@@ -9,12 +9,12 @@ option java_package = "org.mobilitydata";
 option java_outer_classname = "StopsProto";
 
 message Stop {
-    int32 id = 1;
+    int64 id = 1;
     string code = 2;
     string name = 3;
     string desc = 4;
     google.type.LatLng lat_lng = 5;
-    int32 zone_id = 6;
+    int64 zone_id = 6;
     string url = 7;
 
     enum LocationType {
@@ -28,7 +28,7 @@ message Stop {
     }
     LocationType location_type = 8;
 
-    int32 parent_station = 9;
+    int64 parent_station = 9;
     string timezone = 10;
 
     enum WheelchairBoarding {
@@ -39,7 +39,7 @@ message Stop {
 
     WheelchairBoarding wheelchair_boarding = 11;
 
-    int32 level_id = 12;
+    int64 level_id = 12;
     string platform_code = 13;
 }
 

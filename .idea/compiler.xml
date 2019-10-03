@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="stopsCoordAverage" target="1.5" />
+      <module name="stopsCoordAverage" target="6" />
     </bytecodeTargetLevel>
   </component>
 </project>
