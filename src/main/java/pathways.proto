@@ -1,0 +1,41 @@
+syntax = "proto3";
+package pathways;
+
+option java_package = "org.mobilitydata";
+option java_outer_classname = "PathwaysProto";
+
+message Pathway {
+    int64 pathway_id = 1;
+    int64 from_stop_id = 2;
+    int64 to_stop_id = 3;
+
+    enum PathwayMode {
+        RESERVED = 0; //First enum value must be 0 in proto3
+        WALKWAY = 1;
+        STAIRS = 2;
+        MOVING_SIDEWALK_TRAVELATOR = 3;
+        ESCALATOR = 4;
+        ELEVATOR = 5;
+        FARE_GATE = 6;
+        EXIT_GATE = 7;
+    }
+    PathwayMode pathway_mode = 4;
+
+    enum IsBidirectional {
+        FALSE = 0; //First enum value must be 0 in proto3
+        TRUE = 1;
+    }
+    IsBidirectional is_bidirectional = 5;
+
+    float length = 6;
+    uint32 traversal_time = 7;
+    int32 stair_count = 8;
+    float max_slope = 9;
+    float min_width = 10; //must be positive
+    string signposted_as = 11;
+    int64 reversed_signposted_as = 12;
+}
+
+message pathwayCollection {
+    repeated Pathway pathways = 1;
+}
