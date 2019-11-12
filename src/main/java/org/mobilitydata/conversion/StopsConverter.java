@@ -27,7 +27,7 @@ public class StopsConverter {
                 String[] stop = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
                 StopsProto.Stop.Builder toAddBuilder = StopsProto.Stop.newBuilder()
-                        .setId(Long.parseLong(stop[0]))
+                        .setId(stop[0])
                         .setCode(stop[1])
                         .setName(stop[2])
                         .setDesc(stop[3])
@@ -46,13 +46,13 @@ public class StopsConverter {
                 }
 
                 try {
-                    toAddBuilder.setParentStation(Long.parseLong(stop[7]));
+                    toAddBuilder.setParentStation(stop[7]);
                 } catch (NumberFormatException e) {
                     //e.printStackTrace();
                 }
 
                 try {
-                    toAddBuilder.setZoneId(Long.parseLong(stop[10]));
+                    toAddBuilder.setZoneId(stop[10]);
                 } catch (NumberFormatException e) {
                     //e.printStackTrace();
                 }

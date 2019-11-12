@@ -6,22 +6,27 @@ package org.mobilitydata.gtfsproto;
 public final class StopsProto {
   private StopsProto() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
+          com.google.protobuf.ExtensionRegistryLite registry) {
   }
 
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistry registry) {
+          com.google.protobuf.ExtensionRegistry registry) {
     registerAllExtensions(
-        (com.google.protobuf.ExtensionRegistryLite) registry);
+            (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   public interface StopOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:stops.Stop)
-      com.google.protobuf.MessageOrBuilder {
+          // @@protoc_insertion_point(interface_extends:stops.Stop)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 id = 1;</code>
+     * <code>string id = 1;</code>
      */
-    long getId();
+    java.lang.String getId();
+    /**
+     * <code>string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+    getIdBytes();
 
     /**
      * <code>string code = 2;</code>
@@ -31,7 +36,7 @@ public final class StopsProto {
      * <code>string code = 2;</code>
      */
     com.google.protobuf.ByteString
-        getCodeBytes();
+    getCodeBytes();
 
     /**
      * <code>string name = 3;</code>
@@ -41,7 +46,7 @@ public final class StopsProto {
      * <code>string name = 3;</code>
      */
     com.google.protobuf.ByteString
-        getNameBytes();
+    getNameBytes();
 
     /**
      * <code>string desc = 4;</code>
@@ -51,7 +56,7 @@ public final class StopsProto {
      * <code>string desc = 4;</code>
      */
     com.google.protobuf.ByteString
-        getDescBytes();
+    getDescBytes();
 
     /**
      * <code>.google.type.LatLng lat_lng = 5;</code>
@@ -67,9 +72,14 @@ public final class StopsProto {
     com.google.type.LatLngOrBuilder getLatLngOrBuilder();
 
     /**
-     * <code>int64 zone_id = 6;</code>
+     * <code>string zone_id = 6;</code>
      */
-    long getZoneId();
+    java.lang.String getZoneId();
+    /**
+     * <code>string zone_id = 6;</code>
+     */
+    com.google.protobuf.ByteString
+    getZoneIdBytes();
 
     /**
      * <code>string url = 7;</code>
@@ -79,7 +89,7 @@ public final class StopsProto {
      * <code>string url = 7;</code>
      */
     com.google.protobuf.ByteString
-        getUrlBytes();
+    getUrlBytes();
 
     /**
      * <code>.stops.Stop.LocationType location_type = 8;</code>
@@ -88,12 +98,17 @@ public final class StopsProto {
     /**
      * <code>.stops.Stop.LocationType location_type = 8;</code>
      */
-    StopsProto.Stop.LocationType getLocationType();
+    org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType getLocationType();
 
     /**
-     * <code>int64 parent_station = 9;</code>
+     * <code>string parent_station = 9;</code>
      */
-    long getParentStation();
+    java.lang.String getParentStation();
+    /**
+     * <code>string parent_station = 9;</code>
+     */
+    com.google.protobuf.ByteString
+    getParentStationBytes();
 
     /**
      * <code>string timezone = 10;</code>
@@ -103,7 +118,7 @@ public final class StopsProto {
      * <code>string timezone = 10;</code>
      */
     com.google.protobuf.ByteString
-        getTimezoneBytes();
+    getTimezoneBytes();
 
     /**
      * <code>.stops.Stop.WheelchairBoarding wheelchair_boarding = 11;</code>
@@ -112,12 +127,17 @@ public final class StopsProto {
     /**
      * <code>.stops.Stop.WheelchairBoarding wheelchair_boarding = 11;</code>
      */
-    StopsProto.Stop.WheelchairBoarding getWheelchairBoarding();
+    org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding getWheelchairBoarding();
 
     /**
-     * <code>int64 level_id = 12;</code>
+     * <code>string level_id = 12;</code>
      */
-    long getLevelId();
+    java.lang.String getLevelId();
+    /**
+     * <code>string level_id = 12;</code>
+     */
+    com.google.protobuf.ByteString
+    getLevelIdBytes();
 
     /**
      * <code>string platform_code = 13;</code>
@@ -127,35 +147,39 @@ public final class StopsProto {
      * <code>string platform_code = 13;</code>
      */
     com.google.protobuf.ByteString
-        getPlatformCodeBytes();
+    getPlatformCodeBytes();
   }
   /**
    * Protobuf type {@code stops.Stop}
    */
   public  static final class Stop extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:stops.Stop)
-      StopOrBuilder {
-  private static final long serialVersionUID = 0L;
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:stops.Stop)
+          StopOrBuilder {
+    private static final long serialVersionUID = 0L;
     // Use Stop.newBuilder() to construct.
     private Stop(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
     private Stop() {
+      id_ = "";
       code_ = "";
       name_ = "";
       desc_ = "";
+      zoneId_ = "";
       url_ = "";
       locationType_ = 0;
+      parentStation_ = "";
       timezone_ = "";
       wheelchairBoarding_ = 0;
+      levelId_ = "";
       platformCode_ = "";
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
+            UnusedPrivateParameter unused) {
       return new Stop();
     }
 
@@ -165,15 +189,15 @@ public final class StopsProto {
       return this.unknownFields;
     }
     private Stop(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
+              com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -182,9 +206,10 @@ public final class StopsProto {
             case 0:
               done = true;
               break;
-            case 8: {
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              id_ = input.readInt64();
+              id_ = s;
               break;
             }
             case 18: {
@@ -218,9 +243,10 @@ public final class StopsProto {
 
               break;
             }
-            case 48: {
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              zoneId_ = input.readInt64();
+              zoneId_ = s;
               break;
             }
             case 58: {
@@ -235,9 +261,10 @@ public final class StopsProto {
               locationType_ = rawValue;
               break;
             }
-            case 72: {
+            case 74: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              parentStation_ = input.readInt64();
+              parentStation_ = s;
               break;
             }
             case 82: {
@@ -252,9 +279,10 @@ public final class StopsProto {
               wheelchairBoarding_ = rawValue;
               break;
             }
-            case 96: {
+            case 98: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              levelId_ = input.readInt64();
+              levelId_ = s;
               break;
             }
             case 106: {
@@ -265,7 +293,7 @@ public final class StopsProto {
             }
             default: {
               if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
+                      input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -276,30 +304,30 @@ public final class StopsProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+                e).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return StopsProto.internal_static_stops_Stop_descriptor;
+    getDescriptor() {
+      return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_Stop_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return StopsProto.internal_static_stops_Stop_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              StopsProto.Stop.class, StopsProto.Stop.Builder.class);
+    internalGetFieldAccessorTable() {
+      return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_Stop_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                      org.mobilitydata.gtfsproto.StopsProto.Stop.class, org.mobilitydata.gtfsproto.StopsProto.Stop.Builder.class);
     }
 
     /**
      * Protobuf enum {@code stops.Stop.LocationType}
      */
     public enum LocationType
-        implements com.google.protobuf.ProtocolMessageEnum {
+            implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <code>PLATFORM = 0;</code>
        */
@@ -356,7 +384,7 @@ public final class StopsProto {
       public final int getNumber() {
         if (index == -1) {
           throw new java.lang.IllegalArgumentException(
-              "Can't get the number of an unknown enum value.");
+                  "Can't get the number of an unknown enum value.");
         }
         return value;
       }
@@ -381,39 +409,39 @@ public final class StopsProto {
       }
 
       public static com.google.protobuf.Internal.EnumLiteMap<LocationType>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
       private static final com.google.protobuf.Internal.EnumLiteMap<
-          LocationType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<LocationType>() {
-              public LocationType findValueByNumber(int number) {
-                return LocationType.forNumber(number);
-              }
-            };
+              LocationType> internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<LocationType>() {
+                public LocationType findValueByNumber(int number) {
+                  return LocationType.forNumber(number);
+                }
+              };
 
       public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         return getDescriptor().getValues().get(index);
       }
       public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return StopsProto.Stop.getDescriptor().getEnumTypes().get(0);
+      getDescriptor() {
+        return org.mobilitydata.gtfsproto.StopsProto.Stop.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final LocationType[] VALUES = {
-        PLATFORM, STATION, ENTRANCE, EXIT, GENERIC, BOARDING, 
+              PLATFORM, STATION, ENTRANCE, EXIT, GENERIC, BOARDING,
       };
 
       public static LocationType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+              com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+                  "EnumValueDescriptor is not for this type.");
         }
         if (desc.getIndex() == -1) {
           return UNRECOGNIZED;
@@ -436,7 +464,7 @@ public final class StopsProto {
      * Protobuf enum {@code stops.Stop.WheelchairBoarding}
      */
     public enum WheelchairBoarding
-        implements com.google.protobuf.ProtocolMessageEnum {
+            implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <code>ZERO = 0;</code>
        */
@@ -469,7 +497,7 @@ public final class StopsProto {
       public final int getNumber() {
         if (this == UNRECOGNIZED) {
           throw new java.lang.IllegalArgumentException(
-              "Can't get the number of an unknown enum value.");
+                  "Can't get the number of an unknown enum value.");
         }
         return value;
       }
@@ -492,37 +520,37 @@ public final class StopsProto {
       }
 
       public static com.google.protobuf.Internal.EnumLiteMap<WheelchairBoarding>
-          internalGetValueMap() {
+      internalGetValueMap() {
         return internalValueMap;
       }
       private static final com.google.protobuf.Internal.EnumLiteMap<
-          WheelchairBoarding> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<WheelchairBoarding>() {
-              public WheelchairBoarding findValueByNumber(int number) {
-                return WheelchairBoarding.forNumber(number);
-              }
-            };
+              WheelchairBoarding> internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<WheelchairBoarding>() {
+                public WheelchairBoarding findValueByNumber(int number) {
+                  return WheelchairBoarding.forNumber(number);
+                }
+              };
 
       public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
+      getValueDescriptor() {
         return getDescriptor().getValues().get(ordinal());
       }
       public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
+      getDescriptorForType() {
         return getDescriptor();
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return StopsProto.Stop.getDescriptor().getEnumTypes().get(1);
+      getDescriptor() {
+        return org.mobilitydata.gtfsproto.StopsProto.Stop.getDescriptor().getEnumTypes().get(1);
       }
 
       private static final WheelchairBoarding[] VALUES = values();
 
       public static WheelchairBoarding valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+              com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
+                  "EnumValueDescriptor is not for this type.");
         }
         if (desc.getIndex() == -1) {
           return UNRECOGNIZED;
@@ -540,12 +568,37 @@ public final class StopsProto {
     }
 
     public static final int ID_FIELD_NUMBER = 1;
-    private long id_;
+    private volatile java.lang.Object id_;
     /**
-     * <code>int64 id = 1;</code>
+     * <code>string id = 1;</code>
      */
-    public long getId() {
-      return id_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        id_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+    getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int CODE_FIELD_NUMBER = 2;
@@ -558,8 +611,8 @@ public final class StopsProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         code_ = s;
         return s;
@@ -569,12 +622,12 @@ public final class StopsProto {
      * <code>string code = 2;</code>
      */
     public com.google.protobuf.ByteString
-        getCodeBytes() {
+    getCodeBytes() {
       java.lang.Object ref = code_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
         code_ = b;
         return b;
       } else {
@@ -592,8 +645,8 @@ public final class StopsProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         name_ = s;
         return s;
@@ -603,12 +656,12 @@ public final class StopsProto {
      * <code>string name = 3;</code>
      */
     public com.google.protobuf.ByteString
-        getNameBytes() {
+    getNameBytes() {
       java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
         name_ = b;
         return b;
       } else {
@@ -626,8 +679,8 @@ public final class StopsProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         desc_ = s;
         return s;
@@ -637,12 +690,12 @@ public final class StopsProto {
      * <code>string desc = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getDescBytes() {
+    getDescBytes() {
       java.lang.Object ref = desc_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
         desc_ = b;
         return b;
       } else {
@@ -672,12 +725,37 @@ public final class StopsProto {
     }
 
     public static final int ZONE_ID_FIELD_NUMBER = 6;
-    private long zoneId_;
+    private volatile java.lang.Object zoneId_;
     /**
-     * <code>int64 zone_id = 6;</code>
+     * <code>string zone_id = 6;</code>
      */
-    public long getZoneId() {
-      return zoneId_;
+    public java.lang.String getZoneId() {
+      java.lang.Object ref = zoneId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        zoneId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string zone_id = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+    getZoneIdBytes() {
+      java.lang.Object ref = zoneId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
+        zoneId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int URL_FIELD_NUMBER = 7;
@@ -690,8 +768,8 @@ public final class StopsProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         url_ = s;
         return s;
@@ -701,12 +779,12 @@ public final class StopsProto {
      * <code>string url = 7;</code>
      */
     public com.google.protobuf.ByteString
-        getUrlBytes() {
+    getUrlBytes() {
       java.lang.Object ref = url_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
         url_ = b;
         return b;
       } else {
@@ -725,19 +803,44 @@ public final class StopsProto {
     /**
      * <code>.stops.Stop.LocationType location_type = 8;</code>
      */
-    public StopsProto.Stop.LocationType getLocationType() {
+    public org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType getLocationType() {
       @SuppressWarnings("deprecation")
-      StopsProto.Stop.LocationType result = StopsProto.Stop.LocationType.valueOf(locationType_);
-      return result == null ? StopsProto.Stop.LocationType.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType result = org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType.valueOf(locationType_);
+      return result == null ? org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType.UNRECOGNIZED : result;
     }
 
     public static final int PARENT_STATION_FIELD_NUMBER = 9;
-    private long parentStation_;
+    private volatile java.lang.Object parentStation_;
     /**
-     * <code>int64 parent_station = 9;</code>
+     * <code>string parent_station = 9;</code>
      */
-    public long getParentStation() {
-      return parentStation_;
+    public java.lang.String getParentStation() {
+      java.lang.Object ref = parentStation_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        parentStation_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string parent_station = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+    getParentStationBytes() {
+      java.lang.Object ref = parentStation_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
+        parentStation_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int TIMEZONE_FIELD_NUMBER = 10;
@@ -750,8 +853,8 @@ public final class StopsProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         timezone_ = s;
         return s;
@@ -761,12 +864,12 @@ public final class StopsProto {
      * <code>string timezone = 10;</code>
      */
     public com.google.protobuf.ByteString
-        getTimezoneBytes() {
+    getTimezoneBytes() {
       java.lang.Object ref = timezone_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
         timezone_ = b;
         return b;
       } else {
@@ -785,19 +888,44 @@ public final class StopsProto {
     /**
      * <code>.stops.Stop.WheelchairBoarding wheelchair_boarding = 11;</code>
      */
-    public StopsProto.Stop.WheelchairBoarding getWheelchairBoarding() {
+    public org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding getWheelchairBoarding() {
       @SuppressWarnings("deprecation")
-      StopsProto.Stop.WheelchairBoarding result = StopsProto.Stop.WheelchairBoarding.valueOf(wheelchairBoarding_);
-      return result == null ? StopsProto.Stop.WheelchairBoarding.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding result = org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding.valueOf(wheelchairBoarding_);
+      return result == null ? org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding.UNRECOGNIZED : result;
     }
 
     public static final int LEVEL_ID_FIELD_NUMBER = 12;
-    private long levelId_;
+    private volatile java.lang.Object levelId_;
     /**
-     * <code>int64 level_id = 12;</code>
+     * <code>string level_id = 12;</code>
      */
-    public long getLevelId() {
-      return levelId_;
+    public java.lang.String getLevelId() {
+      java.lang.Object ref = levelId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        levelId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string level_id = 12;</code>
+     */
+    public com.google.protobuf.ByteString
+    getLevelIdBytes() {
+      java.lang.Object ref = levelId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
+        levelId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int PLATFORM_CODE_FIELD_NUMBER = 13;
@@ -810,8 +938,8 @@ public final class StopsProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         platformCode_ = s;
         return s;
@@ -821,12 +949,12 @@ public final class StopsProto {
      * <code>string platform_code = 13;</code>
      */
     public com.google.protobuf.ByteString
-        getPlatformCodeBytes() {
+    getPlatformCodeBytes() {
       java.lang.Object ref = platformCode_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
         platformCode_ = b;
         return b;
       } else {
@@ -847,9 +975,9 @@ public final class StopsProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      if (id_ != 0L) {
-        output.writeInt64(1, id_);
+            throws java.io.IOException {
+      if (!getIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
       }
       if (!getCodeBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, code_);
@@ -863,26 +991,26 @@ public final class StopsProto {
       if (latLng_ != null) {
         output.writeMessage(5, getLatLng());
       }
-      if (zoneId_ != 0L) {
-        output.writeInt64(6, zoneId_);
+      if (!getZoneIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, zoneId_);
       }
       if (!getUrlBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 7, url_);
       }
-      if (locationType_ != StopsProto.Stop.LocationType.PLATFORM.getNumber()) {
+      if (locationType_ != org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType.PLATFORM.getNumber()) {
         output.writeEnum(8, locationType_);
       }
-      if (parentStation_ != 0L) {
-        output.writeInt64(9, parentStation_);
+      if (!getParentStationBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, parentStation_);
       }
       if (!getTimezoneBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 10, timezone_);
       }
-      if (wheelchairBoarding_ != StopsProto.Stop.WheelchairBoarding.ZERO.getNumber()) {
+      if (wheelchairBoarding_ != org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding.ZERO.getNumber()) {
         output.writeEnum(11, wheelchairBoarding_);
       }
-      if (levelId_ != 0L) {
-        output.writeInt64(12, levelId_);
+      if (!getLevelIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 12, levelId_);
       }
       if (!getPlatformCodeBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 13, platformCode_);
@@ -896,9 +1024,8 @@ public final class StopsProto {
       if (size != -1) return size;
 
       size = 0;
-      if (id_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, id_);
+      if (!getIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
       }
       if (!getCodeBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, code_);
@@ -911,33 +1038,30 @@ public final class StopsProto {
       }
       if (latLng_ != null) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, getLatLng());
+                .computeMessageSize(5, getLatLng());
       }
-      if (zoneId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(6, zoneId_);
+      if (!getZoneIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, zoneId_);
       }
       if (!getUrlBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, url_);
       }
-      if (locationType_ != StopsProto.Stop.LocationType.PLATFORM.getNumber()) {
+      if (locationType_ != org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType.PLATFORM.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(8, locationType_);
+                .computeEnumSize(8, locationType_);
       }
-      if (parentStation_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(9, parentStation_);
+      if (!getParentStationBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, parentStation_);
       }
       if (!getTimezoneBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, timezone_);
       }
-      if (wheelchairBoarding_ != StopsProto.Stop.WheelchairBoarding.ZERO.getNumber()) {
+      if (wheelchairBoarding_ != org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding.ZERO.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(11, wheelchairBoarding_);
+                .computeEnumSize(11, wheelchairBoarding_);
       }
-      if (levelId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(12, levelId_);
+      if (!getLevelIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, levelId_);
       }
       if (!getPlatformCodeBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(13, platformCode_);
@@ -950,40 +1074,40 @@ public final class StopsProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
-      if (!(obj instanceof StopsProto.Stop)) {
+      if (!(obj instanceof org.mobilitydata.gtfsproto.StopsProto.Stop)) {
         return super.equals(obj);
       }
-      StopsProto.Stop other = (StopsProto.Stop) obj;
+      org.mobilitydata.gtfsproto.StopsProto.Stop other = (org.mobilitydata.gtfsproto.StopsProto.Stop) obj;
 
-      if (getId()
-          != other.getId()) return false;
+      if (!getId()
+              .equals(other.getId())) return false;
       if (!getCode()
-          .equals(other.getCode())) return false;
+              .equals(other.getCode())) return false;
       if (!getName()
-          .equals(other.getName())) return false;
+              .equals(other.getName())) return false;
       if (!getDesc()
-          .equals(other.getDesc())) return false;
+              .equals(other.getDesc())) return false;
       if (hasLatLng() != other.hasLatLng()) return false;
       if (hasLatLng()) {
         if (!getLatLng()
-            .equals(other.getLatLng())) return false;
+                .equals(other.getLatLng())) return false;
       }
-      if (getZoneId()
-          != other.getZoneId()) return false;
+      if (!getZoneId()
+              .equals(other.getZoneId())) return false;
       if (!getUrl()
-          .equals(other.getUrl())) return false;
+              .equals(other.getUrl())) return false;
       if (locationType_ != other.locationType_) return false;
-      if (getParentStation()
-          != other.getParentStation()) return false;
+      if (!getParentStation()
+              .equals(other.getParentStation())) return false;
       if (!getTimezone()
-          .equals(other.getTimezone())) return false;
+              .equals(other.getTimezone())) return false;
       if (wheelchairBoarding_ != other.wheelchairBoarding_) return false;
-      if (getLevelId()
-          != other.getLevelId()) return false;
+      if (!getLevelId()
+              .equals(other.getLevelId())) return false;
       if (!getPlatformCode()
-          .equals(other.getPlatformCode())) return false;
+              .equals(other.getPlatformCode())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -996,8 +1120,7 @@ public final class StopsProto {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getId());
+      hash = (53 * hash) + getId().hashCode();
       hash = (37 * hash) + CODE_FIELD_NUMBER;
       hash = (53 * hash) + getCode().hashCode();
       hash = (37 * hash) + NAME_FIELD_NUMBER;
@@ -1009,22 +1132,19 @@ public final class StopsProto {
         hash = (53 * hash) + getLatLng().hashCode();
       }
       hash = (37 * hash) + ZONE_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getZoneId());
+      hash = (53 * hash) + getZoneId().hashCode();
       hash = (37 * hash) + URL_FIELD_NUMBER;
       hash = (53 * hash) + getUrl().hashCode();
       hash = (37 * hash) + LOCATION_TYPE_FIELD_NUMBER;
       hash = (53 * hash) + locationType_;
       hash = (37 * hash) + PARENT_STATION_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getParentStation());
+      hash = (53 * hash) + getParentStation().hashCode();
       hash = (37 * hash) + TIMEZONE_FIELD_NUMBER;
       hash = (53 * hash) + getTimezone().hashCode();
       hash = (37 * hash) + WHEELCHAIR_BOARDING_FIELD_NUMBER;
       hash = (53 * hash) + wheelchairBoarding_;
       hash = (37 * hash) + LEVEL_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getLevelId());
+      hash = (53 * hash) + getLevelId().hashCode();
       hash = (37 * hash) + PLATFORM_CODE_FIELD_NUMBER;
       hash = (53 * hash) + getPlatformCode().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
@@ -1032,74 +1152,74 @@ public final class StopsProto {
       return hash;
     }
 
-    public static StopsProto.Stop parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopsProto.Stop parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopsProto.Stop parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopsProto.Stop parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopsProto.Stop parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopsProto.Stop parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopsProto.Stop parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
-    public static StopsProto.Stop parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static StopsProto.Stop parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+              .parseDelimitedWithIOException(PARSER, input);
     }
-    public static StopsProto.Stop parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static StopsProto.Stop parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
-    public static StopsProto.Stop parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
@@ -1107,18 +1227,18 @@ public final class StopsProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(StopsProto.Stop prototype) {
+    public static Builder newBuilder(org.mobilitydata.gtfsproto.StopsProto.Stop prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -1126,20 +1246,20 @@ public final class StopsProto {
      * Protobuf type {@code stops.Stop}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:stops.Stop)
-        StopsProto.StopOrBuilder {
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:stops.Stop)
+            org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return StopsProto.internal_static_stops_Stop_descriptor;
+      getDescriptor() {
+        return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_Stop_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return StopsProto.internal_static_stops_Stop_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                StopsProto.Stop.class, StopsProto.Stop.Builder.class);
+      internalGetFieldAccessorTable() {
+        return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_Stop_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        org.mobilitydata.gtfsproto.StopsProto.Stop.class, org.mobilitydata.gtfsproto.StopsProto.Stop.Builder.class);
       }
 
       // Construct using org.mobilitydata.gtfsproto.StopsProto.Stop.newBuilder()
@@ -1148,7 +1268,7 @@ public final class StopsProto {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1160,7 +1280,7 @@ public final class StopsProto {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        id_ = 0L;
+        id_ = "";
 
         code_ = "";
 
@@ -1174,19 +1294,19 @@ public final class StopsProto {
           latLng_ = null;
           latLngBuilder_ = null;
         }
-        zoneId_ = 0L;
+        zoneId_ = "";
 
         url_ = "";
 
         locationType_ = 0;
 
-        parentStation_ = 0L;
+        parentStation_ = "";
 
         timezone_ = "";
 
         wheelchairBoarding_ = 0;
 
-        levelId_ = 0L;
+        levelId_ = "";
 
         platformCode_ = "";
 
@@ -1195,18 +1315,18 @@ public final class StopsProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return StopsProto.internal_static_stops_Stop_descriptor;
+      getDescriptorForType() {
+        return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_Stop_descriptor;
       }
 
       @java.lang.Override
-      public StopsProto.Stop getDefaultInstanceForType() {
-        return StopsProto.Stop.getDefaultInstance();
+      public org.mobilitydata.gtfsproto.StopsProto.Stop getDefaultInstanceForType() {
+        return org.mobilitydata.gtfsproto.StopsProto.Stop.getDefaultInstance();
       }
 
       @java.lang.Override
-      public StopsProto.Stop build() {
-        StopsProto.Stop result = buildPartial();
+      public org.mobilitydata.gtfsproto.StopsProto.Stop build() {
+        org.mobilitydata.gtfsproto.StopsProto.Stop result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -1214,8 +1334,8 @@ public final class StopsProto {
       }
 
       @java.lang.Override
-      public StopsProto.Stop buildPartial() {
-        StopsProto.Stop result = new StopsProto.Stop(this);
+      public org.mobilitydata.gtfsproto.StopsProto.Stop buildPartial() {
+        org.mobilitydata.gtfsproto.StopsProto.Stop result = new org.mobilitydata.gtfsproto.StopsProto.Stop(this);
         result.id_ = id_;
         result.code_ = code_;
         result.name_ = name_;
@@ -1243,46 +1363,47 @@ public final class StopsProto {
       }
       @java.lang.Override
       public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              java.lang.Object value) {
         return super.setField(field, value);
       }
       @java.lang.Override
       public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
       @java.lang.Override
       public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
       @java.lang.Override
       public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
       @java.lang.Override
       public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof StopsProto.Stop) {
-          return mergeFrom((StopsProto.Stop)other);
+        if (other instanceof org.mobilitydata.gtfsproto.StopsProto.Stop) {
+          return mergeFrom((org.mobilitydata.gtfsproto.StopsProto.Stop)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(StopsProto.Stop other) {
-        if (other == StopsProto.Stop.getDefaultInstance()) return this;
-        if (other.getId() != 0L) {
-          setId(other.getId());
+      public Builder mergeFrom(org.mobilitydata.gtfsproto.StopsProto.Stop other) {
+        if (other == org.mobilitydata.gtfsproto.StopsProto.Stop.getDefaultInstance()) return this;
+        if (!other.getId().isEmpty()) {
+          id_ = other.id_;
+          onChanged();
         }
         if (!other.getCode().isEmpty()) {
           code_ = other.code_;
@@ -1299,8 +1420,9 @@ public final class StopsProto {
         if (other.hasLatLng()) {
           mergeLatLng(other.getLatLng());
         }
-        if (other.getZoneId() != 0L) {
-          setZoneId(other.getZoneId());
+        if (!other.getZoneId().isEmpty()) {
+          zoneId_ = other.zoneId_;
+          onChanged();
         }
         if (!other.getUrl().isEmpty()) {
           url_ = other.url_;
@@ -1309,8 +1431,9 @@ public final class StopsProto {
         if (other.locationType_ != 0) {
           setLocationTypeValue(other.getLocationTypeValue());
         }
-        if (other.getParentStation() != 0L) {
-          setParentStation(other.getParentStation());
+        if (!other.getParentStation().isEmpty()) {
+          parentStation_ = other.parentStation_;
+          onChanged();
         }
         if (!other.getTimezone().isEmpty()) {
           timezone_ = other.timezone_;
@@ -1319,8 +1442,9 @@ public final class StopsProto {
         if (other.wheelchairBoarding_ != 0) {
           setWheelchairBoardingValue(other.getWheelchairBoardingValue());
         }
-        if (other.getLevelId() != 0L) {
-          setLevelId(other.getLevelId());
+        if (!other.getLevelId().isEmpty()) {
+          levelId_ = other.levelId_;
+          onChanged();
         }
         if (!other.getPlatformCode().isEmpty()) {
           platformCode_ = other.platformCode_;
@@ -1338,14 +1462,14 @@ public final class StopsProto {
 
       @java.lang.Override
       public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        StopsProto.Stop parsedMessage = null;
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+        org.mobilitydata.gtfsproto.StopsProto.Stop parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StopsProto.Stop) e.getUnfinishedMessage();
+          parsedMessage = (org.mobilitydata.gtfsproto.StopsProto.Stop) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1355,28 +1479,71 @@ public final class StopsProto {
         return this;
       }
 
-      private long id_ ;
+      private java.lang.Object id_ = "";
       /**
-       * <code>int64 id = 1;</code>
+       * <code>string id = 1;</code>
        */
-      public long getId() {
-        return id_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          id_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 id = 1;</code>
+       * <code>string id = 1;</code>
        */
-      public Builder setId(long value) {
-        
+      public com.google.protobuf.ByteString
+      getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder setId(
+              java.lang.String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
         id_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 id = 1;</code>
+       * <code>string id = 1;</code>
        */
       public Builder clearId() {
-        
-        id_ = 0L;
+
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder setIdBytes(
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        id_ = value;
         onChanged();
         return this;
       }
@@ -1389,7 +1556,7 @@ public final class StopsProto {
         java.lang.Object ref = code_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
+                  (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           code_ = s;
           return s;
@@ -1401,12 +1568,12 @@ public final class StopsProto {
        * <code>string code = 2;</code>
        */
       public com.google.protobuf.ByteString
-          getCodeBytes() {
+      getCodeBytes() {
         java.lang.Object ref = code_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
           code_ = b;
           return b;
         } else {
@@ -1417,11 +1584,11 @@ public final class StopsProto {
        * <code>string code = 2;</code>
        */
       public Builder setCode(
-          java.lang.String value) {
+              java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         code_ = value;
         onChanged();
         return this;
@@ -1430,7 +1597,7 @@ public final class StopsProto {
        * <code>string code = 2;</code>
        */
       public Builder clearCode() {
-        
+
         code_ = getDefaultInstance().getCode();
         onChanged();
         return this;
@@ -1439,12 +1606,12 @@ public final class StopsProto {
        * <code>string code = 2;</code>
        */
       public Builder setCodeBytes(
-          com.google.protobuf.ByteString value) {
+              com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
         code_ = value;
         onChanged();
         return this;
@@ -1458,7 +1625,7 @@ public final class StopsProto {
         java.lang.Object ref = name_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
+                  (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           name_ = s;
           return s;
@@ -1470,12 +1637,12 @@ public final class StopsProto {
        * <code>string name = 3;</code>
        */
       public com.google.protobuf.ByteString
-          getNameBytes() {
+      getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
           name_ = b;
           return b;
         } else {
@@ -1486,11 +1653,11 @@ public final class StopsProto {
        * <code>string name = 3;</code>
        */
       public Builder setName(
-          java.lang.String value) {
+              java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         name_ = value;
         onChanged();
         return this;
@@ -1499,7 +1666,7 @@ public final class StopsProto {
        * <code>string name = 3;</code>
        */
       public Builder clearName() {
-        
+
         name_ = getDefaultInstance().getName();
         onChanged();
         return this;
@@ -1508,12 +1675,12 @@ public final class StopsProto {
        * <code>string name = 3;</code>
        */
       public Builder setNameBytes(
-          com.google.protobuf.ByteString value) {
+              com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
         name_ = value;
         onChanged();
         return this;
@@ -1527,7 +1694,7 @@ public final class StopsProto {
         java.lang.Object ref = desc_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
+                  (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           desc_ = s;
           return s;
@@ -1539,12 +1706,12 @@ public final class StopsProto {
        * <code>string desc = 4;</code>
        */
       public com.google.protobuf.ByteString
-          getDescBytes() {
+      getDescBytes() {
         java.lang.Object ref = desc_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
           desc_ = b;
           return b;
         } else {
@@ -1555,11 +1722,11 @@ public final class StopsProto {
        * <code>string desc = 4;</code>
        */
       public Builder setDesc(
-          java.lang.String value) {
+              java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         desc_ = value;
         onChanged();
         return this;
@@ -1568,7 +1735,7 @@ public final class StopsProto {
        * <code>string desc = 4;</code>
        */
       public Builder clearDesc() {
-        
+
         desc_ = getDefaultInstance().getDesc();
         onChanged();
         return this;
@@ -1577,12 +1744,12 @@ public final class StopsProto {
        * <code>string desc = 4;</code>
        */
       public Builder setDescBytes(
-          com.google.protobuf.ByteString value) {
+              com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
         desc_ = value;
         onChanged();
         return this;
@@ -1590,7 +1757,7 @@ public final class StopsProto {
 
       private com.google.type.LatLng latLng_;
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.type.LatLng, com.google.type.LatLng.Builder, com.google.type.LatLngOrBuilder> latLngBuilder_;
+              com.google.type.LatLng, com.google.type.LatLng.Builder, com.google.type.LatLngOrBuilder> latLngBuilder_;
       /**
        * <code>.google.type.LatLng lat_lng = 5;</code>
        */
@@ -1627,7 +1794,7 @@ public final class StopsProto {
        * <code>.google.type.LatLng lat_lng = 5;</code>
        */
       public Builder setLatLng(
-          com.google.type.LatLng.Builder builderForValue) {
+              com.google.type.LatLng.Builder builderForValue) {
         if (latLngBuilder_ == null) {
           latLng_ = builderForValue.build();
           onChanged();
@@ -1644,7 +1811,7 @@ public final class StopsProto {
         if (latLngBuilder_ == null) {
           if (latLng_ != null) {
             latLng_ =
-              com.google.type.LatLng.newBuilder(latLng_).mergeFrom(value).buildPartial();
+                    com.google.type.LatLng.newBuilder(latLng_).mergeFrom(value).buildPartial();
           } else {
             latLng_ = value;
           }
@@ -1673,7 +1840,7 @@ public final class StopsProto {
        * <code>.google.type.LatLng lat_lng = 5;</code>
        */
       public com.google.type.LatLng.Builder getLatLngBuilder() {
-        
+
         onChanged();
         return getLatLngFieldBuilder().getBuilder();
       }
@@ -1685,18 +1852,18 @@ public final class StopsProto {
           return latLngBuilder_.getMessageOrBuilder();
         } else {
           return latLng_ == null ?
-              com.google.type.LatLng.getDefaultInstance() : latLng_;
+                  com.google.type.LatLng.getDefaultInstance() : latLng_;
         }
       }
       /**
        * <code>.google.type.LatLng lat_lng = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.type.LatLng, com.google.type.LatLng.Builder, com.google.type.LatLngOrBuilder> 
-          getLatLngFieldBuilder() {
+              com.google.type.LatLng, com.google.type.LatLng.Builder, com.google.type.LatLngOrBuilder>
+      getLatLngFieldBuilder() {
         if (latLngBuilder_ == null) {
           latLngBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.type.LatLng, com.google.type.LatLng.Builder, com.google.type.LatLngOrBuilder>(
+                  com.google.type.LatLng, com.google.type.LatLng.Builder, com.google.type.LatLngOrBuilder>(
                   getLatLng(),
                   getParentForChildren(),
                   isClean());
@@ -1705,28 +1872,71 @@ public final class StopsProto {
         return latLngBuilder_;
       }
 
-      private long zoneId_ ;
+      private java.lang.Object zoneId_ = "";
       /**
-       * <code>int64 zone_id = 6;</code>
+       * <code>string zone_id = 6;</code>
        */
-      public long getZoneId() {
-        return zoneId_;
+      public java.lang.String getZoneId() {
+        java.lang.Object ref = zoneId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          zoneId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 zone_id = 6;</code>
+       * <code>string zone_id = 6;</code>
        */
-      public Builder setZoneId(long value) {
-        
+      public com.google.protobuf.ByteString
+      getZoneIdBytes() {
+        java.lang.Object ref = zoneId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
+          zoneId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string zone_id = 6;</code>
+       */
+      public Builder setZoneId(
+              java.lang.String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
         zoneId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 zone_id = 6;</code>
+       * <code>string zone_id = 6;</code>
        */
       public Builder clearZoneId() {
-        
-        zoneId_ = 0L;
+
+        zoneId_ = getDefaultInstance().getZoneId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string zone_id = 6;</code>
+       */
+      public Builder setZoneIdBytes(
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        zoneId_ = value;
         onChanged();
         return this;
       }
@@ -1739,7 +1949,7 @@ public final class StopsProto {
         java.lang.Object ref = url_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
+                  (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           url_ = s;
           return s;
@@ -1751,12 +1961,12 @@ public final class StopsProto {
        * <code>string url = 7;</code>
        */
       public com.google.protobuf.ByteString
-          getUrlBytes() {
+      getUrlBytes() {
         java.lang.Object ref = url_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
           url_ = b;
           return b;
         } else {
@@ -1767,11 +1977,11 @@ public final class StopsProto {
        * <code>string url = 7;</code>
        */
       public Builder setUrl(
-          java.lang.String value) {
+              java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         url_ = value;
         onChanged();
         return this;
@@ -1780,7 +1990,7 @@ public final class StopsProto {
        * <code>string url = 7;</code>
        */
       public Builder clearUrl() {
-        
+
         url_ = getDefaultInstance().getUrl();
         onChanged();
         return this;
@@ -1789,12 +1999,12 @@ public final class StopsProto {
        * <code>string url = 7;</code>
        */
       public Builder setUrlBytes(
-          com.google.protobuf.ByteString value) {
+              com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
         url_ = value;
         onChanged();
         return this;
@@ -1818,19 +2028,19 @@ public final class StopsProto {
       /**
        * <code>.stops.Stop.LocationType location_type = 8;</code>
        */
-      public StopsProto.Stop.LocationType getLocationType() {
+      public org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType getLocationType() {
         @SuppressWarnings("deprecation")
-        StopsProto.Stop.LocationType result = StopsProto.Stop.LocationType.valueOf(locationType_);
-        return result == null ? StopsProto.Stop.LocationType.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType result = org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType.valueOf(locationType_);
+        return result == null ? org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType.UNRECOGNIZED : result;
       }
       /**
        * <code>.stops.Stop.LocationType location_type = 8;</code>
        */
-      public Builder setLocationType(StopsProto.Stop.LocationType value) {
+      public Builder setLocationType(org.mobilitydata.gtfsproto.StopsProto.Stop.LocationType value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        
+
         locationType_ = value.getNumber();
         onChanged();
         return this;
@@ -1839,34 +2049,77 @@ public final class StopsProto {
        * <code>.stops.Stop.LocationType location_type = 8;</code>
        */
       public Builder clearLocationType() {
-        
+
         locationType_ = 0;
         onChanged();
         return this;
       }
 
-      private long parentStation_ ;
+      private java.lang.Object parentStation_ = "";
       /**
-       * <code>int64 parent_station = 9;</code>
+       * <code>string parent_station = 9;</code>
        */
-      public long getParentStation() {
-        return parentStation_;
+      public java.lang.String getParentStation() {
+        java.lang.Object ref = parentStation_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          parentStation_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 parent_station = 9;</code>
+       * <code>string parent_station = 9;</code>
        */
-      public Builder setParentStation(long value) {
-        
+      public com.google.protobuf.ByteString
+      getParentStationBytes() {
+        java.lang.Object ref = parentStation_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
+          parentStation_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string parent_station = 9;</code>
+       */
+      public Builder setParentStation(
+              java.lang.String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
         parentStation_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 parent_station = 9;</code>
+       * <code>string parent_station = 9;</code>
        */
       public Builder clearParentStation() {
-        
-        parentStation_ = 0L;
+
+        parentStation_ = getDefaultInstance().getParentStation();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string parent_station = 9;</code>
+       */
+      public Builder setParentStationBytes(
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        parentStation_ = value;
         onChanged();
         return this;
       }
@@ -1879,7 +2132,7 @@ public final class StopsProto {
         java.lang.Object ref = timezone_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
+                  (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           timezone_ = s;
           return s;
@@ -1891,12 +2144,12 @@ public final class StopsProto {
        * <code>string timezone = 10;</code>
        */
       public com.google.protobuf.ByteString
-          getTimezoneBytes() {
+      getTimezoneBytes() {
         java.lang.Object ref = timezone_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
           timezone_ = b;
           return b;
         } else {
@@ -1907,11 +2160,11 @@ public final class StopsProto {
        * <code>string timezone = 10;</code>
        */
       public Builder setTimezone(
-          java.lang.String value) {
+              java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         timezone_ = value;
         onChanged();
         return this;
@@ -1920,7 +2173,7 @@ public final class StopsProto {
        * <code>string timezone = 10;</code>
        */
       public Builder clearTimezone() {
-        
+
         timezone_ = getDefaultInstance().getTimezone();
         onChanged();
         return this;
@@ -1929,12 +2182,12 @@ public final class StopsProto {
        * <code>string timezone = 10;</code>
        */
       public Builder setTimezoneBytes(
-          com.google.protobuf.ByteString value) {
+              com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
         timezone_ = value;
         onChanged();
         return this;
@@ -1958,19 +2211,19 @@ public final class StopsProto {
       /**
        * <code>.stops.Stop.WheelchairBoarding wheelchair_boarding = 11;</code>
        */
-      public StopsProto.Stop.WheelchairBoarding getWheelchairBoarding() {
+      public org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding getWheelchairBoarding() {
         @SuppressWarnings("deprecation")
-        StopsProto.Stop.WheelchairBoarding result = StopsProto.Stop.WheelchairBoarding.valueOf(wheelchairBoarding_);
-        return result == null ? StopsProto.Stop.WheelchairBoarding.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding result = org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding.valueOf(wheelchairBoarding_);
+        return result == null ? org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding.UNRECOGNIZED : result;
       }
       /**
        * <code>.stops.Stop.WheelchairBoarding wheelchair_boarding = 11;</code>
        */
-      public Builder setWheelchairBoarding(StopsProto.Stop.WheelchairBoarding value) {
+      public Builder setWheelchairBoarding(org.mobilitydata.gtfsproto.StopsProto.Stop.WheelchairBoarding value) {
         if (value == null) {
           throw new NullPointerException();
         }
-        
+
         wheelchairBoarding_ = value.getNumber();
         onChanged();
         return this;
@@ -1979,34 +2232,77 @@ public final class StopsProto {
        * <code>.stops.Stop.WheelchairBoarding wheelchair_boarding = 11;</code>
        */
       public Builder clearWheelchairBoarding() {
-        
+
         wheelchairBoarding_ = 0;
         onChanged();
         return this;
       }
 
-      private long levelId_ ;
+      private java.lang.Object levelId_ = "";
       /**
-       * <code>int64 level_id = 12;</code>
+       * <code>string level_id = 12;</code>
        */
-      public long getLevelId() {
-        return levelId_;
+      public java.lang.String getLevelId() {
+        java.lang.Object ref = levelId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          levelId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 level_id = 12;</code>
+       * <code>string level_id = 12;</code>
        */
-      public Builder setLevelId(long value) {
-        
+      public com.google.protobuf.ByteString
+      getLevelIdBytes() {
+        java.lang.Object ref = levelId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
+          levelId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string level_id = 12;</code>
+       */
+      public Builder setLevelId(
+              java.lang.String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
         levelId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 level_id = 12;</code>
+       * <code>string level_id = 12;</code>
        */
       public Builder clearLevelId() {
-        
-        levelId_ = 0L;
+
+        levelId_ = getDefaultInstance().getLevelId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string level_id = 12;</code>
+       */
+      public Builder setLevelIdBytes(
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        levelId_ = value;
         onChanged();
         return this;
       }
@@ -2019,7 +2315,7 @@ public final class StopsProto {
         java.lang.Object ref = platformCode_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
+                  (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           platformCode_ = s;
           return s;
@@ -2031,12 +2327,12 @@ public final class StopsProto {
        * <code>string platform_code = 13;</code>
        */
       public com.google.protobuf.ByteString
-          getPlatformCodeBytes() {
+      getPlatformCodeBytes() {
         java.lang.Object ref = platformCode_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
           platformCode_ = b;
           return b;
         } else {
@@ -2047,11 +2343,11 @@ public final class StopsProto {
        * <code>string platform_code = 13;</code>
        */
       public Builder setPlatformCode(
-          java.lang.String value) {
+              java.lang.String value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  
+          throw new NullPointerException();
+        }
+
         platformCode_ = value;
         onChanged();
         return this;
@@ -2060,7 +2356,7 @@ public final class StopsProto {
        * <code>string platform_code = 13;</code>
        */
       public Builder clearPlatformCode() {
-        
+
         platformCode_ = getDefaultInstance().getPlatformCode();
         onChanged();
         return this;
@@ -2069,25 +2365,25 @@ public final class StopsProto {
        * <code>string platform_code = 13;</code>
        */
       public Builder setPlatformCodeBytes(
-          com.google.protobuf.ByteString value) {
+              com.google.protobuf.ByteString value) {
         if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
         platformCode_ = value;
         onChanged();
         return this;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -2096,22 +2392,22 @@ public final class StopsProto {
     }
 
     // @@protoc_insertion_point(class_scope:stops.Stop)
-    private static final StopsProto.Stop DEFAULT_INSTANCE;
+    private static final org.mobilitydata.gtfsproto.StopsProto.Stop DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new StopsProto.Stop();
+      DEFAULT_INSTANCE = new org.mobilitydata.gtfsproto.StopsProto.Stop();
     }
 
-    public static StopsProto.Stop getDefaultInstance() {
+    public static org.mobilitydata.gtfsproto.StopsProto.Stop getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<Stop>
-        PARSER = new com.google.protobuf.AbstractParser<Stop>() {
+            PARSER = new com.google.protobuf.AbstractParser<Stop>() {
       @java.lang.Override
       public Stop parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
         return new Stop(input, extensionRegistry);
       }
     };
@@ -2126,25 +2422,25 @@ public final class StopsProto {
     }
 
     @java.lang.Override
-    public StopsProto.Stop getDefaultInstanceForType() {
+    public org.mobilitydata.gtfsproto.StopsProto.Stop getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public interface stopCollectionOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:stops.stopCollection)
-      com.google.protobuf.MessageOrBuilder {
+          // @@protoc_insertion_point(interface_extends:stops.stopCollection)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>repeated .stops.Stop stops = 1;</code>
      */
-    java.util.List<StopsProto.Stop>
-        getStopsList();
+    java.util.List<org.mobilitydata.gtfsproto.StopsProto.Stop>
+    getStopsList();
     /**
      * <code>repeated .stops.Stop stops = 1;</code>
      */
-    StopsProto.Stop getStops(int index);
+    org.mobilitydata.gtfsproto.StopsProto.Stop getStops(int index);
     /**
      * <code>repeated .stops.Stop stops = 1;</code>
      */
@@ -2152,22 +2448,22 @@ public final class StopsProto {
     /**
      * <code>repeated .stops.Stop stops = 1;</code>
      */
-    java.util.List<? extends StopsProto.StopOrBuilder>
-        getStopsOrBuilderList();
+    java.util.List<? extends org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder>
+    getStopsOrBuilderList();
     /**
      * <code>repeated .stops.Stop stops = 1;</code>
      */
-    StopsProto.StopOrBuilder getStopsOrBuilder(
-        int index);
+    org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder getStopsOrBuilder(
+            int index);
   }
   /**
    * Protobuf type {@code stops.stopCollection}
    */
   public  static final class stopCollection extends
-      com.google.protobuf.GeneratedMessageV3 implements
-      // @@protoc_insertion_point(message_implements:stops.stopCollection)
-      stopCollectionOrBuilder {
-  private static final long serialVersionUID = 0L;
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:stops.stopCollection)
+          stopCollectionOrBuilder {
+    private static final long serialVersionUID = 0L;
     // Use stopCollection.newBuilder() to construct.
     private stopCollection(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -2179,7 +2475,7 @@ public final class StopsProto {
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
+            UnusedPrivateParameter unused) {
       return new stopCollection();
     }
 
@@ -2189,16 +2485,16 @@ public final class StopsProto {
       return this.unknownFields;
     }
     private stopCollection(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
+              com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -2209,16 +2505,16 @@ public final class StopsProto {
               break;
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                stops_ = new java.util.ArrayList<StopsProto.Stop>();
+                stops_ = new java.util.ArrayList<org.mobilitydata.gtfsproto.StopsProto.Stop>();
                 mutable_bitField0_ |= 0x00000001;
               }
               stops_.add(
-                  input.readMessage(StopsProto.Stop.parser(), extensionRegistry));
+                      input.readMessage(org.mobilitydata.gtfsproto.StopsProto.Stop.parser(), extensionRegistry));
               break;
             }
             default: {
               if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
+                      input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -2229,7 +2525,7 @@ public final class StopsProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-            e).setUnfinishedMessage(this);
+                e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
           stops_ = java.util.Collections.unmodifiableList(stops_);
@@ -2239,31 +2535,31 @@ public final class StopsProto {
       }
     }
     public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return StopsProto.internal_static_stops_stopCollection_descriptor;
+    getDescriptor() {
+      return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_stopCollection_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return StopsProto.internal_static_stops_stopCollection_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              StopsProto.stopCollection.class, StopsProto.stopCollection.Builder.class);
+    internalGetFieldAccessorTable() {
+      return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_stopCollection_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                      org.mobilitydata.gtfsproto.StopsProto.stopCollection.class, org.mobilitydata.gtfsproto.StopsProto.stopCollection.Builder.class);
     }
 
     public static final int STOPS_FIELD_NUMBER = 1;
-    private java.util.List<StopsProto.Stop> stops_;
+    private java.util.List<org.mobilitydata.gtfsproto.StopsProto.Stop> stops_;
     /**
      * <code>repeated .stops.Stop stops = 1;</code>
      */
-    public java.util.List<StopsProto.Stop> getStopsList() {
+    public java.util.List<org.mobilitydata.gtfsproto.StopsProto.Stop> getStopsList() {
       return stops_;
     }
     /**
      * <code>repeated .stops.Stop stops = 1;</code>
      */
-    public java.util.List<? extends StopsProto.StopOrBuilder>
-        getStopsOrBuilderList() {
+    public java.util.List<? extends org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder>
+    getStopsOrBuilderList() {
       return stops_;
     }
     /**
@@ -2275,14 +2571,14 @@ public final class StopsProto {
     /**
      * <code>repeated .stops.Stop stops = 1;</code>
      */
-    public StopsProto.Stop getStops(int index) {
+    public org.mobilitydata.gtfsproto.StopsProto.Stop getStops(int index) {
       return stops_.get(index);
     }
     /**
      * <code>repeated .stops.Stop stops = 1;</code>
      */
-    public StopsProto.StopOrBuilder getStopsOrBuilder(
-        int index) {
+    public org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder getStopsOrBuilder(
+            int index) {
       return stops_.get(index);
     }
 
@@ -2299,7 +2595,7 @@ public final class StopsProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
+            throws java.io.IOException {
       for (int i = 0; i < stops_.size(); i++) {
         output.writeMessage(1, stops_.get(i));
       }
@@ -2314,7 +2610,7 @@ public final class StopsProto {
       size = 0;
       for (int i = 0; i < stops_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, stops_.get(i));
+                .computeMessageSize(1, stops_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2324,15 +2620,15 @@ public final class StopsProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-       return true;
+        return true;
       }
-      if (!(obj instanceof StopsProto.stopCollection)) {
+      if (!(obj instanceof org.mobilitydata.gtfsproto.StopsProto.stopCollection)) {
         return super.equals(obj);
       }
-      StopsProto.stopCollection other = (StopsProto.stopCollection) obj;
+      org.mobilitydata.gtfsproto.StopsProto.stopCollection other = (org.mobilitydata.gtfsproto.StopsProto.stopCollection) obj;
 
       if (!getStopsList()
-          .equals(other.getStopsList())) return false;
+              .equals(other.getStopsList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -2353,74 +2649,74 @@ public final class StopsProto {
       return hash;
     }
 
-    public static StopsProto.stopCollection parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopsProto.stopCollection parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopsProto.stopCollection parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopsProto.stopCollection parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopsProto.stopCollection parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopsProto.stopCollection parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopsProto.stopCollection parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
-    public static StopsProto.stopCollection parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static StopsProto.stopCollection parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input);
+              .parseDelimitedWithIOException(PARSER, input);
     }
-    public static StopsProto.stopCollection parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static StopsProto.stopCollection parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input);
+              .parseWithIOException(PARSER, input);
     }
-    public static StopsProto.stopCollection parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-          .parseWithIOException(PARSER, input, extensionRegistry);
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
@@ -2428,18 +2724,18 @@ public final class StopsProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(StopsProto.stopCollection prototype) {
+    public static Builder newBuilder(org.mobilitydata.gtfsproto.StopsProto.stopCollection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -2447,20 +2743,20 @@ public final class StopsProto {
      * Protobuf type {@code stops.stopCollection}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:stops.stopCollection)
-        StopsProto.stopCollectionOrBuilder {
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:stops.stopCollection)
+            org.mobilitydata.gtfsproto.StopsProto.stopCollectionOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return StopsProto.internal_static_stops_stopCollection_descriptor;
+      getDescriptor() {
+        return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_stopCollection_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return StopsProto.internal_static_stops_stopCollection_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                StopsProto.stopCollection.class, StopsProto.stopCollection.Builder.class);
+      internalGetFieldAccessorTable() {
+        return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_stopCollection_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        org.mobilitydata.gtfsproto.StopsProto.stopCollection.class, org.mobilitydata.gtfsproto.StopsProto.stopCollection.Builder.class);
       }
 
       // Construct using org.mobilitydata.gtfsproto.StopsProto.stopCollection.newBuilder()
@@ -2469,7 +2765,7 @@ public final class StopsProto {
       }
 
       private Builder(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -2493,18 +2789,18 @@ public final class StopsProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return StopsProto.internal_static_stops_stopCollection_descriptor;
+      getDescriptorForType() {
+        return org.mobilitydata.gtfsproto.StopsProto.internal_static_stops_stopCollection_descriptor;
       }
 
       @java.lang.Override
-      public StopsProto.stopCollection getDefaultInstanceForType() {
-        return StopsProto.stopCollection.getDefaultInstance();
+      public org.mobilitydata.gtfsproto.StopsProto.stopCollection getDefaultInstanceForType() {
+        return org.mobilitydata.gtfsproto.StopsProto.stopCollection.getDefaultInstance();
       }
 
       @java.lang.Override
-      public StopsProto.stopCollection build() {
-        StopsProto.stopCollection result = buildPartial();
+      public org.mobilitydata.gtfsproto.StopsProto.stopCollection build() {
+        org.mobilitydata.gtfsproto.StopsProto.stopCollection result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2512,8 +2808,8 @@ public final class StopsProto {
       }
 
       @java.lang.Override
-      public StopsProto.stopCollection buildPartial() {
-        StopsProto.stopCollection result = new StopsProto.stopCollection(this);
+      public org.mobilitydata.gtfsproto.StopsProto.stopCollection buildPartial() {
+        org.mobilitydata.gtfsproto.StopsProto.stopCollection result = new org.mobilitydata.gtfsproto.StopsProto.stopCollection(this);
         int from_bitField0_ = bitField0_;
         if (stopsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
@@ -2534,44 +2830,44 @@ public final class StopsProto {
       }
       @java.lang.Override
       public Builder setField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              java.lang.Object value) {
         return super.setField(field, value);
       }
       @java.lang.Override
       public Builder clearField(
-          com.google.protobuf.Descriptors.FieldDescriptor field) {
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
       @java.lang.Override
       public Builder clearOneof(
-          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
       @java.lang.Override
       public Builder setRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          int index, java.lang.Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
       @java.lang.Override
       public Builder addRepeatedField(
-          com.google.protobuf.Descriptors.FieldDescriptor field,
-          java.lang.Object value) {
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof StopsProto.stopCollection) {
-          return mergeFrom((StopsProto.stopCollection)other);
+        if (other instanceof org.mobilitydata.gtfsproto.StopsProto.stopCollection) {
+          return mergeFrom((org.mobilitydata.gtfsproto.StopsProto.stopCollection)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(StopsProto.stopCollection other) {
-        if (other == StopsProto.stopCollection.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.mobilitydata.gtfsproto.StopsProto.stopCollection other) {
+        if (other == org.mobilitydata.gtfsproto.StopsProto.stopCollection.getDefaultInstance()) return this;
         if (stopsBuilder_ == null) {
           if (!other.stops_.isEmpty()) {
             if (stops_.isEmpty()) {
@@ -2590,9 +2886,9 @@ public final class StopsProto {
               stopsBuilder_ = null;
               stops_ = other.stops_;
               bitField0_ = (bitField0_ & ~0x00000001);
-              stopsBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getStopsFieldBuilder() : null;
+              stopsBuilder_ =
+                      com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                              getStopsFieldBuilder() : null;
             } else {
               stopsBuilder_.addAllMessages(other.stops_);
             }
@@ -2610,14 +2906,14 @@ public final class StopsProto {
 
       @java.lang.Override
       public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        StopsProto.stopCollection parsedMessage = null;
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+        org.mobilitydata.gtfsproto.StopsProto.stopCollection parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StopsProto.stopCollection) e.getUnfinishedMessage();
+          parsedMessage = (org.mobilitydata.gtfsproto.StopsProto.stopCollection) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2628,22 +2924,22 @@ public final class StopsProto {
       }
       private int bitField0_;
 
-      private java.util.List<StopsProto.Stop> stops_ =
-        java.util.Collections.emptyList();
+      private java.util.List<org.mobilitydata.gtfsproto.StopsProto.Stop> stops_ =
+              java.util.Collections.emptyList();
       private void ensureStopsIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          stops_ = new java.util.ArrayList<StopsProto.Stop>(stops_);
+          stops_ = new java.util.ArrayList<org.mobilitydata.gtfsproto.StopsProto.Stop>(stops_);
           bitField0_ |= 0x00000001;
-         }
+        }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          StopsProto.Stop, StopsProto.Stop.Builder, StopsProto.StopOrBuilder> stopsBuilder_;
+              org.mobilitydata.gtfsproto.StopsProto.Stop, org.mobilitydata.gtfsproto.StopsProto.Stop.Builder, org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder> stopsBuilder_;
 
       /**
        * <code>repeated .stops.Stop stops = 1;</code>
        */
-      public java.util.List<StopsProto.Stop> getStopsList() {
+      public java.util.List<org.mobilitydata.gtfsproto.StopsProto.Stop> getStopsList() {
         if (stopsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(stops_);
         } else {
@@ -2663,7 +2959,7 @@ public final class StopsProto {
       /**
        * <code>repeated .stops.Stop stops = 1;</code>
        */
-      public StopsProto.Stop getStops(int index) {
+      public org.mobilitydata.gtfsproto.StopsProto.Stop getStops(int index) {
         if (stopsBuilder_ == null) {
           return stops_.get(index);
         } else {
@@ -2674,7 +2970,7 @@ public final class StopsProto {
        * <code>repeated .stops.Stop stops = 1;</code>
        */
       public Builder setStops(
-          int index, StopsProto.Stop value) {
+              int index, org.mobilitydata.gtfsproto.StopsProto.Stop value) {
         if (stopsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2691,7 +2987,7 @@ public final class StopsProto {
        * <code>repeated .stops.Stop stops = 1;</code>
        */
       public Builder setStops(
-          int index, StopsProto.Stop.Builder builderForValue) {
+              int index, org.mobilitydata.gtfsproto.StopsProto.Stop.Builder builderForValue) {
         if (stopsBuilder_ == null) {
           ensureStopsIsMutable();
           stops_.set(index, builderForValue.build());
@@ -2704,7 +3000,7 @@ public final class StopsProto {
       /**
        * <code>repeated .stops.Stop stops = 1;</code>
        */
-      public Builder addStops(StopsProto.Stop value) {
+      public Builder addStops(org.mobilitydata.gtfsproto.StopsProto.Stop value) {
         if (stopsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2721,7 +3017,7 @@ public final class StopsProto {
        * <code>repeated .stops.Stop stops = 1;</code>
        */
       public Builder addStops(
-          int index, StopsProto.Stop value) {
+              int index, org.mobilitydata.gtfsproto.StopsProto.Stop value) {
         if (stopsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2738,7 +3034,7 @@ public final class StopsProto {
        * <code>repeated .stops.Stop stops = 1;</code>
        */
       public Builder addStops(
-          StopsProto.Stop.Builder builderForValue) {
+              org.mobilitydata.gtfsproto.StopsProto.Stop.Builder builderForValue) {
         if (stopsBuilder_ == null) {
           ensureStopsIsMutable();
           stops_.add(builderForValue.build());
@@ -2752,7 +3048,7 @@ public final class StopsProto {
        * <code>repeated .stops.Stop stops = 1;</code>
        */
       public Builder addStops(
-          int index, StopsProto.Stop.Builder builderForValue) {
+              int index, org.mobilitydata.gtfsproto.StopsProto.Stop.Builder builderForValue) {
         if (stopsBuilder_ == null) {
           ensureStopsIsMutable();
           stops_.add(index, builderForValue.build());
@@ -2766,11 +3062,11 @@ public final class StopsProto {
        * <code>repeated .stops.Stop stops = 1;</code>
        */
       public Builder addAllStops(
-          java.lang.Iterable<? extends StopsProto.Stop> values) {
+              java.lang.Iterable<? extends org.mobilitydata.gtfsproto.StopsProto.Stop> values) {
         if (stopsBuilder_ == null) {
           ensureStopsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, stops_);
+                  values, stops_);
           onChanged();
         } else {
           stopsBuilder_.addAllMessages(values);
@@ -2806,15 +3102,15 @@ public final class StopsProto {
       /**
        * <code>repeated .stops.Stop stops = 1;</code>
        */
-      public StopsProto.Stop.Builder getStopsBuilder(
-          int index) {
+      public org.mobilitydata.gtfsproto.StopsProto.Stop.Builder getStopsBuilder(
+              int index) {
         return getStopsFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .stops.Stop stops = 1;</code>
        */
-      public StopsProto.StopOrBuilder getStopsOrBuilder(
-          int index) {
+      public org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder getStopsOrBuilder(
+              int index) {
         if (stopsBuilder_ == null) {
           return stops_.get(index);  } else {
           return stopsBuilder_.getMessageOrBuilder(index);
@@ -2823,8 +3119,8 @@ public final class StopsProto {
       /**
        * <code>repeated .stops.Stop stops = 1;</code>
        */
-      public java.util.List<? extends StopsProto.StopOrBuilder>
-           getStopsOrBuilderList() {
+      public java.util.List<? extends org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder>
+      getStopsOrBuilderList() {
         if (stopsBuilder_ != null) {
           return stopsBuilder_.getMessageOrBuilderList();
         } else {
@@ -2834,31 +3130,31 @@ public final class StopsProto {
       /**
        * <code>repeated .stops.Stop stops = 1;</code>
        */
-      public StopsProto.Stop.Builder addStopsBuilder() {
+      public org.mobilitydata.gtfsproto.StopsProto.Stop.Builder addStopsBuilder() {
         return getStopsFieldBuilder().addBuilder(
-            StopsProto.Stop.getDefaultInstance());
+                org.mobilitydata.gtfsproto.StopsProto.Stop.getDefaultInstance());
       }
       /**
        * <code>repeated .stops.Stop stops = 1;</code>
        */
-      public StopsProto.Stop.Builder addStopsBuilder(
-          int index) {
+      public org.mobilitydata.gtfsproto.StopsProto.Stop.Builder addStopsBuilder(
+              int index) {
         return getStopsFieldBuilder().addBuilder(
-            index, StopsProto.Stop.getDefaultInstance());
+                index, org.mobilitydata.gtfsproto.StopsProto.Stop.getDefaultInstance());
       }
       /**
        * <code>repeated .stops.Stop stops = 1;</code>
        */
-      public java.util.List<StopsProto.Stop.Builder>
-           getStopsBuilderList() {
+      public java.util.List<org.mobilitydata.gtfsproto.StopsProto.Stop.Builder>
+      getStopsBuilderList() {
         return getStopsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          StopsProto.Stop, StopsProto.Stop.Builder, StopsProto.StopOrBuilder>
-          getStopsFieldBuilder() {
+              org.mobilitydata.gtfsproto.StopsProto.Stop, org.mobilitydata.gtfsproto.StopsProto.Stop.Builder, org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder>
+      getStopsFieldBuilder() {
         if (stopsBuilder_ == null) {
           stopsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              StopsProto.Stop, StopsProto.Stop.Builder, StopsProto.StopOrBuilder>(
+                  org.mobilitydata.gtfsproto.StopsProto.Stop, org.mobilitydata.gtfsproto.StopsProto.Stop.Builder, org.mobilitydata.gtfsproto.StopsProto.StopOrBuilder>(
                   stops_,
                   ((bitField0_ & 0x00000001) != 0),
                   getParentForChildren(),
@@ -2869,13 +3165,13 @@ public final class StopsProto {
       }
       @java.lang.Override
       public final Builder setUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-          final com.google.protobuf.UnknownFieldSet unknownFields) {
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -2884,22 +3180,22 @@ public final class StopsProto {
     }
 
     // @@protoc_insertion_point(class_scope:stops.stopCollection)
-    private static final StopsProto.stopCollection DEFAULT_INSTANCE;
+    private static final org.mobilitydata.gtfsproto.StopsProto.stopCollection DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new StopsProto.stopCollection();
+      DEFAULT_INSTANCE = new org.mobilitydata.gtfsproto.StopsProto.stopCollection();
     }
 
-    public static StopsProto.stopCollection getDefaultInstance() {
+    public static org.mobilitydata.gtfsproto.StopsProto.stopCollection getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
     private static final com.google.protobuf.Parser<stopCollection>
-        PARSER = new com.google.protobuf.AbstractParser<stopCollection>() {
+            PARSER = new com.google.protobuf.AbstractParser<stopCollection>() {
       @java.lang.Override
       public stopCollection parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
         return new stopCollection(input, extensionRegistry);
       }
     };
@@ -2914,65 +3210,65 @@ public final class StopsProto {
     }
 
     @java.lang.Override
-    public StopsProto.stopCollection getDefaultInstanceForType() {
+    public org.mobilitydata.gtfsproto.StopsProto.stopCollection getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_stops_Stop_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_stops_Stop_fieldAccessorTable;
+          internal_static_stops_Stop_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_stops_Stop_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_stops_stopCollection_descriptor;
-  private static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_stops_stopCollection_fieldAccessorTable;
+          internal_static_stops_stopCollection_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_stops_stopCollection_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+  getDescriptor() {
     return descriptor;
   }
   private static  com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
+          descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013stops.proto\022\005stops\032\030google/type/latlng" +
-      ".proto\"\325\003\n\004Stop\022\n\n\002id\030\001 \001(\003\022\014\n\004code\030\002 \001(" +
-      "\t\022\014\n\004name\030\003 \001(\t\022\014\n\004desc\030\004 \001(\t\022$\n\007lat_lng" +
-      "\030\005 \001(\0132\023.google.type.LatLng\022\017\n\007zone_id\030\006" +
-      " \001(\003\022\013\n\003url\030\007 \001(\t\022/\n\rlocation_type\030\010 \001(\016" +
-      "2\030.stops.Stop.LocationType\022\026\n\016parent_sta" +
-      "tion\030\t \001(\003\022\020\n\010timezone\030\n \001(\t\022;\n\023wheelcha" +
-      "ir_boarding\030\013 \001(\0162\036.stops.Stop.Wheelchai" +
-      "rBoarding\022\020\n\010level_id\030\014 \001(\003\022\025\n\rplatform_" +
-      "code\030\r \001(\t\"`\n\014LocationType\022\014\n\010PLATFORM\020\000" +
-      "\022\013\n\007STATION\020\001\022\014\n\010ENTRANCE\020\002\022\010\n\004EXIT\020\002\022\013\n" +
-      "\007GENERIC\020\003\022\014\n\010BOARDING\020\004\032\002\020\001\"0\n\022Wheelcha" +
-      "irBoarding\022\010\n\004ZERO\020\000\022\007\n\003ONE\020\001\022\007\n\003TWO\020\002\"," +
-      "\n\016stopCollection\022\032\n\005stops\030\001 \003(\0132\013.stops." +
-      "StopB\036\n\020org.mobilitydataB\nStopsProtob\006pr" +
-      "oto3"
+            "\n\013stops.proto\022\005stops\032\030google/type/latlng" +
+                    ".proto\"\325\003\n\004Stop\022\n\n\002id\030\001 \001(\t\022\014\n\004code\030\002 \001(" +
+                    "\t\022\014\n\004name\030\003 \001(\t\022\014\n\004desc\030\004 \001(\t\022$\n\007lat_lng" +
+                    "\030\005 \001(\0132\023.google.type.LatLng\022\017\n\007zone_id\030\006" +
+                    " \001(\t\022\013\n\003url\030\007 \001(\t\022/\n\rlocation_type\030\010 \001(\016" +
+                    "2\030.stops.Stop.LocationType\022\026\n\016parent_sta" +
+                    "tion\030\t \001(\t\022\020\n\010timezone\030\n \001(\t\022;\n\023wheelcha" +
+                    "ir_boarding\030\013 \001(\0162\036.stops.Stop.Wheelchai" +
+                    "rBoarding\022\020\n\010level_id\030\014 \001(\t\022\025\n\rplatform_" +
+                    "code\030\r \001(\t\"`\n\014LocationType\022\014\n\010PLATFORM\020\000" +
+                    "\022\013\n\007STATION\020\001\022\014\n\010ENTRANCE\020\002\022\010\n\004EXIT\020\002\022\013\n" +
+                    "\007GENERIC\020\003\022\014\n\010BOARDING\020\004\032\002\020\001\"0\n\022Wheelcha" +
+                    "irBoarding\022\010\n\004ZERO\020\000\022\007\n\003ONE\020\001\022\007\n\003TWO\020\002\"," +
+                    "\n\016stopCollection\022\032\n\005stops\030\001 \003(\0132\013.stops." +
+                    "StopB(\n\032org.mobilitydata.gtfsprotoB\nStop" +
+                    "sProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
-      .internalBuildGeneratedFileFrom(descriptorData,
-        new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.type.LatLngProto.getDescriptor(),
-        });
+            .internalBuildGeneratedFileFrom(descriptorData,
+                    new com.google.protobuf.Descriptors.FileDescriptor[] {
+                            com.google.type.LatLngProto.getDescriptor(),
+                    });
     internal_static_stops_Stop_descriptor =
-      getDescriptor().getMessageTypes().get(0);
+            getDescriptor().getMessageTypes().get(0);
     internal_static_stops_Stop_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_stops_Stop_descriptor,
-        new java.lang.String[] { "Id", "Code", "Name", "Desc", "LatLng", "ZoneId", "Url", "LocationType", "ParentStation", "Timezone", "WheelchairBoarding", "LevelId", "PlatformCode", });
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_stops_Stop_descriptor,
+            new java.lang.String[] { "Id", "Code", "Name", "Desc", "LatLng", "ZoneId", "Url", "LocationType", "ParentStation", "Timezone", "WheelchairBoarding", "LevelId", "PlatformCode", });
     internal_static_stops_stopCollection_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+            getDescriptor().getMessageTypes().get(1);
     internal_static_stops_stopCollection_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_stops_stopCollection_descriptor,
-        new java.lang.String[] { "Stops", });
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_stops_stopCollection_descriptor,
+            new java.lang.String[] { "Stops", });
     com.google.type.LatLngProto.getDescriptor();
   }
 

@@ -5,16 +5,16 @@ package stops;
 // /Users/fabricev/Dev/api-common-protos
 import "google/type/latlng.proto";
 
-option java_package = "org.mobilitydata";
+option java_package = "org.mobilitydata.gtfsproto";
 option java_outer_classname = "StopsProto";
 
 message Stop {
-    int64 id = 1;
+    string id = 1;
     string code = 2;
     string name = 3;
     string desc = 4;
     google.type.LatLng lat_lng = 5;
-    int64 zone_id = 6;
+    string zone_id = 6;
     string url = 7;
 
     enum LocationType {
@@ -28,7 +28,7 @@ message Stop {
     }
     LocationType location_type = 8;
 
-    int64 parent_station = 9;
+    string parent_station = 9;
     string timezone = 10;
 
     enum WheelchairBoarding {
@@ -39,7 +39,7 @@ message Stop {
 
     WheelchairBoarding wheelchair_boarding = 11;
 
-    int64 level_id = 12;
+    string level_id = 12;
     string platform_code = 13;
 }
 
