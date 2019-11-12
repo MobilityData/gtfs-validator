@@ -19,19 +19,34 @@ public final class PathwaysProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 pathway_id = 1;</code>
+     * <code>string pathway_id = 1;</code>
      */
-    long getPathwayId();
+    java.lang.String getPathwayId();
+    /**
+     * <code>string pathway_id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getPathwayIdBytes();
 
     /**
-     * <code>int64 from_stop_id = 2;</code>
+     * <code>string from_stop_id = 2;</code>
      */
-    long getFromStopId();
+    java.lang.String getFromStopId();
+    /**
+     * <code>string from_stop_id = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getFromStopIdBytes();
 
     /**
-     * <code>int64 to_stop_id = 3;</code>
+     * <code>string to_stop_id = 3;</code>
      */
-    long getToStopId();
+    java.lang.String getToStopId();
+    /**
+     * <code>string to_stop_id = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getToStopIdBytes();
 
     /**
      * <code>.pathways.Pathway.PathwayMode pathway_mode = 4;</code>
@@ -91,9 +106,14 @@ public final class PathwaysProto {
         getSignpostedAsBytes();
 
     /**
-     * <code>int64 reversed_signposted_as = 12;</code>
+     * <code>string reversed_signposted_as = 12;</code>
      */
-    long getReversedSignpostedAs();
+    java.lang.String getReversedSignpostedAs();
+    /**
+     * <code>string reversed_signposted_as = 12;</code>
+     */
+    com.google.protobuf.ByteString
+        getReversedSignpostedAsBytes();
   }
   /**
    * Protobuf type {@code pathways.Pathway}
@@ -108,9 +128,13 @@ public final class PathwaysProto {
       super(builder);
     }
     private Pathway() {
+      pathwayId_ = "";
+      fromStopId_ = "";
+      toStopId_ = "";
       pathwayMode_ = 0;
       isBidirectional_ = 0;
       signpostedAs_ = "";
+      reversedSignpostedAs_ = "";
     }
 
     @java.lang.Override
@@ -143,19 +167,22 @@ public final class PathwaysProto {
             case 0:
               done = true;
               break;
-            case 8: {
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              pathwayId_ = input.readInt64();
+              pathwayId_ = s;
               break;
             }
-            case 16: {
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              fromStopId_ = input.readInt64();
+              fromStopId_ = s;
               break;
             }
-            case 24: {
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              toStopId_ = input.readInt64();
+              toStopId_ = s;
               break;
             }
             case 32: {
@@ -201,9 +228,10 @@ public final class PathwaysProto {
               signpostedAs_ = s;
               break;
             }
-            case 96: {
+            case 98: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              reversedSignpostedAs_ = input.readInt64();
+              reversedSignpostedAs_ = s;
               break;
             }
             default: {
@@ -505,30 +533,105 @@ public final class PathwaysProto {
     }
 
     public static final int PATHWAY_ID_FIELD_NUMBER = 1;
-    private long pathwayId_;
+    private volatile java.lang.Object pathwayId_;
     /**
-     * <code>int64 pathway_id = 1;</code>
+     * <code>string pathway_id = 1;</code>
      */
-    public long getPathwayId() {
-      return pathwayId_;
+    public java.lang.String getPathwayId() {
+      java.lang.Object ref = pathwayId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        pathwayId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string pathway_id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPathwayIdBytes() {
+      java.lang.Object ref = pathwayId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        pathwayId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int FROM_STOP_ID_FIELD_NUMBER = 2;
-    private long fromStopId_;
+    private volatile java.lang.Object fromStopId_;
     /**
-     * <code>int64 from_stop_id = 2;</code>
+     * <code>string from_stop_id = 2;</code>
      */
-    public long getFromStopId() {
-      return fromStopId_;
+    public java.lang.String getFromStopId() {
+      java.lang.Object ref = fromStopId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        fromStopId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string from_stop_id = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getFromStopIdBytes() {
+      java.lang.Object ref = fromStopId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fromStopId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int TO_STOP_ID_FIELD_NUMBER = 3;
-    private long toStopId_;
+    private volatile java.lang.Object toStopId_;
     /**
-     * <code>int64 to_stop_id = 3;</code>
+     * <code>string to_stop_id = 3;</code>
      */
-    public long getToStopId() {
-      return toStopId_;
+    public java.lang.String getToStopId() {
+      java.lang.Object ref = toStopId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        toStopId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string to_stop_id = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getToStopIdBytes() {
+      java.lang.Object ref = toStopId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        toStopId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int PATHWAY_MODE_FIELD_NUMBER = 4;
@@ -649,12 +752,37 @@ public final class PathwaysProto {
     }
 
     public static final int REVERSED_SIGNPOSTED_AS_FIELD_NUMBER = 12;
-    private long reversedSignpostedAs_;
+    private volatile java.lang.Object reversedSignpostedAs_;
     /**
-     * <code>int64 reversed_signposted_as = 12;</code>
+     * <code>string reversed_signposted_as = 12;</code>
      */
-    public long getReversedSignpostedAs() {
-      return reversedSignpostedAs_;
+    public java.lang.String getReversedSignpostedAs() {
+      java.lang.Object ref = reversedSignpostedAs_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        reversedSignpostedAs_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string reversed_signposted_as = 12;</code>
+     */
+    public com.google.protobuf.ByteString
+        getReversedSignpostedAsBytes() {
+      java.lang.Object ref = reversedSignpostedAs_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        reversedSignpostedAs_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -671,14 +799,14 @@ public final class PathwaysProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (pathwayId_ != 0L) {
-        output.writeInt64(1, pathwayId_);
+      if (!getPathwayIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, pathwayId_);
       }
-      if (fromStopId_ != 0L) {
-        output.writeInt64(2, fromStopId_);
+      if (!getFromStopIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, fromStopId_);
       }
-      if (toStopId_ != 0L) {
-        output.writeInt64(3, toStopId_);
+      if (!getToStopIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, toStopId_);
       }
       if (pathwayMode_ != PathwaysProto.Pathway.PathwayMode.RESERVED.getNumber()) {
         output.writeEnum(4, pathwayMode_);
@@ -704,8 +832,8 @@ public final class PathwaysProto {
       if (!getSignpostedAsBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 11, signpostedAs_);
       }
-      if (reversedSignpostedAs_ != 0L) {
-        output.writeInt64(12, reversedSignpostedAs_);
+      if (!getReversedSignpostedAsBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 12, reversedSignpostedAs_);
       }
       unknownFields.writeTo(output);
     }
@@ -716,17 +844,14 @@ public final class PathwaysProto {
       if (size != -1) return size;
 
       size = 0;
-      if (pathwayId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(1, pathwayId_);
+      if (!getPathwayIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, pathwayId_);
       }
-      if (fromStopId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(2, fromStopId_);
+      if (!getFromStopIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, fromStopId_);
       }
-      if (toStopId_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(3, toStopId_);
+      if (!getToStopIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, toStopId_);
       }
       if (pathwayMode_ != PathwaysProto.Pathway.PathwayMode.RESERVED.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
@@ -759,9 +884,8 @@ public final class PathwaysProto {
       if (!getSignpostedAsBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(11, signpostedAs_);
       }
-      if (reversedSignpostedAs_ != 0L) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(12, reversedSignpostedAs_);
+      if (!getReversedSignpostedAsBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(12, reversedSignpostedAs_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -778,12 +902,12 @@ public final class PathwaysProto {
       }
       PathwaysProto.Pathway other = (PathwaysProto.Pathway) obj;
 
-      if (getPathwayId()
-          != other.getPathwayId()) return false;
-      if (getFromStopId()
-          != other.getFromStopId()) return false;
-      if (getToStopId()
-          != other.getToStopId()) return false;
+      if (!getPathwayId()
+          .equals(other.getPathwayId())) return false;
+      if (!getFromStopId()
+          .equals(other.getFromStopId())) return false;
+      if (!getToStopId()
+          .equals(other.getToStopId())) return false;
       if (pathwayMode_ != other.pathwayMode_) return false;
       if (isBidirectional_ != other.isBidirectional_) return false;
       if (java.lang.Float.floatToIntBits(getLength())
@@ -801,8 +925,8 @@ public final class PathwaysProto {
               other.getMinWidth())) return false;
       if (!getSignpostedAs()
           .equals(other.getSignpostedAs())) return false;
-      if (getReversedSignpostedAs()
-          != other.getReversedSignpostedAs()) return false;
+      if (!getReversedSignpostedAs()
+          .equals(other.getReversedSignpostedAs())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -815,14 +939,11 @@ public final class PathwaysProto {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + PATHWAY_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getPathwayId());
+      hash = (53 * hash) + getPathwayId().hashCode();
       hash = (37 * hash) + FROM_STOP_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getFromStopId());
+      hash = (53 * hash) + getFromStopId().hashCode();
       hash = (37 * hash) + TO_STOP_ID_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getToStopId());
+      hash = (53 * hash) + getToStopId().hashCode();
       hash = (37 * hash) + PATHWAY_MODE_FIELD_NUMBER;
       hash = (53 * hash) + pathwayMode_;
       hash = (37 * hash) + IS_BIDIRECTIONAL_FIELD_NUMBER;
@@ -843,8 +964,7 @@ public final class PathwaysProto {
       hash = (37 * hash) + SIGNPOSTED_AS_FIELD_NUMBER;
       hash = (53 * hash) + getSignpostedAs().hashCode();
       hash = (37 * hash) + REVERSED_SIGNPOSTED_AS_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getReversedSignpostedAs());
+      hash = (53 * hash) + getReversedSignpostedAs().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -978,11 +1098,11 @@ public final class PathwaysProto {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        pathwayId_ = 0L;
+        pathwayId_ = "";
 
-        fromStopId_ = 0L;
+        fromStopId_ = "";
 
-        toStopId_ = 0L;
+        toStopId_ = "";
 
         pathwayMode_ = 0;
 
@@ -1000,7 +1120,7 @@ public final class PathwaysProto {
 
         signpostedAs_ = "";
 
-        reversedSignpostedAs_ = 0L;
+        reversedSignpostedAs_ = "";
 
         return this;
       }
@@ -1088,14 +1208,17 @@ public final class PathwaysProto {
 
       public Builder mergeFrom(PathwaysProto.Pathway other) {
         if (other == PathwaysProto.Pathway.getDefaultInstance()) return this;
-        if (other.getPathwayId() != 0L) {
-          setPathwayId(other.getPathwayId());
+        if (!other.getPathwayId().isEmpty()) {
+          pathwayId_ = other.pathwayId_;
+          onChanged();
         }
-        if (other.getFromStopId() != 0L) {
-          setFromStopId(other.getFromStopId());
+        if (!other.getFromStopId().isEmpty()) {
+          fromStopId_ = other.fromStopId_;
+          onChanged();
         }
-        if (other.getToStopId() != 0L) {
-          setToStopId(other.getToStopId());
+        if (!other.getToStopId().isEmpty()) {
+          toStopId_ = other.toStopId_;
+          onChanged();
         }
         if (other.pathwayMode_ != 0) {
           setPathwayModeValue(other.getPathwayModeValue());
@@ -1122,8 +1245,9 @@ public final class PathwaysProto {
           signpostedAs_ = other.signpostedAs_;
           onChanged();
         }
-        if (other.getReversedSignpostedAs() != 0L) {
-          setReversedSignpostedAs(other.getReversedSignpostedAs());
+        if (!other.getReversedSignpostedAs().isEmpty()) {
+          reversedSignpostedAs_ = other.reversedSignpostedAs_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1154,80 +1278,209 @@ public final class PathwaysProto {
         return this;
       }
 
-      private long pathwayId_ ;
+      private java.lang.Object pathwayId_ = "";
       /**
-       * <code>int64 pathway_id = 1;</code>
+       * <code>string pathway_id = 1;</code>
        */
-      public long getPathwayId() {
-        return pathwayId_;
+      public java.lang.String getPathwayId() {
+        java.lang.Object ref = pathwayId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          pathwayId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 pathway_id = 1;</code>
+       * <code>string pathway_id = 1;</code>
        */
-      public Builder setPathwayId(long value) {
-        
+      public com.google.protobuf.ByteString
+          getPathwayIdBytes() {
+        java.lang.Object ref = pathwayId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          pathwayId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string pathway_id = 1;</code>
+       */
+      public Builder setPathwayId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
         pathwayId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 pathway_id = 1;</code>
+       * <code>string pathway_id = 1;</code>
        */
       public Builder clearPathwayId() {
         
-        pathwayId_ = 0L;
+        pathwayId_ = getDefaultInstance().getPathwayId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string pathway_id = 1;</code>
+       */
+      public Builder setPathwayIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        pathwayId_ = value;
         onChanged();
         return this;
       }
 
-      private long fromStopId_ ;
+      private java.lang.Object fromStopId_ = "";
       /**
-       * <code>int64 from_stop_id = 2;</code>
+       * <code>string from_stop_id = 2;</code>
        */
-      public long getFromStopId() {
-        return fromStopId_;
+      public java.lang.String getFromStopId() {
+        java.lang.Object ref = fromStopId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          fromStopId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 from_stop_id = 2;</code>
+       * <code>string from_stop_id = 2;</code>
        */
-      public Builder setFromStopId(long value) {
-        
+      public com.google.protobuf.ByteString
+          getFromStopIdBytes() {
+        java.lang.Object ref = fromStopId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          fromStopId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string from_stop_id = 2;</code>
+       */
+      public Builder setFromStopId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
         fromStopId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 from_stop_id = 2;</code>
+       * <code>string from_stop_id = 2;</code>
        */
       public Builder clearFromStopId() {
         
-        fromStopId_ = 0L;
+        fromStopId_ = getDefaultInstance().getFromStopId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string from_stop_id = 2;</code>
+       */
+      public Builder setFromStopIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        fromStopId_ = value;
         onChanged();
         return this;
       }
 
-      private long toStopId_ ;
+      private java.lang.Object toStopId_ = "";
       /**
-       * <code>int64 to_stop_id = 3;</code>
+       * <code>string to_stop_id = 3;</code>
        */
-      public long getToStopId() {
-        return toStopId_;
+      public java.lang.String getToStopId() {
+        java.lang.Object ref = toStopId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          toStopId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 to_stop_id = 3;</code>
+       * <code>string to_stop_id = 3;</code>
        */
-      public Builder setToStopId(long value) {
-        
+      public com.google.protobuf.ByteString
+          getToStopIdBytes() {
+        java.lang.Object ref = toStopId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          toStopId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string to_stop_id = 3;</code>
+       */
+      public Builder setToStopId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
         toStopId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 to_stop_id = 3;</code>
+       * <code>string to_stop_id = 3;</code>
        */
       public Builder clearToStopId() {
         
-        toStopId_ = 0L;
+        toStopId_ = getDefaultInstance().getToStopId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string to_stop_id = 3;</code>
+       */
+      public Builder setToStopIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        toStopId_ = value;
         onChanged();
         return this;
       }
@@ -1533,28 +1786,71 @@ public final class PathwaysProto {
         return this;
       }
 
-      private long reversedSignpostedAs_ ;
+      private java.lang.Object reversedSignpostedAs_ = "";
       /**
-       * <code>int64 reversed_signposted_as = 12;</code>
+       * <code>string reversed_signposted_as = 12;</code>
        */
-      public long getReversedSignpostedAs() {
-        return reversedSignpostedAs_;
+      public java.lang.String getReversedSignpostedAs() {
+        java.lang.Object ref = reversedSignpostedAs_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          reversedSignpostedAs_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>int64 reversed_signposted_as = 12;</code>
+       * <code>string reversed_signposted_as = 12;</code>
        */
-      public Builder setReversedSignpostedAs(long value) {
-        
+      public com.google.protobuf.ByteString
+          getReversedSignpostedAsBytes() {
+        java.lang.Object ref = reversedSignpostedAs_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          reversedSignpostedAs_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string reversed_signposted_as = 12;</code>
+       */
+      public Builder setReversedSignpostedAs(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
         reversedSignpostedAs_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int64 reversed_signposted_as = 12;</code>
+       * <code>string reversed_signposted_as = 12;</code>
        */
       public Builder clearReversedSignpostedAs() {
         
-        reversedSignpostedAs_ = 0L;
+        reversedSignpostedAs_ = getDefaultInstance().getReversedSignpostedAs();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string reversed_signposted_as = 12;</code>
+       */
+      public Builder setReversedSignpostedAsBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        reversedSignpostedAs_ = value;
         onChanged();
         return this;
       }
@@ -2419,15 +2715,15 @@ public final class PathwaysProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\016pathways.proto\022\010pathways\"\215\004\n\007Pathway\022\022" +
-      "\n\npathway_id\030\001 \001(\003\022\024\n\014from_stop_id\030\002 \001(\003" +
-      "\022\022\n\nto_stop_id\030\003 \001(\003\0223\n\014pathway_mode\030\004 \001" +
+      "\n\npathway_id\030\001 \001(\t\022\024\n\014from_stop_id\030\002 \001(\t" +
+      "\022\022\n\nto_stop_id\030\003 \001(\t\0223\n\014pathway_mode\030\004 \001" +
       "(\0162\035.pathways.Pathway.PathwayMode\022;\n\020is_" +
       "bidirectional\030\005 \001(\0162!.pathways.Pathway.I" +
       "sBidirectional\022\016\n\006length\030\006 \001(\002\022\026\n\016traver" +
       "sal_time\030\007 \001(\r\022\023\n\013stair_count\030\010 \001(\005\022\021\n\tm" +
       "ax_slope\030\t \001(\002\022\021\n\tmin_width\030\n \001(\002\022\025\n\rsig" +
       "nposted_as\030\013 \001(\t\022\036\n\026reversed_signposted_" +
-      "as\030\014 \001(\003\"\217\001\n\013PathwayMode\022\014\n\010RESERVED\020\000\022\013" +
+      "as\030\014 \001(\t\"\217\001\n\013PathwayMode\022\014\n\010RESERVED\020\000\022\013" +
       "\n\007WALKWAY\020\001\022\n\n\006STAIRS\020\002\022\036\n\032MOVING_SIDEWA" +
       "LK_TRAVELATOR\020\003\022\r\n\tESCALATOR\020\004\022\014\n\010ELEVAT" +
       "OR\020\005\022\r\n\tFARE_GATE\020\006\022\r\n\tEXIT_GATE\020\007\"&\n\017Is" +
