@@ -1,6 +1,7 @@
 package org.mobilitydata;
 
 import org.mobilitydata.conversion.PathwaysConverter;
+import org.mobilitydata.conversion.StopTimesConverter;
 import org.mobilitydata.conversion.StopsConverter;
 import org.mobilitydata.conversion.TripsConverter;
 
@@ -14,6 +15,7 @@ public class Main {
         StopsConverter.convert();
         PathwaysConverter.convert();
         TripsConverter.convert();
+        StopTimesConverter.convert();
 
         System.out.println("Took " + (System.currentTimeMillis() - timeBeforeMillis) + "ms");
     }
