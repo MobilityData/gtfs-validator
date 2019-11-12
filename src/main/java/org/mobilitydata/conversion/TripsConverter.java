@@ -24,57 +24,57 @@ public class TripsConverter {
                 if(line.contains("trip_id")) //skipping headers - TODO: there must be a better way
                     continue;
 
-                String[] pathway = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+                String[] trip = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 
                 TripsProto.Trip.Builder toAddBuilder = TripsProto.Trip.newBuilder()
-                        .setRouteId(pathway[0])
-                        .setServiceId(pathway[1])
-                        .setTripId(pathway[2]);
+                        .setRouteId(trip[0])
+                        .setServiceId(trip[1])
+                        .setTripId(trip[2]);
 
                 try {
-                    toAddBuilder.setTripHeadsign(pathway[3]);
+                    toAddBuilder.setTripHeadsign(trip[3]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     //e.printStackTrace();
                 }
 
                 try {
-                    toAddBuilder.setTripShortName(pathway[5]);
+                    toAddBuilder.setTripShortName(trip[5]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     //e.printStackTrace();
                 }
 
                 try {
-                    toAddBuilder.setTripShortName(pathway[6]);
+                    toAddBuilder.setTripShortName(trip[6]);
                 } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                     //e.printStackTrace();
                 }
 
                 try {
-                    toAddBuilder.setDirectionIdValue(Integer.parseInt(pathway[7]));
+                    toAddBuilder.setDirectionIdValue(Integer.parseInt(trip[7]));
                 } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                     //e.printStackTrace();
                 }
 
                 try {
-                    toAddBuilder.setBlockId(pathway[8]);
+                    toAddBuilder.setBlockId(trip[8]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     //e.printStackTrace();
                 }
 
                 try {
-                    toAddBuilder.setShapeId(pathway[9]);
+                    toAddBuilder.setShapeId(trip[9]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     //e.printStackTrace();
                 }
 
                 try {
-                    toAddBuilder.setWheelchairAccessibleValue(Integer.parseInt(pathway[10]));
+                    toAddBuilder.setWheelchairAccessibleValue(Integer.parseInt(trip[10]));
                 } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                     toAddBuilder.setWheelchairAccessibleValue(0);
                 }
 
                 try {
-                    toAddBuilder.setBikesAllowedValue(Integer.parseInt(pathway[11]));
+                    toAddBuilder.setBikesAllowedValue(Integer.parseInt(trip[11]));
                 } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
                     toAddBuilder.setBikesAllowedValue(0);
                 }
