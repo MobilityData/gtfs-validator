@@ -1,5 +1,9 @@
 package org.mobilitydata;
 
+/*
+ * Copyright (c) 2019. MobilityData IO. All rights reserved
+ */
+
 import org.mobilitydata.conversion.PathwaysConverter;
 import org.mobilitydata.conversion.StopTimesConverter;
 import org.mobilitydata.conversion.StopsConverter;

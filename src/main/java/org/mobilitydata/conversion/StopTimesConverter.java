@@ -1,5 +1,9 @@
 package org.mobilitydata.conversion;
 
+/*
+ * Copyright (c) 2019. MobilityData IO. All rights reserved
+ */
+
 import org.mobilitydata.gtfsproto.StopTimesProto;
 
 import java.io.BufferedReader;
