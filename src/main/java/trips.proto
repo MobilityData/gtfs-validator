@@ -1,0 +1,35 @@
+syntax = "proto3";
+package trips;
+
+option java_package = "org.mobilitydata.gtfsproto";
+option java_outer_classname = "TripsProto";
+
+message Trip {
+    string route_id = 1;
+    string service_id = 2;
+    string trip_id = 3;
+    string trip_headsign = 4;
+    string trip_short_name = 5;
+
+    enum DirectionId {
+        A_TO_B = 0;
+        B_TO_A = 1;
+    }
+
+    DirectionId direction_id = 6;
+
+    string block_id = 7;
+    string shape_id = 8;
+
+    enum Accessibility {
+        UNKNOWN = 0;
+        TRUE = 1;
+        FALSE = 2;
+    }
+    Accessibility wheelchair_accessible = 9;
+    Accessibility bikes_allowed = 10;
+}
+
+message tripCollection {
+    repeated Trip trips = 1;
+}
