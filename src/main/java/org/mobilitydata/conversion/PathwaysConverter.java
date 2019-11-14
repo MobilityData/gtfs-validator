@@ -20,7 +20,7 @@ public class PathwaysConverter {
         String line;
 
         try {
-            br = new BufferedReader(new FileReader("pathways.txt"));
+            br = new BufferedReader(new FileReader("input/pathways.txt"));
 
             PathwaysProto.pathwayCollection.Builder collectionBuilder = PathwaysProto.pathwayCollection.newBuilder();
 

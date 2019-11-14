@@ -20,7 +20,7 @@ public class TripsConverter {
         String line;
 
         try {
-            br = new BufferedReader(new FileReader("trips.txt"));
+            br = new BufferedReader(new FileReader("input/trips.txt"));
 
             TripsProto.tripCollection.Builder collectionBuilder = TripsProto.tripCollection.newBuilder();
 

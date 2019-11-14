@@ -20,7 +20,7 @@ public class StopsConverter {
         String line;
 
         try {
-            br = new BufferedReader(new FileReader("stops.txt"));
+            br = new BufferedReader(new FileReader("input/stops.txt"));
 
             StopsProto.stopCollection.Builder collectionBuilder = StopsProto.stopCollection.newBuilder();
 

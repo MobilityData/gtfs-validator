@@ -19,7 +19,7 @@ public class StopTimesConverter {
         String line;
 
         try {
-            br = new BufferedReader(new FileReader("stop_times.txt"));
+            br = new BufferedReader(new FileReader("input/stop_times.txt"));
 
             StopTimesProto.stopTimeCollection.Builder collectionBuilder = StopTimesProto.stopTimeCollection.newBuilder();
 
