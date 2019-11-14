@@ -5,29 +5,29 @@ option java_package = "org.mobilitydata.gtfsproto";
 option java_outer_classname = "TripsProto";
 
 message Trip {
-    string route_id = 1;
-    string service_id = 2;
-    string trip_id = 3;
-    string trip_headsign = 4;
-    string trip_short_name = 5;
+    string routeId = 1;
+    string serviceId = 2;
+    string tripId = 3;
+    string tripHeadsign = 4;
+    string tripShortName = 5;
 
     enum DirectionId {
         A_TO_B = 0;
         B_TO_A = 1;
     }
 
-    DirectionId direction_id = 6;
+    DirectionId directionId = 6;
 
-    string block_id = 7;
-    string shape_id = 8;
+    string blockId = 7;
+    string shapeId = 8;
 
     enum Accessibility {
         UNKNOWN = 0;
         TRUE = 1;
         FALSE = 2;
     }
-    Accessibility wheelchair_accessible = 9;
-    Accessibility bikes_allowed = 10;
+    Accessibility wheelchairAccessible = 9;
+    Accessibility bikesAllowed = 10;
 }
 
 message tripCollection {

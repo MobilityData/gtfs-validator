@@ -13,8 +13,8 @@ message Stop {
     string code = 2;
     string name = 3;
     string desc = 4;
-    google.type.LatLng lat_lng = 5;
-    string zone_id = 6;
+    google.type.LatLng latLng = 5;
+    string zoneId = 6;
     string url = 7;
 
     enum LocationType {
@@ -26,9 +26,9 @@ message Stop {
         GENERIC = 3;
         BOARDING = 4;
     }
-    LocationType location_type = 8;
+    LocationType locationType = 8;
 
-    string parent_station = 9;
+    string parentStation = 9;
     string timezone = 10;
 
     enum WheelchairBoarding {
@@ -37,10 +37,10 @@ message Stop {
         TWO = 2;
     }
 
-    WheelchairBoarding wheelchair_boarding = 11;
+    WheelchairBoarding wheelchairBoarding = 11;
 
-    string level_id = 12;
-    string platform_code = 13;
+    string levelId = 12;
+    string platformCode = 13;
 }
 
 message stopCollection {
