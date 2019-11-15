@@ -1,11 +1,11 @@
-package org.mobilitydata;
+package org.mobilitydata.gtfsvalidator;
 
 /*
  * Copyright (c) 2019. MobilityData IO. All rights reserved
  */
 
-import org.mobilitydata.conversion.*;
-import org.mobilitydata.gtfsproto.PathwaysProto;
+import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
+import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package org.mobilitydata;
+package org.mobilitydata.gtfsvalidator;
 
 /*
  * Copyright (c) 2019. MobilityData IO. All rights reserved

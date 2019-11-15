@@ -1,4 +1,4 @@
-package org.mobilitydata.conversion;
+package org.mobilitydata.gtfsvalidator.conversion;
 
 /*
  * Copyright (c) 2019. MobilityData IO. All rights reserved
@@ -7,10 +7,10 @@ package org.mobilitydata.conversion;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import org.mobilitydata.gtfsproto.PathwaysProto;
-import org.mobilitydata.gtfsproto.StopTimesProto;
-import org.mobilitydata.gtfsproto.StopsProto;
-import org.mobilitydata.gtfsproto.TripsProto;
+import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
+import org.mobilitydata.gtfsvalidator.proto.StopTimesProto;
+import org.mobilitydata.gtfsvalidator.proto.StopsProto;
+import org.mobilitydata.gtfsvalidator.proto.TripsProto;
 
 import java.io.File;
 import java.io.FileOutputStream;
