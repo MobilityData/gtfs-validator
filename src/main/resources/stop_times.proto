@@ -1,27 +1,34 @@
 syntax = "proto3";
 package stoptimes;
 
-option java_package = "org.mobilitydata.gtfsproto";
+option java_package = "org.mobilitydata.gtfsvalidator.proto";
 option java_outer_classname = "StopTimesProto";
 
 message StopTime {
-    string tripId = 1;
-    string arrivalTime = 2;
-    string departureTime = 3;
-    string stopId = 4;
-    uint32 stopSequence = 5;
-    string stopHeadsign = 6;
+    string trip_id = 1;
+    string arrival_time = 2;
+    string departure_time = 3;
+    string stop_id = 4;
+    uint32 stop_sequence = 5;
+    string stop_headsign = 6;
 
-    enum PickupDropOffType {
-        REGULAR = 0;
-        NONE = 1;
-        AGENCY = 2;
-        DRIVER = 3;
+    enum PickupType {
+        REGULAR_PICKUP = 0;
+        NO_PICKUP = 1;
+        AGENCY_PICKUP = 2;
+        DRIVER_PICKUP = 3;
     }
-    PickupDropOffType pickupType = 7;
-    PickupDropOffType dropOffType = 8;
+    PickupType pickup_type = 7;
 
-    float shapeDistTraveled = 9;
+    enum DropoffType {
+        REGULAR_DROPOFF = 0;
+        NO_DROPOFF = 1;
+        AGENCY_DROPOFF = 2;
+        DRIVER_DROPOFF = 3;
+    }
+    DropoffType dropOff_type = 8;
+
+    float shape_dist_traveled = 9;
 
     enum TimePrecision {
         APPROXIMATE = 0;
@@ -32,5 +39,5 @@ message StopTime {
 }
 
 message stopTimeCollection {
-    repeated StopTime stopTimes = 1;
+    repeated StopTime stop_times = 1;
 }

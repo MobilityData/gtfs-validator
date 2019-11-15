@@ -5,7 +5,7 @@ package stops;
 // /Users/fabricev/Dev/api-common-protos
 import "google/type/latlng.proto";
 
-option java_package = "org.mobilitydata.gtfsproto";
+option java_package = "org.mobilitydata.gtfsvalidator.proto";
 option java_outer_classname = "StopsProto";
 
 message Stop {
@@ -13,34 +13,32 @@ message Stop {
     string code = 2;
     string name = 3;
     string desc = 4;
-    google.type.LatLng latLng = 5;
-    string zoneId = 6;
+    google.type.LatLng lat_lng = 5;
+    string zone_id = 6;
     string url = 7;
 
     enum LocationType {
-        option allow_alias = true;
-        PLATFORM = 0;
+        STOP_OR_PLATFORM = 0;
         STATION = 1;
-        ENTRANCE = 2;
-        EXIT = 2;
+        ENTRANCE_OR_EXIT = 2;
         GENERIC = 3;
         BOARDING = 4;
     }
-    LocationType locationType = 8;
+    LocationType location_type = 8;
 
-    string parentStation = 9;
+    string parent_station = 9;
     string timezone = 10;
 
     enum WheelchairBoarding {
-        ZERO = 0;
-        ONE = 1;
-        TWO = 2;
+        UNKNOWN = 0;
+        AT_LEAST_ONE = 1;
+        NONE = 2;
     }
 
-    WheelchairBoarding wheelchairBoarding = 11;
+    WheelchairBoarding wheelchair_boarding = 11;
 
-    string levelId = 12;
-    string platformCode = 13;
+    string level_id = 12;
+    string platform_code = 13;
 }
 
 message stopCollection {

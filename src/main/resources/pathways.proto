@@ -1,13 +1,13 @@
 syntax = "proto3";
 package pathways;
 
-option java_package = "org.mobilitydata.gtfsproto";
+option java_package = "org.mobilitydata.gtfsvalidator.proto";
 option java_outer_classname = "PathwaysProto";
 
 message Pathway {
-    string pathwayId = 1;
-    string fromStopId = 2;
-    string toStopId = 3;
+    string pathway_id = 1;
+    string from_stop_id = 2;
+    string to_stop_id = 3;
 
     enum PathwayMode {
         RESERVED = 0; //First enum value must be 0 in proto3
@@ -19,21 +19,21 @@ message Pathway {
         FARE_GATE = 6;
         EXIT_GATE = 7;
     }
-    PathwayMode pathwayMode = 4;
+    PathwayMode pathway_mode = 4;
 
-    enum IsBidirectional {
-        FALSE = 0; //First enum value must be 0 in proto3
-        TRUE = 1;
+    enum Directionality {
+        UNIDIRECTIONAL = 0; //First enum value must be 0 in proto3
+        BIDIRECTIONAL = 1;
     }
-    IsBidirectional is_bidirectional = 5;
+    Directionality is_bidirectional = 5;
 
     float length = 6;
-    uint32 traversalTime = 7;
-    int32 stairCount = 8;
-    float maxSlope = 9;
-    float minWidth = 10; //must be positive
-    string signpostedAs = 11;
-    string reversedSignpostedAs = 12;
+    uint32 traversal_time = 7;
+    int32 stair_count = 8;
+    float max_slope = 9;
+    float min_width = 10; //must be positive
+    string signposted_as = 11;
+    string reversed_signposted_as = 12;
 }
 
 message pathwayCollection {

@@ -78,22 +78,22 @@ public final class StopTimesProto {
         getStopHeadsignBytes();
 
     /**
-     * <code>.stoptimes.StopTime.PickupDropOffType pickup_type = 7;</code>
+     * <code>.stoptimes.StopTime.PickupType pickup_type = 7;</code>
      */
     int getPickupTypeValue();
     /**
-     * <code>.stoptimes.StopTime.PickupDropOffType pickup_type = 7;</code>
+     * <code>.stoptimes.StopTime.PickupType pickup_type = 7;</code>
      */
-    StopTimesProto.StopTime.PickupDropOffType getPickupType();
+    org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType getPickupType();
 
     /**
-     * <code>.stoptimes.StopTime.PickupDropOffType drop_off_type = 8;</code>
+     * <code>.stoptimes.StopTime.DropoffType dropOff_type = 8;</code>
      */
     int getDropOffTypeValue();
     /**
-     * <code>.stoptimes.StopTime.PickupDropOffType drop_off_type = 8;</code>
+     * <code>.stoptimes.StopTime.DropoffType dropOff_type = 8;</code>
      */
-    StopTimesProto.StopTime.PickupDropOffType getDropOffType();
+    org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType getDropOffType();
 
     /**
      * <code>float shape_dist_traveled = 9;</code>
@@ -107,7 +107,7 @@ public final class StopTimesProto {
     /**
      * <code>.stoptimes.StopTime.TimePrecision timepoint = 10;</code>
      */
-    StopTimesProto.StopTime.TimePrecision getTimepoint();
+    org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision getTimepoint();
   }
   /**
    * Protobuf type {@code stoptimes.StopTime}
@@ -241,57 +241,57 @@ public final class StopTimesProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return StopTimesProto.internal_static_stoptimes_StopTime_descriptor;
+      return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_StopTime_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return StopTimesProto.internal_static_stoptimes_StopTime_fieldAccessorTable
+      return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_StopTime_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              StopTimesProto.StopTime.class, StopTimesProto.StopTime.Builder.class);
+              org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.class, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder.class);
     }
 
     /**
-     * Protobuf enum {@code stoptimes.StopTime.PickupDropOffType}
+     * Protobuf enum {@code stoptimes.StopTime.PickupType}
      */
-    public enum PickupDropOffType
+    public enum PickupType
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
-       * <code>REGULAR = 0;</code>
+       * <code>REGULAR_PICKUP = 0;</code>
        */
-      REGULAR(0),
+      REGULAR_PICKUP(0),
       /**
-       * <code>NONE = 1;</code>
+       * <code>NO_PICKUP = 1;</code>
        */
-      NONE(1),
+      NO_PICKUP(1),
       /**
-       * <code>AGENCY = 2;</code>
+       * <code>AGENCY_PICKUP = 2;</code>
        */
-      AGENCY(2),
+      AGENCY_PICKUP(2),
       /**
-       * <code>DRIVER = 3;</code>
+       * <code>DRIVER_PICKUP = 3;</code>
        */
-      DRIVER(3),
+      DRIVER_PICKUP(3),
       UNRECOGNIZED(-1),
       ;
 
       /**
-       * <code>REGULAR = 0;</code>
+       * <code>REGULAR_PICKUP = 0;</code>
        */
-      public static final int REGULAR_VALUE = 0;
+      public static final int REGULAR_PICKUP_VALUE = 0;
       /**
-       * <code>NONE = 1;</code>
+       * <code>NO_PICKUP = 1;</code>
        */
-      public static final int NONE_VALUE = 1;
+      public static final int NO_PICKUP_VALUE = 1;
       /**
-       * <code>AGENCY = 2;</code>
+       * <code>AGENCY_PICKUP = 2;</code>
        */
-      public static final int AGENCY_VALUE = 2;
+      public static final int AGENCY_PICKUP_VALUE = 2;
       /**
-       * <code>DRIVER = 3;</code>
+       * <code>DRIVER_PICKUP = 3;</code>
        */
-      public static final int DRIVER_VALUE = 3;
+      public static final int DRIVER_PICKUP_VALUE = 3;
 
 
       public final int getNumber() {
@@ -306,29 +306,29 @@ public final class StopTimesProto {
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
-      public static PickupDropOffType valueOf(int value) {
+      public static PickupType valueOf(int value) {
         return forNumber(value);
       }
 
-      public static PickupDropOffType forNumber(int value) {
+      public static PickupType forNumber(int value) {
         switch (value) {
-          case 0: return REGULAR;
-          case 1: return NONE;
-          case 2: return AGENCY;
-          case 3: return DRIVER;
+          case 0: return REGULAR_PICKUP;
+          case 1: return NO_PICKUP;
+          case 2: return AGENCY_PICKUP;
+          case 3: return DRIVER_PICKUP;
           default: return null;
         }
       }
 
-      public static com.google.protobuf.Internal.EnumLiteMap<PickupDropOffType>
+      public static com.google.protobuf.Internal.EnumLiteMap<PickupType>
           internalGetValueMap() {
         return internalValueMap;
       }
       private static final com.google.protobuf.Internal.EnumLiteMap<
-          PickupDropOffType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<PickupDropOffType>() {
-              public PickupDropOffType findValueByNumber(int number) {
-                return PickupDropOffType.forNumber(number);
+          PickupType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<PickupType>() {
+              public PickupType findValueByNumber(int number) {
+                return PickupType.forNumber(number);
               }
             };
 
@@ -342,12 +342,12 @@ public final class StopTimesProto {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return StopTimesProto.StopTime.getDescriptor().getEnumTypes().get(0);
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.getDescriptor().getEnumTypes().get(0);
       }
 
-      private static final PickupDropOffType[] VALUES = values();
+      private static final PickupType[] VALUES = values();
 
-      public static PickupDropOffType valueOf(
+      public static PickupType valueOf(
           com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
@@ -361,11 +361,127 @@ public final class StopTimesProto {
 
       private final int value;
 
-      private PickupDropOffType(int value) {
+      private PickupType(int value) {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:stoptimes.StopTime.PickupDropOffType)
+      // @@protoc_insertion_point(enum_scope:stoptimes.StopTime.PickupType)
+    }
+
+    /**
+     * Protobuf enum {@code stoptimes.StopTime.DropoffType}
+     */
+    public enum DropoffType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>REGULAR_DROPOFF = 0;</code>
+       */
+      REGULAR_DROPOFF(0),
+      /**
+       * <code>NO_DROPOFF = 1;</code>
+       */
+      NO_DROPOFF(1),
+      /**
+       * <code>AGENCY_DROPOFF = 2;</code>
+       */
+      AGENCY_DROPOFF(2),
+      /**
+       * <code>DRIVER_DROPOFF = 3;</code>
+       */
+      DRIVER_DROPOFF(3),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <code>REGULAR_DROPOFF = 0;</code>
+       */
+      public static final int REGULAR_DROPOFF_VALUE = 0;
+      /**
+       * <code>NO_DROPOFF = 1;</code>
+       */
+      public static final int NO_DROPOFF_VALUE = 1;
+      /**
+       * <code>AGENCY_DROPOFF = 2;</code>
+       */
+      public static final int AGENCY_DROPOFF_VALUE = 2;
+      /**
+       * <code>DRIVER_DROPOFF = 3;</code>
+       */
+      public static final int DRIVER_DROPOFF_VALUE = 3;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static DropoffType valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static DropoffType forNumber(int value) {
+        switch (value) {
+          case 0: return REGULAR_DROPOFF;
+          case 1: return NO_DROPOFF;
+          case 2: return AGENCY_DROPOFF;
+          case 3: return DRIVER_DROPOFF;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<DropoffType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          DropoffType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<DropoffType>() {
+              public DropoffType findValueByNumber(int number) {
+                return DropoffType.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.getDescriptor().getEnumTypes().get(1);
+      }
+
+      private static final DropoffType[] VALUES = values();
+
+      public static DropoffType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private DropoffType(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:stoptimes.StopTime.DropoffType)
     }
 
     /**
@@ -440,7 +556,7 @@ public final class StopTimesProto {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return StopTimesProto.StopTime.getDescriptor().getEnumTypes().get(1);
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.getDescriptor().getEnumTypes().get(2);
       }
 
       private static final TimePrecision[] VALUES = values();
@@ -648,35 +764,35 @@ public final class StopTimesProto {
     public static final int PICKUP_TYPE_FIELD_NUMBER = 7;
     private int pickupType_;
     /**
-     * <code>.stoptimes.StopTime.PickupDropOffType pickup_type = 7;</code>
+     * <code>.stoptimes.StopTime.PickupType pickup_type = 7;</code>
      */
     public int getPickupTypeValue() {
       return pickupType_;
     }
     /**
-     * <code>.stoptimes.StopTime.PickupDropOffType pickup_type = 7;</code>
+     * <code>.stoptimes.StopTime.PickupType pickup_type = 7;</code>
      */
-    public StopTimesProto.StopTime.PickupDropOffType getPickupType() {
+    public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType getPickupType() {
       @SuppressWarnings("deprecation")
-      StopTimesProto.StopTime.PickupDropOffType result = StopTimesProto.StopTime.PickupDropOffType.valueOf(pickupType_);
-      return result == null ? StopTimesProto.StopTime.PickupDropOffType.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType result = org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType.valueOf(pickupType_);
+      return result == null ? org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType.UNRECOGNIZED : result;
     }
 
-    public static final int DROP_OFF_TYPE_FIELD_NUMBER = 8;
+    public static final int DROPOFF_TYPE_FIELD_NUMBER = 8;
     private int dropOffType_;
     /**
-     * <code>.stoptimes.StopTime.PickupDropOffType drop_off_type = 8;</code>
+     * <code>.stoptimes.StopTime.DropoffType dropOff_type = 8;</code>
      */
     public int getDropOffTypeValue() {
       return dropOffType_;
     }
     /**
-     * <code>.stoptimes.StopTime.PickupDropOffType drop_off_type = 8;</code>
+     * <code>.stoptimes.StopTime.DropoffType dropOff_type = 8;</code>
      */
-    public StopTimesProto.StopTime.PickupDropOffType getDropOffType() {
+    public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType getDropOffType() {
       @SuppressWarnings("deprecation")
-      StopTimesProto.StopTime.PickupDropOffType result = StopTimesProto.StopTime.PickupDropOffType.valueOf(dropOffType_);
-      return result == null ? StopTimesProto.StopTime.PickupDropOffType.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType result = org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType.valueOf(dropOffType_);
+      return result == null ? org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType.UNRECOGNIZED : result;
     }
 
     public static final int SHAPE_DIST_TRAVELED_FIELD_NUMBER = 9;
@@ -699,10 +815,10 @@ public final class StopTimesProto {
     /**
      * <code>.stoptimes.StopTime.TimePrecision timepoint = 10;</code>
      */
-    public StopTimesProto.StopTime.TimePrecision getTimepoint() {
+    public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision getTimepoint() {
       @SuppressWarnings("deprecation")
-      StopTimesProto.StopTime.TimePrecision result = StopTimesProto.StopTime.TimePrecision.valueOf(timepoint_);
-      return result == null ? StopTimesProto.StopTime.TimePrecision.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision result = org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision.valueOf(timepoint_);
+      return result == null ? org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -737,16 +853,16 @@ public final class StopTimesProto {
       if (!getStopHeadsignBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, stopHeadsign_);
       }
-      if (pickupType_ != StopTimesProto.StopTime.PickupDropOffType.REGULAR.getNumber()) {
+      if (pickupType_ != org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType.REGULAR_PICKUP.getNumber()) {
         output.writeEnum(7, pickupType_);
       }
-      if (dropOffType_ != StopTimesProto.StopTime.PickupDropOffType.REGULAR.getNumber()) {
+      if (dropOffType_ != org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType.REGULAR_DROPOFF.getNumber()) {
         output.writeEnum(8, dropOffType_);
       }
       if (shapeDistTraveled_ != 0F) {
         output.writeFloat(9, shapeDistTraveled_);
       }
-      if (timepoint_ != StopTimesProto.StopTime.TimePrecision.APPROXIMATE.getNumber()) {
+      if (timepoint_ != org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision.APPROXIMATE.getNumber()) {
         output.writeEnum(10, timepoint_);
       }
       unknownFields.writeTo(output);
@@ -777,11 +893,11 @@ public final class StopTimesProto {
       if (!getStopHeadsignBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, stopHeadsign_);
       }
-      if (pickupType_ != StopTimesProto.StopTime.PickupDropOffType.REGULAR.getNumber()) {
+      if (pickupType_ != org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType.REGULAR_PICKUP.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(7, pickupType_);
       }
-      if (dropOffType_ != StopTimesProto.StopTime.PickupDropOffType.REGULAR.getNumber()) {
+      if (dropOffType_ != org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType.REGULAR_DROPOFF.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(8, dropOffType_);
       }
@@ -789,7 +905,7 @@ public final class StopTimesProto {
         size += com.google.protobuf.CodedOutputStream
           .computeFloatSize(9, shapeDistTraveled_);
       }
-      if (timepoint_ != StopTimesProto.StopTime.TimePrecision.APPROXIMATE.getNumber()) {
+      if (timepoint_ != org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision.APPROXIMATE.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(10, timepoint_);
       }
@@ -803,10 +919,10 @@ public final class StopTimesProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof StopTimesProto.StopTime)) {
+      if (!(obj instanceof org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime)) {
         return super.equals(obj);
       }
-      StopTimesProto.StopTime other = (StopTimesProto.StopTime) obj;
+      org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime other = (org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime) obj;
 
       if (!getTripId()
           .equals(other.getTripId())) return false;
@@ -851,7 +967,7 @@ public final class StopTimesProto {
       hash = (53 * hash) + getStopHeadsign().hashCode();
       hash = (37 * hash) + PICKUP_TYPE_FIELD_NUMBER;
       hash = (53 * hash) + pickupType_;
-      hash = (37 * hash) + DROP_OFF_TYPE_FIELD_NUMBER;
+      hash = (37 * hash) + DROPOFF_TYPE_FIELD_NUMBER;
       hash = (53 * hash) + dropOffType_;
       hash = (37 * hash) + SHAPE_DIST_TRAVELED_FIELD_NUMBER;
       hash = (53 * hash) + java.lang.Float.floatToIntBits(
@@ -863,69 +979,69 @@ public final class StopTimesProto {
       return hash;
     }
 
-    public static StopTimesProto.StopTime parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopTimesProto.StopTime parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopTimesProto.StopTime parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopTimesProto.StopTime parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopTimesProto.StopTime parseFrom(byte[] data)
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopTimesProto.StopTime parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopTimesProto.StopTime parseFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static StopTimesProto.StopTime parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static StopTimesProto.StopTime parseDelimitedFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static StopTimesProto.StopTime parseDelimitedFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static StopTimesProto.StopTime parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static StopTimesProto.StopTime parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -938,7 +1054,7 @@ public final class StopTimesProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(StopTimesProto.StopTime prototype) {
+    public static Builder newBuilder(org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -959,21 +1075,21 @@ public final class StopTimesProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:stoptimes.StopTime)
-        StopTimesProto.StopTimeOrBuilder {
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return StopTimesProto.internal_static_stoptimes_StopTime_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_StopTime_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return StopTimesProto.internal_static_stoptimes_StopTime_fieldAccessorTable
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_StopTime_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                StopTimesProto.StopTime.class, StopTimesProto.StopTime.Builder.class);
+                org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.class, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder.class);
       }
 
-      // Construct using org.mobilitydata.gtfsproto.StopTimesProto.StopTime.newBuilder()
+      // Construct using org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1017,17 +1133,17 @@ public final class StopTimesProto {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return StopTimesProto.internal_static_stoptimes_StopTime_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_StopTime_descriptor;
       }
 
       @java.lang.Override
-      public StopTimesProto.StopTime getDefaultInstanceForType() {
-        return StopTimesProto.StopTime.getDefaultInstance();
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime getDefaultInstanceForType() {
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.getDefaultInstance();
       }
 
       @java.lang.Override
-      public StopTimesProto.StopTime build() {
-        StopTimesProto.StopTime result = buildPartial();
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime build() {
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -1035,8 +1151,8 @@ public final class StopTimesProto {
       }
 
       @java.lang.Override
-      public StopTimesProto.StopTime buildPartial() {
-        StopTimesProto.StopTime result = new StopTimesProto.StopTime(this);
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime buildPartial() {
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime result = new org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime(this);
         result.tripId_ = tripId_;
         result.arrivalTime_ = arrivalTime_;
         result.departureTime_ = departureTime_;
@@ -1085,16 +1201,16 @@ public final class StopTimesProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof StopTimesProto.StopTime) {
-          return mergeFrom((StopTimesProto.StopTime)other);
+        if (other instanceof org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime) {
+          return mergeFrom((org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(StopTimesProto.StopTime other) {
-        if (other == StopTimesProto.StopTime.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime other) {
+        if (other == org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.getDefaultInstance()) return this;
         if (!other.getTripId().isEmpty()) {
           tripId_ = other.tripId_;
           onChanged();
@@ -1145,11 +1261,11 @@ public final class StopTimesProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StopTimesProto.StopTime parsedMessage = null;
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StopTimesProto.StopTime) e.getUnfinishedMessage();
+          parsedMessage = (org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1532,13 +1648,13 @@ public final class StopTimesProto {
 
       private int pickupType_ = 0;
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType pickup_type = 7;</code>
+       * <code>.stoptimes.StopTime.PickupType pickup_type = 7;</code>
        */
       public int getPickupTypeValue() {
         return pickupType_;
       }
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType pickup_type = 7;</code>
+       * <code>.stoptimes.StopTime.PickupType pickup_type = 7;</code>
        */
       public Builder setPickupTypeValue(int value) {
         pickupType_ = value;
@@ -1546,17 +1662,17 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType pickup_type = 7;</code>
+       * <code>.stoptimes.StopTime.PickupType pickup_type = 7;</code>
        */
-      public StopTimesProto.StopTime.PickupDropOffType getPickupType() {
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType getPickupType() {
         @SuppressWarnings("deprecation")
-        StopTimesProto.StopTime.PickupDropOffType result = StopTimesProto.StopTime.PickupDropOffType.valueOf(pickupType_);
-        return result == null ? StopTimesProto.StopTime.PickupDropOffType.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType result = org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType.valueOf(pickupType_);
+        return result == null ? org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType.UNRECOGNIZED : result;
       }
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType pickup_type = 7;</code>
+       * <code>.stoptimes.StopTime.PickupType pickup_type = 7;</code>
        */
-      public Builder setPickupType(StopTimesProto.StopTime.PickupDropOffType value) {
+      public Builder setPickupType(org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.PickupType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1566,7 +1682,7 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType pickup_type = 7;</code>
+       * <code>.stoptimes.StopTime.PickupType pickup_type = 7;</code>
        */
       public Builder clearPickupType() {
         
@@ -1577,13 +1693,13 @@ public final class StopTimesProto {
 
       private int dropOffType_ = 0;
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType drop_off_type = 8;</code>
+       * <code>.stoptimes.StopTime.DropoffType dropOff_type = 8;</code>
        */
       public int getDropOffTypeValue() {
         return dropOffType_;
       }
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType drop_off_type = 8;</code>
+       * <code>.stoptimes.StopTime.DropoffType dropOff_type = 8;</code>
        */
       public Builder setDropOffTypeValue(int value) {
         dropOffType_ = value;
@@ -1591,17 +1707,17 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType drop_off_type = 8;</code>
+       * <code>.stoptimes.StopTime.DropoffType dropOff_type = 8;</code>
        */
-      public StopTimesProto.StopTime.PickupDropOffType getDropOffType() {
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType getDropOffType() {
         @SuppressWarnings("deprecation")
-        StopTimesProto.StopTime.PickupDropOffType result = StopTimesProto.StopTime.PickupDropOffType.valueOf(dropOffType_);
-        return result == null ? StopTimesProto.StopTime.PickupDropOffType.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType result = org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType.valueOf(dropOffType_);
+        return result == null ? org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType.UNRECOGNIZED : result;
       }
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType drop_off_type = 8;</code>
+       * <code>.stoptimes.StopTime.DropoffType dropOff_type = 8;</code>
        */
-      public Builder setDropOffType(StopTimesProto.StopTime.PickupDropOffType value) {
+      public Builder setDropOffType(org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.DropoffType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1611,7 +1727,7 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>.stoptimes.StopTime.PickupDropOffType drop_off_type = 8;</code>
+       * <code>.stoptimes.StopTime.DropoffType dropOff_type = 8;</code>
        */
       public Builder clearDropOffType() {
         
@@ -1664,15 +1780,15 @@ public final class StopTimesProto {
       /**
        * <code>.stoptimes.StopTime.TimePrecision timepoint = 10;</code>
        */
-      public StopTimesProto.StopTime.TimePrecision getTimepoint() {
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision getTimepoint() {
         @SuppressWarnings("deprecation")
-        StopTimesProto.StopTime.TimePrecision result = StopTimesProto.StopTime.TimePrecision.valueOf(timepoint_);
-        return result == null ? StopTimesProto.StopTime.TimePrecision.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision result = org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision.valueOf(timepoint_);
+        return result == null ? org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision.UNRECOGNIZED : result;
       }
       /**
        * <code>.stoptimes.StopTime.TimePrecision timepoint = 10;</code>
        */
-      public Builder setTimepoint(StopTimesProto.StopTime.TimePrecision value) {
+      public Builder setTimepoint(org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.TimePrecision value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1707,12 +1823,12 @@ public final class StopTimesProto {
     }
 
     // @@protoc_insertion_point(class_scope:stoptimes.StopTime)
-    private static final StopTimesProto.StopTime DEFAULT_INSTANCE;
+    private static final org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new StopTimesProto.StopTime();
+      DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime();
     }
 
-    public static StopTimesProto.StopTime getDefaultInstance() {
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1737,7 +1853,7 @@ public final class StopTimesProto {
     }
 
     @java.lang.Override
-    public StopTimesProto.StopTime getDefaultInstanceForType() {
+    public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1748,27 +1864,27 @@ public final class StopTimesProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
-    java.util.List<StopTimesProto.StopTime>
+    java.util.List<org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime> 
         getStopTimesList();
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
-    StopTimesProto.StopTime getStopTimes(int index);
+    org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime getStopTimes(int index);
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
     int getStopTimesCount();
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
-    java.util.List<? extends StopTimesProto.StopTimeOrBuilder>
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder> 
         getStopTimesOrBuilderList();
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
-    StopTimesProto.StopTimeOrBuilder getStopTimesOrBuilder(
+    org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder getStopTimesOrBuilder(
         int index);
   }
   /**
@@ -1820,11 +1936,11 @@ public final class StopTimesProto {
               break;
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                stopTimes_ = new java.util.ArrayList<StopTimesProto.StopTime>();
+                stopTimes_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime>();
                 mutable_bitField0_ |= 0x00000001;
               }
               stopTimes_.add(
-                  input.readMessage(StopTimesProto.StopTime.parser(), extensionRegistry));
+                  input.readMessage(org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.parser(), extensionRegistry));
               break;
             }
             default: {
@@ -1851,48 +1967,48 @@ public final class StopTimesProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return StopTimesProto.internal_static_stoptimes_stopTimeCollection_descriptor;
+      return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_stopTimeCollection_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return StopTimesProto.internal_static_stoptimes_stopTimeCollection_fieldAccessorTable
+      return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_stopTimeCollection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              StopTimesProto.stopTimeCollection.class, StopTimesProto.stopTimeCollection.Builder.class);
+              org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection.class, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection.Builder.class);
     }
 
-    public static final int STOPTIMES_FIELD_NUMBER = 1;
-    private java.util.List<StopTimesProto.StopTime> stopTimes_;
+    public static final int STOP_TIMES_FIELD_NUMBER = 1;
+    private java.util.List<org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime> stopTimes_;
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
-    public java.util.List<StopTimesProto.StopTime> getStopTimesList() {
+    public java.util.List<org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime> getStopTimesList() {
       return stopTimes_;
     }
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
-    public java.util.List<? extends StopTimesProto.StopTimeOrBuilder>
+    public java.util.List<? extends org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder> 
         getStopTimesOrBuilderList() {
       return stopTimes_;
     }
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
     public int getStopTimesCount() {
       return stopTimes_.size();
     }
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
-    public StopTimesProto.StopTime getStopTimes(int index) {
+    public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime getStopTimes(int index) {
       return stopTimes_.get(index);
     }
     /**
-     * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+     * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
      */
-    public StopTimesProto.StopTimeOrBuilder getStopTimesOrBuilder(
+    public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder getStopTimesOrBuilder(
         int index) {
       return stopTimes_.get(index);
     }
@@ -1937,10 +2053,10 @@ public final class StopTimesProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof StopTimesProto.stopTimeCollection)) {
+      if (!(obj instanceof org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection)) {
         return super.equals(obj);
       }
-      StopTimesProto.stopTimeCollection other = (StopTimesProto.stopTimeCollection) obj;
+      org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection other = (org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection) obj;
 
       if (!getStopTimesList()
           .equals(other.getStopTimesList())) return false;
@@ -1956,7 +2072,7 @@ public final class StopTimesProto {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       if (getStopTimesCount() > 0) {
-        hash = (37 * hash) + STOPTIMES_FIELD_NUMBER;
+        hash = (37 * hash) + STOP_TIMES_FIELD_NUMBER;
         hash = (53 * hash) + getStopTimesList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
@@ -1964,69 +2080,69 @@ public final class StopTimesProto {
       return hash;
     }
 
-    public static StopTimesProto.stopTimeCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopTimesProto.stopTimeCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopTimesProto.stopTimeCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopTimesProto.stopTimeCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopTimesProto.stopTimeCollection parseFrom(byte[] data)
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StopTimesProto.stopTimeCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StopTimesProto.stopTimeCollection parseFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static StopTimesProto.stopTimeCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static StopTimesProto.stopTimeCollection parseDelimitedFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static StopTimesProto.stopTimeCollection parseDelimitedFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static StopTimesProto.stopTimeCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static StopTimesProto.stopTimeCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2039,7 +2155,7 @@ public final class StopTimesProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(StopTimesProto.stopTimeCollection prototype) {
+    public static Builder newBuilder(org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -2060,21 +2176,21 @@ public final class StopTimesProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:stoptimes.stopTimeCollection)
-        StopTimesProto.stopTimeCollectionOrBuilder {
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollectionOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return StopTimesProto.internal_static_stoptimes_stopTimeCollection_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_stopTimeCollection_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return StopTimesProto.internal_static_stoptimes_stopTimeCollection_fieldAccessorTable
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_stopTimeCollection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                StopTimesProto.stopTimeCollection.class, StopTimesProto.stopTimeCollection.Builder.class);
+                org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection.class, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection.Builder.class);
       }
 
-      // Construct using org.mobilitydata.gtfsproto.StopTimesProto.stopTimeCollection.newBuilder()
+      // Construct using org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2105,17 +2221,17 @@ public final class StopTimesProto {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return StopTimesProto.internal_static_stoptimes_stopTimeCollection_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.internal_static_stoptimes_stopTimeCollection_descriptor;
       }
 
       @java.lang.Override
-      public StopTimesProto.stopTimeCollection getDefaultInstanceForType() {
-        return StopTimesProto.stopTimeCollection.getDefaultInstance();
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection getDefaultInstanceForType() {
+        return org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection.getDefaultInstance();
       }
 
       @java.lang.Override
-      public StopTimesProto.stopTimeCollection build() {
-        StopTimesProto.stopTimeCollection result = buildPartial();
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection build() {
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2123,8 +2239,8 @@ public final class StopTimesProto {
       }
 
       @java.lang.Override
-      public StopTimesProto.stopTimeCollection buildPartial() {
-        StopTimesProto.stopTimeCollection result = new StopTimesProto.stopTimeCollection(this);
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection buildPartial() {
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection result = new org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection(this);
         int from_bitField0_ = bitField0_;
         if (stopTimesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
@@ -2173,16 +2289,16 @@ public final class StopTimesProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof StopTimesProto.stopTimeCollection) {
-          return mergeFrom((StopTimesProto.stopTimeCollection)other);
+        if (other instanceof org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection) {
+          return mergeFrom((org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(StopTimesProto.stopTimeCollection other) {
-        if (other == StopTimesProto.stopTimeCollection.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection other) {
+        if (other == org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection.getDefaultInstance()) return this;
         if (stopTimesBuilder_ == null) {
           if (!other.stopTimes_.isEmpty()) {
             if (stopTimes_.isEmpty()) {
@@ -2224,11 +2340,11 @@ public final class StopTimesProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StopTimesProto.stopTimeCollection parsedMessage = null;
+        org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StopTimesProto.stopTimeCollection) e.getUnfinishedMessage();
+          parsedMessage = (org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2239,22 +2355,22 @@ public final class StopTimesProto {
       }
       private int bitField0_;
 
-      private java.util.List<StopTimesProto.StopTime> stopTimes_ =
+      private java.util.List<org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime> stopTimes_ =
         java.util.Collections.emptyList();
       private void ensureStopTimesIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          stopTimes_ = new java.util.ArrayList<StopTimesProto.StopTime>(stopTimes_);
+          stopTimes_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime>(stopTimes_);
           bitField0_ |= 0x00000001;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          StopTimesProto.StopTime, StopTimesProto.StopTime.Builder, StopTimesProto.StopTimeOrBuilder> stopTimesBuilder_;
+          org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder> stopTimesBuilder_;
 
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
-      public java.util.List<StopTimesProto.StopTime> getStopTimesList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime> getStopTimesList() {
         if (stopTimesBuilder_ == null) {
           return java.util.Collections.unmodifiableList(stopTimes_);
         } else {
@@ -2262,7 +2378,7 @@ public final class StopTimesProto {
         }
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
       public int getStopTimesCount() {
         if (stopTimesBuilder_ == null) {
@@ -2272,9 +2388,9 @@ public final class StopTimesProto {
         }
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
-      public StopTimesProto.StopTime getStopTimes(int index) {
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime getStopTimes(int index) {
         if (stopTimesBuilder_ == null) {
           return stopTimes_.get(index);
         } else {
@@ -2282,10 +2398,10 @@ public final class StopTimesProto {
         }
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
       public Builder setStopTimes(
-          int index, StopTimesProto.StopTime value) {
+          int index, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime value) {
         if (stopTimesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2299,10 +2415,10 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
       public Builder setStopTimes(
-          int index, StopTimesProto.StopTime.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder builderForValue) {
         if (stopTimesBuilder_ == null) {
           ensureStopTimesIsMutable();
           stopTimes_.set(index, builderForValue.build());
@@ -2313,9 +2429,9 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
-      public Builder addStopTimes(StopTimesProto.StopTime value) {
+      public Builder addStopTimes(org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime value) {
         if (stopTimesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2329,10 +2445,10 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
       public Builder addStopTimes(
-          int index, StopTimesProto.StopTime value) {
+          int index, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime value) {
         if (stopTimesBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2346,10 +2462,10 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
       public Builder addStopTimes(
-          StopTimesProto.StopTime.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder builderForValue) {
         if (stopTimesBuilder_ == null) {
           ensureStopTimesIsMutable();
           stopTimes_.add(builderForValue.build());
@@ -2360,10 +2476,10 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
       public Builder addStopTimes(
-          int index, StopTimesProto.StopTime.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder builderForValue) {
         if (stopTimesBuilder_ == null) {
           ensureStopTimesIsMutable();
           stopTimes_.add(index, builderForValue.build());
@@ -2374,10 +2490,10 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
       public Builder addAllStopTimes(
-          java.lang.Iterable<? extends StopTimesProto.StopTime> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime> values) {
         if (stopTimesBuilder_ == null) {
           ensureStopTimesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -2389,7 +2505,7 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
       public Builder clearStopTimes() {
         if (stopTimesBuilder_ == null) {
@@ -2402,7 +2518,7 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
       public Builder removeStopTimes(int index) {
         if (stopTimesBuilder_ == null) {
@@ -2415,16 +2531,16 @@ public final class StopTimesProto {
         return this;
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
-      public StopTimesProto.StopTime.Builder getStopTimesBuilder(
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder getStopTimesBuilder(
           int index) {
         return getStopTimesFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
-      public StopTimesProto.StopTimeOrBuilder getStopTimesOrBuilder(
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder getStopTimesOrBuilder(
           int index) {
         if (stopTimesBuilder_ == null) {
           return stopTimes_.get(index);  } else {
@@ -2432,9 +2548,9 @@ public final class StopTimesProto {
         }
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
-      public java.util.List<? extends StopTimesProto.StopTimeOrBuilder>
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder> 
            getStopTimesOrBuilderList() {
         if (stopTimesBuilder_ != null) {
           return stopTimesBuilder_.getMessageOrBuilderList();
@@ -2443,33 +2559,33 @@ public final class StopTimesProto {
         }
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
-      public StopTimesProto.StopTime.Builder addStopTimesBuilder() {
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder addStopTimesBuilder() {
         return getStopTimesFieldBuilder().addBuilder(
-            StopTimesProto.StopTime.getDefaultInstance());
+            org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.getDefaultInstance());
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
-      public StopTimesProto.StopTime.Builder addStopTimesBuilder(
+      public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder addStopTimesBuilder(
           int index) {
         return getStopTimesFieldBuilder().addBuilder(
-            index, StopTimesProto.StopTime.getDefaultInstance());
+            index, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.getDefaultInstance());
       }
       /**
-       * <code>repeated .stoptimes.StopTime stopTimes = 1;</code>
+       * <code>repeated .stoptimes.StopTime stop_times = 1;</code>
        */
-      public java.util.List<StopTimesProto.StopTime.Builder>
+      public java.util.List<org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder> 
            getStopTimesBuilderList() {
         return getStopTimesFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          StopTimesProto.StopTime, StopTimesProto.StopTime.Builder, StopTimesProto.StopTimeOrBuilder>
+          org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder> 
           getStopTimesFieldBuilder() {
         if (stopTimesBuilder_ == null) {
           stopTimesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              StopTimesProto.StopTime, StopTimesProto.StopTime.Builder, StopTimesProto.StopTimeOrBuilder>(
+              org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTime.Builder, org.mobilitydata.gtfsvalidator.proto.StopTimesProto.StopTimeOrBuilder>(
                   stopTimes_,
                   ((bitField0_ & 0x00000001) != 0),
                   getParentForChildren(),
@@ -2495,12 +2611,12 @@ public final class StopTimesProto {
     }
 
     // @@protoc_insertion_point(class_scope:stoptimes.stopTimeCollection)
-    private static final StopTimesProto.stopTimeCollection DEFAULT_INSTANCE;
+    private static final org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new StopTimesProto.stopTimeCollection();
+      DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection();
     }
 
-    public static StopTimesProto.stopTimeCollection getDefaultInstance() {
+    public static org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2525,7 +2641,7 @@ public final class StopTimesProto {
     }
 
     @java.lang.Override
-    public StopTimesProto.stopTimeCollection getDefaultInstanceForType() {
+    public org.mobilitydata.gtfsvalidator.proto.StopTimesProto.stopTimeCollection getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2550,22 +2666,24 @@ public final class StopTimesProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\020stop_times.proto\022\tstoptimes\"\306\003\n\010StopTi" +
+      "\n\020stop_times.proto\022\tstoptimes\"\247\004\n\010StopTi" +
       "me\022\017\n\007trip_id\030\001 \001(\t\022\024\n\014arrival_time\030\002 \001(" +
       "\t\022\026\n\016departure_time\030\003 \001(\t\022\017\n\007stop_id\030\004 \001" +
       "(\t\022\025\n\rstop_sequence\030\005 \001(\r\022\025\n\rstop_headsi" +
-      "gn\030\006 \001(\t\022:\n\013pickup_type\030\007 \001(\0162%.stoptime" +
-      "s.StopTime.PickupDropOffType\022<\n\rdrop_off" +
-      "_type\030\010 \001(\0162%.stoptimes.StopTime.PickupD" +
-      "ropOffType\022\033\n\023shape_dist_traveled\030\t \001(\002\022" +
-      "4\n\ttimepoint\030\n \001(\0162!.stoptimes.StopTime." +
-      "TimePrecision\"B\n\021PickupDropOffType\022\013\n\007RE" +
-      "GULAR\020\000\022\010\n\004NONE\020\001\022\n\n\006AGENCY\020\002\022\n\n\006DRIVER\020" +
-      "\003\"+\n\rTimePrecision\022\017\n\013APPROXIMATE\020\000\022\t\n\005E" +
-      "XACT\020\001\"<\n\022stopTimeCollection\022&\n\tstopTime" +
-      "s\030\001 \003(\0132\023.stoptimes.StopTimeB,\n\032org.mobi" +
-      "litydata.gtfsprotoB\016StopTimesProtob\006prot" +
-      "o3"
+      "gn\030\006 \001(\t\0223\n\013pickup_type\030\007 \001(\0162\036.stoptime" +
+      "s.StopTime.PickupType\0225\n\014dropOff_type\030\010 " +
+      "\001(\0162\037.stoptimes.StopTime.DropoffType\022\033\n\023" +
+      "shape_dist_traveled\030\t \001(\002\0224\n\ttimepoint\030\n" +
+      " \001(\0162!.stoptimes.StopTime.TimePrecision\"" +
+      "U\n\nPickupType\022\022\n\016REGULAR_PICKUP\020\000\022\r\n\tNO_" +
+      "PICKUP\020\001\022\021\n\rAGENCY_PICKUP\020\002\022\021\n\rDRIVER_PI" +
+      "CKUP\020\003\"Z\n\013DropoffType\022\023\n\017REGULAR_DROPOFF" +
+      "\020\000\022\016\n\nNO_DROPOFF\020\001\022\022\n\016AGENCY_DROPOFF\020\002\022\022" +
+      "\n\016DRIVER_DROPOFF\020\003\"+\n\rTimePrecision\022\017\n\013A" +
+      "PPROXIMATE\020\000\022\t\n\005EXACT\020\001\"=\n\022stopTimeColle" +
+      "ction\022\'\n\nstop_times\030\001 \003(\0132\023.stoptimes.St" +
+      "opTimeB6\n$org.mobilitydata.gtfsvalidator" +
+      ".protoB\016StopTimesProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

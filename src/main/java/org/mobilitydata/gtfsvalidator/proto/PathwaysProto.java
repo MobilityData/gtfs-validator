@@ -59,16 +59,16 @@ public final class PathwaysProto {
     /**
      * <code>.pathways.Pathway.PathwayMode pathway_mode = 4;</code>
      */
-    PathwaysProto.Pathway.PathwayMode getPathwayMode();
+    org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode getPathwayMode();
 
     /**
-     * <code>.pathways.Pathway.IsBidirectional is_bidirectional = 5;</code>
+     * <code>.pathways.Pathway.Directionality is_bidirectional = 5;</code>
      */
     int getIsBidirectionalValue();
     /**
-     * <code>.pathways.Pathway.IsBidirectional is_bidirectional = 5;</code>
+     * <code>.pathways.Pathway.Directionality is_bidirectional = 5;</code>
      */
-    PathwaysProto.Pathway.IsBidirectional getIsBidirectional();
+    org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality getIsBidirectional();
 
     /**
      * <code>float length = 6;</code>
@@ -259,15 +259,15 @@ public final class PathwaysProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return PathwaysProto.internal_static_pathways_Pathway_descriptor;
+      return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_Pathway_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return PathwaysProto.internal_static_pathways_Pathway_fieldAccessorTable
+      return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_Pathway_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              PathwaysProto.Pathway.class, PathwaysProto.Pathway.Builder.class);
+              org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.class, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder.class);
     }
 
     /**
@@ -404,7 +404,7 @@ public final class PathwaysProto {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return PathwaysProto.Pathway.getDescriptor().getEnumTypes().get(0);
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final PathwayMode[] VALUES = values();
@@ -431,22 +431,22 @@ public final class PathwaysProto {
     }
 
     /**
-     * Protobuf enum {@code pathways.Pathway.IsBidirectional}
+     * Protobuf enum {@code pathways.Pathway.Directionality}
      */
-    public enum IsBidirectional
+    public enum Directionality
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <pre>
        *First enum value must be 0 in proto3
        * </pre>
        *
-       * <code>FALSE = 0;</code>
+       * <code>UNIDIRECTIONAL = 0;</code>
        */
-      FALSE(0),
+      UNIDIRECTIONAL(0),
       /**
-       * <code>TRUE = 1;</code>
+       * <code>BIDIRECTIONAL = 1;</code>
        */
-      TRUE(1),
+      BIDIRECTIONAL(1),
       UNRECOGNIZED(-1),
       ;
 
@@ -455,13 +455,13 @@ public final class PathwaysProto {
        *First enum value must be 0 in proto3
        * </pre>
        *
-       * <code>FALSE = 0;</code>
+       * <code>UNIDIRECTIONAL = 0;</code>
        */
-      public static final int FALSE_VALUE = 0;
+      public static final int UNIDIRECTIONAL_VALUE = 0;
       /**
-       * <code>TRUE = 1;</code>
+       * <code>BIDIRECTIONAL = 1;</code>
        */
-      public static final int TRUE_VALUE = 1;
+      public static final int BIDIRECTIONAL_VALUE = 1;
 
 
       public final int getNumber() {
@@ -476,27 +476,27 @@ public final class PathwaysProto {
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
-      public static IsBidirectional valueOf(int value) {
+      public static Directionality valueOf(int value) {
         return forNumber(value);
       }
 
-      public static IsBidirectional forNumber(int value) {
+      public static Directionality forNumber(int value) {
         switch (value) {
-          case 0: return FALSE;
-          case 1: return TRUE;
+          case 0: return UNIDIRECTIONAL;
+          case 1: return BIDIRECTIONAL;
           default: return null;
         }
       }
 
-      public static com.google.protobuf.Internal.EnumLiteMap<IsBidirectional>
+      public static com.google.protobuf.Internal.EnumLiteMap<Directionality>
           internalGetValueMap() {
         return internalValueMap;
       }
       private static final com.google.protobuf.Internal.EnumLiteMap<
-          IsBidirectional> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<IsBidirectional>() {
-              public IsBidirectional findValueByNumber(int number) {
-                return IsBidirectional.forNumber(number);
+          Directionality> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<Directionality>() {
+              public Directionality findValueByNumber(int number) {
+                return Directionality.forNumber(number);
               }
             };
 
@@ -510,12 +510,12 @@ public final class PathwaysProto {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return PathwaysProto.Pathway.getDescriptor().getEnumTypes().get(1);
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.getDescriptor().getEnumTypes().get(1);
       }
 
-      private static final IsBidirectional[] VALUES = values();
+      private static final Directionality[] VALUES = values();
 
-      public static IsBidirectional valueOf(
+      public static Directionality valueOf(
           com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
@@ -529,11 +529,11 @@ public final class PathwaysProto {
 
       private final int value;
 
-      private IsBidirectional(int value) {
+      private Directionality(int value) {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:pathways.Pathway.IsBidirectional)
+      // @@protoc_insertion_point(enum_scope:pathways.Pathway.Directionality)
     }
 
     public static final int PATHWAY_ID_FIELD_NUMBER = 1;
@@ -649,27 +649,27 @@ public final class PathwaysProto {
     /**
      * <code>.pathways.Pathway.PathwayMode pathway_mode = 4;</code>
      */
-    public PathwaysProto.Pathway.PathwayMode getPathwayMode() {
+    public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode getPathwayMode() {
       @SuppressWarnings("deprecation")
-      PathwaysProto.Pathway.PathwayMode result = PathwaysProto.Pathway.PathwayMode.valueOf(pathwayMode_);
-      return result == null ? PathwaysProto.Pathway.PathwayMode.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode result = org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode.valueOf(pathwayMode_);
+      return result == null ? org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode.UNRECOGNIZED : result;
     }
 
     public static final int IS_BIDIRECTIONAL_FIELD_NUMBER = 5;
     private int isBidirectional_;
     /**
-     * <code>.pathways.Pathway.IsBidirectional is_bidirectional = 5;</code>
+     * <code>.pathways.Pathway.Directionality is_bidirectional = 5;</code>
      */
     public int getIsBidirectionalValue() {
       return isBidirectional_;
     }
     /**
-     * <code>.pathways.Pathway.IsBidirectional is_bidirectional = 5;</code>
+     * <code>.pathways.Pathway.Directionality is_bidirectional = 5;</code>
      */
-    public PathwaysProto.Pathway.IsBidirectional getIsBidirectional() {
+    public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality getIsBidirectional() {
       @SuppressWarnings("deprecation")
-      PathwaysProto.Pathway.IsBidirectional result = PathwaysProto.Pathway.IsBidirectional.valueOf(isBidirectional_);
-      return result == null ? PathwaysProto.Pathway.IsBidirectional.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality result = org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality.valueOf(isBidirectional_);
+      return result == null ? org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality.UNRECOGNIZED : result;
     }
 
     public static final int LENGTH_FIELD_NUMBER = 6;
@@ -812,10 +812,10 @@ public final class PathwaysProto {
       if (!getToStopIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, toStopId_);
       }
-      if (pathwayMode_ != PathwaysProto.Pathway.PathwayMode.RESERVED.getNumber()) {
+      if (pathwayMode_ != org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode.RESERVED.getNumber()) {
         output.writeEnum(4, pathwayMode_);
       }
-      if (isBidirectional_ != PathwaysProto.Pathway.IsBidirectional.FALSE.getNumber()) {
+      if (isBidirectional_ != org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality.UNIDIRECTIONAL.getNumber()) {
         output.writeEnum(5, isBidirectional_);
       }
       if (length_ != 0F) {
@@ -857,11 +857,11 @@ public final class PathwaysProto {
       if (!getToStopIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, toStopId_);
       }
-      if (pathwayMode_ != PathwaysProto.Pathway.PathwayMode.RESERVED.getNumber()) {
+      if (pathwayMode_ != org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode.RESERVED.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(4, pathwayMode_);
       }
-      if (isBidirectional_ != PathwaysProto.Pathway.IsBidirectional.FALSE.getNumber()) {
+      if (isBidirectional_ != org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality.UNIDIRECTIONAL.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(5, isBidirectional_);
       }
@@ -901,10 +901,10 @@ public final class PathwaysProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof PathwaysProto.Pathway)) {
+      if (!(obj instanceof org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway)) {
         return super.equals(obj);
       }
-      PathwaysProto.Pathway other = (PathwaysProto.Pathway) obj;
+      org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway other = (org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway) obj;
 
       if (!getPathwayId()
           .equals(other.getPathwayId())) return false;
@@ -974,69 +974,69 @@ public final class PathwaysProto {
       return hash;
     }
 
-    public static PathwaysProto.Pathway parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static PathwaysProto.Pathway parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static PathwaysProto.Pathway parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static PathwaysProto.Pathway parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static PathwaysProto.Pathway parseFrom(byte[] data)
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static PathwaysProto.Pathway parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static PathwaysProto.Pathway parseFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static PathwaysProto.Pathway parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static PathwaysProto.Pathway parseDelimitedFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static PathwaysProto.Pathway parseDelimitedFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static PathwaysProto.Pathway parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static PathwaysProto.Pathway parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1049,7 +1049,7 @@ public final class PathwaysProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(PathwaysProto.Pathway prototype) {
+    public static Builder newBuilder(org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -1070,21 +1070,21 @@ public final class PathwaysProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:pathways.Pathway)
-        PathwaysProto.PathwayOrBuilder {
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return PathwaysProto.internal_static_pathways_Pathway_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_Pathway_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return PathwaysProto.internal_static_pathways_Pathway_fieldAccessorTable
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_Pathway_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                PathwaysProto.Pathway.class, PathwaysProto.Pathway.Builder.class);
+                org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.class, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder.class);
       }
 
-      // Construct using org.mobilitydata.gtfsproto.PathwaysProto.Pathway.newBuilder()
+      // Construct using org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1132,17 +1132,17 @@ public final class PathwaysProto {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return PathwaysProto.internal_static_pathways_Pathway_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_Pathway_descriptor;
       }
 
       @java.lang.Override
-      public PathwaysProto.Pathway getDefaultInstanceForType() {
-        return PathwaysProto.Pathway.getDefaultInstance();
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway getDefaultInstanceForType() {
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.getDefaultInstance();
       }
 
       @java.lang.Override
-      public PathwaysProto.Pathway build() {
-        PathwaysProto.Pathway result = buildPartial();
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway build() {
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -1150,8 +1150,8 @@ public final class PathwaysProto {
       }
 
       @java.lang.Override
-      public PathwaysProto.Pathway buildPartial() {
-        PathwaysProto.Pathway result = new PathwaysProto.Pathway(this);
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway buildPartial() {
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway result = new org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway(this);
         result.pathwayId_ = pathwayId_;
         result.fromStopId_ = fromStopId_;
         result.toStopId_ = toStopId_;
@@ -1202,16 +1202,16 @@ public final class PathwaysProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof PathwaysProto.Pathway) {
-          return mergeFrom((PathwaysProto.Pathway)other);
+        if (other instanceof org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway) {
+          return mergeFrom((org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(PathwaysProto.Pathway other) {
-        if (other == PathwaysProto.Pathway.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway other) {
+        if (other == org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.getDefaultInstance()) return this;
         if (!other.getPathwayId().isEmpty()) {
           pathwayId_ = other.pathwayId_;
           onChanged();
@@ -1268,11 +1268,11 @@ public final class PathwaysProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        PathwaysProto.Pathway parsedMessage = null;
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (PathwaysProto.Pathway) e.getUnfinishedMessage();
+          parsedMessage = (org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1507,15 +1507,15 @@ public final class PathwaysProto {
       /**
        * <code>.pathways.Pathway.PathwayMode pathway_mode = 4;</code>
        */
-      public PathwaysProto.Pathway.PathwayMode getPathwayMode() {
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode getPathwayMode() {
         @SuppressWarnings("deprecation")
-        PathwaysProto.Pathway.PathwayMode result = PathwaysProto.Pathway.PathwayMode.valueOf(pathwayMode_);
-        return result == null ? PathwaysProto.Pathway.PathwayMode.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode result = org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode.valueOf(pathwayMode_);
+        return result == null ? org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode.UNRECOGNIZED : result;
       }
       /**
        * <code>.pathways.Pathway.PathwayMode pathway_mode = 4;</code>
        */
-      public Builder setPathwayMode(PathwaysProto.Pathway.PathwayMode value) {
+      public Builder setPathwayMode(org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.PathwayMode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1536,13 +1536,13 @@ public final class PathwaysProto {
 
       private int isBidirectional_ = 0;
       /**
-       * <code>.pathways.Pathway.IsBidirectional is_bidirectional = 5;</code>
+       * <code>.pathways.Pathway.Directionality is_bidirectional = 5;</code>
        */
       public int getIsBidirectionalValue() {
         return isBidirectional_;
       }
       /**
-       * <code>.pathways.Pathway.IsBidirectional is_bidirectional = 5;</code>
+       * <code>.pathways.Pathway.Directionality is_bidirectional = 5;</code>
        */
       public Builder setIsBidirectionalValue(int value) {
         isBidirectional_ = value;
@@ -1550,17 +1550,17 @@ public final class PathwaysProto {
         return this;
       }
       /**
-       * <code>.pathways.Pathway.IsBidirectional is_bidirectional = 5;</code>
+       * <code>.pathways.Pathway.Directionality is_bidirectional = 5;</code>
        */
-      public PathwaysProto.Pathway.IsBidirectional getIsBidirectional() {
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality getIsBidirectional() {
         @SuppressWarnings("deprecation")
-        PathwaysProto.Pathway.IsBidirectional result = PathwaysProto.Pathway.IsBidirectional.valueOf(isBidirectional_);
-        return result == null ? PathwaysProto.Pathway.IsBidirectional.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality result = org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality.valueOf(isBidirectional_);
+        return result == null ? org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality.UNRECOGNIZED : result;
       }
       /**
-       * <code>.pathways.Pathway.IsBidirectional is_bidirectional = 5;</code>
+       * <code>.pathways.Pathway.Directionality is_bidirectional = 5;</code>
        */
-      public Builder setIsBidirectional(PathwaysProto.Pathway.IsBidirectional value) {
+      public Builder setIsBidirectional(org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Directionality value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1570,7 +1570,7 @@ public final class PathwaysProto {
         return this;
       }
       /**
-       * <code>.pathways.Pathway.IsBidirectional is_bidirectional = 5;</code>
+       * <code>.pathways.Pathway.Directionality is_bidirectional = 5;</code>
        */
       public Builder clearIsBidirectional() {
         
@@ -1875,12 +1875,12 @@ public final class PathwaysProto {
     }
 
     // @@protoc_insertion_point(class_scope:pathways.Pathway)
-    private static final PathwaysProto.Pathway DEFAULT_INSTANCE;
+    private static final org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new PathwaysProto.Pathway();
+      DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway();
     }
 
-    public static PathwaysProto.Pathway getDefaultInstance() {
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1905,7 +1905,7 @@ public final class PathwaysProto {
     }
 
     @java.lang.Override
-    public PathwaysProto.Pathway getDefaultInstanceForType() {
+    public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1918,12 +1918,12 @@ public final class PathwaysProto {
     /**
      * <code>repeated .pathways.Pathway pathways = 1;</code>
      */
-    java.util.List<PathwaysProto.Pathway>
+    java.util.List<org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway> 
         getPathwaysList();
     /**
      * <code>repeated .pathways.Pathway pathways = 1;</code>
      */
-    PathwaysProto.Pathway getPathways(int index);
+    org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway getPathways(int index);
     /**
      * <code>repeated .pathways.Pathway pathways = 1;</code>
      */
@@ -1931,12 +1931,12 @@ public final class PathwaysProto {
     /**
      * <code>repeated .pathways.Pathway pathways = 1;</code>
      */
-    java.util.List<? extends PathwaysProto.PathwayOrBuilder>
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder> 
         getPathwaysOrBuilderList();
     /**
      * <code>repeated .pathways.Pathway pathways = 1;</code>
      */
-    PathwaysProto.PathwayOrBuilder getPathwaysOrBuilder(
+    org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder getPathwaysOrBuilder(
         int index);
   }
   /**
@@ -1988,11 +1988,11 @@ public final class PathwaysProto {
               break;
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                pathways_ = new java.util.ArrayList<PathwaysProto.Pathway>();
+                pathways_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway>();
                 mutable_bitField0_ |= 0x00000001;
               }
               pathways_.add(
-                  input.readMessage(PathwaysProto.Pathway.parser(), extensionRegistry));
+                  input.readMessage(org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.parser(), extensionRegistry));
               break;
             }
             default: {
@@ -2019,29 +2019,29 @@ public final class PathwaysProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return PathwaysProto.internal_static_pathways_pathwayCollection_descriptor;
+      return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_pathwayCollection_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return PathwaysProto.internal_static_pathways_pathwayCollection_fieldAccessorTable
+      return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_pathwayCollection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              PathwaysProto.pathwayCollection.class, PathwaysProto.pathwayCollection.Builder.class);
+              org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection.class, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection.Builder.class);
     }
 
     public static final int PATHWAYS_FIELD_NUMBER = 1;
-    private java.util.List<PathwaysProto.Pathway> pathways_;
+    private java.util.List<org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway> pathways_;
     /**
      * <code>repeated .pathways.Pathway pathways = 1;</code>
      */
-    public java.util.List<PathwaysProto.Pathway> getPathwaysList() {
+    public java.util.List<org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway> getPathwaysList() {
       return pathways_;
     }
     /**
      * <code>repeated .pathways.Pathway pathways = 1;</code>
      */
-    public java.util.List<? extends PathwaysProto.PathwayOrBuilder>
+    public java.util.List<? extends org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder> 
         getPathwaysOrBuilderList() {
       return pathways_;
     }
@@ -2054,13 +2054,13 @@ public final class PathwaysProto {
     /**
      * <code>repeated .pathways.Pathway pathways = 1;</code>
      */
-    public PathwaysProto.Pathway getPathways(int index) {
+    public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway getPathways(int index) {
       return pathways_.get(index);
     }
     /**
      * <code>repeated .pathways.Pathway pathways = 1;</code>
      */
-    public PathwaysProto.PathwayOrBuilder getPathwaysOrBuilder(
+    public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder getPathwaysOrBuilder(
         int index) {
       return pathways_.get(index);
     }
@@ -2105,10 +2105,10 @@ public final class PathwaysProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof PathwaysProto.pathwayCollection)) {
+      if (!(obj instanceof org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection)) {
         return super.equals(obj);
       }
-      PathwaysProto.pathwayCollection other = (PathwaysProto.pathwayCollection) obj;
+      org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection other = (org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection) obj;
 
       if (!getPathwaysList()
           .equals(other.getPathwaysList())) return false;
@@ -2132,69 +2132,69 @@ public final class PathwaysProto {
       return hash;
     }
 
-    public static PathwaysProto.pathwayCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static PathwaysProto.pathwayCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static PathwaysProto.pathwayCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static PathwaysProto.pathwayCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static PathwaysProto.pathwayCollection parseFrom(byte[] data)
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static PathwaysProto.pathwayCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static PathwaysProto.pathwayCollection parseFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static PathwaysProto.pathwayCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static PathwaysProto.pathwayCollection parseDelimitedFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static PathwaysProto.pathwayCollection parseDelimitedFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static PathwaysProto.pathwayCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static PathwaysProto.pathwayCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2207,7 +2207,7 @@ public final class PathwaysProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(PathwaysProto.pathwayCollection prototype) {
+    public static Builder newBuilder(org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -2228,21 +2228,21 @@ public final class PathwaysProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:pathways.pathwayCollection)
-        PathwaysProto.pathwayCollectionOrBuilder {
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollectionOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return PathwaysProto.internal_static_pathways_pathwayCollection_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_pathwayCollection_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return PathwaysProto.internal_static_pathways_pathwayCollection_fieldAccessorTable
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_pathwayCollection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                PathwaysProto.pathwayCollection.class, PathwaysProto.pathwayCollection.Builder.class);
+                org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection.class, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection.Builder.class);
       }
 
-      // Construct using org.mobilitydata.gtfsproto.PathwaysProto.pathwayCollection.newBuilder()
+      // Construct using org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2273,17 +2273,17 @@ public final class PathwaysProto {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return PathwaysProto.internal_static_pathways_pathwayCollection_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.internal_static_pathways_pathwayCollection_descriptor;
       }
 
       @java.lang.Override
-      public PathwaysProto.pathwayCollection getDefaultInstanceForType() {
-        return PathwaysProto.pathwayCollection.getDefaultInstance();
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection getDefaultInstanceForType() {
+        return org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection.getDefaultInstance();
       }
 
       @java.lang.Override
-      public PathwaysProto.pathwayCollection build() {
-        PathwaysProto.pathwayCollection result = buildPartial();
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection build() {
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2291,8 +2291,8 @@ public final class PathwaysProto {
       }
 
       @java.lang.Override
-      public PathwaysProto.pathwayCollection buildPartial() {
-        PathwaysProto.pathwayCollection result = new PathwaysProto.pathwayCollection(this);
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection buildPartial() {
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection result = new org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection(this);
         int from_bitField0_ = bitField0_;
         if (pathwaysBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
@@ -2341,16 +2341,16 @@ public final class PathwaysProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof PathwaysProto.pathwayCollection) {
-          return mergeFrom((PathwaysProto.pathwayCollection)other);
+        if (other instanceof org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection) {
+          return mergeFrom((org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(PathwaysProto.pathwayCollection other) {
-        if (other == PathwaysProto.pathwayCollection.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection other) {
+        if (other == org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection.getDefaultInstance()) return this;
         if (pathwaysBuilder_ == null) {
           if (!other.pathways_.isEmpty()) {
             if (pathways_.isEmpty()) {
@@ -2392,11 +2392,11 @@ public final class PathwaysProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        PathwaysProto.pathwayCollection parsedMessage = null;
+        org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (PathwaysProto.pathwayCollection) e.getUnfinishedMessage();
+          parsedMessage = (org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2407,22 +2407,22 @@ public final class PathwaysProto {
       }
       private int bitField0_;
 
-      private java.util.List<PathwaysProto.Pathway> pathways_ =
+      private java.util.List<org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway> pathways_ =
         java.util.Collections.emptyList();
       private void ensurePathwaysIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          pathways_ = new java.util.ArrayList<PathwaysProto.Pathway>(pathways_);
+          pathways_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway>(pathways_);
           bitField0_ |= 0x00000001;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          PathwaysProto.Pathway, PathwaysProto.Pathway.Builder, PathwaysProto.PathwayOrBuilder> pathwaysBuilder_;
+          org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder> pathwaysBuilder_;
 
       /**
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
-      public java.util.List<PathwaysProto.Pathway> getPathwaysList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway> getPathwaysList() {
         if (pathwaysBuilder_ == null) {
           return java.util.Collections.unmodifiableList(pathways_);
         } else {
@@ -2442,7 +2442,7 @@ public final class PathwaysProto {
       /**
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
-      public PathwaysProto.Pathway getPathways(int index) {
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway getPathways(int index) {
         if (pathwaysBuilder_ == null) {
           return pathways_.get(index);
         } else {
@@ -2453,7 +2453,7 @@ public final class PathwaysProto {
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
       public Builder setPathways(
-          int index, PathwaysProto.Pathway value) {
+          int index, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway value) {
         if (pathwaysBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2470,7 +2470,7 @@ public final class PathwaysProto {
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
       public Builder setPathways(
-          int index, PathwaysProto.Pathway.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder builderForValue) {
         if (pathwaysBuilder_ == null) {
           ensurePathwaysIsMutable();
           pathways_.set(index, builderForValue.build());
@@ -2483,7 +2483,7 @@ public final class PathwaysProto {
       /**
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
-      public Builder addPathways(PathwaysProto.Pathway value) {
+      public Builder addPathways(org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway value) {
         if (pathwaysBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2500,7 +2500,7 @@ public final class PathwaysProto {
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
       public Builder addPathways(
-          int index, PathwaysProto.Pathway value) {
+          int index, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway value) {
         if (pathwaysBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2517,7 +2517,7 @@ public final class PathwaysProto {
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
       public Builder addPathways(
-          PathwaysProto.Pathway.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder builderForValue) {
         if (pathwaysBuilder_ == null) {
           ensurePathwaysIsMutable();
           pathways_.add(builderForValue.build());
@@ -2531,7 +2531,7 @@ public final class PathwaysProto {
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
       public Builder addPathways(
-          int index, PathwaysProto.Pathway.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder builderForValue) {
         if (pathwaysBuilder_ == null) {
           ensurePathwaysIsMutable();
           pathways_.add(index, builderForValue.build());
@@ -2545,7 +2545,7 @@ public final class PathwaysProto {
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
       public Builder addAllPathways(
-          java.lang.Iterable<? extends PathwaysProto.Pathway> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway> values) {
         if (pathwaysBuilder_ == null) {
           ensurePathwaysIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -2585,14 +2585,14 @@ public final class PathwaysProto {
       /**
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
-      public PathwaysProto.Pathway.Builder getPathwaysBuilder(
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder getPathwaysBuilder(
           int index) {
         return getPathwaysFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
-      public PathwaysProto.PathwayOrBuilder getPathwaysOrBuilder(
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder getPathwaysOrBuilder(
           int index) {
         if (pathwaysBuilder_ == null) {
           return pathways_.get(index);  } else {
@@ -2602,7 +2602,7 @@ public final class PathwaysProto {
       /**
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
-      public java.util.List<? extends PathwaysProto.PathwayOrBuilder>
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder> 
            getPathwaysOrBuilderList() {
         if (pathwaysBuilder_ != null) {
           return pathwaysBuilder_.getMessageOrBuilderList();
@@ -2613,31 +2613,31 @@ public final class PathwaysProto {
       /**
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
-      public PathwaysProto.Pathway.Builder addPathwaysBuilder() {
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder addPathwaysBuilder() {
         return getPathwaysFieldBuilder().addBuilder(
-            PathwaysProto.Pathway.getDefaultInstance());
+            org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.getDefaultInstance());
       }
       /**
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
-      public PathwaysProto.Pathway.Builder addPathwaysBuilder(
+      public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder addPathwaysBuilder(
           int index) {
         return getPathwaysFieldBuilder().addBuilder(
-            index, PathwaysProto.Pathway.getDefaultInstance());
+            index, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.getDefaultInstance());
       }
       /**
        * <code>repeated .pathways.Pathway pathways = 1;</code>
        */
-      public java.util.List<PathwaysProto.Pathway.Builder>
+      public java.util.List<org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder> 
            getPathwaysBuilderList() {
         return getPathwaysFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          PathwaysProto.Pathway, PathwaysProto.Pathway.Builder, PathwaysProto.PathwayOrBuilder>
+          org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder> 
           getPathwaysFieldBuilder() {
         if (pathwaysBuilder_ == null) {
           pathwaysBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              PathwaysProto.Pathway, PathwaysProto.Pathway.Builder, PathwaysProto.PathwayOrBuilder>(
+              org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.Pathway.Builder, org.mobilitydata.gtfsvalidator.proto.PathwaysProto.PathwayOrBuilder>(
                   pathways_,
                   ((bitField0_ & 0x00000001) != 0),
                   getParentForChildren(),
@@ -2663,12 +2663,12 @@ public final class PathwaysProto {
     }
 
     // @@protoc_insertion_point(class_scope:pathways.pathwayCollection)
-    private static final PathwaysProto.pathwayCollection DEFAULT_INSTANCE;
+    private static final org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new PathwaysProto.pathwayCollection();
+      DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection();
     }
 
-    public static PathwaysProto.pathwayCollection getDefaultInstance() {
+    public static org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2693,7 +2693,7 @@ public final class PathwaysProto {
     }
 
     @java.lang.Override
-    public PathwaysProto.pathwayCollection getDefaultInstanceForType() {
+    public org.mobilitydata.gtfsvalidator.proto.PathwaysProto.pathwayCollection getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2718,23 +2718,24 @@ public final class PathwaysProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016pathways.proto\022\010pathways\"\215\004\n\007Pathway\022\022" +
+      "\n\016pathways.proto\022\010pathways\"\235\004\n\007Pathway\022\022" +
       "\n\npathway_id\030\001 \001(\t\022\024\n\014from_stop_id\030\002 \001(\t" +
       "\022\022\n\nto_stop_id\030\003 \001(\t\0223\n\014pathway_mode\030\004 \001" +
-      "(\0162\035.pathways.Pathway.PathwayMode\022;\n\020is_" +
-      "bidirectional\030\005 \001(\0162!.pathways.Pathway.I" +
-      "sBidirectional\022\016\n\006length\030\006 \001(\002\022\026\n\016traver" +
-      "sal_time\030\007 \001(\r\022\023\n\013stair_count\030\010 \001(\005\022\021\n\tm" +
-      "ax_slope\030\t \001(\002\022\021\n\tmin_width\030\n \001(\002\022\025\n\rsig" +
-      "nposted_as\030\013 \001(\t\022\036\n\026reversed_signposted_" +
-      "as\030\014 \001(\t\"\217\001\n\013PathwayMode\022\014\n\010RESERVED\020\000\022\013" +
-      "\n\007WALKWAY\020\001\022\n\n\006STAIRS\020\002\022\036\n\032MOVING_SIDEWA" +
-      "LK_TRAVELATOR\020\003\022\r\n\tESCALATOR\020\004\022\014\n\010ELEVAT" +
-      "OR\020\005\022\r\n\tFARE_GATE\020\006\022\r\n\tEXIT_GATE\020\007\"&\n\017Is" +
-      "Bidirectional\022\t\n\005FALSE\020\000\022\010\n\004TRUE\020\001\"8\n\021pa" +
-      "thwayCollection\022#\n\010pathways\030\001 \003(\0132\021.path" +
-      "ways.PathwayB!\n\020org.mobilitydataB\rPathwa" +
-      "ysProtob\006proto3"
+      "(\0162\035.pathways.Pathway.PathwayMode\022:\n\020is_" +
+      "bidirectional\030\005 \001(\0162 .pathways.Pathway.D" +
+      "irectionality\022\016\n\006length\030\006 \001(\002\022\026\n\016travers" +
+      "al_time\030\007 \001(\r\022\023\n\013stair_count\030\010 \001(\005\022\021\n\tma" +
+      "x_slope\030\t \001(\002\022\021\n\tmin_width\030\n \001(\002\022\025\n\rsign" +
+      "posted_as\030\013 \001(\t\022\036\n\026reversed_signposted_a" +
+      "s\030\014 \001(\t\"\217\001\n\013PathwayMode\022\014\n\010RESERVED\020\000\022\013\n" +
+      "\007WALKWAY\020\001\022\n\n\006STAIRS\020\002\022\036\n\032MOVING_SIDEWAL" +
+      "K_TRAVELATOR\020\003\022\r\n\tESCALATOR\020\004\022\014\n\010ELEVATO" +
+      "R\020\005\022\r\n\tFARE_GATE\020\006\022\r\n\tEXIT_GATE\020\007\"7\n\016Dir" +
+      "ectionality\022\022\n\016UNIDIRECTIONAL\020\000\022\021\n\rBIDIR" +
+      "ECTIONAL\020\001\"8\n\021pathwayCollection\022#\n\010pathw" +
+      "ays\030\001 \003(\0132\021.pathways.PathwayB5\n$org.mobi" +
+      "litydata.gtfsvalidator.protoB\rPathwaysPr" +
+      "otob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

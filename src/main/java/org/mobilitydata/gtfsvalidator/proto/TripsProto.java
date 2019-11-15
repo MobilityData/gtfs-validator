@@ -79,7 +79,7 @@ public final class TripsProto {
     /**
      * <code>.trips.Trip.DirectionId direction_id = 6;</code>
      */
-    TripsProto.Trip.DirectionId getDirectionId();
+    org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId getDirectionId();
 
     /**
      * <code>string block_id = 7;</code>
@@ -102,22 +102,22 @@ public final class TripsProto {
         getShapeIdBytes();
 
     /**
-     * <code>.trips.Trip.Accessibility wheelchair_accessible = 9;</code>
+     * <code>.trips.Trip.WheelchairAccessibility wheelchair_accessible = 9;</code>
      */
     int getWheelchairAccessibleValue();
     /**
-     * <code>.trips.Trip.Accessibility wheelchair_accessible = 9;</code>
+     * <code>.trips.Trip.WheelchairAccessibility wheelchair_accessible = 9;</code>
      */
-    TripsProto.Trip.Accessibility getWheelchairAccessible();
+    org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility getWheelchairAccessible();
 
     /**
-     * <code>.trips.Trip.Accessibility bikes_allowed = 10;</code>
+     * <code>.trips.Trip.BikeAccessibility bikes_allowed = 10;</code>
      */
     int getBikesAllowedValue();
     /**
-     * <code>.trips.Trip.Accessibility bikes_allowed = 10;</code>
+     * <code>.trips.Trip.BikeAccessibility bikes_allowed = 10;</code>
      */
-    TripsProto.Trip.Accessibility getBikesAllowed();
+    org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility getBikesAllowed();
   }
   /**
    * Protobuf type {@code trips.Trip}
@@ -255,15 +255,15 @@ public final class TripsProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return TripsProto.internal_static_trips_Trip_descriptor;
+      return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_Trip_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return TripsProto.internal_static_trips_Trip_fieldAccessorTable
+      return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_Trip_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              TripsProto.Trip.class, TripsProto.Trip.Builder.class);
+              org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.class, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder.class);
     }
 
     /**
@@ -272,24 +272,40 @@ public final class TripsProto {
     public enum DirectionId
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
-       * <code>A_TO_B = 0;</code>
+       * <pre>
+       *Field is optional in spec =&gt; must provide default value
+       * </pre>
+       *
+       * <code>UNKNOWN_DIR = 0;</code>
        */
-      A_TO_B(0),
+      UNKNOWN_DIR(0),
       /**
-       * <code>B_TO_A = 1;</code>
+       * <code>A_TO_B = 1;</code>
        */
-      B_TO_A(1),
+      A_TO_B(1),
+      /**
+       * <code>B_TO_A = 2;</code>
+       */
+      B_TO_A(2),
       UNRECOGNIZED(-1),
       ;
 
       /**
-       * <code>A_TO_B = 0;</code>
+       * <pre>
+       *Field is optional in spec =&gt; must provide default value
+       * </pre>
+       *
+       * <code>UNKNOWN_DIR = 0;</code>
        */
-      public static final int A_TO_B_VALUE = 0;
+      public static final int UNKNOWN_DIR_VALUE = 0;
       /**
-       * <code>B_TO_A = 1;</code>
+       * <code>A_TO_B = 1;</code>
        */
-      public static final int B_TO_A_VALUE = 1;
+      public static final int A_TO_B_VALUE = 1;
+      /**
+       * <code>B_TO_A = 2;</code>
+       */
+      public static final int B_TO_A_VALUE = 2;
 
 
       public final int getNumber() {
@@ -310,8 +326,9 @@ public final class TripsProto {
 
       public static DirectionId forNumber(int value) {
         switch (value) {
-          case 0: return A_TO_B;
-          case 1: return B_TO_A;
+          case 0: return UNKNOWN_DIR;
+          case 1: return A_TO_B;
+          case 2: return B_TO_A;
           default: return null;
         }
       }
@@ -338,7 +355,7 @@ public final class TripsProto {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return TripsProto.Trip.getDescriptor().getEnumTypes().get(0);
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final DirectionId[] VALUES = values();
@@ -365,37 +382,37 @@ public final class TripsProto {
     }
 
     /**
-     * Protobuf enum {@code trips.Trip.Accessibility}
+     * Protobuf enum {@code trips.Trip.WheelchairAccessibility}
      */
-    public enum Accessibility
+    public enum WheelchairAccessibility
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
-       * <code>UNKNOWN = 0;</code>
+       * <code>UNKNOWN_WHEELCHAIR = 0;</code>
        */
-      UNKNOWN(0),
+      UNKNOWN_WHEELCHAIR(0),
       /**
-       * <code>TRUE = 1;</code>
+       * <code>AT_LEAST_ONE_WHEELCHAIR = 1;</code>
        */
-      TRUE(1),
+      AT_LEAST_ONE_WHEELCHAIR(1),
       /**
-       * <code>FALSE = 2;</code>
+       * <code>NO_WHEELCHAIR = 2;</code>
        */
-      FALSE(2),
+      NO_WHEELCHAIR(2),
       UNRECOGNIZED(-1),
       ;
 
       /**
-       * <code>UNKNOWN = 0;</code>
+       * <code>UNKNOWN_WHEELCHAIR = 0;</code>
        */
-      public static final int UNKNOWN_VALUE = 0;
+      public static final int UNKNOWN_WHEELCHAIR_VALUE = 0;
       /**
-       * <code>TRUE = 1;</code>
+       * <code>AT_LEAST_ONE_WHEELCHAIR = 1;</code>
        */
-      public static final int TRUE_VALUE = 1;
+      public static final int AT_LEAST_ONE_WHEELCHAIR_VALUE = 1;
       /**
-       * <code>FALSE = 2;</code>
+       * <code>NO_WHEELCHAIR = 2;</code>
        */
-      public static final int FALSE_VALUE = 2;
+      public static final int NO_WHEELCHAIR_VALUE = 2;
 
 
       public final int getNumber() {
@@ -410,28 +427,28 @@ public final class TripsProto {
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
-      public static Accessibility valueOf(int value) {
+      public static WheelchairAccessibility valueOf(int value) {
         return forNumber(value);
       }
 
-      public static Accessibility forNumber(int value) {
+      public static WheelchairAccessibility forNumber(int value) {
         switch (value) {
-          case 0: return UNKNOWN;
-          case 1: return TRUE;
-          case 2: return FALSE;
+          case 0: return UNKNOWN_WHEELCHAIR;
+          case 1: return AT_LEAST_ONE_WHEELCHAIR;
+          case 2: return NO_WHEELCHAIR;
           default: return null;
         }
       }
 
-      public static com.google.protobuf.Internal.EnumLiteMap<Accessibility>
+      public static com.google.protobuf.Internal.EnumLiteMap<WheelchairAccessibility>
           internalGetValueMap() {
         return internalValueMap;
       }
       private static final com.google.protobuf.Internal.EnumLiteMap<
-          Accessibility> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<Accessibility>() {
-              public Accessibility findValueByNumber(int number) {
-                return Accessibility.forNumber(number);
+          WheelchairAccessibility> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<WheelchairAccessibility>() {
+              public WheelchairAccessibility findValueByNumber(int number) {
+                return WheelchairAccessibility.forNumber(number);
               }
             };
 
@@ -445,12 +462,12 @@ public final class TripsProto {
       }
       public static final com.google.protobuf.Descriptors.EnumDescriptor
           getDescriptor() {
-        return TripsProto.Trip.getDescriptor().getEnumTypes().get(1);
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.getDescriptor().getEnumTypes().get(1);
       }
 
-      private static final Accessibility[] VALUES = values();
+      private static final WheelchairAccessibility[] VALUES = values();
 
-      public static Accessibility valueOf(
+      public static WheelchairAccessibility valueOf(
           com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
@@ -464,11 +481,118 @@ public final class TripsProto {
 
       private final int value;
 
-      private Accessibility(int value) {
+      private WheelchairAccessibility(int value) {
         this.value = value;
       }
 
-      // @@protoc_insertion_point(enum_scope:trips.Trip.Accessibility)
+      // @@protoc_insertion_point(enum_scope:trips.Trip.WheelchairAccessibility)
+    }
+
+    /**
+     * Protobuf enum {@code trips.Trip.BikeAccessibility}
+     */
+    public enum BikeAccessibility
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>UNKNOWN_BIKE = 0;</code>
+       */
+      UNKNOWN_BIKE(0),
+      /**
+       * <code>AT_LEAST_ONE_BIKE = 1;</code>
+       */
+      AT_LEAST_ONE_BIKE(1),
+      /**
+       * <code>NO_BIKE = 2;</code>
+       */
+      NO_BIKE(2),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <code>UNKNOWN_BIKE = 0;</code>
+       */
+      public static final int UNKNOWN_BIKE_VALUE = 0;
+      /**
+       * <code>AT_LEAST_ONE_BIKE = 1;</code>
+       */
+      public static final int AT_LEAST_ONE_BIKE_VALUE = 1;
+      /**
+       * <code>NO_BIKE = 2;</code>
+       */
+      public static final int NO_BIKE_VALUE = 2;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static BikeAccessibility valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static BikeAccessibility forNumber(int value) {
+        switch (value) {
+          case 0: return UNKNOWN_BIKE;
+          case 1: return AT_LEAST_ONE_BIKE;
+          case 2: return NO_BIKE;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<BikeAccessibility>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          BikeAccessibility> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<BikeAccessibility>() {
+              public BikeAccessibility findValueByNumber(int number) {
+                return BikeAccessibility.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.getDescriptor().getEnumTypes().get(2);
+      }
+
+      private static final BikeAccessibility[] VALUES = values();
+
+      public static BikeAccessibility valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private BikeAccessibility(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:trips.Trip.BikeAccessibility)
     }
 
     public static final int ROUTE_ID_FIELD_NUMBER = 1;
@@ -652,10 +776,10 @@ public final class TripsProto {
     /**
      * <code>.trips.Trip.DirectionId direction_id = 6;</code>
      */
-    public TripsProto.Trip.DirectionId getDirectionId() {
+    public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId getDirectionId() {
       @SuppressWarnings("deprecation")
-      TripsProto.Trip.DirectionId result = TripsProto.Trip.DirectionId.valueOf(directionId_);
-      return result == null ? TripsProto.Trip.DirectionId.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId result = org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId.valueOf(directionId_);
+      return result == null ? org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId.UNRECOGNIZED : result;
     }
 
     public static final int BLOCK_ID_FIELD_NUMBER = 7;
@@ -729,35 +853,35 @@ public final class TripsProto {
     public static final int WHEELCHAIR_ACCESSIBLE_FIELD_NUMBER = 9;
     private int wheelchairAccessible_;
     /**
-     * <code>.trips.Trip.Accessibility wheelchair_accessible = 9;</code>
+     * <code>.trips.Trip.WheelchairAccessibility wheelchair_accessible = 9;</code>
      */
     public int getWheelchairAccessibleValue() {
       return wheelchairAccessible_;
     }
     /**
-     * <code>.trips.Trip.Accessibility wheelchair_accessible = 9;</code>
+     * <code>.trips.Trip.WheelchairAccessibility wheelchair_accessible = 9;</code>
      */
-    public TripsProto.Trip.Accessibility getWheelchairAccessible() {
+    public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility getWheelchairAccessible() {
       @SuppressWarnings("deprecation")
-      TripsProto.Trip.Accessibility result = TripsProto.Trip.Accessibility.valueOf(wheelchairAccessible_);
-      return result == null ? TripsProto.Trip.Accessibility.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility result = org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility.valueOf(wheelchairAccessible_);
+      return result == null ? org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility.UNRECOGNIZED : result;
     }
 
     public static final int BIKES_ALLOWED_FIELD_NUMBER = 10;
     private int bikesAllowed_;
     /**
-     * <code>.trips.Trip.Accessibility bikes_allowed = 10;</code>
+     * <code>.trips.Trip.BikeAccessibility bikes_allowed = 10;</code>
      */
     public int getBikesAllowedValue() {
       return bikesAllowed_;
     }
     /**
-     * <code>.trips.Trip.Accessibility bikes_allowed = 10;</code>
+     * <code>.trips.Trip.BikeAccessibility bikes_allowed = 10;</code>
      */
-    public TripsProto.Trip.Accessibility getBikesAllowed() {
+    public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility getBikesAllowed() {
       @SuppressWarnings("deprecation")
-      TripsProto.Trip.Accessibility result = TripsProto.Trip.Accessibility.valueOf(bikesAllowed_);
-      return result == null ? TripsProto.Trip.Accessibility.UNRECOGNIZED : result;
+      org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility result = org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility.valueOf(bikesAllowed_);
+      return result == null ? org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility.UNRECOGNIZED : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -789,7 +913,7 @@ public final class TripsProto {
       if (!getTripShortNameBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 5, tripShortName_);
       }
-      if (directionId_ != TripsProto.Trip.DirectionId.A_TO_B.getNumber()) {
+      if (directionId_ != org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId.UNKNOWN_DIR.getNumber()) {
         output.writeEnum(6, directionId_);
       }
       if (!getBlockIdBytes().isEmpty()) {
@@ -798,10 +922,10 @@ public final class TripsProto {
       if (!getShapeIdBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 8, shapeId_);
       }
-      if (wheelchairAccessible_ != TripsProto.Trip.Accessibility.UNKNOWN.getNumber()) {
+      if (wheelchairAccessible_ != org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility.UNKNOWN_WHEELCHAIR.getNumber()) {
         output.writeEnum(9, wheelchairAccessible_);
       }
-      if (bikesAllowed_ != TripsProto.Trip.Accessibility.UNKNOWN.getNumber()) {
+      if (bikesAllowed_ != org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility.UNKNOWN_BIKE.getNumber()) {
         output.writeEnum(10, bikesAllowed_);
       }
       unknownFields.writeTo(output);
@@ -828,7 +952,7 @@ public final class TripsProto {
       if (!getTripShortNameBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, tripShortName_);
       }
-      if (directionId_ != TripsProto.Trip.DirectionId.A_TO_B.getNumber()) {
+      if (directionId_ != org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId.UNKNOWN_DIR.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(6, directionId_);
       }
@@ -838,11 +962,11 @@ public final class TripsProto {
       if (!getShapeIdBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, shapeId_);
       }
-      if (wheelchairAccessible_ != TripsProto.Trip.Accessibility.UNKNOWN.getNumber()) {
+      if (wheelchairAccessible_ != org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility.UNKNOWN_WHEELCHAIR.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(9, wheelchairAccessible_);
       }
-      if (bikesAllowed_ != TripsProto.Trip.Accessibility.UNKNOWN.getNumber()) {
+      if (bikesAllowed_ != org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility.UNKNOWN_BIKE.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(10, bikesAllowed_);
       }
@@ -856,10 +980,10 @@ public final class TripsProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof TripsProto.Trip)) {
+      if (!(obj instanceof org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip)) {
         return super.equals(obj);
       }
-      TripsProto.Trip other = (TripsProto.Trip) obj;
+      org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip other = (org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip) obj;
 
       if (!getRouteId()
           .equals(other.getRouteId())) return false;
@@ -914,69 +1038,69 @@ public final class TripsProto {
       return hash;
     }
 
-    public static TripsProto.Trip parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TripsProto.Trip parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TripsProto.Trip parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TripsProto.Trip parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TripsProto.Trip parseFrom(byte[] data)
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TripsProto.Trip parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TripsProto.Trip parseFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TripsProto.Trip parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TripsProto.Trip parseDelimitedFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static TripsProto.Trip parseDelimitedFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TripsProto.Trip parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TripsProto.Trip parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -989,7 +1113,7 @@ public final class TripsProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(TripsProto.Trip prototype) {
+    public static Builder newBuilder(org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -1010,21 +1134,21 @@ public final class TripsProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:trips.Trip)
-        TripsProto.TripOrBuilder {
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return TripsProto.internal_static_trips_Trip_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_Trip_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return TripsProto.internal_static_trips_Trip_fieldAccessorTable
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_Trip_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                TripsProto.Trip.class, TripsProto.Trip.Builder.class);
+                org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.class, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder.class);
       }
 
-      // Construct using org.mobilitydata.gtfsproto.TripsProto.Trip.newBuilder()
+      // Construct using org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1068,17 +1192,17 @@ public final class TripsProto {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return TripsProto.internal_static_trips_Trip_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_Trip_descriptor;
       }
 
       @java.lang.Override
-      public TripsProto.Trip getDefaultInstanceForType() {
-        return TripsProto.Trip.getDefaultInstance();
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip getDefaultInstanceForType() {
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.getDefaultInstance();
       }
 
       @java.lang.Override
-      public TripsProto.Trip build() {
-        TripsProto.Trip result = buildPartial();
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip build() {
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -1086,8 +1210,8 @@ public final class TripsProto {
       }
 
       @java.lang.Override
-      public TripsProto.Trip buildPartial() {
-        TripsProto.Trip result = new TripsProto.Trip(this);
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip buildPartial() {
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip result = new org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip(this);
         result.routeId_ = routeId_;
         result.serviceId_ = serviceId_;
         result.tripId_ = tripId_;
@@ -1136,16 +1260,16 @@ public final class TripsProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof TripsProto.Trip) {
-          return mergeFrom((TripsProto.Trip)other);
+        if (other instanceof org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip) {
+          return mergeFrom((org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(TripsProto.Trip other) {
-        if (other == TripsProto.Trip.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip other) {
+        if (other == org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.getDefaultInstance()) return this;
         if (!other.getRouteId().isEmpty()) {
           routeId_ = other.routeId_;
           onChanged();
@@ -1198,11 +1322,11 @@ public final class TripsProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        TripsProto.Trip parsedMessage = null;
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (TripsProto.Trip) e.getUnfinishedMessage();
+          parsedMessage = (org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1575,15 +1699,15 @@ public final class TripsProto {
       /**
        * <code>.trips.Trip.DirectionId direction_id = 6;</code>
        */
-      public TripsProto.Trip.DirectionId getDirectionId() {
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId getDirectionId() {
         @SuppressWarnings("deprecation")
-        TripsProto.Trip.DirectionId result = TripsProto.Trip.DirectionId.valueOf(directionId_);
-        return result == null ? TripsProto.Trip.DirectionId.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId result = org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId.valueOf(directionId_);
+        return result == null ? org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId.UNRECOGNIZED : result;
       }
       /**
        * <code>.trips.Trip.DirectionId direction_id = 6;</code>
        */
-      public Builder setDirectionId(TripsProto.Trip.DirectionId value) {
+      public Builder setDirectionId(org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.DirectionId value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1742,13 +1866,13 @@ public final class TripsProto {
 
       private int wheelchairAccessible_ = 0;
       /**
-       * <code>.trips.Trip.Accessibility wheelchair_accessible = 9;</code>
+       * <code>.trips.Trip.WheelchairAccessibility wheelchair_accessible = 9;</code>
        */
       public int getWheelchairAccessibleValue() {
         return wheelchairAccessible_;
       }
       /**
-       * <code>.trips.Trip.Accessibility wheelchair_accessible = 9;</code>
+       * <code>.trips.Trip.WheelchairAccessibility wheelchair_accessible = 9;</code>
        */
       public Builder setWheelchairAccessibleValue(int value) {
         wheelchairAccessible_ = value;
@@ -1756,17 +1880,17 @@ public final class TripsProto {
         return this;
       }
       /**
-       * <code>.trips.Trip.Accessibility wheelchair_accessible = 9;</code>
+       * <code>.trips.Trip.WheelchairAccessibility wheelchair_accessible = 9;</code>
        */
-      public TripsProto.Trip.Accessibility getWheelchairAccessible() {
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility getWheelchairAccessible() {
         @SuppressWarnings("deprecation")
-        TripsProto.Trip.Accessibility result = TripsProto.Trip.Accessibility.valueOf(wheelchairAccessible_);
-        return result == null ? TripsProto.Trip.Accessibility.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility result = org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility.valueOf(wheelchairAccessible_);
+        return result == null ? org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility.UNRECOGNIZED : result;
       }
       /**
-       * <code>.trips.Trip.Accessibility wheelchair_accessible = 9;</code>
+       * <code>.trips.Trip.WheelchairAccessibility wheelchair_accessible = 9;</code>
        */
-      public Builder setWheelchairAccessible(TripsProto.Trip.Accessibility value) {
+      public Builder setWheelchairAccessible(org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.WheelchairAccessibility value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1776,7 +1900,7 @@ public final class TripsProto {
         return this;
       }
       /**
-       * <code>.trips.Trip.Accessibility wheelchair_accessible = 9;</code>
+       * <code>.trips.Trip.WheelchairAccessibility wheelchair_accessible = 9;</code>
        */
       public Builder clearWheelchairAccessible() {
         
@@ -1787,13 +1911,13 @@ public final class TripsProto {
 
       private int bikesAllowed_ = 0;
       /**
-       * <code>.trips.Trip.Accessibility bikes_allowed = 10;</code>
+       * <code>.trips.Trip.BikeAccessibility bikes_allowed = 10;</code>
        */
       public int getBikesAllowedValue() {
         return bikesAllowed_;
       }
       /**
-       * <code>.trips.Trip.Accessibility bikes_allowed = 10;</code>
+       * <code>.trips.Trip.BikeAccessibility bikes_allowed = 10;</code>
        */
       public Builder setBikesAllowedValue(int value) {
         bikesAllowed_ = value;
@@ -1801,17 +1925,17 @@ public final class TripsProto {
         return this;
       }
       /**
-       * <code>.trips.Trip.Accessibility bikes_allowed = 10;</code>
+       * <code>.trips.Trip.BikeAccessibility bikes_allowed = 10;</code>
        */
-      public TripsProto.Trip.Accessibility getBikesAllowed() {
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility getBikesAllowed() {
         @SuppressWarnings("deprecation")
-        TripsProto.Trip.Accessibility result = TripsProto.Trip.Accessibility.valueOf(bikesAllowed_);
-        return result == null ? TripsProto.Trip.Accessibility.UNRECOGNIZED : result;
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility result = org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility.valueOf(bikesAllowed_);
+        return result == null ? org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility.UNRECOGNIZED : result;
       }
       /**
-       * <code>.trips.Trip.Accessibility bikes_allowed = 10;</code>
+       * <code>.trips.Trip.BikeAccessibility bikes_allowed = 10;</code>
        */
-      public Builder setBikesAllowed(TripsProto.Trip.Accessibility value) {
+      public Builder setBikesAllowed(org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.BikeAccessibility value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1821,7 +1945,7 @@ public final class TripsProto {
         return this;
       }
       /**
-       * <code>.trips.Trip.Accessibility bikes_allowed = 10;</code>
+       * <code>.trips.Trip.BikeAccessibility bikes_allowed = 10;</code>
        */
       public Builder clearBikesAllowed() {
         
@@ -1846,12 +1970,12 @@ public final class TripsProto {
     }
 
     // @@protoc_insertion_point(class_scope:trips.Trip)
-    private static final TripsProto.Trip DEFAULT_INSTANCE;
+    private static final org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new TripsProto.Trip();
+      DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip();
     }
 
-    public static TripsProto.Trip getDefaultInstance() {
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1876,7 +2000,7 @@ public final class TripsProto {
     }
 
     @java.lang.Override
-    public TripsProto.Trip getDefaultInstanceForType() {
+    public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1889,12 +2013,12 @@ public final class TripsProto {
     /**
      * <code>repeated .trips.Trip trips = 1;</code>
      */
-    java.util.List<TripsProto.Trip>
+    java.util.List<org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip> 
         getTripsList();
     /**
      * <code>repeated .trips.Trip trips = 1;</code>
      */
-    TripsProto.Trip getTrips(int index);
+    org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip getTrips(int index);
     /**
      * <code>repeated .trips.Trip trips = 1;</code>
      */
@@ -1902,12 +2026,12 @@ public final class TripsProto {
     /**
      * <code>repeated .trips.Trip trips = 1;</code>
      */
-    java.util.List<? extends TripsProto.TripOrBuilder>
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder> 
         getTripsOrBuilderList();
     /**
      * <code>repeated .trips.Trip trips = 1;</code>
      */
-    TripsProto.TripOrBuilder getTripsOrBuilder(
+    org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder getTripsOrBuilder(
         int index);
   }
   /**
@@ -1959,11 +2083,11 @@ public final class TripsProto {
               break;
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-                trips_ = new java.util.ArrayList<TripsProto.Trip>();
+                trips_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip>();
                 mutable_bitField0_ |= 0x00000001;
               }
               trips_.add(
-                  input.readMessage(TripsProto.Trip.parser(), extensionRegistry));
+                  input.readMessage(org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.parser(), extensionRegistry));
               break;
             }
             default: {
@@ -1990,29 +2114,29 @@ public final class TripsProto {
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return TripsProto.internal_static_trips_tripCollection_descriptor;
+      return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_tripCollection_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return TripsProto.internal_static_trips_tripCollection_fieldAccessorTable
+      return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_tripCollection_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              TripsProto.tripCollection.class, TripsProto.tripCollection.Builder.class);
+              org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection.class, org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection.Builder.class);
     }
 
     public static final int TRIPS_FIELD_NUMBER = 1;
-    private java.util.List<TripsProto.Trip> trips_;
+    private java.util.List<org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip> trips_;
     /**
      * <code>repeated .trips.Trip trips = 1;</code>
      */
-    public java.util.List<TripsProto.Trip> getTripsList() {
+    public java.util.List<org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip> getTripsList() {
       return trips_;
     }
     /**
      * <code>repeated .trips.Trip trips = 1;</code>
      */
-    public java.util.List<? extends TripsProto.TripOrBuilder>
+    public java.util.List<? extends org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder> 
         getTripsOrBuilderList() {
       return trips_;
     }
@@ -2025,13 +2149,13 @@ public final class TripsProto {
     /**
      * <code>repeated .trips.Trip trips = 1;</code>
      */
-    public TripsProto.Trip getTrips(int index) {
+    public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip getTrips(int index) {
       return trips_.get(index);
     }
     /**
      * <code>repeated .trips.Trip trips = 1;</code>
      */
-    public TripsProto.TripOrBuilder getTripsOrBuilder(
+    public org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder getTripsOrBuilder(
         int index) {
       return trips_.get(index);
     }
@@ -2076,10 +2200,10 @@ public final class TripsProto {
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof TripsProto.tripCollection)) {
+      if (!(obj instanceof org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection)) {
         return super.equals(obj);
       }
-      TripsProto.tripCollection other = (TripsProto.tripCollection) obj;
+      org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection other = (org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection) obj;
 
       if (!getTripsList()
           .equals(other.getTripsList())) return false;
@@ -2103,69 +2227,69 @@ public final class TripsProto {
       return hash;
     }
 
-    public static TripsProto.tripCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TripsProto.tripCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TripsProto.tripCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TripsProto.tripCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TripsProto.tripCollection parseFrom(byte[] data)
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static TripsProto.tripCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static TripsProto.tripCollection parseFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TripsProto.tripCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TripsProto.tripCollection parseDelimitedFrom(java.io.InputStream input)
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static TripsProto.tripCollection parseDelimitedFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static TripsProto.tripCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static TripsProto.tripCollection parseFrom(
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2178,7 +2302,7 @@ public final class TripsProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(TripsProto.tripCollection prototype) {
+    public static Builder newBuilder(org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -2199,21 +2323,21 @@ public final class TripsProto {
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:trips.tripCollection)
-        TripsProto.tripCollectionOrBuilder {
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollectionOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return TripsProto.internal_static_trips_tripCollection_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_tripCollection_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return TripsProto.internal_static_trips_tripCollection_fieldAccessorTable
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_tripCollection_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                TripsProto.tripCollection.class, TripsProto.tripCollection.Builder.class);
+                org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection.class, org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection.Builder.class);
       }
 
-      // Construct using org.mobilitydata.gtfsproto.TripsProto.tripCollection.newBuilder()
+      // Construct using org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2244,17 +2368,17 @@ public final class TripsProto {
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return TripsProto.internal_static_trips_tripCollection_descriptor;
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.internal_static_trips_tripCollection_descriptor;
       }
 
       @java.lang.Override
-      public TripsProto.tripCollection getDefaultInstanceForType() {
-        return TripsProto.tripCollection.getDefaultInstance();
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection getDefaultInstanceForType() {
+        return org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection.getDefaultInstance();
       }
 
       @java.lang.Override
-      public TripsProto.tripCollection build() {
-        TripsProto.tripCollection result = buildPartial();
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection build() {
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -2262,8 +2386,8 @@ public final class TripsProto {
       }
 
       @java.lang.Override
-      public TripsProto.tripCollection buildPartial() {
-        TripsProto.tripCollection result = new TripsProto.tripCollection(this);
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection buildPartial() {
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection result = new org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection(this);
         int from_bitField0_ = bitField0_;
         if (tripsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
@@ -2312,16 +2436,16 @@ public final class TripsProto {
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof TripsProto.tripCollection) {
-          return mergeFrom((TripsProto.tripCollection)other);
+        if (other instanceof org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection) {
+          return mergeFrom((org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(TripsProto.tripCollection other) {
-        if (other == TripsProto.tripCollection.getDefaultInstance()) return this;
+      public Builder mergeFrom(org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection other) {
+        if (other == org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection.getDefaultInstance()) return this;
         if (tripsBuilder_ == null) {
           if (!other.trips_.isEmpty()) {
             if (trips_.isEmpty()) {
@@ -2363,11 +2487,11 @@ public final class TripsProto {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        TripsProto.tripCollection parsedMessage = null;
+        org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (TripsProto.tripCollection) e.getUnfinishedMessage();
+          parsedMessage = (org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -2378,22 +2502,22 @@ public final class TripsProto {
       }
       private int bitField0_;
 
-      private java.util.List<TripsProto.Trip> trips_ =
+      private java.util.List<org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip> trips_ =
         java.util.Collections.emptyList();
       private void ensureTripsIsMutable() {
         if (!((bitField0_ & 0x00000001) != 0)) {
-          trips_ = new java.util.ArrayList<TripsProto.Trip>(trips_);
+          trips_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip>(trips_);
           bitField0_ |= 0x00000001;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          TripsProto.Trip, TripsProto.Trip.Builder, TripsProto.TripOrBuilder> tripsBuilder_;
+          org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder, org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder> tripsBuilder_;
 
       /**
        * <code>repeated .trips.Trip trips = 1;</code>
        */
-      public java.util.List<TripsProto.Trip> getTripsList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip> getTripsList() {
         if (tripsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(trips_);
         } else {
@@ -2413,7 +2537,7 @@ public final class TripsProto {
       /**
        * <code>repeated .trips.Trip trips = 1;</code>
        */
-      public TripsProto.Trip getTrips(int index) {
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip getTrips(int index) {
         if (tripsBuilder_ == null) {
           return trips_.get(index);
         } else {
@@ -2424,7 +2548,7 @@ public final class TripsProto {
        * <code>repeated .trips.Trip trips = 1;</code>
        */
       public Builder setTrips(
-          int index, TripsProto.Trip value) {
+          int index, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip value) {
         if (tripsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2441,7 +2565,7 @@ public final class TripsProto {
        * <code>repeated .trips.Trip trips = 1;</code>
        */
       public Builder setTrips(
-          int index, TripsProto.Trip.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder builderForValue) {
         if (tripsBuilder_ == null) {
           ensureTripsIsMutable();
           trips_.set(index, builderForValue.build());
@@ -2454,7 +2578,7 @@ public final class TripsProto {
       /**
        * <code>repeated .trips.Trip trips = 1;</code>
        */
-      public Builder addTrips(TripsProto.Trip value) {
+      public Builder addTrips(org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip value) {
         if (tripsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2471,7 +2595,7 @@ public final class TripsProto {
        * <code>repeated .trips.Trip trips = 1;</code>
        */
       public Builder addTrips(
-          int index, TripsProto.Trip value) {
+          int index, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip value) {
         if (tripsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -2488,7 +2612,7 @@ public final class TripsProto {
        * <code>repeated .trips.Trip trips = 1;</code>
        */
       public Builder addTrips(
-          TripsProto.Trip.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder builderForValue) {
         if (tripsBuilder_ == null) {
           ensureTripsIsMutable();
           trips_.add(builderForValue.build());
@@ -2502,7 +2626,7 @@ public final class TripsProto {
        * <code>repeated .trips.Trip trips = 1;</code>
        */
       public Builder addTrips(
-          int index, TripsProto.Trip.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder builderForValue) {
         if (tripsBuilder_ == null) {
           ensureTripsIsMutable();
           trips_.add(index, builderForValue.build());
@@ -2516,7 +2640,7 @@ public final class TripsProto {
        * <code>repeated .trips.Trip trips = 1;</code>
        */
       public Builder addAllTrips(
-          java.lang.Iterable<? extends TripsProto.Trip> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip> values) {
         if (tripsBuilder_ == null) {
           ensureTripsIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -2556,14 +2680,14 @@ public final class TripsProto {
       /**
        * <code>repeated .trips.Trip trips = 1;</code>
        */
-      public TripsProto.Trip.Builder getTripsBuilder(
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder getTripsBuilder(
           int index) {
         return getTripsFieldBuilder().getBuilder(index);
       }
       /**
        * <code>repeated .trips.Trip trips = 1;</code>
        */
-      public TripsProto.TripOrBuilder getTripsOrBuilder(
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder getTripsOrBuilder(
           int index) {
         if (tripsBuilder_ == null) {
           return trips_.get(index);  } else {
@@ -2573,7 +2697,7 @@ public final class TripsProto {
       /**
        * <code>repeated .trips.Trip trips = 1;</code>
        */
-      public java.util.List<? extends TripsProto.TripOrBuilder>
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder> 
            getTripsOrBuilderList() {
         if (tripsBuilder_ != null) {
           return tripsBuilder_.getMessageOrBuilderList();
@@ -2584,31 +2708,31 @@ public final class TripsProto {
       /**
        * <code>repeated .trips.Trip trips = 1;</code>
        */
-      public TripsProto.Trip.Builder addTripsBuilder() {
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder addTripsBuilder() {
         return getTripsFieldBuilder().addBuilder(
-            TripsProto.Trip.getDefaultInstance());
+            org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.getDefaultInstance());
       }
       /**
        * <code>repeated .trips.Trip trips = 1;</code>
        */
-      public TripsProto.Trip.Builder addTripsBuilder(
+      public org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder addTripsBuilder(
           int index) {
         return getTripsFieldBuilder().addBuilder(
-            index, TripsProto.Trip.getDefaultInstance());
+            index, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.getDefaultInstance());
       }
       /**
        * <code>repeated .trips.Trip trips = 1;</code>
        */
-      public java.util.List<TripsProto.Trip.Builder>
+      public java.util.List<org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder> 
            getTripsBuilderList() {
         return getTripsFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          TripsProto.Trip, TripsProto.Trip.Builder, TripsProto.TripOrBuilder>
+          org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder, org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder> 
           getTripsFieldBuilder() {
         if (tripsBuilder_ == null) {
           tripsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              TripsProto.Trip, TripsProto.Trip.Builder, TripsProto.TripOrBuilder>(
+              org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip, org.mobilitydata.gtfsvalidator.proto.TripsProto.Trip.Builder, org.mobilitydata.gtfsvalidator.proto.TripsProto.TripOrBuilder>(
                   trips_,
                   ((bitField0_ & 0x00000001) != 0),
                   getParentForChildren(),
@@ -2634,12 +2758,12 @@ public final class TripsProto {
     }
 
     // @@protoc_insertion_point(class_scope:trips.tripCollection)
-    private static final TripsProto.tripCollection DEFAULT_INSTANCE;
+    private static final org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new TripsProto.tripCollection();
+      DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection();
     }
 
-    public static TripsProto.tripCollection getDefaultInstance() {
+    public static org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2664,7 +2788,7 @@ public final class TripsProto {
     }
 
     @java.lang.Override
-    public TripsProto.tripCollection getDefaultInstanceForType() {
+    public org.mobilitydata.gtfsvalidator.proto.TripsProto.tripCollection getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -2689,19 +2813,23 @@ public final class TripsProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\013trips.proto\022\005trips\"\206\003\n\004Trip\022\020\n\010route_i" +
+      "\n\013trips.proto\022\005trips\"\240\004\n\004Trip\022\020\n\010route_i" +
       "d\030\001 \001(\t\022\022\n\nservice_id\030\002 \001(\t\022\017\n\007trip_id\030\003" +
       " \001(\t\022\025\n\rtrip_headsign\030\004 \001(\t\022\027\n\017trip_shor" +
       "t_name\030\005 \001(\t\022-\n\014direction_id\030\006 \001(\0162\027.tri" +
       "ps.Trip.DirectionId\022\020\n\010block_id\030\007 \001(\t\022\020\n" +
-      "\010shape_id\030\010 \001(\t\0228\n\025wheelchair_accessible" +
-      "\030\t \001(\0162\031.trips.Trip.Accessibility\0220\n\rbik" +
-      "es_allowed\030\n \001(\0162\031.trips.Trip.Accessibil" +
-      "ity\"%\n\013DirectionId\022\n\n\006A_TO_B\020\000\022\n\n\006B_TO_A" +
-      "\020\001\"1\n\rAccessibility\022\013\n\007UNKNOWN\020\000\022\010\n\004TRUE" +
-      "\020\001\022\t\n\005FALSE\020\002\",\n\016tripCollection\022\032\n\005trips" +
-      "\030\001 \003(\0132\013.trips.TripB(\n\032org.mobilitydata." +
-      "gtfsprotoB\nTripsProtob\006proto3"
+      "\010shape_id\030\010 \001(\t\022B\n\025wheelchair_accessible" +
+      "\030\t \001(\0162#.trips.Trip.WheelchairAccessibil" +
+      "ity\0224\n\rbikes_allowed\030\n \001(\0162\035.trips.Trip." +
+      "BikeAccessibility\"6\n\013DirectionId\022\017\n\013UNKN" +
+      "OWN_DIR\020\000\022\n\n\006A_TO_B\020\001\022\n\n\006B_TO_A\020\002\"a\n\027Whe" +
+      "elchairAccessibility\022\026\n\022UNKNOWN_WHEELCHA" +
+      "IR\020\000\022\033\n\027AT_LEAST_ONE_WHEELCHAIR\020\001\022\021\n\rNO_" +
+      "WHEELCHAIR\020\002\"I\n\021BikeAccessibility\022\020\n\014UNK" +
+      "NOWN_BIKE\020\000\022\025\n\021AT_LEAST_ONE_BIKE\020\001\022\013\n\007NO" +
+      "_BIKE\020\002\",\n\016tripCollection\022\032\n\005trips\030\001 \003(\013" +
+      "2\013.trips.TripB2\n$org.mobilitydata.gtfsva" +
+      "lidator.protoB\nTripsProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -1,33 +1,41 @@
 syntax = "proto3";
 package trips;
 
-option java_package = "org.mobilitydata.gtfsproto";
+option java_package = "org.mobilitydata.gtfsvalidator.proto";
 option java_outer_classname = "TripsProto";
 
 message Trip {
-    string routeId = 1;
-    string serviceId = 2;
-    string tripId = 3;
-    string tripHeadsign = 4;
-    string tripShortName = 5;
+    string route_id = 1;
+    string service_id = 2;
+    string trip_id = 3;
+    string trip_headsign = 4;
+    string trip_short_name = 5;
 
     enum DirectionId {
-        A_TO_B = 0;
-        B_TO_A = 1;
+        UNKNOWN_DIR = 0; //Field is optional in spec => must provide default value
+        A_TO_B = 1;
+        B_TO_A = 2;
     }
 
-    DirectionId directionId = 6;
+    DirectionId direction_id = 6;
 
-    string blockId = 7;
-    string shapeId = 8;
+    string block_id = 7;
+    string shape_id = 8;
 
-    enum Accessibility {
-        UNKNOWN = 0;
-        TRUE = 1;
-        FALSE = 2;
+    enum WheelchairAccessibility {
+        UNKNOWN_WHEELCHAIR = 0;
+        AT_LEAST_ONE_WHEELCHAIR = 1;
+        NO_WHEELCHAIR = 2;
     }
-    Accessibility wheelchairAccessible = 9;
-    Accessibility bikesAllowed = 10;
+    WheelchairAccessibility wheelchair_accessible = 9;
+
+    enum BikeAccessibility {
+        UNKNOWN_BIKE = 0;
+        AT_LEAST_ONE_BIKE = 1;
+        NO_BIKE = 2;
+    }
+
+    BikeAccessibility bikes_allowed = 10;
 }
 
 message tripCollection {
