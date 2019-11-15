@@ -20,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        long timeBeforeMillis = System.currentTimeMillis();
+        long startTime = System.nanoTime();
 
         // download data source from URL and unzip
         //TODO: configurable through command line options: url, zip path, extraction path, output path
@@ -65,6 +65,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println("Took " + (System.currentTimeMillis() - timeBeforeMillis) + "ms");
+        System.out.println("Took " + (System.nanoTime() - startTime) / 100000 + "ms");
     }
 }

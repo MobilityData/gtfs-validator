@@ -40,7 +40,7 @@ public class CSVtoProtoConverter {
                 //TODO: mandatory but mtba dataset don't provide them
                 toAddBuilder.setPathwayModeValue(Integer.parseInt(rowAsMap.get("pathway_mode")));
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
 
             try{
@@ -48,9 +48,11 @@ public class CSVtoProtoConverter {
 
             } catch (NumberFormatException e) {
                 //TODO: collect errors
+                e.printStackTrace();
             }
             catch (NullPointerException e){
                 //not an error - optional value not provided
+                e.printStackTrace();
             }
 
             try{
@@ -58,9 +60,11 @@ public class CSVtoProtoConverter {
 
             } catch (NumberFormatException e) {
                 //TODO: collect errors
+                e.printStackTrace();
             }
             catch (NullPointerException e){
                 //not an error - optional value not provided
+                e.printStackTrace();
             }
 
             try{
@@ -68,9 +72,11 @@ public class CSVtoProtoConverter {
 
             } catch (NumberFormatException e) {
                 //TODO: collect errors
+                e.printStackTrace();
             }
             catch (NullPointerException e){
                 //not an error - optional value not provided
+                e.printStackTrace();
             }
 
             try{
@@ -78,9 +84,11 @@ public class CSVtoProtoConverter {
 
             } catch (NumberFormatException e) {
                 //TODO: collect errors
+                e.printStackTrace();
             }
             catch (NullPointerException e){
                 //not an error - optional value not provided
+                e.printStackTrace();
             }
 
             try{
@@ -88,9 +96,11 @@ public class CSVtoProtoConverter {
 
             } catch (NumberFormatException e) {
                 //TODO: collect errors
+                e.printStackTrace();
             }
             catch (NullPointerException e){
                 //not an error - optional value not provided
+                e.printStackTrace();
             }
 
             try{
@@ -98,9 +108,11 @@ public class CSVtoProtoConverter {
 
             } catch (NumberFormatException e) {
                 //TODO: collect errors
+                e.printStackTrace();
             }
             catch (NullPointerException e){
                 //not an error - optional value not provided
+                e.printStackTrace();
             }
 
             try{
@@ -108,9 +120,11 @@ public class CSVtoProtoConverter {
 
             } catch (NumberFormatException e) {
                 //TODO: collect errors
+                e.printStackTrace();
             }
             catch (NullPointerException e){
                 //not an error - optional value not provided
+                e.printStackTrace();
             }
 
             protoCollectionBuilder.addPathways(toAddBuilder);
