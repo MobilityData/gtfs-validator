@@ -2,130 +2,171 @@ package org.mobilitydata.gtfsvalidator.conversion;
 
 /*
  * Copyright (c) 2019. MobilityData IO. All rights reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.proto.StopTimesProto;
 import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.proto.TripsProto;
+import org.mobilitydata.gtfsvalidator.util.RuleUtils;
+import org.mobilitydata.gtfsvalidator.util.ValidationUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import static org.mobilitydata.gtfsvalidator.rules.ValidationRules.*;
 
 public class CSVtoProtoConverter {
 
-    public void convert(String csvInFilePath, String protoBinOutFilePath,
-                        PathwaysProto.pathwayCollection.Builder protoCollectionBuilder)
-            throws IOException {
+    public List<OccurrenceModel> convert(String csvInFilePath, String protoBinOutFilePath,
+                                         PathwaysProto.pathwayCollection.Builder protoCollectionBuilder) throws IOException {
 
-        var it = getRows(csvInFilePath);
+        List<OccurrenceModel> errorAndWarningList = new ArrayList<>();
 
-        while (it.hasNext()){
-            Map<String, String> rowAsMap = it.next();
+        MappingIterator<Map<String, String>> rawEntities;
+        try {
+            rawEntities = getRows(csvInFilePath);
+        } catch (IOException e) {
+            RuleUtils.addOccurrence(E001, "File Pathways.txt", errorAndWarningList);
+            return errorAndWarningList;
+        }
+
+        while (rawEntities.hasNext()) {
+            Map<String, String> rawEntity = rawEntities.next();
 
             PathwaysProto.Pathway.Builder toAddBuilder = PathwaysProto.Pathway.newBuilder();
 
-            toAddBuilder.setPathwayId(rowAsMap.get("pathway_id"));
-            toAddBuilder.setFromStopId(rowAsMap.get("from_stop_id"));
-            toAddBuilder.setToStopId(rowAsMap.get("to_stop_id"));
+            String pathwayId = ValidationUtils.validateString("pathway_id",
+                    rawEntity.get("pathway_id"),
+                    false,
+                    true,
+                    errorAndWarningList);
 
-            toAddBuilder.setIsBidirectionalValue(Integer.parseInt(rowAsMap.get("is_bidirectional")));
-
-            try {
-                //TODO: mandatory but mtba dataset don't provide them
-                toAddBuilder.setPathwayModeValue(Integer.parseInt(rowAsMap.get("pathway_mode")));
-            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                e.printStackTrace();
+            if (pathwayId != null) {
+                toAddBuilder.setPathwayId(pathwayId);
             }
 
-            try{
-                toAddBuilder.setLength(Float.parseFloat(rowAsMap.get("length")));
+            String fromStopId = ValidationUtils.validateString("from_stop_id",
+                    rawEntity.get("from_stop_id"),
+                    false,
+                    true,
+                    errorAndWarningList);
 
-            } catch (NumberFormatException e) {
-                //TODO: collect errors
-                e.printStackTrace();
-            }
-            catch (NullPointerException e){
-                //not an error - optional value not provided
-                e.printStackTrace();
-            }
+            if (fromStopId != null)
+                toAddBuilder.setFromStopId(fromStopId);
 
-            try{
-                toAddBuilder.setTraversalTime(Integer.parseInt(rowAsMap.get("traversal_time")));
+            String toStopId = ValidationUtils.validateString("to_stop_id",
+                    rawEntity.get("to_stop_id"),
+                    false,
+                    true,
+                    errorAndWarningList);
 
-            } catch (NumberFormatException e) {
-                //TODO: collect errors
-                e.printStackTrace();
-            }
-            catch (NullPointerException e){
-                //not an error - optional value not provided
-                e.printStackTrace();
-            }
+            if (toStopId != null)
+                toAddBuilder.setToStopId(toStopId);
 
-            try{
-                toAddBuilder.setStairCount(Integer.parseInt(rowAsMap.get("stair_count")));
+            Integer pathwayMode = ValidationUtils.parseAndValidateInteger("pathway_mode",
+                    rawEntity.get("pathway_mode"),
+                    false,
+                    false,
+                    errorAndWarningList);
 
-            } catch (NumberFormatException e) {
-                //TODO: collect errors
-                e.printStackTrace();
-            }
-            catch (NullPointerException e){
-                //not an error - optional value not provided
-                e.printStackTrace();
+            if (pathwayMode != null) {
+                toAddBuilder.setPathwayModeValue(pathwayMode);
             }
 
-            try{
-                toAddBuilder.setMaxSlope(Float.parseFloat(rowAsMap.get("max_slope")));
+            Integer isBidirectional = ValidationUtils.parseAndValidateInteger("is_bidirectional",
+                    rawEntity.get("is_bidirectional"),
+                    false,
+                    false,
+                    errorAndWarningList);
 
-            } catch (NumberFormatException e) {
-                //TODO: collect errors
-                e.printStackTrace();
-            }
-            catch (NullPointerException e){
-                //not an error - optional value not provided
-                e.printStackTrace();
+            if (isBidirectional != null) {
+                toAddBuilder.setIsBidirectionalValue(isBidirectional);
             }
 
-            try{
-                toAddBuilder.setMinWidth(Float.parseFloat(rowAsMap.get("min_width")));
+            Float length = ValidationUtils.parseAndValidateFloat("length",
+                    rawEntity.get("length"),
+                    true,
+                    false,
+                    errorAndWarningList);
 
-            } catch (NumberFormatException e) {
-                //TODO: collect errors
-                e.printStackTrace();
-            }
-            catch (NullPointerException e){
-                //not an error - optional value not provided
-                e.printStackTrace();
+            if (length != null) {
+                toAddBuilder.setLength(length);
             }
 
-            try{
-                toAddBuilder.setSignpostedAs(rowAsMap.get("signposted_as"));
+            Integer traversalTime = ValidationUtils.parseAndValidateInteger("traversal_time",
+                    rawEntity.get("traversal_time"),
+                    true,
+                    false,
+                    errorAndWarningList);
 
-            } catch (NumberFormatException e) {
-                //TODO: collect errors
-                e.printStackTrace();
-            }
-            catch (NullPointerException e){
-                //not an error - optional value not provided
-                e.printStackTrace();
+            if (traversalTime != null) {
+                toAddBuilder.setTraversalTime(traversalTime);
             }
 
-            try{
-                toAddBuilder.setReversedSignpostedAs(rowAsMap.get("reversed_signposted_as"));
+            Integer stairCount = ValidationUtils.parseAndValidateInteger("stair_count",
+                    rawEntity.get("stair_count"),
+                    true,
+                    true,
+                    errorAndWarningList);
 
-            } catch (NumberFormatException e) {
-                //TODO: collect errors
-                e.printStackTrace();
+            if (stairCount != null) {
+                toAddBuilder.setStairCount(stairCount);
             }
-            catch (NullPointerException e){
-                //not an error - optional value not provided
-                e.printStackTrace();
+
+            Float maxSlope = ValidationUtils.parseAndValidateFloat("max_slope",
+                    rawEntity.get("max_slope"),
+                    true,
+                    true,
+                    errorAndWarningList);
+
+            if (maxSlope != null) {
+                toAddBuilder.setMaxSlope(maxSlope);
             }
+
+            Float minWidth = ValidationUtils.parseAndValidateFloat("min_width",
+                    rawEntity.get("min_width"),
+                    true,
+                    false,
+                    errorAndWarningList);
+
+            if (minWidth != null) {
+                toAddBuilder.setMinWidth(minWidth);
+            }
+
+            String signpostedAs = ValidationUtils.validateString("signposted_as",
+                    rawEntity.get("signposted_as"),
+                    true,
+                    false,
+                    errorAndWarningList);
+
+            toAddBuilder.setSignpostedAs(signpostedAs);
+
+            String reversedSignpostedAs = ValidationUtils.validateString("reversed_signposted_as",
+                    rawEntity.get("reversed_signposted_as"),
+                    true,
+                    false,
+                    errorAndWarningList);
 
             protoCollectionBuilder.addPathways(toAddBuilder);
         }
@@ -134,6 +175,8 @@ public class CSVtoProtoConverter {
         FileOutputStream output = new FileOutputStream(protoBinOutFilePath);
         protoCollectionBuilder.build().writeTo(output);
         output.close();
+
+        return errorAndWarningList;
     }
 
     public void convert(String csvInFilePath, String protoBinOutFilePath,

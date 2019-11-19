@@ -2,10 +2,23 @@ package org.mobilitydata.gtfsvalidator;
 
 /*
  * Copyright (c) 2019. MobilityData IO. All rights reserved
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
+import org.mobilitydata.gtfsvalidator.util.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +62,7 @@ public class Main {
             Path out = Path.of(outputPath);
 
             // to empty any already existing directory
-            if(Files.exists(out)){
+            if (Files.exists(out)) {
                 //noinspection ResultOfMethodCallIgnored
                 Files.walk(out).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
                 Files.createDirectory(out);
@@ -65,6 +78,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println("Took " + (System.nanoTime() - startTime) / 100000 + "ms");
+        System.out.println("Took " + (System.nanoTime() - startTime) / 1000000 + "ms");
     }
 }
