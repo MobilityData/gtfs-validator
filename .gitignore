@@ -2,7 +2,6 @@
 .idea/
 
 target/
-out/
 **/target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -17,10 +16,3 @@ buildNumber.properties
 *~
 
 *.db
-
-### Gradle ###
-.gradle
-build/
-
-### Gradle Patch ###
-**/build/
