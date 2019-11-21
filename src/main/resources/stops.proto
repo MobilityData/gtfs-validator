@@ -1,0 +1,46 @@
+syntax = "proto3";
+package stops;
+
+//https://github.com/googleapis/api-common-protos
+// /Users/fabricev/Dev/api-common-protos
+import "google/type/latlng.proto";
+
+option java_package = "org.mobilitydata.gtfsvalidator.proto";
+option java_outer_classname = "StopsProto";
+
+message Stop {
+    string id = 1;
+    string code = 2;
+    string name = 3;
+    string desc = 4;
+    google.type.LatLng lat_lng = 5;
+    string zone_id = 6;
+    string url = 7;
+
+    enum LocationType {
+        STOP_OR_PLATFORM = 0;
+        STATION = 1;
+        ENTRANCE_OR_EXIT = 2;
+        GENERIC = 3;
+        BOARDING = 4;
+    }
+    LocationType location_type = 8;
+
+    string parent_station = 9;
+    string timezone = 10;
+
+    enum WheelchairBoarding {
+        UNKNOWN = 0;
+        AT_LEAST_ONE = 1;
+        NONE = 2;
+    }
+
+    WheelchairBoarding wheelchair_boarding = 11;
+
+    string level_id = 12;
+    string platform_code = 13;
+}
+
+message stopCollection {
+    repeated Stop stops = 1;
+}
