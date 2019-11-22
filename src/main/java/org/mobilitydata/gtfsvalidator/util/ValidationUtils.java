@@ -40,6 +40,10 @@ public class ValidationUtils {
         try {
             float value = Float.parseFloat(rawValue);
 
+            if (Float.isNaN(value)) {
+                throw new NumberFormatException();
+            }
+
             if (!canBeNegative && value < 0) {
                 RuleUtils.addOccurrence(E004, fieldName, outList);
                 return null;
@@ -48,7 +52,7 @@ public class ValidationUtils {
             return value;
 
         } catch (NumberFormatException e) {
-            outList.add(new OccurrenceModel(fieldName, E003));
+            RuleUtils.addOccurrence(E003, fieldName, outList);
             return null;
         }
     }
@@ -91,11 +95,11 @@ public class ValidationUtils {
         if (rawValue == null || rawValue.isEmpty()) {
             if (!canBeNullOrEmpty) {
                 RuleUtils.addOccurrence(E002, fieldName, outList);
+                return null;
             }
-            return null;
         }
 
-        if (onlyPrintableAscii) {
+        if (rawValue != null && onlyPrintableAscii) {
             int charCount = rawValue.length();
             for (int i = 0; i < charCount; ++i) {
                 if (!isPrintableAscii(rawValue.charAt(i))) {
