@@ -10,10 +10,7 @@ plugins {
 
 repositories {
     mavenLocal()
-    maven {
-        url = 'http://repo.maven.apache.org/maven2'
-    }
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -29,7 +26,6 @@ dependencies {
 
 group = 'org.mobilitydata'
 version = '1.0-SNAPSHOT'
-sourceCompatibility = '11'
 
 publishing {
     publications {
