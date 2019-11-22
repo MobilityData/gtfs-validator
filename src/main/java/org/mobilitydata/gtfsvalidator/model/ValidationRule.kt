@@ -17,8 +17,8 @@ import java.io.Serializable
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */   data class ValidationRule(val errorId: String?,
-                                val severity: String?,
-                                val title: String?,
-                                val errorDescription: String?,
-                                val occurrenceSuffix: String?) : Serializable
+ */   data class ValidationRule(val errorId: String,
+                                val severity: String,
+                                val title: String,
+                                val errorDescription: String,
+                                val occurrenceSuffix: String) : Serializable

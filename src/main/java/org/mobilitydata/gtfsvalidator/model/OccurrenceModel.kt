@@ -19,4 +19,4 @@ package org.mobilitydata.gtfsvalidator.model
 
 import java.io.Serializable
 
-class OccurrenceModel(val prefix: String, val rule: ValidationRule) : Serializable
+data class OccurrenceModel(val prefix: String, val rule: ValidationRule) : Serializable

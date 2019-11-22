@@ -25,7 +25,8 @@ dependencies {
 }
 
 group = 'org.mobilitydata'
-version = '1.0-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '11'
 
 publishing {
     publications {
@@ -36,11 +37,11 @@ publishing {
 }
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = sourceCompatibility
     }
 }
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = sourceCompatibility
     }
 }
