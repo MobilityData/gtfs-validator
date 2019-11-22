@@ -15,38 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.mobilitydata.gtfsvalidator.model
 
-package org.mobilitydata.gtfsvalidator.model;
+import java.io.Serializable
 
-import java.io.Serializable;
-
-public class OccurrenceModel implements Serializable {
-
-    public OccurrenceModel(String prefix, ValidationRule rule) {
-        this.prefix = prefix;
-        this.rule = rule;
-    }
-
-    public OccurrenceModel() {
-    }
-
-    private String prefix;
-    private ValidationRule rule;
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public ValidationRule getRule() {
-        return rule;
-    }
-
-    public void setRule(ValidationRule rule) {
-        this.rule = rule;
-    }
-
-}
+class OccurrenceModel(val prefix: String, val rule: ValidationRule) : Serializable
