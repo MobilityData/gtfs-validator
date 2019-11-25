@@ -16,21 +16,25 @@ package org.mobilitydata.gtfsvalidator.util;
  * limitations under the License.
  */
 
+import com.google.common.base.Strings;
+import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static org.mobilitydata.gtfsvalidator.rules.ValidationRules.*;
 
 public class ValidationUtils {
 
-    public static Float parseAndValidateFloat(String fieldName,
-                                              String rawValue,
-                                              boolean canBeNullOrEmpty,
-                                              boolean canBeNegative,
-                                              List<OccurrenceModel> outList) {
+    public static @Nullable
+    Float parseAndValidateFloat(@NotNull String fieldName,
+                                  @Nullable String rawValue,
+                                  boolean canBeNullOrEmpty,
+                                  boolean canBeNegative,
+                                  @NotNull  List<OccurrenceModel> outList) {
 
-        if (rawValue == null || rawValue.isEmpty()) {
+        if (Strings.isNullOrEmpty(rawValue)) {
             if (!canBeNullOrEmpty) {
                 RuleUtils.addOccurrence(E002, fieldName, outList);
             }
@@ -57,13 +61,14 @@ public class ValidationUtils {
         }
     }
 
-    public static Integer parseAndValidateInteger(String fieldName,
-                                                  String rawValue,
-                                                  boolean canBeNullOrEmpty,
-                                                  boolean canBeNegative,
-                                                  List<OccurrenceModel> outList) {
+    public static @Nullable
+    Integer parseAndValidateInteger(@NotNull  String fieldName,
+                                  @Nullable String rawValue,
+                                  boolean canBeNullOrEmpty,
+                                  boolean canBeNegative,
+                                  @NotNull  List<OccurrenceModel> outList) {
 
-        if (rawValue == null || rawValue.isEmpty()) {
+        if (Strings.isNullOrEmpty(rawValue)) {
             if (!canBeNullOrEmpty) {
                 RuleUtils.addOccurrence(E002, fieldName, outList);
             }
@@ -86,13 +91,14 @@ public class ValidationUtils {
         }
     }
 
-    public static String validateString(String fieldName,
-                                        String rawValue,
-                                        boolean canBeNullOrEmpty,
-                                        boolean onlyPrintableAscii,
-                                        List<OccurrenceModel> outList) {
+    public static @Nullable
+    String validateString(@NotNull String fieldName,
+                          @Nullable String rawValue,
+                          boolean canBeNullOrEmpty,
+                          boolean onlyPrintableAscii,
+                          @NotNull List<OccurrenceModel> outList) {
 
-        if (rawValue == null || rawValue.isEmpty()) {
+        if (Strings.isNullOrEmpty(rawValue)) {
             if (!canBeNullOrEmpty) {
                 RuleUtils.addOccurrence(E002, fieldName, outList);
                 return null;

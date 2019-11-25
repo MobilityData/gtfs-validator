@@ -9,7 +9,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("ConstantConditions")
 class ValidationUtilsTest {
 
     String fieldName = "filedNameTest";
@@ -19,8 +18,18 @@ class ValidationUtilsTest {
     void parseAndValidateFloat() {
         List<OccurrenceModel> testList = new ArrayList<>();
 
-        //can be null
+        // typical case
         Float returned = ValidationUtils.parseAndValidateFloat(fieldName,
+                "66.6",
+                false,
+                false,
+                testList);
+
+        assertEquals(66.6f, returned);
+        assertEquals(0, testList.size());
+
+        // can be null
+        returned = ValidationUtils.parseAndValidateFloat(fieldName,
                 null,
                 true,
                 false,
@@ -28,7 +37,7 @@ class ValidationUtilsTest {
         assertNull(returned);
         assertEquals(0, testList.size());
 
-        //cannot be null
+        // cannot be null
         returned = ValidationUtils.parseAndValidateFloat(fieldName,
                 null,
                 false,
@@ -42,7 +51,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //can be empty
+        // can be empty
         returned = ValidationUtils.parseAndValidateFloat(fieldName,
                 "",
                 true,
@@ -51,7 +60,7 @@ class ValidationUtilsTest {
         assertNull(returned);
         assertEquals(0, testList.size());
 
-        //cannot be empty
+        // cannot be empty
         returned = ValidationUtils.parseAndValidateFloat(fieldName,
                 "",
                 false,
@@ -65,7 +74,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //NaN parsing
+        // NaN parsing
         returned = ValidationUtils.parseAndValidateFloat(fieldName,
                 "NaN",
                 false,
@@ -79,7 +88,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //Any non parsable
+        // Any non parsable
         returned = ValidationUtils.parseAndValidateFloat(fieldName,
                 "abc",
                 false,
@@ -93,7 +102,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //can't be negative, value is zero
+        // can't be negative, value is zero
         returned = ValidationUtils.parseAndValidateFloat(fieldName,
                 "0",
                 false,
@@ -103,7 +112,7 @@ class ValidationUtilsTest {
         assertEquals(0, returned);
         assertEquals(0, testList.size());
 
-        //can't be negative, value is negative
+        // can't be negative, value is negative
         returned = ValidationUtils.parseAndValidateFloat(fieldName,
                 "-0.001",
                 false,
@@ -117,24 +126,24 @@ class ValidationUtilsTest {
         assertEquals("E004", error.getRule().getErrorId());
 
         testList.clear();
-
-        //typical case
-        returned = ValidationUtils.parseAndValidateFloat(fieldName,
-                "66.6",
-                false,
-                false,
-                testList);
-
-        assertEquals(66.6f, returned);
-        assertEquals(0, testList.size());
     }
 
     @Test
     void parseAndValidateInteger() {
         List<OccurrenceModel> testList = new ArrayList<>();
 
-        //can be null
+        // typical case
         Integer returned = ValidationUtils.parseAndValidateInteger(fieldName,
+                "666",
+                false,
+                false,
+                testList);
+
+        assertEquals(666, returned);
+        assertEquals(0, testList.size());
+
+        // can be null
+        returned = ValidationUtils.parseAndValidateInteger(fieldName,
                 null,
                 true,
                 false,
@@ -142,7 +151,7 @@ class ValidationUtilsTest {
         assertNull(returned);
         assertEquals(0, testList.size());
 
-        //cannot be null
+        // cannot be null
         returned = ValidationUtils.parseAndValidateInteger(fieldName,
                 null,
                 false,
@@ -156,7 +165,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //can be empty
+        // can be empty
         returned = ValidationUtils.parseAndValidateInteger(fieldName,
                 "",
                 true,
@@ -165,7 +174,7 @@ class ValidationUtilsTest {
         assertNull(returned);
         assertEquals(0, testList.size());
 
-        //cannot be empty
+        // cannot be empty
         returned = ValidationUtils.parseAndValidateInteger(fieldName,
                 "",
                 false,
@@ -179,7 +188,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //Any non parsable
+        // any non parsable
         returned = ValidationUtils.parseAndValidateInteger(fieldName,
                 "abc",
                 false,
@@ -193,7 +202,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //can't be negative, value is zero
+        // can't be negative, value is zero
         returned = ValidationUtils.parseAndValidateInteger(fieldName,
                 "0",
                 false,
@@ -203,7 +212,7 @@ class ValidationUtilsTest {
         assertEquals(0, returned);
         assertEquals(0, testList.size());
 
-        //can't be negative, value is negative
+        // can't be negative, value is negative
         returned = ValidationUtils.parseAndValidateInteger(fieldName,
                 "-1",
                 false,
@@ -217,24 +226,24 @@ class ValidationUtilsTest {
         assertEquals("E006", error.getRule().getErrorId());
 
         testList.clear();
-
-        //typical case
-        returned = ValidationUtils.parseAndValidateInteger(fieldName,
-                "666",
-                false,
-                false,
-                testList);
-
-        assertEquals(666, returned);
-        assertEquals(0, testList.size());
     }
 
     @Test
     void validateString() {
         List<OccurrenceModel> testList = new ArrayList<>();
 
-        //can be null
+        // typical case
         String returned = ValidationUtils.validateString(fieldName,
+                "666sixcentsoixantesix",
+                false,
+                false,
+                testList);
+
+        assertEquals("666sixcentsoixantesix", returned);
+        assertEquals(0, testList.size());
+
+        // can be null
+        returned = ValidationUtils.validateString(fieldName,
                 null,
                 true,
                 false,
@@ -242,7 +251,7 @@ class ValidationUtilsTest {
         assertNull(returned);
         assertEquals(0, testList.size());
 
-        //cannot be null
+        // cannot be null
         returned = ValidationUtils.validateString(fieldName,
                 null,
                 false,
@@ -256,7 +265,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //can be empty
+        // can be empty
         returned = ValidationUtils.validateString(fieldName,
                 "",
                 true,
@@ -265,7 +274,7 @@ class ValidationUtilsTest {
         assertEquals("", returned);
         assertEquals(0, testList.size());
 
-        //cannot be empty
+        // cannot be empty
         returned = ValidationUtils.validateString(fieldName,
                 "",
                 false,
@@ -279,7 +288,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //onlyPrintableAscii is true, value contains non ASCII
+        // onlyPrintableAscii is true, value contains non ASCII
         returned = ValidationUtils.validateString(fieldName,
                 "abçé",
                 false,
@@ -293,7 +302,7 @@ class ValidationUtilsTest {
 
         testList.clear();
 
-        //onlyPrintableAscii is true, value contains non printable ASCII
+        // onlyPrintableAscii is true, value contains non printable ASCII
         returned = ValidationUtils.validateString(fieldName,
                 "ab\u0003",
                 false,
@@ -306,15 +315,5 @@ class ValidationUtilsTest {
         assertEquals("W001", warning.getRule().getErrorId());
 
         testList.clear();
-
-        //typical case
-        returned = ValidationUtils.validateString(fieldName,
-                "666sixcentsoixantesix",
-                false,
-                false,
-                testList);
-
-        assertEquals("666sixcentsoixantesix", returned);
-        assertEquals(0, testList.size());
     }
 }
