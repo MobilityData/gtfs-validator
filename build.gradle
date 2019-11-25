@@ -5,13 +5,12 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.60'
 }
 
 repositories {
     mavenLocal()
-    maven {
-        url = 'http://repo.maven.apache.org/maven2'
-    }
+    jcenter()
 }
 
 dependencies {
@@ -22,6 +21,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.1'
     implementation 'com.google.guava:guava:28.1-jre'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     implementation 'org.jetbrains:annotations:15.0'
@@ -41,7 +41,7 @@ test {
 }
 
 group = 'org.mobilitydata'
-version = '1.0-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
 sourceCompatibility = '11'
 
 publishing {
@@ -49,5 +49,15 @@ publishing {
         maven(MavenPublication) {
             from(components.java)
         }
+    }
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = sourceCompatibility
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = sourceCompatibility
     }
 }
