@@ -36,7 +36,7 @@ public class RuleUtils {
      */
     public static void addOccurrence(ValidationRule rule, String occurrencePrefix, List<OccurrenceModel> list/*, org.slf4j.Logger log*/) {
         OccurrenceModel om = new OccurrenceModel(occurrencePrefix, rule);
-        //list.add(om);
+        list.add(om);
         //log.debug(om.getPrefix() + " " + rule.getOccurrenceSuffix());
     }
 }
