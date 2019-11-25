@@ -18,32 +18,52 @@ package org.mobilitydata.gtfsvalidator.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class ZipUtils {
+public class FileUtils {
+
+    public static void copyZipFromNetwork(String url, String zipInputPath) throws IOException {
+
+        Files.copy(
+                new URL(url).openStream(),
+                Paths.get(zipInputPath),
+                StandardCopyOption.REPLACE_EXISTING
+        );
+    }
+
+    public static Path cleanOrCreatePath(String pathToCleanOrCreate) throws IOException {
+
+        Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
+
+        // to empty any already existing directory
+        if (Files.exists(toCleanOrCreate)) {
+            //noinspection ResultOfMethodCallIgnored
+            Files.walk(toCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        }
+
+        Files.createDirectory(toCleanOrCreate);
+
+        return toCleanOrCreate;
+    }
 
     public static void unzip(String zipInputPath, String extractTargetPath) throws IOException {
 
-        Path unzipPath = Path.of(extractTargetPath);
-
-        // to empty any already existing directory
-        if(Files.exists(unzipPath)){
-            //noinspection ResultOfMethodCallIgnored
-            Files.walk(unzipPath).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-            Files.createDirectory(unzipPath);
-        }
+        Path unzipPath = cleanOrCreatePath(extractTargetPath);
 
         try (var zf = new ZipFile(zipInputPath)) {
             Enumeration<? extends ZipEntry> zipEntries = zf.entries();
             zipEntries.asIterator().forEachRemaining(entry -> {
                 try {
                     if (entry.isDirectory()) {
-                        var dirToCreate = unzipPath.resolve(entry.getName());
+                        throw new IOException("input zip must not contain any folder");
                     } else {
                         var fileToCreate = unzipPath.resolve(entry.getName());
                         Files.copy(zf.getInputStream(entry), fileToCreate);

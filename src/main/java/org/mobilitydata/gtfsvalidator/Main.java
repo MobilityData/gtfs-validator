@@ -18,16 +18,10 @@ package org.mobilitydata.gtfsvalidator;
 
 import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
-import org.mobilitydata.gtfsvalidator.util.ZipUtils;
+import org.mobilitydata.gtfsvalidator.util.FileUtils;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Comparator;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
@@ -35,7 +29,6 @@ public class Main {
 
         long startTime = System.nanoTime();
 
-        // download data source from URL and unzip
         //TODO: configurable through command line options: url, zip path, extraction path, output path
         String url = "https://transitfeeds.com/p/mbta/64/latest/download";
         String zipInputPath = "input.zip";
@@ -43,13 +36,9 @@ public class Main {
         String outputPath = "output";
 
         try {
-            Files.copy(
-                    new URL(url).openStream(),
-                    Paths.get(zipInputPath),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
 
-            ZipUtils.unzip(zipInputPath, zipExtractTargetPath);
+            FileUtils.copyZipFromNetwork(url, zipInputPath);
+            FileUtils.unzip(zipInputPath, zipExtractTargetPath);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -59,16 +48,7 @@ public class Main {
 
         try {
 
-            Path out = Path.of(outputPath);
-
-            // to empty any already existing directory
-            if (Files.exists(out)) {
-                //noinspection ResultOfMethodCallIgnored
-                Files.walk(out).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-                Files.createDirectory(out);
-            } else {
-                Files.createDirectory(out);
-            }
+            FileUtils.cleanOrCreatePath(outputPath);
 
             // convert GTFS text files to .proto files on disk
             pathwaysConverter.convert("input/pathways.txt",
@@ -78,6 +58,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println("Took " + (System.nanoTime() - startTime) / 1000000 + "ms");
+        System.out.println("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
     }
 }
