@@ -16,11 +16,15 @@ package org.mobilitydata.gtfsvalidator;
  * limitations under the License.
  */
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
 import org.mobilitydata.gtfsvalidator.util.FileUtils;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -28,6 +32,7 @@ public class Main {
     public static void main(String[] args) {
 
         long startTime = System.nanoTime();
+        final Logger logger = LogManager.getLogger();
 
         //TODO: configurable through command line options: url, zip path, extraction path, output path
         String url = "https://transitfeeds.com/p/mbta/64/latest/download";
@@ -50,14 +55,18 @@ public class Main {
 
             FileUtils.cleanOrCreatePath(outputPath);
 
+
             // convert GTFS text files to .proto files on disk
-            pathwaysConverter.convert("input/pathways.txt",
+            List<OccurrenceModel> result  = pathwaysConverter.convert("input/pathways.txt",
                     "output/pathways.pb",
                     PathwaysProto.pathwayCollection.newBuilder());
+
+            logger.debug("validation result: " + result);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
+        logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
     }
 }
