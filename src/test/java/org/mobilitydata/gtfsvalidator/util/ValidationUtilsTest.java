@@ -316,4 +316,101 @@ class ValidationUtilsTest {
 
         testList.clear();
     }
+
+    @Test
+    void parseAndValidateColor() {
+
+        List<OccurrenceModel> testList = new ArrayList<>();
+
+        // typical case
+        String returned = ValidationUtils.parseAndValidateColor(fieldName,
+                "#ABCDEF",
+                testList);
+
+        assertEquals("#ABCDEF", returned);
+        assertEquals(0, testList.size());
+
+        // typical case
+        returned = ValidationUtils.parseAndValidateColor(fieldName,
+                "#012345",
+                testList);
+
+        assertEquals("#012345", returned);
+        assertEquals(0, testList.size());
+
+        // typical case
+        returned = ValidationUtils.parseAndValidateColor(fieldName,
+                "#6789af",
+                testList);
+
+        assertEquals("#6789af", returned);
+        assertEquals(0, testList.size());
+
+        // null
+        returned = ValidationUtils.parseAndValidateColor(fieldName,
+                null,
+                testList);
+
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // empty
+        returned = ValidationUtils.parseAndValidateColor(fieldName,
+                "",
+                testList);
+
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // not starting with #
+        returned = ValidationUtils.parseAndValidateColor(fieldName,
+                "ABCDEF",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E007", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // incorrect length - too short
+        returned = ValidationUtils.parseAndValidateColor(fieldName,
+                "#ABC",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E007", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // incorrect length - too long
+        returned = ValidationUtils.parseAndValidateColor(fieldName,
+                "#ABCDEF0",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E007", error.getRule().getErrorId());
+
+        testList.clear();
+
+        //  invalid characters
+        returned = ValidationUtils.parseAndValidateColor(fieldName,
+                "#AZ-FTJ",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E007", error.getRule().getErrorId());
+
+    }
 }

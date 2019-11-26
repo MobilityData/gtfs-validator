@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static org.mobilitydata.gtfsvalidator.rules.ValidationRules.*;
 
@@ -118,7 +119,25 @@ public class ValidationUtils {
         return rawValue;
     }
 
+    public static @Nullable
+    String parseAndValidateColor(@NotNull String fieldName,
+                         @Nullable String rawValue,
+                         @NotNull List<OccurrenceModel> outList) {
+
+        if (Strings.isNullOrEmpty(rawValue)) {
+            return null;
+        }
+
+        if (COLOR_6_DIGITS_HEXADECIMAL_PATTERN.matcher(rawValue).matches()) {
+            return rawValue;
+        } else {
+            RuleUtils.addOccurrence(E007, fieldName, outList);
+            return null;
+        }
+    }
+
     private static boolean isPrintableAscii(char ch) {
         return ch >= 32 && ch < 127;
     }
+    private static final Pattern COLOR_6_DIGITS_HEXADECIMAL_PATTERN = Pattern.compile("^#[0-9A-Fa-f]{6}$");
 }
