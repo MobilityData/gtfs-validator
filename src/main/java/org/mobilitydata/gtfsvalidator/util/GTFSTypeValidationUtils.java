@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 import static org.mobilitydata.gtfsvalidator.rules.ValidationRules.*;
 
-public class ValidationUtils {
+public class GTFSTypeValidationUtils {
 
     public static @Nullable
     Float parseAndValidateFloat(@NotNull String fieldName,
