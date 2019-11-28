@@ -25,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.proto.StopTimesProto;
 import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.proto.TripsProto;
 import org.mobilitydata.gtfsvalidator.util.RuleUtils;
-import org.mobilitydata.gtfsvalidator.util.ValidationUtils;
+import org.mobilitydata.gtfsvalidator.util.GTFSTypeValidationUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,7 +56,7 @@ public class CSVtoProtoConverter {
 
             PathwaysProto.Pathway.Builder toAddBuilder = PathwaysProto.Pathway.newBuilder();
 
-            String pathwayId = ValidationUtils.validateString("pathway_id",
+            String pathwayId = GTFSTypeValidationUtils.validateString("pathway_id",
                     rawEntity.get("pathway_id"),
                     false,
                     true,
@@ -66,7 +66,7 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setPathwayId(pathwayId);
             }
 
-            String fromStopId = ValidationUtils.validateString("from_stop_id",
+            String fromStopId = GTFSTypeValidationUtils.validateString("from_stop_id",
                     rawEntity.get("from_stop_id"),
                     false,
                     true,
@@ -75,7 +75,7 @@ public class CSVtoProtoConverter {
             if (fromStopId != null)
                 toAddBuilder.setFromStopId(fromStopId);
 
-            String toStopId = ValidationUtils.validateString("to_stop_id",
+            String toStopId = GTFSTypeValidationUtils.validateString("to_stop_id",
                     rawEntity.get("to_stop_id"),
                     false,
                     true,
@@ -84,7 +84,7 @@ public class CSVtoProtoConverter {
             if (toStopId != null)
                 toAddBuilder.setToStopId(toStopId);
 
-            Integer pathwayMode = ValidationUtils.parseAndValidateInteger("pathway_mode",
+            Integer pathwayMode = GTFSTypeValidationUtils.parseAndValidateInteger("pathway_mode",
                     rawEntity.get("pathway_mode"),
                     false,
                     false,
@@ -94,7 +94,7 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setPathwayModeValue(pathwayMode);
             }
 
-            Integer isBidirectional = ValidationUtils.parseAndValidateInteger("is_bidirectional",
+            Integer isBidirectional = GTFSTypeValidationUtils.parseAndValidateInteger("is_bidirectional",
                     rawEntity.get("is_bidirectional"),
                     false,
                     false,
@@ -104,7 +104,7 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setIsBidirectionalValue(isBidirectional);
             }
 
-            Float length = ValidationUtils.parseAndValidateFloat("length",
+            Float length = GTFSTypeValidationUtils.parseAndValidateFloat("length",
                     rawEntity.get("length"),
                     true,
                     false,
@@ -114,7 +114,7 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setLength(length);
             }
 
-            Integer traversalTime = ValidationUtils.parseAndValidateInteger("traversal_time",
+            Integer traversalTime = GTFSTypeValidationUtils.parseAndValidateInteger("traversal_time",
                     rawEntity.get("traversal_time"),
                     true,
                     false,
@@ -124,7 +124,7 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setTraversalTime(traversalTime);
             }
 
-            Integer stairCount = ValidationUtils.parseAndValidateInteger("stair_count",
+            Integer stairCount = GTFSTypeValidationUtils.parseAndValidateInteger("stair_count",
                     rawEntity.get("stair_count"),
                     true,
                     true,
@@ -134,7 +134,7 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setStairCount(stairCount);
             }
 
-            Float maxSlope = ValidationUtils.parseAndValidateFloat("max_slope",
+            Float maxSlope = GTFSTypeValidationUtils.parseAndValidateFloat("max_slope",
                     rawEntity.get("max_slope"),
                     true,
                     true,
@@ -144,7 +144,7 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setMaxSlope(maxSlope);
             }
 
-            Float minWidth = ValidationUtils.parseAndValidateFloat("min_width",
+            Float minWidth = GTFSTypeValidationUtils.parseAndValidateFloat("min_width",
                     rawEntity.get("min_width"),
                     true,
                     false,
@@ -154,7 +154,7 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setMinWidth(minWidth);
             }
 
-            String signpostedAs = ValidationUtils.validateString("signposted_as",
+            String signpostedAs = GTFSTypeValidationUtils.validateString("signposted_as",
                     rawEntity.get("signposted_as"),
                     true,
                     false,
@@ -162,7 +162,7 @@ public class CSVtoProtoConverter {
 
             toAddBuilder.setSignpostedAs(signpostedAs);
 
-            String reversedSignpostedAs = ValidationUtils.validateString("reversed_signposted_as",
+            String reversedSignpostedAs = GTFSTypeValidationUtils.validateString("reversed_signposted_as",
                     rawEntity.get("reversed_signposted_as"),
                     true,
                     false,

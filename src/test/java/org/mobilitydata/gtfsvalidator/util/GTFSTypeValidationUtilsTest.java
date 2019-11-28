@@ -1,6 +1,5 @@
 package org.mobilitydata.gtfsvalidator.util;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 
@@ -9,7 +8,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ValidationUtilsTest {
+class GTFSTypeValidationUtilsTest {
 
     String fieldName = "filedNameTest";
 
@@ -19,7 +18,7 @@ class ValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        Float returned = ValidationUtils.parseAndValidateFloat(fieldName,
+        Float returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 "66.6",
                 false,
                 false,
@@ -29,7 +28,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = ValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 null,
                 true,
                 false,
@@ -38,7 +37,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = ValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 null,
                 false,
                 false,
@@ -52,7 +51,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // can be empty
-        returned = ValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 "",
                 true,
                 false,
@@ -61,7 +60,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = ValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 "",
                 false,
                 false,
@@ -75,7 +74,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // NaN parsing
-        returned = ValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 "NaN",
                 false,
                 false,
@@ -89,7 +88,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // Any non parsable
-        returned = ValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 "abc",
                 false,
                 false,
@@ -103,7 +102,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // can't be negative, value is zero
-        returned = ValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 "0",
                 false,
                 false,
@@ -113,7 +112,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can't be negative, value is negative
-        returned = ValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 "-0.001",
                 false,
                 false,
@@ -133,7 +132,7 @@ class ValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        Integer returned = ValidationUtils.parseAndValidateInteger(fieldName,
+        Integer returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
                 "666",
                 false,
                 false,
@@ -143,7 +142,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = ValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
                 null,
                 true,
                 false,
@@ -152,7 +151,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = ValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
                 null,
                 false,
                 false,
@@ -166,7 +165,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // can be empty
-        returned = ValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
                 "",
                 true,
                 false,
@@ -175,7 +174,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = ValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
                 "",
                 false,
                 false,
@@ -189,7 +188,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // any non parsable
-        returned = ValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
                 "abc",
                 false,
                 false,
@@ -203,7 +202,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // can't be negative, value is zero
-        returned = ValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
                 "0",
                 false,
                 false,
@@ -213,7 +212,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can't be negative, value is negative
-        returned = ValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
                 "-1",
                 false,
                 false,
@@ -233,7 +232,7 @@ class ValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        String returned = ValidationUtils.validateString(fieldName,
+        String returned = GTFSTypeValidationUtils.validateString(fieldName,
                 "666sixcentsoixantesix",
                 false,
                 false,
@@ -243,7 +242,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = ValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateString(fieldName,
                 null,
                 true,
                 false,
@@ -252,7 +251,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = ValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateString(fieldName,
                 null,
                 false,
                 false,
@@ -266,7 +265,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // can be empty
-        returned = ValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateString(fieldName,
                 "",
                 true,
                 false,
@@ -275,7 +274,7 @@ class ValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = ValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateString(fieldName,
                 "",
                 false,
                 false,
@@ -289,7 +288,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // onlyPrintableAscii is true, value contains non ASCII
-        returned = ValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateString(fieldName,
                 "abçé",
                 false,
                 true,
@@ -303,7 +302,7 @@ class ValidationUtilsTest {
         testList.clear();
 
         // onlyPrintableAscii is true, value contains non printable ASCII
-        returned = ValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateString(fieldName,
                 "ab\u0003",
                 false,
                 true,
@@ -315,5 +314,102 @@ class ValidationUtilsTest {
         assertEquals("W001", warning.getRule().getErrorId());
 
         testList.clear();
+    }
+
+    @Test
+    void parseAndValidateColor() {
+
+        List<OccurrenceModel> testList = new ArrayList<>();
+
+        // typical case
+        String returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+                "#ABCDEF",
+                testList);
+
+        assertEquals("#ABCDEF", returned);
+        assertEquals(0, testList.size());
+
+        // typical case
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+                "#012345",
+                testList);
+
+        assertEquals("#012345", returned);
+        assertEquals(0, testList.size());
+
+        // typical case
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+                "#6789af",
+                testList);
+
+        assertEquals("#6789af", returned);
+        assertEquals(0, testList.size());
+
+        // null
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+                null,
+                testList);
+
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // empty
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+                "",
+                testList);
+
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // not starting with #
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+                "ABCDEF",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E007", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // incorrect length - too short
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+                "#ABC",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E007", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // incorrect length - too long
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+                "#ABCDEF0",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E007", error.getRule().getErrorId());
+
+        testList.clear();
+
+        //  invalid characters
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+                "#AZ-FTJ",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E007", error.getRule().getErrorId());
+
     }
 }

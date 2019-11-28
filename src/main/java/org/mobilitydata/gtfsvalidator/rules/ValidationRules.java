@@ -55,4 +55,8 @@ public class ValidationRules {
     public static final ValidationRule E006 = new ValidationRule("E006", "ERROR", "Invalid field value",
             "A field of type non negative integer can't be negative",
             "is negative");
+
+    public static final ValidationRule E007 = new ValidationRule("E007", "ERROR", "Invalid field value",
+            "A field of type color can't be parsed",
+            "is not parsable as an hexadecimal color");
 }
