@@ -59,4 +59,12 @@ public class ValidationRules {
     public static final ValidationRule E007 = new ValidationRule("E007", "ERROR", "Invalid field value",
             "A field of type color can't be parsed",
             "is not parsable as an hexadecimal color");
+
+    public static final ValidationRule E008 = new ValidationRule("E008", "ERROR", "Invalid field value",
+            "A field of type latitude has a limited validity range",
+            "is not in valid [-90..90] range");
+
+    public static final ValidationRule E009 = new ValidationRule("E009", "ERROR", "Invalid field value",
+            "A field of type longitude has a limited validity range",
+            "is not in valid [-180..180] range");
 }

@@ -87,7 +87,7 @@ class GTFSTypeValidationUtilsTest {
 
         testList.clear();
 
-        // Any non parsable
+        // any non parsable
         returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
                 "abc",
                 false,
@@ -125,6 +125,236 @@ class GTFSTypeValidationUtilsTest {
         assertEquals("E004", error.getRule().getErrorId());
 
         testList.clear();
+    }
+
+    @Test
+    void parseAndValidateLatitude() {
+        List<OccurrenceModel> testList = new ArrayList<>();
+
+        // typical case - positive
+        Float returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                "90",
+                false,
+                testList);
+
+        assertEquals(90.0f, returned);
+        assertEquals(0, testList.size());
+
+        // typical case - negative
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                "-90",
+                false,
+                testList);
+
+        assertEquals(-90.0f, returned);
+        assertEquals(0, testList.size());
+
+        // can be null
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                null,
+                true,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // cannot be null
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                null,
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E002", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // can be empty
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                "",
+                true,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // cannot be empty
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                "",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E002", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // NaN parsing
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                "NaN",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E003", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // any non parsable
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                "abc",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E003", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // invalid value - too high
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                "90.1234567",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E008", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // invalid value - too low
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+                "-90.1234567",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E008", error.getRule().getErrorId());
+    }
+
+    @Test
+    void parseAndValidateLongitude() {
+        List<OccurrenceModel> testList = new ArrayList<>();
+
+        // typical case - positive
+        Float returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                "180",
+                false,
+                testList);
+
+        assertEquals(180.0f, returned);
+        assertEquals(0, testList.size());
+
+        // typical case - negative
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                "-180",
+                false,
+                testList);
+
+        assertEquals(-180.0f, returned);
+        assertEquals(0, testList.size());
+
+        // can be null
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                null,
+                true,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // cannot be null
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                null,
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E002", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // can be empty
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                "",
+                true,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // cannot be empty
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                "",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E002", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // NaN parsing
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                "NaN",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E003", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // any non parsable
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                "abc",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E003", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // invalid value - too high
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                "180.1234567",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E009", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // invalid value - too low
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+                "-180.1234567",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E009", error.getRule().getErrorId());
     }
 
     @Test
@@ -400,7 +630,7 @@ class GTFSTypeValidationUtilsTest {
 
         testList.clear();
 
-        //  invalid characters
+        // invalid characters
         returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
                 "#AZ-FTJ",
                 testList);
