@@ -63,6 +63,52 @@ public class GTFSTypeValidationUtils {
     }
 
     public static @Nullable
+    Float parseAndValidateLatitude(@NotNull String fieldName,
+                                   @Nullable String rawValue,
+                                   boolean canBeNullOrEmpty,
+                                   @NotNull List<OccurrenceModel> outList) {
+        Float validatedFloat = parseAndValidateFloat(fieldName,
+                rawValue,
+                canBeNullOrEmpty,
+                true,
+                outList);
+
+        if (validatedFloat == null) {
+            return null;
+        }
+
+        if (validatedFloat < -90f || validatedFloat > 90f) {
+            RuleUtils.addOccurrence(E008, fieldName, outList);
+            return null;
+        }
+
+        return validatedFloat;
+    }
+
+    public static @Nullable
+    Float parseAndValidateLongitude(@NotNull String fieldName,
+                                   @Nullable String rawValue,
+                                   boolean canBeNullOrEmpty,
+                                   @NotNull List<OccurrenceModel> outList) {
+        Float validatedFloat = parseAndValidateFloat(fieldName,
+                rawValue,
+                canBeNullOrEmpty,
+                true,
+                outList);
+
+        if (validatedFloat == null) {
+            return null;
+        }
+
+        if (validatedFloat < -180f || validatedFloat > 180f) {
+            RuleUtils.addOccurrence(E009, fieldName, outList);
+            return null;
+        }
+
+        return validatedFloat;
+    }
+
+    public static @Nullable
     Integer parseAndValidateInteger(@NotNull  String fieldName,
                                   @Nullable String rawValue,
                                   boolean canBeNullOrEmpty,
