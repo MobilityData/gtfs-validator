@@ -17,6 +17,7 @@ package org.mobilitydata.gtfsvalidator.util;
  */
 
 import com.google.common.base.Strings;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 
@@ -166,6 +167,29 @@ public class GTFSTypeValidationUtils {
     }
 
     public static @Nullable
+    String validateUrl(@NotNull String fieldName,
+                       @Nullable String rawValue,
+                       boolean canBeNullOrEmpty,
+                       @NotNull List<OccurrenceModel> outList) {
+
+        if (Strings.isNullOrEmpty(rawValue)) {
+            if (!canBeNullOrEmpty) {
+                RuleUtils.addOccurrence(E002, fieldName, outList);
+            }
+            return null;
+        }
+
+        UrlValidator urlValidator = new UrlValidator(VALID_URL_SCHEMES);
+
+        if (!urlValidator.isValid(rawValue)) {
+            RuleUtils.addOccurrence(E011, fieldName, outList);
+            return null;
+        }
+
+        return rawValue;
+    }
+
+    public static @Nullable
     String parseAndValidateColor(@NotNull String fieldName,
                          @Nullable String rawValue,
                          @NotNull List<OccurrenceModel> outList) {
@@ -186,4 +210,5 @@ public class GTFSTypeValidationUtils {
         return ch >= 32 && ch < 127;
     }
     private static final Pattern COLOR_6_DIGITS_HEXADECIMAL_PATTERN = Pattern.compile("^#[0-9A-Fa-f]{6}$");
+    private static final String[] VALID_URL_SCHEMES = { "http", "https" };
 }
