@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 
 import javax.annotation.Nullable;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -204,6 +205,25 @@ public class GTFSTypeValidationUtils {
             RuleUtils.addOccurrence(E007, fieldName, outList);
             return null;
         }
+    }
+
+    public static @Nullable
+    String parseAndValidateTimeZone(@NotNull String fieldName,
+                                    @Nullable String rawValue,
+                                    @NotNull List<OccurrenceModel> outList) {
+
+        if (Strings.isNullOrEmpty(rawValue)) {
+            return null;
+        }
+
+        // Uses IANA timezone database shipped with JDK
+        // to update without updating JDK see https://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html
+        if (!ZoneId.getAvailableZoneIds().contains(rawValue)) {
+            RuleUtils.addOccurrence(E010, fieldName, outList);
+            return null;
+        }
+
+        return rawValue;
     }
 
     private static boolean isPrintableAscii(char ch) {

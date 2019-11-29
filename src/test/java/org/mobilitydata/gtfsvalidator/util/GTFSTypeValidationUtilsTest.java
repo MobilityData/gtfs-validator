@@ -722,6 +722,44 @@ class GTFSTypeValidationUtilsTest {
         error = testList.get(0);
         assertEquals(fieldName, error.getPrefix());
         assertEquals("E007", error.getRule().getErrorId());
+    }
 
+    @Test
+    public void parseAndValidateTimeZone() {
+
+        List<OccurrenceModel> testList = new ArrayList<>();
+
+        // typical case
+        String returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(fieldName,
+                "America/Montreal",
+                testList);
+
+        assertEquals("America/Montreal", returned);
+        assertEquals(0, testList.size());
+
+        // null
+        returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(fieldName,
+                null,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // empty
+        returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(fieldName,
+                "",
+                testList);
+
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // any non parsable
+        returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(fieldName,
+                "abc",
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E010", error.getRule().getErrorId());
     }
 }
