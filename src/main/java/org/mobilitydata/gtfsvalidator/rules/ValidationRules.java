@@ -67,4 +67,8 @@ public class ValidationRules {
     public static final ValidationRule E009 = new ValidationRule("E009", "ERROR", "Invalid field value",
             "A field of type longitude has a limited validity range",
             "is not in valid [-180..180] range");
+
+    public static final ValidationRule E010 = new ValidationRule("E010", "ERROR", "Invalid field value",
+            "A field of type timezone must be in IANA database",
+            "is not in IANA timezone database");
 }
