@@ -71,4 +71,8 @@ public class ValidationRules {
     public static final ValidationRule E010 = new ValidationRule("E010", "ERROR", "Invalid field value",
             "A field of type timezone must be in IANA database",
             "is not in IANA timezone database");
+
+    public static final ValidationRule E011 = new ValidationRule("E011", "ERROR", "Invalid field value",
+            "A field of type URL must use http or https scheme and conform to RFC2396",
+            "is not a valid URL");
 }

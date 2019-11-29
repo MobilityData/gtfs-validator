@@ -547,6 +547,88 @@ class GTFSTypeValidationUtilsTest {
     }
 
     @Test
+    void validateUrl() {
+        List<OccurrenceModel> testList = new ArrayList<>();
+
+        // typical case
+        String returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+                "https://mobilitydata.org",
+                false,
+                testList);
+
+        assertEquals("https://mobilitydata.org", returned);
+        assertEquals(0, testList.size());
+
+        // can be null
+        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+                null,
+                true,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // cannot be null
+        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+                null,
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E002", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // can be empty
+        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+                "",
+                true,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // cannot be empty
+        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+                "",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E002", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // invalid scheme
+        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+                "ftp://mobilitydata.org",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E011", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // any malformed
+        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+                "http://mobilitydataorg",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E011", error.getRule().getErrorId());
+
+        testList.clear();
+    }
+
+    @Test
     void parseAndValidateColor() {
 
         List<OccurrenceModel> testList = new ArrayList<>();
