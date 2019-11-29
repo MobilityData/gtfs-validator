@@ -458,13 +458,12 @@ class GTFSTypeValidationUtilsTest {
     }
 
     @Test
-    void validateString() {
+    void validateId() {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        String returned = GTFSTypeValidationUtils.validateString(fieldName,
+        String returned = GTFSTypeValidationUtils.validateId(fieldName,
                 "666sixcentsoixantesix",
-                false,
                 false,
                 testList);
 
@@ -472,18 +471,16 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = GTFSTypeValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateId(fieldName,
                 null,
                 true,
-                false,
                 testList);
         assertNull(returned);
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = GTFSTypeValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateId(fieldName,
                 null,
-                false,
                 false,
                 testList);
         assertNull(returned);
@@ -495,18 +492,16 @@ class GTFSTypeValidationUtilsTest {
         testList.clear();
 
         // can be empty
-        returned = GTFSTypeValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateId(fieldName,
                 "",
                 true,
-                false,
                 testList);
-        assertEquals("", returned);
+        assertNull(returned);
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = GTFSTypeValidationUtils.validateString(fieldName,
+        returned = GTFSTypeValidationUtils.validateId(fieldName,
                 "",
-                false,
                 false,
                 testList);
         assertNull(returned);
@@ -517,11 +512,10 @@ class GTFSTypeValidationUtilsTest {
 
         testList.clear();
 
-        // onlyPrintableAscii is true, value contains non ASCII
-        returned = GTFSTypeValidationUtils.validateString(fieldName,
+        // contains non ASCII
+        returned = GTFSTypeValidationUtils.validateId(fieldName,
                 "abçé",
                 false,
-                true,
                 testList);
         assertEquals("abçé", returned);
         assertEquals(1, testList.size());
@@ -531,17 +525,72 @@ class GTFSTypeValidationUtilsTest {
 
         testList.clear();
 
-        // onlyPrintableAscii is true, value contains non printable ASCII
-        returned = GTFSTypeValidationUtils.validateString(fieldName,
+        // contains non printable ASCII
+        returned = GTFSTypeValidationUtils.validateId(fieldName,
                 "ab\u0003",
                 false,
-                true,
                 testList);
         assertEquals("ab\u0003", returned);
         assertEquals(1, testList.size());
         warning = testList.get(0);
         assertEquals(fieldName, warning.getPrefix());
         assertEquals("W001", warning.getRule().getErrorId());
+
+        testList.clear();
+    }
+
+    @Test
+    void validateText() {
+        List<OccurrenceModel> testList = new ArrayList<>();
+
+        // typical case
+        String returned = GTFSTypeValidationUtils.validateText(fieldName,
+                "666sixcentsoixantesixçàé",
+                false,
+                testList);
+
+        assertEquals("666sixcentsoixantesixçàé", returned);
+        assertEquals(0, testList.size());
+
+        // can be null
+        returned = GTFSTypeValidationUtils.validateText(fieldName,
+                null,
+                true,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // cannot be null
+        returned = GTFSTypeValidationUtils.validateText(fieldName,
+                null,
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E002", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // can be empty
+        returned = GTFSTypeValidationUtils.validateText(fieldName,
+                "",
+                true,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // cannot be empty
+        returned = GTFSTypeValidationUtils.validateText(fieldName,
+                "",
+                false,
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
     }

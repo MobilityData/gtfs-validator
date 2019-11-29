@@ -56,29 +56,26 @@ public class CSVtoProtoConverter {
 
             PathwaysProto.Pathway.Builder toAddBuilder = PathwaysProto.Pathway.newBuilder();
 
-            String pathwayId = GTFSTypeValidationUtils.validateString("pathway_id",
+            String pathwayId = GTFSTypeValidationUtils.validateId("pathway_id",
                     rawEntity.get("pathway_id"),
                     false,
-                    true,
                     errorAndWarningList);
 
             if (pathwayId != null) {
                 toAddBuilder.setPathwayId(pathwayId);
             }
 
-            String fromStopId = GTFSTypeValidationUtils.validateString("from_stop_id",
+            String fromStopId = GTFSTypeValidationUtils.validateId("from_stop_id",
                     rawEntity.get("from_stop_id"),
                     false,
-                    true,
                     errorAndWarningList);
 
             if (fromStopId != null)
                 toAddBuilder.setFromStopId(fromStopId);
 
-            String toStopId = GTFSTypeValidationUtils.validateString("to_stop_id",
+            String toStopId = GTFSTypeValidationUtils.validateId("to_stop_id",
                     rawEntity.get("to_stop_id"),
                     false,
-                    true,
                     errorAndWarningList);
 
             if (toStopId != null)
@@ -154,18 +151,16 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setMinWidth(minWidth);
             }
 
-            String signpostedAs = GTFSTypeValidationUtils.validateString("signposted_as",
+            String signpostedAs = GTFSTypeValidationUtils.validateText("signposted_as",
                     rawEntity.get("signposted_as"),
                     true,
-                    false,
                     errorAndWarningList);
 
             toAddBuilder.setSignpostedAs(signpostedAs);
 
-            String reversedSignpostedAs = GTFSTypeValidationUtils.validateString("reversed_signposted_as",
+            String reversedSignpostedAs = GTFSTypeValidationUtils.validateText("reversed_signposted_as",
                     rawEntity.get("reversed_signposted_as"),
                     true,
-                    false,
                     errorAndWarningList);
 
             protoCollectionBuilder.addPathways(toAddBuilder);
