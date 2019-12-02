@@ -232,6 +232,23 @@ public class GTFSTypeValidationUtils {
         return rawValue;
     }
 
+    public static @Nullable
+    String validateTime(@NotNull String fieldName,
+                        @Nullable String rawValue,
+                        @NotNull List<OccurrenceModel>outList) {
+
+        if(Strings.isNullOrEmpty(rawValue)) {
+            return null;
+        }
+
+        if (!TIME_PATTERN.matcher(rawValue).matches()) {
+            RuleUtils.addOccurrence(E012, fieldName, outList);
+            return null;
+        }
+
+        return rawValue;
+    }
+
 
     private static @Nullable
     String validateString(@NotNull String fieldName,
@@ -263,5 +280,6 @@ public class GTFSTypeValidationUtils {
         return ch >= 32 && ch < 127;
     }
     private static final Pattern COLOR_6_DIGITS_HEXADECIMAL_PATTERN = Pattern.compile("^#[0-9A-Fa-f]{6}$");
+    private static final Pattern TIME_PATTERN = Pattern.compile("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]");
     private static final String[] VALID_URL_SCHEMES = { "http", "https" };
 }

@@ -774,6 +774,54 @@ class GTFSTypeValidationUtilsTest {
     }
 
     @Test
+    public void validateTime() {
+
+        List<OccurrenceModel> testList = new ArrayList<>();
+
+        // typical case
+        String returned = GTFSTypeValidationUtils.validateTime(fieldName,
+                "99:59:59",
+                testList);
+
+        assertEquals("99:59:59", returned);
+        assertEquals(0, testList.size());
+
+        // typical case
+        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+                "9:59:59",
+                testList);
+
+        assertEquals("9:59:59", returned);
+        assertEquals(0, testList.size());
+
+        // null
+        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+                null,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // empty
+        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+                "",
+                testList);
+
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // any non parsable
+        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+                "abc",
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E012", error.getRule().getErrorId());
+
+    }
+
+    @Test
     public void parseAndValidateTimeZone() {
 
         List<OccurrenceModel> testList = new ArrayList<>();

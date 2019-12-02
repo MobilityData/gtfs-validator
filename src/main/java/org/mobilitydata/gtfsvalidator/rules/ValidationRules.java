@@ -75,4 +75,8 @@ public class ValidationRules {
     public static final ValidationRule E011 = new ValidationRule("E011", "ERROR", "Invalid field value",
             "A field of type URL must use http or https scheme and conform to RFC2396",
             "is not a valid URL");
+
+    public static final ValidationRule E012 = new ValidationRule("E012", "ERROR", "Invalid field value",
+            "A field of type time can't be parsed",
+            "is not in valid HH:MM:SS or H:MM:SS format");
 }
