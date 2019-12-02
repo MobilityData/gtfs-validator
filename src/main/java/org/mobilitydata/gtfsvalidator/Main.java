@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
+import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.util.FileUtils;
 
 import java.io.IOException;
@@ -50,6 +51,7 @@ public class Main {
         }
 
         CSVtoProtoConverter pathwaysConverter = new CSVtoProtoConverter();
+        CSVtoProtoConverter stopsConverter = new CSVtoProtoConverter();
 
         try {
 
@@ -60,6 +62,10 @@ public class Main {
             List<OccurrenceModel> result  = pathwaysConverter.convert("input/pathways.txt",
                     "output/pathways.pb",
                     PathwaysProto.pathwayCollection.newBuilder());
+
+            result.addAll(stopsConverter.convert("input/stops.txt",
+                    "output/stops.pb",
+                    StopsProto.stopCollection.newBuilder()));
 
             logger.debug("validation result: " + result);
 
