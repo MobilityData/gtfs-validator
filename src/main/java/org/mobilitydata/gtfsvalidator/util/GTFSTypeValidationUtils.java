@@ -17,6 +17,8 @@ package org.mobilitydata.gtfsvalidator.util;
  */
 
 import com.google.common.base.Strings;
+import org.apache.commons.validator.routines.FloatValidator;
+import org.apache.commons.validator.routines.IntegerValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
@@ -24,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 import javax.annotation.Nullable;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import static org.mobilitydata.gtfsvalidator.rules.ValidationRules.*;
@@ -31,151 +34,168 @@ import static org.mobilitydata.gtfsvalidator.rules.ValidationRules.*;
 public class GTFSTypeValidationUtils {
 
     public static @Nullable
-    Float parseAndValidateFloat(@NotNull String fieldName,
-                                  @Nullable String rawValue,
-                                  boolean canBeNullOrEmpty,
-                                  boolean canBeNegative,
-                                  @NotNull  List<OccurrenceModel> outList) {
+    Float parseAndValidateFloat(@NotNull String validatedEntityId,
+                                @NotNull String fieldName,
+                                @Nullable String rawValue,
+                                boolean canBeNullOrEmpty,
+                                boolean canBeNegative,
+                                @NotNull  List<OccurrenceModel> outList) {
 
         if (Strings.isNullOrEmpty(rawValue)) {
             if (!canBeNullOrEmpty) {
-                RuleUtils.addOccurrence(E002, fieldName, outList);
+                RuleUtils.addOccurrence(E002, formatOccurrencePrefix(validatedEntityId, fieldName, "null or empty"), outList);
             }
             return null;
         }
 
-        try {
-            float value = Float.parseFloat(rawValue);
+        FloatValidator floatValidator = new FloatValidator();
 
-            if (Float.isNaN(value)) {
-                throw new NumberFormatException();
-            }
+        //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
+        //from feed_lang in feed_info.txt before defaulting to Locale.US
+        Float value = floatValidator.validate(rawValue, Locale.US);
 
-            if (!canBeNegative && value < 0) {
-                RuleUtils.addOccurrence(E004, fieldName, outList);
-                return null;
-            }
-
-            return value;
-
-        } catch (NumberFormatException e) {
-            RuleUtils.addOccurrence(E003, fieldName, outList);
+        if (value == null || Float.isNaN(value)) {
+            RuleUtils.addOccurrence(E003, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
             return null;
         }
+
+        if (!canBeNegative && !floatValidator.minValue(value, 0)) {
+            RuleUtils.addOccurrence(E004, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
+            return null;
+        }
+
+        return value;
     }
 
     public static @Nullable
-    Float parseAndValidateLatitude(@NotNull String fieldName,
+    Float parseAndValidateLatitude(@NotNull String validatedEntityId,
+                                   @NotNull String fieldName,
                                    @Nullable String rawValue,
                                    boolean canBeNullOrEmpty,
                                    @NotNull List<OccurrenceModel> outList) {
-        Float validatedFloat = parseAndValidateFloat(fieldName,
+        Float value = parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 rawValue,
                 canBeNullOrEmpty,
                 true,
                 outList);
 
-        if (validatedFloat == null) {
+        if (value == null) {
             return null;
         }
 
-        if (validatedFloat < -90f || validatedFloat > 90f) {
-            RuleUtils.addOccurrence(E008, fieldName, outList);
+        FloatValidator floatValidator = new FloatValidator();
+
+        if (!floatValidator.isInRange(value, -90f, 90f)) {
+            //noinspection ConstantConditions
+            RuleUtils.addOccurrence(E008, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
             return null;
         }
 
-        return validatedFloat;
+        return value;
     }
 
     public static @Nullable
-    Float parseAndValidateLongitude(@NotNull String fieldName,
-                                   @Nullable String rawValue,
-                                   boolean canBeNullOrEmpty,
-                                   @NotNull List<OccurrenceModel> outList) {
-        Float validatedFloat = parseAndValidateFloat(fieldName,
+    Float parseAndValidateLongitude(@NotNull String validatedEntityId,
+                                    @NotNull String fieldName,
+                                    @Nullable String rawValue,
+                                    boolean canBeNullOrEmpty,
+                                    @NotNull List<OccurrenceModel> outList) {
+        Float value = parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 rawValue,
                 canBeNullOrEmpty,
                 true,
                 outList);
 
-        if (validatedFloat == null) {
+        if (value == null) {
             return null;
         }
 
-        if (validatedFloat < -180f || validatedFloat > 180f) {
-            RuleUtils.addOccurrence(E009, fieldName, outList);
+        FloatValidator floatValidator = new FloatValidator();
+
+        if (!floatValidator.isInRange(value, -180f, 180f)) {
+            //noinspection ConstantConditions
+            RuleUtils.addOccurrence(E009, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
             return null;
         }
 
-        return validatedFloat;
+        return value;
     }
 
     public static @Nullable
-    Integer parseAndValidateInteger(@NotNull  String fieldName,
-                                  @Nullable String rawValue,
-                                  boolean canBeNullOrEmpty,
-                                  boolean canBeNegative,
-                                  @NotNull  List<OccurrenceModel> outList) {
+    Integer parseAndValidateInteger(@NotNull String validatedEntityId,
+                                    @NotNull  String fieldName,
+                                    @Nullable String rawValue,
+                                    boolean canBeNullOrEmpty,
+                                    boolean canBeNegative,
+                                    @NotNull  List<OccurrenceModel> outList) {
 
         if (Strings.isNullOrEmpty(rawValue)) {
             if (!canBeNullOrEmpty) {
-                RuleUtils.addOccurrence(E002, fieldName, outList);
+                RuleUtils.addOccurrence(E002, formatOccurrencePrefix(validatedEntityId, fieldName, "null or empty"), outList);
             }
             return null;
         }
 
-        try {
-            int value = Integer.parseInt(rawValue);
+        IntegerValidator integerValidator = new IntegerValidator();
 
-            if (!canBeNegative && value < 0) {
-                RuleUtils.addOccurrence(E006, fieldName, outList);
-                return null;
-            }
+        //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
+        //from feed_lang in feed_info.txt before defaulting to Locale.US
+        Integer value = integerValidator.validate(rawValue, Locale.US);
 
-            return value;
-
-        } catch (NumberFormatException e) {
-            RuleUtils.addOccurrence(E005, fieldName, outList);
+        if (value == null) {
+            RuleUtils.addOccurrence(E005, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
             return null;
         }
+
+        if (!canBeNegative && !integerValidator.minValue(value, 0)) {
+            RuleUtils.addOccurrence(E006, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
+            return null;
+        }
+
+        return value;
     }
 
     public static @Nullable
-    String validateString(@NotNull String fieldName,
-                          @Nullable String rawValue,
-                          boolean canBeNullOrEmpty,
-                          boolean onlyPrintableAscii,
-                          @NotNull List<OccurrenceModel> outList) {
+    String validateId(@NotNull String fieldName,
+                      @Nullable String rawValue,
+                      boolean canBeNullOrEmpty,
+                      @NotNull List<OccurrenceModel> outList) {
 
-        if (Strings.isNullOrEmpty(rawValue)) {
-            if (!canBeNullOrEmpty) {
-                RuleUtils.addOccurrence(E002, fieldName, outList);
-                return null;
-            }
-        }
-
-        if (rawValue != null && onlyPrintableAscii) {
-            int charCount = rawValue.length();
-            for (int i = 0; i < charCount; ++i) {
-                if (!isPrintableAscii(rawValue.charAt(i))) {
-                    RuleUtils.addOccurrence(W001, fieldName, outList);
-                    break;
-                }
-            }
-        }
-
-        return rawValue;
+        return validateString(Strings.isNullOrEmpty(rawValue) ? "" : rawValue,
+                fieldName,
+                rawValue,
+                canBeNullOrEmpty,
+                true,
+                outList);
     }
 
     public static @Nullable
-    String validateUrl(@NotNull String fieldName,
+    String validateText(@NotNull String validatedEntityId,
+                        @NotNull String fieldName,
+                        @Nullable String rawValue,
+                        boolean canBeNullOrEmpty,
+                        @NotNull List<OccurrenceModel> outList) {
+
+        return validateString(validatedEntityId,
+                fieldName,
+                rawValue,
+                canBeNullOrEmpty,
+                false,
+                outList);
+    }
+
+    public static @Nullable
+    String validateUrl(@NotNull String validatedEntityId,
+                       @NotNull String fieldName,
                        @Nullable String rawValue,
                        boolean canBeNullOrEmpty,
                        @NotNull List<OccurrenceModel> outList) {
 
         if (Strings.isNullOrEmpty(rawValue)) {
             if (!canBeNullOrEmpty) {
-                RuleUtils.addOccurrence(E002, fieldName, outList);
+                RuleUtils.addOccurrence(E002, formatOccurrencePrefix(validatedEntityId, fieldName, "null or empty"), outList);
             }
             return null;
         }
@@ -183,7 +203,7 @@ public class GTFSTypeValidationUtils {
         UrlValidator urlValidator = new UrlValidator(VALID_URL_SCHEMES);
 
         if (!urlValidator.isValid(rawValue)) {
-            RuleUtils.addOccurrence(E011, fieldName, outList);
+            RuleUtils.addOccurrence(E011, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
             return null;
         }
 
@@ -191,24 +211,26 @@ public class GTFSTypeValidationUtils {
     }
 
     public static @Nullable
-    String parseAndValidateColor(@NotNull String fieldName,
-                         @Nullable String rawValue,
-                         @NotNull List<OccurrenceModel> outList) {
+    String parseAndValidateColor(@NotNull String validatedEntityId,
+                                 @NotNull String fieldName,
+                                 @Nullable String rawValue,
+                                 @NotNull List<OccurrenceModel> outList) {
 
         if (Strings.isNullOrEmpty(rawValue)) {
             return null;
         }
 
-        if (COLOR_6_DIGITS_HEXADECIMAL_PATTERN.matcher(rawValue).matches()) {
-            return rawValue;
-        } else {
-            RuleUtils.addOccurrence(E007, fieldName, outList);
+        if (!COLOR_6_DIGITS_HEXADECIMAL_PATTERN.matcher(rawValue).matches()) {
+            RuleUtils.addOccurrence(E007, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
             return null;
         }
+
+        return rawValue;
     }
 
     public static @Nullable
-    String parseAndValidateTimeZone(@NotNull String fieldName,
+    String parseAndValidateTimeZone(@NotNull String validatedEntityId,
+                                    @NotNull String fieldName,
                                     @Nullable String rawValue,
                                     @NotNull List<OccurrenceModel> outList) {
 
@@ -219,16 +241,49 @@ public class GTFSTypeValidationUtils {
         // Uses IANA timezone database shipped with JDK
         // to update without updating JDK see https://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html
         if (!ZoneId.getAvailableZoneIds().contains(rawValue)) {
-            RuleUtils.addOccurrence(E010, fieldName, outList);
+            RuleUtils.addOccurrence(E010, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
             return null;
         }
 
         return rawValue;
     }
 
+
+    private static @Nullable
+    String validateString(@NotNull String validatedEntityId,
+                          @NotNull String fieldName,
+                          @Nullable String rawValue,
+                          boolean canBeNullOrEmpty,
+                          boolean onlyPrintableAscii,
+                          @NotNull List<OccurrenceModel> outList) {
+
+        if (Strings.isNullOrEmpty(rawValue)) {
+            if (!canBeNullOrEmpty) {
+                RuleUtils.addOccurrence(E002, formatOccurrencePrefix(validatedEntityId, fieldName, "null or empty"), outList);
+            }
+            return null;
+        }
+
+        if (onlyPrintableAscii) {
+            int charCount = rawValue.length();
+            for (int i = 0; i < charCount; ++i) {
+                if (!isPrintableAscii(rawValue.charAt(i))) {
+                    RuleUtils.addOccurrence(W001, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
+                    break;
+                }
+            }
+        }
+
+        return rawValue;
+    }
     private static boolean isPrintableAscii(char ch) {
         return ch >= 32 && ch < 127;
     }
-    private static final Pattern COLOR_6_DIGITS_HEXADECIMAL_PATTERN = Pattern.compile("^#[0-9A-Fa-f]{6}$");
+    private static final Pattern COLOR_6_DIGITS_HEXADECIMAL_PATTERN = Pattern.compile("[0-9A-Fa-f]{6}$");
     private static final String[] VALID_URL_SCHEMES = { "http", "https" };
+    private static String formatOccurrencePrefix(@NotNull String validatedEntityId,
+                                                 @NotNull String fieldName,
+                                                 @NotNull String rawValue) {
+        return validatedEntityId + " " + fieldName + " is " + rawValue;
+    }
 }
