@@ -64,11 +64,10 @@ public class CSVtoProtoConverter {
 
             if (pathwayId != null) {
                 toAddBuilder.setPathwayId(pathwayId);
+                pathwayId = "pathway_id: " + pathwayId;
             } else {
                 pathwayId = "pathway_id: null";
             }
-
-            pathwayId = "pathway_id: " + pathwayId;
 
             String fromStopId = GTFSTypeValidationUtils.validateId("from_stop_id",
                     rawEntity.get("from_stop_id"),
@@ -248,9 +247,13 @@ public class CSVtoProtoConverter {
 
             if (stopId != null) {
                 toAddBuilder.setId(stopId);
+                stopId = "stop_id: " + stopId;
+            } else {
+                stopId = "stop_id: null";
             }
 
-            String stopCode = GTFSTypeValidationUtils.validateText("stop_code",
+            String stopCode = GTFSTypeValidationUtils.validateText(stopId,
+                    "stop_code",
                     rawEntity.get("stop_code"),
                     true,
                     errorAndWarningList);
@@ -259,7 +262,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setCode(stopCode);
             }
 
-            String stopName = GTFSTypeValidationUtils.validateText("stop_name",
+            String stopName = GTFSTypeValidationUtils.validateText(stopId,
+                    "stop_name",
                     rawEntity.get("stop_name"),
                     true,
                     errorAndWarningList);
@@ -268,7 +272,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setName(stopName);
             }
 
-            String stopDesc = GTFSTypeValidationUtils.validateText("stop_desc",
+            String stopDesc = GTFSTypeValidationUtils.validateText(stopId,
+                    "stop_desc",
                     rawEntity.get("stop_desc"),
                     true,
                     errorAndWarningList);
@@ -277,12 +282,14 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setDesc(stopDesc);
             }
 
-            Float stopLatitude = GTFSTypeValidationUtils.parseAndValidateLatitude("stop_lat",
+            Float stopLatitude = GTFSTypeValidationUtils.parseAndValidateLatitude(stopId,
+                    "stop_lat",
                     rawEntity.get("stop_lat"),
                     true,
                     errorAndWarningList);
 
-            Float stopLongitude = GTFSTypeValidationUtils.parseAndValidateLongitude("stop_lon",
+            Float stopLongitude = GTFSTypeValidationUtils.parseAndValidateLongitude(stopId,
+                    "stop_lon",
                     rawEntity.get("stop_lon"),
                     true,
                     errorAndWarningList);
@@ -300,7 +307,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setZoneId(zoneId);
             }
 
-            String stopUrl = GTFSTypeValidationUtils.validateUrl("stop_url",
+            String stopUrl = GTFSTypeValidationUtils.validateUrl(stopId,
+                    "stop_url",
                     rawEntity.get("stop_url"),
                     true,
                     errorAndWarningList);
@@ -309,7 +317,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setUrl(stopUrl);
             }
 
-            Integer locationType = GTFSTypeValidationUtils.parseAndValidateInteger("location_type",
+            Integer locationType = GTFSTypeValidationUtils.parseAndValidateInteger(stopId,
+                    "location_type",
                     rawEntity.get("location_type"),
                     true,
                     false,
@@ -328,7 +337,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setParentStation(parentStationId);
             }
 
-            String timezone = GTFSTypeValidationUtils.parseAndValidateTimeZone("stop_timezone",
+            String timezone = GTFSTypeValidationUtils.parseAndValidateTimeZone(stopId,
+                    "stop_timezone",
                     rawEntity.get("stop_timezone"),
                     errorAndWarningList);
 
@@ -336,7 +346,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setTimezone(timezone);
             }
 
-            Integer wheelchairBoarding = GTFSTypeValidationUtils.parseAndValidateInteger("wheelchair_boarding",
+            Integer wheelchairBoarding = GTFSTypeValidationUtils.parseAndValidateInteger(stopId,
+                    "wheelchair_boarding",
                     rawEntity.get("wheelchair_boarding"),
                     true,
                     false,
@@ -355,7 +366,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setLevelId(levelId);
             }
 
-            String platformCode = GTFSTypeValidationUtils.validateText("platform_code",
+            String platformCode = GTFSTypeValidationUtils.validateText(stopId,
+                    "platform_code",
                     rawEntity.get("platform_code"),
                     true,
                     errorAndWarningList);
