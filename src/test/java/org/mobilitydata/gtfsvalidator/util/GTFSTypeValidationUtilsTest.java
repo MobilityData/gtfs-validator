@@ -824,7 +824,8 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case HH:MM:SS
-        String returned = GTFSTypeValidationUtils.validateTime(fieldName,
+        String returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
                 "99:59:59",
                 testList);
 
@@ -832,7 +833,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // typical case H:MM:SS
-        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
                 "9:59:59",
                 testList);
 
@@ -840,27 +842,30 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // invalid HHH:MM:SS
-        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
                 "999:59:59",
                 testList);
 
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is 999:59:59", error.getPrefix());
         assertEquals("E012", error.getRule().getErrorId());
 
         testList.clear();
 
         // null
-        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
                 null,
                 testList);
         assertNull(returned);
         assertEquals(0, testList.size());
 
         // empty
-        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
                 "",
                 testList);
 
@@ -868,13 +873,14 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // any non parsable
-        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
                 "abc",
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is abc", error.getPrefix());
         assertEquals("E012", error.getRule().getErrorId());
 
     }

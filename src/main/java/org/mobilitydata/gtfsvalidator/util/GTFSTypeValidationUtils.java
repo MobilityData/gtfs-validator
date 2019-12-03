@@ -248,6 +248,24 @@ public class GTFSTypeValidationUtils {
         return rawValue;
     }
 
+    public static @Nullable
+    String validateTime(@NotNull String validatedEntityId,
+                        @NotNull String fieldName,
+                        @Nullable String rawValue,
+                        @NotNull List<OccurrenceModel>outList) {
+
+        if(Strings.isNullOrEmpty(rawValue)) {
+            return null;
+        }
+
+        if (!TIME_PATTERN.matcher(rawValue).matches()) {
+            RuleUtils.addOccurrence(E012, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
+            return null;
+        }
+
+        return rawValue;
+    }
+
 
     private static @Nullable
     String validateString(@NotNull String validatedEntityId,
@@ -277,50 +295,6 @@ public class GTFSTypeValidationUtils {
         return rawValue;
     }
 
-    public static @Nullable
-    String validateTime(@NotNull String fieldName,
-                        @Nullable String rawValue,
-                        @NotNull List<OccurrenceModel>outList) {
-
-        if(Strings.isNullOrEmpty(rawValue)) {
-            return null;
-        }
-
-        if (!TIME_PATTERN.matcher(rawValue).matches()) {
-            RuleUtils.addOccurrence(E012, fieldName, outList);
-            return null;
-        }
-
-        return rawValue;
-    }
-
-
-    private static @Nullable
-    String validateString(@NotNull String fieldName,
-                          @Nullable String rawValue,
-                          boolean canBeNullOrEmpty,
-                          boolean onlyPrintableAscii,
-                          @NotNull List<OccurrenceModel> outList) {
-
-        if (Strings.isNullOrEmpty(rawValue)) {
-            if (!canBeNullOrEmpty) {
-                RuleUtils.addOccurrence(E002, fieldName, outList);
-            }
-            return null;
-        }
-
-        if (onlyPrintableAscii) {
-            int charCount = rawValue.length();
-            for (int i = 0; i < charCount; ++i) {
-                if (!isPrintableAscii(rawValue.charAt(i))) {
-                    RuleUtils.addOccurrence(W001, fieldName, outList);
-                    break;
-                }
-            }
-        }
-
-        return rawValue;
-    }
     private static boolean isPrintableAscii(char ch) {
         return ch >= 32 && ch < 127;
     }
