@@ -63,6 +63,8 @@ public class CSVtoProtoConverter {
 
             if (pathwayId != null) {
                 toAddBuilder.setPathwayId(pathwayId);
+            } else {
+                pathwayId = "null";
             }
 
             String fromStopId = GTFSTypeValidationUtils.validateId("from_stop_id",
@@ -81,7 +83,8 @@ public class CSVtoProtoConverter {
             if (toStopId != null)
                 toAddBuilder.setToStopId(toStopId);
 
-            Integer pathwayMode = GTFSTypeValidationUtils.parseAndValidateInteger("pathway_mode",
+            Integer pathwayMode = GTFSTypeValidationUtils.parseAndValidateInteger(pathwayId,
+                    "pathway_mode",
                     rawEntity.get("pathway_mode"),
                     false,
                     false,
@@ -91,7 +94,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setPathwayModeValue(pathwayMode);
             }
 
-            Integer isBidirectional = GTFSTypeValidationUtils.parseAndValidateInteger("is_bidirectional",
+            Integer isBidirectional = GTFSTypeValidationUtils.parseAndValidateInteger(pathwayId,
+                    "is_bidirectional",
                     rawEntity.get("is_bidirectional"),
                     false,
                     false,
@@ -101,7 +105,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setIsBidirectionalValue(isBidirectional);
             }
 
-            Float length = GTFSTypeValidationUtils.parseAndValidateFloat("length",
+            Float length = GTFSTypeValidationUtils.parseAndValidateFloat(pathwayId,
+                    "length",
                     rawEntity.get("length"),
                     true,
                     false,
@@ -111,7 +116,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setLength(length);
             }
 
-            Integer traversalTime = GTFSTypeValidationUtils.parseAndValidateInteger("traversal_time",
+            Integer traversalTime = GTFSTypeValidationUtils.parseAndValidateInteger(pathwayId,
+                    "traversal_time",
                     rawEntity.get("traversal_time"),
                     true,
                     false,
@@ -121,7 +127,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setTraversalTime(traversalTime);
             }
 
-            Integer stairCount = GTFSTypeValidationUtils.parseAndValidateInteger("stair_count",
+            Integer stairCount = GTFSTypeValidationUtils.parseAndValidateInteger(pathwayId,
+                    "stair_count",
                     rawEntity.get("stair_count"),
                     true,
                     true,
@@ -131,7 +138,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setStairCount(stairCount);
             }
 
-            Float maxSlope = GTFSTypeValidationUtils.parseAndValidateFloat("max_slope",
+            Float maxSlope = GTFSTypeValidationUtils.parseAndValidateFloat(pathwayId,
+                    "max_slope",
                     rawEntity.get("max_slope"),
                     true,
                     true,
@@ -141,7 +149,8 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setMaxSlope(maxSlope);
             }
 
-            Float minWidth = GTFSTypeValidationUtils.parseAndValidateFloat("min_width",
+            Float minWidth = GTFSTypeValidationUtils.parseAndValidateFloat(pathwayId,
+                    "min_width",
                     rawEntity.get("min_width"),
                     true,
                     false,
@@ -151,14 +160,16 @@ public class CSVtoProtoConverter {
                 toAddBuilder.setMinWidth(minWidth);
             }
 
-            String signpostedAs = GTFSTypeValidationUtils.validateText("signposted_as",
+            String signpostedAs = GTFSTypeValidationUtils.validateText(pathwayId,
+                    "signposted_as",
                     rawEntity.get("signposted_as"),
                     true,
                     errorAndWarningList);
 
             toAddBuilder.setSignpostedAs(signpostedAs);
 
-            String reversedSignpostedAs = GTFSTypeValidationUtils.validateText("reversed_signposted_as",
+            String reversedSignpostedAs = GTFSTypeValidationUtils.validateText(pathwayId,
+                    "reversed_signposted_as",
                     rawEntity.get("reversed_signposted_as"),
                     true,
                     errorAndWarningList);

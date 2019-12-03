@@ -10,7 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GTFSTypeValidationUtilsTest {
 
-    String fieldName = "filedNameTest";
+    String fieldName = "fieldNameTest";
+    String validatedEntityId = "entityIdTest";
 
 
     @Test
@@ -18,7 +19,8 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        Float returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
+        Float returned = GTFSTypeValidationUtils.parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 "66.6",
                 false,
                 false,
@@ -28,7 +30,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 null,
                 true,
                 false,
@@ -37,7 +40,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 null,
                 false,
                 false,
@@ -45,13 +49,14 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // can be empty
-        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 "",
                 true,
                 false,
@@ -60,7 +65,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 "",
                 false,
                 false,
@@ -68,13 +74,14 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // NaN parsing
-        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 "NaN",
                 false,
                 false,
@@ -82,13 +89,14 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "NaN", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
 
         // any non parsable
-        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 "abc",
                 false,
                 false,
@@ -96,13 +104,14 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc" , error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
 
         // can't be negative, value is zero
-        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 "0",
                 false,
                 false,
@@ -112,7 +121,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can't be negative, value is negative
-        returned = GTFSTypeValidationUtils.parseAndValidateFloat(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateFloat(validatedEntityId,
+                fieldName,
                 "-0.001",
                 false,
                 false,
@@ -121,7 +131,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "-0.001", error.getPrefix());
         assertEquals("E004", error.getRule().getErrorId());
 
         testList.clear();
@@ -132,7 +142,8 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case - positive
-        Float returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        Float returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 "90",
                 false,
                 testList);
@@ -141,7 +152,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // typical case - negative
-        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 "-90",
                 false,
                 testList);
@@ -150,7 +162,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 null,
                 true,
                 testList);
@@ -158,20 +171,22 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 null,
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // can be empty
-        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 "",
                 true,
                 testList);
@@ -179,66 +194,71 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 "",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // NaN parsing
-        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 "NaN",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "NaN", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
 
         // any non parsable
-        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 "abc",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
 
         // invalid value - too high
-        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 "90.1234567",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "90.1234567", error.getPrefix());
         assertEquals("E008", error.getRule().getErrorId());
 
         testList.clear();
 
         // invalid value - too low
-        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLatitude(validatedEntityId,
+                fieldName,
                 "-90.1234567",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "-90.1234567", error.getPrefix());
         assertEquals("E008", error.getRule().getErrorId());
     }
 
@@ -247,7 +267,8 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case - positive
-        Float returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        Float returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 "180",
                 false,
                 testList);
@@ -256,7 +277,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // typical case - negative
-        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 "-180",
                 false,
                 testList);
@@ -265,7 +287,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 null,
                 true,
                 testList);
@@ -273,20 +296,22 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 null,
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // can be empty
-        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 "",
                 true,
                 testList);
@@ -294,66 +319,71 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 "",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // NaN parsing
-        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 "NaN",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "NaN", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
 
         // any non parsable
-        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 "abc",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
 
         // invalid value - too high
-        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 "180.1234567",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "180.1234567", error.getPrefix());
         assertEquals("E009", error.getRule().getErrorId());
 
         testList.clear();
 
         // invalid value - too low
-        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateLongitude(validatedEntityId,
+                fieldName,
                 "-180.1234567",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "-180.1234567", error.getPrefix());
         assertEquals("E009", error.getRule().getErrorId());
     }
 
@@ -362,7 +392,8 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        Integer returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
+        Integer returned = GTFSTypeValidationUtils.parseAndValidateInteger(validatedEntityId,
+                fieldName,
                 "666",
                 false,
                 false,
@@ -372,7 +403,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(validatedEntityId,
+                fieldName,
                 null,
                 true,
                 false,
@@ -381,7 +413,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(validatedEntityId,
+                fieldName,
                 null,
                 false,
                 false,
@@ -389,13 +422,14 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // can be empty
-        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(validatedEntityId,
+                fieldName,
                 "",
                 true,
                 false,
@@ -404,7 +438,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(validatedEntityId,
+                fieldName,
                 "",
                 false,
                 false,
@@ -412,13 +447,14 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // any non parsable
-        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(validatedEntityId,
+                fieldName,
                 "abc",
                 false,
                 false,
@@ -426,13 +462,14 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc", error.getPrefix());
         assertEquals("E005", error.getRule().getErrorId());
 
         testList.clear();
 
         // can't be negative, value is zero
-        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(validatedEntityId,
+                fieldName,
                 "0",
                 false,
                 false,
@@ -442,7 +479,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can't be negative, value is negative
-        returned = GTFSTypeValidationUtils.parseAndValidateInteger(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateInteger(validatedEntityId,
+                fieldName,
                 "-1",
                 false,
                 false,
@@ -451,7 +489,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "-1", error.getPrefix());
         assertEquals("E006", error.getRule().getErrorId());
 
         testList.clear();
@@ -486,7 +524,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + "" + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -507,7 +545,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + "" + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -520,7 +558,7 @@ class GTFSTypeValidationUtilsTest {
         assertEquals("abçé", returned);
         assertEquals(1, testList.size());
         OccurrenceModel warning = testList.get(0);
-        assertEquals(fieldName, warning.getPrefix());
+        assertEquals("id: " + "abçé" + " " + fieldName + " is " + "abçé", warning.getPrefix());
         assertEquals("W001", warning.getRule().getErrorId());
 
         testList.clear();
@@ -533,7 +571,7 @@ class GTFSTypeValidationUtilsTest {
         assertEquals("ab\u0003", returned);
         assertEquals(1, testList.size());
         warning = testList.get(0);
-        assertEquals(fieldName, warning.getPrefix());
+        assertEquals("id: " + "ab\u0003" + " " + fieldName + " is " + "ab\u0003", warning.getPrefix());
         assertEquals("W001", warning.getRule().getErrorId());
 
         testList.clear();
@@ -544,7 +582,8 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        String returned = GTFSTypeValidationUtils.validateText(fieldName,
+        String returned = GTFSTypeValidationUtils.validateText(validatedEntityId,
+                fieldName,
                 "666sixcentsoixantesixçàé",
                 false,
                 testList);
@@ -553,7 +592,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = GTFSTypeValidationUtils.validateText(fieldName,
+        returned = GTFSTypeValidationUtils.validateText(validatedEntityId,
+                fieldName,
                 null,
                 true,
                 testList);
@@ -561,20 +601,22 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = GTFSTypeValidationUtils.validateText(fieldName,
+        returned = GTFSTypeValidationUtils.validateText(validatedEntityId,
+                fieldName,
                 null,
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // can be empty
-        returned = GTFSTypeValidationUtils.validateText(fieldName,
+        returned = GTFSTypeValidationUtils.validateText(validatedEntityId,
+                fieldName,
                 "",
                 true,
                 testList);
@@ -582,14 +624,15 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = GTFSTypeValidationUtils.validateText(fieldName,
+        returned = GTFSTypeValidationUtils.validateText(validatedEntityId,
+                fieldName,
                 "",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -600,7 +643,8 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        String returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+        String returned = GTFSTypeValidationUtils.validateUrl(validatedEntityId,
+                fieldName,
                 "https://mobilitydata.org",
                 false,
                 testList);
@@ -609,7 +653,8 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // can be null
-        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+        returned = GTFSTypeValidationUtils.validateUrl(validatedEntityId,
+                fieldName,
                 null,
                 true,
                 testList);
@@ -617,20 +662,22 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be null
-        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+        returned = GTFSTypeValidationUtils.validateUrl(validatedEntityId,
+                fieldName,
                 null,
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // can be empty
-        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+        returned = GTFSTypeValidationUtils.validateUrl(validatedEntityId,
+                fieldName,
                 "",
                 true,
                 testList);
@@ -638,40 +685,43 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // cannot be empty
-        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+        returned = GTFSTypeValidationUtils.validateUrl(validatedEntityId,
+                fieldName,
                 "",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
 
         // invalid scheme
-        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+        returned = GTFSTypeValidationUtils.validateUrl(validatedEntityId,
+                fieldName,
                 "ftp://mobilitydata.org",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "ftp://mobilitydata.org", error.getPrefix());
         assertEquals("E011", error.getRule().getErrorId());
 
         testList.clear();
 
         // any malformed
-        returned = GTFSTypeValidationUtils.validateUrl(fieldName,
+        returned = GTFSTypeValidationUtils.validateUrl(validatedEntityId,
+                fieldName,
                 "http://mobilitydataorg",
                 false,
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "http://mobilitydataorg", error.getPrefix());
         assertEquals("E011", error.getRule().getErrorId());
 
         testList.clear();
@@ -683,31 +733,35 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        String returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
-                "#ABCDEF",
+        String returned = GTFSTypeValidationUtils.parseAndValidateColor(validatedEntityId,
+                fieldName,
+                "ABCDEF",
                 testList);
 
-        assertEquals("#ABCDEF", returned);
+        assertEquals("ABCDEF", returned);
         assertEquals(0, testList.size());
 
         // typical case
-        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
-                "#012345",
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(validatedEntityId,
+                fieldName,
+                "012345",
                 testList);
 
-        assertEquals("#012345", returned);
+        assertEquals("012345", returned);
         assertEquals(0, testList.size());
 
         // typical case
-        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
-                "#6789af",
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(validatedEntityId,
+                fieldName,
+                "6789af",
                 testList);
 
-        assertEquals("#6789af", returned);
+        assertEquals("6789af", returned);
         assertEquals(0, testList.size());
 
         // null
-        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(validatedEntityId,
+                fieldName,
                 null,
                 testList);
 
@@ -715,61 +769,52 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // empty
-        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(validatedEntityId,
+                fieldName,
                 "",
                 testList);
 
         assertNull(returned);
         assertEquals(0, testList.size());
 
-        // not starting with #
-        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
-                "ABCDEF",
+        // incorrect length - too short
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(validatedEntityId,
+                fieldName,
+                "ABC",
                 testList);
 
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
-        assertEquals("E007", error.getRule().getErrorId());
-
-        testList.clear();
-
-        // incorrect length - too short
-        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
-                "#ABC",
-                testList);
-
-        assertNull(returned);
-        assertEquals(1, testList.size());
-        error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "ABC", error.getPrefix());
         assertEquals("E007", error.getRule().getErrorId());
 
         testList.clear();
 
         // incorrect length - too long
-        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
-                "#ABCDEF0",
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(validatedEntityId,
+                fieldName,
+                "ABCDEF0",
                 testList);
 
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "ABCDEF0", error.getPrefix());
         assertEquals("E007", error.getRule().getErrorId());
 
         testList.clear();
 
         // invalid characters
-        returned = GTFSTypeValidationUtils.parseAndValidateColor(fieldName,
-                "#AZ-FTJ",
+        returned = GTFSTypeValidationUtils.parseAndValidateColor(validatedEntityId,
+                fieldName,
+                "AZ-FTJ",
                 testList);
 
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "AZ-FTJ", error.getPrefix());
         assertEquals("E007", error.getRule().getErrorId());
     }
 
@@ -779,7 +824,8 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        String returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(fieldName,
+        String returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(validatedEntityId,
+                fieldName,
                 "America/Montreal",
                 testList);
 
@@ -787,14 +833,16 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // null
-        returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(validatedEntityId,
+                fieldName,
                 null,
                 testList);
         assertNull(returned);
         assertEquals(0, testList.size());
 
         // empty
-        returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(validatedEntityId,
+                fieldName,
                 "",
                 testList);
 
@@ -802,13 +850,14 @@ class GTFSTypeValidationUtilsTest {
         assertEquals(0, testList.size());
 
         // any non parsable
-        returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(fieldName,
+        returned = GTFSTypeValidationUtils.parseAndValidateTimeZone(validatedEntityId,
+                fieldName,
                 "abc",
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals(fieldName, error.getPrefix());
+        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc", error.getPrefix());
         assertEquals("E010", error.getRule().getErrorId());
     }
 }
