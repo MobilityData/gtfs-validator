@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GTFSTypeValidationUtilsTest {
 
     String fieldName = "fieldNameTest";
-    String validatedEntityId = "entityIdTest";
+    String validatedEntityId = "entity_id: testId";
 
 
     @Test
@@ -49,7 +49,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -74,7 +74,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -89,7 +89,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "NaN", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is NaN", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
@@ -104,7 +104,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc" , error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is abc" , error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
@@ -131,7 +131,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "-0.001", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is -0.001", error.getPrefix());
         assertEquals("E004", error.getRule().getErrorId());
 
         testList.clear();
@@ -179,7 +179,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -202,7 +202,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -216,7 +216,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "NaN", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is NaN", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
@@ -230,7 +230,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is abc", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
@@ -244,7 +244,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "90.1234567", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is 90.1234567", error.getPrefix());
         assertEquals("E008", error.getRule().getErrorId());
 
         testList.clear();
@@ -258,7 +258,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "-90.1234567", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is -90.1234567", error.getPrefix());
         assertEquals("E008", error.getRule().getErrorId());
     }
 
@@ -304,7 +304,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -327,7 +327,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -341,7 +341,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "NaN", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is NaN", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
@@ -355,7 +355,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is abc", error.getPrefix());
         assertEquals("E003", error.getRule().getErrorId());
 
         testList.clear();
@@ -369,7 +369,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "180.1234567", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is 180.1234567", error.getPrefix());
         assertEquals("E009", error.getRule().getErrorId());
 
         testList.clear();
@@ -383,7 +383,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "-180.1234567", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is -180.1234567", error.getPrefix());
         assertEquals("E009", error.getRule().getErrorId());
     }
 
@@ -422,7 +422,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -447,7 +447,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -462,7 +462,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is abc", error.getPrefix());
         assertEquals("E005", error.getRule().getErrorId());
 
         testList.clear();
@@ -489,7 +489,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "-1", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is -1", error.getPrefix());
         assertEquals("E006", error.getRule().getErrorId());
 
         testList.clear();
@@ -524,7 +524,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals("id: " + "" + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals(" fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -545,7 +545,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + "" + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals(" fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -558,7 +558,7 @@ class GTFSTypeValidationUtilsTest {
         assertEquals("abçé", returned);
         assertEquals(1, testList.size());
         OccurrenceModel warning = testList.get(0);
-        assertEquals("id: " + "abçé" + " " + fieldName + " is " + "abçé", warning.getPrefix());
+        assertEquals("abçé fieldNameTest is abçé", warning.getPrefix());
         assertEquals("W001", warning.getRule().getErrorId());
 
         testList.clear();
@@ -571,7 +571,7 @@ class GTFSTypeValidationUtilsTest {
         assertEquals("ab\u0003", returned);
         assertEquals(1, testList.size());
         warning = testList.get(0);
-        assertEquals("id: " + "ab\u0003" + " " + fieldName + " is " + "ab\u0003", warning.getPrefix());
+        assertEquals("ab\u0003 fieldNameTest is ab\u0003", warning.getPrefix());
         assertEquals("W001", warning.getRule().getErrorId());
 
         testList.clear();
@@ -609,7 +609,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -632,7 +632,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -670,7 +670,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -693,7 +693,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is null or empty", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is null or empty", error.getPrefix());
         assertEquals("E002", error.getRule().getErrorId());
 
         testList.clear();
@@ -707,7 +707,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "ftp://mobilitydata.org", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is ftp://mobilitydata.org", error.getPrefix());
         assertEquals("E011", error.getRule().getErrorId());
 
         testList.clear();
@@ -721,7 +721,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "http://mobilitydataorg", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is http://mobilitydataorg", error.getPrefix());
         assertEquals("E011", error.getRule().getErrorId());
 
         testList.clear();
@@ -786,7 +786,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "ABC", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is ABC", error.getPrefix());
         assertEquals("E007", error.getRule().getErrorId());
 
         testList.clear();
@@ -800,7 +800,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "ABCDEF0", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is ABCDEF0", error.getPrefix());
         assertEquals("E007", error.getRule().getErrorId());
 
         testList.clear();
@@ -814,7 +814,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "AZ-FTJ", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is AZ-FTJ", error.getPrefix());
         assertEquals("E007", error.getRule().getErrorId());
     }
 
@@ -857,7 +857,7 @@ class GTFSTypeValidationUtilsTest {
         assertNull(returned);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
-        assertEquals("id: " + validatedEntityId + " " + fieldName + " is " + "abc", error.getPrefix());
+        assertEquals("entity_id: testId fieldNameTest is abc", error.getPrefix());
         assertEquals("E010", error.getRule().getErrorId());
     }
 }

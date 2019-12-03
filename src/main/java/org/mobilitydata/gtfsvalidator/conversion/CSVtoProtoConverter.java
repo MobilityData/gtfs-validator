@@ -64,8 +64,10 @@ public class CSVtoProtoConverter {
             if (pathwayId != null) {
                 toAddBuilder.setPathwayId(pathwayId);
             } else {
-                pathwayId = "null";
+                pathwayId = "pathway_id: null";
             }
+
+            pathwayId = "pathway_id: " + pathwayId;
 
             String fromStopId = GTFSTypeValidationUtils.validateId("from_stop_id",
                     rawEntity.get("from_stop_id"),

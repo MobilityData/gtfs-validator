@@ -284,6 +284,6 @@ public class GTFSTypeValidationUtils {
     private static String formatOccurrencePrefix(@NotNull String validatedEntityId,
                                                  @NotNull String fieldName,
                                                  @NotNull String rawValue) {
-        return "id: " + validatedEntityId + " " + fieldName + " is " + rawValue;
+        return validatedEntityId + " " + fieldName + " is " + rawValue;
     }
 }
