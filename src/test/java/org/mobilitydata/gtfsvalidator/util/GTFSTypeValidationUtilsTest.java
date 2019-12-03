@@ -778,7 +778,7 @@ class GTFSTypeValidationUtilsTest {
 
         List<OccurrenceModel> testList = new ArrayList<>();
 
-        // typical case
+        // typical case HH:MM:SS
         String returned = GTFSTypeValidationUtils.validateTime(fieldName,
                 "99:59:59",
                 testList);
@@ -786,13 +786,26 @@ class GTFSTypeValidationUtilsTest {
         assertEquals("99:59:59", returned);
         assertEquals(0, testList.size());
 
-        // typical case
+        // typical case H:MM:SS
         returned = GTFSTypeValidationUtils.validateTime(fieldName,
                 "9:59:59",
                 testList);
 
         assertEquals("9:59:59", returned);
         assertEquals(0, testList.size());
+
+        // invalid HHH:MM:SS
+        returned = GTFSTypeValidationUtils.validateTime(fieldName,
+                "999:59:59",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals(fieldName, error.getPrefix());
+        assertEquals("E012", error.getRule().getErrorId());
+
+        testList.clear();
 
         // null
         returned = GTFSTypeValidationUtils.validateTime(fieldName,
@@ -815,7 +828,7 @@ class GTFSTypeValidationUtilsTest {
                 testList);
         assertNull(returned);
         assertEquals(1, testList.size());
-        OccurrenceModel error = testList.get(0);
+        error = testList.get(0);
         assertEquals(fieldName, error.getPrefix());
         assertEquals("E012", error.getRule().getErrorId());
 
