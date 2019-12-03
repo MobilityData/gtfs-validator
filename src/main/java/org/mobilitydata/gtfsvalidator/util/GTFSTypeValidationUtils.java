@@ -49,7 +49,8 @@ public class GTFSTypeValidationUtils {
 
         FloatValidator floatValidator = new FloatValidator();
 
-        //TODO: locale is not specified in GTFS spec but using the default one could lead to inconsistent results
+        //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
+        //from feed_lang in feed_info.txt before defaulting to Locale.US
         Float value = floatValidator.validate(rawValue, Locale.US);
 
         if (value == null || Float.isNaN(value)) {
@@ -131,7 +132,8 @@ public class GTFSTypeValidationUtils {
 
         IntegerValidator integerValidator = new IntegerValidator();
 
-        //TODO: locale is not specified in GTFS spec but using the default one could lead to inconsistent results
+        //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
+        //from feed_lang in feed_info.txt before defaulting to Locale.US
         Integer value = integerValidator.validate(rawValue, Locale.US);
 
         if (value == null) {
