@@ -826,10 +826,10 @@ class GTFSTypeValidationUtilsTest {
         // typical case HH:MM:SS
         String returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
                 fieldName,
-                "99:59:59",
+                "26:59:59",
                 testList);
 
-        assertEquals("99:59:59", returned);
+        assertEquals("26:59:59", returned);
         assertEquals(0, testList.size());
 
         // typical case H:MM:SS
@@ -840,6 +840,20 @@ class GTFSTypeValidationUtilsTest {
 
         assertEquals("9:59:59", returned);
         assertEquals(0, testList.size());
+
+        // suspicious HH:MM:SS
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
+                "99:59:59",
+                testList);
+
+        assertEquals("99:59:59", returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel warning = testList.get(0);
+        assertEquals("entity_id: testId fieldNameTest is 99:59:59", warning.getPrefix());
+        assertEquals("W002", warning.getRule().getErrorId());
+
+        testList.clear();
 
         // invalid HHH:MM:SS
         returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
