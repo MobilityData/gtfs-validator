@@ -819,6 +819,87 @@ class GTFSTypeValidationUtilsTest {
     }
 
     @Test
+    public void validateTime() {
+
+        List<OccurrenceModel> testList = new ArrayList<>();
+
+        // typical case HH:MM:SS
+        String returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
+                "26:59:59",
+                testList);
+
+        assertEquals("26:59:59", returned);
+        assertEquals(0, testList.size());
+
+        // typical case H:MM:SS
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
+                "9:59:59",
+                testList);
+
+        assertEquals("9:59:59", returned);
+        assertEquals(0, testList.size());
+
+        // suspicious HH:MM:SS
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
+                "99:59:59",
+                testList);
+
+        assertEquals("99:59:59", returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel warning = testList.get(0);
+        assertEquals("entity_id: testId fieldNameTest is 99:59:59", warning.getPrefix());
+        assertEquals("W002", warning.getRule().getErrorId());
+
+        testList.clear();
+
+        // invalid HHH:MM:SS
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
+                "999:59:59",
+                testList);
+
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        OccurrenceModel error = testList.get(0);
+        assertEquals("entity_id: testId fieldNameTest is 999:59:59", error.getPrefix());
+        assertEquals("E012", error.getRule().getErrorId());
+
+        testList.clear();
+
+        // null
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
+                null,
+                testList);
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // empty
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
+                "",
+                testList);
+
+        assertNull(returned);
+        assertEquals(0, testList.size());
+
+        // any non parsable
+        returned = GTFSTypeValidationUtils.validateTime(validatedEntityId,
+                fieldName,
+                "abc",
+                testList);
+        assertNull(returned);
+        assertEquals(1, testList.size());
+        error = testList.get(0);
+        assertEquals("entity_id: testId fieldNameTest is abc", error.getPrefix());
+        assertEquals("E012", error.getRule().getErrorId());
+
+    }
+
+    @Test
     public void parseAndValidateTimeZone() {
 
         List<OccurrenceModel> testList = new ArrayList<>();

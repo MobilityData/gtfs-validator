@@ -30,6 +30,12 @@ public class ValidationRules {
             "Using only printable ASCII characters for ids is recommended",
             " - field of type id contains non printable or non ASCII characters");
 
+    public static final ValidationRule W002 = new ValidationRule("W002", "WARNING",
+            "Suspicious time value",
+            //TODO: fine tune default threshold value based on 95th percentile of real data
+            "Time value greater than default (27:00:00) or user provided threshold was found",
+            " - field of type time contains a value greater than suspicious threshold");
+
     /**
      * Errors
      */
@@ -86,4 +92,9 @@ public class ValidationRules {
             "Invalid url value",
             "A field of type URL must use http or https scheme and conform to RFC2396",
             " - field of type url is not a valid http or https URL");
+
+    public static final ValidationRule E012 = new ValidationRule("E012", "ERROR",
+            "Invalid time value",
+            "A field of type time can't be parsed",
+            " - field of type time is not in valid HH:MM:SS or H:MM:SS format");
 }

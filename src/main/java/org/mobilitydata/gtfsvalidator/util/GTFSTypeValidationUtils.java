@@ -248,6 +248,28 @@ public class GTFSTypeValidationUtils {
         return rawValue;
     }
 
+    public static @Nullable
+    String validateTime(@NotNull String validatedEntityId,
+                        @NotNull String fieldName,
+                        @Nullable String rawValue,
+                        @NotNull List<OccurrenceModel>outList) {
+
+        if(Strings.isNullOrEmpty(rawValue)) {
+            return null;
+        }
+
+        if (!TIME_PATTERN.matcher(rawValue).matches()) {
+            RuleUtils.addOccurrence(E012, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
+            return null;
+        }
+
+        if (TIME_PATTERN_SUSPICIOUS.matcher(rawValue).matches()) {
+            RuleUtils.addOccurrence(W002, formatOccurrencePrefix(validatedEntityId, fieldName, rawValue), outList);
+        }
+
+        return rawValue;
+    }
+
 
     private static @Nullable
     String validateString(@NotNull String validatedEntityId,
@@ -276,10 +298,17 @@ public class GTFSTypeValidationUtils {
 
         return rawValue;
     }
+
     private static boolean isPrintableAscii(char ch) {
         return ch >= 32 && ch < 127;
     }
     private static final Pattern COLOR_6_DIGITS_HEXADECIMAL_PATTERN = Pattern.compile("[0-9A-Fa-f]{6}$");
+    // General Time pattern HH:MM:SS or H:MM:SS
+    private static final Pattern TIME_PATTERN = Pattern.compile("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]");
+    // By default, a warning is emitted for time >= 27:00:00
+    //TODO: fine tune threshold value based on 95th percentile of real data
+    //TODO: make it configurable through command line argument
+    private static final Pattern TIME_PATTERN_SUSPICIOUS = Pattern.compile("[2-9][7-9]:[0-5][0-9]:[0-5][0-9]");
     private static final String[] VALID_URL_SCHEMES = { "http", "https" };
     private static String formatOccurrencePrefix(@NotNull String validatedEntityId,
                                                  @NotNull String fieldName,
