@@ -16,6 +16,7 @@ package org.mobilitydata.gtfsvalidator;
  * limitations under the License.
  */
 
+import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
@@ -34,43 +35,51 @@ public class Main {
 
         long startTime = System.nanoTime();
         final Logger logger = LogManager.getLogger();
+        final Options options = new Options();
 
-        //TODO: configurable through command line options: url, zip path, extraction path, output path
-        String url = "https://transitfeeds.com/p/mbta/64/latest/download";
-        String zipInputPath = "input.zip";
-        String zipExtractTargetPath = "input";
-        String outputPath = "output";
+        options.addOption("u", "url", true, "URL to GTFS zipped archive");
+        options.addRequiredOption("z", "zip", true, "if -url is used, where to place the downloaded archive," +
+                "otherwise must point to a valid GTFS zipped archive on disk");
+        options.addRequiredOption("i", "input", true, "Relative path where to extract the zip content");
+        options.addRequiredOption("o", "output", true, "Relative path where to place output files");
+        //TODO: add configurable warning threshold for GTFS time type validation
+
+        final CommandLineParser parser = new DefaultParser();
 
         try {
+            final CommandLine cmd = parser.parse(options, args);
 
-            FileUtils.copyZipFromNetwork(url, zipInputPath);
+            String url = cmd.getOptionValue("u");
+            String zipInputPath = cmd.getOptionValue("z");
+            String zipExtractTargetPath = cmd.getOptionValue("i");
+            String outputPath = cmd.getOptionValue("o");
+
+            if (cmd.hasOption("u")) {
+                FileUtils.copyZipFromNetwork(url, zipInputPath);
+            }
+
             FileUtils.unzip(zipInputPath, zipExtractTargetPath);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        CSVtoProtoConverter pathwaysConverter = new CSVtoProtoConverter();
-        CSVtoProtoConverter stopsConverter = new CSVtoProtoConverter();
-
-        try {
+            CSVtoProtoConverter pathwaysConverter = new CSVtoProtoConverter();
+            CSVtoProtoConverter stopsConverter = new CSVtoProtoConverter();
 
             FileUtils.cleanOrCreatePath(outputPath);
 
-
             // convert GTFS text files to .proto files on disk
-            List<OccurrenceModel> result  = pathwaysConverter.convert("input/pathways.txt",
-                    "output/pathways.pb",
+            List<OccurrenceModel> result  = pathwaysConverter.convert(zipExtractTargetPath + "/pathways.txt",
+                    outputPath + "/pathways.pb",
                     PathwaysProto.pathwayCollection.newBuilder());
 
-            result.addAll(stopsConverter.convert("input/stops.txt",
-                    "output/stops.pb",
+            result.addAll(stopsConverter.convert(zipExtractTargetPath + "/stops.txt",
+                    outputPath + "/stops.pb",
                     StopsProto.stopCollection.newBuilder()));
 
             logger.debug("validation result: " + result);
 
+        } catch (ParseException e) {
+            logger.error("Could not parse command line arguments: " + e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An exception occurred: " + e.getMessage());
         }
 
         logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
