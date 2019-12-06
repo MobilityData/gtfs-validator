@@ -57,10 +57,7 @@ public class CSVtoProtoConverter {
 
             PathwaysProto.Pathway.Builder toAddBuilder = PathwaysProto.Pathway.newBuilder();
 
-            String pathwayId = GTFSTypeValidationUtils.validateId("pathway_id",
-                    rawEntity.get("pathway_id"),
-                    false,
-                    errorAndWarningList);
+            String pathwayId = rawEntity.get("pathway_id");
 
             if (pathwayId != null) {
                 toAddBuilder.setPathwayId(pathwayId);
@@ -69,112 +66,90 @@ public class CSVtoProtoConverter {
                 pathwayId = "pathway_id: null";
             }
 
-            String fromStopId = GTFSTypeValidationUtils.validateId("from_stop_id",
-                    rawEntity.get("from_stop_id"),
-                    false,
-                    errorAndWarningList);
+            String fromStopId = rawEntity.get("from_stop_id");
 
             if (fromStopId != null)
                 toAddBuilder.setFromStopId(fromStopId);
 
-            String toStopId = GTFSTypeValidationUtils.validateId("to_stop_id",
-                    rawEntity.get("to_stop_id"),
-                    false,
-                    errorAndWarningList);
+            String toStopId = rawEntity.get("to_stop_id");
 
             if (toStopId != null)
                 toAddBuilder.setToStopId(toStopId);
 
-            Integer pathwayMode = GTFSTypeValidationUtils.parseAndValidateInteger(pathwayId,
+            Integer pathwayMode = GTFSTypeValidationUtils.parseInteger(pathwayId,
                     "pathway_mode",
                     rawEntity.get("pathway_mode"),
-                    false,
-                    false,
                     errorAndWarningList);
 
             if (pathwayMode != null) {
                 toAddBuilder.setPathwayModeValue(pathwayMode);
             }
 
-            Integer isBidirectional = GTFSTypeValidationUtils.parseAndValidateInteger(pathwayId,
+            Integer isBidirectional = GTFSTypeValidationUtils.parseInteger(pathwayId,
                     "is_bidirectional",
                     rawEntity.get("is_bidirectional"),
-                    false,
-                    false,
                     errorAndWarningList);
 
             if (isBidirectional != null) {
                 toAddBuilder.setIsBidirectionalValue(isBidirectional);
             }
 
-            Float length = GTFSTypeValidationUtils.parseAndValidateFloat(pathwayId,
+            Float length = GTFSTypeValidationUtils.parseFloat(pathwayId,
                     "length",
                     rawEntity.get("length"),
-                    true,
-                    false,
                     errorAndWarningList);
 
             if (length != null) {
                 toAddBuilder.setLength(length);
             }
 
-            Integer traversalTime = GTFSTypeValidationUtils.parseAndValidateInteger(pathwayId,
+            Integer traversalTime = GTFSTypeValidationUtils.parseInteger(pathwayId,
                     "traversal_time",
                     rawEntity.get("traversal_time"),
-                    true,
-                    false,
                     errorAndWarningList);
 
             if (traversalTime != null) {
                 toAddBuilder.setTraversalTime(traversalTime);
             }
 
-            Integer stairCount = GTFSTypeValidationUtils.parseAndValidateInteger(pathwayId,
+            Integer stairCount = GTFSTypeValidationUtils.parseInteger(pathwayId,
                     "stair_count",
                     rawEntity.get("stair_count"),
-                    true,
-                    true,
                     errorAndWarningList);
 
             if (stairCount != null) {
                 toAddBuilder.setStairCount(stairCount);
             }
 
-            Float maxSlope = GTFSTypeValidationUtils.parseAndValidateFloat(pathwayId,
+            Float maxSlope = GTFSTypeValidationUtils.parseFloat(pathwayId,
                     "max_slope",
                     rawEntity.get("max_slope"),
-                    true,
-                    true,
                     errorAndWarningList);
 
             if (maxSlope != null) {
                 toAddBuilder.setMaxSlope(maxSlope);
             }
 
-            Float minWidth = GTFSTypeValidationUtils.parseAndValidateFloat(pathwayId,
+            Float minWidth = GTFSTypeValidationUtils.parseFloat(pathwayId,
                     "min_width",
                     rawEntity.get("min_width"),
-                    true,
-                    false,
                     errorAndWarningList);
 
             if (minWidth != null) {
                 toAddBuilder.setMinWidth(minWidth);
             }
 
-            String signpostedAs = GTFSTypeValidationUtils.validateText(pathwayId,
-                    "signposted_as",
-                    rawEntity.get("signposted_as"),
-                    true,
-                    errorAndWarningList);
+            String signpostedAs = rawEntity.get("signposted_as");
 
-            toAddBuilder.setSignpostedAs(signpostedAs);
+            if (signpostedAs != null) {
+                toAddBuilder.setSignpostedAs(signpostedAs);
+            }
 
-            String reversedSignpostedAs = GTFSTypeValidationUtils.validateText(pathwayId,
-                    "reversed_signposted_as",
-                    rawEntity.get("reversed_signposted_as"),
-                    true,
-                    errorAndWarningList);
+            String reversedSignpostedAs = rawEntity.get("reversed_signposted_as");
+
+            if (reversedSignpostedAs != null) {
+                toAddBuilder.setReversedSignpostedAs(reversedSignpostedAs);
+            }
 
             protoCollectionBuilder.addPathways(toAddBuilder);
         }
@@ -240,10 +215,7 @@ public class CSVtoProtoConverter {
 
             StopsProto.Stop.Builder toAddBuilder = StopsProto.Stop.newBuilder();
 
-            String stopId = GTFSTypeValidationUtils.validateId("stop_id",
-                    rawEntity.get("stop_id"),
-                    false,
-                    errorAndWarningList);
+            String stopId = rawEntity.get("stop_id");
 
             if (stopId != null) {
                 toAddBuilder.setId(stopId);
@@ -252,125 +224,87 @@ public class CSVtoProtoConverter {
                 stopId = "stop_id: null";
             }
 
-            String stopCode = GTFSTypeValidationUtils.validateText(stopId,
-                    "stop_code",
-                    rawEntity.get("stop_code"),
-                    true,
-                    errorAndWarningList);
+            String stopCode = rawEntity.get("stop_code");
 
             if (stopCode != null) {
                 toAddBuilder.setCode(stopCode);
             }
 
-            String stopName = GTFSTypeValidationUtils.validateText(stopId,
-                    "stop_name",
-                    rawEntity.get("stop_name"),
-                    true,
-                    errorAndWarningList);
+            String stopName = rawEntity.get("stop_name");
 
             if (stopName != null) {
                 toAddBuilder.setName(stopName);
             }
 
-            String stopDesc = GTFSTypeValidationUtils.validateText(stopId,
-                    "stop_desc",
-                    rawEntity.get("stop_desc"),
-                    true,
-                    errorAndWarningList);
+            String stopDesc = rawEntity.get("stop_desc");
 
             if (stopDesc != null) {
                 toAddBuilder.setDesc(stopDesc);
             }
 
-            Float stopLatitude = GTFSTypeValidationUtils.parseAndValidateLatitude(stopId,
+            Float stopLatitude = GTFSTypeValidationUtils.parseFloat(stopId,
                     "stop_lat",
                     rawEntity.get("stop_lat"),
-                    true,
                     errorAndWarningList);
 
-            Float stopLongitude = GTFSTypeValidationUtils.parseAndValidateLongitude(stopId,
+            Float stopLongitude = GTFSTypeValidationUtils.parseFloat(stopId,
                     "stop_lon",
                     rawEntity.get("stop_lon"),
-                    true,
                     errorAndWarningList);
 
             if (stopLatitude != null && stopLongitude != null) {
                 toAddBuilder.setLatLng(LatLng.newBuilder().setLatitude(stopLatitude).setLongitude(stopLongitude).build());
             }
 
-            String zoneId = GTFSTypeValidationUtils.validateId("zone_id",
-                    rawEntity.get("zone_id"),
-                    true,
-                    errorAndWarningList);
+            String zoneId = rawEntity.get("zone_id");
 
             if (zoneId != null) {
                 toAddBuilder.setZoneId(zoneId);
             }
 
-            String stopUrl = GTFSTypeValidationUtils.validateUrl(stopId,
-                    "stop_url",
-                    rawEntity.get("stop_url"),
-                    true,
-                    errorAndWarningList);
+            String stopUrl = rawEntity.get("stop_url");
 
             if (stopUrl != null) {
                 toAddBuilder.setUrl(stopUrl);
             }
 
-            Integer locationType = GTFSTypeValidationUtils.parseAndValidateInteger(stopId,
+            Integer locationType = GTFSTypeValidationUtils.parseInteger(stopId,
                     "location_type",
                     rawEntity.get("location_type"),
-                    true,
-                    false,
                     errorAndWarningList);
 
             if (locationType != null) {
                 toAddBuilder.setLocationTypeValue(locationType);
             }
 
-            String parentStationId = GTFSTypeValidationUtils.validateId("parent_station",
-                    rawEntity.get("parent_station"),
-                    true,
-                    errorAndWarningList);
+            String parentStationId = rawEntity.get("parent_station");
 
             if (parentStationId != null) {
                 toAddBuilder.setParentStation(parentStationId);
             }
 
-            String timezone = GTFSTypeValidationUtils.parseAndValidateTimeZone(stopId,
-                    "stop_timezone",
-                    rawEntity.get("stop_timezone"),
-                    errorAndWarningList);
+            String timezone = rawEntity.get("stop_timezone");
 
             if (timezone != null) {
                 toAddBuilder.setTimezone(timezone);
             }
 
-            Integer wheelchairBoarding = GTFSTypeValidationUtils.parseAndValidateInteger(stopId,
+            Integer wheelchairBoarding = GTFSTypeValidationUtils.parseInteger(stopId,
                     "wheelchair_boarding",
                     rawEntity.get("wheelchair_boarding"),
-                    true,
-                    false,
                     errorAndWarningList);
 
             if (wheelchairBoarding != null) {
                 toAddBuilder.setWheelchairBoardingValue(wheelchairBoarding);
             }
 
-            String levelId = GTFSTypeValidationUtils.validateId("level_id",
-                    rawEntity.get("level_id"),
-                    true,
-                    errorAndWarningList);
+            String levelId = rawEntity.get("level_id");
 
             if (levelId != null) {
                 toAddBuilder.setLevelId(levelId);
             }
 
-            String platformCode = GTFSTypeValidationUtils.validateText(stopId,
-                    "platform_code",
-                    rawEntity.get("platform_code"),
-                    true,
-                    errorAndWarningList);
+            String platformCode = rawEntity.get("platform_code");
 
             if (platformCode != null) {
                 toAddBuilder.setPlatformCode(platformCode);

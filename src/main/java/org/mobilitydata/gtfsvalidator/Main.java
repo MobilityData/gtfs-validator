@@ -57,7 +57,6 @@ public class Main {
 
             FileUtils.cleanOrCreatePath(outputPath);
 
-
             // convert GTFS text files to .proto files on disk
             List<OccurrenceModel> result  = pathwaysConverter.convert("input/pathways.txt",
                     "output/pathways.pb",
@@ -67,7 +66,7 @@ public class Main {
                     "output/stops.pb",
                     StopsProto.stopCollection.newBuilder()));
 
-            logger.debug("validation result: " + result);
+            logger.debug("conversion result: " + result);
 
         } catch (IOException e) {
             e.printStackTrace();
