@@ -33,14 +33,14 @@ import static org.mobilitydata.gtfsvalidator.rules.ValidationRules.*;
 
 public class GTFSTypeValidationUtils {
 
-    public static @Nullable
-    Float parseFloat(@NotNull String entityId,
+    public static
+    float parseFloat(@NotNull String entityId,
                      @NotNull String fieldName,
                      @Nullable String rawValue,
                      @NotNull  List<OccurrenceModel> outList) {
 
         if (Strings.isNullOrEmpty(rawValue)) {
-            return null;
+            return Float.NaN;
         }
 
         FloatValidator floatValidator = new FloatValidator();
@@ -51,7 +51,7 @@ public class GTFSTypeValidationUtils {
 
         if (value == null || Float.isNaN(value)) {
             RuleUtils.addOccurrence(E003, formatOccurrencePrefix(entityId, fieldName, rawValue), outList);
-            return null;
+            return Float.NaN;
         }
 
         return value;
@@ -59,13 +59,13 @@ public class GTFSTypeValidationUtils {
 
     public static void validateFloat(@NotNull String validatedEntityId,
                                      @NotNull String fieldName,
-                                     @Nullable Float value,
-                                     boolean canBeNull,
+                                     float value,
+                                     boolean canBeNaN,
                                      boolean canBeNegative,
                                      @NotNull  List<OccurrenceModel> outList) {
 
-        if (value == null) {
-            if (!canBeNull) {
+        if (Float.isNaN(value)) {
+            if (!canBeNaN) {
                 RuleUtils.addOccurrence(E002, formatOccurrencePrefix(validatedEntityId, fieldName, "null"), outList);
             }
             return;
@@ -76,14 +76,14 @@ public class GTFSTypeValidationUtils {
         }
     }
 
-    public static @Nullable
-    Integer parseInteger(@NotNull String entityId,
-                         @NotNull String fieldName,
-                         @Nullable String rawValue,
-                         @NotNull  List<OccurrenceModel> outList) {
+    public static
+    int parseInteger(@NotNull String entityId,
+                     @NotNull String fieldName,
+                     @Nullable String rawValue,
+                     @NotNull  List<OccurrenceModel> outList) {
 
         if (Strings.isNullOrEmpty(rawValue)) {
-            return null;
+            return Integer.MAX_VALUE;
         }
 
         IntegerValidator integerValidator = new IntegerValidator();
@@ -94,7 +94,7 @@ public class GTFSTypeValidationUtils {
 
         if (value == null) {
             RuleUtils.addOccurrence(E005, formatOccurrencePrefix(entityId, fieldName, rawValue), outList);
-            return null;
+            return Integer.MAX_VALUE;
         }
 
         return value;
@@ -102,13 +102,13 @@ public class GTFSTypeValidationUtils {
 
     public static void validateInteger(@NotNull String validatedEntityId,
                                        @NotNull String fieldName,
-                                       @Nullable Integer value,
-                                       boolean canBeNull,
+                                       int value,
+                                       boolean canBeMax,
                                        boolean canBeNegative,
                                        @NotNull  List<OccurrenceModel> outList) {
 
-        if (value == null) {
-            if (!canBeNull) {
+        if (value == Integer.MAX_VALUE) {
+            if (!canBeMax) {
                 RuleUtils.addOccurrence(E002, formatOccurrencePrefix(validatedEntityId, fieldName, "null"), outList);
             }
             return;
@@ -121,12 +121,12 @@ public class GTFSTypeValidationUtils {
 
     public static void validateLatitude(@NotNull String validatedEntityId,
                                            @NotNull String fieldName,
-                                           @Nullable Float value,
-                                           boolean canBeNull,
+                                           float value,
+                                           boolean canBeNaN,
                                            @NotNull List<OccurrenceModel> outList) {
 
-        if (value == null) {
-            if (!canBeNull) {
+        if (Float.isNaN(value)) {
+            if (!canBeNaN) {
                 RuleUtils.addOccurrence(E002, formatOccurrencePrefix(validatedEntityId, fieldName, "null"), outList);
             }
             return;
@@ -139,12 +139,12 @@ public class GTFSTypeValidationUtils {
 
     public static void validateLongitude(@NotNull String validatedEntityId,
                                          @NotNull String fieldName,
-                                         @Nullable Float value,
-                                         boolean canBeNull,
+                                         float value,
+                                         boolean canBeNaN,
                                          @NotNull List<OccurrenceModel> outList) {
 
-        if (value == null) {
-            if (!canBeNull) {
+        if (Float.isNaN(value)) {
+            if (!canBeNaN) {
                 RuleUtils.addOccurrence(E002, formatOccurrencePrefix(validatedEntityId, fieldName, "null"), outList);
             }
             return;
@@ -228,9 +228,9 @@ public class GTFSTypeValidationUtils {
 
     public static @Nullable
     String validateTimeZone(@NotNull String validatedEntityId,
-                                    @NotNull String fieldName,
-                                    @Nullable String rawValue,
-                                    @NotNull List<OccurrenceModel> outList) {
+                            @NotNull String fieldName,
+                            @Nullable String rawValue,
+                            @NotNull List<OccurrenceModel> outList) {
 
         if (Strings.isNullOrEmpty(rawValue)) {
             return null;

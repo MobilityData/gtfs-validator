@@ -18,7 +18,7 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        Float returned = GTFSTypeValidationUtils.parseFloat(validatedEntityId,
+        float returned = GTFSTypeValidationUtils.parseFloat(validatedEntityId,
                 fieldName,
                 "66.6",
                 testList);
@@ -31,7 +31,7 @@ class GTFSTypeValidationUtilsTest {
                 fieldName,
                 null,
                 testList);
-        assertNull(returned);
+        assertTrue(Float.isNaN(returned));
         assertEquals(0, testList.size());
 
         // empty
@@ -39,7 +39,7 @@ class GTFSTypeValidationUtilsTest {
                 fieldName,
                 "",
                 testList);
-        assertNull(returned);
+        assertTrue(Float.isNaN(returned));
         assertEquals(0, testList.size());
 
         // NaN parsing
@@ -47,7 +47,7 @@ class GTFSTypeValidationUtilsTest {
                 fieldName,
                 "NaN",
                 testList);
-        assertNull(returned);
+        assertTrue(Float.isNaN(returned));
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
         assertEquals("entity_id: testId fieldNameTest is NaN" , error.getPrefix());
@@ -60,7 +60,7 @@ class GTFSTypeValidationUtilsTest {
                 fieldName,
                 "abc",
                 testList);
-        assertNull(returned);
+        assertTrue(Float.isNaN(returned));
         assertEquals(1, testList.size());
         error = testList.get(0);
         assertEquals("entity_id: testId fieldNameTest is abc" , error.getPrefix());
@@ -81,19 +81,19 @@ class GTFSTypeValidationUtilsTest {
 
         assertEquals(0, testList.size());
 
-        // can be null
+        // can be NaN
         GTFSTypeValidationUtils.validateFloat(validatedEntityId,
                 fieldName,
-                null,
+                Float.NaN,
                 true,
                 false,
                 testList);
         assertEquals(0, testList.size());
 
-        // cannot be null
+        // cannot be NaN
         GTFSTypeValidationUtils.validateFloat(validatedEntityId,
                 fieldName,
-                null,
+                Float.NaN,
                 false,
                 false,
                 testList);
@@ -134,7 +134,7 @@ class GTFSTypeValidationUtilsTest {
         List<OccurrenceModel> testList = new ArrayList<>();
 
         // typical case
-        Integer returned = GTFSTypeValidationUtils.parseInteger(validatedEntityId,
+        int returned = GTFSTypeValidationUtils.parseInteger(validatedEntityId,
                 fieldName,
                 "666",
                 testList);
@@ -147,7 +147,7 @@ class GTFSTypeValidationUtilsTest {
                 fieldName,
                 null,
                 testList);
-        assertNull(returned);
+        assertEquals(returned, Integer.MAX_VALUE);
         assertEquals(0, testList.size());
 
         // empty
@@ -155,7 +155,7 @@ class GTFSTypeValidationUtilsTest {
                 fieldName,
                 "",
                 testList);
-        assertNull(returned);
+        assertEquals(returned, Integer.MAX_VALUE);
         assertEquals(0, testList.size());
 
         // any non parsable
@@ -163,7 +163,7 @@ class GTFSTypeValidationUtilsTest {
                 fieldName,
                 "abc",
                 testList);
-        assertNull(returned);
+        assertEquals(returned, Integer.MAX_VALUE);
         assertEquals(1, testList.size());
         OccurrenceModel error = testList.get(0);
         assertEquals("entity_id: testId fieldNameTest is abc" , error.getPrefix());
@@ -184,19 +184,19 @@ class GTFSTypeValidationUtilsTest {
 
         assertEquals(0, testList.size());
 
-        // can be null
+        // can be max
         GTFSTypeValidationUtils.validateInteger(validatedEntityId,
                 fieldName,
-                null,
+                Integer.MAX_VALUE,
                 true,
                 false,
                 testList);
         assertEquals(0, testList.size());
 
-        // cannot be null
+        // cannot be max
         GTFSTypeValidationUtils.validateInteger(validatedEntityId,
                 fieldName,
-                null,
+                Integer.MAX_VALUE,
                 false,
                 false,
                 testList);
@@ -254,18 +254,18 @@ class GTFSTypeValidationUtilsTest {
 
         assertEquals(0, testList.size());
 
-        // can be null
+        // can be NaN
         GTFSTypeValidationUtils.validateLatitude(validatedEntityId,
                 fieldName,
-                null,
+                Float.NaN,
                 true,
                 testList);
         assertEquals(0, testList.size());
 
-        // cannot be null
+        // cannot be NaN
         GTFSTypeValidationUtils.validateLatitude(validatedEntityId,
                 fieldName,
-                null,
+                Float.NaN,
                 false,
                 testList);
         assertEquals(1, testList.size());
@@ -322,18 +322,18 @@ class GTFSTypeValidationUtilsTest {
 
         assertEquals(0, testList.size());
 
-        // can be null
+        // can be NaN
         GTFSTypeValidationUtils.validateLongitude(validatedEntityId,
                 fieldName,
-                null,
+                Float.NaN,
                 true,
                 testList);
         assertEquals(0, testList.size());
 
-        // cannot be null
+        // cannot be NaN
         GTFSTypeValidationUtils.validateLongitude(validatedEntityId,
                 fieldName,
-                null,
+                Float.NaN,
                 false,
                 testList);
         assertEquals(1, testList.size());
