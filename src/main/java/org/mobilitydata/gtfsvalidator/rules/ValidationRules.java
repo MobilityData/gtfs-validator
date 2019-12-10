@@ -97,4 +97,9 @@ public class ValidationRules {
             "Invalid time value",
             "A field of type time can't be parsed",
             " - field of type time is not in valid HH:MM:SS or H:MM:SS format");
+
+    public static final ValidationRule E013 = new ValidationRule("E013", "ERROR",
+            "Invalid enum value",
+            "A field of type time enum is invalid",
+            " - field of type enum is not in valid range");
 }

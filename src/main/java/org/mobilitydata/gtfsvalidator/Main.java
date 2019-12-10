@@ -23,7 +23,9 @@ import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
 import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.util.FileUtils;
+import org.mobilitydata.gtfsvalidator.validation.ProtoGTFSTypeValidator;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +39,7 @@ public class Main {
 
         //TODO: configurable through command line options: url, zip path, extraction path, output path
         String url = "https://transitfeeds.com/p/mbta/64/latest/download";
+        //String url = "http://gtfs.ovapi.nl/nl/gtfs-nl.zip";
         String zipInputPath = "input.zip";
         String zipExtractTargetPath = "input";
         String outputPath = "output";
@@ -53,20 +56,29 @@ public class Main {
         CSVtoProtoConverter pathwaysConverter = new CSVtoProtoConverter();
         CSVtoProtoConverter stopsConverter = new CSVtoProtoConverter();
 
+        ProtoGTFSTypeValidator pathwayBasicValidator = new ProtoGTFSTypeValidator();
+
         try {
 
             FileUtils.cleanOrCreatePath(outputPath);
 
             // convert GTFS text files to .proto files on disk
-            List<OccurrenceModel> result  = pathwaysConverter.convert("input/pathways.txt",
+            List<OccurrenceModel> conversionResult  = pathwaysConverter.convert("input/pathways.txt",
                     "output/pathways.pb",
                     PathwaysProto.pathwayCollection.newBuilder());
 
-            result.addAll(stopsConverter.convert("input/stops.txt",
+            conversionResult.addAll(stopsConverter.convert("input/stops.txt",
                     "output/stops.pb",
                     StopsProto.stopCollection.newBuilder()));
 
-            logger.debug("conversion result: " + result);
+            logger.debug("conversion result: " + conversionResult);
+
+            // validate proto files in terms of GTFS types conformance
+            List<OccurrenceModel> typeValidationResult = pathwayBasicValidator.validate(
+                    PathwaysProto.pathwayCollection.parseFrom(new FileInputStream("output/pathways.pb"))
+            );
+
+            logger.debug("GTFS type validation result: " + typeValidationResult);
 
         } catch (IOException e) {
             e.printStackTrace();
