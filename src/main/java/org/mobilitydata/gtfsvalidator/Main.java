@@ -71,14 +71,18 @@ public class Main {
                     "output/stops.pb",
                     StopsProto.stopCollection.newBuilder()));
 
-            logger.debug("conversion result: " + conversionResult);
+            logger.info("conversion result: " + conversionResult);
 
-            // validate proto files in terms of GTFS types conformance
-            List<OccurrenceModel> typeValidationResult = pathwayBasicValidator.validate(
-                    PathwaysProto.pathwayCollection.parseFrom(new FileInputStream("output/pathways.pb"))
-            );
+            if(conversionResult.isEmpty()) {
+                // validate proto files in terms of GTFS types conformance
+                List<OccurrenceModel> typeValidationResult = pathwayBasicValidator.validate(
+                        PathwaysProto.pathwayCollection.parseFrom(new FileInputStream("output/pathways.pb"))
+                );
 
-            logger.debug("GTFS type validation result: " + typeValidationResult);
+                logger.info("GTFS type validation result: " + typeValidationResult);
+            } else {
+                logger.error("ABORTED -- Warning or Errors detected at conversion step. Please fix warnings and errors and retry");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();

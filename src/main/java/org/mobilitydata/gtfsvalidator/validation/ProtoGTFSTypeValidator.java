@@ -22,7 +22,7 @@ public class ProtoGTFSTypeValidator {
 
             String pathwayID = pathway.getPathwayId();
 
-            // TODO: have some kind of schema to pass around at least filed names - they also exist in CSVToProtoConverter
+            // TODO: have some kind of schema to pass around at least fields names - they also exist in CSVToProtoConverter
             GTFSTypeValidationUtils.validateId(pathwayID,
                     "pathway_id",
                     pathwayID,
