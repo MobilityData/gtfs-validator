@@ -156,12 +156,13 @@ public class GTFSTypeValidationUtils {
     }
 
     public static @Nullable
-    String validateId(@NotNull String fieldName,
+    String validateId(@NotNull String entityId,
+                      @NotNull String fieldName,
                       @Nullable String rawValue,
                       boolean canBeNullOrEmpty,
                       @NotNull List<OccurrenceModel> outList) {
 
-        return validateString(Strings.isNullOrEmpty(rawValue) ? "" : rawValue,
+        return validateString(entityId,
                 fieldName,
                 rawValue,
                 canBeNullOrEmpty,
@@ -308,6 +309,8 @@ public class GTFSTypeValidationUtils {
     //TODO: make it configurable through command line argument
     private static final Pattern TIME_PATTERN_SUSPICIOUS = Pattern.compile("[2-9][7-9]:[0-5][0-9]:[0-5][0-9]");
     private static final String[] VALID_URL_SCHEMES = { "http", "https" };
+
+    //TODO: Factor this
     private static String formatOccurrencePrefix(@NotNull String validatedEntityId,
                                                  @NotNull String fieldName,
                                                  @NotNull String rawValue) {
