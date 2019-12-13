@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator.conversion;
 
 /*
- * Copyright (c) 2019. MobilityData IO. All rights reserved
+ * Copyright (c) 2019. MobilityData IO.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.proto.StopTimesProto;
 import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.proto.TripsProto;
-import org.mobilitydata.gtfsvalidator.util.RuleUtils;
 import org.mobilitydata.gtfsvalidator.util.GTFSTypeValidationUtils;
+import org.mobilitydata.gtfsvalidator.util.RuleUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.mobilitydata.gtfsvalidator.rules.ValidationRules.*;
+import static org.mobilitydata.gtfsvalidator.rules.ValidationRules.E001;
 
 public class CSVtoProtoConverter {
 

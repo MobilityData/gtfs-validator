@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator;
 
 /*
- * Copyright (c) 2019. MobilityData IO. All rights reserved
+ * Copyright (c) 2019. MobilityData IO.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ package org.mobilitydata.gtfsvalidator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
-import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
 import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.util.FileUtils;
 import org.mobilitydata.gtfsvalidator.validation.ProtoGTFSTypeValidator;
