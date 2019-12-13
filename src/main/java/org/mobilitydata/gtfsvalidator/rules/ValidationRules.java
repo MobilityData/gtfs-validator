@@ -3,7 +3,7 @@ package org.mobilitydata.gtfsvalidator.rules;
 /*
  * Original work Copyright (C) 2011-2017 Nipuna Gunathilake, University of South Florida.
  * Modified work Copyright (C) 2019 MobilityData IO
- * All rights reserved.
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

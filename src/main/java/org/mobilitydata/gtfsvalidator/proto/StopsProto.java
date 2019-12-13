@@ -4,7 +4,7 @@
 package org.mobilitydata.gtfsvalidator.proto;
 
 /*
- * Copyright (c) 2019. MobilityData IO. All rights reserved
+ * Copyright (c) 2019. MobilityData IO.
  */
 
 public final class StopsProto {
