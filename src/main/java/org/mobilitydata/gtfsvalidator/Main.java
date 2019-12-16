@@ -53,13 +53,26 @@ public class Main {
             final CommandLine cmd = parser.parse(options, args);
 
             if (args.length == 0) {
-                System.out.println("This program can not be runned without arguments. For help, run binary file with -h argument");
+                System.out.println("This program can not be runned without arguments. For help, run file with -h argument");
                 System.exit(0);
             }
+
             if (cmd.hasOption("h")) {
                 printHelp(options);
                 return;
             }
+
+            if ((cmd.hasOption("u")) & !(cmd.hasOption("z"))) {
+                System.out.println("If -url is provided then it is mandatory to specify where to place the downloaded archive (-z option)");
+                System.exit(0);
+            }
+
+            if (!(cmd.hasOption("u")) & (!(cmd.hasOption("i")) || !(cmd.hasOption("o")))) {
+                System.out.println("If -url is not provided then it is mandatory to specify relative paths where to extract zip content (-i) and place output files (-o)");
+                System.exit(0);
+
+            }
+
 
             String url = cmd.getOptionValue("u");
             String zipInputPath = cmd.getOptionValue("z");
