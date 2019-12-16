@@ -68,16 +68,16 @@ public class Main {
             }
 
             if (!(cmd.hasOption("u")) & (!(cmd.hasOption("i")) || !(cmd.hasOption("o")))) {
-                System.out.println("If -url is not provided then it is mandatory to specify relative paths where to extract zip content (-i) and place output files (-o)");
+                System.out.println("If -url is not provided then it is mandatory to specify relative paths where to extract zip content (-i option) and place output files (-o option)");
                 System.exit(0);
 
             }
-
 
             String url = cmd.getOptionValue("u");
             String zipInputPath = cmd.getOptionValue("z");
             String zipExtractTargetPath = cmd.getOptionValue("i");
             String outputPath = cmd.getOptionValue("o");
+
 
             if (cmd.hasOption("u")) {
                 FileUtils.copyZipFromNetwork(url, zipInputPath);
