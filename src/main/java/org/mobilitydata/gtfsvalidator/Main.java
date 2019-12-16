@@ -52,6 +52,10 @@ public class Main {
         try {
             final CommandLine cmd = parser.parse(options, args);
 
+            if (args.length == 0) {
+                System.out.println("This program can not be runned without arguments. For help, run binary file with -h argument");
+                System.exit(0);
+            }
             if (cmd.hasOption("h")) {
                 printHelp(options);
                 return;
