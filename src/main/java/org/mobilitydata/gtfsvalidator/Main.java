@@ -26,8 +26,12 @@ import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.util.FileUtils;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -38,8 +42,8 @@ public class Main {
         final Options options = new Options();
 
         options.addOption("u", "url", true, "URL to GTFS zipped archive");
-        options.addOption("z", "zip", true, "if -url is used, where to place the downloaded archive," +
-                "otherwise must point to a valid GTFS zipped archive on disk");
+        options.addOption("z", "zip", true, "if --url is used, where to place the downloaded archive." +
+                "Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
         options.addOption("i", "input", true, "Relative path where to extract the zip content");
         options.addOption("o", "output", true, "Relative path where to place output files");
         options.addOption("h", "help", false, "Print this message");
@@ -53,34 +57,50 @@ public class Main {
             final CommandLine cmd = parser.parse(options, args);
 
             if (args.length == 0) {
-                System.out.println("This program can not be runned without arguments. For help, run file with -h argument");
-                System.exit(0);
-            }
-
-            if (cmd.hasOption("h")) {
                 printHelp(options);
+            } else if (cmd.hasOption("h")) {
                 return;
             }
 
+            String zipInputPath = cmd.getOptionValue("z") != null ? cmd.getOptionValue("z") : System.getProperty("user.dir");
+            String zipExtractTargetPath = cmd.getOptionValue("i") != null ? cmd.getOptionValue("i") : System.getProperty("user.dir") + "/input";
+            String outputPath = cmd.getOptionValue("o") != null ? cmd.getOptionValue("o"): System.getProperty("user.dir") + "/output";
+
             if ((cmd.hasOption("u")) & !(cmd.hasOption("z"))) {
-                System.out.println("If -url is provided then it is mandatory to specify where to place the downloaded archive (-z option)");
-                System.exit(0);
+                logger.info("--url provided but no location to place zip (--zip option). Using default: " + zipInputPath);
             }
 
-            if (!(cmd.hasOption("u")) & (!(cmd.hasOption("i")) || !(cmd.hasOption("o")))) {
-                System.out.println("If -url is not provided then it is mandatory to specify relative paths where to extract zip content (-i option) and place output files (-o option)");
-                System.exit(0);
+            if (!(cmd.hasOption("u")) & !(cmd.hasOption("z"))) {
+                logger.info("--url and relative path to zip file(--zip option) not provided. Trying to find zip in: " + zipInputPath);
+                List<String> zipList = Files.walk(Paths.get(zipInputPath))
+                        .map(Path::toString)
+                        .filter(f -> f.endsWith(".zip"))
+                        .collect(Collectors.toUnmodifiableList());
 
+                if (zipList.isEmpty()) {
+                    logger.error("no zip file found - exiting");
+                    System.exit(0);
+                } else if (zipList.size() > 1) {
+                    logger.error("multiple zip files found - exiting");
+                    System.exit(0);
+                } else {
+                    logger.info("zip file found: "+ zipList.get(0));
+                    zipInputPath = zipList.get(0);
+                }
+            } else {
+                zipInputPath += "/input.zip";
             }
 
-            String url = cmd.getOptionValue("u");
-            String zipInputPath = cmd.getOptionValue("z");
-            String zipExtractTargetPath = cmd.getOptionValue("i");
-            String outputPath = cmd.getOptionValue("o");
+            if (!cmd.hasOption("i")) {
+                logger.info("--input not provided. Will extract zip content in: " + zipExtractTargetPath);
+            }
 
+            if (!cmd.hasOption("o")) {
+                logger.info("--output not provided. Will place execution results in: " + outputPath);
+            }
 
-            if (cmd.hasOption("u")) {
-                FileUtils.copyZipFromNetwork(url, zipInputPath);
+            if (cmd.getOptionValue("u") != null) {
+                FileUtils.copyZipFromNetwork(cmd.getOptionValue("u"), zipInputPath);
             }
 
             FileUtils.unzip(zipInputPath, zipExtractTargetPath);
