@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.util.FileUtils;
 import org.mobilitydata.gtfsvalidator.validation.ProtoGTFSTypeValidator;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -65,8 +66,10 @@ public class Main {
             }
 
             String zipInputPath = cmd.getOptionValue("z") != null ? cmd.getOptionValue("z") : System.getProperty("user.dir");
-            String zipExtractTargetPath = cmd.getOptionValue("i") != null ? cmd.getOptionValue("i") : System.getProperty("user.dir") + "/input";
-            String outputPath = cmd.getOptionValue("o") != null ? cmd.getOptionValue("o"): System.getProperty("user.dir") + "/output";
+            String zipExtractTargetPath = cmd.getOptionValue("i") != null ? cmd.getOptionValue("i") :
+                    System.getProperty("user.dir") + File.separator + "input";
+            String outputPath = cmd.getOptionValue("o") != null ? cmd.getOptionValue("o"):
+                    System.getProperty("user.dir") + File.separator + "output";
 
             if (cmd.hasOption("u") & !cmd.hasOption("z")) {
                 logger.info("--url provided but no location to place zip (--zip option). Using default: " + zipInputPath);
@@ -90,7 +93,7 @@ public class Main {
                     zipInputPath = zipList.get(0);
                 }
             } else if (!cmd.hasOption("z")) {
-                zipInputPath += "/input.zip";
+                zipInputPath += File.separator + "input.zip";
             }
 
             if (!cmd.hasOption("i")) {
