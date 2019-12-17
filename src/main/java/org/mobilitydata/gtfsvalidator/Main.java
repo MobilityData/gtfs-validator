@@ -68,11 +68,11 @@ public class Main {
             String zipExtractTargetPath = cmd.getOptionValue("i") != null ? cmd.getOptionValue("i") : System.getProperty("user.dir") + "/input";
             String outputPath = cmd.getOptionValue("o") != null ? cmd.getOptionValue("o"): System.getProperty("user.dir") + "/output";
 
-            if ((cmd.hasOption("u")) & !(cmd.hasOption("z"))) {
+            if (cmd.hasOption("u") & !cmd.hasOption("z")) {
                 logger.info("--url provided but no location to place zip (--zip option). Using default: " + zipInputPath);
             }
 
-            if (!(cmd.hasOption("u")) & !(cmd.hasOption("z"))) {
+            if (!cmd.hasOption("u") & !cmd.hasOption("z")) {
                 logger.info("--url and relative path to zip file(--zip option) not provided. Trying to find zip in: " + zipInputPath);
                 List<String> zipList = Files.walk(Paths.get(zipInputPath))
                         .map(Path::toString)
@@ -89,7 +89,7 @@ public class Main {
                     logger.info("zip file found: "+ zipList.get(0));
                     zipInputPath = zipList.get(0);
                 }
-            } else {
+            } else if (!cmd.hasOption("z")) {
                 zipInputPath += "/input.zip";
             }
 
@@ -119,7 +119,7 @@ public class Main {
                     outputPath + "/pathways.pb",
                     PathwaysProto.pathwayCollection.newBuilder());
 
-            result.addAll(stopsConverter.convert(zipExtractTargetPath + "/stops.txt",
+            conversionResult.addAll(stopsConverter.convert(zipExtractTargetPath + "/stops.txt",
                     outputPath + "/stops.pb",
                     StopsProto.stopCollection.newBuilder()));
 
