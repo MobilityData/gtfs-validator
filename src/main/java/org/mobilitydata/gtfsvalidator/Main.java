@@ -118,12 +118,13 @@ public class Main {
             FileUtils.cleanOrCreatePath(outputPath);
 
             // convert GTFS text files to .proto files on disk
-            List<OccurrenceModel> conversionResult  = pathwaysConverter.convert(zipExtractTargetPath + "/pathways.txt",
-                    outputPath + "/pathways.pb",
+            List<OccurrenceModel> conversionResult  = pathwaysConverter.convert(
+                    zipExtractTargetPath + File.separator + "pathways.txt",
+                    outputPath + File.separator + "pathways.pb",
                     PathwaysProto.pathwayCollection.newBuilder());
 
-            conversionResult.addAll(stopsConverter.convert(zipExtractTargetPath + "/stops.txt",
-                    outputPath + "/stops.pb",
+            conversionResult.addAll(stopsConverter.convert(zipExtractTargetPath + File.separator + "stops.txt",
+                    outputPath + File.separator + "stops.pb",
                     StopsProto.stopCollection.newBuilder()));
 
             logger.info("conversion result: " + conversionResult);
@@ -131,7 +132,7 @@ public class Main {
             if(conversionResult.isEmpty()) {
                 // validate proto files in terms of GTFS types conformance
                 List<OccurrenceModel> typeValidationResult = pathwayBasicValidator.validate(
-                        PathwaysProto.pathwayCollection.parseFrom(new FileInputStream("output/pathways.pb"))
+                        PathwaysProto.pathwayCollection.parseFrom(new FileInputStream(outputPath + File.separator + "pathways.pb"))
                 );
 
                 logger.info("GTFS type validation result: " + typeValidationResult);
