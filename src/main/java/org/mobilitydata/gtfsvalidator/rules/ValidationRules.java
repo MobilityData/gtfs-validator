@@ -3,7 +3,7 @@ package org.mobilitydata.gtfsvalidator.rules;
 /*
  * Original work Copyright (C) 2011-2017 Nipuna Gunathilake, University of South Florida.
  * Modified work Copyright (C) 2019 MobilityData IO
- * All rights reserved.
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,4 +97,9 @@ public class ValidationRules {
             "Invalid time value",
             "A field of type time can't be parsed",
             " - field of type time is not in valid HH:MM:SS or H:MM:SS format");
+
+    public static final ValidationRule E013 = new ValidationRule("E013", "ERROR",
+            "Invalid enum value",
+            "A field of type time enum is invalid",
+            " - field of type enum is not in valid range");
 }

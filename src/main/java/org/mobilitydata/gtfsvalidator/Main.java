@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator;
 
 /*
- * Copyright (c) 2019. MobilityData IO. All rights reserved
+ * Copyright (c) 2019. MobilityData IO.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,9 @@ import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.util.FileUtils;
+import org.mobilitydata.gtfsvalidator.validation.ProtoGTFSTypeValidator;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -108,10 +110,12 @@ public class Main {
             CSVtoProtoConverter pathwaysConverter = new CSVtoProtoConverter();
             CSVtoProtoConverter stopsConverter = new CSVtoProtoConverter();
 
+            ProtoGTFSTypeValidator pathwayBasicValidator = new ProtoGTFSTypeValidator();
+
             FileUtils.cleanOrCreatePath(outputPath);
 
             // convert GTFS text files to .proto files on disk
-            List<OccurrenceModel> result  = pathwaysConverter.convert(zipExtractTargetPath + "/pathways.txt",
+            List<OccurrenceModel> conversionResult  = pathwaysConverter.convert(zipExtractTargetPath + "/pathways.txt",
                     outputPath + "/pathways.pb",
                     PathwaysProto.pathwayCollection.newBuilder());
 
@@ -119,7 +123,18 @@ public class Main {
                     outputPath + "/stops.pb",
                     StopsProto.stopCollection.newBuilder()));
 
-            logger.debug("validation result: " + result);
+            logger.info("conversion result: " + conversionResult);
+
+            if(conversionResult.isEmpty()) {
+                // validate proto files in terms of GTFS types conformance
+                List<OccurrenceModel> typeValidationResult = pathwayBasicValidator.validate(
+                        PathwaysProto.pathwayCollection.parseFrom(new FileInputStream("output/pathways.pb"))
+                );
+
+                logger.info("GTFS type validation result: " + typeValidationResult);
+            } else {
+                logger.error("ABORTED -- Warning or Errors detected at conversion step. Please fix warnings and errors and retry");
+            }
 
         } catch (ParseException e) {
 
