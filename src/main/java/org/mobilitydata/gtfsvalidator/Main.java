@@ -16,11 +16,14 @@ package org.mobilitydata.gtfsvalidator;
  * limitations under the License.
  */
 
+import com.google.common.io.Resources;
+import com.google.protobuf.TextFormat;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
+import org.mobilitydata.gtfsvalidator.proto.GtfsProto;
 import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.proto.StopsProto;
 import org.mobilitydata.gtfsvalidator.util.FileUtils;
@@ -29,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.validation.ProtoGTFSTypeValidator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -57,6 +61,8 @@ public class Main {
 
 
         try {
+            GtfsProto.CsvSpecProtos gtfsSpec = loadGtfsSpec();
+
             final CommandLine cmd = parser.parse(options, args);
 
             if (args.length == 0) {
@@ -158,6 +164,14 @@ public class Main {
         System.out.println(); // blank line for legibility
         formatter.printHelp(HELP, options);
         System.out.println(); // blank line for legibility
+    }
+
+    private static GtfsProto.CsvSpecProtos loadGtfsSpec() throws IOException {
+
+        //noinspection UnstableApiUsage
+        return TextFormat.parse(Resources.toString(Resources.getResource("gtfs_spec.asciipb"), StandardCharsets.UTF_8),
+                GtfsProto.CsvSpecProtos.class);
+
     }
 
 }
