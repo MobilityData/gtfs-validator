@@ -3,3 +3,9 @@
  */
 
 rootProject.name = 'gtfs-validator'
+include 'domain'
+include 'usecase'
+include 'config'
+include 'adapter:repository:in-memory-simple'
+findProject(':adapter:repository:in-memory-simple')?.name = 'in-memory-simple'
+
