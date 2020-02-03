@@ -15,6 +15,11 @@ repositories {
 
 dependencies {
 
+    implementation(
+            project(':config'),
+            project(':usecase'),
+    )
+
     implementation 'com.google.api.grpc:proto-google-common-protos:1.16.0'
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'

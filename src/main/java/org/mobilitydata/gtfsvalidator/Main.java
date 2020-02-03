@@ -21,12 +21,12 @@ import com.google.protobuf.TextFormat;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
 import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
 import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
 import org.mobilitydata.gtfsvalidator.proto.GtfsProto;
 import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
 import org.mobilitydata.gtfsvalidator.proto.StopsProto;
-import org.mobilitydata.gtfsvalidator.util.FileUtils;
 import org.mobilitydata.gtfsvalidator.validation.ProtoGTFSTypeValidator;
 
 import java.io.File;
@@ -61,7 +61,7 @@ public class Main {
 
 
         try {
-            GtfsProto.CsvSpecProtos gtfsSpec = loadGtfsSpec();
+            final DefaultConfig config = new DefaultConfig();
 
             final CommandLine cmd = parser.parse(options, args);
 
@@ -111,17 +111,17 @@ public class Main {
             }
 
             if (cmd.getOptionValue("u") != null) {
-                FileUtils.copyZipFromNetwork(cmd.getOptionValue("u"), zipInputPath);
+                config.downloadArchiveFromNetwork(cmd.getOptionValue("u"), zipInputPath).execute();
             }
 
-            FileUtils.unzip(zipInputPath, zipExtractTargetPath);
+            config.unzipInputArchive(zipInputPath, config.cleanOrCreatePath(zipExtractTargetPath).execute()).execute();
 
             CSVtoProtoConverter pathwaysConverter = new CSVtoProtoConverter();
             CSVtoProtoConverter stopsConverter = new CSVtoProtoConverter();
 
             ProtoGTFSTypeValidator pathwayBasicValidator = new ProtoGTFSTypeValidator();
 
-            FileUtils.cleanOrCreatePath(outputPath);
+            config.cleanOrCreatePath(outputPath).execute();
 
             // convert GTFS text files to .proto files on disk
             List<OccurrenceModel> conversionResult  = pathwaysConverter.convert(
@@ -156,6 +156,7 @@ public class Main {
         logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
     }
 
+    //TODO: make a use case out of this
     private static void printHelp(Options options) {
         final String HELP = String.join("\n",
                 "Loads input GTFS feed from url or disk.",
@@ -165,13 +166,4 @@ public class Main {
         formatter.printHelp(HELP, options);
         System.out.println(); // blank line for legibility
     }
-
-    private static GtfsProto.CsvSpecProtos loadGtfsSpec() throws IOException {
-
-        //noinspection UnstableApiUsage
-        return TextFormat.parse(Resources.toString(Resources.getResource("gtfs_spec.asciipb"), StandardCharsets.UTF_8),
-                GtfsProto.CsvSpecProtos.class);
-
-    }
-
 }
