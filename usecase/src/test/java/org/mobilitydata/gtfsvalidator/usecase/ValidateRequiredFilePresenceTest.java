@@ -32,6 +32,11 @@ class ValidateRequiredFilePresenceTest {
 
             return toReturn;
         }
+
+        @Override
+        public List<String> getExpectedHeadersForFile(RawFileInfo fileInfo) {
+            return null;
+        }
     }
 
     //mock raw file repo
@@ -53,6 +58,11 @@ class ValidateRequiredFilePresenceTest {
         @Override
         public Optional<RawFileInfo> findByName(String filename) {
             return Optional.empty();
+        }
+
+        @Override
+        public Collection<String> getActualHeadersForFile(RawFileInfo file) {
+            return null;
         }
 
         @Override

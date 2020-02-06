@@ -33,7 +33,12 @@ public class UnzipInputArchive {
                 } else {
                     Path fileToCreate = zipExtractPath.resolve(entry.getName());
                     Files.copy(inputZip.getInputStream(entry), fileToCreate);
-                    rawFileRepo.create(new RawFileInfo.RawFileBuilder().filename(entry.getName()).build());
+                    rawFileRepo.create(
+                            new RawFileInfo.RawFileInfoBuilder()
+                                    .filename(entry.getName())
+                                    .path(zipExtractPath.toAbsolutePath().toString())
+                                    .build()
+                    );
                 }
             } catch (IOException e) {
                 throw new UnzipException(e);

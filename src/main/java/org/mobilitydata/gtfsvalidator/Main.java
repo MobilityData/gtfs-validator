@@ -116,6 +116,10 @@ public class Main {
 
             config.unzipInputArchive(zipInputPath, config.cleanOrCreatePath(zipExtractTargetPath).execute()).execute();
 
+            //TODO: we will loop through all files in the archive. MVP is for stops.txt
+            config.validateHeadersForFile("stops.txt").execute();
+
+
             CSVtoProtoConverter pathwaysConverter = new CSVtoProtoConverter();
             CSVtoProtoConverter stopsConverter = new CSVtoProtoConverter();
 
@@ -124,7 +128,7 @@ public class Main {
             config.cleanOrCreatePath(outputPath).execute();
 
             // convert GTFS text files to .proto files on disk
-            List<OccurrenceModel> conversionResult  = pathwaysConverter.convert(
+            List<OccurrenceModel> conversionResult = pathwaysConverter.convert(
                     zipExtractTargetPath + File.separator + "pathways.txt",
                     outputPath + File.separator + "pathways.pb",
                     PathwaysProto.pathwayCollection.newBuilder());
