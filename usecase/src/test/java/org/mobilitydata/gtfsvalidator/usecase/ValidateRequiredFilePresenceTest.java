@@ -1,6 +1,5 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.exception.MissingRequiredFileException;
@@ -11,14 +10,14 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ValidateFileNameTest {
+class ValidateRequiredFilePresenceTest {
 
-    //Mock spec repo
-    private static class mockSpecRepo implements GtfsSpecRepository {
+    //mock spec repo
+    private static class MockSpecRepo implements GtfsSpecRepository {
 
         private final int homManyReq;
 
-        public mockSpecRepo(int howManyReq) {
+        public MockSpecRepo(int howManyReq) {
             this.homManyReq = howManyReq;
         }
 
@@ -36,12 +35,12 @@ class ValidateFileNameTest {
     }
 
     //mock raw file repo
-    private static class mockRawFileRepo implements RawFileRepository {
+    private static class MockRawFileRepo implements RawFileRepository {
 
         private final int homManyReq;
         private final int homManyOpt;
 
-        public mockRawFileRepo(int howManyReq, int howManyOpt) {
+        public MockRawFileRepo(int howManyReq, int howManyOpt) {
             this.homManyReq = howManyReq;
             this.homManyOpt = howManyOpt;
         }
@@ -75,24 +74,24 @@ class ValidateFileNameTest {
     @Test
     void shouldRaiseNoExceptionIfAllRequiredFilesFound() {
 
-        ValidateFileName underTest = new ValidateFileName(
-                new mockSpecRepo(10),
-                new mockRawFileRepo(10, 10)
+        ValidateRequiredFilePresence underTest = new ValidateRequiredFilePresence(
+                new MockSpecRepo(10),
+                new MockRawFileRepo(10, 10)
         );
 
         //test will fail if an exception is raised
-        underTest.validateRequiredAll();
+        underTest.execute();
     }
 
     @Test
     void shouldRaiseExceptionIfNotAllRequiredFilesFound() {
 
-        ValidateFileName underTest = new ValidateFileName(
-                new mockSpecRepo(15),
-                new mockRawFileRepo(10, 10)
+        ValidateRequiredFilePresence underTest = new ValidateRequiredFilePresence(
+                new MockSpecRepo(15),
+                new MockRawFileRepo(10, 10)
         );
 
-        MissingRequiredFileException exception = assertThrows(MissingRequiredFileException.class, underTest::validateRequiredAll);
+        MissingRequiredFileException exception = assertThrows(MissingRequiredFileException.class, underTest::execute);
 
         List<String> expected = Arrays.asList("req10.req", "req11.req", "req12.req", "req13.req", "req14.req");
         assertEquals(expected, exception.missingFilenameList);

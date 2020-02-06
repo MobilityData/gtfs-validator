@@ -6,24 +6,20 @@ import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 
 import java.util.stream.Collectors;
 
-public class ValidateFileName {
+public class ValidateRequiredFilePresence {
 
     private final GtfsSpecRepository specRepo;
     private final RawFileRepository rawFileRepo;
 
-    public ValidateFileName(final GtfsSpecRepository specRepo, final RawFileRepository rawFileRepo) {
+    public ValidateRequiredFilePresence(final GtfsSpecRepository specRepo, final RawFileRepository rawFileRepo) {
         this.specRepo = specRepo;
         this.rawFileRepo = rawFileRepo;
     }
 
-    public void validateRequiredAll() {
+    public void execute() {
         if (!rawFileRepo.getFilenameAll().containsAll(specRepo.getRequiredFilenameList())) {
             throw new MissingRequiredFileException(specRepo.getRequiredFilenameList().stream()
                     .filter(req -> !rawFileRepo.getFilenameAll().contains(req)).collect(Collectors.toList()));
         }
-    }
-
-    public void validateOptionalAll() {
-        //TODO
     }
 }

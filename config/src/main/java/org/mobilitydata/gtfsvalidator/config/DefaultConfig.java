@@ -5,7 +5,7 @@ import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.CleanOrCreatePath;
 import org.mobilitydata.gtfsvalidator.usecase.DownloadArchiveFromNetwork;
 import org.mobilitydata.gtfsvalidator.usecase.UnzipInputArchive;
-import org.mobilitydata.gtfsvalidator.usecase.ValidateFileName;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateRequiredFilePresence;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 
@@ -31,8 +31,8 @@ public class DefaultConfig {
         return new UnzipInputArchive(rawFileRepo, new ZipFile(zipInputPath), zipExtractPath);
     }
 
-    public ValidateFileName validateFileName() {
-        return new ValidateFileName(specRepo, rawFileRepo);
+    public ValidateRequiredFilePresence validateFileName() {
+        return new ValidateRequiredFilePresence(specRepo, rawFileRepo);
     }
 
     public DefaultConfig() throws IOException {
