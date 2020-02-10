@@ -2,10 +2,12 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.InfoNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class InMemoryValidationResultRepository implements ValidationResultRepository {
@@ -30,5 +32,21 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     public ErrorNotice addNotice(ErrorNotice newError) {
         errorNoticeList.add(newError);
         return newError;
+    }
+
+    @Override
+    public Collection<Notice> getAll() {
+        //TODO: might be memory intensive, check how to streamline
+        Collection<Notice> toReturn = new ArrayList<>(
+                infoNoticeList.size() +
+                        warningNoticeList.size() +
+                        errorNoticeList.size()
+        );
+
+        toReturn.addAll(infoNoticeList);
+        toReturn.addAll(warningNoticeList);
+        toReturn.addAll(errorNoticeList);
+
+        return toReturn;
     }
 }

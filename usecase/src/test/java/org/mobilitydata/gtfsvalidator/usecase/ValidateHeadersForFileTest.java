@@ -92,6 +92,11 @@ class ValidateHeadersForFileTest {
             notices.add(newError);
             return newError;
         }
+
+        @Override
+        public Collection<Notice> getAll() {
+            return null;
+        }
     }
 
     @Test

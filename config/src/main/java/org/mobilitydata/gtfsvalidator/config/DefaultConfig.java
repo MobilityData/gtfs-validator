@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.zip.ZipFile;
 
 public class DefaultConfig {
@@ -55,5 +56,9 @@ public class DefaultConfig {
     }
 
     public DefaultConfig() throws IOException {
+    }
+
+    public Collection<Notice> getValidationResult() {
+        return resultRepo.getAll();
     }
 }

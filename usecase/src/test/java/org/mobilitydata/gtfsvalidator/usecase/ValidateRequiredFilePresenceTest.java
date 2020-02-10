@@ -114,6 +114,11 @@ class ValidateRequiredFilePresenceTest {
             notices.add(newError);
             return null;
         }
+
+        @Override
+        public Collection<Notice> getAll() {
+            return null;
+        }
     }
 
     @Test

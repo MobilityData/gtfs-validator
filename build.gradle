@@ -18,6 +18,7 @@ dependencies {
     implementation(
             project(':config'),
             project(':usecase'),
+            project(':domain'),
     )
 
     implementation 'com.google.api.grpc:proto-google-common-protos:1.16.0'

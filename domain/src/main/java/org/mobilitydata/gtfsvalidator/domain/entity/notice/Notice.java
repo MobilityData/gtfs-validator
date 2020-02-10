@@ -31,4 +31,14 @@ public abstract class Notice {
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public String toString() {
+        return "Notice{" +
+                "filename='" + filename + '\'' +
+                ", noticeId='" + noticeId + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
