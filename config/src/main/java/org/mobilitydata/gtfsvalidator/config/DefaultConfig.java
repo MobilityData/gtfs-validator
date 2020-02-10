@@ -4,6 +4,7 @@ import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.zip.ZipFile;
 
 public class DefaultConfig {
@@ -33,13 +35,30 @@ public class DefaultConfig {
     }
 
     public ValidateRequiredFilePresence validateFileName() {
-        return new ValidateRequiredFilePresence(specRepo, rawFileRepo);
+        return new ValidateRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
     }
 
     public ValidateHeadersForFile validateHeadersForFile(String filename) {
-        return new ValidateHeadersForFile(specRepo, rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()), rawFileRepo, resultRepo);
+        return new ValidateHeadersForFile(
+                specRepo,
+                rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                rawFileRepo,
+                resultRepo
+        );
+    }
+
+    public ValidateAllRowLengthForFile validateAllRowLengthForFile(String filename) {
+        return new ValidateAllRowLengthForFile(
+                rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                rawFileRepo,
+                resultRepo
+        );
     }
 
     public DefaultConfig() throws IOException {
+    }
+
+    public Collection<Notice> getValidationResult() {
+        return resultRepo.getAll();
     }
 }

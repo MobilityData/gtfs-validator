@@ -66,6 +66,11 @@ class ValidateHeadersForFileTest {
         public Set<String> getFilenameAll() {
             return null;
         }
+
+        @Override
+        public Optional<RawEntityProvider> getProviderForFile(RawFileInfo file) {
+            return Optional.empty();
+        }
     }
 
     //mock result repo
@@ -87,6 +92,11 @@ class ValidateHeadersForFileTest {
         public ErrorNotice addNotice(ErrorNotice newError) {
             notices.add(newError);
             return newError;
+        }
+
+        @Override
+        public Collection<Notice> getAll() {
+            return null;
         }
     }
 

@@ -49,4 +49,14 @@ public class InMemoryRawFileRepository implements RawFileRepository {
     public Set<String> getFilenameAll() {
         return fileInfoPerFilename.keySet();
     }
+
+    @Override
+    public Optional<RawEntityProvider> getProviderForFile(RawFileInfo file) {
+
+        try {
+            return Optional.of(new FromFileRawEntityProvider(file));
+        } catch (IOException e) {
+            return Optional.empty();
+        }
+    }
 }
