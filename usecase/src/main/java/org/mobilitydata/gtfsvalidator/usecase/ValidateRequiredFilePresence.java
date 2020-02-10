@@ -1,25 +1,30 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.usecase.exception.MissingRequiredFileException;
+import org.mobilitydata.gtfsvalidator.usecase.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
-
-import java.util.stream.Collectors;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class ValidateRequiredFilePresence {
 
     private final GtfsSpecRepository specRepo;
     private final RawFileRepository rawFileRepo;
+    private final ValidationResultRepository resultRepo;
 
-    public ValidateRequiredFilePresence(final GtfsSpecRepository specRepo, final RawFileRepository rawFileRepo) {
+    public ValidateRequiredFilePresence(final GtfsSpecRepository specRepo,
+                                        final RawFileRepository rawFileRepo,
+                                        final ValidationResultRepository resultRepo) {
         this.specRepo = specRepo;
         this.rawFileRepo = rawFileRepo;
+        this.resultRepo = resultRepo;
     }
 
     public void execute() {
         if (!rawFileRepo.getFilenameAll().containsAll(specRepo.getRequiredFilenameList())) {
-            throw new MissingRequiredFileException(specRepo.getRequiredFilenameList().stream()
-                    .filter(req -> !rawFileRepo.getFilenameAll().contains(req)).collect(Collectors.toList()));
+
+            specRepo.getRequiredFilenameList().stream()
+                    .filter(requiredFile -> !rawFileRepo.getFilenameAll().contains(requiredFile))
+                    .forEach(missingFile -> resultRepo.addNotice(new MissingRequiredFileNotice(missingFile)));
         }
     }
 }
