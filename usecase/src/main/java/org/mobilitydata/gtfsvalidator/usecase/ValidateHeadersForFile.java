@@ -1,7 +1,8 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.MissingHeadersNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.MissingHeaderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -32,10 +33,14 @@ public class ValidateHeadersForFile {
         List<String> expectedHeaderList = specRepo.getExpectedHeadersForFile(rawFileInfo);
         Collection<String> actualHeaderList = rawFileRepo.getActualHeadersForFile(rawFileInfo);
 
-        if (!actualHeaderList.containsAll(expectedHeaderList)) {
-            resultRepo.addNotice(new MissingHeadersNotice(rawFileInfo.getFilename(), expectedHeaderList, actualHeaderList));
-        } else {
-            //TODO: output warning notices for non standards headers
-        }
+        //Extra headers
+        actualHeaderList.stream()
+                .filter(expectedHeader -> !(expectedHeaderList.contains(expectedHeader)))
+                .forEach(extraHeader -> resultRepo.addNotice(new NonStandardHeaderNotice(rawFileInfo.getFilename(), extraHeader)));
+
+        //Missing headers
+        expectedHeaderList.stream()
+                .filter(expectedHeader -> !(actualHeaderList.contains(expectedHeader)))
+                .forEach(missingHeader -> resultRepo.addNotice(new MissingHeaderNotice(rawFileInfo.getFilename(), missingHeader)));
     }
 }
