@@ -86,6 +86,11 @@ class ValidateRequiredFilePresenceTest {
 
             return toReturn;
         }
+
+        @Override
+        public Optional<RawEntityProvider> getProviderForFile(RawFileInfo file) {
+            return Optional.empty();
+        }
     }
 
     //mock validation result repo

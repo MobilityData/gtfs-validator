@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 
 import java.util.Collection;
@@ -15,4 +16,15 @@ public interface RawFileRepository {
     Collection<String> getActualHeadersForFile(RawFileInfo file);
 
     Set<String> getFilenameAll();
+
+    Optional<RawEntityProvider> getProviderForFile(RawFileInfo file);
+
+    interface RawEntityProvider {
+
+        boolean hasNext();
+
+        RawEntity getNext();
+
+        int getHeaderCount();
+    }
 }

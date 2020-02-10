@@ -4,6 +4,7 @@ import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
@@ -33,11 +34,24 @@ public class DefaultConfig {
     }
 
     public ValidateRequiredFilePresence validateFileName() {
-        return new ValidateRequiredFilePresence(specRepo, rawFileRepo);
+        return new ValidateRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
     }
 
     public ValidateHeadersForFile validateHeadersForFile(String filename) {
-        return new ValidateHeadersForFile(specRepo, rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()), rawFileRepo, resultRepo);
+        return new ValidateHeadersForFile(
+                specRepo,
+                rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                rawFileRepo,
+                resultRepo
+        );
+    }
+
+    public ValidateAllRowLengthForFile validateAllRowLengthForFile(String filename) {
+        return new ValidateAllRowLengthForFile(
+                rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                rawFileRepo,
+                resultRepo
+        );
     }
 
     public DefaultConfig() throws IOException {
