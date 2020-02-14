@@ -29,18 +29,38 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
     }
 
     @Override
-    public List<String> getExpectedHeadersForFile(RawFileInfo fileInfo) {
-        GtfsSpecProto.CsvSpecProto specForFile = inMemoryGTFSSpec.getCsvspecList().stream()
-                .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
-                .findAny()
-                .orElse(null);
+    public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
+        GtfsSpecProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
 
         if (specForFile != null) {
             return specForFile.getColumnList().stream()
+                    .filter(GtfsSpecProto.ColumnSpecProto::getRequired)
                     .map(GtfsSpecProto.ColumnSpecProto::getName)
                     .collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
     }
+
+    @Override
+    public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
+        GtfsSpecProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
+
+        if (specForFile != null) {
+            return specForFile.getColumnList().stream()
+                    .filter(column -> !column.getRequired())
+                    .map(GtfsSpecProto.ColumnSpecProto::getName)
+                    .collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private GtfsSpecProto.CsvSpecProto getSpecForFile(RawFileInfo fileInfo) {
+        return inMemoryGTFSSpec.getCsvspecList().stream()
+                .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
+                .findAny()
+                .orElse(null);
+    }
+
 }

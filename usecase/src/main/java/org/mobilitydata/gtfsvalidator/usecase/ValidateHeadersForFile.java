@@ -30,17 +30,19 @@ public class ValidateHeadersForFile {
     }
 
     public void execute() {
-        List<String> expectedHeaderList = specRepo.getExpectedHeadersForFile(rawFileInfo);
+        List<String> expectedRequiredHeaderList = specRepo.getRequiredHeadersForFile(rawFileInfo);
+        List<String> expectedOptionalHeaderList = specRepo.getOptionalHeadersForFile(rawFileInfo);
         Collection<String> actualHeaderList = rawFileRepo.getActualHeadersForFile(rawFileInfo);
+
+        //Missing headers
+        expectedRequiredHeaderList.stream()
+                .filter(expectedHeader -> !(actualHeaderList.contains(expectedHeader)))
+                .forEach(missingHeader -> resultRepo.addNotice(new MissingHeaderNotice(rawFileInfo.getFilename(), missingHeader)));
 
         //Extra headers
         actualHeaderList.stream()
-                .filter(expectedHeader -> !(expectedHeaderList.contains(expectedHeader)))
+                .filter(header -> !expectedOptionalHeaderList.contains(header) && !expectedRequiredHeaderList.contains(header))
                 .forEach(extraHeader -> resultRepo.addNotice(new NonStandardHeaderNotice(rawFileInfo.getFilename(), extraHeader)));
 
-        //Missing headers
-        expectedHeaderList.stream()
-                .filter(expectedHeader -> !(actualHeaderList.contains(expectedHeader)))
-                .forEach(missingHeader -> resultRepo.addNotice(new MissingHeaderNotice(rawFileInfo.getFilename(), missingHeader)));
     }
 }

@@ -41,7 +41,12 @@ class ValidateRequiredFilePresenceTest {
         }
 
         @Override
-        public List<String> getExpectedHeadersForFile(RawFileInfo fileInfo) {
+        public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
+            return null;
+        }
+
+        @Override
+        public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
             return null;
         }
     }

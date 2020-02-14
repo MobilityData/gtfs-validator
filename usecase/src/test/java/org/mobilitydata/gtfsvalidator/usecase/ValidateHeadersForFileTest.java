@@ -20,12 +20,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ValidateHeadersForFileTest {
 
+    private static final String REQUIRED_HEADER_0 = "requiredHeader0";
+    private static final String REQUIRED_HEADER_1 = "requiredHeader1";
+    private static final String REQUIRED_HEADER_2 = "requiredHeader2";
+    private static final String REQUIRED_HEADER_3 = "requiredHeader3";
+    private static final String REQUIRED_HEADER_4 = "requiredHeader4";
+
+    private static final String OPTIONAL_HEADER_0 = "optionalHeader0";
+    private static final String OPTIONAL_HEADER_1 = "optionalHeader1";
+
+    private static final String EXTRA_HEADER_0 = "extraHeader0";
+    private static final String EXTRA_HEADER_1 = "extraHeader1";
+
+    private static final String TEST_TST = "test.tst";
+
     //mock spec repo
     private static class MockSpecRepo implements GtfsSpecRepository {
-        private final List<String> mockHeaders;
+        private final List<String> mockRequiredHeaders;
+        private final List<String> mockOptionalHeaders;
 
-        public MockSpecRepo(List<String> mockHeaders) {
-            this.mockHeaders = mockHeaders;
+        public MockSpecRepo(List<String> mockRequiredHeaders, List<String> mockOptionalHeaders) {
+            this.mockRequiredHeaders = mockRequiredHeaders;
+            this.mockOptionalHeaders = mockOptionalHeaders;
         }
 
         @Override
@@ -34,9 +50,15 @@ class ValidateHeadersForFileTest {
         }
 
         @Override
-        public List<String> getExpectedHeadersForFile(RawFileInfo fileInfo) {
-            return mockHeaders;
+        public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
+            return mockRequiredHeaders;
         }
+
+        @Override
+        public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
+            return mockOptionalHeaders;
+        }
+
     }
 
     //mock raw file repo
@@ -85,7 +107,7 @@ class ValidateHeadersForFileTest {
         @Override
         public WarningNotice addNotice(WarningNotice newWarning) {
             notices.add(newWarning);
-            return null;
+            return newWarning;
         }
 
         @Override
@@ -106,9 +128,9 @@ class ValidateHeadersForFileTest {
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList("header0", "header1", "header2")),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Collections.emptyList()),
                 RawFileInfo.builder().build(),
-                new MockRawFileRepo(Arrays.asList("header0", "header1", "header2")),
+                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2)),
                 resultRepo
         );
 
@@ -119,14 +141,14 @@ class ValidateHeadersForFileTest {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
-    void expectedHeaderCountAndDifferentContentShouldGenerateNotices() {
+    void expectedRequiredHeaderCountAndDifferentContentShouldGenerateNotices() {
 
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList("header0", "header1", "header2")),
-                RawFileInfo.builder().filename("test.tst").build(),
-                new MockRawFileRepo(Arrays.asList("header0", "header3", "header4")),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Collections.emptyList()),
+                RawFileInfo.builder().filename(TEST_TST).build(),
+                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_3, REQUIRED_HEADER_4)),
                 resultRepo
         );
 
@@ -135,51 +157,51 @@ class ValidateHeadersForFileTest {
         assertEquals(4, resultRepo.notices.size());
 
         Notice notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header1")).findAny().get();
+                .filter(n -> n.getDescription().contains(REQUIRED_HEADER_1)).findAny().get();
         assertThat(notice, instanceOf(MissingHeaderNotice.class));
         assertEquals("E001", notice.getId());
         assertEquals("Missing required header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("File test.tst is missing required header: header1",
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("File test.tst is missing required header: " + REQUIRED_HEADER_1,
                 notice.getDescription());
 
         notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header2")).findAny().get();
+                .filter(n -> n.getDescription().contains(REQUIRED_HEADER_2)).findAny().get();
         assertThat(notice, instanceOf(MissingHeaderNotice.class));
         assertEquals("E001", notice.getId());
         assertEquals("Missing required header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("File test.tst is missing required header: header2",
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("File test.tst is missing required header: " + REQUIRED_HEADER_2,
                 notice.getDescription());
 
         notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header3")).findAny().get();
+                .filter(n -> n.getDescription().contains(REQUIRED_HEADER_3)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
         assertEquals("W001", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("Unexpected header: header3 in file: test.tst", notice.getDescription());
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("Unexpected header:" + REQUIRED_HEADER_3 + " in file:test.tst", notice.getDescription());
 
         notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header4")).findAny().get();
+                .filter(n -> n.getDescription().contains(REQUIRED_HEADER_4)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
         assertEquals("W001", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("Unexpected header: header4 in file: test.tst", notice.getDescription());
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("Unexpected header:" + REQUIRED_HEADER_4 + " in file:test.tst", notice.getDescription());
     }
 
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
-    void lessHeaderCountThanExpectedShouldGenerateOneNoticePerMissingHeader() {
+    void lessRequiredHeaderCountThanExpectedShouldGenerateOneNoticePerMissingHeader() {
 
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList("header0", "header1", "header2", "header3")),
-                RawFileInfo.builder().filename("test.tst").build(),
-                new MockRawFileRepo(Arrays.asList("header0", "header1")),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, REQUIRED_HEADER_3), Collections.emptyList()),
+                RawFileInfo.builder().filename(TEST_TST).build(),
+                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1)),
                 resultRepo
         );
 
@@ -188,34 +210,34 @@ class ValidateHeadersForFileTest {
         assertEquals(2, resultRepo.notices.size());
 
         Notice notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header2")).findAny().get();
+                .filter(n -> n.getDescription().contains(REQUIRED_HEADER_2)).findAny().get();
         assertThat(notice, instanceOf(MissingHeaderNotice.class));
         assertEquals("E001", notice.getId());
         assertEquals("Missing required header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("File test.tst is missing required header: header2",
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("File test.tst is missing required header: " + REQUIRED_HEADER_2,
                 notice.getDescription());
 
         notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header3")).findAny().get();
+                .filter(n -> n.getDescription().contains(REQUIRED_HEADER_3)).findAny().get();
         assertThat(notice, instanceOf(MissingHeaderNotice.class));
         assertEquals("E001", notice.getId());
         assertEquals("Missing required header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("File test.tst is missing required header: header3",
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("File test.tst is missing required header: " + REQUIRED_HEADER_3,
                 notice.getDescription());
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
-    void lessHeaderCountThanExpectedAndNonStandardHeadersPresenceShouldGenerateNotices() {
+    void lessRequiredHeaderCountThanExpectedAndNonStandardHeadersPresenceShouldGenerateNotices() {
 
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList("header0", "header1", "header2")),
-                RawFileInfo.builder().filename("test.tst").build(),
-                new MockRawFileRepo(Arrays.asList("header0", "header4")),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Collections.emptyList()),
+                RawFileInfo.builder().filename(TEST_TST).build(),
+                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, EXTRA_HEADER_0)),
                 resultRepo
         );
 
@@ -224,64 +246,80 @@ class ValidateHeadersForFileTest {
         assertEquals(3, resultRepo.notices.size());
 
         Notice notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header1")).findAny().get();
+                .filter(n -> n.getDescription().contains(REQUIRED_HEADER_1)).findAny().get();
         assertThat(notice, instanceOf(MissingHeaderNotice.class));
         assertEquals("E001", notice.getId());
         assertEquals("Missing required header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("File test.tst is missing required header: header1",
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("File test.tst is missing required header: " + REQUIRED_HEADER_1,
                 notice.getDescription());
 
         notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header2")).findAny().get();
+                .filter(n -> n.getDescription().contains(REQUIRED_HEADER_2)).findAny().get();
         assertThat(notice, instanceOf(MissingHeaderNotice.class));
         assertEquals("E001", notice.getId());
         assertEquals("Missing required header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("File test.tst is missing required header: header2",
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("File test.tst is missing required header: " + REQUIRED_HEADER_2,
                 notice.getDescription());
 
         notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header4")).findAny().get();
+                .filter(n -> n.getDescription().contains(EXTRA_HEADER_0)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
         assertEquals("W001", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("Unexpected header: header4 in file: test.tst", notice.getDescription());
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("Unexpected header:" + EXTRA_HEADER_0 + " in file:test.tst", notice.getDescription());
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
-    void moreHeaderCountThanExpectedShouldGenerateOneNoticePerExtraHeader() {
+    void presenceOfKnownOptionalHeaderShouldNotGenerateNotices() {
 
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList("header0", "header1", "header2")),
-                RawFileInfo.builder().filename("test.tst").build(),
-                new MockRawFileRepo(Arrays.asList("header0", "header1", "header2", "header3", "header4")),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Arrays.asList(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1)),
+                RawFileInfo.builder().filename(TEST_TST).build(),
+                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, OPTIONAL_HEADER_0, OPTIONAL_HEADER_1)),
+                resultRepo
+        );
+
+        underTest.execute();
+
+        assertEquals(0, resultRepo.notices.size());
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Test
+    void unexpectedOptionalHeaderShouldGenerateNotices() {
+        MockResultRepo resultRepo = new MockResultRepo();
+
+        ValidateHeadersForFile underTest = new ValidateHeadersForFile(
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Arrays.asList(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1)),
+                RawFileInfo.builder().filename(TEST_TST).build(),
+                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, OPTIONAL_HEADER_0, OPTIONAL_HEADER_1, EXTRA_HEADER_0, EXTRA_HEADER_1)),
                 resultRepo
         );
 
         underTest.execute();
 
         assertEquals(2, resultRepo.notices.size());
-
         Notice notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header3")).findAny().get();
+                .filter(n -> n.getDescription().contains(EXTRA_HEADER_0)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
         assertEquals("W001", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("Unexpected header: header3 in file: test.tst", notice.getDescription());
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("Unexpected header:" + EXTRA_HEADER_0 + " in file:test.tst", notice.getDescription());
 
         notice = resultRepo.notices.stream()
-                .filter(n -> n.getDescription().contains("header4")).findAny().get();
+                .filter(n -> n.getDescription().contains(EXTRA_HEADER_1)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
         assertEquals("W001", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
-        assertEquals("test.tst", notice.getFilename());
-        assertEquals("Unexpected header: header4 in file: test.tst", notice.getDescription());
+        assertEquals(TEST_TST, notice.getFilename());
+        assertEquals("Unexpected header:" + EXTRA_HEADER_1 + " in file:test.tst", notice.getDescription());
+
     }
 
 }
