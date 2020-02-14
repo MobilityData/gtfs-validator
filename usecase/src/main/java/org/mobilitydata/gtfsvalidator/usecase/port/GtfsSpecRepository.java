@@ -8,7 +8,7 @@ public interface GtfsSpecRepository {
 
     List<String> getRequiredFilenameList();
 
-    List<String> getExpectedHeadersForFile(final RawFileInfo fileInfo);
+    List<String> getRequiredHeadersForFile(final RawFileInfo fileInfo);
 
-
+    List<String> getOptionalHeadersForFile(final RawFileInfo fileInfo);
 }
