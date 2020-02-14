@@ -49,6 +49,11 @@ class ValidateRequiredFilePresenceTest {
         public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
             return null;
         }
+
+        @Override
+        public RawEntityParser getParserForFile(RawFileInfo file) {
+            return null;
+        }
     }
 
     //mock raw file repo

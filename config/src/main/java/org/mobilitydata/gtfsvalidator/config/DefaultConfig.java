@@ -55,6 +55,15 @@ public class DefaultConfig {
         );
     }
 
+    public ParseAllRowForFile parseAllRowForFile(String filename) {
+        return new ParseAllRowForFile(
+                rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                rawFileRepo,
+                specRepo,
+                resultRepo
+        );
+    }
+
     public DefaultConfig() throws IOException {
     }
 

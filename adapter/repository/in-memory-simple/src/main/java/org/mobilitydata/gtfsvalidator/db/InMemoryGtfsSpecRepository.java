@@ -2,7 +2,9 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import com.google.common.io.Resources;
 import com.google.protobuf.TextFormat;
+import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
 import java.io.IOException;
@@ -13,29 +15,29 @@ import java.util.stream.Collectors;
 
 public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
-    private final GtfsSpecProto.CsvSpecProtos inMemoryGTFSSpec;
+    private final GtfsSpecificationProto.CsvSpecProtos inMemoryGTFSSpec;
 
     public InMemoryGtfsSpecRepository(final String specResourceName) throws IOException {
         //noinspection UnstableApiUsage
         inMemoryGTFSSpec = TextFormat.parse(Resources.toString(Resources.getResource("gtfs_spec.asciipb"), StandardCharsets.UTF_8),
-                GtfsSpecProto.CsvSpecProtos.class);
+                GtfsSpecificationProto.CsvSpecProtos.class);
     }
 
     @Override
     public List<String> getRequiredFilenameList() {
         return inMemoryGTFSSpec.getCsvspecList().stream()
-                .filter(GtfsSpecProto.CsvSpecProto::getRequired).map(GtfsSpecProto.CsvSpecProto::getFilename)
+                .filter(GtfsSpecificationProto.CsvSpecProto::getRequired).map(GtfsSpecificationProto.CsvSpecProto::getFilename)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
-        GtfsSpecProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
+        GtfsSpecificationProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
 
         if (specForFile != null) {
             return specForFile.getColumnList().stream()
-                    .filter(GtfsSpecProto.ColumnSpecProto::getRequired)
-                    .map(GtfsSpecProto.ColumnSpecProto::getName)
+                    .filter(GtfsSpecificationProto.ColumnSpecProto::getRequired)
+                    .map(GtfsSpecificationProto.ColumnSpecProto::getName)
                     .collect(Collectors.toList());
         } else {
             return Collections.emptyList();
@@ -44,23 +46,33 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     @Override
     public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
-        GtfsSpecProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
+        GtfsSpecificationProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
 
         if (specForFile != null) {
             return specForFile.getColumnList().stream()
                     .filter(column -> !column.getRequired())
-                    .map(GtfsSpecProto.ColumnSpecProto::getName)
+                    .map(GtfsSpecificationProto.ColumnSpecProto::getName)
                     .collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
     }
 
-    private GtfsSpecProto.CsvSpecProto getSpecForFile(RawFileInfo fileInfo) {
+    private GtfsSpecificationProto.CsvSpecProto getSpecForFile(RawFileInfo fileInfo) {
         return inMemoryGTFSSpec.getCsvspecList().stream()
                 .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
                 .findAny()
                 .orElse(null);
     }
 
+
+    @Override
+    public RawEntityParser getParserForFile(RawFileInfo file) {
+        return new GtfsEntityParser(
+                inMemoryGTFSSpec.getCsvspecList().stream()
+                        .filter(spec -> file.getFilename().equals(spec.getFilename()))
+                        .findAny()
+                        .orElse(null),
+                file);
+    }
 }

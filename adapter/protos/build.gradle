@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group 'org.mobilitydata'
+version '1.0.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.protobuf:protobuf-java:3.8.0'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

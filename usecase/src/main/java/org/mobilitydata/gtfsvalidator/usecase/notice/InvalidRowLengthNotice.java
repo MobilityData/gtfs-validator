@@ -6,7 +6,7 @@ public class InvalidRowLengthNotice extends ErrorNotice {
     public InvalidRowLengthNotice(String filename, int rowIndex, int expectedLength, int actualLength) {
         super(filename, "E004",
                 "Invalid row length",
-                "Invalid length for row with index:" + rowIndex +
+                "Invalid length for row:" + rowIndex +
                         " -- expected:" + expectedLength + " actual:" + actualLength);
     }
 }
