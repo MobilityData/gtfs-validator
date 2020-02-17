@@ -8,4 +8,8 @@ include 'usecase'
 include 'config'
 include 'adapter:repository:in-memory-simple'
 findProject(':adapter:repository:in-memory-simple')?.name = 'in-memory-simple'
+include 'adapter:parser'
+findProject(':adapter:parser')?.name = 'parser'
+include 'adapter:protos'
+findProject(':adapter:protos')?.name = 'protos'
 

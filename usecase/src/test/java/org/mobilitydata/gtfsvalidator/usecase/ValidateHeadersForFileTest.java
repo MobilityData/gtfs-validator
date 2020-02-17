@@ -64,6 +64,11 @@ class ValidateHeadersForFileTest {
             return mockOptionalHeaders;
         }
 
+
+        @Override
+        public RawEntityParser getParserForFile(RawFileInfo file) {
+            return null;
+        }
     }
 
     //mock raw file repo

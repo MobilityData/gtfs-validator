@@ -119,6 +119,7 @@ public class Main {
             //TODO: we will loop through all files in the archive. MVP is for stops.txt
             config.validateHeadersForFile("stops.txt").execute();
             config.validateAllRowLengthForFile("stops.txt").execute();
+            config.parseAllRowForFile("stops.txt").execute();
 
             logger.info("validation repo content:" + config.getValidationResult());
 

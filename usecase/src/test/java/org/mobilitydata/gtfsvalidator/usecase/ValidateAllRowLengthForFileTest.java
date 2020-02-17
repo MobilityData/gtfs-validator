@@ -36,7 +36,7 @@ class ValidateAllRowLengthForFileTest {
         @Override
         public RawEntity getNext() {
             ++currentCount;
-            return new RawEntity(mockEntityList.get(currentCount), currentCount);
+            return new RawEntity(mockEntityList.get(currentCount), currentCount + 1);
         }
 
         @Override
@@ -162,14 +162,14 @@ class ValidateAllRowLengthForFileTest {
         assertEquals("E004", notice.getId());
         assertEquals("Invalid row length", notice.getTitle());
         assertEquals("test_invalid.tst", notice.getFilename());
-        assertEquals("Invalid length for row with index:1 -- expected:3 actual:2", notice.getDescription());
+        assertEquals("Invalid length for row:2 -- expected:3 actual:2", notice.getDescription());
 
         notice = resultRepo.noticeList.get(1);
         assertThat(notice, instanceOf(InvalidRowLengthNotice.class));
         assertEquals("E004", notice.getId());
         assertEquals("Invalid row length", notice.getTitle());
         assertEquals("test_invalid.tst", notice.getFilename());
-        assertEquals("Invalid length for row with index:3 -- expected:3 actual:4", notice.getDescription());
+        assertEquals("Invalid length for row:4 -- expected:3 actual:4", notice.getDescription());
     }
 
     @Test
