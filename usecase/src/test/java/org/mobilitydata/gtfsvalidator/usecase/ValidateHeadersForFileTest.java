@@ -50,6 +50,11 @@ class ValidateHeadersForFileTest {
         }
 
         @Override
+        public List<String> getOptionalFilenameList() {
+            return null;
+        }
+
+        @Override
         public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
             return mockRequiredHeaders;
         }
