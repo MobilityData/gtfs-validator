@@ -16,23 +16,12 @@ package org.mobilitydata.gtfsvalidator;
  * limitations under the License.
  */
 
-import com.google.common.io.Resources;
-import com.google.protobuf.TextFormat;
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
-import org.mobilitydata.gtfsvalidator.conversion.CSVtoProtoConverter;
-import org.mobilitydata.gtfsvalidator.model.OccurrenceModel;
-import org.mobilitydata.gtfsvalidator.proto.GtfsProto;
-import org.mobilitydata.gtfsvalidator.proto.PathwaysProto;
-import org.mobilitydata.gtfsvalidator.proto.StopsProto;
-import org.mobilitydata.gtfsvalidator.validation.ProtoGTFSTypeValidator;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -74,7 +63,8 @@ public class Main {
             String zipInputPath = cmd.getOptionValue("z") != null ? cmd.getOptionValue("z") : System.getProperty("user.dir");
             String zipExtractTargetPath = cmd.getOptionValue("i") != null ? cmd.getOptionValue("i") :
                     System.getProperty("user.dir") + File.separator + "input";
-            String outputPath = cmd.getOptionValue("o") != null ? cmd.getOptionValue("o"):
+            String outputPath = cmd.getOptionValue("o") != null ?
+                    System.getProperty("user.dir") + File.separator + cmd.getOptionValue("o") :
                     System.getProperty("user.dir") + File.separator + "output";
 
             if (cmd.hasOption("u") & !cmd.hasOption("z")) {
@@ -119,43 +109,13 @@ public class Main {
             //TODO: we will loop through all files in the archive. MVP is for stops.txt
             config.validateHeadersForFile("stops.txt").execute();
             config.validateAllRowLengthForFile("stops.txt").execute();
-            config.parseAllRowForFile("stops.txt").execute();
+
+            config.validateGtfsTypes().execute(config.parseAllRowForFile("stops.txt").execute());
 
             logger.info("validation repo content:" + config.getValidationResult());
-
-
-            CSVtoProtoConverter pathwaysConverter = new CSVtoProtoConverter();
-            CSVtoProtoConverter stopsConverter = new CSVtoProtoConverter();
-
-            ProtoGTFSTypeValidator pathwayBasicValidator = new ProtoGTFSTypeValidator();
-
-            config.cleanOrCreatePath(outputPath).execute();
-
-            // convert GTFS text files to .proto files on disk
-            List<OccurrenceModel> conversionResult = pathwaysConverter.convert(
-                    zipExtractTargetPath + File.separator + "pathways.txt",
-                    outputPath + File.separator + "pathways.pb",
-                    PathwaysProto.pathwayCollection.newBuilder());
-
-            conversionResult.addAll(stopsConverter.convert(zipExtractTargetPath + File.separator + "stops.txt",
-                    outputPath + File.separator + "stops.pb",
-                    StopsProto.stopCollection.newBuilder()));
-
-            logger.info("conversion result: " + conversionResult);
-
-            if(conversionResult.isEmpty()) {
-                // validate proto files in terms of GTFS types conformance
-                List<OccurrenceModel> typeValidationResult = pathwayBasicValidator.validate(
-                        PathwaysProto.pathwayCollection.parseFrom(new FileInputStream(outputPath + File.separator + "pathways.pb"))
-                );
-
-                logger.info("GTFS type validation result: " + typeValidationResult);
-            } else {
-                logger.error("ABORTED -- Warning or Errors detected at conversion step. Please fix warnings and errors and retry");
-            }
+            Files.writeString(Paths.get(outputPath + File.separator + "result.txt"), config.getValidationResult().toString());
 
         } catch (ParseException e) {
-
             logger.error("Could not parse command line arguments: " + e.getMessage());
         } catch (IOException e) {
             logger.error("An exception occurred: " + e.getMessage());

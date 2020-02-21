@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class InMemoryGtfsSpecRepositoryTest {
 
@@ -28,8 +29,8 @@ class InMemoryGtfsSpecRepositoryTest {
         final Collection<String> requiredFilenameList = underTest.getRequiredFilenameList();
 
         assertEquals(2, requiredFilenameList.size());
-        assert (requiredFilenameList.contains(REQUIRED_FILE_0));
-        assert (requiredFilenameList.contains(REQUIRED_FILE_1));
+        assertTrue(requiredFilenameList.contains(REQUIRED_FILE_0));
+        assertTrue(requiredFilenameList.contains(REQUIRED_FILE_1));
     }
 
     @Test
@@ -41,8 +42,8 @@ class InMemoryGtfsSpecRepositoryTest {
 
         assertEquals(2, optionalFilenameList.size());
 
-        assert (optionalFilenameList.contains(OPTIONAL_FILE_0));
-        assert (optionalFilenameList.contains(OPTIONAL_FILE_1));
+        assertTrue(optionalFilenameList.contains(OPTIONAL_FILE_0));
+        assertTrue(optionalFilenameList.contains(OPTIONAL_FILE_1));
 
     }
 
@@ -60,11 +61,11 @@ class InMemoryGtfsSpecRepositoryTest {
 
 
         assertEquals(1, requiredHeaderListForRequiredFile0.size());
-        assert (requiredHeaderListForRequiredFile0.contains(REQUIRED_HEADER0));
+        assertTrue(requiredHeaderListForRequiredFile0.contains(REQUIRED_HEADER0));
 
         assertEquals(2, requiredHeaderListForRequiredFile1.size());
-        assert (requiredHeaderListForRequiredFile1.contains(REQUIRED_HEADER0));
-        assert (requiredHeaderListForRequiredFile1.contains(REQUIRED_HEADER_1));
+        assertTrue(requiredHeaderListForRequiredFile1.contains(REQUIRED_HEADER0));
+        assertTrue(requiredHeaderListForRequiredFile1.contains(REQUIRED_HEADER_1));
     }
 
     @Test
@@ -80,11 +81,11 @@ class InMemoryGtfsSpecRepositoryTest {
                 RawFileInfo.builder().filename(OPTIONAL_FILE_1).build());
 
         assertEquals(2, requiredHeaderListForOptionalFile0.size());
-        assert (requiredHeaderListForOptionalFile0.contains(REQUIRED_HEADER0));
-        assert (requiredHeaderListForOptionalFile0.contains(REQUIRED_HEADER_1));
+        assertTrue(requiredHeaderListForOptionalFile0.contains(REQUIRED_HEADER0));
+        assertTrue(requiredHeaderListForOptionalFile0.contains(REQUIRED_HEADER_1));
 
         assertEquals(1, requiredHeaderListForOptionalFile1.size());
-        assert (requiredHeaderListForOptionalFile1.contains(REQUIRED_HEADER0));
+        assertTrue(requiredHeaderListForOptionalFile1.contains(REQUIRED_HEADER0));
     }
 
 
@@ -100,8 +101,8 @@ class InMemoryGtfsSpecRepositoryTest {
                 RawFileInfo.builder().filename(REQUIRED_FILE_1).build());
 
         assertEquals(2, optionalHeaderListForRequiredFile0.size());
-        assert (optionalHeaderListForRequiredFile0.contains(OPTIONAL_HEADER_0));
-        assert (optionalHeaderListForRequiredFile0.contains(OPTIONAL_HEADER_1));
+        assertTrue(optionalHeaderListForRequiredFile0.contains(OPTIONAL_HEADER_0));
+        assertTrue(optionalHeaderListForRequiredFile0.contains(OPTIONAL_HEADER_1));
 
         assertEquals(0, optionalHeaderListForRequiredFile1.size());
     }
@@ -119,12 +120,12 @@ class InMemoryGtfsSpecRepositoryTest {
                 RawFileInfo.builder().filename(OPTIONAL_FILE_1).build());
 
         assertEquals(1, optionalHeaderListForOptionalFile0.size());
-        assert (optionalHeaderListForOptionalFile0.contains(OPTIONAL_HEADER_0));
+        assertTrue(optionalHeaderListForOptionalFile0.contains(OPTIONAL_HEADER_0));
 
 
         assertEquals(2, optionalHeaderListForOptionalFile1.size());
-        assert (optionalHeaderListForOptionalFile0.contains(OPTIONAL_HEADER_0));
-        assert (optionalHeaderListForOptionalFile1.contains(OPTIONAL_HEADER_1));
+        assertTrue(optionalHeaderListForOptionalFile0.contains(OPTIONAL_HEADER_0));
+        assertTrue(optionalHeaderListForOptionalFile1.contains(OPTIONAL_HEADER_1));
     }
 
 }

@@ -14,4 +14,7 @@ include 'adapter:protos'
 findProject(':adapter:protos')?.name = 'protos'
 include 'adapter:validator'
 findProject(':adapter:validator')?.name = 'validator'
+include 'application'
+include 'application:cli-app'
+findProject(':application:cli-app')?.name = 'cli-app'
 
