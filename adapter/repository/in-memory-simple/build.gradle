@@ -16,7 +16,8 @@ dependencies {
             project(':domain'),
             project(':usecase'),
             project(':adapter:protos'),
-            project(':adapter:parser')
+            project(':adapter:parser'),
+            project(':adapter:validator')
     )
 
     implementation 'com.google.guava:guava:28.1-jre'

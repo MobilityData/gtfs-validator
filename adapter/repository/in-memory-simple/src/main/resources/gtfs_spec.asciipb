@@ -255,6 +255,8 @@ csvspec: {
     field_number: 5
     name: "stop_lat"
     type: { type: FLOAT_STD }
+    floatmin: -90.0
+    floatmax: 90.0
     required: true
     cache: {
       cache_numbers: true
@@ -269,6 +271,8 @@ csvspec: {
     field_number: 6
     name: "stop_lon"
     type: { type: FLOAT_STD }
+    floatmin: -180.0
+    floatmax: 180.0
     required: true
     cache: {
       cache_numbers: true
@@ -296,21 +300,6 @@ csvspec: {
     name: "stop_url"
     required: false
     # A URL for a particular location, different from agency_url or route_url.
-  }
-
-  column: {
-    field_number: 10
-    ### When updating this, remember to update route_type in routes.txt too.
-    name: "vehicle_type"
-    required: false
-    matchregexp: "[0-9]|1[0-2]|[1-9][0-9]{2}|1[0-9]{3}"
-    type: { type: INT_DEC }
-    # The type of vehicles stopping at a station.
-    # The toplevel proto (CsvSpecProtos) defines constants with descriptive
-    # names for the permissible values of this field (see at the bottom of this
-    # file).
-    # Both the original GTFS types (vehicle_type..., now deprecated) and
-    # TPEG-like hierarchical vehicle types (hvt_...) are supported.
   }
 
   column: {

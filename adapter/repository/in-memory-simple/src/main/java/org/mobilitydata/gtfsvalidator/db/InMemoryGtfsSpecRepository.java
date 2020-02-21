@@ -6,16 +6,20 @@ import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
+import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     private final GtfsSpecificationProto.CsvSpecProtos inMemoryGTFSSpec;
+    private final Map<String, ParsedEntityTypeValidator> validatorByFilenameCache = new HashMap<>();
 
     public InMemoryGtfsSpecRepository(final String specResourceName) throws IOException {
         //noinspection UnstableApiUsage
@@ -74,5 +78,21 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                         .findAny()
                         .orElse(null),
                 file);
+    }
+
+    @Override
+    public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
+        ParsedEntityTypeValidator toReturn = validatorByFilenameCache.get(file.getFilename());
+
+        if (toReturn == null) {
+            toReturn = new GtfsTypeValidator(
+                    inMemoryGTFSSpec.getCsvspecList().stream()
+                            .filter(spec -> file.getFilename().equals(spec.getFilename()))
+                            .findAny()
+                            .orElse(null));
+            validatorByFilenameCache.put(file.getFilename(), toReturn);
+        }
+
+        return toReturn;
     }
 }

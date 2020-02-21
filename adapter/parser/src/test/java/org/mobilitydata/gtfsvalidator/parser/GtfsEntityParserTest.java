@@ -7,7 +7,7 @@ import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseFloatNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseIntegerNotice;
 
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GtfsEntityParserTest {
     @SuppressWarnings("UnstableApiUsage")
     private final GtfsSpecificationProto.CsvSpecProtos testGtfsSpec = TextFormat.parse(
-            Resources.toString(Resources.getResource("test_gtfs_spec.asciipb"), StandardCharsets.UTF_8),
+            Resources.toString(Resources.getResource("parser_test_gtfs_spec.asciipb"), StandardCharsets.UTF_8),
             GtfsSpecificationProto.CsvSpecProtos.class
     );
 

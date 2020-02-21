@@ -1,9 +1,9 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.InfoNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 
 import java.util.Collection;
 
@@ -16,4 +16,6 @@ public interface ValidationResultRepository {
     ErrorNotice addNotice(ErrorNotice newError);
 
     Collection<Notice> getAll();
+
+    Notice addNotice(Notice newNotice);
 }

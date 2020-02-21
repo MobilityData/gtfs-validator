@@ -2,10 +2,10 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.InfoNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.MissingHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
@@ -62,6 +62,11 @@ class ValidateHeadersForFileTest {
 
         @Override
         public RawEntityParser getParserForFile(RawFileInfo file) {
+            return null;
+        }
+
+        @Override
+        public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
             return null;
         }
     }
@@ -123,6 +128,11 @@ class ValidateHeadersForFileTest {
 
         @Override
         public Collection<Notice> getAll() {
+            return null;
+        }
+
+        @Override
+        public Notice addNotice(Notice newNotice) {
             return null;
         }
     }

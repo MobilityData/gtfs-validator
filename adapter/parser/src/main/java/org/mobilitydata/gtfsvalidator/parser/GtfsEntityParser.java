@@ -7,7 +7,7 @@ import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseFloatNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
@@ -74,6 +74,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
     @Override
     public ParsedEntity parse(RawEntity toParse) {
         Map<String, Object> contentByHeaderMap = new HashMap<>(fileSchema.getColumnCount());
+        final String[] entityId = new String[1];
 
         fileSchema.getColumnList().forEach(columnSpecProto -> {
             String rawField = toParse.get(columnSpecProto.getName());
@@ -108,6 +109,6 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
             }
         });
 
-        return new ParsedEntity(contentByHeaderMap, rawFileInfo);
+        return new ParsedEntity(entityId[0], contentByHeaderMap, rawFileInfo);
     }
 }

@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.InfoNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
@@ -77,6 +77,11 @@ class ParseAllRowForFileTest {
             }
 
             return parser;
+        }
+
+        @Override
+        public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
+            return null;
         }
     }
 
@@ -185,6 +190,11 @@ class ParseAllRowForFileTest {
 
         @Override
         public Collection<Notice> getAll() {
+            return null;
+        }
+
+        @Override
+        public Notice addNotice(Notice newNotice) {
             return null;
         }
     }

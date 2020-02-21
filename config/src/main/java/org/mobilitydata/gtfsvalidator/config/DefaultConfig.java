@@ -4,7 +4,7 @@ import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.Notice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
@@ -59,6 +59,13 @@ public class DefaultConfig {
         return new ParseAllRowForFile(
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
                 rawFileRepo,
+                specRepo,
+                resultRepo
+        );
+    }
+
+    public ValidateGtfsTypes validateGtfsTypes() {
+        return new ValidateGtfsTypes(
                 specRepo,
                 resultRepo
         );

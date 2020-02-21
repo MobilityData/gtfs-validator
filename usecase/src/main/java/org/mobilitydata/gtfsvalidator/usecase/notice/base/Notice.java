@@ -1,4 +1,6 @@
-package org.mobilitydata.gtfsvalidator.domain.entity.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.base;
+
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public abstract class Notice {
     protected String filename;
@@ -15,6 +17,8 @@ public abstract class Notice {
         this.title = title;
         this.description = description;
     }
+
+    public abstract Notice visit(ValidationResultRepository resultRepo);
 
     public String getFilename() {
         return filename;
@@ -34,7 +38,7 @@ public abstract class Notice {
 
     @Override
     public String toString() {
-        return "Notice{" +
+        return "\nNotice{" +
                 "filename='" + filename + '\'' +
                 ", noticeId='" + noticeId + '\'' +
                 ", title='" + title + '\'' +
