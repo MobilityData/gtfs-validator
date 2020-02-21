@@ -1,6 +1,6 @@
 package org.mobilitydata.gtfsvalidator.usecase.notice;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 
 import java.net.URL;
 
