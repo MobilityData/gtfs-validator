@@ -23,15 +23,15 @@ public class DefaultConfig {
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork(final String url, final String targetPath) throws MalformedURLException {
-        return new DownloadArchiveFromNetwork(new URL(url), targetPath);
+        return new DownloadArchiveFromNetwork(new URL(url), targetPath, resultRepo);
     }
 
     public CleanOrCreatePath cleanOrCreatePath(final String toCleanOrCreate) {
-        return new CleanOrCreatePath(toCleanOrCreate);
+        return new CleanOrCreatePath(toCleanOrCreate, resultRepo);
     }
 
     public UnzipInputArchive unzipInputArchive(final String zipInputPath, final Path zipExtractPath) throws IOException {
-        return new UnzipInputArchive(rawFileRepo, new ZipFile(zipInputPath), zipExtractPath);
+        return new UnzipInputArchive(rawFileRepo, new ZipFile(zipInputPath), zipExtractPath, resultRepo);
     }
 
     public ValidateRequiredFilePresence validateFileName() {
