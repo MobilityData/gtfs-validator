@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.usecase.exception.PathCleaningOrCreationException;
+import org.mobilitydata.gtfsvalidator.usecase.notice.CouldNotCleanOrCreatePathNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,9 +12,12 @@ import java.util.Comparator;
 public class CleanOrCreatePath {
 
     private final String pathToCleanOrCreate;
+    private final ValidationResultRepository resultRepo;
 
-    public CleanOrCreatePath(final String toCleanOrCreate) {
+    public CleanOrCreatePath(final String toCleanOrCreate,
+                             final ValidationResultRepository resultRepo) {
         this.pathToCleanOrCreate = toCleanOrCreate;
+        this.resultRepo = resultRepo;
     }
 
     public Path execute() {
@@ -26,7 +30,7 @@ public class CleanOrCreatePath {
             }
             Files.createDirectory(toCleanOrCreate);
         } catch (IOException e) {
-            throw new PathCleaningOrCreationException(e);
+            resultRepo.addNotice(new CouldNotCleanOrCreatePathNotice(pathToCleanOrCreate));
         }
 
         return toCleanOrCreate;

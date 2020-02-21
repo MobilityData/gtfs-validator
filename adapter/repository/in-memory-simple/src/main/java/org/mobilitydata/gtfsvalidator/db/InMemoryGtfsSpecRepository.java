@@ -23,7 +23,7 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     public InMemoryGtfsSpecRepository(final String specResourceName) throws IOException {
         //noinspection UnstableApiUsage
-        inMemoryGTFSSpec = TextFormat.parse(Resources.toString(Resources.getResource("gtfs_spec.asciipb"), StandardCharsets.UTF_8),
+        inMemoryGTFSSpec = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName), StandardCharsets.UTF_8),
                 GtfsSpecificationProto.CsvSpecProtos.class);
     }
 
@@ -31,6 +31,14 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
     public List<String> getRequiredFilenameList() {
         return inMemoryGTFSSpec.getCsvspecList().stream()
                 .filter(GtfsSpecificationProto.CsvSpecProto::getRequired).map(GtfsSpecificationProto.CsvSpecProto::getFilename)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getOptionalFilenameList() {
+        return inMemoryGTFSSpec.getCsvspecList().stream()
+                .filter(file -> !file.getRequired())
+                .map(GtfsSpecificationProto.CsvSpecProto::getFilename)
                 .collect(Collectors.toList());
     }
 

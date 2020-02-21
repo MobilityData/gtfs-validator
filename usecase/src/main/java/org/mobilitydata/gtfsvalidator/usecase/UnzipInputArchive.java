@@ -1,8 +1,10 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.exception.UnzipException;
+import org.mobilitydata.gtfsvalidator.usecase.notice.CannotUnzipInputArchiveNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.InputZipContainsFolderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,11 +18,16 @@ public class UnzipInputArchive {
     private final RawFileRepository rawFileRepo;
     private final ZipFile inputZip;
     private final Path zipExtractPath;
+    private final ValidationResultRepository resultRepo;
 
-    public UnzipInputArchive(final RawFileRepository fileRepo, final ZipFile inputZip, final Path zipExtractPath) {
+    public UnzipInputArchive(final RawFileRepository fileRepo,
+                             final ZipFile inputZip,
+                             final Path zipExtractPath,
+                             final ValidationResultRepository resultRepo) {
         this.rawFileRepo = fileRepo;
         this.inputZip = inputZip;
         this.zipExtractPath = zipExtractPath;
+        this.resultRepo = resultRepo;
     }
 
     public void execute() {
@@ -29,7 +36,7 @@ public class UnzipInputArchive {
         zipEntries.asIterator().forEachRemaining(entry -> {
             try {
                 if (entry.isDirectory()) {
-                    throw new IOException("input zip must not contain any folder");
+                    resultRepo.addNotice(new InputZipContainsFolderNotice(inputZip.getName(), entry.getName()));
                 } else {
                     Path fileToCreate = zipExtractPath.resolve(entry.getName());
                     Files.copy(inputZip.getInputStream(entry), fileToCreate);
@@ -41,7 +48,8 @@ public class UnzipInputArchive {
                     );
                 }
             } catch (IOException e) {
-                throw new UnzipException(e);
+                //TODO: should CannotUnzipInputArchiveNotice be made a warning instead of an error?
+                resultRepo.addNotice(new CannotUnzipInputArchiveNotice(inputZip.getName()));
             }
         });
     }

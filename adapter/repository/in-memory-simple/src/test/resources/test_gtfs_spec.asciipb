@@ -27,21 +27,92 @@
 ###############################################################################
 
 csvspec: {
-  name: "test_file_required"
-  filename: "test_file_required.txt"
+  name: "requiredFile0"
+  filename: "requiredFile0.txt"
   required: true
 
   column: {
-    name: "string_test"
+    name: "requiredHeader0"
+    required: true
   }
 
   column: {
-    name: "float_test"
+    name: "optionalHeader0"
     type: { type: FLOAT_STD }
+    required: false
+
   }
 
   column: {
-      name: "integer_test"
+      name: "optionalHeader1"
       type: { type: INT_DEC }
+      required: false
+
+    }
+}
+
+csvspec: {
+  name: "requiredFile1"
+  filename: "requiredFile1.txt"
+  required: true
+
+
+  column: {
+    name: "requiredHeader0"
+    type: { type: FLOAT_STD }
+    required: true
+  }
+
+  column: {
+      name: "requiredHeader1"
+      type: { type: INT_DEC }
+      required: true
+    }
+}
+
+csvspec: {
+  name: "optionalFile0"
+  filename: "optionalFile0.txt"
+  required: false
+
+  column: {
+    name: "requiredHeader0"
+    required: true
+  }
+
+  column: {
+    name: "requiredHeader1"
+    type: { type: FLOAT_STD }
+    required: true
+  }
+
+  column: {
+      name: "optionalHeader0"
+      type: { type: INT_DEC }
+      required: false
+    }
+}
+
+csvspec: {
+  name: "optionalFile1"
+  filename: "optionalFile1.txt"
+  required: false
+
+  column: {
+    name: "requiredHeader0"
+    required: true
+  }
+
+  column: {
+    name: "optionalHeader0"
+    type: { type: FLOAT_STD }
+    required: false
+
+  }
+
+  column: {
+      name: "optionalHeader1"
+      type: { type: INT_DEC }
+      required: false
     }
 }
