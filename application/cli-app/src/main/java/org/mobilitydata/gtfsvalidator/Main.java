@@ -1,5 +1,3 @@
-package org.mobilitydata.gtfsvalidator;
-
 /*
  * Copyright (c) 2019. MobilityData IO.
  *
@@ -15,6 +13,8 @@ package org.mobilitydata.gtfsvalidator;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.mobilitydata.gtfsvalidator;
 
 import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
@@ -44,7 +44,7 @@ public class Main {
         options.addOption("o", "output", true, "Relative path where to place output files");
         options.addOption("h", "help", false, "Print this message");
 
-        //TODO: add configurable warning threshold for GTFS time type validation
+        //TODO: add configurable warning threshold for GTFS time type validation - when we support time type again
 
         final CommandLineParser parser = new DefaultParser();
 

@@ -13,7 +13,7 @@ Java code to parse and validate a GTFS feed Zip archive
 TODO: improve description
 
 # Tests
-* To run tests : `./gradlew check
+* To run tests : `./gradlew check`
 
 # License
 
