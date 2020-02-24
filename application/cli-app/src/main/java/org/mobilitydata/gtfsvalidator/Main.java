@@ -113,6 +113,8 @@ public class Main {
             config.validateGtfsTypes().execute(config.parseAllRowForFile("stops.txt").execute());
 
             logger.info("validation repo content:" + config.getValidationResult());
+
+            config.cleanOrCreatePath(outputPath).execute();
             Files.writeString(Paths.get(outputPath + File.separator + "result.txt"), config.getValidationResult().toString());
 
         } catch (ParseException e) {
