@@ -57,8 +57,8 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
 
             Object value = toValidate.get(columnSpecProto.getName());
 
-            if ((!(value instanceof String) && value != null) ||
-                    value != null && !Strings.isNullOrEmpty((String) value)) {
+            if (value != null &&
+                    (!(value instanceof String) || !((String) value).isEmpty())) {
                 switch (columnSpecProto.getType().getType()) {
                     case FLOAT_STD:
                         if (!FloatValidator.getInstance().isInRange(
