@@ -38,6 +38,9 @@ public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
 
+    public DefaultConfig() throws IOException {
+    }
+
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork(final String url, final String targetPath) throws MalformedURLException {
         return new DownloadArchiveFromNetwork(new URL(url), targetPath, resultRepo);
     }
@@ -85,9 +88,6 @@ public class DefaultConfig {
                 specRepo,
                 resultRepo
         );
-    }
-
-    public DefaultConfig() throws IOException {
     }
 
     public Collection<Notice> getValidationResult() {
