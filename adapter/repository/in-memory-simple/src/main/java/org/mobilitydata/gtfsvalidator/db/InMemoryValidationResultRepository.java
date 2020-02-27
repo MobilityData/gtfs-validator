@@ -25,6 +25,8 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class InMemoryValidationResultRepository implements ValidationResultRepository {
     private final List<InfoNotice> infoNoticeList = new ArrayList<>();
@@ -52,18 +54,12 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
 
     @Override
     public Collection<Notice> getAll() {
-        //TODO: might be memory intensive, check how to streamline
-        Collection<Notice> toReturn = new ArrayList<>(
-                infoNoticeList.size() +
-                        warningNoticeList.size() +
-                        errorNoticeList.size()
-        );
-
-        toReturn.addAll(infoNoticeList);
-        toReturn.addAll(warningNoticeList);
-        toReturn.addAll(errorNoticeList);
-
-        return toReturn;
+        return Stream.concat(
+                Stream.concat(
+                        infoNoticeList.stream(),
+                        warningNoticeList.stream()),
+                errorNoticeList.stream())
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
