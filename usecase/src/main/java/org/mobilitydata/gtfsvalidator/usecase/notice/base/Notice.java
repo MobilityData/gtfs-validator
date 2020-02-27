@@ -19,10 +19,10 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.base;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public abstract class Notice {
-    protected String filename;
-    protected String noticeId;
-    protected String title;
-    protected String description;
+    private final String filename;
+    private final String noticeId;
+    private final String title;
+    private final String description;
 
     protected Notice(final String filename,
                      final String noticeId,
