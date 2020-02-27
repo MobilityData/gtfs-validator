@@ -213,7 +213,7 @@ class ValidateHeadersForFileTest {
         notice = resultRepo.notices.stream()
                 .filter(n -> n.getDescription().contains(REQUIRED_HEADER_3)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
-        assertEquals("W001", notice.getId());
+        assertEquals("W002", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("Unexpected header:" + REQUIRED_HEADER_3 + " in file:test.tst", notice.getDescription());
@@ -221,7 +221,7 @@ class ValidateHeadersForFileTest {
         notice = resultRepo.notices.stream()
                 .filter(n -> n.getDescription().contains(REQUIRED_HEADER_4)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
-        assertEquals("W001", notice.getId());
+        assertEquals("W002", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("Unexpected header:" + REQUIRED_HEADER_4 + " in file:test.tst", notice.getDescription());
@@ -302,7 +302,7 @@ class ValidateHeadersForFileTest {
         notice = resultRepo.notices.stream()
                 .filter(n -> n.getDescription().contains(EXTRA_HEADER_0)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
-        assertEquals("W001", notice.getId());
+        assertEquals("W002", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("Unexpected header:" + EXTRA_HEADER_0 + " in file:test.tst", notice.getDescription());
@@ -343,7 +343,7 @@ class ValidateHeadersForFileTest {
         Notice notice = resultRepo.notices.stream()
                 .filter(n -> n.getDescription().contains(EXTRA_HEADER_0)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
-        assertEquals("W001", notice.getId());
+        assertEquals("W002", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("Unexpected header:" + EXTRA_HEADER_0 + " in file:test.tst", notice.getDescription());
@@ -351,7 +351,7 @@ class ValidateHeadersForFileTest {
         notice = resultRepo.notices.stream()
                 .filter(n -> n.getDescription().contains(EXTRA_HEADER_1)).findAny().get();
         assertThat(notice, instanceOf(NonStandardHeaderNotice.class));
-        assertEquals("W001", notice.getId());
+        assertEquals("W002", notice.getId());
         assertEquals("Non standard header", notice.getTitle());
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("Unexpected header:" + EXTRA_HEADER_1 + " in file:test.tst", notice.getDescription());

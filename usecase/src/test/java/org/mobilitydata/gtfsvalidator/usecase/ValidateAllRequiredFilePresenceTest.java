@@ -197,31 +197,31 @@ class ValidateAllRequiredFilePresenceTest {
 
         Notice notice = mockResultRepo.notices.get(0);
         assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E002", notice.getId());
+        assertEquals("E003", notice.getId());
         assertEquals("Missing required file", notice.getTitle());
         assertEquals("req10.req", notice.getFilename());
 
         notice = mockResultRepo.notices.get(1);
         assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E002", notice.getId());
+        assertEquals("E003", notice.getId());
         assertEquals("Missing required file", notice.getTitle());
         assertEquals("req11.req", notice.getFilename());
 
         notice = mockResultRepo.notices.get(2);
         assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E002", notice.getId());
+        assertEquals("E003", notice.getId());
         assertEquals("Missing required file", notice.getTitle());
         assertEquals("req12.req", notice.getFilename());
 
         notice = mockResultRepo.notices.get(3);
         assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E002", notice.getId());
+        assertEquals("E003", notice.getId());
         assertEquals("Missing required file", notice.getTitle());
         assertEquals("req13.req", notice.getFilename());
 
         notice = mockResultRepo.notices.get(4);
         assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E002", notice.getId());
+        assertEquals("E003", notice.getId());
         assertEquals("Missing required file", notice.getTitle());
         assertEquals("req14.req", notice.getFilename());
     }
