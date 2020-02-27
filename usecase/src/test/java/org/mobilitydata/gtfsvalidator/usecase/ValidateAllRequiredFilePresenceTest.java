@@ -33,7 +33,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ValidateRequiredFilePresenceTest {
+class ValidateAllRequiredFilePresenceTest {
 
     //mock spec repo
     private static class MockSpecRepo implements GtfsSpecRepository {
@@ -167,7 +167,7 @@ class ValidateRequiredFilePresenceTest {
 
         MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
 
-        ValidateRequiredFilePresence underTest = new ValidateRequiredFilePresence(
+        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
                 new MockSpecRepo(10),
                 new MockRawFileRepo(10, 10),
                 mockResultRepo
@@ -185,7 +185,7 @@ class ValidateRequiredFilePresenceTest {
 
         MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
 
-        ValidateRequiredFilePresence underTest = new ValidateRequiredFilePresence(
+        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
                 new MockSpecRepo(15),
                 new MockRawFileRepo(10, 10),
                 mockResultRepo

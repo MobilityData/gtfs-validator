@@ -50,8 +50,8 @@ public class DefaultConfig {
         return new UnzipInputArchive(rawFileRepo, new ZipFile(zipInputPath), zipExtractPath, resultRepo);
     }
 
-    public ValidateRequiredFilePresence validateFileName() {
-        return new ValidateRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
+    public ValidateAllRequiredFilePresence validateAllRequiredFilePresence() {
+        return new ValidateAllRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
     }
 
     public ValidateHeadersForFile validateHeadersForFile(String filename) {

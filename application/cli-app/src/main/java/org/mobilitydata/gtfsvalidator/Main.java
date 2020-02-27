@@ -105,6 +105,7 @@ public class Main {
             }
 
             config.unzipInputArchive(zipInputPath, config.cleanOrCreatePath(zipExtractTargetPath).execute()).execute();
+            config.validateAllRequiredFilePresence().execute();
 
             //TODO: we will loop through all files in the archive. MVP is for stops.txt
             config.validateHeadersForFile("stops.txt").execute();

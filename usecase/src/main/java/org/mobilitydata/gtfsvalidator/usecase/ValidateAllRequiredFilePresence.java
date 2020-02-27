@@ -21,15 +21,15 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-public class ValidateRequiredFilePresence {
+public class ValidateAllRequiredFilePresence {
 
     private final GtfsSpecRepository specRepo;
     private final RawFileRepository rawFileRepo;
     private final ValidationResultRepository resultRepo;
 
-    public ValidateRequiredFilePresence(final GtfsSpecRepository specRepo,
-                                        final RawFileRepository rawFileRepo,
-                                        final ValidationResultRepository resultRepo) {
+    public ValidateAllRequiredFilePresence(final GtfsSpecRepository specRepo,
+                                           final RawFileRepository rawFileRepo,
+                                           final ValidationResultRepository resultRepo) {
         this.specRepo = specRepo;
         this.rawFileRepo = rawFileRepo;
         this.resultRepo = resultRepo;
