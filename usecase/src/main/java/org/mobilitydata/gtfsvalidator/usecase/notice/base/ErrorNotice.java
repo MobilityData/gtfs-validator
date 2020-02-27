@@ -20,6 +20,22 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class ErrorNotice extends Notice {
 
+    protected static final String E_001 = "E001";
+    protected static final String E_002 = "E002";
+    protected static final String E_003 = "E003";
+    protected static final String E_004 = "E004";
+    protected static final String E_005 = "E005";
+    protected static final String E_006 = "E006";
+    protected static final String E_007 = "E007";
+    protected static final String E_008 = "E008";
+    protected static final String E_009 = "E009";
+    protected static final String E_010 = "E010";
+    protected static final String E_011 = "E011";
+    protected static final String E_012 = "E012";
+    protected static final String E_013 = "E013";
+    protected static final String E_014 = "E014";
+    protected static final String E_015 = "E015";
+
     public ErrorNotice(final String filename,
                        final String noticeId,
                        final String title,

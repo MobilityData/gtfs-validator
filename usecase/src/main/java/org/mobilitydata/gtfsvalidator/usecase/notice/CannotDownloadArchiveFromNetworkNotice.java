@@ -21,9 +21,10 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import java.net.URL;
 
 public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
+
     public CannotDownloadArchiveFromNetworkNotice(final URL url) {
         super(String.valueOf(url),
-                "E007",
+                E_007,
                 "Downloading error",
                 "An error occurred while trying to download archive from network: " + url);
     }

@@ -19,9 +19,10 @@ package org.mobilitydata.gtfsvalidator.usecase.notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 
 public class CouldNotCleanOrCreatePathNotice extends ErrorNotice {
+
     public CouldNotCleanOrCreatePathNotice(final String pathToCleanOrCreate) {
         super("",
-                "E009",
+                E_009,
                 "Path cleaning or creation error",
                 "An error occurred while trying clean or create path: " + pathToCleanOrCreate);
     }

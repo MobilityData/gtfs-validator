@@ -19,8 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 
 public class InvalidRowLengthNotice extends ErrorNotice {
+
     public InvalidRowLengthNotice(String filename, int rowIndex, int expectedLength, int actualLength) {
-        super(filename, "E004",
+        super(filename, E_004,
                 "Invalid row length",
                 "Invalid length for row:" + rowIndex +
                         " -- expected:" + expectedLength + " actual:" + actualLength);
