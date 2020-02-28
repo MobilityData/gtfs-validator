@@ -20,6 +20,7 @@ import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
+import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -111,7 +112,10 @@ public class Main {
             config.validateHeadersForFile("stops.txt").execute();
             config.validateAllRowLengthForFile("stops.txt").execute();
 
-            config.validateGtfsTypes().execute(config.parseAllRowForFile("stops.txt").execute());
+            ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile("stops.txt");
+            while (parseSingleRowForFile.hasNext()) {
+                config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
+            }
 
             logger.info("validation repo content:" + config.getValidationResult());
 

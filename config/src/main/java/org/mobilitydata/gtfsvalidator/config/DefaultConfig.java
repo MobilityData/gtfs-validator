@@ -74,8 +74,8 @@ public class DefaultConfig {
         );
     }
 
-    public ParseAllRowForFile parseAllRowForFile(String filename) {
-        return new ParseAllRowForFile(
+    public ParseSingleRowForFile parseSingleRowForFile(String filename) {
+        return new ParseSingleRowForFile(
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
                 rawFileRepo,
                 specRepo,
