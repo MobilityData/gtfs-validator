@@ -20,11 +20,11 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.usecase.notice.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -33,9 +33,9 @@ import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-class ParseAllRowForFileTest {
+class ParseSingleRowForFileTest {
 
     private static class MockEntityParser implements GtfsSpecRepository.RawEntityParser {
         public int callToValidateNumericTypesCount = 0;
@@ -221,23 +221,38 @@ class ParseAllRowForFileTest {
     }
 
     @Test
-    void shouldValidateAndParseAllEntities() {
+    void shouldValidateAndParseOneByOne() {
 
         MockResultRepo resultRepo = new MockResultRepo();
         MockSpecRepo specRepo = new MockSpecRepo();
 
-        ParseAllRowForFile underTest = new ParseAllRowForFile(
+        ParseSingleRowForFile underTest = new ParseSingleRowForFile(
                 RawFileInfo.builder().filename("test.tst").build(),
                 new MockRawFileRepo(),
                 specRepo,
                 resultRepo
         );
 
-        List<ParsedEntity> result = (ArrayList<ParsedEntity>) underTest.execute();
-        assertEquals(3, result.size());
+        assertTrue(underTest.hasNext());
+        underTest.execute();
+        assertEquals(0, resultRepo.noticeList.size());
+        assertEquals(1, specRepo.parser.callToValidateNumericTypesCount);
+        assertEquals(1, specRepo.parser.callToParseCount);
+
+        assertTrue(underTest.hasNext());
+        underTest.execute();
+        assertEquals(0, resultRepo.noticeList.size());
+        assertEquals(2, specRepo.parser.callToValidateNumericTypesCount);
+        assertEquals(2, specRepo.parser.callToParseCount);
+
+        assertTrue(underTest.hasNext());
+        underTest.execute();
         assertEquals(0, resultRepo.noticeList.size());
         assertEquals(3, specRepo.parser.callToValidateNumericTypesCount);
         assertEquals(3, specRepo.parser.callToParseCount);
+
+        assertFalse(underTest.hasNext());
+        assertNull(underTest.execute());
     }
 
     @Test
@@ -245,16 +260,18 @@ class ParseAllRowForFileTest {
 
         MockResultRepo resultRepo = new MockResultRepo();
 
-        ParseAllRowForFile underTest = new ParseAllRowForFile(
+        ParseSingleRowForFile underTest = new ParseSingleRowForFile(
                 RawFileInfo.builder().filename("test_invalid.tst").build(),
                 new MockRawFileRepo(),
                 new MockSpecRepo(),
                 resultRepo
         );
 
-        List<ParsedEntity> result = (ArrayList<ParsedEntity>) underTest.execute();
-        assertEquals(3, result.size());
-        //3 files and 3 fake notices per file
+        underTest.execute();
+        assertEquals(3, resultRepo.noticeList.size());
+        underTest.execute();
+        assertEquals(6, resultRepo.noticeList.size());
+        underTest.execute();
         assertEquals(9, resultRepo.noticeList.size());
     }
 
@@ -263,15 +280,14 @@ class ParseAllRowForFileTest {
 
         MockResultRepo resultRepo = new MockResultRepo();
 
-        ParseAllRowForFile underTest = new ParseAllRowForFile(
+        ParseSingleRowForFile underTest = new ParseSingleRowForFile(
                 RawFileInfo.builder().filename("test_empty.tst").build(),
                 new MockRawFileRepo(),
                 new MockSpecRepo(),
                 resultRepo
         );
 
-        List<ParsedEntity> result = (ArrayList<ParsedEntity>) underTest.execute();
-        assertEquals(0, result.size());
+        underTest.execute();
         assertEquals(1, resultRepo.noticeList.size());
         Notice notice = resultRepo.noticeList.get(0);
         assertThat(notice, instanceOf(CannotConstructDataProviderNotice.class));

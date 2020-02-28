@@ -33,7 +33,7 @@ public class ValidateGtfsTypes {
         this.resultRepo = resultRepo;
     }
 
-    public void execute(final Collection<ParsedEntity> toValidate) {
-        toValidate.forEach(parsedEntity -> specRepo.getValidatorForFile(parsedEntity.getRawFileInfo()).validate(parsedEntity).forEach(resultRepo::addNotice));
+    public void execute(final ParsedEntity toValidate) {
+        specRepo.getValidatorForFile(toValidate.getRawFileInfo()).validate(toValidate).forEach(resultRepo::addNotice);
     }
 }

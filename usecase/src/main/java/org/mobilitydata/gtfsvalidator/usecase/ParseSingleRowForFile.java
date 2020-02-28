@@ -24,45 +24,39 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+public class ParseSingleRowForFile {
 
-public class ParseAllRowForFile {
-
-    private final RawFileInfo rawFileInfo;
-    private final RawFileRepository rawFileRepo;
-    private final GtfsSpecRepository specRepo;
     private final ValidationResultRepository resultRepo;
+    private RawFileRepository.RawEntityProvider provider;
+    private GtfsSpecRepository.RawEntityParser parser;
 
-    public ParseAllRowForFile(final RawFileInfo rawFileInfo,
-                              final RawFileRepository rawFileRepo,
-                              final GtfsSpecRepository specRepo,
-                              final ValidationResultRepository resultRepo) {
-        this.rawFileInfo = rawFileInfo;
-        this.rawFileRepo = rawFileRepo;
-        this.specRepo = specRepo;
+    public ParseSingleRowForFile(final RawFileInfo rawFileInfo,
+                                 final RawFileRepository rawFileRepo,
+                                 final GtfsSpecRepository specRepo,
+                                 final ValidationResultRepository resultRepo) {
         this.resultRepo = resultRepo;
-    }
-
-    public Collection<ParsedEntity> execute() {
-
-        List<ParsedEntity> toReturn = new ArrayList<>();
 
         rawFileRepo.getProviderForFile(rawFileInfo).ifPresentOrElse(
                 provider -> {
-                    GtfsSpecRepository.RawEntityParser parser = specRepo.getParserForFile(rawFileInfo);
-
-                    while (provider.hasNext()) {
-                        RawEntity rawEntity = provider.getNext();
-
-                        parser.validateNumericTypes(rawEntity).forEach(resultRepo::addNotice);
-
-                        toReturn.add(parser.parse(rawEntity));
-                    }
+                    this.parser = specRepo.getParserForFile(rawFileInfo);
+                    this.provider = provider;
                 },
                 () -> resultRepo.addNotice(new CannotConstructDataProviderNotice(rawFileInfo.getFilename()))
         );
+    }
+
+    public boolean hasNext() {
+        return provider != null && provider.hasNext();
+    }
+
+    public ParsedEntity execute() {
+        ParsedEntity toReturn = null;
+
+        if (hasNext()) {
+            RawEntity rawEntity = provider.getNext();
+            parser.validateNumericTypes(rawEntity).forEach(resultRepo::addNotice);
+            toReturn = parser.parse(rawEntity);
+        }
 
         return toReturn;
     }
