@@ -20,6 +20,7 @@ import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
+import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
 
 import java.io.*;
@@ -114,7 +115,8 @@ public class Main {
 
             ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile("stops.txt");
             while (parseSingleRowForFile.hasNext()) {
-                config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
+                ParsedEntity entity = parseSingleRowForFile.execute();
+                config.validateGtfsTypes().execute(entity);
             }
 
             logger.info("validation repo content:" + config.getValidationResult());
