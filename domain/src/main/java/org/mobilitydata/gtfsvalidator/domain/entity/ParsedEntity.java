@@ -18,26 +18,46 @@ package org.mobilitydata.gtfsvalidator.domain.entity;
 
 import java.util.Map;
 
+/**
+ * The {@code ParsedEntity} class represents a row of a GTFS file that has been parsed: type of each column of the raw
+ * has been determined.
+ */
 public class ParsedEntity {
 
     private final RawFileInfo rawFileInfo;
     private final String entityId;
     private final Map<String, Object> contentByHeaderMap;
 
+    /**
+     * Constructor
+     * rawFileInfo is a @code{RawFileInfo} instance
+     * contentByHeaderMap is an object that maps rows of a GTFS .txt file on header name.
+     * entityId is the id extracted from the original row.
+     */
     public ParsedEntity(String id, Map<String, Object> contentByHeaderMap, RawFileInfo rawFileInfo) {
         this.contentByHeaderMap = contentByHeaderMap;
         this.rawFileInfo = rawFileInfo;
         this.entityId = id;
     }
 
+    /**
+     * Return the id extracted from the original row.
+     */
     public String getEntityId() {
         return entityId;
     }
 
+    /**
+     * Return a string object that represents the value contained in a parsed row for a given header (column).
+     */
     public Object get(final String header) {
         return contentByHeaderMap.get(header);
     }
 
+    /**
+     * Return an instance of @code{RawFileInfo} class that contains the information related to the raw file from which
+     * this entity's data was parsed.
+     */
     public RawFileInfo getRawFileInfo() {
         return rawFileInfo;
     }
