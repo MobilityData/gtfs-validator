@@ -17,11 +17,16 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.domain.entity.StopOrPlatform;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.Station;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.StopOrPlatform;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+/*
+ * This use case turns a parsed entity to a concrete class depending on the 'type' field
+ * Further processing stop.txt related entities is required to validate parent stations <--> child stops relationships
+ */
 public class ProcessParsedStop {
 
     private final GtfsSpecRepository specRepo;
@@ -42,7 +47,7 @@ public class ProcessParsedStop {
 
         if (type != null) {
             switch (type) {
-                case 0: // stop or platform
+                case 0: {// stop or platform
                     String id = validatedStopEntity.getEntityId();
                     String name = (String) validatedStopEntity.get("stop_name");
                     Float latitude = (Float) validatedStopEntity.get("stop_lat");
@@ -71,6 +76,37 @@ public class ProcessParsedStop {
                         //TODO: notice for cannnot build stop or platform
                     }
                     break;
+                }
+                case 1: {//Platform
+                    String id = validatedStopEntity.getEntityId();
+                    String name = (String) validatedStopEntity.get("stop_name");
+                    Float latitude = (Float) validatedStopEntity.get("stop_lat");
+                    Float longitude = (Float) validatedStopEntity.get("stop_lon");
+                    //TODO: check that parent_station is null
+                    if (id != null && name != null && latitude != null && longitude != null) {
+                        Station.StationBuilder builder = new Station.StationBuilder(
+                                id,
+                                name,
+                                latitude,
+                                longitude
+                        );
+
+                        builder.code((String) validatedStopEntity.get("stop_code"))
+                                .description((String) validatedStopEntity.get("stop_desc"))
+                                .zoneId((String) validatedStopEntity.get("zone_id"))
+                                .url((String) validatedStopEntity.get("stop_url"))
+                                .timezone((String) validatedStopEntity.get("stop_timezone"))
+                                .levelId((String) validatedStopEntity.get("level_id"))
+                                .platformCode((String) validatedStopEntity.get("platform_code"));
+
+                        //TODO: ready to be built and added to gtfsDataRepo
+                        //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
+                    } else {
+                        //TODO: notice for cannnot build station
+                    }
+
+                    break;
+                }
             }
 
         } else {

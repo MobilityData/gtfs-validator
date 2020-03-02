@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/*
- * This use case turns a parsed entity to a concrete class depending on the 'type' field
- * Further processing stop.txt related entities is required to validate parent stations <--> child stops relationships
- */
+//TODO: use Kotlin data class
 public class StopOrPlatform {
 
     public enum WheelchairBoarding {
