@@ -20,27 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 //TODO: use Kotlin data class - approval required
-public class BoardingArea {
-
-    public enum WheelchairBoarding {
-        UNKNOWN_WHEELCHAIR_BOARDING,
-        WHEELCHAIR_ACCESSIBLE,
-        NOT_WHEELCHAIR_ACCESSIBLE
-    }
-
-    private final String id;
-    private final String code;
-    private final String name;
-    private final String description;
-    private final float latitude;
-    private final float longitude;
-    private final String zoneId;
-    private final String url;
-    private final String parentStation; // id of a StopOrPlatform
-    private final String timezone;
-    private final WheelchairBoarding wheelchairBoarding;
-    private final String levelId;
-    private final String platformCode;
+public class BoardingArea extends LocationBase {
 
     private BoardingArea(@NotNull String id,
                          @Nullable String code,
@@ -55,117 +35,35 @@ public class BoardingArea {
                          @Nullable WheelchairBoarding wheelchairBoarding,
                          @Nullable String levelId,
                          @Nullable String platformCode) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.description = description;
-        this.latitude = latitude != null ? latitude : 0.0f;
-        this.longitude = longitude != null ? longitude : 0.0f;
-        this.zoneId = zoneId;
-        this.url = url;
-        this.parentStation = parentStation;
-        this.timezone = timezone;
-        this.wheelchairBoarding = wheelchairBoarding;
-        this.levelId = levelId;
-        this.platformCode = platformCode;
+        super(id, code, name, description, latitude, longitude, zoneId, url, parentStation, timezone, wheelchairBoarding,
+                levelId, platformCode);
     }
 
-    public static class EntranceOrExitBuilder {
-        private String id;
-        private String code;
-        private String name;
-        private String description;
-        private float latitude;
-        private float longitude;
-        private String zoneId;
-        private String url;
-        private String parentStation;
-        private String timezone;
-        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
-        private String levelId;
-        private String platformCode;
+    public static class EntranceOrExitBuilder extends LocationBaseBuilder {
 
-        public EntranceOrExitBuilder(@NotNull String id,
-                                     @NotNull String name,
-                                     @NotNull Float latitude,
-                                     @NotNull Float longitude) {
+        public EntranceOrExitBuilder(@NotNull String id, @NotNull String parentStation) {
             this.id = id;
-            this.name = name;
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-        public EntranceOrExitBuilder id(@NotNull String id) {
-            this.id = id;
-            return this;
-        }
-
-        public EntranceOrExitBuilder code(@Nullable String code) {
-            this.code = code;
-            return this;
-        }
-
-        public EntranceOrExitBuilder name(@NotNull String name) {
-            this.name = name;
-            return this;
-        }
-
-        public EntranceOrExitBuilder description(@Nullable String description) {
-            this.description = description;
-            return this;
-        }
-
-        public EntranceOrExitBuilder zoneId(@Nullable String zoneId) {
-            this.zoneId = zoneId;
-            return this;
-        }
-
-        public EntranceOrExitBuilder url(@Nullable String url) {
-            this.url = url;
-            return this;
-        }
-
-        public EntranceOrExitBuilder parentStation(@Nullable String parentStation) {
             this.parentStation = parentStation;
+        }
+
+        public EntranceOrExitBuilder name(@Nullable String name) {
+            this.name = name;
             return this;
         }
 
-        public EntranceOrExitBuilder timezone(@Nullable String timezone) {
-            this.timezone = timezone;
+        public EntranceOrExitBuilder latitude(@Nullable Float latitude) {
+            this.latitude = latitude;
             return this;
         }
 
-        public EntranceOrExitBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
-            this.wheelchairBoarding = wheelchairBoarding;
-            return this;
-        }
-
-        public EntranceOrExitBuilder levelId(@Nullable String levelId) {
-            this.levelId = levelId;
-            return this;
-        }
-
-        public EntranceOrExitBuilder platformCode(@Nullable String platformCode) {
-            this.platformCode = platformCode;
+        public EntranceOrExitBuilder longitude(@Nullable Float longitude) {
+            this.longitude = longitude;
             return this;
         }
 
         public BoardingArea build() {
-            return new BoardingArea(
-                    id,
-                    code,
-                    name,
-                    description,
-                    latitude,
-                    longitude,
-                    zoneId,
-                    url,
-                    parentStation,
-                    timezone,
-                    wheelchairBoarding,
-                    levelId,
-                    platformCode
-            );
+            return new BoardingArea(id, code, name, description, latitude, longitude, zoneId, url, parentStation,
+                    timezone, wheelchairBoarding, levelId, platformCode);
         }
     }
 }

@@ -20,26 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 //TODO: use Kotlin data class - approval required
-public class Station {
-
-    public enum WheelchairBoarding {
-        UNKNOWN_WHEELCHAIR_BOARDING,
-        WHEELCHAIR_ACCESSIBLE,
-        NOT_WHEELCHAIR_ACCESSIBLE
-    }
-
-    private final String id;
-    private final String code;
-    private final String name;
-    private final String description;
-    private final float latitude;
-    private final float longitude;
-    private final String zoneId;
-    private final String url;
-    private final String timezone;
-    private final WheelchairBoarding wheelchairBoarding;
-    private final String levelId;
-    private final String platformCode;
+public class Station extends LocationBase {
 
     private Station(@NotNull String id,
                     @Nullable String code,
@@ -53,33 +34,11 @@ public class Station {
                     @Nullable WheelchairBoarding wheelchairBoarding,
                     @Nullable String levelId,
                     @Nullable String platformCode) {
-        this.id = id;
-        this.code = code;
-        this.name = name;
-        this.description = description;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.zoneId = zoneId;
-        this.url = url;
-        this.timezone = timezone;
-        this.wheelchairBoarding = wheelchairBoarding;
-        this.levelId = levelId;
-        this.platformCode = platformCode;
+        super(id, code, name, description, latitude, longitude, zoneId, url, null, timezone, wheelchairBoarding,
+                levelId, platformCode);
     }
 
-    public static class StationBuilder {
-        private String id;
-        private String code;
-        private String name;
-        private String description;
-        private float latitude;
-        private float longitude;
-        private String zoneId;
-        private String url;
-        private String timezone;
-        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
-        private String levelId;
-        private String platformCode;
+    public static class StationBuilder extends LocationBaseBuilder {
 
         public StationBuilder(@NotNull String id,
                               @NotNull String name,
@@ -91,71 +50,9 @@ public class Station {
             this.longitude = longitude;
         }
 
-        public StationBuilder id(@NotNull String id) {
-            this.id = id;
-            return this;
-        }
-
-        public StationBuilder code(@Nullable String code) {
-            this.code = code;
-            return this;
-        }
-
-        public StationBuilder name(@NotNull String name) {
-            this.name = name;
-            return this;
-        }
-
-        public StationBuilder description(@Nullable String description) {
-            this.description = description;
-            return this;
-        }
-
-        public StationBuilder zoneId(@Nullable String zoneId) {
-            this.zoneId = zoneId;
-            return this;
-        }
-
-        public StationBuilder url(@Nullable String url) {
-            this.url = url;
-            return this;
-        }
-
-        public StationBuilder timezone(@Nullable String timezone) {
-            this.timezone = timezone;
-            return this;
-        }
-
-        public StationBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
-            this.wheelchairBoarding = wheelchairBoarding;
-            return this;
-        }
-
-        public StationBuilder levelId(@Nullable String levelId) {
-            this.levelId = levelId;
-            return this;
-        }
-
-        public StationBuilder platformCode(@Nullable String platformCode) {
-            this.platformCode = platformCode;
-            return this;
-        }
-
         public Station build() {
-            return new Station(
-                    id,
-                    code,
-                    name,
-                    description,
-                    latitude,
-                    longitude,
-                    zoneId,
-                    url,
-                    timezone,
-                    wheelchairBoarding,
-                    levelId,
-                    platformCode
-            );
+            return new Station(id, code, name, description, latitude, longitude, zoneId, url, timezone,
+                    wheelchairBoarding, levelId, platformCode);
         }
     }
 }
