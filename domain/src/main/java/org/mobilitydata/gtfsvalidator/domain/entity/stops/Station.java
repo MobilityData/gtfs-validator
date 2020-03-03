@@ -19,13 +19,13 @@ package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//TODO: use Kotlin data class
+//TODO: use Kotlin data class - approval required
 public class Station {
 
     public enum WheelchairBoarding {
-        NO_INFO,
-        SOME_VEHICLES,
-        NOT_POSSIBLE,
+        UNKNOWN_WHEELCHAIR_BOARDING,
+        WHEELCHAIR_ACCESSIBLE,
+        NOT_WHEELCHAIR_ACCESSIBLE
     }
 
     private final String id;
@@ -77,7 +77,7 @@ public class Station {
         private String zoneId;
         private String url;
         private String timezone;
-        private WheelchairBoarding wheelchairBoarding;
+        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
         private String levelId;
         private String platformCode;
 
