@@ -39,24 +39,24 @@ public class BoardingArea extends LocationBase {
                 levelId, platformCode);
     }
 
-    public static class EntranceOrExitBuilder extends LocationBaseBuilder {
+    public static class BoardingAreaBuilder extends LocationBaseBuilder {
 
-        public EntranceOrExitBuilder(@NotNull String id, @NotNull String parentStation) {
+        public BoardingAreaBuilder(@NotNull String id, @NotNull String parentStation) {
             this.id = id;
             this.parentStation = parentStation;
         }
 
-        public EntranceOrExitBuilder name(@Nullable String name) {
+        public BoardingAreaBuilder name(@Nullable String name) {
             this.name = name;
             return this;
         }
 
-        public EntranceOrExitBuilder latitude(@Nullable Float latitude) {
+        public BoardingAreaBuilder latitude(@Nullable Float latitude) {
             this.latitude = latitude;
             return this;
         }
 
-        public EntranceOrExitBuilder longitude(@Nullable Float longitude) {
+        public BoardingAreaBuilder longitude(@Nullable Float longitude) {
             this.longitude = longitude;
             return this;
         }

@@ -21,6 +21,14 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class LocationBase {
 
+    // see https://gtfs.org/reference/static#stopstxt
+    public static final int LOCATION_TYPE_STOP_OR_PLATFORM = 0;
+    public static final int LOCATION_TYPE_STATION = 1;
+    public static final int LOCATION_TYPE_ENTRANCE_OR_EXIT = 2;
+    public static final int LOCATION_TYPE_GENERIC_NODE = 3;
+    public static final int LOCATION_TYPE_BOARDING_AREA = 4;
+
+
     public enum WheelchairBoarding {
         UNKNOWN_WHEELCHAIR_BOARDING,
         WHEELCHAIR_ACCESSIBLE,
@@ -128,7 +136,7 @@ public abstract class LocationBase {
         this.platformCode = platformCode;
     }
 
-    protected static abstract class LocationBaseBuilder {
+    public static abstract class LocationBaseBuilder {
         protected String id;
         protected String code;
         protected String name;

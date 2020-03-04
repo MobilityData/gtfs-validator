@@ -17,11 +17,12 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.Station;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.StopOrPlatform;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+
+import static org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase.*;
 
 /*
  * This use case turns a parsed entity to a concrete class depending on the 'type' field
@@ -43,74 +44,106 @@ public class ProcessParsedStop {
 
     public void execute(final ParsedEntity validatedStopEntity) {
 
-        Integer type = (Integer) validatedStopEntity.get("location_type");
+        Integer locationType = (Integer) validatedStopEntity.get("location_type");
+        String stopId = validatedStopEntity.getEntityId();
+        String stopName = (String) validatedStopEntity.get("stop_name");
+        Float stopLat = (Float) validatedStopEntity.get("stop_lat");
+        Float stopLon = (Float) validatedStopEntity.get("stop_lon");
+        String stopCode = (String) validatedStopEntity.get("stop_code");
+        String stopDesc = (String) validatedStopEntity.get("stop_desc");
+        String zoneId = (String) validatedStopEntity.get("zone_id");
+        String stopUrl = (String) validatedStopEntity.get("stop_url");
+        String parentStation = (String) validatedStopEntity.get("parent_station");
+        String stopTimezone = (String) validatedStopEntity.get("stop_timezone");
+        String levelId = (String) validatedStopEntity.get("level_id");
+        String platformCode = (String) validatedStopEntity.get("platform_code");
 
-        if (type != null) {
-            switch (type) {
-                case 0: {// stop or platform
-                    String id = validatedStopEntity.getEntityId();
-                    String name = (String) validatedStopEntity.get("stop_name");
-                    Float latitude = (Float) validatedStopEntity.get("stop_lat");
-                    Float longitude = (Float) validatedStopEntity.get("stop_lon");
+        switch (locationType) {
+            case LOCATION_TYPE_STOP_OR_PLATFORM: {
+                StopOrPlatform.StopOrPlatformBuilder builder = new StopOrPlatform.StopOrPlatformBuilder(
+                        stopId, stopName, stopLat, stopLon);
 
-                    if (id != null && name != null && latitude != null && longitude != null) {
-                        StopOrPlatform.StopOrPlatformBuilder builder = new StopOrPlatform.StopOrPlatformBuilder(
-                                id,
-                                name,
-                                latitude,
-                                longitude
-                        );
+                builder.code(stopCode)
+                        .description(stopDesc)
+                        .zoneId(zoneId)
+                        .url(stopUrl)
+                        .parentStation(parentStation)
+                        .timezone(stopTimezone)
+                        .levelId(levelId)
+                        .platformCode(platformCode);
 
-                        builder.code((String) validatedStopEntity.get("stop_code"))
-                                .description((String) validatedStopEntity.get("stop_desc"))
-                                .zoneId((String) validatedStopEntity.get("zone_id"))
-                                .url((String) validatedStopEntity.get("stop_url"))
-                                .parentStation((String) validatedStopEntity.get("parent_station"))
-                                .timezone((String) validatedStopEntity.get("stop_timezone"))
-                                .levelId((String) validatedStopEntity.get("level_id"))
-                                .platformCode((String) validatedStopEntity.get("platform_code"));
-
-                        //TODO: ready to be built and added to gtfsDataRepo
-                        //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
-                    } else {
-                        //TODO: notice for cannnot build stop or platform
-                    }
-                    break;
-                }
-                case 1: {//Platform
-                    String id = validatedStopEntity.getEntityId();
-                    String name = (String) validatedStopEntity.get("stop_name");
-                    Float latitude = (Float) validatedStopEntity.get("stop_lat");
-                    Float longitude = (Float) validatedStopEntity.get("stop_lon");
-                    //TODO: check that parent_station is null
-                    if (id != null && name != null && latitude != null && longitude != null) {
-                        Station.StationBuilder builder = new Station.StationBuilder(
-                                id,
-                                name,
-                                latitude,
-                                longitude
-                        );
-
-                        builder.code((String) validatedStopEntity.get("stop_code"))
-                                .description((String) validatedStopEntity.get("stop_desc"))
-                                .zoneId((String) validatedStopEntity.get("zone_id"))
-                                .url((String) validatedStopEntity.get("stop_url"))
-                                .timezone((String) validatedStopEntity.get("stop_timezone"))
-                                .levelId((String) validatedStopEntity.get("level_id"))
-                                .platformCode((String) validatedStopEntity.get("platform_code"));
-
-                        //TODO: ready to be built and added to gtfsDataRepo
-                        //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
-                    } else {
-                        //TODO: notice for cannnot build station
-                    }
-
-                    break;
-                }
+                //TODO: ready to be built and added to gtfsDataRepo
+                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
+                break;
             }
+            case LOCATION_TYPE_STATION: {
+                Station.StationBuilder builder = new Station.StationBuilder(
+                        stopId, stopName, stopLat, stopLon);
 
-        } else {
-            //TODO: add notice for null type
+                builder.code(stopCode)
+                        .description(stopDesc)
+                        .zoneId(zoneId)
+                        .url(stopUrl)
+                        .parentStation(parentStation)
+                        .timezone(stopTimezone)
+                        .levelId(levelId)
+                        .platformCode(platformCode);
+                //TODO: ready to be built and added to gtfsDataRepo
+                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
+                break;
+            }
+            case LOCATION_TYPE_ENTRANCE_OR_EXIT: {
+                EntranceOrExit.EntranceOrExitBuilder builder = new EntranceOrExit.EntranceOrExitBuilder(
+                        stopId, stopName, stopLat, stopLon);
+
+                builder.code(stopCode)
+                        .description(stopDesc)
+                        .zoneId(zoneId)
+                        .url(stopUrl)
+                        .parentStation(parentStation)
+                        .timezone(stopTimezone)
+                        .levelId(levelId)
+                        .platformCode(platformCode);
+                //TODO: ready to be built and added to gtfsDataRepo
+                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
+                break;
+            }
+            case LOCATION_TYPE_GENERIC_NODE: {
+                GenericNode.GenericNodeBuilder builder = new GenericNode.GenericNodeBuilder(
+                        stopId, parentStation);
+
+                builder.name(stopName)
+                        .latitude(stopLat)
+                        .longitude(stopLon)
+                        .code(stopCode)
+                        .description(stopDesc)
+                        .zoneId(zoneId)
+                        .url(stopUrl)
+                        .timezone(stopTimezone)
+                        .levelId(levelId)
+                        .platformCode(platformCode);
+                //TODO: ready to be built and added to gtfsDataRepo
+                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
+                break;
+            }
+            case LOCATION_TYPE_BOARDING_AREA: {
+                BoardingArea.BoardingAreaBuilder builder = new BoardingArea.BoardingAreaBuilder(
+                        stopId, parentStation);
+
+                builder.name(stopName)
+                        .latitude(stopLat)
+                        .longitude(stopLon)
+                        .code(stopCode)
+                        .description(stopDesc)
+                        .zoneId(zoneId)
+                        .url(stopUrl)
+                        .timezone(stopTimezone)
+                        .levelId(levelId)
+                        .platformCode(platformCode);
+                //TODO: ready to be built and added to gtfsDataRepo
+                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
+                break;
+            }
         }
     }
 }
