@@ -42,10 +42,8 @@ public class Station extends LocationBase {
                     @Nullable String stopUrl,
                     @Nullable String stopTimezone,
                     @Nullable WheelchairBoarding wheelchairBoarding,
-                    @Nullable String levelId,
-                    @Nullable String platformCode) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, null, stopTimezone,
-                levelId, platformCode);
+                    @Nullable String levelId) {
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, null, stopTimezone, levelId);
         this.wheelchairBoarding = wheelchairBoarding;
     }
 
@@ -70,7 +68,7 @@ public class Station extends LocationBase {
 
         public Station build() {
             return new Station(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone,
-                    wheelchairBoarding, levelId, platformCode);
+                    wheelchairBoarding, levelId);
         }
     }
 }

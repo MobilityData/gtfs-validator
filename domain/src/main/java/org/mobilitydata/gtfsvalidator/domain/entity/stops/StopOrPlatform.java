@@ -30,7 +30,12 @@ public class StopOrPlatform extends LocationBase {
         this.wheelchairBoarding = toSet;
     }
 
+    public String getPlatformCode() {
+        return platformCode;
+    }
+
     private WheelchairBoarding wheelchairBoarding;
+    private final String platformCode;
 
     private StopOrPlatform(@NotNull String stopId,
                            @Nullable String stopCode,
@@ -45,14 +50,15 @@ public class StopOrPlatform extends LocationBase {
                            @Nullable WheelchairBoarding wheelchairBoarding,
                            @Nullable String levelId,
                            @Nullable String platformCode) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone,
-                levelId, platformCode);
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, levelId);
         this.wheelchairBoarding = wheelchairBoarding;
+        this.platformCode = platformCode;
     }
 
     public static class StopOrPlatformBuilder extends LocationBaseBuilder {
 
         private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
+        private String platformCode;
 
         public StopOrPlatformBuilder(@NotNull String stopId,
                                      @NotNull String stopName,
@@ -66,6 +72,11 @@ public class StopOrPlatform extends LocationBase {
 
         public StopOrPlatformBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
             this.wheelchairBoarding = wheelchairBoarding;
+            return this;
+        }
+
+        public StopOrPlatformBuilder platformCode(@Nullable String platformCode) {
+            this.platformCode = platformCode;
             return this;
         }
 

@@ -93,10 +93,6 @@ public abstract class LocationBase {
         return levelId;
     }
 
-    public String getPlatformCode() {
-        return platformCode;
-    }
-
     private @NotNull
     final String stopId;
     private final String stopCode;
@@ -109,8 +105,6 @@ public abstract class LocationBase {
     private final String parentStation;
     private final String stopTimezone;
     private final String levelId;
-    private final String platformCode;
-
 
     protected LocationBase(@NotNull String stopId,
                            String stopCode,
@@ -122,8 +116,7 @@ public abstract class LocationBase {
                            String stopUrl,
                            String parentStation,
                            String stopTimezone,
-                           String levelId,
-                           String platformCode) {
+                           String levelId) {
         this.stopId = stopId;
         this.stopCode = stopCode;
         this.stopName = stopName;
@@ -135,7 +128,6 @@ public abstract class LocationBase {
         this.parentStation = parentStation;
         this.stopTimezone = stopTimezone;
         this.levelId = levelId;
-        this.platformCode = platformCode;
     }
 
     public static abstract class LocationBaseBuilder {
@@ -150,7 +142,6 @@ public abstract class LocationBase {
         protected String parentStation;
         protected String stopTimezone;
         protected String levelId;
-        protected String platformCode;
 
         public LocationBaseBuilder stopCode(@Nullable String code) {
             this.stopCode = code;
@@ -184,11 +175,6 @@ public abstract class LocationBase {
 
         public LocationBaseBuilder levelId(@Nullable String levelId) {
             this.levelId = levelId;
-            return this;
-        }
-
-        public LocationBaseBuilder platformCode(@Nullable String platformCode) {
-            this.platformCode = platformCode;
             return this;
         }
     }

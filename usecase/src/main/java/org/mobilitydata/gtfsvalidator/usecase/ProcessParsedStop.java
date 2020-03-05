@@ -65,14 +65,14 @@ public class ProcessParsedStop {
                         stopId, stopName, stopLat, stopLon);
 
                 builder.wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
+                        .platformCode(platformCode)
                         .stopCode(stopCode)
                         .stopDesc(stopDesc)
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
                         .parentStation(parentStation)
                         .stopTimezone(stopTimezone)
-                        .levelId(levelId)
-                        .platformCode(platformCode);
+                        .levelId(levelId);
 
                 //TODO: ready to be built and added to gtfsDataRepo
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
@@ -89,8 +89,7 @@ public class ProcessParsedStop {
                         .stopUrl(stopUrl)
                         .parentStation(parentStation)
                         .stopTimezone(stopTimezone)
-                        .levelId(levelId)
-                        .platformCode(platformCode);
+                        .levelId(levelId);
                 //TODO: ready to be built and added to gtfsDataRepo
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
@@ -106,8 +105,7 @@ public class ProcessParsedStop {
                         .stopUrl(stopUrl)
                         .parentStation(parentStation)
                         .stopTimezone(stopTimezone)
-                        .levelId(levelId)
-                        .platformCode(platformCode);
+                        .levelId(levelId);
                 //TODO: ready to be built and added to gtfsDataRepo
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
@@ -124,8 +122,7 @@ public class ProcessParsedStop {
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
                         .stopTimezone(stopTimezone)
-                        .levelId(levelId)
-                        .platformCode(platformCode);
+                        .levelId(levelId);
                 //TODO: ready to be built and added to gtfsDataRepo
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
@@ -142,8 +139,7 @@ public class ProcessParsedStop {
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
                         .stopTimezone(stopTimezone)
-                        .levelId(levelId)
-                        .platformCode(platformCode);
+                        .levelId(levelId);
                 //TODO: ready to be built and added to gtfsDataRepo
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
