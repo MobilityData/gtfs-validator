@@ -53,9 +53,8 @@ public class StopOrPlatform extends LocationBase {
                            @Nullable String parentStation,
                            @Nullable String stopTimezone,
                            @Nullable WheelchairBoarding wheelchairBoarding,
-                           @Nullable String levelId,
                            @Nullable String platformCode) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, levelId);
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone);
         this.parentStation = parentStation;
         this.wheelchairBoarding = wheelchairBoarding;
         this.platformCode = platformCode;
@@ -93,8 +92,8 @@ public class StopOrPlatform extends LocationBase {
         }
 
         public StopOrPlatform build() {
-            return new StopOrPlatform(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation,
-                    stopTimezone, wheelchairBoarding, levelId, platformCode);
+            return new StopOrPlatform(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl,
+                    parentStation, stopTimezone, wheelchairBoarding, platformCode);
         }
     }
 }

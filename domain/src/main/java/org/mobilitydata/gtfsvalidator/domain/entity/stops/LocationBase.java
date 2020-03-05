@@ -85,9 +85,6 @@ public abstract class LocationBase {
         return stopTimezone;
     }
 
-    public String getLevelId() {
-        return levelId;
-    }
 
     private @NotNull
     final String stopId;
@@ -99,7 +96,6 @@ public abstract class LocationBase {
     private final String zoneId;
     private final String stopUrl;
     private final String stopTimezone;
-    private final String levelId;
 
     protected LocationBase(@NotNull String stopId,
                            String stopCode,
@@ -109,8 +105,7 @@ public abstract class LocationBase {
                            Float stopLon,
                            String zoneId,
                            String stopUrl,
-                           String stopTimezone,
-                           String levelId) {
+                           String stopTimezone) {
         this.stopId = stopId;
         this.stopCode = stopCode;
         this.stopName = stopName;
@@ -120,7 +115,6 @@ public abstract class LocationBase {
         this.zoneId = zoneId;
         this.stopUrl = stopUrl;
         this.stopTimezone = stopTimezone;
-        this.levelId = levelId;
     }
 
     public static abstract class LocationBaseBuilder {
@@ -133,7 +127,6 @@ public abstract class LocationBase {
         protected String zoneId;
         protected String stopUrl;
         protected String stopTimezone;
-        protected String levelId;
 
         public LocationBaseBuilder stopCode(@Nullable String code) {
             this.stopCode = code;
@@ -157,11 +150,6 @@ public abstract class LocationBase {
 
         public LocationBaseBuilder stopTimezone(@Nullable String timezone) {
             this.stopTimezone = timezone;
-            return this;
-        }
-
-        public LocationBaseBuilder levelId(@Nullable String levelId) {
-            this.levelId = levelId;
             return this;
         }
     }

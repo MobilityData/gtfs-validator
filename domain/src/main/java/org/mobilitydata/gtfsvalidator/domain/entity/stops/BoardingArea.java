@@ -37,9 +37,8 @@ public class BoardingArea extends LocationBase {
                          @Nullable String zoneId,
                          @Nullable String stopUrl,
                          @NotNull String parentStation,
-                         @Nullable String stopTimezone,
-                         @Nullable String levelId) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, levelId);
+                         @Nullable String stopTimezone) {
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone);
         this.parentStation = parentStation;
     }
 
@@ -68,8 +67,8 @@ public class BoardingArea extends LocationBase {
         }
 
         public BoardingArea build() {
-            return new BoardingArea(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation,
-                    stopTimezone, levelId);
+            return new BoardingArea(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl,
+                    parentStation, stopTimezone);
         }
     }
 }

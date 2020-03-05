@@ -30,7 +30,12 @@ public class Station extends LocationBase {
         this.wheelchairBoarding = toSet;
     }
 
+    public String getLevelId() {
+        return levelId;
+    }
+
     private WheelchairBoarding wheelchairBoarding;
+    private final String levelId;
 
     private Station(@NotNull String stopId,
                     @Nullable String stopCode,
@@ -43,13 +48,15 @@ public class Station extends LocationBase {
                     @Nullable String stopTimezone,
                     @Nullable WheelchairBoarding wheelchairBoarding,
                     @Nullable String levelId) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, null, stopTimezone, levelId);
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone);
         this.wheelchairBoarding = wheelchairBoarding;
+        this.levelId = levelId;
     }
 
     public static class StationBuilder extends LocationBaseBuilder {
 
         private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
+        private String levelId;
 
         public StationBuilder(@NotNull String stopId,
                               @NotNull String stopName,
@@ -63,6 +70,11 @@ public class Station extends LocationBase {
 
         public StationBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
             this.wheelchairBoarding = wheelchairBoarding;
+            return this;
+        }
+
+        public StationBuilder levelId(@Nullable String levelId) {
+            this.levelId = levelId;
             return this;
         }
 

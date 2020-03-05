@@ -47,9 +47,8 @@ public class EntranceOrExit extends LocationBase {
                            @Nullable String stopUrl,
                            @NotNull String parentStation,
                            @Nullable String stopTimezone,
-                           @Nullable WheelchairBoarding wheelchairBoarding,
-                           @Nullable String levelId) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, levelId);
+                           @Nullable WheelchairBoarding wheelchairBoarding) {
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone);
         this.wheelchairBoarding = wheelchairBoarding;
         this.parentStation = parentStation;
     }
@@ -78,8 +77,8 @@ public class EntranceOrExit extends LocationBase {
         }
 
         public EntranceOrExit build() {
-            return new EntranceOrExit(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation,
-                    stopTimezone, wheelchairBoarding, levelId);
+            return new EntranceOrExit(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl,
+                    parentStation, stopTimezone, wheelchairBoarding);
         }
     }
 }
