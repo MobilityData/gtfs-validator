@@ -64,13 +64,13 @@ public class ProcessParsedStop {
                 StopOrPlatform.StopOrPlatformBuilder builder = new StopOrPlatform.StopOrPlatformBuilder(
                         stopId, stopName, stopLat, stopLon);
 
-                builder.wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
+                builder.parentStation(parentStation)
+                        .wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
                         .platformCode(platformCode)
                         .stopCode(stopCode)
                         .stopDesc(stopDesc)
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
-                        .parentStation(parentStation)
                         .stopTimezone(stopTimezone)
                         .levelId(levelId);
 
@@ -87,7 +87,6 @@ public class ProcessParsedStop {
                         .stopDesc(stopDesc)
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
-                        .parentStation(parentStation)
                         .stopTimezone(stopTimezone)
                         .levelId(levelId);
                 //TODO: ready to be built and added to gtfsDataRepo
@@ -96,14 +95,13 @@ public class ProcessParsedStop {
             }
             case ENTRANCE_OR_EXIT: {
                 EntranceOrExit.EntranceOrExitBuilder builder = new EntranceOrExit.EntranceOrExitBuilder(
-                        stopId, stopName, stopLat, stopLon);
+                        stopId, stopName, stopLat, stopLon, parentStation);
 
                 builder.wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
                         .stopCode(stopCode)
                         .stopDesc(stopDesc)
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
-                        .parentStation(parentStation)
                         .stopTimezone(stopTimezone)
                         .levelId(levelId);
                 //TODO: ready to be built and added to gtfsDataRepo

@@ -22,6 +22,12 @@ import org.jetbrains.annotations.Nullable;
 //TODO: use Kotlin data class - approval required
 public class GenericNode extends LocationBase {
 
+    public String getParentStation() {
+        return parentStation;
+    }
+
+    private final String parentStation;
+
     private GenericNode(@NotNull String stopId,
                         @Nullable String stopCode,
                         @Nullable String stopName,
@@ -33,10 +39,13 @@ public class GenericNode extends LocationBase {
                         @NotNull String parentStation,
                         @Nullable String stopTimezone,
                         @Nullable String levelId) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, levelId);
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, levelId);
+        this.parentStation = parentStation;
     }
 
     public static class GenericNodeBuilder extends LocationBaseBuilder {
+
+        private String parentStation;
 
         public GenericNodeBuilder(@NotNull String stopId, @NotNull String parentStation) {
             this.stopId = stopId;

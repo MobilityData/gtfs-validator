@@ -30,6 +30,11 @@ public class EntranceOrExit extends LocationBase {
         this.wheelchairBoarding = toSet;
     }
 
+    public String getParentStation() {
+        return parentStation;
+    }
+
+    private final String parentStation;
     private WheelchairBoarding wheelchairBoarding;
 
     private EntranceOrExit(@NotNull String stopId,
@@ -44,22 +49,27 @@ public class EntranceOrExit extends LocationBase {
                            @Nullable String stopTimezone,
                            @Nullable WheelchairBoarding wheelchairBoarding,
                            @Nullable String levelId) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, levelId);
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, levelId);
         this.wheelchairBoarding = wheelchairBoarding;
+        this.parentStation = parentStation;
     }
 
     public static class EntranceOrExitBuilder extends LocationBaseBuilder {
+
+        private String parentStation;
 
         private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
 
         public EntranceOrExitBuilder(@NotNull String stopId,
                                      @NotNull String stopName,
                                      @NotNull Float stopLat,
-                                     @NotNull Float stopLon) {
+                                     @NotNull Float stopLon,
+                                     @NotNull String parentStation) {
             this.stopId = stopId;
             this.stopName = stopName;
             this.stopLat = stopLat;
             this.stopLon = stopLon;
+            this.parentStation = parentStation;
         }
 
         public EntranceOrExitBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {

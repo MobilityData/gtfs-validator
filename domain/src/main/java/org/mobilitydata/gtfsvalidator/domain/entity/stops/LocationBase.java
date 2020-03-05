@@ -81,10 +81,6 @@ public abstract class LocationBase {
         return stopUrl;
     }
 
-    public String getParentStation() {
-        return parentStation;
-    }
-
     public String getStopTimezone() {
         return stopTimezone;
     }
@@ -102,7 +98,6 @@ public abstract class LocationBase {
     private final Float stopLon;
     private final String zoneId;
     private final String stopUrl;
-    private final String parentStation;
     private final String stopTimezone;
     private final String levelId;
 
@@ -114,7 +109,6 @@ public abstract class LocationBase {
                            Float stopLon,
                            String zoneId,
                            String stopUrl,
-                           String parentStation,
                            String stopTimezone,
                            String levelId) {
         this.stopId = stopId;
@@ -125,7 +119,6 @@ public abstract class LocationBase {
         this.stopLon = stopLon;
         this.zoneId = zoneId;
         this.stopUrl = stopUrl;
-        this.parentStation = parentStation;
         this.stopTimezone = stopTimezone;
         this.levelId = levelId;
     }
@@ -139,7 +132,6 @@ public abstract class LocationBase {
         protected Float stopLon;
         protected String zoneId;
         protected String stopUrl;
-        protected String parentStation;
         protected String stopTimezone;
         protected String levelId;
 
@@ -160,11 +152,6 @@ public abstract class LocationBase {
 
         public LocationBaseBuilder stopUrl(@Nullable String url) {
             this.stopUrl = url;
-            return this;
-        }
-
-        public LocationBaseBuilder parentStation(@Nullable String parentStation) {
-            this.parentStation = parentStation;
             return this;
         }
 

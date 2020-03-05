@@ -22,6 +22,10 @@ import org.jetbrains.annotations.Nullable;
 //TODO: use Kotlin data class - approval required
 public class StopOrPlatform extends LocationBase {
 
+    public String getParentStation() {
+        return parentStation;
+    }
+
     public WheelchairBoarding getWheelchairBoarding() {
         return wheelchairBoarding;
     }
@@ -34,6 +38,7 @@ public class StopOrPlatform extends LocationBase {
         return platformCode;
     }
 
+    private String parentStation;
     private WheelchairBoarding wheelchairBoarding;
     private final String platformCode;
 
@@ -50,13 +55,15 @@ public class StopOrPlatform extends LocationBase {
                            @Nullable WheelchairBoarding wheelchairBoarding,
                            @Nullable String levelId,
                            @Nullable String platformCode) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, levelId);
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, levelId);
+        this.parentStation = parentStation;
         this.wheelchairBoarding = wheelchairBoarding;
         this.platformCode = platformCode;
     }
 
     public static class StopOrPlatformBuilder extends LocationBaseBuilder {
 
+        private String parentStation;
         private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
         private String platformCode;
 
@@ -68,6 +75,11 @@ public class StopOrPlatform extends LocationBase {
             this.stopName = stopName;
             this.stopLat = stopLat;
             this.stopLon = stopLon;
+        }
+
+        public StopOrPlatformBuilder parentStation(@Nullable String parentStation) {
+            this.parentStation = parentStation;
+            return this;
         }
 
         public StopOrPlatformBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
