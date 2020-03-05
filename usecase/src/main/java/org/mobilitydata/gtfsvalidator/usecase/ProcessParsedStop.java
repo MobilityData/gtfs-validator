@@ -59,8 +59,8 @@ public class ProcessParsedStop {
         String levelId = (String) validatedStopEntity.get("level_id");
         String platformCode = (String) validatedStopEntity.get("platform_code");
 
-        switch (locationType) {
-            case LOCATION_TYPE_STOP_OR_PLATFORM: {
+        switch (LocationType.fromInt(locationType)) {
+            case STOP_OR_PLATFORM: {
                 StopOrPlatform.StopOrPlatformBuilder builder = new StopOrPlatform.StopOrPlatformBuilder(
                         stopId, stopName, stopLat, stopLon);
 
@@ -78,7 +78,7 @@ public class ProcessParsedStop {
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
             }
-            case LOCATION_TYPE_STATION: {
+            case STATION: {
                 Station.StationBuilder builder = new Station.StationBuilder(
                         stopId, stopName, stopLat, stopLon);
 
@@ -95,7 +95,7 @@ public class ProcessParsedStop {
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
             }
-            case LOCATION_TYPE_ENTRANCE_OR_EXIT: {
+            case ENTRANCE_OR_EXIT: {
                 EntranceOrExit.EntranceOrExitBuilder builder = new EntranceOrExit.EntranceOrExitBuilder(
                         stopId, stopName, stopLat, stopLon);
 
@@ -112,7 +112,7 @@ public class ProcessParsedStop {
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
             }
-            case LOCATION_TYPE_GENERIC_NODE: {
+            case GENERIC_NODE: {
                 GenericNode.GenericNodeBuilder builder = new GenericNode.GenericNodeBuilder(
                         stopId, parentStation);
 
@@ -130,7 +130,7 @@ public class ProcessParsedStop {
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
             }
-            case LOCATION_TYPE_BOARDING_AREA: {
+            case BOARDING_AREA: {
                 BoardingArea.BoardingAreaBuilder builder = new BoardingArea.BoardingAreaBuilder(
                         stopId, parentStation);
 

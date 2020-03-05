@@ -19,14 +19,34 @@ package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.stream.Stream;
+
 public abstract class LocationBase {
 
     // see https://gtfs.org/reference/static#stopstxt
-    public static final int LOCATION_TYPE_STOP_OR_PLATFORM = 0;
-    public static final int LOCATION_TYPE_STATION = 1;
-    public static final int LOCATION_TYPE_ENTRANCE_OR_EXIT = 2;
-    public static final int LOCATION_TYPE_GENERIC_NODE = 3;
-    public static final int LOCATION_TYPE_BOARDING_AREA = 4;
+    public enum LocationType {
+        STOP_OR_PLATFORM(0),
+        STATION(1),
+        ENTRANCE_OR_EXIT(2),
+        GENERIC_NODE(3),
+        BOARDING_AREA(4);
+
+        private int value;
+
+        LocationType(int value) {
+            this.value = value;
+        }
+
+        static public LocationType fromInt(Integer fromValue) {
+            if (fromValue == null) {
+                return STOP_OR_PLATFORM;
+            }
+            return Stream.of(LocationType.values())
+                    .filter(enumItem -> enumItem.value == fromValue)
+                    .findAny()
+                    .orElse(STOP_OR_PLATFORM);
+        }
+    }
 
     @NotNull
     public String getStopId() {
