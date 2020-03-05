@@ -63,12 +63,12 @@ public class ProcessParsedStop {
                 StopOrPlatform.StopOrPlatformBuilder builder = new StopOrPlatform.StopOrPlatformBuilder(
                         stopId, stopName, stopLat, stopLon);
 
-                builder.code(stopCode)
-                        .description(stopDesc)
+                builder.stopCode(stopCode)
+                        .stopDesc(stopDesc)
                         .zoneId(zoneId)
-                        .url(stopUrl)
+                        .stopUrl(stopUrl)
                         .parentStation(parentStation)
-                        .timezone(stopTimezone)
+                        .stopTimezone(stopTimezone)
                         .levelId(levelId)
                         .platformCode(platformCode);
 
@@ -80,12 +80,12 @@ public class ProcessParsedStop {
                 Station.StationBuilder builder = new Station.StationBuilder(
                         stopId, stopName, stopLat, stopLon);
 
-                builder.code(stopCode)
-                        .description(stopDesc)
+                builder.stopCode(stopCode)
+                        .stopDesc(stopDesc)
                         .zoneId(zoneId)
-                        .url(stopUrl)
+                        .stopUrl(stopUrl)
                         .parentStation(parentStation)
-                        .timezone(stopTimezone)
+                        .stopTimezone(stopTimezone)
                         .levelId(levelId)
                         .platformCode(platformCode);
                 //TODO: ready to be built and added to gtfsDataRepo
@@ -96,12 +96,12 @@ public class ProcessParsedStop {
                 EntranceOrExit.EntranceOrExitBuilder builder = new EntranceOrExit.EntranceOrExitBuilder(
                         stopId, stopName, stopLat, stopLon);
 
-                builder.code(stopCode)
-                        .description(stopDesc)
+                builder.stopCode(stopCode)
+                        .stopDesc(stopDesc)
                         .zoneId(zoneId)
-                        .url(stopUrl)
+                        .stopUrl(stopUrl)
                         .parentStation(parentStation)
-                        .timezone(stopTimezone)
+                        .stopTimezone(stopTimezone)
                         .levelId(levelId)
                         .platformCode(platformCode);
                 //TODO: ready to be built and added to gtfsDataRepo
@@ -112,14 +112,14 @@ public class ProcessParsedStop {
                 GenericNode.GenericNodeBuilder builder = new GenericNode.GenericNodeBuilder(
                         stopId, parentStation);
 
-                builder.name(stopName)
-                        .latitude(stopLat)
-                        .longitude(stopLon)
-                        .code(stopCode)
-                        .description(stopDesc)
+                builder.stopName(stopName)
+                        .stopLat(stopLat)
+                        .stopLon(stopLon)
+                        .stopCode(stopCode)
+                        .stopDesc(stopDesc)
                         .zoneId(zoneId)
-                        .url(stopUrl)
-                        .timezone(stopTimezone)
+                        .stopUrl(stopUrl)
+                        .stopTimezone(stopTimezone)
                         .levelId(levelId)
                         .platformCode(platformCode);
                 //TODO: ready to be built and added to gtfsDataRepo
@@ -130,14 +130,14 @@ public class ProcessParsedStop {
                 BoardingArea.BoardingAreaBuilder builder = new BoardingArea.BoardingAreaBuilder(
                         stopId, parentStation);
 
-                builder.name(stopName)
-                        .latitude(stopLat)
-                        .longitude(stopLon)
-                        .code(stopCode)
-                        .description(stopDesc)
+                builder.stopName(stopName)
+                        .stopLat(stopLat)
+                        .stopLon(stopLon)
+                        .stopCode(stopCode)
+                        .stopDesc(stopDesc)
                         .zoneId(zoneId)
-                        .url(stopUrl)
-                        .timezone(stopTimezone)
+                        .stopUrl(stopUrl)
+                        .stopTimezone(stopTimezone)
                         .levelId(levelId)
                         .platformCode(platformCode);
                 //TODO: ready to be built and added to gtfsDataRepo

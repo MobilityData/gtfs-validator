@@ -108,56 +108,56 @@ public abstract class LocationBase {
     private final String platformCode;
 
 
-    protected LocationBase(@NotNull String id,
+    protected LocationBase(@NotNull String stopId,
                            String stopCode,
-                           String name,
-                           String desc,
-                           Float latitude,
-                           Float longitude,
+                           String stopName,
+                           String stopDesc,
+                           Float stopLat,
+                           Float stopLon,
                            String zoneId,
-                           String url,
+                           String stopUrl,
                            String parentStation,
-                           String timezone,
+                           String stopTimezone,
                            WheelchairBoarding wheelchairBoarding,
                            String levelId,
                            String platformCode) {
-        this.stopId = id;
+        this.stopId = stopId;
         this.stopCode = stopCode;
-        this.stopName = name;
-        this.stopDesc = desc;
-        this.stopLat = latitude;
-        this.stopLon = longitude;
+        this.stopName = stopName;
+        this.stopDesc = stopDesc;
+        this.stopLat = stopLat;
+        this.stopLon = stopLon;
         this.zoneId = zoneId;
-        this.stopUrl = url;
+        this.stopUrl = stopUrl;
         this.parentStation = parentStation;
-        this.stopTimezone = timezone;
+        this.stopTimezone = stopTimezone;
         this.wheelchairBoarding = wheelchairBoarding;
         this.levelId = levelId;
         this.platformCode = platformCode;
     }
 
     public static abstract class LocationBaseBuilder {
-        protected String id;
-        protected String code;
-        protected String name;
-        protected String description;
-        protected Float latitude;
-        protected Float longitude;
+        protected String stopId;
+        protected String stopCode;
+        protected String stopName;
+        protected String stopDesc;
+        protected Float stopLat;
+        protected Float stopLon;
         protected String zoneId;
-        protected String url;
+        protected String stopUrl;
         protected String parentStation;
-        protected String timezone;
+        protected String stopTimezone;
         protected LocationBase.WheelchairBoarding wheelchairBoarding = LocationBase.WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
         protected String levelId;
         protected String platformCode;
 
-        public LocationBaseBuilder code(@Nullable String code) {
-            this.code = code;
+        public LocationBaseBuilder stopCode(@Nullable String code) {
+            this.stopCode = code;
             return this;
         }
 
-        public LocationBaseBuilder description(@Nullable String description) {
-            this.description = description;
+        public LocationBaseBuilder stopDesc(@Nullable String description) {
+            this.stopDesc = description;
             return this;
         }
 
@@ -166,8 +166,8 @@ public abstract class LocationBase {
             return this;
         }
 
-        public LocationBaseBuilder url(@Nullable String url) {
-            this.url = url;
+        public LocationBaseBuilder stopUrl(@Nullable String url) {
+            this.stopUrl = url;
             return this;
         }
 
@@ -176,8 +176,8 @@ public abstract class LocationBase {
             return this;
         }
 
-        public LocationBaseBuilder timezone(@Nullable String timezone) {
-            this.timezone = timezone;
+        public LocationBaseBuilder stopTimezone(@Nullable String timezone) {
+            this.stopTimezone = timezone;
             return this;
         }
 

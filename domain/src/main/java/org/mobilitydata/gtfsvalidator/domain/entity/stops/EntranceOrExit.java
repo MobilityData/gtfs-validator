@@ -22,38 +22,38 @@ import org.jetbrains.annotations.Nullable;
 //TODO: use Kotlin data class - approval required
 public class EntranceOrExit extends LocationBase {
 
-    private EntranceOrExit(@NotNull String id,
-                           @Nullable String code,
-                           @NotNull String name,
-                           @Nullable String description,
-                           @NotNull Float latitude,
-                           @NotNull Float longitude,
+    private EntranceOrExit(@NotNull String stopId,
+                           @Nullable String stopCode,
+                           @NotNull String stopName,
+                           @Nullable String stopDesc,
+                           @NotNull Float stopLat,
+                           @NotNull Float stopLon,
                            @Nullable String zoneId,
-                           @Nullable String url,
+                           @Nullable String stopUrl,
                            @NotNull String parentStation,
-                           @Nullable String timezone,
+                           @Nullable String stopTimezone,
                            @Nullable WheelchairBoarding wheelchairBoarding,
                            @Nullable String levelId,
                            @Nullable String platformCode) {
-        super(id, code, name, description, latitude, longitude, zoneId, url, parentStation, timezone, wheelchairBoarding,
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, wheelchairBoarding,
                 levelId, platformCode);
     }
 
     public static class EntranceOrExitBuilder extends LocationBaseBuilder {
 
-        public EntranceOrExitBuilder(@NotNull String id,
-                                     @NotNull String name,
-                                     @NotNull Float latitude,
-                                     @NotNull Float longitude) {
-            this.id = id;
-            this.name = name;
-            this.latitude = latitude;
-            this.longitude = longitude;
+        public EntranceOrExitBuilder(@NotNull String stopId,
+                                     @NotNull String stopName,
+                                     @NotNull Float stopLat,
+                                     @NotNull Float stopLon) {
+            this.stopId = stopId;
+            this.stopName = stopName;
+            this.stopLat = stopLat;
+            this.stopLon = stopLon;
         }
 
         public EntranceOrExit build() {
-            return new EntranceOrExit(id, code, name, description, latitude, longitude, zoneId, url, parentStation,
-                    timezone, wheelchairBoarding, levelId, platformCode);
+            return new EntranceOrExit(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation,
+                    stopTimezone, wheelchairBoarding, levelId, platformCode);
         }
     }
 }

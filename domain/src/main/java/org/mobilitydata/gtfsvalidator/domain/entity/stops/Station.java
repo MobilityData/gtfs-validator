@@ -22,36 +22,36 @@ import org.jetbrains.annotations.Nullable;
 //TODO: use Kotlin data class - approval required
 public class Station extends LocationBase {
 
-    private Station(@NotNull String id,
-                    @Nullable String code,
-                    @NotNull String name,
-                    @Nullable String description,
-                    @NotNull Float latitude,
-                    @NotNull Float longitude,
+    private Station(@NotNull String stopId,
+                    @Nullable String stopCode,
+                    @NotNull String stopName,
+                    @Nullable String stopDesc,
+                    @NotNull Float stopLat,
+                    @NotNull Float stopLon,
                     @Nullable String zoneId,
-                    @Nullable String url,
-                    @Nullable String timezone,
+                    @Nullable String stopUrl,
+                    @Nullable String stopTimezone,
                     @Nullable WheelchairBoarding wheelchairBoarding,
                     @Nullable String levelId,
                     @Nullable String platformCode) {
-        super(id, code, name, description, latitude, longitude, zoneId, url, null, timezone, wheelchairBoarding,
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, null, stopTimezone, wheelchairBoarding,
                 levelId, platformCode);
     }
 
     public static class StationBuilder extends LocationBaseBuilder {
 
-        public StationBuilder(@NotNull String id,
-                              @NotNull String name,
-                              @NotNull Float latitude,
-                              @NotNull Float longitude) {
-            this.id = id;
-            this.name = name;
-            this.latitude = latitude;
-            this.longitude = longitude;
+        public StationBuilder(@NotNull String stopId,
+                              @NotNull String stopName,
+                              @NotNull Float stopLat,
+                              @NotNull Float stopLon) {
+            this.stopId = stopId;
+            this.stopName = stopName;
+            this.stopLat = stopLat;
+            this.stopLon = stopLon;
         }
 
         public Station build() {
-            return new Station(id, code, name, description, latitude, longitude, zoneId, url, timezone,
+            return new Station(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone,
                     wheelchairBoarding, levelId, platformCode);
         }
     }

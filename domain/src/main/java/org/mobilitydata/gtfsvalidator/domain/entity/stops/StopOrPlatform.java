@@ -22,38 +22,38 @@ import org.jetbrains.annotations.Nullable;
 //TODO: use Kotlin data class - approval required
 public class StopOrPlatform extends LocationBase {
 
-    private StopOrPlatform(@NotNull String id,
-                           @Nullable String code,
-                           @NotNull String name,
-                           @Nullable String description,
-                           @NotNull Float latitude,
-                           @NotNull Float longitude,
+    private StopOrPlatform(@NotNull String stopId,
+                           @Nullable String stopCode,
+                           @NotNull String stopName,
+                           @Nullable String stopDesc,
+                           @NotNull Float stopLat,
+                           @NotNull Float stopLon,
                            @Nullable String zoneId,
-                           @Nullable String url,
+                           @Nullable String stopUrl,
                            @Nullable String parentStation,
-                           @Nullable String timezone,
+                           @Nullable String stopTimezone,
                            @Nullable LocationBase.WheelchairBoarding wheelchairBoarding,
                            @Nullable String levelId,
                            @Nullable String platformCode) {
-        super(id, code, name, description, latitude, longitude, zoneId, url, parentStation, timezone, wheelchairBoarding,
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, wheelchairBoarding,
                 levelId, platformCode);
     }
 
     public static class StopOrPlatformBuilder extends LocationBaseBuilder {
 
-        public StopOrPlatformBuilder(@NotNull String id,
-                                     @NotNull String name,
-                                     @NotNull Float latitude,
-                                     @NotNull Float longitude) {
-            this.id = id;
-            this.name = name;
-            this.latitude = latitude;
-            this.longitude = longitude;
+        public StopOrPlatformBuilder(@NotNull String stopId,
+                                     @NotNull String stopName,
+                                     @NotNull Float stopLat,
+                                     @NotNull Float stopLon) {
+            this.stopId = stopId;
+            this.stopName = stopName;
+            this.stopLat = stopLat;
+            this.stopLon = stopLon;
         }
 
         public StopOrPlatform build() {
-            return new StopOrPlatform(id, code, name, description, latitude, longitude, zoneId, url, parentStation,
-                    timezone, wheelchairBoarding, levelId, platformCode);
+            return new StopOrPlatform(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation,
+                    stopTimezone, wheelchairBoarding, levelId, platformCode);
         }
     }
 }

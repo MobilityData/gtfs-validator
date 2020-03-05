@@ -22,48 +22,48 @@ import org.jetbrains.annotations.Nullable;
 //TODO: use Kotlin data class - approval required
 public class BoardingArea extends LocationBase {
 
-    private BoardingArea(@NotNull String id,
-                         @Nullable String code,
-                         @Nullable String name,
-                         @Nullable String description,
-                         @Nullable Float latitude,
-                         @Nullable Float longitude,
+    private BoardingArea(@NotNull String stopId,
+                         @Nullable String stopCode,
+                         @Nullable String stopName,
+                         @Nullable String stopDesc,
+                         @Nullable Float stopLat,
+                         @Nullable Float stopLon,
                          @Nullable String zoneId,
-                         @Nullable String url,
+                         @Nullable String stopUrl,
                          @NotNull String parentStation,
-                         @Nullable String timezone,
+                         @Nullable String stopTimezone,
                          @Nullable WheelchairBoarding wheelchairBoarding,
                          @Nullable String levelId,
                          @Nullable String platformCode) {
-        super(id, code, name, description, latitude, longitude, zoneId, url, parentStation, timezone, wheelchairBoarding,
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, wheelchairBoarding,
                 levelId, platformCode);
     }
 
     public static class BoardingAreaBuilder extends LocationBaseBuilder {
 
         public BoardingAreaBuilder(@NotNull String id, @NotNull String parentStation) {
-            this.id = id;
+            this.stopId = id;
             this.parentStation = parentStation;
         }
 
-        public BoardingAreaBuilder name(@Nullable String name) {
-            this.name = name;
+        public BoardingAreaBuilder stopName(@Nullable String stopName) {
+            this.stopName = stopName;
             return this;
         }
 
-        public BoardingAreaBuilder latitude(@Nullable Float latitude) {
-            this.latitude = latitude;
+        public BoardingAreaBuilder stopLat(@Nullable Float stopLat) {
+            this.stopLat = stopLat;
             return this;
         }
 
-        public BoardingAreaBuilder longitude(@Nullable Float longitude) {
-            this.longitude = longitude;
+        public BoardingAreaBuilder stopLon(@Nullable Float stopLon) {
+            this.stopLon = stopLon;
             return this;
         }
 
         public BoardingArea build() {
-            return new BoardingArea(id, code, name, description, latitude, longitude, zoneId, url, parentStation,
-                    timezone, wheelchairBoarding, levelId, platformCode);
+            return new BoardingArea(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation,
+                    stopTimezone, wheelchairBoarding, levelId, platformCode);
         }
     }
 }

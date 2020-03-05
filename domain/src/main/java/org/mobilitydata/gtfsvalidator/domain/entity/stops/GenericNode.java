@@ -22,48 +22,48 @@ import org.jetbrains.annotations.Nullable;
 //TODO: use Kotlin data class - approval required
 public class GenericNode extends LocationBase {
 
-    private GenericNode(@NotNull String id,
-                        @Nullable String code,
-                        @Nullable String name,
-                        @Nullable String description,
-                        @Nullable Float latitude,
-                        @Nullable Float longitude,
+    private GenericNode(@NotNull String stopId,
+                        @Nullable String stopCode,
+                        @Nullable String stopName,
+                        @Nullable String stopDesc,
+                        @Nullable Float stopLat,
+                        @Nullable Float stopLon,
                         @Nullable String zoneId,
-                        @Nullable String url,
+                        @Nullable String stopUrl,
                         @NotNull String parentStation,
-                        @Nullable String timezone,
+                        @Nullable String stopTimezone,
                         @Nullable WheelchairBoarding wheelchairBoarding,
                         @Nullable String levelId,
                         @Nullable String platformCode) {
-        super(id, code, name, description, latitude, longitude, zoneId, url, parentStation, timezone, wheelchairBoarding,
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, wheelchairBoarding,
                 levelId, platformCode);
     }
 
     public static class GenericNodeBuilder extends LocationBaseBuilder {
 
-        public GenericNodeBuilder(@NotNull String id, @NotNull String parentStation) {
-            this.id = id;
+        public GenericNodeBuilder(@NotNull String stopId, @NotNull String parentStation) {
+            this.stopId = stopId;
             this.parentStation = parentStation;
         }
 
-        public GenericNodeBuilder name(@Nullable String name) {
-            this.name = name;
+        public GenericNodeBuilder stopName(@Nullable String stopName) {
+            this.stopName = stopName;
             return this;
         }
 
-        public GenericNodeBuilder latitude(@Nullable Float latitude) {
-            this.latitude = latitude;
+        public GenericNodeBuilder stopLat(@Nullable Float stopLat) {
+            this.stopLat = stopLat;
             return this;
         }
 
-        public GenericNodeBuilder longitude(@Nullable Float longitude) {
-            this.longitude = longitude;
+        public GenericNodeBuilder stopLon(@Nullable Float stopLon) {
+            this.stopLon = stopLon;
             return this;
         }
 
         public GenericNode build() {
-            return new GenericNode(id, code, name, description, latitude, longitude, zoneId, url, parentStation,
-                    timezone, wheelchairBoarding, levelId, platformCode);
+            return new GenericNode(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation,
+                    stopTimezone, wheelchairBoarding, levelId, platformCode);
         }
     }
 }
