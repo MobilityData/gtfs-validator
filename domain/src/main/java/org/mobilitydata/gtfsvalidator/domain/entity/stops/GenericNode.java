@@ -32,10 +32,9 @@ public class GenericNode extends LocationBase {
                         @Nullable String stopUrl,
                         @NotNull String parentStation,
                         @Nullable String stopTimezone,
-                        @Nullable WheelchairBoarding wheelchairBoarding,
                         @Nullable String levelId,
                         @Nullable String platformCode) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, wheelchairBoarding,
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone,
                 levelId, platformCode);
     }
 
@@ -63,7 +62,7 @@ public class GenericNode extends LocationBase {
 
         public GenericNode build() {
             return new GenericNode(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation,
-                    stopTimezone, wheelchairBoarding, levelId, platformCode);
+                    stopTimezone, levelId, platformCode);
         }
     }
 }

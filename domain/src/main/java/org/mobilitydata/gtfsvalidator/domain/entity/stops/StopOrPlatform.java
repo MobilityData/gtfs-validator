@@ -22,6 +22,16 @@ import org.jetbrains.annotations.Nullable;
 //TODO: use Kotlin data class - approval required
 public class StopOrPlatform extends LocationBase {
 
+    public WheelchairBoarding getWheelchairBoarding() {
+        return wheelchairBoarding;
+    }
+
+    public void setWheelchairBoarding(WheelchairBoarding toSet) {
+        this.wheelchairBoarding = toSet;
+    }
+
+    private WheelchairBoarding wheelchairBoarding;
+
     private StopOrPlatform(@NotNull String stopId,
                            @Nullable String stopCode,
                            @NotNull String stopName,
@@ -32,14 +42,17 @@ public class StopOrPlatform extends LocationBase {
                            @Nullable String stopUrl,
                            @Nullable String parentStation,
                            @Nullable String stopTimezone,
-                           @Nullable LocationBase.WheelchairBoarding wheelchairBoarding,
+                           @Nullable WheelchairBoarding wheelchairBoarding,
                            @Nullable String levelId,
                            @Nullable String platformCode) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, wheelchairBoarding,
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone,
                 levelId, platformCode);
+        this.wheelchairBoarding = wheelchairBoarding;
     }
 
     public static class StopOrPlatformBuilder extends LocationBaseBuilder {
+
+        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
 
         public StopOrPlatformBuilder(@NotNull String stopId,
                                      @NotNull String stopName,
@@ -49,6 +62,11 @@ public class StopOrPlatform extends LocationBase {
             this.stopName = stopName;
             this.stopLat = stopLat;
             this.stopLon = stopLon;
+        }
+
+        public StopOrPlatformBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
+            this.wheelchairBoarding = wheelchairBoarding;
+            return this;
         }
 
         public StopOrPlatform build() {

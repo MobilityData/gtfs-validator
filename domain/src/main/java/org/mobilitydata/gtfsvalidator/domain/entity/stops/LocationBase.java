@@ -28,13 +28,6 @@ public abstract class LocationBase {
     public static final int LOCATION_TYPE_GENERIC_NODE = 3;
     public static final int LOCATION_TYPE_BOARDING_AREA = 4;
 
-
-    public enum WheelchairBoarding {
-        UNKNOWN_WHEELCHAIR_BOARDING,
-        WHEELCHAIR_ACCESSIBLE,
-        NOT_WHEELCHAIR_ACCESSIBLE
-    }
-
     @NotNull
     public String getStopId() {
         return stopId;
@@ -76,14 +69,6 @@ public abstract class LocationBase {
         return stopTimezone;
     }
 
-    public WheelchairBoarding getWheelchairBoarding() {
-        return wheelchairBoarding;
-    }
-
-    public void setWheelchairBoarding(WheelchairBoarding toSet) {
-        this.wheelchairBoarding = toSet;
-    }
-
     public String getLevelId() {
         return levelId;
     }
@@ -103,7 +88,6 @@ public abstract class LocationBase {
     private final String stopUrl;
     private final String parentStation;
     private final String stopTimezone;
-    private WheelchairBoarding wheelchairBoarding;
     private final String levelId;
     private final String platformCode;
 
@@ -118,7 +102,6 @@ public abstract class LocationBase {
                            String stopUrl,
                            String parentStation,
                            String stopTimezone,
-                           WheelchairBoarding wheelchairBoarding,
                            String levelId,
                            String platformCode) {
         this.stopId = stopId;
@@ -131,7 +114,6 @@ public abstract class LocationBase {
         this.stopUrl = stopUrl;
         this.parentStation = parentStation;
         this.stopTimezone = stopTimezone;
-        this.wheelchairBoarding = wheelchairBoarding;
         this.levelId = levelId;
         this.platformCode = platformCode;
     }
@@ -147,7 +129,6 @@ public abstract class LocationBase {
         protected String stopUrl;
         protected String parentStation;
         protected String stopTimezone;
-        protected LocationBase.WheelchairBoarding wheelchairBoarding = LocationBase.WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
         protected String levelId;
         protected String platformCode;
 
@@ -178,11 +159,6 @@ public abstract class LocationBase {
 
         public LocationBaseBuilder stopTimezone(@Nullable String timezone) {
             this.stopTimezone = timezone;
-            return this;
-        }
-
-        public LocationBaseBuilder wheelchairBoarding(@Nullable LocationBase.WheelchairBoarding wheelchairBoarding) {
-            this.wheelchairBoarding = wheelchairBoarding;
             return this;
         }
 

@@ -22,6 +22,16 @@ import org.jetbrains.annotations.Nullable;
 //TODO: use Kotlin data class - approval required
 public class EntranceOrExit extends LocationBase {
 
+    public WheelchairBoarding getWheelchairBoarding() {
+        return wheelchairBoarding;
+    }
+
+    public void setWheelchairBoarding(WheelchairBoarding toSet) {
+        this.wheelchairBoarding = toSet;
+    }
+
+    private WheelchairBoarding wheelchairBoarding;
+
     private EntranceOrExit(@NotNull String stopId,
                            @Nullable String stopCode,
                            @NotNull String stopName,
@@ -35,11 +45,14 @@ public class EntranceOrExit extends LocationBase {
                            @Nullable WheelchairBoarding wheelchairBoarding,
                            @Nullable String levelId,
                            @Nullable String platformCode) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone, wheelchairBoarding,
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, parentStation, stopTimezone,
                 levelId, platformCode);
+        this.wheelchairBoarding = wheelchairBoarding;
     }
 
     public static class EntranceOrExitBuilder extends LocationBaseBuilder {
+
+        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
 
         public EntranceOrExitBuilder(@NotNull String stopId,
                                      @NotNull String stopName,
@@ -49,6 +62,11 @@ public class EntranceOrExit extends LocationBase {
             this.stopName = stopName;
             this.stopLat = stopLat;
             this.stopLon = stopLon;
+        }
+
+        public EntranceOrExitBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
+            this.wheelchairBoarding = wheelchairBoarding;
+            return this;
         }
 
         public EntranceOrExit build() {

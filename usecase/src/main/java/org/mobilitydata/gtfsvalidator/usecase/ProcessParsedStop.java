@@ -55,6 +55,7 @@ public class ProcessParsedStop {
         String stopUrl = (String) validatedStopEntity.get("stop_url");
         String parentStation = (String) validatedStopEntity.get("parent_station");
         String stopTimezone = (String) validatedStopEntity.get("stop_timezone");
+        Integer wheelchairBoarding = (Integer) validatedStopEntity.get("wheelchair_boarding");
         String levelId = (String) validatedStopEntity.get("level_id");
         String platformCode = (String) validatedStopEntity.get("platform_code");
 
@@ -63,7 +64,8 @@ public class ProcessParsedStop {
                 StopOrPlatform.StopOrPlatformBuilder builder = new StopOrPlatform.StopOrPlatformBuilder(
                         stopId, stopName, stopLat, stopLon);
 
-                builder.stopCode(stopCode)
+                builder.wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
+                        .stopCode(stopCode)
                         .stopDesc(stopDesc)
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
@@ -80,7 +82,8 @@ public class ProcessParsedStop {
                 Station.StationBuilder builder = new Station.StationBuilder(
                         stopId, stopName, stopLat, stopLon);
 
-                builder.stopCode(stopCode)
+                builder.wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
+                        .stopCode(stopCode)
                         .stopDesc(stopDesc)
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
@@ -96,7 +99,8 @@ public class ProcessParsedStop {
                 EntranceOrExit.EntranceOrExitBuilder builder = new EntranceOrExit.EntranceOrExitBuilder(
                         stopId, stopName, stopLat, stopLon);
 
-                builder.stopCode(stopCode)
+                builder.wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
+                        .stopCode(stopCode)
                         .stopDesc(stopDesc)
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
