@@ -38,7 +38,7 @@ public class ProcessParsedStop {
     private enum LocationType {
         STOP_OR_PLATFORM(0),
         STATION(1),
-        ENTRANCE_OR_EXIT(2),
+        ENTRANCE(2),
         GENERIC_NODE(3),
         BOARDING_AREA(4);
 
@@ -48,12 +48,12 @@ public class ProcessParsedStop {
             this.value = value;
         }
 
-        static public LocationType fromInt(Integer fromValue) {
-            if (fromValue == null) {
+        static public LocationType fromInt(Integer locationTypeAsInt) {
+            if (locationTypeAsInt == null) {
                 return STOP_OR_PLATFORM;
             }
             return Stream.of(LocationType.values())
-                    .filter(enumItem -> enumItem.value == fromValue)
+                    .filter(enumItem -> enumItem.value == locationTypeAsInt)
                     .findAny()
                     .orElse(STOP_OR_PLATFORM);
         }
@@ -121,8 +121,8 @@ public class ProcessParsedStop {
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
             }
-            case ENTRANCE_OR_EXIT: {
-                EntranceOrExit.EntranceOrExitBuilder builder = new EntranceOrExit.EntranceOrExitBuilder(
+            case ENTRANCE: {
+                Entrance.EntranceBuilder builder = new Entrance.EntranceBuilder(
                         stopId, stopName, stopLat, stopLon, parentStation);
 
                 builder.wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
