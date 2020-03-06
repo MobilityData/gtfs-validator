@@ -19,6 +19,8 @@ package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 //TODO: use Kotlin data class - approval required
 public class Station extends LocationBase {
 
@@ -27,7 +29,7 @@ public class Station extends LocationBase {
     }
 
     public void setWheelchairBoarding(WheelchairBoarding toSet) {
-        this.wheelchairBoarding = toSet;
+        this.wheelchairBoarding = Objects.requireNonNullElse(toSet, WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING);
     }
 
     public String getLevelId() {
@@ -69,7 +71,7 @@ public class Station extends LocationBase {
         }
 
         public StationBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
-            this.wheelchairBoarding = wheelchairBoarding;
+            this.wheelchairBoarding = Objects.requireNonNullElse(wheelchairBoarding, WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING);
             return this;
         }
 
