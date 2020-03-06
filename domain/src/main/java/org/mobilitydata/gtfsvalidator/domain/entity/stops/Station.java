@@ -21,7 +21,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-//TODO: use Kotlin data class - approval required
+/**
+ * Model class for an entity defined in stops.txt with location_type = 1
+ */
 public class Station extends LocationBase {
 
     public WheelchairBoarding getWheelchairBoarding() {

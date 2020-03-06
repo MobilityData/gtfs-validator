@@ -21,7 +21,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-//TODO: use Kotlin data class - approval required
+/**
+ * Model class for an entity defined in stops.txt with location_type = 0 (or blank)
+ */
 public class StopOrPlatform extends LocationBase {
 
     public String getParentStation() {

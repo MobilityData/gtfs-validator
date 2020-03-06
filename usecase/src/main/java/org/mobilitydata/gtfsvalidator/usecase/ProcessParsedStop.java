@@ -22,13 +22,42 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import static org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase.*;
+import java.util.stream.Stream;
 
 /*
  * This use case turns a parsed entity to a concrete class depending on the 'type' field
  * Further processing stop.txt related entities is required to validate parent stations <--> child stops relationships
  */
 public class ProcessParsedStop {
+
+    /**
+     * This enum matches types that can be found in the location_type field of stops.txt
+     * // see https://gtfs.org/reference/static#stopstxt
+     * It's used to decide which concrete type derived from {@link LocationBase} to instantiate
+     */
+    private enum LocationType {
+        STOP_OR_PLATFORM(0),
+        STATION(1),
+        ENTRANCE_OR_EXIT(2),
+        GENERIC_NODE(3),
+        BOARDING_AREA(4);
+
+        private int value;
+
+        LocationType(int value) {
+            this.value = value;
+        }
+
+        static public LocationType fromInt(Integer fromValue) {
+            if (fromValue == null) {
+                return STOP_OR_PLATFORM;
+            }
+            return Stream.of(LocationType.values())
+                    .filter(enumItem -> enumItem.value == fromValue)
+                    .findAny()
+                    .orElse(STOP_OR_PLATFORM);
+        }
+    }
 
     private final GtfsSpecRepository specRepo;
     private final ValidationResultRepository resultRepo;

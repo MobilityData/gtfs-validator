@@ -19,7 +19,9 @@ package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//TODO: use Kotlin data class - approval required
+/**
+ * Model class for an entity defined in stops.txt with location_type = 3
+ */
 public class GenericNode extends LocationBase {
 
     public String getParentStation() {
