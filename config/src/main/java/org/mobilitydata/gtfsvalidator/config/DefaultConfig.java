@@ -20,8 +20,8 @@ import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.*;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -92,5 +92,9 @@ public class DefaultConfig {
 
     public Collection<Notice> getValidationResult() {
         return resultRepo.getAll();
+    }
+
+    public ExportResult exportResult(String outputPath) {
+        return new ExportResult(resultRepo, outputPath);
     }
 }
