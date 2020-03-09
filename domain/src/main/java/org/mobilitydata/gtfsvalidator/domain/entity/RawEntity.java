@@ -23,13 +23,16 @@ import java.util.Map;
  */
 public class RawEntity {
 
+    /**
+     * Key: header string from original CSV file
+     * Value: a String, the raw value read from the CSV file
+     */
     private final Map<String, String> contentByHeaderMap;
     private final int entityIndex;
 
     /**
-     * Constructor
-     * contentByHeaderMap is an object that maps rows of a GTFS .txt file on header name.
-     * entityIndex is an integer representing the 1 based index of the row
+     * @param contentByHeaderMap is an object that maps rows of a GTFS .txt file on header name.
+     * @param entityIndex        is an integer representing the 1 based index of the row
      */
     public RawEntity(Map<String, String> contentByHeaderMap, int entityIndex) {
         this.contentByHeaderMap = contentByHeaderMap;
@@ -37,21 +40,21 @@ public class RawEntity {
     }
 
     /**
-     * Return a string object representing the value contained in a row for a given header (column).
+     * @return a string object representing the value contained in a row for a given header (column).
      */
     public String get(final String header) {
         return contentByHeaderMap.get(header);
     }
 
     /**
-     * Return the number of headers (columns).
+     * @return the number of headers (columns).
      */
     public int size() {
         return contentByHeaderMap.size();
     }
 
     /**
-     * Return the 1 based index of the row
+     * @return the 1 based index of the row
      */
     public int getIndex() {
         return entityIndex;

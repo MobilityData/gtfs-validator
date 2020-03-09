@@ -26,13 +26,16 @@ public class ParsedEntity {
 
     private final RawFileInfo rawFileInfo;
     private final String entityId;
+    /**
+     * Key: header string from original CSV file
+     * Value: a String, Integer or Float, depending on the declared type of the column
+     */
     private final Map<String, Object> contentByHeaderMap;
 
     /**
-     * Constructor
-     * rawFileInfo is a @code{RawFileInfo} instance
-     * contentByHeaderMap is an object that maps rows of a GTFS .txt file on header name.
-     * entityId is the id extracted from the original row.
+     * @param rawFileInfo        is a @code{RawFileInfo} instance
+     * @param contentByHeaderMap is an object that maps rows of a GTFS .txt file on header name.
+     * @param id                 is the id extracted from the original row.
      */
     public ParsedEntity(String id, Map<String, Object> contentByHeaderMap, RawFileInfo rawFileInfo) {
         this.contentByHeaderMap = contentByHeaderMap;
@@ -41,21 +44,21 @@ public class ParsedEntity {
     }
 
     /**
-     * Return the id extracted from the original row.
+     * @return the id extracted from the original row.
      */
     public String getEntityId() {
         return entityId;
     }
 
     /**
-     * Return a string object that represents the value contained in a parsed row for a given header (column).
+     * @return a string object that represents the value contained in a parsed row for a given header (column).
      */
     public Object get(final String header) {
         return contentByHeaderMap.get(header);
     }
 
     /**
-     * Return an instance of @code{RawFileInfo} class that contains the information related to the raw file from which
+     * @return an instance of @code{RawFileInfo} class that contains the information related to the raw file from which
      * this entity's data was parsed.
      */
     public RawFileInfo getRawFileInfo() {

@@ -25,9 +25,8 @@ public class RawFileInfo {
     private final String path;
 
     /**
-     * Constructor
-     * filename is a string object that represents the name of the file
-     * path is a string object that represents the relative path to access the file
+     * @param filename is a string object that represents the name of the file
+     * @param path     is a string object that represents the relative path to access the file
      */
     private RawFileInfo(final String filename, final String path) {
         this.filename = filename;
@@ -35,7 +34,7 @@ public class RawFileInfo {
     }
 
     /**
-     * Return a builder
+     * @return a builder
      * RawFileInfo can be built either from the filename or from the path.
      */
     public static RawFileInfoBuilder builder() {
