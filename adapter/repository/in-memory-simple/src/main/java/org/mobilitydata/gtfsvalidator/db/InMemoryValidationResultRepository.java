@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import org.mobilitydata.gtfsvalidator.exporter.ProtobufNoticeExporter;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
@@ -32,7 +33,6 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     private final List<InfoNotice> infoNoticeList = new ArrayList<>();
     private final List<WarningNotice> warningNoticeList = new ArrayList<>();
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
-
 
     @Override
     public InfoNotice addNotice(InfoNotice newInfo) {
@@ -53,6 +53,11 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     @Override
+    public Notice addNotice(Notice newNotice) {
+        return newNotice.visit(this);
+    }
+
+    @Override
     public Collection<Notice> getAll() {
         return Stream.concat(
                 Stream.concat(
@@ -63,7 +68,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     @Override
-    public Notice addNotice(Notice newNotice) {
-        return newNotice.visit(this);
+    public NoticeExporter getExporter(String outputPath) {
+        return new ProtobufNoticeExporter(outputPath);
     }
 }

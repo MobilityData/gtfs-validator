@@ -17,8 +17,8 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotUnzipInputArchiveNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotUnzipInputArchiveNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 

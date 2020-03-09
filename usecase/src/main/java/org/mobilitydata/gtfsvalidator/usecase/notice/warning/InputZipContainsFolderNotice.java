@@ -14,26 +14,30 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.base;
+package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
 
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+public class InputZipContainsFolderNotice extends WarningNotice {
 
-public abstract class WarningNotice extends Notice {
+    private String folderName;
 
-    protected static final String W_001 = "W001";
-    protected static final String W_002 = "W002";
-    protected static final String W_003 = "W003";
+    public InputZipContainsFolderNotice(final String filename, final String folderName) {
+        super(filename,
+                W_001,
+                "Non empty folder",
+                "File: " + filename + "contains folder named: " + folderName);
 
-    public WarningNotice(final String filename,
-                         final String noticeId,
-                         final String title,
-                         final String description) {
-        super(filename, noticeId, title, description);
+        this.folderName = folderName;
+    }
+
+    public String getFolderName() {
+        return folderName;
     }
 
     @Override
-    public Notice visit(ValidationResultRepository resultRepo) {
-        return resultRepo.addNotice(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
     }
 }

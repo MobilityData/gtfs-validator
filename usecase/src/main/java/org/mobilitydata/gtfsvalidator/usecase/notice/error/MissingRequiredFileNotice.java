@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class MissingRequiredFileNotice extends ErrorNotice {
-
     public MissingRequiredFileNotice(String filename) {
         super(filename, E_003,
                 "Missing required file",
                 "File " + filename + " is required.");
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
     }
 }

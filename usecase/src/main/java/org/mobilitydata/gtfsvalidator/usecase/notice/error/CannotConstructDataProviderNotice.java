@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-public class InvalidColorNotice extends ErrorNotice {
+public class CannotConstructDataProviderNotice extends ErrorNotice {
 
-    public InvalidColorNotice(String filename, String fieldName, String entityId, String colorValue) {
-        super(filename, E_014,
-                "Invalid color",
-                "Invalid color:" + colorValue + " in field:" + fieldName + " for entity with id:" + entityId);
+    public CannotConstructDataProviderNotice(String filename) {
+        super(filename, E_002,
+                "Data provider error",
+                "An error occurred while trying to access raw data for file: " + filename);
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
     }
 }

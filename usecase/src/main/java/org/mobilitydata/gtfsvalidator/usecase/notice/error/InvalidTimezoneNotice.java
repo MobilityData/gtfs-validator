@@ -14,15 +14,39 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class InvalidTimezoneNotice extends ErrorNotice {
+    private String entityId;
+    private String fieldName;
+    private String timezoneValue;
 
     public InvalidTimezoneNotice(String filename, String fieldName, String entityId, String timezoneValue) {
         super(filename, E_013,
                 "Invalid timezone",
                 "Invalid timezone:" + timezoneValue + " in field:" + fieldName + " for entity with id:" + entityId);
+        this.entityId = entityId;
+        this.fieldName = fieldName;
+        this.timezoneValue = timezoneValue;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
+    }
+
+    public String getEntityId() {
+        return entityId;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getTimezoneValue() {
+        return timezoneValue;
     }
 }

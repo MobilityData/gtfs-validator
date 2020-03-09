@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
+    private String fieldName;
+    private String entityId;
+    private int rangeMin;
+    private int rangeMax;
+    private int actualValue;
 
     public IntegerFieldValueOutOfRangeNotice(
             String filename,
@@ -31,5 +37,35 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
                 "Out of range integer value",
                 "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
                         " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue);
+        this.fieldName = fieldName;
+        this.entityId = entityId;
+        this.rangeMax = rangeMax;
+        this.rangeMin = rangeMin;
+        this.actualValue = actualValue;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getEntityId() {
+        return entityId;
+    }
+
+    public int getRangeMin() {
+        return rangeMin;
+    }
+
+    public int getRangeMax() {
+        return rangeMax;
+    }
+
+    public int getActualValue() {
+        return actualValue;
     }
 }

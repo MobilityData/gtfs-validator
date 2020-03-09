@@ -14,15 +14,28 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class MissingHeaderNotice extends ErrorNotice {
+    private String missingHeaderName;
 
     public MissingHeaderNotice(final String filename, final String missingHeaderName) {
         super(filename, E_001,
                 "Missing required header",
                 "File " + filename + " is missing required header: " + missingHeaderName);
+        this.missingHeaderName = missingHeaderName;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
+
+    }
+
+    public String getMissingHeaderName() {
+        return missingHeaderName;
     }
 }

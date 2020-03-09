@@ -14,15 +14,33 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class MissingRequiredValueNotice extends ErrorNotice {
+    private String fieldName;
+    private String entityId;
 
     public MissingRequiredValueNotice(String filename, String fieldName, String entityId) {
         super(filename, E_015,
                 "Missing required value",
                 "Missing value for field:" + fieldName + " marked as required in entity with id:" + entityId);
+        this.entityId = entityId;
+        this.fieldName = fieldName;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getEntityId() {
+        return entityId;
     }
 }

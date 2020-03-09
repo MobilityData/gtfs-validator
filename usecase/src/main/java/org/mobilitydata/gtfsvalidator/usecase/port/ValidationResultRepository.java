@@ -20,6 +20,11 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
+import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 
 import java.util.Collection;
 
@@ -31,7 +36,51 @@ public interface ValidationResultRepository {
 
     ErrorNotice addNotice(ErrorNotice newError);
 
+    Notice addNotice(Notice newNotice);
+
     Collection<Notice> getAll();
 
-    Notice addNotice(Notice newNotice);
+    NoticeExporter getExporter(String outputPath);
+
+    // an interface that will be implemented in different flavors: proto, json, string, ...
+    interface NoticeExporter {
+
+        void export(NonStandardHeaderNotice toExport);
+
+        void export(InputZipContainsFolderNotice toExport);
+
+        void export(NonAsciiOrNonPrintableCharNotice toExport);
+
+        void export(UnsupportedGtfsTypeNotice toExport);
+
+        void export(CannotConstructDataProviderNotice toExport);
+
+        void export(CannotDownloadArchiveFromNetworkNotice toExport);
+
+        void export(CannotParseFloatNotice toExport);
+
+        void export(CannotParseIntegerNotice toExport);
+
+        void export(CannotUnzipInputArchiveNotice toExport);
+
+        void export(FloatFieldValueOutOfRangeNotice toExport);
+
+        void export(IntegerFieldValueOutOfRangeNotice toExport);
+
+        void export(InvalidRowLengthNotice toExport);
+
+        void export(InvalidTimezoneNotice toExport);
+
+        void export(InvalidUrlNotice toExport);
+
+        void export(MissingHeaderNotice toExport);
+
+        void export(MissingRequiredFileNotice toExport);
+
+        void export(MissingRequiredValueNotice toExport);
+
+        void export(CouldNotCleanOrCreatePathNotice toExport);
+
+        void export(InvalidColorNotice toExport);
+    }
 }

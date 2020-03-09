@@ -36,6 +36,8 @@ public abstract class Notice {
 
     public abstract Notice visit(ValidationResultRepository resultRepo);
 
+    public abstract void export(ValidationResultRepository.NoticeExporter exporter);
+
     public String getFilename() {
         return filename;
     }

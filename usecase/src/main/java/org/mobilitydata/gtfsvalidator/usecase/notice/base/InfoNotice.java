@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.base;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 //TODO: use those to track progress (no error in file xxx, took xxms) maybe also have verbose level
-public class InfoNotice extends Notice {
+public abstract class InfoNotice extends Notice {
     protected static final String I_001 = "I001";
 
     public InfoNotice(final String filename,
@@ -33,4 +33,5 @@ public class InfoNotice extends Notice {
     public Notice visit(ValidationResultRepository resultRepo) {
         return resultRepo.addNotice(this);
     }
+
 }

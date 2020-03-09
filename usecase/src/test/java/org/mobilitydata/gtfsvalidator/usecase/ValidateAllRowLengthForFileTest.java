@@ -23,8 +23,8 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotConstructDataProviderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.InvalidRowLengthNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -32,7 +32,7 @@ import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ValidateAllRowLengthForFileTest {
 
@@ -133,14 +133,20 @@ class ValidateAllRowLengthForFileTest {
         }
 
         @Override
+        public Notice addNotice(Notice newNotice) {
+            return null;
+        }
+
+        @Override
         public Collection<Notice> getAll() {
             return null;
         }
 
         @Override
-        public Notice addNotice(Notice newNotice) {
+        public NoticeExporter getExporter(String outputPath) {
             return null;
         }
+
     }
 
     @Test

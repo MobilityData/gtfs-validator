@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.CouldNotCleanOrCreatePathNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CouldNotCleanOrCreatePathNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.File;

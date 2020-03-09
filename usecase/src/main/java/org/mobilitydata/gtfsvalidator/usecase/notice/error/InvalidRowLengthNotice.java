@@ -14,16 +14,40 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class InvalidRowLengthNotice extends ErrorNotice {
+    private int rowIndex;
+    private int expectedLength;
+    private int actualLength;
 
     public InvalidRowLengthNotice(String filename, int rowIndex, int expectedLength, int actualLength) {
         super(filename, E_004,
                 "Invalid row length",
                 "Invalid length for row:" + rowIndex +
                         " -- expected:" + expectedLength + " actual:" + actualLength);
+        this.rowIndex = rowIndex;
+        this.expectedLength = expectedLength;
+        this.actualLength = actualLength;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
+    }
+
+    public int getRowIndex() {
+        return rowIndex;
+    }
+
+    public int getExpectedLength() {
+        return expectedLength;
+    }
+
+    public int getActualLength() {
+        return actualLength;
     }
 }

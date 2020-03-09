@@ -14,16 +14,29 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class CouldNotCleanOrCreatePathNotice extends ErrorNotice {
+
+    private String pathToCleanOrCreate;
 
     public CouldNotCleanOrCreatePathNotice(final String pathToCleanOrCreate) {
         super("",
                 E_009,
                 "Path cleaning or creation error",
                 "An error occurred while trying clean or create path: " + pathToCleanOrCreate);
+        this.pathToCleanOrCreate = pathToCleanOrCreate;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
+    }
+
+    public String getPathToCleanOrCreate() {
+        return pathToCleanOrCreate;
     }
 }

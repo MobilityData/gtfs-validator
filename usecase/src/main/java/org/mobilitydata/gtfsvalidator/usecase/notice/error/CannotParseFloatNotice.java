@@ -14,15 +14,39 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class CannotParseFloatNotice extends ErrorNotice {
+    private int lineNumber;
+    private String rawValue;
+    private String fieldName;
 
     public CannotParseFloatNotice(String filename, String fieldName, int lineNumber, String rawValue) {
         super(filename, E_006,
                 "Invalid float value",
                 "Value: '" + rawValue + "' of field: " + fieldName + " with type float can't be parsed in file: " + filename + " at row: " + lineNumber);
+        this.rawValue = rawValue;
+        this.fieldName = fieldName;
+        this.lineNumber = lineNumber;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public String getRawValue() {
+        return rawValue;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
     }
 }

@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-public class InvalidUrlNotice extends ErrorNotice {
+public class CannotUnzipInputArchiveNotice extends ErrorNotice {
 
-    public InvalidUrlNotice(String filename, String fieldName, String entityId, String urlValue) {
-        super(filename, E_012,
-                "Invalid url",
-                "Invalid url:" + urlValue + " in field:" + fieldName + " for entity with id:" + entityId);
+    public CannotUnzipInputArchiveNotice(final String filename) {
+        super(filename,
+                E_008,
+                "Unzipping error",
+                "An error occurred while trying to unzip archive: " + filename);
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
     }
 }

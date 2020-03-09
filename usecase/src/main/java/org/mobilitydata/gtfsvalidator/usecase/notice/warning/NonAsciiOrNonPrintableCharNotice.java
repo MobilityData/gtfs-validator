@@ -14,15 +14,36 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
+
+    private String entityId;
+    private String fieldName;
 
     public NonAsciiOrNonPrintableCharNotice(String filename, String fieldName, String entityId, String idValue) {
         super(filename, W_003,
                 "Suspicious id",
                 "Non ascii or non printable character(s) in:" + idValue + " in field:" + fieldName + " for entity with id:" + entityId);
+
+        this.entityId = entityId;
+        this.fieldName = fieldName;
     }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getEntityId() {
+        return entityId;
+    }
+
 }

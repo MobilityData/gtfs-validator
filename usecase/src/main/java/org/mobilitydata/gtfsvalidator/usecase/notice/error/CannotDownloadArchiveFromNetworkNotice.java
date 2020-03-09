@@ -14,18 +14,31 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.net.URL;
 
 public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
+    private URL url;
 
     public CannotDownloadArchiveFromNetworkNotice(final URL url) {
         super(String.valueOf(url),
                 E_007,
                 "Downloading error",
                 "An error occurred while trying to download archive from network: " + url);
+        this.url = url;
+    }
+
+    public URL getUrl() {
+        return url;
+    }
+
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
     }
 }

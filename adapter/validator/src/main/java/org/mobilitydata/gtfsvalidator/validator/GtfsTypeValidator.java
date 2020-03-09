@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import com.google.common.base.Strings;
 import org.apache.commons.validator.routines.FloatValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.apache.commons.validator.routines.RegexValidator;
@@ -24,11 +23,14 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.*;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
+import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeValidator {
     private final GtfsSpecificationProto.CsvSpecProto fileSchema;

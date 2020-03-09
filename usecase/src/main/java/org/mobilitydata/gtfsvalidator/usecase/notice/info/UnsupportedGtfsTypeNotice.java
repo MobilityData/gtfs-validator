@@ -14,16 +14,34 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.info;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class UnsupportedGtfsTypeNotice extends InfoNotice {
+    private String fieldName;
+    private String entityId;
 
     public UnsupportedGtfsTypeNotice(String filename, String fieldName, String entityId) {
         super(filename, I_001,
                 "Unsupported gtfs type",
                 "Tried to validate an unsupported Gtfs type in file:" + filename +
                         ", entityId:" + entityId + ", field name:" + fieldName + " -->IGNORED");
+        this.fieldName = fieldName;
+        this.entityId = entityId;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getEntityId() {
+        return entityId;
     }
 }

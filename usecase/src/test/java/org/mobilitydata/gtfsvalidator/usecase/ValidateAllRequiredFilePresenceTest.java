@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.MissingRequiredFileNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -153,6 +153,11 @@ class ValidateAllRequiredFilePresenceTest {
 
         @Override
         public Collection<Notice> getAll() {
+            return null;
+        }
+
+        @Override
+        public NoticeExporter getExporter(String outputPath) {
             return null;
         }
 

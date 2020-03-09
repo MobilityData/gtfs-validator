@@ -22,8 +22,8 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.MissingHeaderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingHeaderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -149,6 +149,11 @@ class ValidateHeadersForFileTest {
 
         @Override
         public Collection<Notice> getAll() {
+            return null;
+        }
+
+        @Override
+        public NoticeExporter getExporter(String outputPath) {
             return null;
         }
 

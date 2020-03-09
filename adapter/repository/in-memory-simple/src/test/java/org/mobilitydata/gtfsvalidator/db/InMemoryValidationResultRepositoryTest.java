@@ -21,6 +21,9 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -39,19 +42,18 @@ class InMemoryValidationResultRepositoryTest {
     private static final String WARNING_NOTICE_DESCRIPTION = "warningNoticeDescription";
     private static final String ERROR_NOTICE_TITLE = "errorNoticeTitle";
     private static final String ERROR_NOTICE_DESCRIPTION = "errorNoticeDescription";
+    private static final String OUTPUT_PATH = "test.pb";
+
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void addingNoticeShouldExtendNoticeList() {
 
-        InfoNotice infoNotice = new InfoNotice(TEST_FILE_NAME, INFO_NOTICE_ID, INFO_NOTICE_TITLE,
-                INFO_NOTICE_DESCRIPTION);
+        WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
 
-        WarningNotice warningNotice = new WarningNotice(TEST_FILE_NAME, WARNING_NOTICE_ID, WARNING_NOTICE_TITLE,
-                WARNING_NOTICE_DESCRIPTION);
+        InfoNotice infoNotice = new UnsupportedGtfsTypeNotice(TEST_FILE_NAME, "filedName", "entityId");
 
-        ErrorNotice errorNotice = new ErrorNotice(TEST_FILE_NAME, ERROR_NOTICE_ID, ERROR_NOTICE_TITLE,
-                ERROR_NOTICE_DESCRIPTION);
+        ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
 
         ValidationResultRepository underTest = new InMemoryValidationResultRepository();
 
@@ -63,7 +65,7 @@ class InMemoryValidationResultRepositoryTest {
                 .findAny()
                 .get();
 
-        assertThat(testedNotice, instanceOf(InfoNotice.class));
+        assertThat(testedNotice, instanceOf(UnsupportedGtfsTypeNotice.class));
 
         underTest.addNotice(warningNotice);
         assertEquals(2, underTest.getAll().size());
@@ -73,7 +75,7 @@ class InMemoryValidationResultRepositoryTest {
                 .findAny()
                 .get();
 
-        assertThat(testedNotice, instanceOf(WarningNotice.class));
+        assertThat(testedNotice, instanceOf(NonStandardHeaderNotice.class));
 
         underTest.addNotice(errorNotice);
         assertEquals(3, underTest.getAll().size());
@@ -83,28 +85,6 @@ class InMemoryValidationResultRepositoryTest {
                 .findAny()
                 .get();
 
-        assertThat(testedNotice, instanceOf(ErrorNotice.class));
+        assertThat(testedNotice, instanceOf(CannotConstructDataProviderNotice.class));
     }
-
-    @Test
-    void callingGetAllMethodShouldReturnAllNotices() {
-
-        WarningNotice warningNotice = new WarningNotice(TEST_FILE_NAME, WARNING_NOTICE_ID, WARNING_NOTICE_TITLE,
-                WARNING_NOTICE_DESCRIPTION);
-
-        InfoNotice infoNotice = new InfoNotice(TEST_FILE_NAME, INFO_NOTICE_ID, INFO_NOTICE_TITLE,
-                INFO_NOTICE_DESCRIPTION);
-
-        ErrorNotice errorNotice = new ErrorNotice(TEST_FILE_NAME, ERROR_NOTICE_ID, ERROR_NOTICE_TITLE,
-                ERROR_NOTICE_DESCRIPTION);
-
-        ValidationResultRepository underTest = new InMemoryValidationResultRepository();
-
-        underTest.addNotice(infoNotice);
-        underTest.addNotice(warningNotice);
-        underTest.addNotice(errorNotice);
-
-        assertEquals(3, underTest.getAll().size());
-    }
-
 }

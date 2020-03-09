@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
+    private String fieldName;
+    private String entityId;
+    private float rangeMin;
+    private float rangeMax;
+    private float actualValue;
 
     public FloatFieldValueOutOfRangeNotice(
             String filename,
@@ -31,5 +37,35 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
                 "Out of range float value",
                 "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
                         " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue);
+        this.rangeMax = rangeMax;
+        this.rangeMin = rangeMin;
+        this.entityId = entityId;
+        this.fieldName = fieldName;
+        this.actualValue = actualValue;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) {
+        exporter.export(this);
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getEntityId() {
+        return entityId;
+    }
+
+    public float getRangeMin() {
+        return rangeMin;
+    }
+
+    public float getRangeMax() {
+        return rangeMax;
+    }
+
+    public float getActualValue() {
+        return actualValue;
     }
 }

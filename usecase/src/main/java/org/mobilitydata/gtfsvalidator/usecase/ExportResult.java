@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.base;
+package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+public class ExportResult {
 
-public abstract class WarningNotice extends Notice {
+    private final ValidationResultRepository resultRepo;
+    private final String outputPath;
 
-    protected static final String W_001 = "W001";
-    protected static final String W_002 = "W002";
-    protected static final String W_003 = "W003";
+    public ExportResult(final ValidationResultRepository resultRepo, final String outputPath) {
 
-    public WarningNotice(final String filename,
-                         final String noticeId,
-                         final String title,
-                         final String description) {
-        super(filename, noticeId, title, description);
+        this.resultRepo = resultRepo;
+        this.outputPath = outputPath;
     }
 
-    @Override
-    public Notice visit(ValidationResultRepository resultRepo) {
-        return resultRepo.addNotice(this);
+    public void execute() {
+        ValidationResultRepository.NoticeExporter exporter = resultRepo.getExporter(outputPath);
+        resultRepo.getAll()
+                .forEach(notice -> notice.export(exporter));
     }
 }

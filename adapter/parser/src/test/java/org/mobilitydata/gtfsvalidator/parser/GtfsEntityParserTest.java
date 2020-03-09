@@ -24,8 +24,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseFloatNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseIntegerNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseFloatNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseIntegerNotice;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -35,7 +35,8 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class GtfsEntityParserTest {
     @SuppressWarnings("UnstableApiUsage")
