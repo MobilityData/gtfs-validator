@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity;
 import java.util.Map;
 
 /**
- * The {@code RawEntity} class represents a row of a GTFS file as raw string data
+ * The {@code RawEntity} class represents a row of a GTFS file as raw string data.
  */
 public class RawEntity {
 
@@ -31,8 +31,8 @@ public class RawEntity {
     private final int entityIndex;
 
     /**
-     * @param contentByHeaderMap is an object that maps rows of a GTFS .txt file on header name.
-     * @param entityIndex        is an integer representing the 1 based index of the row
+     * @param contentByHeaderMap the object mapping rows of a GTFS .txt file on header name
+     * @param entityIndex        the integer representing the 1 based index of the row
      */
     public RawEntity(Map<String, String> contentByHeaderMap, int entityIndex) {
         this.contentByHeaderMap = contentByHeaderMap;
@@ -40,14 +40,14 @@ public class RawEntity {
     }
 
     /**
-     * @return a string object representing the value contained in a row for a given header (column).
+     * @return the string object representing the value contained in a row for a given header (column)
      */
     public String get(final String header) {
         return contentByHeaderMap.get(header);
     }
 
     /**
-     * @return the number of headers (columns).
+     * @return the number of headers (columns)
      */
     public int size() {
         return contentByHeaderMap.size();

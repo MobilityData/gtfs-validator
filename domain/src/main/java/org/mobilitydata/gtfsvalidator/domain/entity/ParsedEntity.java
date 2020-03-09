@@ -58,7 +58,7 @@ public class ParsedEntity {
     }
 
     /**
-     * @return an instance of @code{RawFileInfo} class that contains the information related to the raw file from which
+     * @return an instance of @link{RawFileInfo} containing information related to the raw file from which
      * this entity's data was parsed.
      */
     public RawFileInfo getRawFileInfo() {

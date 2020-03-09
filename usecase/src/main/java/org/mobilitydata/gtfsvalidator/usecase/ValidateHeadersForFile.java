@@ -26,6 +26,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Use case to validate the headers of a csv file.
+ */
 public class ValidateHeadersForFile {
 
     private final GtfsSpecRepository specRepo;
@@ -33,6 +36,14 @@ public class ValidateHeadersForFile {
     private final RawFileRepository rawFileRepo;
     private final ValidationResultRepository resultRepo;
 
+    /**
+     * @param specRepo    an instance of {@link GtfsSpecRepository} storing information about the GTFS specification
+     *                    used
+     * @param rawFileInfo an instance of {@link RawFileInfo}
+     * @param rawFileRepo an instance of {@link RawFileRepository}
+     * @param resultRepo  an instance of {@link ValidationResultRepository} storing information about the validation
+     *                    process
+     */
     public ValidateHeadersForFile(final GtfsSpecRepository specRepo,
                                   final RawFileInfo rawFileInfo,
                                   final RawFileRepository rawFileRepo,
@@ -44,6 +55,11 @@ public class ValidateHeadersForFile {
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * Use case execution method.
+     * A {@link MissingHeaderNotice} is emitted each time a header marked as "required" is missing.
+     * A {@link NonStandardHeaderNotice} is emitted for each header not marked as "required".
+     */
     public void execute() {
         List<String> expectedRequiredHeaderList = specRepo.getRequiredHeadersForFile(rawFileInfo);
         List<String> expectedOptionalHeaderList = specRepo.getOptionalHeadersForFile(rawFileInfo);
@@ -52,12 +68,15 @@ public class ValidateHeadersForFile {
         //Missing headers
         expectedRequiredHeaderList.stream()
                 .filter(expectedHeader -> !(actualHeaderList.contains(expectedHeader)))
-                .forEach(missingHeader -> resultRepo.addNotice(new MissingHeaderNotice(rawFileInfo.getFilename(), missingHeader)));
+                .forEach(missingHeader -> resultRepo.addNotice(new MissingHeaderNotice(rawFileInfo.getFilename(),
+                        missingHeader)));
 
         //Extra headers
         actualHeaderList.stream()
-                .filter(header -> !expectedOptionalHeaderList.contains(header) && !expectedRequiredHeaderList.contains(header))
-                .forEach(extraHeader -> resultRepo.addNotice(new NonStandardHeaderNotice(rawFileInfo.getFilename(), extraHeader)));
+                .filter(header ->
+                        !expectedOptionalHeaderList.contains(header) && !expectedRequiredHeaderList.contains(header))
+                .forEach(extraHeader ->
+                        resultRepo.addNotice(new NonStandardHeaderNotice(rawFileInfo.getFilename(), extraHeader)));
 
     }
 }

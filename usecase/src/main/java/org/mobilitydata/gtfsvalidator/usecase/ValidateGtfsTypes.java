@@ -20,19 +20,29 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.Collection;
-
+/**
+ * Use case to validate GTFS types from a {@code ParsedEntity}
+ */
 public class ValidateGtfsTypes {
 
     private final GtfsSpecRepository specRepo;
     private final ValidationResultRepository resultRepo;
 
+    /**
+     * @param specRepo   an instance of {@link GtfsSpecRepository} storing information about the GTFS specification
+     *                   used
+     * @param resultRepo an instance of {@link ValidationResultRepository} storing information about the validation
+     *                   process
+     */
     public ValidateGtfsTypes(final GtfsSpecRepository specRepo,
                              final ValidationResultRepository resultRepo) {
         this.specRepo = specRepo;
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * @param toValidate an instance of {@link ParsedEntity}
+     */
     public void execute(final ParsedEntity toValidate) {
         specRepo.getValidatorForFile(toValidate.getRawFileInfo()).validate(toValidate).forEach(resultRepo::addNotice);
     }

@@ -23,12 +23,21 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+/**
+ * Use case to validate the number of rows for a single csv file.
+ */
 public class ValidateAllRowLengthForFile {
 
     private final RawFileInfo rawFileInfo;
     private final RawFileRepository rawFileRepo;
     private final ValidationResultRepository resultRepo;
 
+    /**
+     * @param rawFileInfo an instance of {@link RawFileInfo}
+     * @param rawFileRepo an instance of {@link RawFileRepository}
+     * @param resultRepo  an instance of {@link ValidationResultRepository} storing information about the validation
+     *                    process
+     */
     public ValidateAllRowLengthForFile(final RawFileInfo rawFileInfo,
                                        final RawFileRepository rawFileRepo,
                                        final ValidationResultRepository resultRepo) {
@@ -37,6 +46,9 @@ public class ValidateAllRowLengthForFile {
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * Use case execution method. Uses a @{link }
+     */
     public void execute() {
         rawFileRepo.getProviderForFile(rawFileInfo).ifPresentOrElse(
                 provider -> {

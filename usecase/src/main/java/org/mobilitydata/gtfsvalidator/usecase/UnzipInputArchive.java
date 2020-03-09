@@ -29,6 +29,9 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/**
+ * Use case to unzip an archive.
+ */
 public class UnzipInputArchive {
 
     private final RawFileRepository rawFileRepo;
@@ -36,6 +39,13 @@ public class UnzipInputArchive {
     private final Path zipExtractPath;
     private final ValidationResultRepository resultRepo;
 
+    /**
+     * @param fileRepo       an instance of {@link RawFileRepository}
+     * @param inputZip       an {@link ZipFile} archive to unzip
+     * @param zipExtractPath a {@link Path} pointing to the target directory
+     * @param resultRepo     an instance of {@link ValidationResultRepository} storing information about the validation
+     *                       process
+     */
     public UnzipInputArchive(final RawFileRepository fileRepo,
                              final ZipFile inputZip,
                              final Path zipExtractPath,
@@ -46,6 +56,10 @@ public class UnzipInputArchive {
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * Use case execution method. Tries to unzip an archive, if it fails then a {@link CannotUnzipInputArchiveNotice} is
+     * emitted.
+     */
     public void execute() {
 
         Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();

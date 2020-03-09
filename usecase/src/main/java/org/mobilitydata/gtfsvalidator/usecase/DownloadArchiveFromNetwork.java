@@ -25,13 +25,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+/**
+ * Use case to download archive from network.
+ */
 public class DownloadArchiveFromNetwork {
 
     private final URL sourceUrl;
     private final String targetPath;
     private final ValidationResultRepository resultRepo;
 
-
+    /**
+     * @param url        a {@link URL} object pointing to a remote archive to download
+     * @param targetPath a {@link String} object specifying the download target directory
+     * @param resultRepo an instance of {@link ValidationResultRepository} storing information about the validation
+     *                   process
+     */
     public DownloadArchiveFromNetwork(final URL url,
                                       final String targetPath,
                                       final ValidationResultRepository resultRepo) {

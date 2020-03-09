@@ -24,12 +24,23 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+/**
+ * Use case to parse a single row of a csv file.
+ */
 public class ParseSingleRowForFile {
 
     private final ValidationResultRepository resultRepo;
     private RawFileRepository.RawEntityProvider provider;
     private GtfsSpecRepository.RawEntityParser parser;
 
+    /**
+     * @param rawFileInfo an instance of {@link RawFileInfo}
+     * @param rawFileRepo an instance of {@link RawFileRepository}
+     * @param specRepo    an instance of {@link GtfsSpecRepository} storing information about the GTFS specification
+     *                    used
+     * @param resultRepo  an instance of {@link ValidationResultRepository} storing information about the validation
+     *                    process
+     */
     public ParseSingleRowForFile(final RawFileInfo rawFileInfo,
                                  final RawFileRepository rawFileRepo,
                                  final GtfsSpecRepository specRepo,
@@ -45,10 +56,16 @@ public class ParseSingleRowForFile {
         );
     }
 
+    /**
+     * @return true if a row has a next row, else false
+     */
     public boolean hasNext() {
         return provider != null && provider.hasNext();
     }
 
+    /**
+     * @return a {@link ParsedEntity} representing a row that has been parsed
+     */
     public ParsedEntity execute() {
         ParsedEntity toReturn = null;
 

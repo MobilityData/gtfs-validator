@@ -25,17 +25,30 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 
+/**
+ * Use case to create a path
+ */
 public class CleanOrCreatePath {
 
     private final String pathToCleanOrCreate;
     private final ValidationResultRepository resultRepo;
 
+    /**
+     * @param toCleanOrCreate a string object specifying the target location
+     * @param resultRepo      an instance of {@link ValidationResultRepository} storing information about the validation
+     */
     public CleanOrCreatePath(final String toCleanOrCreate,
                              final ValidationResultRepository resultRepo) {
         this.pathToCleanOrCreate = toCleanOrCreate;
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * Execution method for use case: creates a {@link Path} to the target location. If the target location is not
+     * empty, all files at target are deleted.
+     *
+     * @return a {@code Path} instance
+     */
     public Path execute() {
         Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
         try {
