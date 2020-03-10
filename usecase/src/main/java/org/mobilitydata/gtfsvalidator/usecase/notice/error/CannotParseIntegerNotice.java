@@ -19,6 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class CannotParseIntegerNotice extends ErrorNotice {
     private int lineNumber;
     private String rawValue;
@@ -27,7 +30,8 @@ public class CannotParseIntegerNotice extends ErrorNotice {
     public CannotParseIntegerNotice(String filename, String fieldName, int lineNumber, String rawValue) {
         super(filename, E_005,
                 "Invalid integer value",
-                "Value: '" + rawValue + "' of field: " + fieldName + " with type integer can't be parsed in file: " + filename + " at row: " + lineNumber);
+                "Value: '" + rawValue + "' of field: " + fieldName
+                        + " with type integer can't be parsed in file: " + filename + " at row: " + lineNumber);
         this.rawValue = rawValue;
         this.fieldName = fieldName;
         this.lineNumber = lineNumber;
@@ -46,7 +50,8 @@ public class CannotParseIntegerNotice extends ErrorNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) {
-        exporter.export(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+            throws IOException {
+        exporter.export(this, targetStream);
     }
 }

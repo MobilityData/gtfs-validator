@@ -19,6 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class MissingRequiredValueNotice extends ErrorNotice {
     private String fieldName;
     private String entityId;
@@ -26,14 +29,16 @@ public class MissingRequiredValueNotice extends ErrorNotice {
     public MissingRequiredValueNotice(String filename, String fieldName, String entityId) {
         super(filename, E_015,
                 "Missing required value",
-                "Missing value for field:" + fieldName + " marked as required in entity with id:" + entityId);
+                "Missing value for field:" + fieldName
+                        + " marked as required in entity with id:" + entityId);
         this.entityId = entityId;
         this.fieldName = fieldName;
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) {
-        exporter.export(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+            throws IOException {
+        exporter.export(this, targetStream);
     }
 
     public String getFieldName() {

@@ -19,6 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.info;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class UnsupportedGtfsTypeNotice extends InfoNotice {
     private String fieldName;
     private String entityId;
@@ -33,8 +36,9 @@ public class UnsupportedGtfsTypeNotice extends InfoNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) {
-        exporter.export(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+            throws IOException {
+        exporter.export(this, targetStream);
     }
 
     public String getFieldName() {

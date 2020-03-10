@@ -19,6 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class CannotParseFloatNotice extends ErrorNotice {
     private int lineNumber;
     private String rawValue;
@@ -27,7 +30,8 @@ public class CannotParseFloatNotice extends ErrorNotice {
     public CannotParseFloatNotice(String filename, String fieldName, int lineNumber, String rawValue) {
         super(filename, E_006,
                 "Invalid float value",
-                "Value: '" + rawValue + "' of field: " + fieldName + " with type float can't be parsed in file: " + filename + " at row: " + lineNumber);
+                "Value: '" + rawValue + "' of field: " + fieldName
+                        + " with type float can't be parsed in file: " + filename + " at row: " + lineNumber);
         this.rawValue = rawValue;
         this.fieldName = fieldName;
         this.lineNumber = lineNumber;
@@ -46,7 +50,8 @@ public class CannotParseFloatNotice extends ErrorNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) {
-        exporter.export(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+            throws IOException {
+        exporter.export(this, targetStream);
     }
 }

@@ -19,6 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
 
     private String entityId;
@@ -27,15 +30,17 @@ public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
     public NonAsciiOrNonPrintableCharNotice(String filename, String fieldName, String entityId, String idValue) {
         super(filename, W_003,
                 "Suspicious id",
-                "Non ascii or non printable character(s) in:" + idValue + " in field:" + fieldName + " for entity with id:" + entityId);
+                "Non ascii or non printable character(s) in:" + idValue + " in field:"
+                        + fieldName + " for entity with id:" + entityId);
 
         this.entityId = entityId;
         this.fieldName = fieldName;
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) {
-        exporter.export(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+            throws IOException {
+        exporter.export(this, targetStream);
     }
 
     public String getFieldName() {

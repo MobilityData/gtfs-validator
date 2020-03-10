@@ -19,6 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class MissingRequiredFileNotice extends ErrorNotice {
     public MissingRequiredFileNotice(String filename) {
         super(filename, E_003,
@@ -27,7 +30,8 @@ public class MissingRequiredFileNotice extends ErrorNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) {
-        exporter.export(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+            throws IOException {
+        exporter.export(this, targetStream);
     }
 }

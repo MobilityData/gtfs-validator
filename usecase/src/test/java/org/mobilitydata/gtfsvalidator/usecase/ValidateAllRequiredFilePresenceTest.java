@@ -157,7 +157,7 @@ class ValidateAllRequiredFilePresenceTest {
         }
 
         @Override
-        public NoticeExporter getExporter(String outputPath) {
+        public NoticeExporter getExporter() {
             return null;
         }
 

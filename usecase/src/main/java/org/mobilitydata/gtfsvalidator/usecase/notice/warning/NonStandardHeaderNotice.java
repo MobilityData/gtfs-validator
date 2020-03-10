@@ -19,6 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class NonStandardHeaderNotice extends WarningNotice {
 
     private String extraHeader;
@@ -35,7 +38,8 @@ public class NonStandardHeaderNotice extends WarningNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) {
-        exporter.export(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+            throws IOException {
+        exporter.export(this, targetStream);
     }
 }

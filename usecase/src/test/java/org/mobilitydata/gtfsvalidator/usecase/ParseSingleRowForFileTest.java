@@ -162,9 +162,11 @@ class ParseSingleRowForFileTest {
             if (file.getFilename().contains("invalid")) {
                 return Optional.of(new MockEntityProvider(
                         List.of(
-                                Map.of("header0_string", "header0_string", "header1_float", "header1_float",
+                                Map.of("header0_string", "header0_string",
+                                        "header1_float", "header1_float",
                                         "header2_integer", "header2_integer"),
-                                Map.of("header0_string", "invalid_string", "header1_float", "valid_float",
+                                Map.of("header0_string", "invalid_string",
+                                        "header1_float", "valid_float",
                                         "header2_integer", "invalid_integer"),
                                 Map.of("header0_string", "valid", "header1_float", "invalid_float",
                                         "header2_integer", "valid_integer"),
@@ -220,7 +222,7 @@ class ParseSingleRowForFileTest {
         }
 
         @Override
-        public NoticeExporter getExporter(String outputPath) {
+        public NoticeExporter getExporter() {
             return null;
         }
     }
@@ -299,6 +301,7 @@ class ParseSingleRowForFileTest {
         assertEquals("E002", notice.getId());
         assertEquals("Data provider error", notice.getTitle());
         assertEquals("test_empty.tst", notice.getFilename());
-        assertEquals("An error occurred while trying to access raw data for file: test_empty.tst", notice.getDescription());
+        assertEquals("An error occurred while trying to access raw data for file: test_empty.tst",
+                notice.getDescription());
     }
 }

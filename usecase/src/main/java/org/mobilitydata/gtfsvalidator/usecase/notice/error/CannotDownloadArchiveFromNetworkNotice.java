@@ -19,6 +19,8 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 
 public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
@@ -38,7 +40,8 @@ public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
 
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) {
-        exporter.export(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+            throws IOException {
+        exporter.export(this, targetStream);
     }
 }

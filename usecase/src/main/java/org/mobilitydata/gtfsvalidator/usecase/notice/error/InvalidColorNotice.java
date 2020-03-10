@@ -19,6 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class InvalidColorNotice extends ErrorNotice {
     private String fieldName;
     private String colorValue;
@@ -26,14 +29,16 @@ public class InvalidColorNotice extends ErrorNotice {
     public InvalidColorNotice(String filename, String fieldName, String entityId, String colorValue) {
         super(filename, E_014,
                 "Invalid color",
-                "Invalid color:" + colorValue + " in field:" + fieldName + " for entity with id:" + entityId);
+                "Invalid color:" + colorValue + " in field:" + fieldName
+                        + " for entity with id:" + entityId);
         this.fieldName = fieldName;
         this.colorValue = colorValue;
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) {
-        exporter.export(this);
+    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+            throws IOException {
+        exporter.export(this, targetStream);
     }
 
     public String getFieldName() {

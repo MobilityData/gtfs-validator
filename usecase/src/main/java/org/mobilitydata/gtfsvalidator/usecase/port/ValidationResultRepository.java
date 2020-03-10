@@ -26,6 +26,8 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFol
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collection;
 
 public interface ValidationResultRepository {
@@ -40,47 +42,49 @@ public interface ValidationResultRepository {
 
     Collection<Notice> getAll();
 
-    NoticeExporter getExporter(String outputPath);
+    NoticeExporter getExporter();
 
     // an interface that will be implemented in different flavors: proto, json, string, ...
     interface NoticeExporter {
 
-        void export(NonStandardHeaderNotice toExport);
+        String getExtension();
 
-        void export(InputZipContainsFolderNotice toExport);
+        void export(NonStandardHeaderNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(NonAsciiOrNonPrintableCharNotice toExport);
+        void export(InputZipContainsFolderNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(UnsupportedGtfsTypeNotice toExport);
+        void export(NonAsciiOrNonPrintableCharNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(CannotConstructDataProviderNotice toExport);
+        void export(UnsupportedGtfsTypeNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(CannotDownloadArchiveFromNetworkNotice toExport);
+        void export(CannotConstructDataProviderNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(CannotParseFloatNotice toExport);
+        void export(CannotDownloadArchiveFromNetworkNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(CannotParseIntegerNotice toExport);
+        void export(CannotParseFloatNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(CannotUnzipInputArchiveNotice toExport);
+        void export(CannotParseIntegerNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(FloatFieldValueOutOfRangeNotice toExport);
+        void export(CannotUnzipInputArchiveNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(IntegerFieldValueOutOfRangeNotice toExport);
+        void export(FloatFieldValueOutOfRangeNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(InvalidRowLengthNotice toExport);
+        void export(IntegerFieldValueOutOfRangeNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(InvalidTimezoneNotice toExport);
+        void export(InvalidRowLengthNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(InvalidUrlNotice toExport);
+        void export(InvalidTimezoneNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(MissingHeaderNotice toExport);
+        void export(InvalidUrlNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(MissingRequiredFileNotice toExport);
+        void export(MissingHeaderNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(MissingRequiredValueNotice toExport);
+        void export(MissingRequiredFileNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(CouldNotCleanOrCreatePathNotice toExport);
+        void export(MissingRequiredValueNotice toExport, OutputStream targetStream) throws IOException;
 
-        void export(InvalidColorNotice toExport);
+        void export(CouldNotCleanOrCreatePathNotice toExport, OutputStream targetStream) throws IOException;
+
+        void export(InvalidColorNotice toExport, OutputStream targetStream) throws IOException;
     }
 }

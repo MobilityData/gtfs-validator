@@ -92,7 +92,8 @@ class ValidateAllRowLengthForFileTest {
             if (file.getFilename().contains("invalid")) {
                 return Optional.of(new MockEntityProvider(
                         List.of(
-                                Map.of("h0", "header0_name", "h1", "header1_name", "h2", "header2_name"),
+                                Map.of("h0", "header0_name", "h1", "header1_name",
+                                        "h2", "header2_name"),
                                 Map.of("h0", "v0", "h1", "v1"),
                                 Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
                                 Map.of("h0", "v0", "h1", "v1", "h2", "v2", "h3", "v3")
@@ -102,7 +103,8 @@ class ValidateAllRowLengthForFileTest {
 
             return Optional.of(new MockEntityProvider(
                     List.of(
-                            Map.of("h0", "header0_name", "h1", "header1_name", "h2", "header2_name"),
+                            Map.of("h0", "header0_name", "h1", "header1_name",
+                                    "h2", "header2_name"),
                             Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
                             Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
                             Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
@@ -143,7 +145,7 @@ class ValidateAllRowLengthForFileTest {
         }
 
         @Override
-        public NoticeExporter getExporter(String outputPath) {
+        public NoticeExporter getExporter() {
             return null;
         }
 
@@ -220,6 +222,7 @@ class ValidateAllRowLengthForFileTest {
         assertEquals("E002", notice.getId());
         assertEquals("Data provider error", notice.getTitle());
         assertEquals("test_empty.tst", notice.getFilename());
-        assertEquals("An error occurred while trying to access raw data for file: test_empty.tst", notice.getDescription());
+        assertEquals("An error occurred while trying to access raw data for file: test_empty.tst",
+                notice.getDescription());
     }
 }

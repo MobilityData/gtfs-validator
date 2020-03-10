@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.exporter.ProtobufNoticeExporter;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
@@ -68,7 +69,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     @Override
-    public NoticeExporter getExporter(String outputPath) {
-        return new ProtobufNoticeExporter(outputPath);
+    public NoticeExporter getExporter() {
+        return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder());
     }
 }
