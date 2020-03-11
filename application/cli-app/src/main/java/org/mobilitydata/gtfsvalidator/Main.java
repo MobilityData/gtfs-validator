@@ -108,14 +108,23 @@ public class Main {
             config.unzipInputArchive(zipInputPath, config.cleanOrCreatePath(zipExtractTargetPath).execute()).execute();
             config.validateAllRequiredFilePresence().execute();
 
-            //TODO: we will loop through all files in the archive. MVP is for stops.txt
-            config.validateHeadersForFile("stops.txt").execute();
-            config.validateAllRowLengthForFile("stops.txt").execute();
+            List<String> filenameList = List.of("feed_info.txt", "agency.txt", "stops.txt", "routes.txt",
+                    /*"calendar.txt", "calendar_dates.txt",*/ "trips.txt", //"stop_times.txt", //"fare_attributes.txt",
+                    /*"fare_rules.txt", "frequencies.txt", "translations.txt", "transfers.txt",*/ "pathways.txt",
+                    "levels.txt"/*, "attributions.txt"*/);
 
-            ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile("stops.txt");
-            while (parseSingleRowForFile.hasNext()) {
-                config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
-            }
+            // base validation
+            filenameList.forEach(filename -> {
+                logger.info("Validating: " + filename);
+
+                config.validateHeadersForFile(filename).execute();
+                config.validateAllRowLengthForFile(filename).execute();
+
+                ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
+                while (parseSingleRowForFile.hasNext()) {
+                    config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
+                }
+            });
 
             logger.info("validation repo content:" + config.getValidationResult());
 
