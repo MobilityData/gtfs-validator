@@ -1,4 +1,4 @@
-# gtfs-validator
+# gtfs-validator [![Java CI](https://github.com/MobilityData/gtfs-validator/workflows/Java%20CI/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Java+CI%22)
 
 A GTFS static feed validator
 
