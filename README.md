@@ -10,7 +10,7 @@ Java code to parse and validate a GTFS feed Zip archive
 
 `--help` command available
 
-TODO: improve description
+Sample usage `java -jar gtfs-validator.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -i input -o output`
 
 # Tests
 * To run tests : `./gradlew check`
