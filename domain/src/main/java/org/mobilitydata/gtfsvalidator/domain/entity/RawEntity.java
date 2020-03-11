@@ -32,7 +32,7 @@ public class RawEntity {
 
     /**
      * @param contentByHeaderMap the object mapping rows of a GTFS .txt file on header name
-     * @param entityIndex        the integer representing the 1 based index of the row
+     * @param entityIndex        the 1 based index of the row
      */
     public RawEntity(Map<String, String> contentByHeaderMap, int entityIndex) {
         this.contentByHeaderMap = contentByHeaderMap;
@@ -40,13 +40,17 @@ public class RawEntity {
     }
 
     /**
-     * @return the string object representing the value contained in a row for a given header (column)
+     * Returns the value contained in a row for a given header (column)
+     *
+     * @return the value contained in a row for a given header (column)
      */
     public String get(final String header) {
         return contentByHeaderMap.get(header);
     }
 
     /**
+     * Returns the number of headers (columns)
+     *
      * @return the number of headers (columns)
      */
     public int size() {
@@ -54,6 +58,8 @@ public class RawEntity {
     }
 
     /**
+     * Returns the 1 based index of the row
+     *
      * @return the 1 based index of the row
      */
     public int getIndex() {

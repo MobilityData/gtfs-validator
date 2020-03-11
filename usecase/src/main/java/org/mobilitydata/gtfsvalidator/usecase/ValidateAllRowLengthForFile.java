@@ -24,7 +24,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 /**
- * Use case to validate the number of rows for a single csv file.
+ * Use case to validate the length of rows for a single csv file. It ensures compliance of the length of a row with
+ * the expected number of headers for a csv file. This use case is triggered after the validation of the
+ * presence of all required headers in csv files.
  */
 public class ValidateAllRowLengthForFile {
 
@@ -33,10 +35,9 @@ public class ValidateAllRowLengthForFile {
     private final ValidationResultRepository resultRepo;
 
     /**
-     * @param rawFileInfo an instance of {@link RawFileInfo}
-     * @param rawFileRepo an instance of {@link RawFileRepository}
-     * @param resultRepo  an instance of {@link ValidationResultRepository} storing information about the validation
-     *                    process
+     * @param rawFileInfo an object containing information regarding a file location and expected content
+     * @param rawFileRepo a repository storing information about a GTFS dataset
+     * @param resultRepo  a repository storing information about the validation process
      */
     public ValidateAllRowLengthForFile(final RawFileInfo rawFileInfo,
                                        final RawFileRepository rawFileRepo,
@@ -47,7 +48,9 @@ public class ValidateAllRowLengthForFile {
     }
 
     /**
-     * Use case execution method. Uses a @{link }
+     * Use case execution method: validates the length of all rows of the file linked to the {@link RawFileInfo}.
+     * If the process to retrieve data from a file fail, a {@link CannotConstructDataProviderNotice is generated
+     * and added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
         rawFileRepo.getProviderForFile(rawFileInfo).ifPresentOrElse(

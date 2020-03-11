@@ -25,7 +25,8 @@ import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 /**
- * Use case to parse a single row of a csv file.
+ * Use case to parse a single row of a csv file. This use case is triggered after the validation of the length of all
+ * rows for a specific file.
  */
 public class ParseSingleRowForFile {
 
@@ -34,12 +35,10 @@ public class ParseSingleRowForFile {
     private GtfsSpecRepository.RawEntityParser parser;
 
     /**
-     * @param rawFileInfo an instance of {@link RawFileInfo}
-     * @param rawFileRepo an instance of {@link RawFileRepository}
-     * @param specRepo    an instance of {@link GtfsSpecRepository} storing information about the GTFS specification
-     *                    used
-     * @param resultRepo  an instance of {@link ValidationResultRepository} storing information about the validation
-     *                    process
+     * @param rawFileInfo an object containing information regarding a file location and expected content
+     * @param rawFileRepo a repository storing information about a GTFS dataset
+     * @param specRepo    a repository storing information about the GTFS specification used
+     * @param resultRepo  a repository storing information about the validation process
      */
     public ParseSingleRowForFile(final RawFileInfo rawFileInfo,
                                  final RawFileRepository rawFileRepo,
@@ -57,6 +56,8 @@ public class ParseSingleRowForFile {
     }
 
     /**
+     * Returns true if a row has a next row, else false
+     *
      * @return true if a row has a next row, else false
      */
     public boolean hasNext() {
@@ -64,7 +65,9 @@ public class ParseSingleRowForFile {
     }
 
     /**
-     * @return a {@link ParsedEntity} representing a row that has been parsed
+     * Use case execution method returns a parsed row from a GTFS file
+     *
+     * @return a parsed row from a GTFS file
      */
     public ParsedEntity execute() {
         ParsedEntity toReturn = null;

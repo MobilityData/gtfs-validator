@@ -21,7 +21,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 /**
- * Use case to validate GTFS types from a {@code ParsedEntity}
+ * Use case to validate GTFS types from a {@code ParsedEntity}. This use case is called on each parsed row of a csv
+ * file. It ensures that each value of a parsed row from a GTFS file has the type that is expected in the GTFS
+ * specification.
  */
 public class ValidateGtfsTypes {
 
@@ -29,10 +31,8 @@ public class ValidateGtfsTypes {
     private final ValidationResultRepository resultRepo;
 
     /**
-     * @param specRepo   an instance of {@link GtfsSpecRepository} storing information about the GTFS specification
-     *                   used
-     * @param resultRepo an instance of {@link ValidationResultRepository} storing information about the validation
-     *                   process
+     * @param specRepo   a repository storing information about the GTFS specification used
+     * @param resultRepo a repository storing information about the validation process
      */
     public ValidateGtfsTypes(final GtfsSpecRepository specRepo,
                              final ValidationResultRepository resultRepo) {
@@ -41,7 +41,10 @@ public class ValidateGtfsTypes {
     }
 
     /**
-     * @param toValidate an instance of {@link ParsedEntity}
+     * Use case execution method: applies the type validation requirement provided by the
+     * {@code ParsedEntityTypeValidator} on the {@link ParsedEntity} provided as parameter.
+     *
+     * @param toValidate a parsed row from a GTFS file
      */
     public void execute(final ParsedEntity toValidate) {
         specRepo.getValidatorForFile(toValidate.getRawFileInfo()).validate(toValidate).forEach(resultRepo::addNotice);

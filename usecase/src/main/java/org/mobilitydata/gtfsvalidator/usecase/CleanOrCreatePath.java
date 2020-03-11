@@ -26,7 +26,9 @@ import java.nio.file.Path;
 import java.util.Comparator;
 
 /**
- * Use case to create a path
+ * Use case to create a path. This use case is triggered after parsing the rows of a specific file. The resultant path
+ * is used in the subsequent steps to either unzip the GTFS dataset to validate or to write the valdiation output
+ * results.
  */
 public class CleanOrCreatePath {
 
@@ -34,8 +36,8 @@ public class CleanOrCreatePath {
     private final ValidationResultRepository resultRepo;
 
     /**
-     * @param toCleanOrCreate a string object specifying the target location
-     * @param resultRepo      an instance of {@link ValidationResultRepository} storing information about the validation
+     * @param toCleanOrCreate an path specifying the target location
+     * @param resultRepo      a repository storing information about the validation
      */
     public CleanOrCreatePath(final String toCleanOrCreate,
                              final ValidationResultRepository resultRepo) {
@@ -44,10 +46,11 @@ public class CleanOrCreatePath {
     }
 
     /**
-     * Execution method for use case: creates a {@link Path} to the target location. If the target location is not
-     * empty, all files at target are deleted.
+     * Execution method for use case: creates a path to the target location. If the target location is not
+     * * empty, all files at target are deleted. If the process fails, a {@link CouldNotCleanOrCreatePathNotice} is
+     * * generated and added to the {@link ValidationResultRepository} provided in the constructor.
      *
-     * @return a {@code Path} instance
+     * @return a path to the target location
      */
     public Path execute() {
         Path toCleanOrCreate = Path.of(pathToCleanOrCreate);

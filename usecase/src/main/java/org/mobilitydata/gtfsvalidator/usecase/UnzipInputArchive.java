@@ -30,7 +30,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Use case to unzip an archive.
+ * Use case to unzip an archive containing the GTFS dataset to validate. This step intervenes after the said archive
+ * has been downloaded from the network.
  */
 public class UnzipInputArchive {
 
@@ -40,11 +41,10 @@ public class UnzipInputArchive {
     private final ValidationResultRepository resultRepo;
 
     /**
-     * @param fileRepo       an instance of {@link RawFileRepository}
-     * @param inputZip       an {@link ZipFile} archive to unzip
-     * @param zipExtractPath a {@link Path} pointing to the target directory
-     * @param resultRepo     an instance of {@link ValidationResultRepository} storing information about the validation
-     *                       process
+     * @param fileRepo       a repository storing information about a GTFS dataset
+     * @param inputZip       an archive to unzip
+     * @param zipExtractPath a path pointing to the target directory
+     * @param resultRepo     a repository storing information about the validation process
      */
     public UnzipInputArchive(final RawFileRepository fileRepo,
                              final ZipFile inputZip,
@@ -57,8 +57,9 @@ public class UnzipInputArchive {
     }
 
     /**
-     * Use case execution method. Tries to unzip an archive, if it fails then a {@link CannotUnzipInputArchiveNotice} is
-     * emitted.
+     * Use case execution method. Tries to unzip an archive, if the process fails then
+     * a {@link CannotUnzipInputArchiveNotice} is generated and added to the {@link ValidationResultRepository} provided
+     * in the constructor.
      */
     public void execute() {
 

@@ -27,7 +27,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Use case to validate the headers of a csv file.
+ * Use case to validate the headers of a csv file. This checks that headers marked as required by the GTFS specification
+ * are present in the expected files. This use case is triggered after the validation of required files.
  */
 public class ValidateHeadersForFile {
 
@@ -37,12 +38,10 @@ public class ValidateHeadersForFile {
     private final ValidationResultRepository resultRepo;
 
     /**
-     * @param specRepo    an instance of {@link GtfsSpecRepository} storing information about the GTFS specification
-     *                    used
-     * @param rawFileInfo an instance of {@link RawFileInfo}
-     * @param rawFileRepo an instance of {@link RawFileRepository}
-     * @param resultRepo  an instance of {@link ValidationResultRepository} storing information about the validation
-     *                    process
+     * @param specRepo    a repository storing information about the GTFS specification used
+     * @param rawFileInfo an object containing information regarding a file location and expected content
+     * @param rawFileRepo a repository storing information about a GTFS dataset
+     * @param resultRepo  a repository storing information about the validation process
      */
     public ValidateHeadersForFile(final GtfsSpecRepository specRepo,
                                   final RawFileInfo rawFileInfo,
@@ -56,9 +55,10 @@ public class ValidateHeadersForFile {
     }
 
     /**
-     * Use case execution method.
-     * A {@link MissingHeaderNotice} is emitted each time a header marked as "required" is missing.
-     * A {@link NonStandardHeaderNotice} is emitted for each header not marked as "required".
+     * Use case execution method: for a file, checks the presence of all headers marked as "required" in the
+     * GTFS specification. A {@code MissingHeaderNotice} is generated each time a required header is missing.
+     * A {@code NonStandardHeaderNotice} is generated for each header not marked as "required". These notices are
+     * then added to the {@code ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
         List<String> expectedRequiredHeaderList = specRepo.getRequiredHeadersForFile(rawFileInfo);

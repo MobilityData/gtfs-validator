@@ -19,8 +19,8 @@ package org.mobilitydata.gtfsvalidator.domain.entity;
 import java.util.Map;
 
 /**
- * The {@code ParsedEntity} class represents a row of a GTFS file that has been parsed: type of each column of the raw
- * has been determined.
+ * The {@code ParsedEntity} class represents a row of a GTFS file that has been parsed: the type of each column of the
+ * raw has been determined.
  */
 public class ParsedEntity {
 
@@ -33,9 +33,9 @@ public class ParsedEntity {
     private final Map<String, Object> contentByHeaderMap;
 
     /**
-     * @param rawFileInfo        is a @code{RawFileInfo} instance
-     * @param contentByHeaderMap is an object that maps rows of a GTFS .txt file on header name.
-     * @param id                 is the id extracted from the original row.
+     * @param rawFileInfo        an object containing information regarding a file location and expected content
+     * @param contentByHeaderMap an object mapping rows of a GTFS .txt file on header name.
+     * @param id                 the id extracted from the original row.
      */
     public ParsedEntity(String id, Map<String, Object> contentByHeaderMap, RawFileInfo rawFileInfo) {
         this.contentByHeaderMap = contentByHeaderMap;
@@ -44,22 +44,27 @@ public class ParsedEntity {
     }
 
     /**
-     * @return the id extracted from the original row.
+     * Returns the id extracted from the original row
+     *
+     * @return the id extracted from the original row
      */
     public String getEntityId() {
         return entityId;
     }
 
     /**
-     * @return a string object that represents the value contained in a parsed row for a given header (column).
+     * Returns the value contained in a parsed row for a given header (column)
+     *
+     * @return the value contained in a parsed row for a given header (column)
      */
     public Object get(final String header) {
         return contentByHeaderMap.get(header);
     }
 
     /**
-     * @return an instance of @link{RawFileInfo} containing information related to the raw file from which
-     * this entity's data was parsed.
+     * Returns information related to the raw file from which this entity's data was parsed
+     *
+     * @return information related to the raw file from which this entity's data was parsed
      */
     public RawFileInfo getRawFileInfo() {
         return rawFileInfo;
