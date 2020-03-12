@@ -14,20 +14,32 @@
  * limitations under the License.
  */
 
-plugins {
-    id 'java'
-}
+package org.mobilitydata.gtfsvalidator.domain.entity;
 
-group 'org.mobilitydata'
-version '1.0.0-SNAPSHOT'
+import java.util.stream.Stream;
 
-sourceCompatibility = JavaVersion.VERSION_11
+public enum RouteType {
+    LIGHT_RAIL(0),
+    SUBWAY(1),
+    RAIL(2),
+    BUS(3),
+    FERRY(4),
+    CABLE_CAR(5),
+    GONDOLA(6),
+    FUNICULAR(7);
 
-repositories {
-    mavenCentral()
-}
+    private int value;
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'org.jetbrains:annotations:19.0.0'
+    RouteType(int value) {
+        this.value = value;
+    }
+
+    // no implementation for unsupported enum value
+
+    static public RouteType fromInt(Integer fromValue) {
+        return Stream.of(RouteType.values())
+                .filter(enumItem -> enumItem.value == fromValue)
+                .findAny()
+                .get();
+    }
 }
