@@ -80,16 +80,16 @@ public class Route {
 
     public static class RouteBuilder {
 
-        protected String route_id;
-        protected String agency_id;
-        protected String route_short_name;
-        protected String route_long_name;
-        protected String route_desc;
-        protected RouteType route_type;
-        protected String route_url;
-        protected String route_color;
-        protected String route_text_color;
-        protected int route_sort_order;
+        private String route_id;
+        private String agency_id;
+        private String route_short_name;
+        private String route_long_name;
+        private String route_desc;
+        private RouteType route_type;
+        private String route_url;
+        private String route_color;
+        private String route_text_color;
+        private int route_sort_order;
 
         public RouteBuilder routeId(@NotNull String route_id) {
             this.route_id = route_id;
