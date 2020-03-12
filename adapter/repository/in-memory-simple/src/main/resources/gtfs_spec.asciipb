@@ -106,7 +106,7 @@ csvspec: {
 csvspec: {
   name: "agency"
   filename: "agency.txt"
-  required: false
+  required: true
   # This file contains information about one or more transit agencies
   # that are to be displayed as operators of transit services.
 
@@ -429,7 +429,7 @@ csvspec: {
 csvspec: {
   name: "routes"
   filename: "routes.txt"
-  required: false  # required unless the feed is stops only.
+  required: true  # required unless the feed is stops only.
   # This file contains information about a transit organization's routes.
 
   column: {
@@ -883,7 +883,7 @@ csvspec: {
 csvspec: {
   name: "stop_times"
   filename: "stop_times.txt"
-  required: false  # required unless the feed is stops only.
+  required: true  # required unless the feed is stops only.
   # This file enumerates the stops on trips and gives arrival/departure times.
   # More precisely, the pair (trip_id, stop_sequence) is a unique key into
   # this table, and sorting all rows of a given trip_id in order of ascending
@@ -1311,7 +1311,7 @@ csvspec: {
     value_required: true
     type: { type: INT_DEC }
     intmin: 0
-    intmax: 300000
+    intmax: 5500000
     # The values of shape_pt_sequence must be non-negative integers.
     # Per shape_id, the values of shape_pt_sequence must be unique.
     # This field is used to define the order of points on each shape
