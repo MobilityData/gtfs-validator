@@ -31,7 +31,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 import java.util.zip.ZipFile;
 
 public class DefaultConfig {
@@ -97,7 +96,7 @@ public class DefaultConfig {
         return resultRepo.getAll();
     }
 
-    public ValidateAllOptionalFileName validateAllOptionalFileName(List<String> filenameList) {
-        return new ValidateAllOptionalFileName(specRepo, rawFileRepo, resultRepo, filenameList);
+    public ValidateAllOptionalFilename validateAllOptionalFileName() {
+        return new ValidateAllOptionalFilename(specRepo, rawFileRepo, resultRepo);
     }
 }

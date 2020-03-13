@@ -2,7 +2,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.OptionalFileFoundNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
@@ -17,7 +17,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ValidateAllOptionalFileNameTest {
+class ValidateAllOptionalFilenameTest {
+
+    private static final String EXTRA_FILE_0 = "extra0.extra";
+    private static final String EXTRA_FILE_1 = "extra1.extra";
+    private static final String EXTRA_FILE_2 = "extra2.extra";
 
     //mock spec repo
     private static class MockSpecRepo implements GtfsSpecRepository {
@@ -79,10 +83,12 @@ class ValidateAllOptionalFileNameTest {
 
         private final int howManyReq;
         private final int homManyOpt;
+        private final int howManyExtra;
 
-        public MockRawFileRepo(int howManyReq, int howManyOpt) {
+        public MockRawFileRepo(int howManyReq, int howManyOpt, int howManyExtra) {
             this.howManyReq = howManyReq;
             this.homManyOpt = howManyOpt;
+            this.howManyExtra = howManyExtra;
         }
 
         @Override
@@ -112,6 +118,9 @@ class ValidateAllOptionalFileNameTest {
                 toReturn.add("opt" + j + ".opt");
             }
 
+            for (int k = 0; k < this.howManyExtra; ++k) {
+                toReturn.add("extra" + k + ".extra");
+            }
             return toReturn;
         }
 
@@ -155,32 +164,35 @@ class ValidateAllOptionalFileNameTest {
     }
 
     @Test
-    void allOptionalPresentShouldGenerateNotice() {
+    void allExtraPresentShouldGenerateNotice() {
         MockSpecRepo mockSpecRepo = new MockSpecRepo(1, 2);
-        MockRawFileRepo mockRawFileRepo = new MockRawFileRepo(1, 2);
+        MockRawFileRepo mockRawFileRepo = new MockRawFileRepo(1, 2, 3);
         MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
 
-        ValidateAllOptionalFileName underTest = new ValidateAllOptionalFileName(
+        ValidateAllOptionalFilename underTest = new ValidateAllOptionalFilename(
                 mockSpecRepo,
                 mockRawFileRepo,
-                mockResultRepo,
-                mockSpecRepo.getRequiredFilenameList()
-        );
+                mockResultRepo);
 
         underTest.execute();
-        assertEquals(2, mockResultRepo.notices.size());
+        assertEquals(3, mockResultRepo.notices.size());
 
-        Notice notice = mockResultRepo.notices.get(0);
-        assertThat(notice, instanceOf(OptionalFileFoundNotice.class));
-        assertEquals("I002", notice.getId());
-        assertEquals("Optional file found", notice.getTitle());
-        assertEquals("opt0.opt", notice.getFilename());
+        Notice notice = mockResultRepo.notices.stream()
+                .filter(n -> n.getFilename().contains(EXTRA_FILE_0)).findAny().get();
+        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
+        assertEquals("W004", notice.getId());
+        assertEquals("Non standard file found", notice.getTitle());
 
-        notice = mockResultRepo.notices.get(1);
-        assertThat(notice, instanceOf(OptionalFileFoundNotice.class));
-        assertEquals("I002", notice.getId());
-        assertEquals("Optional file found", notice.getTitle());
-        assertEquals("opt1.opt", notice.getFilename());
+        notice = mockResultRepo.notices.stream()
+                .filter(n -> n.getFilename().contains(EXTRA_FILE_1)).findAny().get();
+        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
+        assertEquals("W004", notice.getId());
+        assertEquals("Non standard file found", notice.getTitle());
 
+        notice = mockResultRepo.notices.stream()
+                .filter(n -> n.getFilename().contains(EXTRA_FILE_2)).findAny().get();
+        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
+        assertEquals("W004", notice.getId());
+        assertEquals("Non standard file found", notice.getTitle());
     }
 }

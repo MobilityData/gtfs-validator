@@ -116,12 +116,10 @@ public class Main {
 
             List<String> filenameList = config.validateAllRequiredFilePresence().execute();
 
-            filenameList = config.validateAllOptionalFileName(filenameList).execute();
+            filenameList.addAll(config.validateAllOptionalFileName().execute());
 
-            filenameList.remove("calendar.txt"); // FIXME: These files have to be removed from
-            // filenameList to avoid generation of too
-            // many notices because of the fact that some types
-            // are not supported yet
+            // FIXME: removing files with unsupported field types
+            filenameList.remove("calendar.txt");
             filenameList.remove("calendar_dates.txt");
             filenameList.remove("stop_times.txt");
 

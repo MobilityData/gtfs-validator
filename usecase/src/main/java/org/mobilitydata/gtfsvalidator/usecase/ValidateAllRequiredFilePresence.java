@@ -43,8 +43,6 @@ public class ValidateAllRequiredFilePresence {
             specRepo.getRequiredFilenameList().stream()
                     .filter(requiredFile -> !rawFileRepo.getFilenameAll().contains(requiredFile))
                     .forEach(missingFile -> resultRepo.addNotice(new MissingRequiredFileNotice(missingFile)));
-
-            return specRepo.getRequiredFilenameList();
         }
         return specRepo.getRequiredFilenameList();
     }
