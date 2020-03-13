@@ -20,8 +20,8 @@ import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.*;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -41,7 +41,8 @@ public class DefaultConfig {
     public DefaultConfig() throws IOException {
     }
 
-    public DownloadArchiveFromNetwork downloadArchiveFromNetwork(final String url, final String targetPath) throws MalformedURLException {
+    public DownloadArchiveFromNetwork downloadArchiveFromNetwork(final String url, final String targetPath)
+            throws MalformedURLException {
         return new DownloadArchiveFromNetwork(new URL(url), targetPath, resultRepo);
     }
 
@@ -49,7 +50,8 @@ public class DefaultConfig {
         return new CleanOrCreatePath(toCleanOrCreate, resultRepo);
     }
 
-    public UnzipInputArchive unzipInputArchive(final String zipInputPath, final Path zipExtractPath) throws IOException {
+    public UnzipInputArchive unzipInputArchive(final String zipInputPath, final Path zipExtractPath)
+            throws IOException {
         return new UnzipInputArchive(rawFileRepo, new ZipFile(zipInputPath), zipExtractPath, resultRepo);
     }
 
@@ -92,5 +94,9 @@ public class DefaultConfig {
 
     public Collection<Notice> getValidationResult() {
         return resultRepo.getAll();
+    }
+
+    public ValidateAllOptionalFilename validateAllOptionalFileName() {
+        return new ValidateAllOptionalFilename(specRepo, rawFileRepo, resultRepo);
     }
 }

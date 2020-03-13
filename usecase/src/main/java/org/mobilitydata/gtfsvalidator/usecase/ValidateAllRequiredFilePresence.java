@@ -21,6 +21,8 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.util.List;
+
 public class ValidateAllRequiredFilePresence {
 
     private final GtfsSpecRepository specRepo;
@@ -35,12 +37,13 @@ public class ValidateAllRequiredFilePresence {
         this.resultRepo = resultRepo;
     }
 
-    public void execute() {
+    public List<String> execute() {
         if (!rawFileRepo.getFilenameAll().containsAll(specRepo.getRequiredFilenameList())) {
 
             specRepo.getRequiredFilenameList().stream()
                     .filter(requiredFile -> !rawFileRepo.getFilenameAll().contains(requiredFile))
                     .forEach(missingFile -> resultRepo.addNotice(new MissingRequiredFileNotice(missingFile)));
         }
+        return specRepo.getRequiredFilenameList();
     }
 }
