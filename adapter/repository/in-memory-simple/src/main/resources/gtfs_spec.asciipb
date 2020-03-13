@@ -1,4 +1,6 @@
-# Copyright (C) 2019 Google Inc.
+#
+# Original work Copyright (C) 2019 Google Inc.
+# Modified work Copyright (c) 2020. MobilityData IO.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,6 +24,7 @@
 # For each column, it defines the data type to represent it after reading
 # (by default, a string), its permissible values (by default, any),
 # and its optional nullvalue regexp (if not given, there are no null values).
+#
 
 ###############################################################################
 ## FEED_INFO
@@ -31,7 +34,7 @@ csvspec: {
   name: "feed_info"
   filename: "feed_info.txt"
   required: false
-  # This file contains one row with values about this feed as a whole.
+  # Dataset metadata, including publisher, version, and expiration information.
 
   column: {
     field_number: 2
@@ -52,7 +55,7 @@ csvspec: {
     name: "feed_lang"
     required: true
     value_required: true
-    # The language code for an agency's primary language, or empty.
+    # The language code for an agency's primary language.
     # This is the preferred alternative to the older agency_lang common to
     # all agencies; see there for history and further details.
   }
@@ -349,10 +352,10 @@ csvspec: {
       keyname: "stop_id"
     }
     # The station to which a stop/entrance belongs.
-    # The location referenced must have location_type 1 (station).
-    # If a stop is given without parent_station, a parent station is created.
-    # If an entrance is given without a parent_station, this is an error.
-    # A station cannot belong to a parent station.
+    # Required for locations which are entrances (location_type=2), generic nodes (location_type=3) or
+    # boarding areas (location_type=4).
+    # Optional for stops/platforms (location_type=0).
+    # Forbidden for stations (location_type=1).
   }
 
   column: {
@@ -731,7 +734,7 @@ csvspec: {
 csvspec: {
   name: "trips"
   filename: "trips.txt"
-  required: true  # required unless the feed is stops only.
+  required: true
   # This file contains information about trips.
   # In the Transit context, the word trip means a scheduled trip
   # of a transit vehicle advertised to passengers as a contiguous journey
@@ -824,7 +827,7 @@ csvspec: {
     intmax: 1
     type: { type: INT_DEC }
     # An optional binary value that can be used by an agency to group
-    # trips for the same route into seperate directions of travel.
+    # trips for the same route into separate directions of travel.
   }
 
   column: {
@@ -883,7 +886,7 @@ csvspec: {
 csvspec: {
   name: "stop_times"
   filename: "stop_times.txt"
-  required: true  # required unless the feed is stops only.
+  required: true
   # This file enumerates the stops on trips and gives arrival/departure times.
   # More precisely, the pair (trip_id, stop_sequence) is a unique key into
   # this table, and sorting all rows of a given trip_id in order of ascending
@@ -955,7 +958,7 @@ csvspec: {
     value_required: true
     type: { type: INT_DEC }
     intmin: 0
-    intmax: 2000000
+    intmax: 2147483647
     cache: {
       cache_numbers: true
     }
@@ -1045,7 +1048,7 @@ csvspec: {
     type: { type: FLOAT_STD }
     required: false
     floatmin: 0
-    floatmax: 6200000
+    floatmax: 2147483647
     cache: {
       cache_numbers: true
     }
@@ -1099,7 +1102,7 @@ csvspec: {
   column: {
     field_number: 2
     name: "agency_id"
-    required: false  # often required, see below
+    required: false
     supersetkey: {
       csvname: "agency"
       keyname: "agency_id"
@@ -1324,8 +1327,7 @@ csvspec: {
     type: { type: FLOAT_STD }
     required: false
     floatmin: 0
-    floatmax: 6200000
-    # Optionally, the "userdist" parameter value of this vertex (see above).
+    floatmax: 2147483647
   }
   column: {
     field_number: 5
