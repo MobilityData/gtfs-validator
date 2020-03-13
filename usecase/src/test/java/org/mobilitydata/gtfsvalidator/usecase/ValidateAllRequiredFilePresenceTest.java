@@ -174,8 +174,11 @@ class ValidateAllRequiredFilePresenceTest {
 
         );
 
-        underTest.execute();
+        List<String> result = underTest.execute();
         assertEquals(0, mockResultRepo.notices.size());
+        assertEquals(10, result.size());
+        assertEquals(List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req", "req5.req", "req6.req",
+                "req7.req", "req8.req", "req9.req"), result);
     }
 
 
@@ -190,9 +193,10 @@ class ValidateAllRequiredFilePresenceTest {
                 mockResultRepo
         );
 
-        underTest.execute();
+        List<String> result = underTest.execute();
 
         assertEquals(5, mockResultRepo.notices.size());
+        assertEquals(15, result.size());
 
         Notice notice = mockResultRepo.notices.get(0);
         assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
@@ -223,9 +227,5 @@ class ValidateAllRequiredFilePresenceTest {
         assertEquals("E003", notice.getId());
         assertEquals("Missing required file", notice.getTitle());
         assertEquals("req14.req", notice.getFilename());
-    }
-
-    @Test
-    void validateOptionalAll() {
     }
 }
