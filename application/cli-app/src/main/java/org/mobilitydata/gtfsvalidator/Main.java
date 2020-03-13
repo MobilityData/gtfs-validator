@@ -109,9 +109,11 @@ public class Main {
             }
 
             if (cmd.getOptionValue("u") != null) {
+                logger.info("Downloading archive");
                 config.downloadArchiveFromNetwork(cmd.getOptionValue("u"), zipInputPath).execute();
             }
 
+            logger.info("Unzipping archive");
             config.unzipInputArchive(zipInputPath, config.cleanOrCreatePath(zipExtractTargetPath).execute()).execute();
 
             List<String> filenameList = config.validateAllRequiredFilePresence().execute();
