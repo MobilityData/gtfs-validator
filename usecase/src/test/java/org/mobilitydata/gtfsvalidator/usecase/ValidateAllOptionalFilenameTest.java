@@ -35,9 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ValidateAllOptionalFilenameTest {
 
-    private static final String EXTRA_FILE_1 = "extra1.extra";
-    private static final String EXTRA_FILE_2 = "extra2.extra";
-
     //mock spec repo
     private static class MockSpecRepo implements GtfsSpecRepository {
 
