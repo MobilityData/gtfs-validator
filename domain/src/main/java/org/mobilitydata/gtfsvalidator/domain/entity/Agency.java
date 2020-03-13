@@ -85,14 +85,14 @@ public class Agency {
 
     public static class AgencyBuilder {
 
-        protected String agency_id;
-        protected String agency_name;
-        protected String agency_url;
-        protected String agency_timezone;
-        protected String agency_lang;
-        protected String agency_phone;
-        protected String agency_fare_url;
-        protected String agency_email;
+        private String agency_id;
+        private String agency_name;
+        private String agency_url;
+        private String agency_timezone;
+        private String agency_lang;
+        private String agency_phone;
+        private String agency_fare_url;
+        private String agency_email;
 
         // TODO: Check the necessity to include @NotNull attributes to builder pattern
 
@@ -137,9 +137,8 @@ public class Agency {
         }
 
         public Agency build() {
-            Agency agency = new Agency(agency_id, agency_name, agency_url, agency_timezone, agency_lang, agency_phone,
+            return new Agency(agency_id, agency_name, agency_url, agency_timezone, agency_lang, agency_phone,
                     agency_fare_url, agency_email);
-            return agency;
         }
     }
 }
