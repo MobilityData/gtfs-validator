@@ -122,6 +122,7 @@ public class Main {
             filenameList.remove("calendar.txt");
             filenameList.remove("calendar_dates.txt");
             filenameList.remove("stop_times.txt");
+            filenameList.remove("frequencies.txt");
 
             // base validation
             filenameList.forEach(filename -> {
