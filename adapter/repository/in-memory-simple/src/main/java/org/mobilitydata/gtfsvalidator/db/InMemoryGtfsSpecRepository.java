@@ -18,9 +18,9 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import com.google.common.io.Resources;
 import com.google.protobuf.TextFormat;
-import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
+import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
 
