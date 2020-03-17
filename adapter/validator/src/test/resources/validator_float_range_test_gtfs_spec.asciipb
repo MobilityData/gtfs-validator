@@ -13,11 +13,13 @@
 # limitations under the License.
 
 csvspec: {
-  name: "test_file_float_e6"
-  filename: "test_file_float_e6.txt"
+  name: "test_float_std_range"
+  filename: "test_float_std_range.txt"
 
   column: {
-    name: "float_e6_test"
-    type: { type: FLOAT_E6 }
+    name: "float_std_with_range"
+    type: { type: FLOAT }
+    floatmin:-6.66
+    floatmax:66.6
   }
 }

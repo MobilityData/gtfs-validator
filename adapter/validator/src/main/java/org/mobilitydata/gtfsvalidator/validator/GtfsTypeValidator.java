@@ -33,11 +33,6 @@ import java.util.Collection;
 public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeValidator {
     private final GtfsSpecificationProto.CsvSpecProto fileSchema;
 
-    //used to match fields to corresponding static Gtfs type - see https://gtfs.org/reference/static/#field-types
-    private static final String URL_FIELD_NAME_IDENTIFIER = "_url";
-    private static final String TIMEZONE_FIELD_NAME_IDENTIFIER = "_timezone";
-    private static final String ID_FIELD_NAME_IDENTIFIER = "_id";
-
     private static final String[] VALID_URL_SCHEMES = {"http", "https"};
 
     private static boolean isPrintableAscii(char ch) {
@@ -60,7 +55,10 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
             if (value != null &&
                     (!(value instanceof String) || !((String) value).isEmpty())) {
                 switch (columnSpecProto.getType().getType()) {
-                    case FLOAT_STD:
+                    case INPUT_TYPE_UNSPECIFIED: // Text is default and does not require validation
+                    case TEXT:
+                        break;
+                    case FLOAT: {
                         if (!FloatValidator.getInstance().isInRange(
                                 (Float) value,
                                 columnSpecProto.getFloatmin(),
@@ -76,7 +74,8 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                             ));
                         }
                         break;
-                    case INT_DEC:
+                    }
+                    case INTEGER: {
                         if (!IntegerValidator.getInstance().isInRange(
                                 (Integer) value,
                                 columnSpecProto.getIntmin(),
@@ -92,7 +91,8 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                             ));
                         }
                         break;
-                    case INT_HEX:   //Color
+                    }
+                    case COLOR: {  //Color
                         if (!new RegexValidator(columnSpecProto.getMatchregexp()).isValid((String) value)) {
                             toReturn.add(new InvalidColorNotice(
                                     toValidate.getRawFileInfo().getFilename(),
@@ -102,65 +102,57 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                             ));
                         }
                         break;
-                    case INPUT_TYPE_UNSPECIFIED: // String is default
-                    case STRING:
-                        if (columnSpecProto.getName().contains(URL_FIELD_NAME_IDENTIFIER)) {
-                            if (!new UrlValidator(VALID_URL_SCHEMES).isValid((String) value)) {
-                                toReturn.add(new InvalidUrlNotice(
+                    }
+                    case TIMEZONE: {
+                        // Uses IANA timezone database shipped with JDK
+                        // to update without updating JDK see https://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html
+                        //noinspection RedundantCast
+                        if (!ZoneId.getAvailableZoneIds().contains((String) value)) {
+                            toReturn.add(new InvalidTimezoneNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    (String) value
+                            ));
+                        }
+                        break;
+                    }
+                    case ID: {
+                        String stringValue = (String) value;
+                        int charCount = stringValue.length();
+                        for (int i = 0; i < charCount; ++i) {
+                            if (!isPrintableAscii(stringValue.charAt(i))) {
+                                toReturn.add(new NonAsciiOrNonPrintableCharNotice(
                                         toValidate.getRawFileInfo().getFilename(),
                                         columnSpecProto.getName(),
                                         toValidate.getEntityId(),
-                                        (String) value
+                                        stringValue
                                 ));
-                            }
-
-                        } else if (columnSpecProto.getName().contains(TIMEZONE_FIELD_NAME_IDENTIFIER)) {
-                            // Uses IANA timezone database shipped with JDK
-                            // to update without updating JDK see https://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html
-                            //noinspection RedundantCast
-                            if (!ZoneId.getAvailableZoneIds().contains((String) value)) {
-                                toReturn.add(new InvalidTimezoneNotice(
-                                        toValidate.getRawFileInfo().getFilename(),
-                                        columnSpecProto.getName(),
-                                        toValidate.getEntityId(),
-                                        (String) value
-                                ));
-                            }
-
-                        } else if (columnSpecProto.getName().contains(ID_FIELD_NAME_IDENTIFIER)) {
-                            String stringValue = (String) value;
-                            int charCount = stringValue.length();
-                            for (int i = 0; i < charCount; ++i) {
-                                if (!isPrintableAscii(stringValue.charAt(i))) {
-                                    toReturn.add(new NonAsciiOrNonPrintableCharNotice(
-                                            toValidate.getRawFileInfo().getFilename(),
-                                            columnSpecProto.getName(),
-                                            toValidate.getEntityId(),
-                                            stringValue
-                                    ));
-                                    break;
-                                }
+                                break;
                             }
                         }
                         break;
-                    case INT:
-                    case FLOAT:
-                    case FLOAT_E6:
-                    case FLOAT_E7:
+                    }
+                    case URL: {
+                        if (!new UrlValidator(VALID_URL_SCHEMES).isValid((String) value)) {
+                            toReturn.add(new InvalidUrlNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    (String) value
+                            ));
+                        }
+                        break;
+                    }
                     case DATE:
-                    case DATE_YYYYMMDD:
-                    case TIME:
-                    case TIME_SECONDS_SINCE_MIDNIGHT:
-                    case TIME_AUTODETECT:
-                    case TIME_HHCMM:
-                    case TIME_HHMMSS:
-                    case TIME_HHCMMCSS:
+                    case TIME: {
                         toReturn.add(new UnsupportedGtfsTypeNotice(
                                 toValidate.getRawFileInfo().getFilename(),
                                 columnSpecProto.getName(),
                                 toValidate.getEntityId()
                         ));
                         break;
+                    }
                 }
             } else {    //value is null or an empty string
                 if (columnSpecProto.getValueRequired()) {

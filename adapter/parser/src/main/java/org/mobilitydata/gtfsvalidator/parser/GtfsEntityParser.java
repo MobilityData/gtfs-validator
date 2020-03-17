@@ -49,12 +49,13 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
             //Skip values that weren't provided
             if (!Strings.isNullOrEmpty(rawField)) {
 
-                if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT_STD) {
+                if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT) {
                     FloatValidator floatValidator = FloatValidator.getInstance();
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
-                    if (!floatValidator.isValid(rawField, Locale.US) || Float.isNaN(floatValidator.validate(rawField, Locale.US))) {
+                    if (!floatValidator.isValid(rawField, Locale.US) || Float.isNaN(floatValidator.validate(rawField,
+                            Locale.US))) {
 
                         toReturn.add(new CannotParseFloatNotice(
                                         fileSchema.getFilename(),
@@ -64,7 +65,8 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                                 )
                         );
                     }
-                } else if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.INT_DEC) {
+                } else if (columnSpecProto.getType().getType() ==
+                        GtfsSpecificationProto.ColumnInputType.InputType.INTEGER) {
 
                     IntegerValidator integerValidator = IntegerValidator.getInstance();
 
@@ -73,8 +75,8 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                     if (!integerValidator.isValid(rawField, Locale.US)) {
 
                         toReturn.add(new CannotParseIntegerNotice(
-                                        fileSchema.getFilename(),
-                                        columnSpecProto.getName(),
+                                fileSchema.getFilename(),
+                                columnSpecProto.getName(),
                                         toValidate.getIndex(),
                                         rawField
                                 )
@@ -97,22 +99,25 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
 
             if (!Strings.isNullOrEmpty(rawField)) {
 
-                if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT_STD) {
+                if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT) {
                     FloatValidator floatValidator = FloatValidator.getInstance();
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
-                    if (floatValidator.isValid(rawField, Locale.US) && !Float.isNaN(floatValidator.validate(rawField, Locale.US))) {
+                    if (floatValidator.isValid(rawField, Locale.US) && !Float.isNaN(floatValidator.validate(rawField,
+                            Locale.US))) {
                         contentByHeaderMap.put(columnSpecProto.getName(), floatValidator.validate(rawField, Locale.US));
                     }
 
-                } else if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.INT_DEC) {
+                } else if (columnSpecProto.getType().getType() ==
+                        GtfsSpecificationProto.ColumnInputType.InputType.INTEGER) {
                     IntegerValidator integerValidator = IntegerValidator.getInstance();
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
                     if (integerValidator.isValid(rawField, Locale.US)) {
-                        contentByHeaderMap.put(columnSpecProto.getName(), integerValidator.validate(rawField, Locale.US));
+                        contentByHeaderMap.put(columnSpecProto.getName(), integerValidator.validate(rawField,
+                                Locale.US));
                     }
 
                 } else {

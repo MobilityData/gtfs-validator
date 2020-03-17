@@ -13,13 +13,12 @@
 # limitations under the License.
 
 csvspec: {
-  name: "test_float_std_range"
-  filename: "test_float_std_range.txt"
+  name: "test_color_format"
+  filename: "test_color_format.txt"
 
   column: {
-    name: "float_std_with_range"
-    type: { type: FLOAT_STD }
-    floatmin:-6.66
-    floatmax:66.6
+    name: "color_with_regex"
+    type: { type: COLOR }
+    matchregexp: "[0-9a-fA-F]{6}"
   }
 }

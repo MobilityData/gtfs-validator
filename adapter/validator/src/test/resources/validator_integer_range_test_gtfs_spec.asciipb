@@ -13,11 +13,13 @@
 # limitations under the License.
 
 csvspec: {
-  name: "test_file_time_hhcmmcss"
-  filename: "test_file_time_hhcmmcss.txt"
+  name: "test_integer_range"
+  filename: "test_integer_range.txt"
 
   column: {
-    name: "time_hhcmmcss_test"
-    type: { type: TIME_HHCMMCSS }
+    name: "integer_with_range"
+    type: { type: INTEGER }
+    intmin:-6
+    intmax:66
   }
 }

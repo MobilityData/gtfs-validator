@@ -17,11 +17,7 @@ csvspec: {
   filename: "test_timezone.txt"
 
   column: {
-    name: "unspecified_type_timezone"
-  }
-
-  column: {
-      name: "string_type_timezone"
-      type: { type: STRING }
+      name: "type_timezone"
+      type: { type: TIMEZONE }
     }
 }

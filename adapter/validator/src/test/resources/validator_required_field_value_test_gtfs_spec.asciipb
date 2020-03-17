@@ -17,35 +17,35 @@ csvspec: {
   filename: "test_required_field_value.txt"
 
   column: {
-    name: "float_std_optional_test"
-    type: { type: FLOAT_STD }
+    name: "float_optional_test"
+    type: { type: FLOAT }
     }
 
   column: {
-    name: "float_std_required_test"
-    type: { type: FLOAT_STD }
+    name: "float_required_test"
+    type: { type: FLOAT }
     value_required: true
     }
 
   column: {
-      name: "int_dec_optional_test"
-      type: { type: INT_DEC }
+      name: "integer_optional_test"
+      type: { type: INTEGER }
     }
 
   column: {
-    name: "int_dec_required_test"
-    type: { type: INT_DEC }
+    name: "integer_required_test"
+    type: { type: INTEGER }
     value_required: true
     }
 
   column: {
-    name: "int_hex_optional_test"
-    type: { type: INT_HEX }
+    name: "color_optional_test"
+    type: { type: COLOR }
     }
 
   column: {
-      name: "int_hex_required_test"
-      type: { type: INT_HEX }
+      name: "color_required_test"
+      type: { type: COLOR }
       matchregexp: "[0-9a-fA-F]{6}"
       value_required: true
     }
@@ -60,13 +60,13 @@ csvspec: {
     }
 
   column: {
-      name: "string_optional_test"
-      type: { type: STRING }
+      name: "text_optional_test"
+      type: { type: TEXT }
     }
 
     column: {
-      name: "string_required_test"
-      type: { type: STRING }
+      name: "text_required_test"
+      type: { type: TEXT }
       value_required: true
     }
 }
