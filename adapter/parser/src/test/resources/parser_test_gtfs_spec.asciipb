@@ -37,11 +37,11 @@ csvspec: {
 
   column: {
     name: "float_test"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
   }
 
   column: {
       name: "integer_test"
-      type: { type: INT_DEC }
+      type: { type: INTEGER }
     }
 }
