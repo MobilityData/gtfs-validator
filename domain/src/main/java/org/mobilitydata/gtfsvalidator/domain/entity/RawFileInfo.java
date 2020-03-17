@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
 /**
- * The @code{RawFileInfo} class contains information regarding a file location and expected content (file name)
+ * Contains information regarding a file location and expected content (file name)
  */
 public class RawFileInfo {
 

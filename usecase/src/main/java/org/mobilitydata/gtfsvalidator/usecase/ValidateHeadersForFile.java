@@ -56,9 +56,9 @@ public class ValidateHeadersForFile {
 
     /**
      * Use case execution method: for a file, checks the presence of all headers marked as "required" in the
-     * GTFS specification. A {@code MissingHeaderNotice} is generated each time a required header is missing.
-     * A {@code NonStandardHeaderNotice} is generated for each header not marked as "required". These notices are
-     * then added to the {@code ValidationResultRepository} provided in the constructor.
+     * GTFS specification. A {@link MissingHeaderNotice} is generated each time a required header is missing.
+     * A {@link NonStandardHeaderNotice} is generated for each header not marked as "required". These notices are
+     * then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
         List<String> expectedRequiredHeaderList = specRepo.getRequiredHeadersForFile(rawFileInfo);

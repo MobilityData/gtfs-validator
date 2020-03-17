@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity;
 import java.util.Map;
 
 /**
- * The {@code RawEntity} class represents a row of a GTFS file as raw string data.
+ * Represents a row of a GTFS file as raw string data.
  */
 public class RawEntity {
 
@@ -31,6 +31,9 @@ public class RawEntity {
     private final int entityIndex;
 
     /**
+     * This class matches a 1 based index identifying the row location within a GTFS CSV file and its content as a
+     * map of strings.
+     *
      * @param contentByHeaderMap the object mapping rows of a GTFS .txt file on header name
      * @param entityIndex        the 1 based index of the row
      */

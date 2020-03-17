@@ -26,9 +26,9 @@ import java.nio.file.Path;
 import java.util.Comparator;
 
 /**
- * Use case to create a path. This use case is triggered after parsing the rows of a specific file. The resultant path
- * is used in the subsequent steps to either unzip the GTFS dataset to validate or to write the valdiation output
- * results.
+ * Use case to create a path, if the target location is not empty, all files at target are deleted. This use case is
+ * triggered after parsing the rows of a specific file. The resultant path is used in the subsequent steps to either
+ * unzip the GTFS dataset to validate or to write the validation output results.
  */
 public class CleanOrCreatePath {
 

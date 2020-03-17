@@ -19,8 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity;
 import java.util.Map;
 
 /**
- * The {@code ParsedEntity} class represents a row of a GTFS file that has been parsed: the type of each column of the
- * raw has been determined.
+ * Represents a row of a GTFS file that has been parsed: the type of each column of the raw data has been determined.
  */
 public class ParsedEntity {
 
