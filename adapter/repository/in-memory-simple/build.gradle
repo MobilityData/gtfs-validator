@@ -19,7 +19,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version '1.0.0-SNAPSHOT'
+version '1.0.1-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_11
 
@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
-    testImplementation 'org.hamcrest:hamcrest-library:2.2'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
 }
 

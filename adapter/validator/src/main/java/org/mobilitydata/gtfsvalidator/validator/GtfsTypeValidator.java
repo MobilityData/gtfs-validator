@@ -120,7 +120,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                             ));
                         }
                         break;
-                    case INPUT_TYPE_UNSPECIFIED: //String is default
+                    case INPUT_TYPE_UNSPECIFIED: // String is default
                     case STRING:
                         if (columnSpecProto.getName().contains(URL_FIELD_NAME_IDENTIFIER)) {
                             if (!new UrlValidator(VALID_URL_SCHEMES).isValid((String) value)) {

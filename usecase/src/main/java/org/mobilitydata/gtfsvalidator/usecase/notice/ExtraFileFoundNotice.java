@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-plugins {
-    id 'java'
-}
+package org.mobilitydata.gtfsvalidator.usecase.notice;
 
-group 'org.mobilitydata'
-version '1.0.1-SNAPSHOT'
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 
-sourceCompatibility = JavaVersion.VERSION_11
+public class ExtraFileFoundNotice extends WarningNotice {
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation(
-            project(':usecase'),
-            project(':domain'),
-            project(':adapter:repository:in-memory-simple')
-    )
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    public ExtraFileFoundNotice(String filename) {
+        super(filename, W_004, "Non standard file found", "Extra file " + filename + " found in archive");
+    }
 }
