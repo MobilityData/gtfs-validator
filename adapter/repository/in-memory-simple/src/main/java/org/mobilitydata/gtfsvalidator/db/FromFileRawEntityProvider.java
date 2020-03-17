@@ -53,9 +53,9 @@ public class FromFileRawEntityProvider implements RawFileRepository.RawEntityPro
     }
 
     /**
-     * Returns a boolean indicating if a GTFS CSV file has more rows that can be read. 1 if yes, else 0.
+     * Returns a boolean indicating if a GTFS CSV file has more rows that can be read. true if yes, else false.
      *
-     * @return a boolean indicating if a GTFS CSV file has more rows that can be read. 1 if yes, else 0.
+     * @return a boolean indicating if a GTFS CSV file has more rows that can be read. true if yes, else false
      */
     @Override
     public boolean hasNext() {
