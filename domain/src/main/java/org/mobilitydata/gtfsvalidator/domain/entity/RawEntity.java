@@ -52,7 +52,7 @@ public class RawEntity {
     }
 
     /**
-     * Returns the number of headers (columns)
+     * Returns the number of headers (columns).
      *
      * @return the number of headers (columns)
      */
@@ -61,7 +61,7 @@ public class RawEntity {
     }
 
     /**
-     * Returns the 1 based index of the row
+     * Returns the 1 based index of the row. This is used in use cases.
      *
      * @return the 1 based index of the row
      */
