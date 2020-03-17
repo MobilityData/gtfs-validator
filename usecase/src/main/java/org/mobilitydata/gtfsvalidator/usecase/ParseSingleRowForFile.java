@@ -65,7 +65,9 @@ public class ParseSingleRowForFile {
     }
 
     /**
-     * Use case execution method returns a parsed row from a GTFS file
+     * Use case execution method returns a parsed row from a GTFS CSV file. While the processed file has rows, a
+     * {@link RawEntity} is created with 1 based index identifying the row location within a GTFS CSV file and its
+     * content as a map of strings; which allows validation of numeric types.
      *
      * @return a parsed row from a GTFS file
      */
