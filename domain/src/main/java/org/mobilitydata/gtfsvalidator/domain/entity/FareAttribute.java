@@ -8,8 +8,7 @@ public class FareAttribute {
     @NotNull
     final String fareId;
 
-    @NotNull
-    final float price;
+    private final float price;
 
     @NotNull
     final String currency;
@@ -23,7 +22,7 @@ public class FareAttribute {
     private final String agencyId;
     private final int transferDuration;
 
-    public FareAttribute(@NotNull String fareId, @NotNull float price, @NotNull String currency,
+    public FareAttribute(@NotNull String fareId, float price, @NotNull String currency,
                          @NotNull PaymentMethod paymentMethod, @NotNull Transfers transfers, String agencyId,
                          int transferDuration) {
         this.fareId = fareId;
@@ -76,9 +75,13 @@ public class FareAttribute {
             return this;
         }
 
-        public FareAttributeBuilder agencyId(@Nullable int transferDuration) {
+        public FareAttributeBuilder transferDuration(int transferDuration) {
             this.transferDuration = transferDuration;
             return this;
+        }
+
+        public FareAttribute build() {
+            return new FareAttribute(fareId, price, currency, paymentMethod, transfers, agencyId, transferDuration);
         }
     }
 }
