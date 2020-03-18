@@ -21,63 +21,66 @@ import org.jetbrains.annotations.Nullable;
 
 public class Agency {
 
-    private final String agency_id;
+    private final String agencyId;
     private @NotNull
-    final String agency_name;
+    final String agencyName;
     private @NotNull
-    final String agency_url;
+    final String agencyUrl;
     private @NotNull
-    final String agency_timezone;
-    private final String agency_lang;
-    private final String agency_phone;
-    private final String agency_fare_url;
-    private final String agency_email;
+    final String agencyTimezone;
+    private final String agencyLang;
+    private final String agencyPhone;
+    private final String agencyFareUrl;
+    private final String agencyEmail;
 
-    public Agency(String agency_id, @NotNull String agency_name, @NotNull String agency_url,
-                  @NotNull String agency_timezone, String agency_lang, String agency_phone,
+    public Agency(String agencyId, @NotNull String agency_name, @NotNull String agencyUrl,
+                  @NotNull String agencyTimezone, String agencyLang, String agencyPhone,
                   String agency_fare_url, String agency_email) {
 
-        this.agency_id = agency_id;
-        this.agency_name = agency_name;
-        this.agency_url = agency_url;
-        this.agency_timezone = agency_timezone;
-        this.agency_lang = agency_lang;
-        this.agency_phone = agency_phone;
-        this.agency_fare_url = agency_fare_url;
-        this.agency_email = agency_email;
+        this.agencyId = agencyId;
+        this.agencyName = agency_name;
+        this.agencyUrl = agencyUrl;
+        this.agencyTimezone = agencyTimezone;
+        this.agencyLang = agencyLang;
+        this.agencyPhone = agencyPhone;
+        this.agencyFareUrl = agency_fare_url;
+        this.agencyEmail = agency_email;
     }
 
     // getters only for immutability - followed by a builder pattern for construction of objects
-    public String getAgency_id() {
-        return agency_id;
+    public String getAgencyId() {
+        return agencyId;
     }
 
-    public String getAgency_name() {
-        return agency_name;
+    @NotNull
+    public String getAgencyName() {
+        return agencyName;
     }
 
-    public String getAgency_url() {
-        return agency_url;
+    @NotNull
+    public String getAgencyUrl() {
+        return agencyUrl;
     }
 
-    public String getAgency_timezone() {
-        return agency_timezone;
+    @NotNull
+    public String getAgencyTimezone() {
+        return agencyTimezone;
     }
 
-    public String getAgency_lang() {
-        return agency_lang;
+    public String getAgencyLang() {
+        return agencyLang;
     }
 
-    public String getAgency_phone() {
-        return agency_phone;
+    public String getAgencyPhone() {
+        return agencyPhone;
     }
 
-    public String getAgency_fare_url() {
-        return agency_fare_url;
+    public String getAgencyFareUrl() {
+        return agencyFareUrl;
     }
 
-    public String getAgency_email() {
-        return agency_email;
+    public String getAgencyEmail() {
+        return agencyEmail;
     }
 
 
@@ -85,60 +88,60 @@ public class Agency {
 
     public static class AgencyBuilder {
 
-        private String agency_id;
-        private String agency_name;
-        private String agency_url;
-        private String agency_timezone;
-        private String agency_lang;
-        private String agency_phone;
-        private String agency_fare_url;
-        private String agency_email;
+        private String agencyId;
+        private String agencyName;
+        private String agencyUrl;
+        private String agencyTimezone;
+        private String agencyLang;
+        private String agencyPhone;
+        private String agencyFareUrl;
+        private String agencyEmail;
 
         // TODO: Check the necessity to include @NotNull attributes to builder pattern
 
-        public AgencyBuilder agencyId(@Nullable String agency_id) {
-            this.agency_id = agency_id;
+        public AgencyBuilder agencyId(@Nullable String agencyId) {
+            this.agencyId = agencyId;
             return this;
         }
 
-        public AgencyBuilder agencyName(@NotNull String agency_name) {
-            this.agency_name = agency_name;
+        public AgencyBuilder agencyName(@NotNull String agencyName) {
+            this.agencyName = agencyName;
             return this;
         }
 
-        public AgencyBuilder agencyUrl(@NotNull String agency_url) {
-            this.agency_url = agency_url;
+        public AgencyBuilder agencyUrl(@NotNull String agencyUrl) {
+            this.agencyUrl = agencyUrl;
             return this;
         }
 
-        public AgencyBuilder agencyTimezone(@NotNull String agency_timezone) {
-            this.agency_timezone = agency_timezone;
+        public AgencyBuilder agencyTimezone(@NotNull String agencyTimezone) {
+            this.agencyTimezone = agencyTimezone;
             return this;
         }
 
-        public AgencyBuilder agencyLang(@Nullable String agency_lang) {
-            this.agency_lang = agency_lang;
+        public AgencyBuilder agencyLang(@Nullable String agencyLang) {
+            this.agencyLang = agencyLang;
             return this;
         }
 
-        public AgencyBuilder agencyPhone(@Nullable String agency_phone) {
-            this.agency_phone = agency_phone;
+        public AgencyBuilder agencyPhone(@Nullable String agencyPhone) {
+            this.agencyPhone = agencyPhone;
             return this;
         }
 
-        public AgencyBuilder agencyFareUrl(@Nullable String agency_fare_url) {
-            this.agency_fare_url = agency_fare_url;
+        public AgencyBuilder agencyFareUrl(@Nullable String agencyFareUrl) {
+            this.agencyFareUrl = agencyFareUrl;
             return this;
         }
 
-        public AgencyBuilder agencyEmail(@Nullable String agency_email) {
-            this.agency_email = agency_email;
+        public AgencyBuilder agencyEmail(@Nullable String agencyEmail) {
+            this.agencyEmail = agencyEmail;
             return this;
         }
 
         public Agency build() {
-            return new Agency(agency_id, agency_name, agency_url, agency_timezone, agency_lang, agency_phone,
-                    agency_fare_url, agency_email);
+            return new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang, agencyPhone,
+                    agencyFareUrl, agencyEmail);
         }
     }
 }
