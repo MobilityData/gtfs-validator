@@ -6,142 +6,145 @@ import org.jetbrains.annotations.Nullable;
 public class Trip {
 
     @NotNull
-    final String route_id;
+    final String routeId;
     @NotNull
-    final String service_id;
+    final String serviceId;
     @NotNull
-    final String trip_id;
+    final String tripId;
 
-    private final String trip_headsign;
-    private final String trip_short_name;
-    private final Direction direction_id;
-    private final String block_id;
-    private final String shape_id;
-    private final WheelchairAccessibleStatus wheelchair_accessible;
-    private final BikesAllowedStatus bikes_allowed;
+    private final String tripHeadsign;
+    private final String tripShortName;
+    private final Direction directionId;
+    private final String blockId;
+    private final String shapeId;
+    private final WheelchairAccessibleStatus wheelchairAccessibleStatus;
+    private final BikesAllowedStatus bikesAllowedStatus;
 
-    public Trip(@NotNull String route_id, @NotNull String service_id, @NotNull String trip_id, String trip_headsign,
-                String trip_short_name, Direction direction_id, String block_id, String shape_id,
-                WheelchairAccessibleStatus wheelchair_accessible, BikesAllowedStatus bikes_allowed) {
-        this.route_id = route_id;
-        this.service_id = service_id;
-        this.trip_id = trip_id;
-        this.trip_headsign = trip_headsign;
-        this.trip_short_name = trip_short_name;
-        this.direction_id = direction_id;
-        this.block_id = block_id;
-        this.shape_id = shape_id;
-        this.wheelchair_accessible = wheelchair_accessible;
-        this.bikes_allowed = bikes_allowed;
+    public Trip(@NotNull String routeId, @NotNull String serviceId, @NotNull String tripId, String tripHeadsign,
+                String tripShortName, Direction directionId, String blockId, String shapeId,
+                WheelchairAccessibleStatus wheelchairAccessibleStatus, BikesAllowedStatus bikesAllowedStatus) {
+        this.routeId = routeId;
+        this.serviceId = serviceId;
+        this.tripId = tripId;
+        this.tripHeadsign = tripHeadsign;
+        this.tripShortName = tripShortName;
+        this.directionId = directionId;
+        this.blockId = blockId;
+        this.shapeId = shapeId;
+        this.wheelchairAccessibleStatus = wheelchairAccessibleStatus;
+        this.bikesAllowedStatus = bikesAllowedStatus;
     }
 
 
-    public String getRoute_id() {
-        return route_id;
+    @NotNull
+    public String getRouteId() {
+        return routeId;
     }
 
-    public String getService_id() {
-        return service_id;
+    @NotNull
+    public String getServiceId() {
+        return serviceId;
     }
 
-    public String getTrip_id() {
-        return trip_id;
+    @NotNull
+    public String getTripId() {
+        return tripId;
     }
 
-    public String getTrip_headsign() {
-        return trip_headsign;
+    public String getTripHeadsign() {
+        return tripHeadsign;
     }
 
-    public String getTrip_short_name() {
-        return trip_short_name;
+    public String getTripShortName() {
+        return tripShortName;
     }
 
-    public Direction getDirection_id() {
-        return direction_id;
+    public Direction getDirectionId() {
+        return directionId;
     }
 
-    public String getBlock_id() {
-        return block_id;
+    public String getBlockId() {
+        return blockId;
     }
 
-    public String getShape_id() {
-        return shape_id;
+    public String getShapeId() {
+        return shapeId;
     }
 
-    public WheelchairAccessibleStatus getWheelchair_accessible() {
-        return wheelchair_accessible;
+    public WheelchairAccessibleStatus getWheelchairAccessibleStatus() {
+        return wheelchairAccessibleStatus;
     }
 
-    public BikesAllowedStatus getBikes_allowed() {
-        return bikes_allowed;
+    public BikesAllowedStatus getBikesAllowedStatus() {
+        return bikesAllowedStatus;
     }
 
-    public class TripBuilder {
+    public static class TripBuilder {
 
-        private String route_id;
-        private String service_id;
-        private String trip_id;
-        private String trip_headsign;
-        private String trip_short_name;
-        private Direction direction_id;
-        private String block_id;
-        private String shape_id;
-        private WheelchairAccessibleStatus wheelchair_accessible;
-        private BikesAllowedStatus bikes_allowed;
+        private String routeId;
+        private String serviceId;
+        private String tripId;
+        private String tripHeadsign;
+        private String tripShortName;
+        private Direction directionId;
+        private String blockId;
+        private String shapeId;
+        private WheelchairAccessibleStatus wheelchairAccessibleStatus;
+        private BikesAllowedStatus bikesAllowedStatus;
 
-        public TripBuilder routeId(@NotNull String route_id) {
-            this.route_id = route_id;
+        public TripBuilder routeId(@NotNull String routeId) {
+            this.routeId = routeId;
             return this;
         }
 
-        public TripBuilder serviceId(@NotNull String service_id) {
-            this.service_id = service_id;
+        public TripBuilder serviceId(@NotNull String serviceId) {
+            this.serviceId = serviceId;
             return this;
         }
 
-        public TripBuilder tripId(@NotNull String trip_id) {
-            this.trip_id = trip_id;
+        public TripBuilder tripId(@NotNull String tripId) {
+            this.tripId = tripId;
             return this;
         }
 
-        public TripBuilder tripHeadsign(@Nullable String trip_headsign) {
-            this.trip_headsign = trip_headsign;
+        public TripBuilder tripHeadsign(@Nullable String tripHeadsign) {
+            this.tripHeadsign = tripHeadsign;
             return this;
         }
 
-        public TripBuilder tripShortName(@Nullable String trip_short_name) {
-            this.trip_short_name = trip_short_name;
+        public TripBuilder tripShortName(@Nullable String tripShortName) {
+            this.tripShortName = tripShortName;
             return this;
         }
 
-        public TripBuilder directionId(@Nullable Direction direction_id) {
-            this.direction_id = direction_id;
+        public TripBuilder directionId(@Nullable Direction directionId) {
+            this.directionId = directionId;
             return this;
         }
 
-        public TripBuilder blockId(@Nullable String block_id) {
-            this.block_id = block_id;
+        public TripBuilder blockId(@Nullable String blockId) {
+            this.blockId = blockId;
             return this;
         }
 
-        public TripBuilder shapeId(@Nullable String shape_id) {
-            this.shape_id = shape_id;
+        public TripBuilder shapeId(@Nullable String shapeId) {
+            this.shapeId = shapeId;
             return this;
         }
 
-        public TripBuilder wheelchairAccessible(@Nullable WheelchairAccessibleStatus wheelchair_accessible) {
-            this.wheelchair_accessible = wheelchair_accessible;
+        public TripBuilder wheelchairAccessible(@Nullable WheelchairAccessibleStatus wheelchairAccessibleStatus) {
+            this.wheelchairAccessibleStatus = wheelchairAccessibleStatus;
             return this;
         }
 
-        public TripBuilder bikesAllowed(@Nullable BikesAllowedStatus bikes_allowed) {
-            this.bikes_allowed = bikes_allowed;
+        public TripBuilder bikesAllowed(@Nullable BikesAllowedStatus bikesAllowedStatus) {
+            this.bikesAllowedStatus = bikesAllowedStatus;
             return this;
         }
 
         public Trip build() {
-            return new Trip(route_id, service_id, trip_id, trip_headsign, trip_short_name, direction_id, block_id,
-                    shape_id, wheelchair_accessible, bikes_allowed);
+            return new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName, directionId, blockId,
+                    shapeId, wheelchairAccessibleStatus, bikesAllowedStatus);
         }
     }
 }
