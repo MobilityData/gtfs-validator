@@ -6,144 +6,144 @@ import org.jetbrains.annotations.Nullable;
 public class Route {
 
     @NotNull
-    final String route_id;
+    final String routeId;
 
-    private final String agency_id;
-    private final String route_short_name;
-    private final String route_long_name;
-    private final String route_desc;
+    private final String agencyId;
+    private final String routeShortName;
+    private final String routeLongName;
+    private final String routeDesc;
 
     @NotNull
-    final RouteType route_type;
+    final RouteType routeType;
 
-    private final String route_url;
-    private final String route_color;
-    private final String route_text_color;
-    private final int route_sort_order;
+    private final String routeUrl;
+    private final String routeColor;
+    private final String routeTextColor;
+    private final int routeSortOrder;
 
 
-    public Route(@NotNull String route_id, String agency_id, String route_short_name, String route_long_name,
-                 String route_desc, @NotNull RouteType route_type, String route_url, String route_color,
-                 String route_text_color, int route_sort_order) {
-        this.route_id = route_id;
-        this.agency_id = agency_id;
-        this.route_short_name = route_short_name;
-        this.route_long_name = route_long_name;
-        this.route_desc = route_desc;
-        this.route_type = route_type;
-        this.route_url = route_url;
-        this.route_color = route_color;
-        this.route_text_color = route_text_color;
-        this.route_sort_order = route_sort_order;
+    public Route(@NotNull String routeId, String agencyId, String routeShortName, String routeLongName,
+                 String routeDesc, @NotNull RouteType routeType, String routeUrl, String routeColor,
+                 String routeTextColor, int routeSortOrder) {
+        this.routeId = routeId;
+        this.agencyId = agencyId;
+        this.routeShortName = routeShortName;
+        this.routeLongName = routeLongName;
+        this.routeDesc = routeDesc;
+        this.routeType = routeType;
+        this.routeUrl = routeUrl;
+        this.routeColor = routeColor;
+        this.routeTextColor = routeTextColor;
+        this.routeSortOrder = routeSortOrder;
     }
 
 
-    public String getRoute_id() {
-        return route_id;
+    public String getRouteId() {
+        return routeId;
     }
 
-    public String getAgency_id() {
-        return agency_id;
+    public String getAgencyId() {
+        return agencyId;
     }
 
-    public String getRoute_short_name() {
-        return route_short_name;
+    public String getRouteShortName() {
+        return routeShortName;
     }
 
-    public String getRoute_long_name() {
-        return route_long_name;
+    public String getRouteLongName() {
+        return routeLongName;
     }
 
-    public String getRoute_desc() {
-        return route_desc;
+    public String getRouteDesc() {
+        return routeDesc;
     }
 
-    public RouteType getRoute_type() {
-        return route_type;
+    public RouteType getRouteType() {
+        return routeType;
     }
 
-    public String getRoute_url() {
-        return route_url;
+    public String getRouteUrl() {
+        return routeUrl;
     }
 
-    public String getRoute_color() {
-        return route_color;
+    public String getRouteColor() {
+        return routeColor;
     }
 
-    public String getRoute_text_color() {
-        return route_text_color;
+    public String getRouteTextColor() {
+        return routeTextColor;
     }
 
-    public int getRoute_sort_order() {
-        return route_sort_order;
+    public int getRouteSortOrder() {
+        return routeSortOrder;
     }
 
     public static class RouteBuilder {
 
-        private String route_id;
-        private String agency_id;
-        private String route_short_name;
-        private String route_long_name;
-        private String route_desc;
-        private RouteType route_type;
-        private String route_url;
-        private String route_color;
-        private String route_text_color;
-        private int route_sort_order;
+        private String routeId;
+        private String agencyId;
+        private String routeShortName;
+        private String routeLongName;
+        private String routeDesc;
+        private RouteType routeType;
+        private String routeUrl;
+        private String routeColor;
+        private String routeTextColor;
+        private int routeSortOrder;
 
-        public RouteBuilder routeId(@NotNull String route_id) {
-            this.route_id = route_id;
+        public RouteBuilder routeId(@NotNull String routeId) {
+            this.routeId = routeId;
             return this;
         }
 
-        public RouteBuilder routeAgencyId(@Nullable String agency_id) {
-            this.agency_id = agency_id;
+        public RouteBuilder routeAgencyId(@Nullable String agencyId) {
+            this.agencyId = agencyId;
             return this;
         }
 
-        public RouteBuilder routeShortName(@Nullable String route_short_name) {
-            this.route_short_name = route_short_name;
+        public RouteBuilder routeShortName(@Nullable String routeShortName) {
+            this.routeShortName = routeShortName;
             return this;
         }
 
-        public RouteBuilder routeLongName(@Nullable String route_long_name) {
-            this.route_long_name = route_long_name;
+        public RouteBuilder routeLongName(@Nullable String routeLongName) {
+            this.routeLongName = routeLongName;
             return this;
         }
 
-        public RouteBuilder routeDesc(@Nullable String route_desc) {
-            this.route_desc = route_desc;
+        public RouteBuilder routeDesc(@Nullable String routeDesc) {
+            this.routeDesc = routeDesc;
             return this;
         }
 
-        public RouteBuilder routeType(@NotNull int route_type) {
-            this.route_type = RouteType.fromInt(route_type);
+        public RouteBuilder routeType(@NotNull int routeType) {
+            this.routeType = RouteType.fromInt(routeType);
             return this;
         }
 
-        public RouteBuilder routeUrl(@Nullable String route_url) {
-            this.route_url = route_url;
+        public RouteBuilder routeUrl(@Nullable String routeUrl) {
+            this.routeUrl = routeUrl;
             return this;
         }
 
-        public RouteBuilder routeColor(@Nullable String route_color) {
-            this.route_color = route_color;
+        public RouteBuilder routeColor(@Nullable String routeColor) {
+            this.routeColor = routeColor;
             return this;
         }
 
-        public RouteBuilder routeTextColor(@Nullable String route_text_color) {
-            this.route_text_color = route_text_color;
+        public RouteBuilder routeTextColor(@Nullable String routeTextColor) {
+            this.routeTextColor = routeTextColor;
             return this;
         }
 
-        public RouteBuilder routeSortOrder(@Nullable int route_sort_order) {
-            this.route_sort_order = route_sort_order;
+        public RouteBuilder routeSortOrder(@Nullable int routeSortOrder) {
+            this.routeSortOrder = routeSortOrder;
             return this;
         }
 
         public Route build() {
-            Route route = new Route(route_id, agency_id, route_short_name, route_long_name, route_desc, route_type,
-                    route_url, route_color, route_text_color, route_sort_order);
+            Route route = new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,
+                    routeUrl, routeColor, routeTextColor, routeSortOrder);
             return route;
         }
     }
