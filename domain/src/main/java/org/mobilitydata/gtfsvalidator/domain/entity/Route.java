@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020. MobilityData IO.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
 import org.jetbrains.annotations.NotNull;
@@ -6,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 public class Route {
 
     @NotNull
-    final String routeId;
+    private final String routeId;
 
     private final String agencyId;
     private final String routeShortName;
@@ -14,7 +30,7 @@ public class Route {
     private final String routeDesc;
 
     @NotNull
-    final RouteType routeType;
+    private final RouteType routeType;
 
     private final String routeUrl;
     private final String routeColor;
@@ -22,9 +38,15 @@ public class Route {
     private final int routeSortOrder;
 
 
-    public Route(@NotNull String routeId, String agencyId, String routeShortName, String routeLongName,
-                 String routeDesc, @NotNull RouteType routeType, String routeUrl, String routeColor,
-                 String routeTextColor, int routeSortOrder) {
+    public Route(@NotNull String routeId,
+                 String agencyId,
+                 String routeShortName,
+                 String routeLongName,
+                 String routeDesc,
+                 @NotNull RouteType routeType,
+                 String routeUrl, String routeColor,
+                 String routeTextColor,
+                 int routeSortOrder) {
         this.routeId = routeId;
         this.agencyId = agencyId;
         this.routeShortName = routeShortName;
@@ -37,7 +59,7 @@ public class Route {
         this.routeSortOrder = routeSortOrder;
     }
 
-
+    @NotNull
     public String getRouteId() {
         return routeId;
     }
@@ -58,6 +80,7 @@ public class Route {
         return routeDesc;
     }
 
+    @NotNull
     public RouteType getRouteType() {
         return routeType;
     }
@@ -89,11 +112,11 @@ public class Route {
         private String routeUrl;
         private String routeColor;
         private String routeTextColor;
-        private int routeSortOrder;
+        private Integer routeSortOrder;
 
-        public RouteBuilder routeId(@NotNull String routeId) {
+        public RouteBuilder(@NotNull String routeId, @NotNull RouteType routeType) {
             this.routeId = routeId;
-            return this;
+            this.routeType = routeType;
         }
 
         public RouteBuilder routeAgencyId(@Nullable String agencyId) {
@@ -116,11 +139,6 @@ public class Route {
             return this;
         }
 
-        public RouteBuilder routeType(@NotNull int routeType) {
-            this.routeType = RouteType.fromInt(routeType);
-            return this;
-        }
-
         public RouteBuilder routeUrl(@Nullable String routeUrl) {
             this.routeUrl = routeUrl;
             return this;
@@ -136,15 +154,14 @@ public class Route {
             return this;
         }
 
-        public RouteBuilder routeSortOrder(@Nullable int routeSortOrder) {
+        public RouteBuilder routeSortOrder(@Nullable Integer routeSortOrder) {
             this.routeSortOrder = routeSortOrder;
             return this;
         }
 
         public Route build() {
-            Route route = new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,
+            return new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,
                     routeUrl, routeColor, routeTextColor, routeSortOrder);
-            return route;
         }
     }
 }

@@ -28,20 +28,19 @@ public enum RouteType {
     AERIAL_LIFT(6),
     FUNICULAR(7),
     TROLLEY_BUS(11),
-    MONORAIL(12),
-    ERROR(-1);
+    MONORAIL(12);
 
-
-    private int value;
+    private final int value;
 
     RouteType(int value) {
         this.value = value;
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     static public RouteType fromInt(Integer fromValue) {
         return Stream.of(RouteType.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .orElse(ERROR);
+                .get();
     }
 }
