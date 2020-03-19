@@ -5,7 +5,7 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.IntegerFieldValueOutOfRange
 
 public class NoticeMemoryConsumptionTest {
 
-    private void generateNotices(MockValidationResultRepo mockValidationResultRepo, int numberOfNotices) {
+    private void generateNotices(InMemoryValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
             resultRepository.addNotice(new IntegerFieldValueOutOfRangeNotice("filename",
                     "fieldname",
@@ -18,12 +18,25 @@ public class NoticeMemoryConsumptionTest {
     }
 
     @Test
-    public void creationOf100NoticeShouldNotRaiseException() {
+    public void creationOf100NoticeShouldNotExceedMemoryLimit() {
+
+        long totalMemory = Runtime.getRuntime().totalMemory(); // bytes
+
+        InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
+
+        generateNotices(resultRepository, 1);
+        resultRepository.getAll();
 
         long freeMemory = Runtime.getRuntime().freeMemory();  // bytes
 
-        generateNotices(mockValidationResultRepo, 100);
-        mockValidationResultRepo.getAll();
+        System.out.println(
+                String.format("Generating 100 notices: Total memory: %s megabytes, Free memory: %s megabytes, Used memory: %s megabytes",
+                        totalMemory / 1_000_000,
+                        freeMemory / 1_000_000,
+                        (totalMemory - freeMemory) / 1_000_000)
+        );
+
+        assert (totalMemory - freeMemory < 455_000_000);
     }
 
     @Test
@@ -36,6 +49,16 @@ public class NoticeMemoryConsumptionTest {
         generateNotices(resultRepository, 1_000);
         resultRepository.getAll();
 
+        long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
+
+        System.out.println(
+                String.format("Generating 1000 notices: Total memory: %s megabytes, Free memory: %s megabytes, Used memory: %s megabytes",
+                        totalMemory / 1_000_000,
+                        freeMemory / 1_000_000,
+                        (totalMemory - freeMemory) / 1_000_000)
+        );
+
+        assert (totalMemory - freeMemory < 33_000_000);
     }
 
     @Test
@@ -48,6 +71,16 @@ public class NoticeMemoryConsumptionTest {
         generateNotices(resultRepository, 10_000);
         resultRepository.getAll();
 
+        long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
+
+        System.out.println(
+                String.format("Generating 10000 notices: Total memory: %s megabytes, Free memory: %s megabytes, Used memory: %s megabytes",
+                        totalMemory / 1_000_000,
+                        freeMemory / 1_000_000,
+                        (totalMemory - freeMemory) / 1_000_000)
+        );
+
+        assert (totalMemory - freeMemory < 34_000_000);
     }
 
     @Test
@@ -60,6 +93,38 @@ public class NoticeMemoryConsumptionTest {
         generateNotices(resultRepository, 100_000);
         resultRepository.getAll();
 
+        long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
+
+        System.out.println(
+                String.format("Generating 100000 notices: Total memory: %s megabytes, Free memory: %s megabytes, Used memory: %s megabytes",
+                        totalMemory / 1_000_000,
+                        freeMemory / 1_000_000,
+                        (totalMemory - freeMemory) / 1_000_000)
+        );
+
+        assert (totalMemory - freeMemory < 105_000_000);
+    }
+
+    @Test
+    public void creationOf1000000NoticeShouldNotExceedMemoryLimit() {
+
+        long totalMemory = Runtime.getRuntime().totalMemory(); // bytes
+
+        InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
+
+        generateNotices(resultRepository, 1_000_000);
+        resultRepository.getAll();
+
+        long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
+
+        System.out.println(
+                String.format("Generating 1000000 notices: Total memory: %s megabytes, Free memory: %s megabytes, Used memory: %s megabytes",
+                        totalMemory / 1_000_000,
+                        freeMemory / 1_000_000,
+                        (totalMemory - freeMemory) / 1_000_000)
+        );
+
+        assert (totalMemory - freeMemory < 418_000_000);
     }
 
     @Test
@@ -74,7 +139,13 @@ public class NoticeMemoryConsumptionTest {
 
         long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
 
-        generateNotices(mockValidationResultRepo, 1_000_000);
-        mockValidationResultRepo.getAll();
+        System.out.println(
+                String.format("Generating 2000000 notices: Total memory: %s megabytes, Free memory: %s megabytes, Used memory: %s megabytes",
+                        totalMemory / 1_000_000,
+                        freeMemory / 1_000_000,
+                        (totalMemory - freeMemory) / 1_000_000)
+        );
+
+        assert (totalMemory - freeMemory < 130_000_000);
     }
 }
