@@ -22,20 +22,29 @@ import org.jetbrains.annotations.Nullable;
 public class Agency {
 
     private final String agencyId;
-    private @NotNull
-    final String agencyName;
-    private @NotNull
-    final String agencyUrl;
-    private @NotNull
-    final String agencyTimezone;
+
+    @NotNull
+    private final String agencyName;
+
+    @NotNull
+    private final String agencyUrl;
+
+    @NotNull
+    private final String agencyTimezone;
+
     private final String agencyLang;
     private final String agencyPhone;
     private final String agencyFareUrl;
     private final String agencyEmail;
 
-    public Agency(String agencyId, @NotNull String agency_name, @NotNull String agencyUrl,
-                  @NotNull String agencyTimezone, String agencyLang, String agencyPhone,
-                  String agency_fare_url, String agency_email) {
+    public Agency(String agencyId,
+                  @NotNull String agency_name,
+                  @NotNull String agencyUrl,
+                  @NotNull String agencyTimezone,
+                  String agencyLang,
+                  String agencyPhone,
+                  String agency_fare_url,
+                  String agency_email) {
 
         this.agencyId = agencyId;
         this.agencyName = agency_name;
