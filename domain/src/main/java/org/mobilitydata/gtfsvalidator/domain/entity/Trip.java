@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020. MobilityData IO.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
 import org.jetbrains.annotations.NotNull;
@@ -6,11 +22,11 @@ import org.jetbrains.annotations.Nullable;
 public class Trip {
 
     @NotNull
-    final String routeId;
+    private final String routeId;
     @NotNull
-    final String serviceId;
+    private final String serviceId;
     @NotNull
-    final String tripId;
+    private final String tripId;
 
     private final String tripHeadsign;
     private final String tripShortName;
@@ -20,9 +36,16 @@ public class Trip {
     private final WheelchairAccessibleStatus wheelchairAccessibleStatus;
     private final BikesAllowedStatus bikesAllowedStatus;
 
-    public Trip(@NotNull String routeId, @NotNull String serviceId, @NotNull String tripId, String tripHeadsign,
-                String tripShortName, Direction directionId, String blockId, String shapeId,
-                WheelchairAccessibleStatus wheelchairAccessibleStatus, BikesAllowedStatus bikesAllowedStatus) {
+    public Trip(@NotNull String routeId,
+                @NotNull String serviceId,
+                @NotNull String tripId,
+                String tripHeadsign,
+                String tripShortName,
+                Direction directionId,
+                String blockId,
+                String shapeId,
+                WheelchairAccessibleStatus wheelchairAccessibleStatus,
+                BikesAllowedStatus bikesAllowedStatus) {
         this.routeId = routeId;
         this.serviceId = serviceId;
         this.tripId = tripId;
@@ -92,19 +115,12 @@ public class Trip {
         private WheelchairAccessibleStatus wheelchairAccessibleStatus;
         private BikesAllowedStatus bikesAllowedStatus;
 
-        public TripBuilder routeId(@NotNull String routeId) {
+        public TripBuilder(@NotNull String routeId,
+                           @NotNull String serviceId,
+                           @NotNull String tripId) {
             this.routeId = routeId;
-            return this;
-        }
-
-        public TripBuilder serviceId(@NotNull String serviceId) {
             this.serviceId = serviceId;
-            return this;
-        }
-
-        public TripBuilder tripId(@NotNull String tripId) {
             this.tripId = tripId;
-            return this;
         }
 
         public TripBuilder tripHeadsign(@Nullable String tripHeadsign) {
