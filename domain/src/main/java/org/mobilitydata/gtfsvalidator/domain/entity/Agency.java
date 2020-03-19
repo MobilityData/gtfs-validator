@@ -38,25 +38,24 @@ public class Agency {
     private final String agencyEmail;
 
     public Agency(String agencyId,
-                  @NotNull String agency_name,
+                  @NotNull String agencyName,
                   @NotNull String agencyUrl,
                   @NotNull String agencyTimezone,
                   String agencyLang,
                   String agencyPhone,
-                  String agency_fare_url,
-                  String agency_email) {
+                  String agencyFareUrl,
+                  String agencyEmail) {
 
         this.agencyId = agencyId;
-        this.agencyName = agency_name;
+        this.agencyName = agencyName;
         this.agencyUrl = agencyUrl;
         this.agencyTimezone = agencyTimezone;
         this.agencyLang = agencyLang;
         this.agencyPhone = agencyPhone;
-        this.agencyFareUrl = agency_fare_url;
-        this.agencyEmail = agency_email;
+        this.agencyFareUrl = agencyFareUrl;
+        this.agencyEmail = agencyEmail;
     }
 
-    // getters only for immutability - followed by a builder pattern for construction of objects
     public String getAgencyId() {
         return agencyId;
     }
@@ -92,9 +91,6 @@ public class Agency {
         return agencyEmail;
     }
 
-
-    // builder pattern
-
     public static class AgencyBuilder {
 
         private String agencyId;
@@ -106,25 +102,16 @@ public class Agency {
         private String agencyFareUrl;
         private String agencyEmail;
 
-        // TODO: Check the necessity to include @NotNull attributes to builder pattern
+        public AgencyBuilder(@NotNull String agencyName,
+                             @NotNull String agencyUrl,
+                             @NotNull String agencyTimezone) {
+            this.agencyName = agencyName;
+            this.agencyUrl = agencyUrl;
+            this.agencyTimezone = agencyTimezone;
+        }
 
         public AgencyBuilder agencyId(@Nullable String agencyId) {
             this.agencyId = agencyId;
-            return this;
-        }
-
-        public AgencyBuilder agencyName(@NotNull String agencyName) {
-            this.agencyName = agencyName;
-            return this;
-        }
-
-        public AgencyBuilder agencyUrl(@NotNull String agencyUrl) {
-            this.agencyUrl = agencyUrl;
-            return this;
-        }
-
-        public AgencyBuilder agencyTimezone(@NotNull String agencyTimezone) {
-            this.agencyTimezone = agencyTimezone;
             return this;
         }
 
