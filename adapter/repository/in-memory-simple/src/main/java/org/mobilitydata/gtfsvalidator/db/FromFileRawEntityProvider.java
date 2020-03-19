@@ -27,6 +27,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+/**
+ * Provides methods to perform operations on rows of a GTFS CSV file. Includes feature to transform a row of a GTFS
+ * CSV file into a {@link RawEntity}.
+ * This is called in {@link InMemoryRawFileRepository} to retrieve the data provider for a specific GTFS CSV file.
+ */
 public class FromFileRawEntityProvider implements RawFileRepository.RawEntityProvider {
     private final MappingIterator<Map<String, String>> dataSource;
     private final int headerCount;
@@ -47,16 +52,31 @@ public class FromFileRawEntityProvider implements RawFileRepository.RawEntityPro
         headerCount = headerCountArray[0];
     }
 
+    /**
+     * Returns a boolean indicating if a GTFS CSV file has more rows that can be read. true if yes, else false.
+     *
+     * @return a boolean indicating if a GTFS CSV file has more rows that can be read. true if yes, else false
+     */
     @Override
     public boolean hasNext() {
         return dataSource.hasNext();
     }
 
+    /**
+     * Returns the next row of a GTFS CSV file as a {@link RawEntity}
+     *
+     * @return the next row of a GTFS CSV file as a {@link RawEntity}
+     */
     @Override
     public RawEntity getNext() {
         return new RawEntity(dataSource.next(), dataSource.getCurrentLocation().getLineNr());
     }
 
+    /**
+     * Returns the number of header of a GTFS CSV file.
+     *
+     * @return the number of header of a GTFS CSV file.
+     */
     @Override
     public int getHeaderCount() {
         return headerCount;

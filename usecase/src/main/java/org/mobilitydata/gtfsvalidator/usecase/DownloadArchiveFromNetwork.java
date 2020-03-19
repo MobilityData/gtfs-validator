@@ -25,13 +25,20 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+/**
+ * Use case to download archive from network. This is the first step of the validation process.
+ */
 public class DownloadArchiveFromNetwork {
 
     private final URL sourceUrl;
     private final String targetPath;
     private final ValidationResultRepository resultRepo;
 
-
+    /**
+     * @param url        a url pointing to a remote archive to download
+     * @param targetPath a path specifying the download target directory
+     * @param resultRepo a repository storing information about the validation process
+     */
     public DownloadArchiveFromNetwork(final URL url,
                                       final String targetPath,
                                       final ValidationResultRepository resultRepo) {
@@ -40,6 +47,11 @@ public class DownloadArchiveFromNetwork {
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * Use case execution method: downloads a GTFS archive at the URL provided in the constructor. If the process fails
+     * a {@link CannotDownloadArchiveFromNetworkNotice} is generated and added to the {@link ValidationResultRepository}
+     * provided in the constructor.
+     */
     public void execute() {
         //TODO: does using File class break clean architecture (make business logic dependant on a framework)?
         //Should the call to File happen in outside layers?
