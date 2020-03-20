@@ -20,8 +20,12 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
 import java.util.List;
+
+/**
+ * Use case to validate the presence of all required files. This use case ensures that at least files from the core GTFS
+ * specification are present. This step fits as the 3rd step of the validation process.
+ */
 
 public class ValidateAllRequiredFilePresence {
 
@@ -29,6 +33,11 @@ public class ValidateAllRequiredFilePresence {
     private final RawFileRepository rawFileRepo;
     private final ValidationResultRepository resultRepo;
 
+    /**
+     * @param specRepo    a repository storing information about the GTFS specification used
+     * @param rawFileRepo a repository storing information about a GTFS dataset
+     * @param resultRepo  a repository storing information about the validation process
+     */
     public ValidateAllRequiredFilePresence(final GtfsSpecRepository specRepo,
                                            final RawFileRepository rawFileRepo,
                                            final ValidationResultRepository resultRepo) {
@@ -37,6 +46,11 @@ public class ValidateAllRequiredFilePresence {
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * Use case execution method: checks the presence of all required files in a {@link RawFileRepository} instance
+     * A new notice is generated each time a file marked as "required" is missing from a {@link RawFileRepository}
+     * instance. This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
+     */
     public List<String> execute() {
         if (!rawFileRepo.getFilenameAll().containsAll(specRepo.getRequiredFilenameList())) {
 

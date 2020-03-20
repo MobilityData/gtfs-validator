@@ -23,6 +23,9 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * This holds information about a GTFS dataset to validate.
+ */
 public interface RawFileRepository {
 
     RawFileInfo create(RawFileInfo fileInfo);
