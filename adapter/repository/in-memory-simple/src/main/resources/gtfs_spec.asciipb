@@ -64,7 +64,7 @@ csvspec: {
     field_number: 5
     name: "feed_start_date"
     required: false
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
     # The first date for which the service described in this feed
     # is complete and authoritative.
   }
@@ -73,7 +73,7 @@ csvspec: {
     field_number: 6
     name: "feed_end_date"
     required: false
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
     # The last date for which the service described in this feed
     # is complete and authoritative.
   }
@@ -265,7 +265,7 @@ csvspec: {
   column: {
     field_number: 5
     name: "stop_lat"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: -90.0
     floatmax: 90.0
     required: false
@@ -281,7 +281,7 @@ csvspec: {
   column: {
     field_number: 6
     name: "stop_lon"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: -180.0
     floatmax: 180.0
     required: false
@@ -317,7 +317,7 @@ csvspec: {
     field_number: 11
     name: "location_type"
     required: false
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 4
     namedvalue: {
@@ -375,7 +375,7 @@ csvspec: {
     field_number: 14
     name: "wheelchair_boarding"
     required: false
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 2
     namedvalue: {
@@ -478,7 +478,7 @@ csvspec: {
     required: true
     value_required: true
     matchregexp: "[0-9]|1[0-2]|[1-9][0-9]{2}|1[0-9]{3}"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 7
     # The type of vehicle running on this route.
@@ -517,7 +517,7 @@ csvspec: {
     name: "route_color"
     required: false
     matchregexp: "[0-9a-fA-F]{6}"
-    type: { type: INT_HEX }
+    type: { type: COLOR }
     # The color assigned to a route, if any, as six-place hexadecimal number.
     # The first, middle, and last two places define the red, green, and blue
     # sRGB color component, respectively, as an integer between 0 and 255.
@@ -529,7 +529,7 @@ csvspec: {
     name: "route_text_color"
     required: false
     matchregexp: "[0-9a-fA-F]{6}"
-    type: { type: INT_HEX }
+    type: { type: COLOR }
     # Color to be used for text drawn on a background of route_color,
     # as a six-place hexadecimal number.  The default is 000000 (black).
     # This field is ignored if no route_color is given.
@@ -538,7 +538,7 @@ csvspec: {
   column: {
     field_number: 13
     name: "route_sort_order"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 100000
@@ -591,21 +591,21 @@ csvspec: {
     name: "start_date"
     required: true
     value_required: true
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
   }
   column: {
     field_number: 4
     name: "end_date"
     required: true
     value_required: true
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
   }
   column: {
     field_number: 5
     name: "monday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -614,7 +614,7 @@ csvspec: {
     name: "tuesday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -623,7 +623,7 @@ csvspec: {
     name: "wednesday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -632,7 +632,7 @@ csvspec: {
     name: "thursday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -641,7 +641,7 @@ csvspec: {
     name: "friday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -650,7 +650,7 @@ csvspec: {
     name: "saturday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -659,7 +659,7 @@ csvspec: {
     name: "sunday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -692,7 +692,7 @@ csvspec: {
     name: "date"
     required: true
     value_required: true
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
     # The date to be included or excluded.
   }
 
@@ -701,7 +701,7 @@ csvspec: {
     name: "exception_type"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 1
     intmax: 2
     namedvalue: {
@@ -825,7 +825,7 @@ csvspec: {
     required: false
     intmin: 0
     intmax: 1
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     # An optional binary value that can be used by an agency to group
     # trips for the same route into separate directions of travel.
   }
@@ -841,7 +841,7 @@ csvspec: {
   column: {
     field_number: 12
     name: "bikes_allowed"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 2
@@ -854,7 +854,7 @@ csvspec: {
     field_number: 13
     name: "wheelchair_accessible"
     required: false
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 2
     namedvalue: {
@@ -956,7 +956,7 @@ csvspec: {
     name: "stop_sequence"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 2147483647
     cache: {
@@ -981,7 +981,8 @@ csvspec: {
     field_number: 5
     name: "arrival_time"
     required: false
-    type: { type: TIME_HHCMMCSS }
+    matchregexp: "([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]"
+    type: { type: TIME }
     cache: {
       cache_numbers: true
     }
@@ -990,7 +991,7 @@ csvspec: {
     field_number: 6
     name: "departure_time"
     required: false
-    type: { type: TIME_HHCMMCSS }
+    type: { type: TIME }
     cache: {
       cache_numbers: true
     }
@@ -1009,7 +1010,7 @@ csvspec: {
   column: {
     field_number: 7
     name: "timepoint"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 1
@@ -1023,7 +1024,7 @@ csvspec: {
   column: {
     field_number: 8
     name: "drop_off_type"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 3
@@ -1031,7 +1032,7 @@ csvspec: {
   column: {
     field_number: 9
     name: "pickup_type"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 3
@@ -1045,7 +1046,7 @@ csvspec: {
   column: {
     field_number: 10
     name: "shape_dist_traveled"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: false
     floatmin: 0
     floatmax: 2147483647
@@ -1128,7 +1129,7 @@ csvspec: {
     name: "price"
     required: true
     value_required: true
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: 0.0
     floatmax:  100.0
   }
@@ -1145,7 +1146,7 @@ csvspec: {
     name: "payment_method"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
     # When and how to pay.
@@ -1164,7 +1165,7 @@ csvspec: {
     name: "transfers"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     # The maximum number of transfers (excluding block transfers)
     # that are possible with this fare; unlimited if empty.
@@ -1176,7 +1177,7 @@ csvspec: {
   column: {
     field_number: 8
     name: "transfer_duration"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 7200
@@ -1312,7 +1313,7 @@ csvspec: {
     name: "shape_pt_sequence"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 5500000
     # The values of shape_pt_sequence must be non-negative integers.
@@ -1324,7 +1325,7 @@ csvspec: {
   column: {
     field_number: 4
     name: "shape_dist_traveled"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: false
     floatmin: 0
     floatmax: 2147483647
@@ -1334,7 +1335,7 @@ csvspec: {
     name: "shape_pt_lat"
     required: true
     value_required: true
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: -90.0
     floatmax: 90.0
     # WGS 84 latitude of this vertex.
@@ -1344,7 +1345,7 @@ csvspec: {
     name: "shape_pt_lon"
     required: true
     value_required: true
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: -180.0
     floatmax: 180.0
     # WGS 84 longitude of this vertex.
@@ -1383,7 +1384,7 @@ csvspec: {
     name: "start_time"
     required: true
     value_required: true
-    type: { type: TIME_HHCMMCSS }
+    type: { type: TIME }
     # Start of time interval (included).
   }
   column: {
@@ -1391,7 +1392,7 @@ csvspec: {
     name: "end_time"
     required: true
     value_required: true
-    type: { type: TIME_HHCMMCSS }
+    type: { type: TIME }
     # End of time interval (excluded, unless start_time = end_time).
   }
 
@@ -1400,7 +1401,7 @@ csvspec: {
     name: "headway_secs"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 3600
     # The distance in time between two successive trips.
@@ -1409,7 +1410,7 @@ csvspec: {
   column: {
     field_number: 6
     name: "exact_times"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 1
@@ -1544,7 +1545,7 @@ csvspec: {
     name: "transfer_type"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 3
     # NOTE: By the public GTFS spec, the column is required,
@@ -1578,7 +1579,7 @@ csvspec: {
   column: {
     field_number: 9
     name: "min_transfer_time"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 900
@@ -1621,7 +1622,7 @@ csvspec: {
     field_number: 9
     name: "pathway_mode"
     required: false
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 1
     intmax: 7
     # The mode of pathway.
@@ -1685,7 +1686,7 @@ csvspec: {
     name: "is_bidirectional"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
     namedvalue: {
@@ -1707,7 +1708,7 @@ csvspec: {
   column: {
     field_number: 17
     name: "length"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: 0
     floatmax: 500
     required: false
@@ -1717,7 +1718,7 @@ csvspec: {
   column: {
     field_number: 5
     name: "traversal_time"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 500
@@ -1741,7 +1742,7 @@ csvspec: {
     name: "stair_count"
     intmin: -500
     intmax: 500
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
   }
 
@@ -1758,7 +1759,7 @@ csvspec: {
     name: "max_slope"
     floatmin: -28.0
     floatmax: 28.0
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: false
   }
 
@@ -1770,7 +1771,7 @@ csvspec: {
     name: "min_width"
     intmin: 0
     intmax: 15
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: false
   }
 
@@ -1819,7 +1820,7 @@ csvspec: {
   column: {
     field_number: 3
     name: "level_index"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: -10.0
     floatmax: 10.0
     required: true
@@ -1903,7 +1904,7 @@ csvspec: {
     field_number: 7
     name: "is_producer"
     required: false
-    type: { type: INT }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
     namedvalue: {
@@ -1923,7 +1924,7 @@ csvspec: {
     field_number: 8
     name: "is_authority"
     required: false
-    type: { type: INT }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
     namedvalue: {
@@ -1942,7 +1943,7 @@ csvspec: {
     field_number: 9
     name: "is_operator"
     required: false
-    type: { type: INT }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
     namedvalue: {

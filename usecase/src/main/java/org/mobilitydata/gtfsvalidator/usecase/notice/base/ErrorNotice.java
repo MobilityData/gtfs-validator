@@ -35,6 +35,7 @@ public class ErrorNotice extends Notice {
     protected static final String E_013 = "E013";
     protected static final String E_014 = "E014";
     protected static final String E_015 = "E015";
+    protected static final String E_016 = "E016";
 
     public ErrorNotice(final String filename,
                        final String noticeId,

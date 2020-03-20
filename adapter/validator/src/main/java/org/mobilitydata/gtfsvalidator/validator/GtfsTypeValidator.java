@@ -26,21 +26,37 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.*;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeValidator {
     private final GtfsSpecificationProto.CsvSpecProto fileSchema;
-
-    private static final String[] VALID_URL_SCHEMES = {"http", "https"};
+    private final FloatValidator floatValidator;
+    private final IntegerValidator integerValidator;
+    private final UrlValidator urlValidator;
+    private final RegexValidator colorValidator;
+    private final RegexValidator timeValidator;
+    private final Set<String> timezoneSet;
 
     private static boolean isPrintableAscii(char ch) {
         return ch >= 32 && ch < 127;
     }
 
-    public GtfsTypeValidator(GtfsSpecificationProto.CsvSpecProto fileSchema) {
+    public GtfsTypeValidator(GtfsSpecificationProto.CsvSpecProto fileSchema,
+                             FloatValidator floatValidator,
+                             IntegerValidator integerValidator,
+                             UrlValidator urlValidator,
+                             RegexValidator colorValidator,
+                             RegexValidator timeValidator,
+                             Set<String> timezoneSet) {
         this.fileSchema = fileSchema;
+        this.floatValidator = floatValidator;
+        this.integerValidator = integerValidator;
+        this.urlValidator = urlValidator;
+        this.colorValidator = colorValidator;
+        this.timeValidator = timeValidator;
+        this.timezoneSet = timezoneSet;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -59,7 +75,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                     case TEXT:
                         break;
                     case FLOAT: {
-                        if (!FloatValidator.getInstance().isInRange(
+                        if (!floatValidator.isInRange(
                                 (Float) value,
                                 columnSpecProto.getFloatmin(),
                                 columnSpecProto.getFloatmax())) {
@@ -76,7 +92,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                         break;
                     }
                     case INTEGER: {
-                        if (!IntegerValidator.getInstance().isInRange(
+                        if (!integerValidator.isInRange(
                                 (Integer) value,
                                 columnSpecProto.getIntmin(),
                                 columnSpecProto.getIntmax())) {
@@ -93,7 +109,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                         break;
                     }
                     case COLOR: {  //Color
-                        if (!new RegexValidator(columnSpecProto.getMatchregexp()).isValid((String) value)) {
+                        if (!colorValidator.isValid((String) value)) {
                             toReturn.add(new InvalidColorNotice(
                                     toValidate.getRawFileInfo().getFilename(),
                                     columnSpecProto.getName(),
@@ -104,10 +120,9 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                         break;
                     }
                     case TIMEZONE: {
-                        // Uses IANA timezone database shipped with JDK
-                        // to update without updating JDK see https://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html
+
                         //noinspection RedundantCast
-                        if (!ZoneId.getAvailableZoneIds().contains((String) value)) {
+                        if (!timezoneSet.contains((String) value)) {
                             toReturn.add(new InvalidTimezoneNotice(
                                     toValidate.getRawFileInfo().getFilename(),
                                     columnSpecProto.getName(),
@@ -134,7 +149,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                         break;
                     }
                     case URL: {
-                        if (!new UrlValidator(VALID_URL_SCHEMES).isValid((String) value)) {
+                        if (!urlValidator.isValid((String) value)) {
                             toReturn.add(new InvalidUrlNotice(
                                     toValidate.getRawFileInfo().getFilename(),
                                     columnSpecProto.getName(),
@@ -144,8 +159,18 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                         }
                         break;
                     }
-                    case DATE:
                     case TIME: {
+                        if (!timeValidator.isValid((String) value)) {
+                            toReturn.add(new InvalidTimeNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    (String) value
+                            ));
+                        }
+                        break;
+                    }
+                    case DATE: {
                         toReturn.add(new UnsupportedGtfsTypeNotice(
                                 toValidate.getRawFileInfo().getFilename(),
                                 columnSpecProto.getName(),

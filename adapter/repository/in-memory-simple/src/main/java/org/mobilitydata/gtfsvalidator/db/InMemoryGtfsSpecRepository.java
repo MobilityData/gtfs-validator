@@ -18,6 +18,10 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import com.google.common.io.Resources;
 import com.google.protobuf.TextFormat;
+import org.apache.commons.validator.routines.FloatValidator;
+import org.apache.commons.validator.routines.IntegerValidator;
+import org.apache.commons.validator.routines.RegexValidator;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
@@ -26,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +41,10 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     private final GtfsSpecificationProto.CsvSpecProtos inMemoryGTFSSpec;
     private final Map<String, ParsedEntityTypeValidator> validatorByFilenameCache = new HashMap<>();
+
+    private static final String[] VALID_URL_SCHEMES = {"http", "https"};
+    private static final String VALID_COLOR_REGEX_PATTERN = "[0-9a-fA-F]{6}";
+    private static final String VALID_TIME_REGEXP_PATTERN = "([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]";
 
     public InMemoryGtfsSpecRepository(final String specResourceName) throws IOException {
         //noinspection UnstableApiUsage
@@ -101,7 +110,9 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                         .filter(spec -> file.getFilename().equals(spec.getFilename()))
                         .findAny()
                         .orElse(null),
-                file);
+                file,
+                FloatValidator.getInstance(),
+                IntegerValidator.getInstance());
     }
 
     @Override
@@ -113,7 +124,16 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                     inMemoryGTFSSpec.getCsvspecList().stream()
                             .filter(spec -> file.getFilename().equals(spec.getFilename()))
                             .findAny()
-                            .orElse(null));
+                            .orElse(null),
+                    FloatValidator.getInstance(),
+                    IntegerValidator.getInstance(),
+                    new UrlValidator(VALID_URL_SCHEMES),
+                    new RegexValidator(VALID_COLOR_REGEX_PATTERN),
+                    new RegexValidator(VALID_TIME_REGEXP_PATTERN),
+                    // Uses IANA timezone database shipped with JDK
+                    // to update without updating JDK see
+                    // https://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html
+                    ZoneId.getAvailableZoneIds());
             validatorByFilenameCache.put(file.getFilename(), toReturn);
         }
 

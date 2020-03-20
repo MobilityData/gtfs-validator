@@ -33,10 +33,15 @@ import java.util.*;
 public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
     private final GtfsSpecificationProto.CsvSpecProto fileSchema;
     private final RawFileInfo rawFileInfo;
+    private final FloatValidator floatValidator;
+    private final IntegerValidator integerValidator;
 
-    public GtfsEntityParser(GtfsSpecificationProto.CsvSpecProto fileSchema, RawFileInfo rawFileInfo) {
+    public GtfsEntityParser(GtfsSpecificationProto.CsvSpecProto fileSchema, RawFileInfo rawFileInfo,
+                            FloatValidator floatValidator, IntegerValidator integerValidator) {
         this.fileSchema = fileSchema;
         this.rawFileInfo = rawFileInfo;
+        this.floatValidator = floatValidator;
+        this.integerValidator = integerValidator;
     }
 
     @Override
@@ -50,7 +55,6 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
             if (!Strings.isNullOrEmpty(rawField)) {
 
                 if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT) {
-                    FloatValidator floatValidator = FloatValidator.getInstance();
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
@@ -67,8 +71,6 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                     }
                 } else if (columnSpecProto.getType().getType() ==
                         GtfsSpecificationProto.ColumnInputType.InputType.INTEGER) {
-
-                    IntegerValidator integerValidator = IntegerValidator.getInstance();
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
@@ -100,7 +102,6 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
             if (!Strings.isNullOrEmpty(rawField)) {
 
                 if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT) {
-                    FloatValidator floatValidator = FloatValidator.getInstance();
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
@@ -111,7 +112,6 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
 
                 } else if (columnSpecProto.getType().getType() ==
                         GtfsSpecificationProto.ColumnInputType.InputType.INTEGER) {
-                    IntegerValidator integerValidator = IntegerValidator.getInstance();
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
