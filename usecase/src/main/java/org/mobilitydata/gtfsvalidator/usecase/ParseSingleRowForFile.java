@@ -54,7 +54,7 @@ public class ParseSingleRowForFile {
 
         if (hasNext()) {
             RawEntity rawEntity = provider.getNext();
-            parser.validateNumericTypes(rawEntity).forEach(resultRepo::addNotice);
+            parser.validateNonStringTypes(rawEntity).forEach(resultRepo::addNotice);
             toReturn = parser.parse(rawEntity);
         }
 

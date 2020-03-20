@@ -48,7 +48,7 @@ class ParseSingleRowForFileTest {
         }
 
         @Override
-        public Collection<ErrorNotice> validateNumericTypes(RawEntity toValidate) {
+        public Collection<ErrorNotice> validateNonStringTypes(RawEntity toValidate) {
 
             ++callToValidateNumericTypesCount;
 

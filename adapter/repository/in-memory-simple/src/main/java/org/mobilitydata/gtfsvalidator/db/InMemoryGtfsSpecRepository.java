@@ -18,10 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import com.google.common.io.Resources;
 import com.google.protobuf.TextFormat;
-import org.apache.commons.validator.routines.FloatValidator;
-import org.apache.commons.validator.routines.IntegerValidator;
-import org.apache.commons.validator.routines.RegexValidator;
-import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
@@ -112,7 +109,8 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                         .orElse(null),
                 file,
                 FloatValidator.getInstance(),
-                IntegerValidator.getInstance());
+                IntegerValidator.getInstance(),
+                DateValidator.getInstance());
     }
 
     @Override

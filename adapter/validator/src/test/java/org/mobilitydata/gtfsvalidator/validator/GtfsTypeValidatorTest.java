@@ -1141,44 +1141,4 @@ class GtfsTypeValidatorTest {
         assertEquals("Missing value for field:type_date marked as required in entity with id:test_id",
                 notice.getDescription());
     }
-
-    @Test
-    void dateTypeIsUnsupported() {
-
-        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
-        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
-        when(mockColumnSpec.getName()).thenReturn("type_date");
-
-        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
-        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.DATE);
-
-        when(mockColumnSpec.getType()).thenReturn(mockInputType);
-        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
-
-        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
-                mock(FloatValidator.class),
-                mock(IntegerValidator.class),
-                mock(UrlValidator.class),
-                mock(RegexValidator.class),
-                mock(RegexValidator.class),
-                Collections.emptySet()
-        );
-
-        Collection<Notice> result = underTest.validate(new ParsedEntity(
-                TEST_ID,
-                Map.of("type_date", TEST),
-                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
-        ));
-
-        assertEquals(1, result.size());
-
-        Notice notice = new ArrayList<>(result).get(0);
-        assertThat(notice, instanceOf(UnsupportedGtfsTypeNotice.class));
-        assertEquals("I001", notice.getId());
-        assertEquals("Unsupported gtfs type", notice.getTitle());
-        assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Tried to validate an unsupported Gtfs type in file:test_file.tst, " +
-                        "entityId:test_id, field name:type_date -->IGNORED",
-                notice.getDescription());
-    }
 }

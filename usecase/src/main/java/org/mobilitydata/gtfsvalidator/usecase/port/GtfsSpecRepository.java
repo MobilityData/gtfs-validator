@@ -40,7 +40,7 @@ public interface GtfsSpecRepository {
     ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file);
 
     interface RawEntityParser {
-        Collection<ErrorNotice> validateNumericTypes(RawEntity toValidate);
+        Collection<ErrorNotice> validateNonStringTypes(RawEntity toValidate);
 
         ParsedEntity parse(RawEntity toParse);
     }

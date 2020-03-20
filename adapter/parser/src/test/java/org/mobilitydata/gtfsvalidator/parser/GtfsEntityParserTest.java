@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.parser;
 
+import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.FloatValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.junit.jupiter.api.Test;
@@ -23,11 +24,14 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
+import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseDateNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseFloatNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mockito.ArgumentMatchers;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,14 +59,18 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mockFloatValidator,
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
-        Collection<ErrorNotice> result = underTest.validateNumericTypes(new RawEntity(
+        Collection<ErrorNotice> result = underTest.validateNonStringTypes(new RawEntity(
                 Map.of("float_type", "1.0"),
                 0
         ));
@@ -90,14 +98,18 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mockIntegerValidator
+                mockIntegerValidator,
+                mockDateValidator
         );
 
-        Collection<ErrorNotice> result = underTest.validateNumericTypes(new RawEntity(
+        Collection<ErrorNotice> result = underTest.validateNonStringTypes(new RawEntity(
                 Map.of("integer_type", "1"),
                 0
         ));
@@ -121,14 +133,18 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
-        Collection<ErrorNotice> result = underTest.validateNumericTypes(new RawEntity(
+        Collection<ErrorNotice> result = underTest.validateNonStringTypes(new RawEntity(
                 Collections.emptyMap(),
                 0
         ));
@@ -149,14 +165,18 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
-        Collection<ErrorNotice> result = underTest.validateNumericTypes(new RawEntity(
+        Collection<ErrorNotice> result = underTest.validateNonStringTypes(new RawEntity(
                 Map.of("float_type", ""),
                 0
         ));
@@ -184,14 +204,18 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().filename("test_filename.tst").build(),
                 mockFloatValidator,
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
-        ArrayList<ErrorNotice> result = (ArrayList<ErrorNotice>) underTest.validateNumericTypes(new RawEntity(
+        ArrayList<ErrorNotice> result = (ArrayList<ErrorNotice>) underTest.validateNonStringTypes(new RawEntity(
                 Map.of("float_type", "NaN"),
                 0
         ));
@@ -226,15 +250,18 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mockFloatValidator,
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
-
-        ArrayList<ErrorNotice> result = (ArrayList<ErrorNotice>) underTest.validateNumericTypes(new RawEntity(
+        ArrayList<ErrorNotice> result = (ArrayList<ErrorNotice>) underTest.validateNonStringTypes(new RawEntity(
                 Map.of("float_type", "abc"),
                 0
         ));
@@ -266,14 +293,18 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
-        Collection<ErrorNotice> result = underTest.validateNumericTypes(new RawEntity(
+        Collection<ErrorNotice> result = underTest.validateNonStringTypes(new RawEntity(
                 Collections.emptyMap(),
                 0
         ));
@@ -294,14 +325,18 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
-        Collection<ErrorNotice> result = underTest.validateNumericTypes(new RawEntity(
+        Collection<ErrorNotice> result = underTest.validateNonStringTypes(new RawEntity(
                 Map.of("integer_type", ""),
                 0
         ));
@@ -325,15 +360,19 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mockIntegerValidator
+                mockIntegerValidator,
+                mockDateValidator
         );
 
 
-        ArrayList<ErrorNotice> result = (ArrayList<ErrorNotice>) underTest.validateNumericTypes(new RawEntity(
+        ArrayList<ErrorNotice> result = (ArrayList<ErrorNotice>) underTest.validateNonStringTypes(new RawEntity(
                 Map.of("integer_type", "abc"),
                 0
         ));
@@ -350,6 +389,118 @@ class GtfsEntityParserTest {
 
         verify(mockIntegerValidator, times(1)).isValid(ArgumentMatchers.eq("abc"),
                 (Locale) ArgumentMatchers.any());
+    }
+
+    @Test
+    void nullDateValidationShouldGenerateNothing() {
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("date_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.DATE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mockDateValidator
+        );
+
+        Collection<ErrorNotice> result = underTest.validateNonStringTypes(new RawEntity(
+                Collections.emptyMap(),
+                0
+        ));
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void emptyDateValidationShouldGenerateNothing() {
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("date_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.DATE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mockDateValidator
+        );
+
+        Collection<ErrorNotice> result = underTest.validateNonStringTypes(new RawEntity(
+                Map.of("date_type", ""),
+                0
+        ));
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void invalidDateValidationShouldGenerateError() {
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        when(mockFileSpec.getFilename()).thenReturn("test_filename.tst");
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("date_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.DATE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mockDateValidator
+        );
+
+
+        ArrayList<ErrorNotice> result = (ArrayList<ErrorNotice>) underTest.validateNonStringTypes(new RawEntity(
+                Map.of("date_type", "not_a_date"),
+                0
+        ));
+
+        assertEquals(1, result.size());
+
+        ErrorNotice notice = result.get(0);
+        assertThat(notice, instanceOf(CannotParseDateNotice.class));
+        assertEquals("E017", notice.getId());
+        assertEquals("Invalid date value", notice.getTitle());
+        assertEquals("test_filename.tst", notice.getFilename());
+        assertEquals("Value: 'not_a_date' of field: date_type with type date can't be parsed in file: " +
+                "test_filename.tst at row: 0", notice.getDescription());
+
+        verify(mockDateValidator, times(1)).isValid(
+                ArgumentMatchers.eq("not_a_date"),
+                ArgumentMatchers.eq("yyyyMMdd"),
+                ArgumentMatchers.any()
+        );
     }
 
     @Test
@@ -371,11 +522,15 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mockFloatValidator,
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
         ParsedEntity result = underTest.parse(new RawEntity(
@@ -405,11 +560,15 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
         ParsedEntity result = underTest.parse(new RawEntity(
@@ -439,11 +598,15 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().filename("test_filename.tst").build(),
                 mockFloatValidator,
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
         ParsedEntity result = underTest.parse(new RawEntity(
@@ -469,11 +632,15 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mockFloatValidator,
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
         ParsedEntity result = underTest.parse(new RawEntity(
@@ -503,11 +670,15 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mockIntegerValidator
+                mockIntegerValidator,
+                mockDateValidator
         );
 
         ParsedEntity result = underTest.parse(new RawEntity(
@@ -537,11 +708,15 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
 
@@ -550,7 +725,7 @@ class GtfsEntityParserTest {
                 0
         ));
 
-        assertNull(result.get("integer_test"));
+        assertNull(result.get("integer_type"));
     }
 
     @Test
@@ -569,11 +744,15 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mockIntegerValidator
+                mockIntegerValidator,
+                mockDateValidator
         );
 
 
@@ -583,6 +762,126 @@ class GtfsEntityParserTest {
         ));
 
         assertNull(result.get("integer_type"));
+    }
+
+    @Test
+    void validDateShouldParse() {
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+        when(mockDateValidator.isValid(ArgumentMatchers.eq("16420517"),
+                ArgumentMatchers.eq("yyyyMMdd"),
+                ArgumentMatchers.any())).thenReturn(true);
+        Date fakeDate = new Date();
+        when(mockDateValidator.validate(ArgumentMatchers.eq("16420517"),
+                ArgumentMatchers.eq("yyyyMMdd"),
+                (Locale) ArgumentMatchers.any())).thenReturn(fakeDate);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("date_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.DATE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mockDateValidator
+        );
+
+        ParsedEntity result = underTest.parse(new RawEntity(
+                Map.of("date_type", "16420517"),
+                0
+        ));
+
+        assertThat(result.get("date_type"), instanceOf(LocalDateTime.class));
+        assertEquals(LocalDateTime.ofInstant(
+                fakeDate.toInstant(),
+                ZoneId.of("America/Montreal")),
+                result.get("date_type"));
+
+        verify(mockDateValidator, times(1)).isValid(ArgumentMatchers.eq("16420517"),
+                ArgumentMatchers.eq("yyyyMMdd"),
+                ArgumentMatchers.any());
+
+        verify(mockDateValidator, times(1)).validate(ArgumentMatchers.eq("16420517"),
+                ArgumentMatchers.eq("yyyyMMdd"),
+                (Locale) ArgumentMatchers.any());
+    }
+
+    @Test
+    void emptyDateShouldParseToNull() {
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("date_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.DATE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mockDateValidator
+        );
+
+
+        ParsedEntity result = underTest.parse(new RawEntity(
+                Map.of("date_type", ""),
+                0
+        ));
+
+        assertNull(result.get("date_type"));
+    }
+
+    @Test
+    void invalidDateShouldParseToNull() {
+
+        IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        when(mockFileSpec.getFilename()).thenReturn("test_filename.tst");
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("date_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.DATE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mockIntegerValidator,
+                mockDateValidator
+        );
+
+
+        ParsedEntity result = underTest.parse(new RawEntity(
+                Map.of("date_type", "not_a_date"),
+                0
+        ));
+
+        assertNull(result.get("date_type"));
     }
 
     @Test
@@ -599,11 +898,15 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
         GtfsEntityParser underTest = new GtfsEntityParser(
                 mockFileSpec,
                 new RawFileInfo.RawFileInfoBuilder().build(),
                 mock(FloatValidator.class),
-                mock(IntegerValidator.class)
+                mock(IntegerValidator.class),
+                mockDateValidator
         );
 
 

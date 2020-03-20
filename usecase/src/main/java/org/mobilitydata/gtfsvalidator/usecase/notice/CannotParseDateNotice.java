@@ -16,14 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.notice;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 
-public class UnsupportedGtfsTypeNotice extends InfoNotice {
+public class CannotParseDateNotice extends ErrorNotice {
 
-    public UnsupportedGtfsTypeNotice(String filename, String fieldName, String entityId) {
-        super(filename, I_001,
-                "Unsupported gtfs type",
-                "Tried to validate an unsupported Gtfs type in file:" + filename +
-                        ", entityId:" + entityId + ", field name:" + fieldName + " -->IGNORED");
+    public CannotParseDateNotice(String filename, String fieldName, int lineNumber, String rawValue) {
+        super(filename, E_017,
+                "Invalid date value",
+                "Value: '" + rawValue + "' of field: " + fieldName +
+                        " with type date can't be parsed in file: " + filename + " at row: " + lineNumber);
     }
 }

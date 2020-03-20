@@ -73,6 +73,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                 switch (columnSpecProto.getType().getType()) {
                     case INPUT_TYPE_UNSPECIFIED: // Text is default and does not require validation
                     case TEXT:
+                    case DATE: //no special validation
                         break;
                     case FLOAT: {
                         if (!floatValidator.isInRange(
@@ -168,14 +169,6 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                                     (String) value
                             ));
                         }
-                        break;
-                    }
-                    case DATE: {
-                        toReturn.add(new UnsupportedGtfsTypeNotice(
-                                toValidate.getRawFileInfo().getFilename(),
-                                columnSpecProto.getName(),
-                                toValidate.getEntityId()
-                        ));
                         break;
                     }
                 }
