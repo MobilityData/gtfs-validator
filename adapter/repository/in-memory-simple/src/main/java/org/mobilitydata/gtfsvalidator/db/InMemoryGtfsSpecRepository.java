@@ -34,6 +34,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * This holds information about the GTFS specification from a {@link GtfsSpecificationProto.CsvSpecProtos}. Provides
+ * methods to get information about what is defined in the official specification.
+ * This is created  when creating a new default configuration.
+ */
 public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     private final GtfsSpecificationProto.CsvSpecProtos inMemoryGTFSSpec;
@@ -43,19 +48,35 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
     private static final String VALID_COLOR_REGEX_PATTERN = "[0-9a-fA-F]{6}";
     private static final String VALID_TIME_REGEXP_PATTERN = "([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]";
 
+    /**
+     * @param specResourceName the path to the GTFS schema resource
+     * @throws IOException in case {@param specResourceName} was not find
+     */
     public InMemoryGtfsSpecRepository(final String specResourceName) throws IOException {
         //noinspection UnstableApiUsage
-        inMemoryGTFSSpec = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName), StandardCharsets.UTF_8),
+        inMemoryGTFSSpec = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName),
+                StandardCharsets.UTF_8),
                 GtfsSpecificationProto.CsvSpecProtos.class);
     }
 
+    /**
+     * Returns the list of the files marked as required in the GTFS schema
+     *
+     * @return the list of the files marked as required in the GTFS schema
+     */
     @Override
     public List<String> getRequiredFilenameList() {
         return inMemoryGTFSSpec.getCsvspecList().stream()
-                .filter(GtfsSpecificationProto.CsvSpecProto::getRequired).map(GtfsSpecificationProto.CsvSpecProto::getFilename)
+                .filter(GtfsSpecificationProto.CsvSpecProto::getRequired)
+                .map(GtfsSpecificationProto.CsvSpecProto::getFilename)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns the list of the files marked as optional in the GTFS schema
+     *
+     * @return the list of the files marked as optional in the GTFS schema
+     */
     @Override
     public List<String> getOptionalFilenameList() {
         return inMemoryGTFSSpec.getCsvspecList().stream()
@@ -64,6 +85,12 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns the list of the headers marked as required for a given file
+     *
+     * @param fileInfo information about the file to process: location and expected content
+     * @return the list of the headers marked as required for file to analyze
+     */
     @Override
     public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
         GtfsSpecificationProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
@@ -78,6 +105,12 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
         }
     }
 
+    /**
+     * Returns the list of the headers marked as optional for a given GTFS CSV file
+     *
+     * @param fileInfo information about the file to process: location and expected content
+     * @return the list of the headers marked as optional for file associated to {@param fileInfo}
+     */
     @Override
     public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
         GtfsSpecificationProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
@@ -92,6 +125,12 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
         }
     }
 
+    /**
+     * Returns the schema for a given GTFS CSV file
+     *
+     * @param fileInfo information about the file to process: location and expected content
+     * @return the schema corresponding to the file associated to {@param fileInfo}
+     */
     private GtfsSpecificationProto.CsvSpecProto getSpecForFile(RawFileInfo fileInfo) {
         return inMemoryGTFSSpec.getCsvspecList().stream()
                 .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
@@ -99,7 +138,12 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                 .orElse(null);
     }
 
-
+    /**
+     * Returns the parser for raw data associated to a given GTFS CSV file
+     *
+     * @param file information about the file to process: location and expected content
+     * @return the parser for raw data associated to the file associated to {@param file}
+     */
     @Override
     public RawEntityParser getParserForFile(RawFileInfo file) {
         return new GtfsEntityParser(
@@ -113,6 +157,12 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                 DateValidator.getInstance());
     }
 
+    /**
+     * Returns the type validator associated to a given GTFS CSV file
+     *
+     * @param file information about the file to process: location and expected content
+     * @return the type validator associated to file associated to {@param file}
+     */
     @Override
     public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
         ParsedEntityTypeValidator toReturn = validatorByFilenameCache.get(file.getFilename());

@@ -34,6 +34,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+/**
+ * This provides methods to parse data from a GTFS CSV file.
+ */
 public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
     private final GtfsSpecificationProto.CsvSpecProto fileSchema;
     private final RawFileInfo rawFileInfo;
@@ -57,11 +60,14 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
     }
 
     /**
-     * Returns a collection of errors regarding validity of non string types. That is validaiton of strings for
-     * fields marked as FLOAT, INTEGER or DATE. See {@link GtfsSpecificationProto.ColumnInputType.InputType}
+     * Validates numeric types for a provided {@link RawEntity} from information stored in the
+     * {@link GtfsSpecificationProto.CsvSpecProto} provided in the constructor. If a NaN value is encountered or if
+     * the value is not a valid float, a {@link CannotParseFloatNotice} is generated and added to the returned list.
+     * The same logic is applied for integer values, which generates {@link CannotParseIntegerNotice} notices.
+     * The same logic is applied for date values, which generates {@link CannotParseDateNotice} notices.
      *
-     * @param toValidate the entity containing raw strings to validate
-     * @return a list of encountered errors and warnings
+     * @param toValidate a {@link RawEntity} to validate
+     * @return a collection of notices containing information about the validation process
      */
     @Override
     public Collection<ErrorNotice> validateNonStringTypes(RawEntity toValidate) {
@@ -124,6 +130,16 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
         return toReturn;
     }
 
+    /**
+     * Returns a parsed entity where fields' type have been determined. The {@link ParsedEntity} is formatted as follows:
+     * - the entityId is the header name
+     * - the contentByHeaderMap is a Map<String, Object> matching columns' header names with the type validated values
+     * associated to the {@link RawEntity} to parse
+     * - the {@link RawFileInfo} associated to the file being processed
+     *
+     * @param toParse a row of a GTFS file as raw string data
+     * @return a parsed entity whose fields' type have been parsed
+     */
     @Override
     public ParsedEntity parse(RawEntity toParse) {
         Map<String, Object> contentByHeaderMap = new HashMap<>(fileSchema.getColumnCount());

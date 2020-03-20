@@ -25,6 +25,9 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * This holds information about a GTFS specification and provides methods to execute the validation process.
+ */
 public interface GtfsSpecRepository {
 
     List<String> getRequiredFilenameList();

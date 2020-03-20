@@ -30,6 +30,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * Provides methods to validate the type of fields in a GTFS CSV file according to the theoretical type set in a
+ * {@link GtfsSpecificationProto.CsvSpecProto}
+ */
 public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeValidator {
     private final GtfsSpecificationProto.CsvSpecProto fileSchema;
     private final FloatValidator floatValidator;
@@ -39,6 +43,12 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
     private final RegexValidator timeValidator;
     private final Set<String> timezoneSet;
 
+    /**
+     * Private class method determining if a character is printable.
+     *
+     * @param ch the character to analyze
+     * @return true if the character is printable, else false
+     */
     private static boolean isPrintableAscii(char ch) {
         return ch >= 32 && ch < 127;
     }
@@ -59,6 +69,14 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
         this.timezoneSet = timezoneSet;
     }
 
+    /**
+     * According to the types set in the GTFS schema, the methods checks the conformity of each column of a provided
+     * {@link ParsedEntity} to the type it is supposed to have as defined
+     * in {@link GtfsSpecificationProto.CsvSpecProto}.
+     *
+     * @param toValidate the parsed entity undergoing the operation
+     * @return a collection of {@link Notice} containing information about the validation process
+     */
     @SuppressWarnings("ConstantConditions")
     @Override
     public Collection<Notice> validate(ParsedEntity toValidate) {

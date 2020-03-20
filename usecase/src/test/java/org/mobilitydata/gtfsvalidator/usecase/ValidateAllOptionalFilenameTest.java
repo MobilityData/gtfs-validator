@@ -35,6 +35,46 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ValidateAllOptionalFilenameTest {
 
+    @Test
+    void allExtraPresentShouldGenerateNotice() {
+        MockSpecRepo mockSpecRepo = new MockSpecRepo(1, 2);
+        MockRawFileRepo mockRawFileRepo = new MockRawFileRepo(1, 2, 3);
+        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
+
+        ValidateAllOptionalFilename underTest = new ValidateAllOptionalFilename(
+                mockSpecRepo,
+                mockRawFileRepo,
+                mockResultRepo);
+
+        List<String> result = underTest.execute();
+
+        assertEquals(2, result.size());
+        assertEquals(List.of("opt0.opt", "opt1.opt"), result);
+
+        assertEquals(3, mockResultRepo.notices.size());
+
+        Notice notice = mockResultRepo.notices.get(0);
+        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
+        assertEquals("extra0.extra", notice.getFilename());
+        assertEquals("W004", notice.getId());
+        assertEquals("Non standard file found", notice.getTitle());
+        assertEquals("Extra file extra0.extra found in archive", notice.getDescription());
+
+        notice = mockResultRepo.notices.get(1);
+        assertEquals("extra2.extra", notice.getFilename());
+        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
+        assertEquals("W004", notice.getId());
+        assertEquals("Non standard file found", notice.getTitle());
+        assertEquals("Extra file extra2.extra found in archive", notice.getDescription());
+
+        notice = mockResultRepo.notices.get(2);
+        assertEquals("extra1.extra", notice.getFilename());
+        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
+        assertEquals("W004", notice.getId());
+        assertEquals("Non standard file found", notice.getTitle());
+        assertEquals("Extra file extra1.extra found in archive", notice.getDescription());
+    }
+
     //mock spec repo
     private static class MockSpecRepo implements GtfsSpecRepository {
 
@@ -175,43 +215,4 @@ class ValidateAllOptionalFilenameTest {
         }
     }
 
-    @Test
-    void allExtraPresentShouldGenerateNotice() {
-        MockSpecRepo mockSpecRepo = new MockSpecRepo(1, 2);
-        MockRawFileRepo mockRawFileRepo = new MockRawFileRepo(1, 2, 3);
-        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
-
-        ValidateAllOptionalFilename underTest = new ValidateAllOptionalFilename(
-                mockSpecRepo,
-                mockRawFileRepo,
-                mockResultRepo);
-
-        List<String> result = underTest.execute();
-
-        assertEquals(2, result.size());
-        assertEquals(List.of("opt0.opt", "opt1.opt"), result);
-
-        assertEquals(3, mockResultRepo.notices.size());
-
-        Notice notice = mockResultRepo.notices.get(0);
-        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
-        assertEquals("extra0.extra", notice.getFilename());
-        assertEquals("W004", notice.getId());
-        assertEquals("Non standard file found", notice.getTitle());
-        assertEquals("Extra file extra0.extra found in archive", notice.getDescription());
-
-        notice = mockResultRepo.notices.get(1);
-        assertEquals("extra2.extra", notice.getFilename());
-        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
-        assertEquals("W004", notice.getId());
-        assertEquals("Non standard file found", notice.getTitle());
-        assertEquals("Extra file extra2.extra found in archive", notice.getDescription());
-
-        notice = mockResultRepo.notices.get(2);
-        assertEquals("extra1.extra", notice.getFilename());
-        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
-        assertEquals("W004", notice.getId());
-        assertEquals("Non standard file found", notice.getTitle());
-        assertEquals("Extra file extra1.extra found in archive", notice.getDescription());
-    }
 }
