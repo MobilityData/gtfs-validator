@@ -9,7 +9,9 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.IntegerFieldValueOutOfRange
 
 public class NoticeMemoryConsumptionTest {
 
-    public static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final int CONVERSION_FACTOR = 1_000_000;
+    private static final float BUFFER = 1.10f;
 
     private void generateNotices(InMemoryValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
@@ -46,12 +48,12 @@ public class NoticeMemoryConsumptionTest {
 
         LOGGER.info(String.format("Generating 100 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
                         " Used memory: %s megabytes",
-                totalMemory / 1_000_000,
-                freeMemory / 1_000_000,
-                (totalMemory - freeMemory) / 1_000_000)
+                totalMemory / CONVERSION_FACTOR,
+                freeMemory / CONVERSION_FACTOR,
+                (totalMemory - freeMemory) / CONVERSION_FACTOR)
         );
 
-        assert (totalMemory - freeMemory < 7_000_000);
+        assert (totalMemory - freeMemory < 7_000_000 * BUFFER);
     }
 
     @Test
@@ -67,12 +69,12 @@ public class NoticeMemoryConsumptionTest {
 
         LOGGER.info(String.format("Generating 1000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
                         " Used memory: %s megabytes",
-                totalMemory / 1_000_000,
-                freeMemory / 1_000_000,
-                (totalMemory - freeMemory) / 1_000_000)
+                totalMemory / CONVERSION_FACTOR,
+                freeMemory / CONVERSION_FACTOR,
+                (totalMemory - freeMemory) / CONVERSION_FACTOR)
         );
 
-        assert (totalMemory - freeMemory < 8_000_000);
+        assert (totalMemory - freeMemory < 8_000_000 * BUFFER);
     }
 
     @Test
@@ -88,12 +90,12 @@ public class NoticeMemoryConsumptionTest {
 
         LOGGER.info(String.format("Generating 10 000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
                         " Used memory: %s megabytes",
-                totalMemory / 1_000_000,
-                freeMemory / 1_000_000,
-                (totalMemory - freeMemory) / 1_000_000)
+                totalMemory / CONVERSION_FACTOR,
+                freeMemory / CONVERSION_FACTOR,
+                (totalMemory - freeMemory) / CONVERSION_FACTOR)
         );
 
-        assert (totalMemory - freeMemory < 9_000_000);
+        assert (totalMemory - freeMemory < 9_000_000 * BUFFER);
     }
 
     @Test
@@ -109,12 +111,12 @@ public class NoticeMemoryConsumptionTest {
 
         LOGGER.info(String.format("Generating 100 000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
                         " Used memory: %s megabytes",
-                totalMemory / 1_000_000,
-                freeMemory / 1_000_000,
-                (totalMemory - freeMemory) / 1_000_000)
+                totalMemory / CONVERSION_FACTOR,
+                freeMemory / CONVERSION_FACTOR,
+                (totalMemory - freeMemory) / CONVERSION_FACTOR)
         );
 
-        assert (totalMemory - freeMemory < 28_000_000);
+        assert (totalMemory - freeMemory < 28_000_000 * BUFFER);
     }
 
     @Test
@@ -122,7 +124,7 @@ public class NoticeMemoryConsumptionTest {
 
         InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
-        generateNotices(resultRepository, 1_000_000);
+        generateNotices(resultRepository, CONVERSION_FACTOR);
         resultRepository.getAll();
 
         long totalMemory = Runtime.getRuntime().totalMemory(); // bytes
@@ -130,12 +132,12 @@ public class NoticeMemoryConsumptionTest {
 
         LOGGER.info(String.format("Generating 1 000 000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
                         " Used memory: %s megabytes",
-                totalMemory / 1_000_000,
-                freeMemory / 1_000_000,
-                (totalMemory - freeMemory) / 1_000_000)
+                totalMemory / CONVERSION_FACTOR,
+                freeMemory / CONVERSION_FACTOR,
+                (totalMemory - freeMemory) / CONVERSION_FACTOR)
         );
 
-        assert (totalMemory - freeMemory < 231_000_000);
+        assert (totalMemory - freeMemory < 231_000_000 * BUFFER);
     }
 
     @Test
@@ -151,11 +153,11 @@ public class NoticeMemoryConsumptionTest {
 
         LOGGER.info(String.format("Generating 2 000 000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
                         " Used memory: %s megabytes",
-                totalMemory / 1_000_000,
-                freeMemory / 1_000_000,
-                (totalMemory - freeMemory) / 1_000_000)
+                totalMemory / CONVERSION_FACTOR,
+                freeMemory / CONVERSION_FACTOR,
+                (totalMemory - freeMemory) / CONVERSION_FACTOR)
         );
 
-        assert (totalMemory - freeMemory < 454_000_000);
+        assert (totalMemory - freeMemory < 454_000_000 * BUFFER);
     }
 }
