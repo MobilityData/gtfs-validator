@@ -10,8 +10,9 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.IntegerFieldValueOutOfRange
 public class NoticeMemoryConsumptionTest {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final int CONVERSION_FACTOR = 1_000_000;
-    private static final float BUFFER = 1.10f;
+
+    // used to provide a 10% safety margin to avoid instability due to the behavior of the garbage collector
+    private static final float SAFETY_BUFFER_FACTOR = 1.10f;
 
     private void generateNotices(InMemoryValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
@@ -23,6 +24,16 @@ public class NoticeMemoryConsumptionTest {
                     101)
             );
         }
+    }
+
+    private void logInformation(long totalMemoryInBytes, long freeMemoryInBytes, int noticeCount) {
+        LOGGER.info(String.format("Generating %s notices: Total memory: %s megabytes, Free memory: %s megabytes," +
+                        " Used memory: %s megabytes",
+                noticeCount,
+                totalMemoryInBytes / 1_000_000, // converting bytes to megabytes
+                freeMemoryInBytes / 1_000_000, // converting bytes to megabytes
+                (totalMemoryInBytes - freeMemoryInBytes) / 1_000_000) // converting bytes to megabytes
+        );
     }
 
     @BeforeEach
@@ -38,22 +49,21 @@ public class NoticeMemoryConsumptionTest {
     @Test
     public void creationOf100NoticeShouldNotExceedMemoryLimit() {
 
+        int noticeCount = 100;
+
         InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
-        generateNotices(resultRepository, 1);
+        generateNotices(resultRepository, noticeCount);
         resultRepository.getAll();
 
-        long totalMemory = Runtime.getRuntime().totalMemory(); // bytes
-        long freeMemory = Runtime.getRuntime().freeMemory();  // bytes
+        long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
+        long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
 
-        LOGGER.info(String.format("Generating 100 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
-                        " Used memory: %s megabytes",
-                totalMemory / CONVERSION_FACTOR,
-                freeMemory / CONVERSION_FACTOR,
-                (totalMemory - freeMemory) / CONVERSION_FACTOR)
-        );
+        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticeCount);
 
-        assert (totalMemory - freeMemory < 7_000_000 * BUFFER);
+        // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
+        // SAFETY_BUFFER_FACTOR) into account
+        assert (totalMemoryInBytes - freeMemoryInBytes < 7_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -61,20 +71,19 @@ public class NoticeMemoryConsumptionTest {
 
         InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
-        generateNotices(resultRepository, 1_000);
+        int noticeCount = 1_000;
+
+        generateNotices(resultRepository, noticeCount);
         resultRepository.getAll();
 
-        long totalMemory = Runtime.getRuntime().totalMemory(); // bytes
-        long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
+        long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
+        long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
 
-        LOGGER.info(String.format("Generating 1000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
-                        " Used memory: %s megabytes",
-                totalMemory / CONVERSION_FACTOR,
-                freeMemory / CONVERSION_FACTOR,
-                (totalMemory - freeMemory) / CONVERSION_FACTOR)
-        );
+        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticeCount);
 
-        assert (totalMemory - freeMemory < 8_000_000 * BUFFER);
+        // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
+        // SAFETY_BUFFER_FACTOR) into account
+        assert (totalMemoryInBytes - freeMemoryInBytes < 8_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -82,20 +91,19 @@ public class NoticeMemoryConsumptionTest {
 
         InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
+        int noticeCount = 10_000;
+
         generateNotices(resultRepository, 10_000);
         resultRepository.getAll();
 
-        long totalMemory = Runtime.getRuntime().totalMemory(); // bytes
-        long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
+        long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
+        long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
 
-        LOGGER.info(String.format("Generating 10 000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
-                        " Used memory: %s megabytes",
-                totalMemory / CONVERSION_FACTOR,
-                freeMemory / CONVERSION_FACTOR,
-                (totalMemory - freeMemory) / CONVERSION_FACTOR)
-        );
+        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticeCount);
 
-        assert (totalMemory - freeMemory < 9_000_000 * BUFFER);
+        // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
+        // SAFETY_BUFFER_FACTOR) into account
+        assert (totalMemoryInBytes - freeMemoryInBytes < 9_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -103,20 +111,19 @@ public class NoticeMemoryConsumptionTest {
 
         InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
-        generateNotices(resultRepository, 100_000);
+        int noticeCount = 100_000;
+
+        generateNotices(resultRepository, noticeCount);
         resultRepository.getAll();
 
-        long totalMemory = Runtime.getRuntime().totalMemory(); // bytes
-        long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
+        long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
+        long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
 
-        LOGGER.info(String.format("Generating 100 000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
-                        " Used memory: %s megabytes",
-                totalMemory / CONVERSION_FACTOR,
-                freeMemory / CONVERSION_FACTOR,
-                (totalMemory - freeMemory) / CONVERSION_FACTOR)
-        );
+        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticeCount);
 
-        assert (totalMemory - freeMemory < 28_000_000 * BUFFER);
+        // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
+        // SAFETY_BUFFER_FACTOR) into account
+        assert (totalMemoryInBytes - freeMemoryInBytes < 28_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -124,20 +131,19 @@ public class NoticeMemoryConsumptionTest {
 
         InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
-        generateNotices(resultRepository, CONVERSION_FACTOR);
+        int noticeCount = 1_000_000;
+
+        generateNotices(resultRepository, noticeCount);
         resultRepository.getAll();
 
-        long totalMemory = Runtime.getRuntime().totalMemory(); // bytes
-        long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
+        long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
+        long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
 
-        LOGGER.info(String.format("Generating 1 000 000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
-                        " Used memory: %s megabytes",
-                totalMemory / CONVERSION_FACTOR,
-                freeMemory / CONVERSION_FACTOR,
-                (totalMemory - freeMemory) / CONVERSION_FACTOR)
-        );
+        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticeCount);
 
-        assert (totalMemory - freeMemory < 231_000_000 * BUFFER);
+        // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
+        // SAFETY_BUFFER_FACTOR) into account
+        assert (totalMemoryInBytes - freeMemoryInBytes < 231_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -145,19 +151,18 @@ public class NoticeMemoryConsumptionTest {
 
         InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
-        generateNotices(resultRepository, 2_000_000);
+        int noticeCount = 2_000_000;
+
+        generateNotices(resultRepository, noticeCount);
         resultRepository.getAll();
 
-        long totalMemory = Runtime.getRuntime().totalMemory(); // bytes
-        long freeMemory = Runtime.getRuntime().freeMemory(); // bytes
+        long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
+        long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
 
-        LOGGER.info(String.format("Generating 2 000 000 notices: Total memory: %s megabytes, Free memory: %s megabytes," +
-                        " Used memory: %s megabytes",
-                totalMemory / CONVERSION_FACTOR,
-                freeMemory / CONVERSION_FACTOR,
-                (totalMemory - freeMemory) / CONVERSION_FACTOR)
-        );
+        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticeCount);
 
-        assert (totalMemory - freeMemory < 454_000_000 * BUFFER);
+        // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
+        // SAFETY_BUFFER_FACTOR) into account
+        assert (totalMemoryInBytes - freeMemoryInBytes < 454_000_000 * SAFETY_BUFFER_FACTOR);
     }
 }
