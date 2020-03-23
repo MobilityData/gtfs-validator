@@ -38,15 +38,16 @@ public class Route {
     private final int routeSortOrder;
 
 
-    public Route(@NotNull String routeId,
-                 String agencyId,
-                 String routeShortName,
-                 String routeLongName,
-                 String routeDesc,
-                 @NotNull RouteType routeType,
-                 String routeUrl, String routeColor,
-                 String routeTextColor,
-                 int routeSortOrder) {
+    private Route(@NotNull final String routeId,
+                  final String agencyId,
+                  final String routeShortName,
+                  final String routeLongName,
+                  final String routeDesc,
+                  @NotNull final RouteType routeType,
+                  final String routeUrl,
+                  final String routeColor,
+                  final String routeTextColor,
+                  final int routeSortOrder) {
         this.routeId = routeId;
         this.agencyId = agencyId;
         this.routeShortName = routeShortName;
@@ -114,47 +115,57 @@ public class Route {
         private String routeTextColor;
         private Integer routeSortOrder;
 
-        public RouteBuilder(@NotNull String routeId, @NotNull RouteType routeType) {
+        public RouteBuilder(@NotNull final String routeId, @NotNull final RouteType routeType) {
             this.routeId = routeId;
             this.routeType = routeType;
         }
 
-        public RouteBuilder routeAgencyId(@Nullable String agencyId) {
+        public RouteBuilder routeId(@NotNull final String routeId) {
+            this.routeId = routeId;
+            return this;
+        }
+
+        public RouteBuilder routeType(@NotNull final RouteType routeType) {
+            this.routeType = routeType;
+            return this;
+        }
+
+        public RouteBuilder routeAgencyId(@Nullable final String agencyId) {
             this.agencyId = agencyId;
             return this;
         }
 
-        public RouteBuilder routeShortName(@Nullable String routeShortName) {
+        public RouteBuilder routeShortName(@Nullable final String routeShortName) {
             this.routeShortName = routeShortName;
             return this;
         }
 
-        public RouteBuilder routeLongName(@Nullable String routeLongName) {
+        public RouteBuilder routeLongName(@Nullable final String routeLongName) {
             this.routeLongName = routeLongName;
             return this;
         }
 
-        public RouteBuilder routeDesc(@Nullable String routeDesc) {
+        public RouteBuilder routeDesc(@Nullable final String routeDesc) {
             this.routeDesc = routeDesc;
             return this;
         }
 
-        public RouteBuilder routeUrl(@Nullable String routeUrl) {
+        public RouteBuilder routeUrl(@Nullable final String routeUrl) {
             this.routeUrl = routeUrl;
             return this;
         }
 
-        public RouteBuilder routeColor(@Nullable String routeColor) {
+        public RouteBuilder routeColor(@Nullable final String routeColor) {
             this.routeColor = routeColor;
             return this;
         }
 
-        public RouteBuilder routeTextColor(@Nullable String routeTextColor) {
+        public RouteBuilder routeTextColor(@Nullable final String routeTextColor) {
             this.routeTextColor = routeTextColor;
             return this;
         }
 
-        public RouteBuilder routeSortOrder(@Nullable Integer routeSortOrder) {
+        public RouteBuilder routeSortOrder(@Nullable final Integer routeSortOrder) {
             this.routeSortOrder = routeSortOrder;
             return this;
         }
