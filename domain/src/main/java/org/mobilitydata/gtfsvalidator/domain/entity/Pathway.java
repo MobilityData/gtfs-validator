@@ -20,26 +20,39 @@ public class Pathway {
     @NotNull
     private final IsBidirectional isBidirectional;
 
-    private final float length;
-    private final int traversalTime;
-    private final int stairCount;
-    private final float maxSlope;
-    private final float minWidth;
+    @Nullable
+    private final Float length;
+
+    @Nullable
+    private final Integer traversalTime;
+
+    @Nullable
+    private final Integer stairCount;
+
+    @Nullable
+    private final Float maxSlope;
+
+    @Nullable
+    private final Float minWidth;
+
+    @Nullable
     private final String signpostedAs;
+
+    @Nullable
     private final String reversedSignpostedAs;
 
-    public Pathway(@NotNull final String pathwayId,
-                   @NotNull final String fromStopId,
-                   @NotNull final String toStopId,
-                   @NotNull final PathwayMode pathwayMode,
-                   @NotNull final IsBidirectional isBidirectional,
-                   final float length,
-                   final int traversalTime,
-                   final int stairCount,
-                   final float maxSlope,
-                   final float minWidth,
-                   final String signpostedAs,
-                   final String reversedSignpostedAs) {
+    private Pathway(@NotNull final String pathwayId,
+                    @NotNull final String fromStopId,
+                    @NotNull final String toStopId,
+                    @NotNull final PathwayMode pathwayMode,
+                    @NotNull final IsBidirectional isBidirectional,
+                    @Nullable final Float length,
+                    @Nullable final Integer traversalTime,
+                    @Nullable final Integer stairCount,
+                    @Nullable final Float maxSlope,
+                    @Nullable final Float minWidth,
+                    @Nullable final String signpostedAs,
+                    @Nullable final String reversedSignpostedAs) {
         this.pathwayId = pathwayId;
         this.fromStopId = fromStopId;
         this.toStopId = toStopId;
@@ -79,35 +92,41 @@ public class Pathway {
         return isBidirectional;
     }
 
-    public float getLength() {
+    @Nullable
+    public Float getLength() {
         return length;
     }
 
-    public int getTraversalTime() {
+    @Nullable
+    public Integer getTraversalTime() {
         return traversalTime;
     }
 
-    public int getStairCount() {
+    @Nullable
+    public Integer getStairCount() {
         return stairCount;
     }
 
-    public float getMaxSlope() {
+    @Nullable
+    public Float getMaxSlope() {
         return maxSlope;
     }
 
-    public float getMinWidth() {
+    @Nullable
+    public Float getMinWidth() {
         return minWidth;
     }
 
+    @Nullable
     public String getSignpostedAs() {
         return signpostedAs;
     }
 
+    @Nullable
     public String getReversedSignpostedAs() {
         return reversedSignpostedAs;
     }
 
-    @SuppressWarnings("CanBeFinal")
     public static class PathwayBuilder {
         private String pathwayId;
         private String fromStopId;
@@ -132,6 +151,31 @@ public class Pathway {
             this.toStopId = toStopId;
             this.pathwayMode = pathwayMode;
             this.isBidirectional = isBidirectional;
+        }
+
+        public PathwayBuilder pathwayId(@NotNull final String pathwayId) {
+            this.pathwayId = pathwayId;
+            return this;
+        }
+
+        public PathwayBuilder fromStopId(@NotNull final String fromStopId) {
+            this.fromStopId = fromStopId;
+            return this;
+        }
+
+        public PathwayBuilder toStopId(@NotNull final String toStopId) {
+            this.toStopId = toStopId;
+            return this;
+        }
+
+        public PathwayBuilder pathwayMode(@NotNull final PathwayMode pathwayMode) {
+            this.pathwayMode = pathwayMode;
+            return this;
+        }
+
+        public PathwayBuilder isBidirectional(@NotNull final IsBidirectional isBidirectional) {
+            this.isBidirectional = isBidirectional;
+            return this;
         }
 
         public PathwayBuilder length(@Nullable final Float length) {
