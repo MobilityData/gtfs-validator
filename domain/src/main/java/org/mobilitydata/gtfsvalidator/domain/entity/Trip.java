@@ -36,16 +36,16 @@ public class Trip {
     private final WheelchairAccessibleStatus wheelchairAccessibleStatus;
     private final BikesAllowedStatus bikesAllowedStatus;
 
-    public Trip(@NotNull String routeId,
-                @NotNull String serviceId,
-                @NotNull String tripId,
-                String tripHeadsign,
-                String tripShortName,
-                Direction directionId,
-                String blockId,
-                String shapeId,
-                WheelchairAccessibleStatus wheelchairAccessibleStatus,
-                BikesAllowedStatus bikesAllowedStatus) {
+    private Trip(@NotNull final String routeId,
+                 @NotNull final String serviceId,
+                 @NotNull final String tripId,
+                 final String tripHeadsign,
+                 final String tripShortName,
+                 final Direction directionId,
+                 final String blockId,
+                 final String shapeId,
+                 final WheelchairAccessibleStatus wheelchairAccessibleStatus,
+                 final BikesAllowedStatus bikesAllowedStatus) {
         this.routeId = routeId;
         this.serviceId = serviceId;
         this.tripId = tripId;
@@ -115,45 +115,60 @@ public class Trip {
         private WheelchairAccessibleStatus wheelchairAccessibleStatus;
         private BikesAllowedStatus bikesAllowedStatus;
 
-        public TripBuilder(@NotNull String routeId,
-                           @NotNull String serviceId,
-                           @NotNull String tripId) {
+        public TripBuilder(@NotNull final String routeId,
+                           @NotNull final String serviceId,
+                           @NotNull final String tripId) {
             this.routeId = routeId;
             this.serviceId = serviceId;
             this.tripId = tripId;
         }
 
-        public TripBuilder tripHeadsign(@Nullable String tripHeadsign) {
+        public TripBuilder routeId(@NotNull final String routeId) {
+            this.routeId = routeId;
+            return this;
+        }
+
+        public TripBuilder serviceId(@NotNull final String serviceId) {
+            this.serviceId = serviceId;
+            return this;
+        }
+
+        public TripBuilder tripId(@NotNull final String tripId) {
+            this.tripId = tripId;
+            return this;
+        }
+
+        public TripBuilder tripHeadsign(@Nullable final String tripHeadsign) {
             this.tripHeadsign = tripHeadsign;
             return this;
         }
 
-        public TripBuilder tripShortName(@Nullable String tripShortName) {
+        public TripBuilder tripShortName(@Nullable final String tripShortName) {
             this.tripShortName = tripShortName;
             return this;
         }
 
-        public TripBuilder directionId(@Nullable Direction directionId) {
+        public TripBuilder directionId(@Nullable final Direction directionId) {
             this.directionId = directionId;
             return this;
         }
 
-        public TripBuilder blockId(@Nullable String blockId) {
+        public TripBuilder blockId(@Nullable final String blockId) {
             this.blockId = blockId;
             return this;
         }
 
-        public TripBuilder shapeId(@Nullable String shapeId) {
+        public TripBuilder shapeId(@Nullable final String shapeId) {
             this.shapeId = shapeId;
             return this;
         }
 
-        public TripBuilder wheelchairAccessible(@Nullable WheelchairAccessibleStatus wheelchairAccessibleStatus) {
+        public TripBuilder wheelchairAccessible(@Nullable final WheelchairAccessibleStatus wheelchairAccessibleStatus) {
             this.wheelchairAccessibleStatus = wheelchairAccessibleStatus;
             return this;
         }
 
-        public TripBuilder bikesAllowed(@Nullable BikesAllowedStatus bikesAllowedStatus) {
+        public TripBuilder bikesAllowed(@Nullable final BikesAllowedStatus bikesAllowedStatus) {
             this.bikesAllowedStatus = bikesAllowedStatus;
             return this;
         }
