@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class FareRule {
 
@@ -13,11 +12,11 @@ public class FareRule {
     private final String destinationId;
     private final String containsId;
 
-    public FareRule(@NotNull final String fareId,
-                    final String routeId,
-                    final String originId,
-                    final String destinationId,
-                    final String containsId) {
+    private FareRule(@NotNull final String fareId,
+                     final String routeId,
+                     final String originId,
+                     final String destinationId,
+                     final String containsId) {
         this.fareId = fareId;
         this.routeId = routeId;
         this.originId = originId;
@@ -48,7 +47,6 @@ public class FareRule {
 
     public static class FareRuleBuilder {
 
-        @SuppressWarnings("CanBeFinal")
         private String fareId;
         private String routeId;
         private String originId;
@@ -59,22 +57,27 @@ public class FareRule {
             this.fareId = fareId;
         }
 
-        public FareRuleBuilder routeId(@Nullable String routeId) {
+        public FareRuleBuilder fareId(@NotNull final String fareId) {
+            this.fareId = fareId;
+            return this;
+        }
+
+        public FareRuleBuilder routeId(final String routeId) {
             this.routeId = routeId;
             return this;
         }
 
-        public FareRuleBuilder originId(@Nullable String originId) {
+        public FareRuleBuilder originId(final String originId) {
             this.originId = originId;
             return this;
         }
 
-        public FareRuleBuilder destinationId(@Nullable String destinationId) {
+        public FareRuleBuilder destinationId(final String destinationId) {
             this.destinationId = destinationId;
             return this;
         }
 
-        public FareRuleBuilder containsId(String containsId) {
+        public FareRuleBuilder containsId(final String containsId) {
             this.containsId = containsId;
             return this;
         }
