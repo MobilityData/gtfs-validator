@@ -12,9 +12,9 @@ public class Level {
     private final Float levelIndex;
     private final String levelName;
 
-    private Level(@NotNull String levelId,
-                  float levelIndex,
-                  @Nullable String levelName) {
+    private Level(@NotNull final String levelId,
+                  final float levelIndex,
+                  @Nullable final String levelName) {
         this.levelId = levelId;
         this.levelIndex = levelIndex;
         this.levelName = levelName;
@@ -34,7 +34,6 @@ public class Level {
         return levelName;
     }
 
-    @SuppressWarnings("CanBeFinal")
     public static class LevelBuilder {
         private String levelId;
         private Float levelIndex;
@@ -45,7 +44,17 @@ public class Level {
             this.levelIndex = levelIndex;
         }
 
-        public LevelBuilder levelName(@Nullable String levelName) {
+        public LevelBuilder levelId(@NotNull final String levelId) {
+            this.levelId = levelId;
+            return this;
+        }
+
+        public LevelBuilder levelIndex(final float levelIndex) {
+            this.levelIndex = levelIndex;
+            return this;
+        }
+
+        public LevelBuilder levelName(@Nullable final String levelName) {
             this.levelName = levelName;
             return this;
         }
