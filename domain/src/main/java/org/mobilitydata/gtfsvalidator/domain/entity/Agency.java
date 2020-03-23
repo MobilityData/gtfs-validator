@@ -37,14 +37,14 @@ public class Agency {
     private final String agencyFareUrl;
     private final String agencyEmail;
 
-    public Agency(String agencyId,
-                  @NotNull String agencyName,
-                  @NotNull String agencyUrl,
-                  @NotNull String agencyTimezone,
-                  String agencyLang,
-                  String agencyPhone,
-                  String agencyFareUrl,
-                  String agencyEmail) {
+    private Agency(final String agencyId,
+                   @NotNull final String agencyName,
+                   @NotNull final String agencyUrl,
+                   @NotNull final String agencyTimezone,
+                   final String agencyLang,
+                   final String agencyPhone,
+                   final String agencyFareUrl,
+                   final String agencyEmail) {
 
         this.agencyId = agencyId;
         this.agencyName = agencyName;
@@ -102,35 +102,50 @@ public class Agency {
         private String agencyFareUrl;
         private String agencyEmail;
 
-        public AgencyBuilder(@NotNull String agencyName,
-                             @NotNull String agencyUrl,
-                             @NotNull String agencyTimezone) {
+        public AgencyBuilder(@NotNull final String agencyName,
+                             @NotNull final String agencyUrl,
+                             @NotNull final String agencyTimezone) {
             this.agencyName = agencyName;
             this.agencyUrl = agencyUrl;
             this.agencyTimezone = agencyTimezone;
         }
 
-        public AgencyBuilder agencyId(@Nullable String agencyId) {
+        public AgencyBuilder agencyName(@Nullable final String agencyName) {
+            this.agencyName = agencyName;
+            return this;
+        }
+
+        public AgencyBuilder agencyUrl(@Nullable final String agencyUrl) {
+            this.agencyUrl = agencyUrl;
+            return this;
+        }
+
+        public AgencyBuilder agencyTimezone(@Nullable final String agencyTimezone) {
+            this.agencyTimezone = agencyTimezone;
+            return this;
+        }
+
+        public AgencyBuilder agencyId(@Nullable final String agencyId) {
             this.agencyId = agencyId;
             return this;
         }
 
-        public AgencyBuilder agencyLang(@Nullable String agencyLang) {
+        public AgencyBuilder agencyLang(@Nullable final String agencyLang) {
             this.agencyLang = agencyLang;
             return this;
         }
 
-        public AgencyBuilder agencyPhone(@Nullable String agencyPhone) {
+        public AgencyBuilder agencyPhone(@Nullable final String agencyPhone) {
             this.agencyPhone = agencyPhone;
             return this;
         }
 
-        public AgencyBuilder agencyFareUrl(@Nullable String agencyFareUrl) {
+        public AgencyBuilder agencyFareUrl(@Nullable final String agencyFareUrl) {
             this.agencyFareUrl = agencyFareUrl;
             return this;
         }
 
-        public AgencyBuilder agencyEmail(@Nullable String agencyEmail) {
+        public AgencyBuilder agencyEmail(@Nullable final String agencyEmail) {
             this.agencyEmail = agencyEmail;
             return this;
         }
