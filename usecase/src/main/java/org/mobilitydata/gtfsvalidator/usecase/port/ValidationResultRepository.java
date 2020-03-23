@@ -23,6 +23,9 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 
 import java.util.Collection;
 
+/**
+ * This hold contains notices generated during the validation process.
+ */
 public interface ValidationResultRepository {
 
     InfoNotice addNotice(InfoNotice newInfo);

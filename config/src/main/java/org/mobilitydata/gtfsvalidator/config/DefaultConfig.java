@@ -33,6 +33,10 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.zip.ZipFile;
 
+/**
+ * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
+ * process. Hence, this is created before calling the different use case of the validation process in the main method.
+ */
 public class DefaultConfig {
     private final GtfsSpecRepository specRepo = new InMemoryGtfsSpecRepository("gtfs_spec.asciipb");
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
