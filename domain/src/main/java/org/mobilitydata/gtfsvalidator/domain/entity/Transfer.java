@@ -30,12 +30,13 @@ public class Transfer {
     @NotNull
     private final TransferType transferType;
 
-    private final int minTransferTime;
+    @Nullable
+    private final Integer minTransferTime;
 
     private Transfer(@NotNull final String fromStopId,
                      @NotNull final String toStopId,
                      @NotNull final TransferType transferType,
-                     int minTransferTime) {
+                     @Nullable final Integer minTransferTime) {
         this.fromStopId = fromStopId;
         this.toStopId = toStopId;
         this.transferType = transferType;
@@ -85,7 +86,7 @@ public class Transfer {
             return this;
         }
 
-        public TransferBuilder minTransferTime(@NotNull final TransferType transferType) {
+        public TransferBuilder transferType(@NotNull final TransferType transferType) {
             this.transferType = transferType;
             return this;
         }
