@@ -27,11 +27,11 @@ public class Shape {
     private final int shapePtSequence;
     private final Float shapeDistTraveled;
 
-    private Shape(@NotNull String shapeId,
+    private Shape(@NotNull final String shapeId,
                   float shapePtLat,
                   float shapePtLon,
-                  int shapePtSequence,
-                  Float shapeDistTraveled) {
+                  final int shapePtSequence,
+                  final Float shapeDistTraveled) {
         this.shapeId = shapeId;
         this.shapePtLat = shapePtLat;
         this.shapePtLon = shapePtLon;
@@ -71,37 +71,37 @@ public class Shape {
         private int shapePtSequence;
         private Float shapeDistTraveled;
 
-        public ShapeBuilder(@NotNull String shapeId,
-                            float shapePtLat,
-                            float shapePtLon,
-                            int shapePtSequence) {
+        public ShapeBuilder(@NotNull final String shapeId,
+                            final float shapePtLat,
+                            final float shapePtLon,
+                            final int shapePtSequence) {
             this.shapeId = shapeId;
             this.shapePtLat = shapePtLat;
             this.shapePtLon = shapePtLon;
             this.shapePtSequence = shapePtSequence;
         }
 
-        public ShapeBuilder shapeId(@NotNull String shapeId) {
+        public ShapeBuilder shapeId(@NotNull final String shapeId) {
             this.shapeId = shapeId;
             return this;
         }
 
-        public ShapeBuilder shapePtLat(float shapePtLat) {
+        public ShapeBuilder shapePtLat(final float shapePtLat) {
             this.shapePtLat = shapePtLat;
             return this;
         }
 
-        public ShapeBuilder shapePtLon(float shapePtLon) {
+        public ShapeBuilder shapePtLon(final float shapePtLon) {
             this.shapePtLon = shapePtLon;
             return this;
         }
 
-        public ShapeBuilder shapePtSequence(int shapePtSequence) {
+        public ShapeBuilder shapePtSequence(final int shapePtSequence) {
             this.shapePtSequence = shapePtSequence;
             return this;
         }
 
-        public ShapeBuilder shapeDistTraveled(Float shapeDistTraveled) {
+        public ShapeBuilder shapeDistTraveled(final Float shapeDistTraveled) {
             this.shapeDistTraveled = shapeDistTraveled;
             return this;
         }
