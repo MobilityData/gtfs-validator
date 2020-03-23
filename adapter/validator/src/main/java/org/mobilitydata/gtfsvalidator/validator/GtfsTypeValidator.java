@@ -20,6 +20,7 @@ import org.apache.commons.validator.routines.FloatValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.notice.*;
@@ -53,13 +54,13 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
         return ch >= 32 && ch < 127;
     }
 
-    public GtfsTypeValidator(GtfsSpecificationProto.CsvSpecProto fileSchema,
-                             FloatValidator floatValidator,
-                             IntegerValidator integerValidator,
-                             UrlValidator urlValidator,
-                             RegexValidator colorValidator,
-                             RegexValidator timeValidator,
-                             Set<String> timezoneSet) {
+    public GtfsTypeValidator(@NotNull GtfsSpecificationProto.CsvSpecProto fileSchema,
+                             @NotNull FloatValidator floatValidator,
+                             @NotNull IntegerValidator integerValidator,
+                             @NotNull UrlValidator urlValidator,
+                             @NotNull RegexValidator colorValidator,
+                             @NotNull RegexValidator timeValidator,
+                             @NotNull Set<String> timezoneSet) {
         this.fileSchema = fileSchema;
         this.floatValidator = floatValidator;
         this.integerValidator = integerValidator;

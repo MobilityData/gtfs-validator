@@ -38,6 +38,7 @@ dependencies {
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'commons-validator:commons-validator:1.6'
 
+    implementation 'org.jetbrains:annotations:19.0.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testImplementation 'org.hamcrest:hamcrest:2.2'

@@ -20,6 +20,7 @@ import com.google.common.base.Strings;
 import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.FloatValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
+import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
@@ -46,14 +47,17 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
 
     private static final String DATE_PATTERN = "yyyyMMdd";
 
-    public GtfsEntityParser(GtfsSpecificationProto.CsvSpecProto fileSchema, RawFileInfo rawFileInfo,
-                            FloatValidator floatValidator, IntegerValidator integerValidator,
-                            DateValidator dateValidator) {
+    public GtfsEntityParser(@NotNull GtfsSpecificationProto.CsvSpecProto fileSchema,
+                            @NotNull RawFileInfo rawFileInfo,
+                            @NotNull FloatValidator floatValidator,
+                            @NotNull IntegerValidator integerValidator,
+                            @NotNull DateValidator dateValidator) {
         this.fileSchema = fileSchema;
         this.rawFileInfo = rawFileInfo;
         this.floatValidator = floatValidator;
         this.integerValidator = integerValidator;
         if (!dateValidator.isStrict()) {
+            //see https://commons.apache.org/proper/commons-validator/apidocs/org/apache/commons/validator/routines/AbstractFormatValidator.html#isStrict()
             throw new IllegalArgumentException("Date validator must be strict");
         }
         this.dateValidator = dateValidator;
@@ -174,13 +178,12 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
-                    //FIXME: retrieve timezone from agency.txt
                     if (dateValidator.isValid(rawField, DATE_PATTERN, Locale.US)) {
                         contentByHeaderMap.put(
                                 //https://programminghints.com/2017/05/still-using-java-util-date-dont/
                                 columnSpecProto.getName(), LocalDateTime.ofInstant(
                                         dateValidator.validate(rawField, DATE_PATTERN, Locale.US).toInstant(),
-                                        ZoneId.of("America/Montreal")
+                                        ZoneId.of("America/Montreal") //FIXME: retrieve timezone from agency.txt
                                 ));
                     }
 
