@@ -25,17 +25,33 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 
+/**
+ * Use case to create a path, if the target location is not empty, all files at target are deleted. This use case is
+ * triggered after parsing the rows of a specific file. The resultant path is used in the subsequent steps to either
+ * unzip the GTFS dataset to validate or to write the validation output results.
+ */
 public class CleanOrCreatePath {
 
     private final String pathToCleanOrCreate;
     private final ValidationResultRepository resultRepo;
 
+    /**
+     * @param toCleanOrCreate an path specifying the target location
+     * @param resultRepo      a repository storing information about the validation
+     */
     public CleanOrCreatePath(final String toCleanOrCreate,
                              final ValidationResultRepository resultRepo) {
         this.pathToCleanOrCreate = toCleanOrCreate;
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * Execution method for use case: creates a path to the target location. If the target location is not
+     * * empty, all files at target are deleted. If the process fails, a {@link CouldNotCleanOrCreatePathNotice} is
+     * * generated and added to the {@link ValidationResultRepository} provided in the constructor.
+     *
+     * @return a path to the target location
+     */
     public Path execute() {
         Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
         try {

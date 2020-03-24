@@ -23,13 +23,16 @@ import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseFloatNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseFloatNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
 import java.util.*;
 
+/**
+ * This provides methods to parse data from a GTFS CSV file.
+ */
 public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
     private final GtfsSpecificationProto.CsvSpecProto fileSchema;
     private final RawFileInfo rawFileInfo;
@@ -39,6 +42,15 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
         this.rawFileInfo = rawFileInfo;
     }
 
+    /**
+     * Validates numeric types for a provided {@link RawEntity} from information stored in the
+     * {@link GtfsSpecificationProto.CsvSpecProto} provided in te constructor. If a NaN value is encountered or if
+     * the value is not a valid float, a {@link CannotParseFloatNotice} is generated and added to the returned list.
+     * The same logic is applied for integer values, which generates {@link CannotParseIntegerNotice} notices.
+     *
+     * @param toValidate a {@link RawEntity} to validate
+     * @return a collection of notices containing information about the validation process
+     */
     @Override
     public Collection<ErrorNotice> validateNumericTypes(RawEntity toValidate) {
         Collection<ErrorNotice> toReturn = new ArrayList<>();
@@ -54,7 +66,8 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
-                    if (!floatValidator.isValid(rawField, Locale.US) || Float.isNaN(floatValidator.validate(rawField, Locale.US))) {
+                    if (!floatValidator.isValid(rawField, Locale.US) || Float.isNaN(floatValidator.validate(rawField,
+                            Locale.US))) {
 
                         toReturn.add(new CannotParseFloatNotice(
                                         fileSchema.getFilename(),
@@ -87,6 +100,16 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
         return toReturn;
     }
 
+    /**
+     * Returns a parsed entity where fields' type have been determined. The {@link ParsedEntity} is formatted as follows:
+     * - the entityId is the header name
+     * - the contentByHeaderMap is a Map<String, Object> matching columns' header names with the type validated values
+     * associated to the {@link RawEntity} to parse
+     * - the {@link RawFileInfo} associated to the file being processed
+     *
+     * @param toParse a row of a GTFS file as raw string data
+     * @return a parsed entity whose fields' type have been parsed
+     */
     @Override
     public ParsedEntity parse(RawEntity toParse) {
         Map<String, Object> contentByHeaderMap = new HashMap<>(fileSchema.getColumnCount());

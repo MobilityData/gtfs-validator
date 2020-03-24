@@ -29,6 +29,9 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNo
 import java.io.IOException;
 import java.util.Collection;
 
+/**
+ * This hold contains notices generated during the validation process.
+ */
 public interface ValidationResultRepository {
 
     InfoNotice addNotice(InfoNotice newInfo);

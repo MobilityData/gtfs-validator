@@ -25,21 +25,44 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Holds information about a GTFS CSV file that have not been through the parsing process. Provides methods to get
+ * information about said file.
+ * This is created when creating a new default configuration, all fields being set to their default value.
+ */
 public class InMemoryRawFileRepository implements RawFileRepository {
 
     private final Map<String, RawFileInfo> fileInfoPerFilename = new HashMap<>();
 
+    /**
+     * Builds a{@link RawFileInfo} with filename of the file to process
+     *
+     * @param fileInfo information regarding a file location and expected content (file name)
+     * @return with filename
+     */
     @Override
     public RawFileInfo create(RawFileInfo fileInfo) {
         fileInfoPerFilename.put(fileInfo.getFilename(), fileInfo);
         return fileInfo;
     }
 
+    /**
+     * Returns information regarding a file location and expected content (file name)
+     *
+     * @param filename the name of the file
+     * @return information regarding a file location and expected content (file name)
+     */
     @Override
     public Optional<RawFileInfo> findByName(String filename) {
         return Optional.ofNullable(fileInfoPerFilename.get(filename));
     }
 
+    /**
+     * Returns the collection of headers for GTFS CSV file from a {@link RawFileInfo}
+     *
+     * @param file information regarding a file location and expected content (file name)
+     * @return the collection of headers for a given GTFS CSV file
+     */
     @Override
     public Collection<String> getActualHeadersForFile(RawFileInfo file) {
         File csvFile = new File(file.getPath() + File.separator + file.getFilename());
@@ -60,11 +83,22 @@ public class InMemoryRawFileRepository implements RawFileRepository {
         return toReturn;
     }
 
+    /**
+     * Returns a collection of all filenames contained in the repository
+     *
+     * @return a collection of all filenames contained in the repository
+     */
     @Override
     public Set<String> getFilenameAll() {
         return fileInfoPerFilename.keySet();
     }
 
+    /**
+     * Returns a data provider for a GTFS CSV file
+     *
+     * @param file information regarding a file to process
+     * @return a data provider for a GTFS CSV file
+     */
     @Override
     public Optional<RawEntityProvider> getProviderForFile(RawFileInfo file) {
 

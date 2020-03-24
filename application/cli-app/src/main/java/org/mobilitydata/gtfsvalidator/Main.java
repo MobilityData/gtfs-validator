@@ -40,10 +40,13 @@ public class Main {
         final Options options = new Options();
 
         options.addOption("u", "url", true, "URL to GTFS zipped archive");
-        options.addOption("z", "zip", true, "if --url is used, where to place the downloaded archive." +
+        options.addOption("z", "zip", true, "if --url is used, where to place the " +
+                "downloaded archive." +
                 "Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
-        options.addOption("i", "input", true, "Relative path where to extract the zip content");
-        options.addOption("o", "output", true, "Relative path where to place output files");
+        options.addOption("i", "input", true, "Relative path where to extract the zip" +
+                " content");
+        options.addOption("o", "output", true, "Relative path where to place output" +
+                " files");
         options.addOption("h", "help", false, "Print this message");
 
         //TODO: add configurable warning threshold for GTFS time type validation - when we support time type again
@@ -62,7 +65,8 @@ public class Main {
                 return;
             }
 
-            String zipInputPath = cmd.getOptionValue("z") != null ? cmd.getOptionValue("z") : System.getProperty("user.dir");
+            String zipInputPath = cmd.getOptionValue("z") != null ? cmd.getOptionValue("z") :
+                    System.getProperty("user.dir");
             String zipExtractTargetPath = cmd.getOptionValue("i") != null ? cmd.getOptionValue("i") :
                     System.getProperty("user.dir") + File.separator + "input";
             String outputPath = cmd.getOptionValue("o") != null ?
@@ -70,11 +74,13 @@ public class Main {
                     System.getProperty("user.dir") + File.separator + "output";
 
             if (cmd.hasOption("u") & !cmd.hasOption("z")) {
-                logger.info("--url provided but no location to place zip (--zip option). Using default: " + zipInputPath);
+                logger.info("--url provided but no location to place zip (--zip option). Using default: " +
+                        zipInputPath);
             }
 
             if (!cmd.hasOption("u") & !cmd.hasOption("z")) {
-                logger.info("--url and relative path to zip file(--zip option) not provided. Trying to find zip in: " + zipInputPath);
+                logger.info("--url and relative path to zip file(--zip option) not provided. Trying to find zip in: " +
+                        zipInputPath);
                 List<String> zipList = Files.walk(Paths.get(zipInputPath))
                         .map(Path::toString)
                         .filter(f -> f.endsWith(".zip"))
@@ -103,22 +109,38 @@ public class Main {
             }
 
             if (cmd.getOptionValue("u") != null) {
+                logger.info("Downloading archive");
                 config.downloadArchiveFromNetwork(cmd.getOptionValue("u"), zipInputPath).execute();
             }
 
+            logger.info("Unzipping archive");
             config.unzipInputArchive(zipInputPath, config.cleanOrCreatePath(zipExtractTargetPath).execute()).execute();
-            config.validateAllRequiredFilePresence().execute();
 
-            //TODO: we will loop through all files in the archive. MVP is for stops.txt
-            config.validateHeadersForFile("stops.txt").execute();
-            config.validateAllRowLengthForFile("stops.txt").execute();
+            List<String> filenameList = config.validateAllRequiredFilePresence().execute();
 
-            ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile("stops.txt");
-            while (parseSingleRowForFile.hasNext()) {
-                config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
-            }
+            filenameList.addAll(config.validateAllOptionalFileName().execute());
+
+            // FIXME: removing files with unsupported field types
+            filenameList.remove("calendar.txt");
+            filenameList.remove("calendar_dates.txt");
+            filenameList.remove("stop_times.txt");
+            filenameList.remove("frequencies.txt");
+
+            // base validation
+            filenameList.forEach(filename -> {
+                logger.info("Validating: " + filename);
+
+                config.validateHeadersForFile(filename).execute();
+                config.validateAllRowLengthForFile(filename).execute();
+
+                ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
+                while (parseSingleRowForFile.hasNext()) {
+                    config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
+                }
+            });
 
             logger.info("Exporting validation repo content:" + config.getValidationResult());
+            config.cleanOrCreatePath(outputPath).execute();
             config.exportResultAsFile(false, outputPath).execute();
 
         } catch (ParseException e) {

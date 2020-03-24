@@ -36,34 +36,57 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Holds information about the validation process. Stores notices according to their types. Provides methods to add
+ * said notices to the repository and get said notices.
+ * This is created  when creating a new default configuration, all fields being set to their default value.
+ */
 public class InMemoryValidationResultRepository implements ValidationResultRepository {
     private final List<InfoNotice> infoNoticeList = new ArrayList<>();
     private final List<WarningNotice> warningNoticeList = new ArrayList<>();
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
 
+    /**
+     * Adds an info notice to the repository and returns the notice
+     *
+     * @param newInfo a info notice
+     * @return the info notice that was added to the repository
+     */
     @Override
     public InfoNotice addNotice(InfoNotice newInfo) {
         infoNoticeList.add(newInfo);
         return newInfo;
     }
 
+    /**
+     * Adds an warning notice to the repository and returns the notice
+     *
+     * @param newWarning a warning notice
+     * @return the info notice that was added to the repository
+     */
     @Override
     public WarningNotice addNotice(WarningNotice newWarning) {
         warningNoticeList.add(newWarning);
         return newWarning;
     }
 
+    /**
+     * Adds an error notice to the repository and returns the notice
+     *
+     * @param newError an error notice
+     * @return the error notice that was added to the repository
+     */
     @Override
     public ErrorNotice addNotice(ErrorNotice newError) {
         errorNoticeList.add(newError);
         return newError;
     }
 
-    @Override
-    public Notice addNotice(Notice newNotice) {
-        return newNotice.visit(this);
-    }
-
+    /**
+     * Returns a collection of all notices contained in the validation repository
+     *
+     * @return all notices contained in the validation repository as a collection
+     */
     @Override
     public Collection<Notice> getAll() {
         return Stream.concat(
@@ -74,6 +97,12 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
                 .collect(Collectors.toUnmodifiableList());
     }
 
+    /**
+     * Adds an error notice to the repository and returns the notice. Useful for automatic type inference
+     *
+     * @param newNotice notice
+     * @return the notice that was added to the repository
+     */
     @Override
     public NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException {
         if (outputAsProto) {

@@ -19,12 +19,12 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -35,6 +35,80 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ValidateAllRowLengthForFileTest {
+
+    @Test
+    void expectedLengthForAllShouldNotGenerateNotice() {
+
+        MockResultRepo resultRepo = new MockResultRepo();
+
+        ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
+                RawFileInfo.builder()
+                        .filename("test.tst")
+                        .build(),
+                new MockRawFileRepo(),
+                resultRepo
+        );
+
+        underTest.execute();
+
+        assertEquals(0, resultRepo.noticeList.size());
+    }
+
+    @Test
+    void invalidRowsShouldGenerateError() {
+
+        MockResultRepo resultRepo = new MockResultRepo();
+
+        ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
+                RawFileInfo.builder()
+                        .filename("test_invalid.tst")
+                        .build(),
+                new MockRawFileRepo(),
+                resultRepo
+        );
+
+        underTest.execute();
+
+        assertEquals(2, resultRepo.noticeList.size());
+
+        Notice notice = resultRepo.noticeList.get(0);
+        assertThat(notice, instanceOf(InvalidRowLengthNotice.class));
+        assertEquals("E004", notice.getId());
+        assertEquals("Invalid row length", notice.getTitle());
+        assertEquals("test_invalid.tst", notice.getFilename());
+        assertEquals("Invalid length for row:2 -- expected:3 actual:2", notice.getDescription());
+
+        notice = resultRepo.noticeList.get(1);
+        assertThat(notice, instanceOf(InvalidRowLengthNotice.class));
+        assertEquals("E004", notice.getId());
+        assertEquals("Invalid row length", notice.getTitle());
+        assertEquals("test_invalid.tst", notice.getFilename());
+        assertEquals("Invalid length for row:4 -- expected:3 actual:4", notice.getDescription());
+    }
+
+    @Test
+    void dataProviderConstructionIssueShouldGenerateError() {
+
+        MockResultRepo resultRepo = new MockResultRepo();
+
+        ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
+                RawFileInfo.builder()
+                        .filename("test_empty.tst")
+                        .build(),
+                new MockRawFileRepo(),
+                resultRepo
+        );
+
+        underTest.execute();
+
+        assertEquals(1, resultRepo.noticeList.size());
+        Notice notice = resultRepo.noticeList.get(0);
+        assertThat(notice, instanceOf(CannotConstructDataProviderNotice.class));
+        assertEquals("E002", notice.getId());
+        assertEquals("Data provider error", notice.getTitle());
+        assertEquals("test_empty.tst", notice.getFilename());
+        assertEquals("An error occurred while trying to access raw data for file: test_empty.tst", notice.getDescription());
+    }
 
     private static class MockEntityProvider implements RawFileRepository.RawEntityProvider {
         private int currentCount = 0;
@@ -151,78 +225,4 @@ class ValidateAllRowLengthForFileTest {
 
     }
 
-    @Test
-    void expectedLengthForAllShouldNotGenerateNotice() {
-
-        MockResultRepo resultRepo = new MockResultRepo();
-
-        ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
-                RawFileInfo.builder()
-                        .filename("test.tst")
-                        .build(),
-                new MockRawFileRepo(),
-                resultRepo
-        );
-
-        underTest.execute();
-
-        assertEquals(0, resultRepo.noticeList.size());
-    }
-
-    @Test
-    void invalidRowsShouldGenerateError() {
-
-        MockResultRepo resultRepo = new MockResultRepo();
-
-        ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
-                RawFileInfo.builder()
-                        .filename("test_invalid.tst")
-                        .build(),
-                new MockRawFileRepo(),
-                resultRepo
-        );
-
-        underTest.execute();
-
-        assertEquals(2, resultRepo.noticeList.size());
-
-        Notice notice = resultRepo.noticeList.get(0);
-        assertThat(notice, instanceOf(InvalidRowLengthNotice.class));
-        assertEquals("E004", notice.getId());
-        assertEquals("Invalid row length", notice.getTitle());
-        assertEquals("test_invalid.tst", notice.getFilename());
-        assertEquals("Invalid length for row:2 -- expected:3 actual:2", notice.getDescription());
-
-        notice = resultRepo.noticeList.get(1);
-        assertThat(notice, instanceOf(InvalidRowLengthNotice.class));
-        assertEquals("E004", notice.getId());
-        assertEquals("Invalid row length", notice.getTitle());
-        assertEquals("test_invalid.tst", notice.getFilename());
-        assertEquals("Invalid length for row:4 -- expected:3 actual:4", notice.getDescription());
-    }
-
-    @Test
-    void dataProviderConstructionIssueShouldGenerateError() {
-
-        MockResultRepo resultRepo = new MockResultRepo();
-
-        ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
-                RawFileInfo.builder()
-                        .filename("test_empty.tst")
-                        .build(),
-                new MockRawFileRepo(),
-                resultRepo
-        );
-
-        underTest.execute();
-
-        assertEquals(1, resultRepo.noticeList.size());
-        Notice notice = resultRepo.noticeList.get(0);
-        assertThat(notice, instanceOf(CannotConstructDataProviderNotice.class));
-        assertEquals("E002", notice.getId());
-        assertEquals("Data provider error", notice.getTitle());
-        assertEquals("test_empty.tst", notice.getFilename());
-        assertEquals("An error occurred while trying to access raw data for file: test_empty.tst",
-                notice.getDescription());
-    }
 }

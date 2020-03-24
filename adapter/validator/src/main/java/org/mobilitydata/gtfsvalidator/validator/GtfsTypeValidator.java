@@ -22,16 +22,18 @@ import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.usecase.notice.*;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Provides methods to validate the type of fields in a GTFS CSV file according to the theoretical type set in a
+ * {@link GtfsSpecificationProto.CsvSpecProto}
+ */
 public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeValidator {
     private final GtfsSpecificationProto.CsvSpecProto fileSchema;
 
@@ -42,6 +44,12 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
 
     private static final String[] VALID_URL_SCHEMES = {"http", "https"};
 
+    /**
+     * Private class method determining if a character is printable.
+     *
+     * @param ch the character to analyze
+     * @return true if the character is printable, else false
+     */
     private static boolean isPrintableAscii(char ch) {
         return ch >= 32 && ch < 127;
     }
@@ -50,6 +58,14 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
         this.fileSchema = fileSchema;
     }
 
+    /**
+     * According to the types set in the GTFS schema, the methods checks the conformity of each column of a provided
+     * {@link ParsedEntity} to the type it is supposed to have as defined
+     * in {@link GtfsSpecificationProto.CsvSpecProto}.
+     *
+     * @param toValidate the parsed entity undergoing the operation
+     * @return a collection of {@link Notice} containing information about the validation process
+     */
     @SuppressWarnings("ConstantConditions")
     @Override
     public Collection<Notice> validate(ParsedEntity toValidate) {
@@ -104,7 +120,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                             ));
                         }
                         break;
-                    case INPUT_TYPE_UNSPECIFIED: //String is default
+                    case INPUT_TYPE_UNSPECIFIED: // String is default
                     case STRING:
                         if (columnSpecProto.getName().contains(URL_FIELD_NAME_IDENTIFIER)) {
                             if (!new UrlValidator(VALID_URL_SCHEMES).isValid((String) value)) {

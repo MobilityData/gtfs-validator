@@ -18,12 +18,12 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingHeaderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingHeaderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -49,119 +49,6 @@ class ValidateHeadersForFileTest {
     private static final String EXTRA_HEADER_1 = "extraHeader1";
 
     private static final String TEST_TST = "test.tst";
-
-    //mock spec repo
-    private static class MockSpecRepo implements GtfsSpecRepository {
-        private final List<String> mockRequiredHeaders;
-        private final List<String> mockOptionalHeaders;
-
-        public MockSpecRepo(List<String> mockRequiredHeaders, List<String> mockOptionalHeaders) {
-            this.mockRequiredHeaders = mockRequiredHeaders;
-            this.mockOptionalHeaders = mockOptionalHeaders;
-        }
-
-        @Override
-        public List<String> getRequiredFilenameList() {
-            return null;
-        }
-
-        @Override
-        public List<String> getOptionalFilenameList() {
-            return null;
-        }
-
-        @Override
-        public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
-            return mockRequiredHeaders;
-        }
-
-        @Override
-        public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
-            return mockOptionalHeaders;
-        }
-
-
-        @Override
-        public RawEntityParser getParserForFile(RawFileInfo file) {
-            return null;
-        }
-
-        @Override
-        public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
-            return null;
-        }
-    }
-
-    //mock raw file repo
-    private static class MockRawFileRepo implements RawFileRepository {
-        private final Collection<String> mockHeaders;
-
-        public MockRawFileRepo(Collection<String> mockHeaders) {
-            this.mockHeaders = mockHeaders;
-        }
-
-        @Override
-        public RawFileInfo create(RawFileInfo fileInfo) {
-            return null;
-        }
-
-        @Override
-        public Optional<RawFileInfo> findByName(String filename) {
-            return Optional.empty();
-        }
-
-        @Override
-        public Collection<String> getActualHeadersForFile(RawFileInfo file) {
-            return mockHeaders;
-        }
-
-        @Override
-        public Set<String> getFilenameAll() {
-            return null;
-        }
-
-        @Override
-        public Optional<RawEntityProvider> getProviderForFile(RawFileInfo file) {
-            return Optional.empty();
-        }
-    }
-
-    //mock result repo
-    private static class MockResultRepo implements ValidationResultRepository {
-        public List<Notice> notices = new ArrayList<>();
-
-        @Override
-        public InfoNotice addNotice(InfoNotice newInfo) {
-            return null;
-        }
-
-        @Override
-        public WarningNotice addNotice(WarningNotice newWarning) {
-            notices.add(newWarning);
-            return newWarning;
-        }
-
-        @Override
-        public ErrorNotice addNotice(ErrorNotice newError) {
-            notices.add(newError);
-            return newError;
-        }
-
-        @Override
-        public Collection<Notice> getAll() {
-            return null;
-        }
-
-        @Override
-        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
-            return null;
-        }
-
-        @Override
-        public Notice addNotice(Notice newNotice) {
-            return null;
-        }
-    }
 
     @Test
     void expectedHeaderCountShouldNotGenerateNotice() {
@@ -376,6 +263,114 @@ class ValidateHeadersForFileTest {
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("Unexpected header:" + EXTRA_HEADER_1 + " in file:test.tst", notice.getDescription());
 
+    }
+
+    //mock spec repo
+    private static class MockSpecRepo implements GtfsSpecRepository {
+        private final List<String> mockRequiredHeaders;
+        private final List<String> mockOptionalHeaders;
+
+        public MockSpecRepo(List<String> mockRequiredHeaders, List<String> mockOptionalHeaders) {
+            this.mockRequiredHeaders = mockRequiredHeaders;
+            this.mockOptionalHeaders = mockOptionalHeaders;
+        }
+
+        @Override
+        public List<String> getRequiredFilenameList() {
+            return null;
+        }
+
+        @Override
+        public List<String> getOptionalFilenameList() {
+            return null;
+        }
+
+        @Override
+        public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
+            return mockRequiredHeaders;
+        }
+
+        @Override
+        public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
+            return mockOptionalHeaders;
+        }
+
+
+        @Override
+        public RawEntityParser getParserForFile(RawFileInfo file) {
+            return null;
+        }
+
+        @Override
+        public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
+            return null;
+        }
+    }
+
+    //mock raw file repo
+    private static class MockRawFileRepo implements RawFileRepository {
+        private final Collection<String> mockHeaders;
+
+        public MockRawFileRepo(Collection<String> mockHeaders) {
+            this.mockHeaders = mockHeaders;
+        }
+
+        @Override
+        public RawFileInfo create(RawFileInfo fileInfo) {
+            return null;
+        }
+
+        @Override
+        public Optional<RawFileInfo> findByName(String filename) {
+            return Optional.empty();
+        }
+
+        @Override
+        public Collection<String> getActualHeadersForFile(RawFileInfo file) {
+            return mockHeaders;
+        }
+
+        @Override
+        public Set<String> getFilenameAll() {
+            return null;
+        }
+
+        @Override
+        public Optional<RawEntityProvider> getProviderForFile(RawFileInfo file) {
+            return Optional.empty();
+        }
+    }
+
+    //mock result repo
+    private static class MockResultRepo implements ValidationResultRepository {
+        public List<Notice> notices = new ArrayList<>();
+
+        @Override
+        public InfoNotice addNotice(InfoNotice newInfo) {
+            return null;
+        }
+
+        @Override
+        public WarningNotice addNotice(WarningNotice newWarning) {
+            notices.add(newWarning);
+            return newWarning;
+        }
+
+        @Override
+        public ErrorNotice addNotice(ErrorNotice newError) {
+            notices.add(newError);
+            return newError;
+        }
+
+        @Override
+        public Collection<Notice> getAll() {
+            return null;
+        }
+
+        @Override
+        public Notice addNotice(Notice newNotice) {
+            return null;
+        }
     }
 
 }

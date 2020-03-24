@@ -3,9 +3,9 @@
 
 target/
 out/
-input.zip
-input/
 output/
+input/
+input.zip
 **/target/
 pom.xml.tag
 pom.xml.releaseBackup

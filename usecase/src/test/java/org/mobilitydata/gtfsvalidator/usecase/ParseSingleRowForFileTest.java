@@ -37,6 +37,83 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ParseSingleRowForFileTest {
 
+    @Test
+    void shouldValidateAndParseOneByOne() {
+
+        MockResultRepo resultRepo = new MockResultRepo();
+        MockSpecRepo specRepo = new MockSpecRepo();
+
+        ParseSingleRowForFile underTest = new ParseSingleRowForFile(
+                RawFileInfo.builder().filename("test.tst").build(),
+                new MockRawFileRepo(),
+                specRepo,
+                resultRepo
+        );
+
+        assertTrue(underTest.hasNext());
+        underTest.execute();
+        assertEquals(0, resultRepo.noticeList.size());
+        assertEquals(1, specRepo.parser.callToValidateNumericTypesCount);
+        assertEquals(1, specRepo.parser.callToParseCount);
+
+        assertTrue(underTest.hasNext());
+        underTest.execute();
+        assertEquals(0, resultRepo.noticeList.size());
+        assertEquals(2, specRepo.parser.callToValidateNumericTypesCount);
+        assertEquals(2, specRepo.parser.callToParseCount);
+
+        assertTrue(underTest.hasNext());
+        underTest.execute();
+        assertEquals(0, resultRepo.noticeList.size());
+        assertEquals(3, specRepo.parser.callToValidateNumericTypesCount);
+        assertEquals(3, specRepo.parser.callToParseCount);
+
+        assertFalse(underTest.hasNext());
+        assertNull(underTest.execute());
+    }
+
+    @Test
+    void shouldWriteNoticesToRepo() {
+
+        MockResultRepo resultRepo = new MockResultRepo();
+
+        ParseSingleRowForFile underTest = new ParseSingleRowForFile(
+                RawFileInfo.builder().filename("test_invalid.tst").build(),
+                new MockRawFileRepo(),
+                new MockSpecRepo(),
+                resultRepo
+        );
+
+        underTest.execute();
+        assertEquals(3, resultRepo.noticeList.size());
+        underTest.execute();
+        assertEquals(6, resultRepo.noticeList.size());
+        underTest.execute();
+        assertEquals(9, resultRepo.noticeList.size());
+    }
+
+    @Test
+    void providerErrorShouldGenerateNotice() {
+
+        MockResultRepo resultRepo = new MockResultRepo();
+
+        ParseSingleRowForFile underTest = new ParseSingleRowForFile(
+                RawFileInfo.builder().filename("test_empty.tst").build(),
+                new MockRawFileRepo(),
+                new MockSpecRepo(),
+                resultRepo
+        );
+
+        underTest.execute();
+        assertEquals(1, resultRepo.noticeList.size());
+        Notice notice = resultRepo.noticeList.get(0);
+        assertThat(notice, instanceOf(CannotConstructDataProviderNotice.class));
+        assertEquals("E002", notice.getId());
+        assertEquals("Data provider error", notice.getTitle());
+        assertEquals("test_empty.tst", notice.getFilename());
+        assertEquals("An error occurred while trying to access raw data for file: test_empty.tst", notice.getDescription());
+    }
+
     private static class MockEntityParser implements GtfsSpecRepository.RawEntityParser {
         public int callToValidateNumericTypesCount = 0;
         public int callToParseCount = 0;
@@ -227,81 +304,4 @@ class ParseSingleRowForFileTest {
         }
     }
 
-    @Test
-    void shouldValidateAndParseOneByOne() {
-
-        MockResultRepo resultRepo = new MockResultRepo();
-        MockSpecRepo specRepo = new MockSpecRepo();
-
-        ParseSingleRowForFile underTest = new ParseSingleRowForFile(
-                RawFileInfo.builder().filename("test.tst").build(),
-                new MockRawFileRepo(),
-                specRepo,
-                resultRepo
-        );
-
-        assertTrue(underTest.hasNext());
-        underTest.execute();
-        assertEquals(0, resultRepo.noticeList.size());
-        assertEquals(1, specRepo.parser.callToValidateNumericTypesCount);
-        assertEquals(1, specRepo.parser.callToParseCount);
-
-        assertTrue(underTest.hasNext());
-        underTest.execute();
-        assertEquals(0, resultRepo.noticeList.size());
-        assertEquals(2, specRepo.parser.callToValidateNumericTypesCount);
-        assertEquals(2, specRepo.parser.callToParseCount);
-
-        assertTrue(underTest.hasNext());
-        underTest.execute();
-        assertEquals(0, resultRepo.noticeList.size());
-        assertEquals(3, specRepo.parser.callToValidateNumericTypesCount);
-        assertEquals(3, specRepo.parser.callToParseCount);
-
-        assertFalse(underTest.hasNext());
-        assertNull(underTest.execute());
-    }
-
-    @Test
-    void shouldWriteNoticesToRepo() {
-
-        MockResultRepo resultRepo = new MockResultRepo();
-
-        ParseSingleRowForFile underTest = new ParseSingleRowForFile(
-                RawFileInfo.builder().filename("test_invalid.tst").build(),
-                new MockRawFileRepo(),
-                new MockSpecRepo(),
-                resultRepo
-        );
-
-        underTest.execute();
-        assertEquals(3, resultRepo.noticeList.size());
-        underTest.execute();
-        assertEquals(6, resultRepo.noticeList.size());
-        underTest.execute();
-        assertEquals(9, resultRepo.noticeList.size());
-    }
-
-    @Test
-    void providerErrorShouldGenerateNotice() {
-
-        MockResultRepo resultRepo = new MockResultRepo();
-
-        ParseSingleRowForFile underTest = new ParseSingleRowForFile(
-                RawFileInfo.builder().filename("test_empty.tst").build(),
-                new MockRawFileRepo(),
-                new MockSpecRepo(),
-                resultRepo
-        );
-
-        underTest.execute();
-        assertEquals(1, resultRepo.noticeList.size());
-        Notice notice = resultRepo.noticeList.get(0);
-        assertThat(notice, instanceOf(CannotConstructDataProviderNotice.class));
-        assertEquals("E002", notice.getId());
-        assertEquals("Data provider error", notice.getTitle());
-        assertEquals("test_empty.tst", notice.getFilename());
-        assertEquals("An error occurred while trying to access raw data for file: test_empty.tst",
-                notice.getDescription());
-    }
 }

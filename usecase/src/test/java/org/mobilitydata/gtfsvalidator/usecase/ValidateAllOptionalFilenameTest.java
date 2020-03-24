@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredFileNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
@@ -33,89 +33,65 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ValidateAllRequiredFilePresenceTest {
+class ValidateAllOptionalFilenameTest {
 
     @Test
-    void allRequiredPresentShouldNotGenerateNotice() {
-
+    void allExtraPresentShouldGenerateNotice() {
+        MockSpecRepo mockSpecRepo = new MockSpecRepo(1, 2);
+        MockRawFileRepo mockRawFileRepo = new MockRawFileRepo(1, 2, 3);
         MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
 
-        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
-                new MockSpecRepo(10),
-                new MockRawFileRepo(10, 10),
-                mockResultRepo
-
-        );
-
-        List<String> result = underTest.execute();
-        assertEquals(0, mockResultRepo.notices.size());
-        assertEquals(10, result.size());
-        assertEquals(List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req", "req5.req", "req6.req",
-                "req7.req", "req8.req", "req9.req"), result);
-    }
-
-    @Test
-    void missingRequiredShouldGenerateOneNoticePerMissingFile() {
-
-        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
-
-        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
-                new MockSpecRepo(15),
-                new MockRawFileRepo(10, 10),
-                mockResultRepo
-        );
+        ValidateAllOptionalFilename underTest = new ValidateAllOptionalFilename(
+                mockSpecRepo,
+                mockRawFileRepo,
+                mockResultRepo);
 
         List<String> result = underTest.execute();
 
-        assertEquals(5, mockResultRepo.notices.size());
-        assertEquals(15, result.size());
+        assertEquals(2, result.size());
+        assertEquals(List.of("opt0.opt", "opt1.opt"), result);
+
+        assertEquals(3, mockResultRepo.notices.size());
 
         Notice notice = mockResultRepo.notices.get(0);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req10.req", notice.getFilename());
+        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
+        assertEquals("extra0.extra", notice.getFilename());
+        assertEquals("W004", notice.getId());
+        assertEquals("Non standard file found", notice.getTitle());
+        assertEquals("Extra file extra0.extra found in archive", notice.getDescription());
 
         notice = mockResultRepo.notices.get(1);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req11.req", notice.getFilename());
+        assertEquals("extra2.extra", notice.getFilename());
+        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
+        assertEquals("W004", notice.getId());
+        assertEquals("Non standard file found", notice.getTitle());
+        assertEquals("Extra file extra2.extra found in archive", notice.getDescription());
 
         notice = mockResultRepo.notices.get(2);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req12.req", notice.getFilename());
-
-        notice = mockResultRepo.notices.get(3);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req13.req", notice.getFilename());
-
-        notice = mockResultRepo.notices.get(4);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req14.req", notice.getFilename());
+        assertEquals("extra1.extra", notice.getFilename());
+        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
+        assertEquals("W004", notice.getId());
+        assertEquals("Non standard file found", notice.getTitle());
+        assertEquals("Extra file extra1.extra found in archive", notice.getDescription());
     }
 
     //mock spec repo
     private static class MockSpecRepo implements GtfsSpecRepository {
 
-        private final int homManyReq;
+        private final int howManyReq;
+        private final int howManyOpt;
 
-        public MockSpecRepo(int howManyReq) {
-            this.homManyReq = howManyReq;
+        public MockSpecRepo(int howManyReq, int howManyOpt) {
+            this.howManyReq = howManyReq;
+            this.howManyOpt = howManyOpt;
         }
 
         @Override
         public List<String> getRequiredFilenameList() {
 
-            List<String> toReturn = new ArrayList<>(this.homManyReq);
+            List<String> toReturn = new ArrayList<>(this.howManyReq);
 
-            for (int i = 0; i < this.homManyReq; ++i) {
+            for (int i = 0; i < this.howManyReq; ++i) {
                 toReturn.add("req" + i + ".req");
             }
 
@@ -124,7 +100,13 @@ class ValidateAllRequiredFilePresenceTest {
 
         @Override
         public List<String> getOptionalFilenameList() {
-            return null;
+            List<String> toReturn = new ArrayList<>(this.howManyOpt);
+
+            for (int i = 0; i < this.howManyOpt; ++i) {
+                toReturn.add("opt" + i + ".opt");
+            }
+
+            return toReturn;
         }
 
         @Override
@@ -151,12 +133,14 @@ class ValidateAllRequiredFilePresenceTest {
     //mock raw file repo
     private static class MockRawFileRepo implements RawFileRepository {
 
-        private final int homManyReq;
+        private final int howManyReq;
         private final int homManyOpt;
+        private final int howManyExtra;
 
-        public MockRawFileRepo(int howManyReq, int howManyOpt) {
-            this.homManyReq = howManyReq;
+        public MockRawFileRepo(int howManyReq, int howManyOpt, int howManyExtra) {
+            this.howManyReq = howManyReq;
             this.homManyOpt = howManyOpt;
+            this.howManyExtra = howManyExtra;
         }
 
         @Override
@@ -176,9 +160,9 @@ class ValidateAllRequiredFilePresenceTest {
 
         @Override
         public Set<String> getFilenameAll() {
-            Set<String> toReturn = new HashSet<>(this.homManyReq + this.homManyOpt);
+            Set<String> toReturn = new HashSet<>(this.howManyReq + this.homManyOpt);
 
-            for (int i = 0; i < this.homManyReq; ++i) {
+            for (int i = 0; i < this.howManyReq; ++i) {
                 toReturn.add("req" + i + ".req");
             }
 
@@ -186,6 +170,9 @@ class ValidateAllRequiredFilePresenceTest {
                 toReturn.add("opt" + j + ".opt");
             }
 
+            for (int k = 0; k < this.howManyExtra; ++k) {
+                toReturn.add("extra" + k + ".extra");
+            }
             return toReturn;
         }
 
@@ -197,7 +184,7 @@ class ValidateAllRequiredFilePresenceTest {
 
     //mock validation result repo
     private static class MockValidationResultRepo implements ValidationResultRepository {
-        public List<Notice> notices = new ArrayList<>();
+        public final List<Notice> notices = new ArrayList<>();
 
         @Override
         public InfoNotice addNotice(InfoNotice newInfo) {
@@ -219,11 +206,6 @@ class ValidateAllRequiredFilePresenceTest {
 
         @Override
         public Collection<Notice> getAll() {
-            return null;
-        }
-
-        @Override
-        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
             return null;
         }
 
