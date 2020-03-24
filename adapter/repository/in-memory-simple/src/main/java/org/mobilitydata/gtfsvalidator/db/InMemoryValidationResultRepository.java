@@ -16,7 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
+import org.mobilitydata.gtfsvalidator.exporter.JsonNoticeExporter;
 import org.mobilitydata.gtfsvalidator.exporter.ProtobufNoticeExporter;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
@@ -24,6 +26,10 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -69,7 +75,17 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     @Override
-    public NoticeExporter getExporter() {
-        return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder());
+    public NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException {
+        if (outputAsProto) {
+            return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder(),
+                    new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath));
+        } else {
+            return new JsonNoticeExporter(new ObjectMapper().getFactory().createGenerator(
+                    Files.newOutputStream(Paths.get(
+                            outputPath + File.separator + "results" +
+                                    JsonNoticeExporter.FILE_EXTENSION
+                            )
+                    )));
+        }
     }
 }

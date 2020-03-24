@@ -222,7 +222,7 @@ class ParseSingleRowForFileTest {
         }
 
         @Override
-        public NoticeExporter getExporter() {
+        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
             return null;
         }
     }

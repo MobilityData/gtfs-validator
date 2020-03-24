@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.base;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 public abstract class Notice {
     private final String filename;
@@ -39,7 +38,7 @@ public abstract class Notice {
 
     public abstract Notice visit(ValidationResultRepository resultRepo);
 
-    public abstract void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+    public abstract void export(ValidationResultRepository.NoticeExporter exporter)
             throws IOException;
 
     public String getFilename() {

@@ -20,7 +20,6 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 public class InvalidTimezoneNotice extends ErrorNotice {
     private String entityId;
@@ -38,9 +37,9 @@ public class InvalidTimezoneNotice extends ErrorNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+    public void export(ValidationResultRepository.NoticeExporter exporter)
             throws IOException {
-        exporter.export(this, targetStream);
+        exporter.export(this);
     }
 
     public String getEntityId() {

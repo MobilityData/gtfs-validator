@@ -22,7 +22,8 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
 import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -117,10 +118,8 @@ public class Main {
                 config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
             }
 
-            logger.info("validation repo content:" + config.getValidationResult());
-
-            config.cleanOrCreatePath(outputPath).execute();
-            Files.writeString(Paths.get(outputPath + File.separator + "result.txt"), config.getValidationResult().toString());
+            logger.info("Exporting validation repo content:" + config.getValidationResult());
+            config.exportResultAsFile(false, outputPath).execute();
 
         } catch (ParseException e) {
             logger.error("Could not parse command line arguments: " + e.getMessage());

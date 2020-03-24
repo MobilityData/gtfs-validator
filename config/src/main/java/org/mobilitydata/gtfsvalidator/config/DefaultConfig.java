@@ -94,7 +94,7 @@ public class DefaultConfig {
         return resultRepo.getAll();
     }
 
-    public ExportResultAsFile exportResultAsFile(String outputPath) {
-        return new ExportResultAsFile(resultRepo, outputPath);
+    public ExportResultAsFile exportResultAsFile(boolean asProto, String outputPath) {
+        return new ExportResultAsFile(resultRepo, outputPath, asProto);
     }
 }

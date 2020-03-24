@@ -20,30 +20,30 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 
 public class ExportResultAsFile {
 
     private final ValidationResultRepository resultRepo;
     private final String outputPath;
+    private final boolean asProto;
 
-    // future use will also specify what kind of export as constructor parameter. Now supporting ony protobuf
-    public ExportResultAsFile(final ValidationResultRepository resultRepo, final String outputPath) {
+    public ExportResultAsFile(final ValidationResultRepository resultRepo,
+                              final String outputPath,
+                              final boolean asProto) {
         this.resultRepo = resultRepo;
         this.outputPath = outputPath;
+        this.asProto = asProto;
     }
 
     public void execute() throws IOException {
-        ValidationResultRepository.NoticeExporter exporter = resultRepo.getExporter();
+        ValidationResultRepository.NoticeExporter exporter = resultRepo.getExporter(asProto, outputPath);
+
+        exporter.exportBegin();
 
         for (Notice notice : resultRepo.getAll()) {
-            OutputStream outStream = Files.newOutputStream(Paths.get(
-                    outputPath + TimeUnit.NANOSECONDS.toMillis(System.nanoTime()) + exporter.getExtension()));
-            notice.export(exporter, outStream);
-            outStream.close();
+            notice.export(exporter);
         }
+
+        exporter.exportEnd();
     }
 }

@@ -20,7 +20,6 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 public class InputZipContainsFolderNotice extends WarningNotice {
 
@@ -40,8 +39,8 @@ public class InputZipContainsFolderNotice extends WarningNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter, OutputStream targetStream)
+    public void export(ValidationResultRepository.NoticeExporter exporter)
             throws IOException {
-        exporter.export(this, targetStream);
+        exporter.export(this);
     }
 }

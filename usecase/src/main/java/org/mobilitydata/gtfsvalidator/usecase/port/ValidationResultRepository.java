@@ -27,7 +27,6 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrinta
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Collection;
 
 public interface ValidationResultRepository {
@@ -42,49 +41,53 @@ public interface ValidationResultRepository {
 
     Collection<Notice> getAll();
 
-    NoticeExporter getExporter();
+    NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException;
 
     // an interface that will be implemented in different flavors: proto, json, string, ...
     interface NoticeExporter {
 
         String getExtension();
 
-        void export(NonStandardHeaderNotice toExport, OutputStream targetStream) throws IOException;
+        void exportBegin() throws IOException;
 
-        void export(InputZipContainsFolderNotice toExport, OutputStream targetStream) throws IOException;
+        void exportEnd() throws IOException;
 
-        void export(NonAsciiOrNonPrintableCharNotice toExport, OutputStream targetStream) throws IOException;
+        void export(NonStandardHeaderNotice toExport) throws IOException;
 
-        void export(UnsupportedGtfsTypeNotice toExport, OutputStream targetStream) throws IOException;
+        void export(InputZipContainsFolderNotice toExport) throws IOException;
 
-        void export(CannotConstructDataProviderNotice toExport, OutputStream targetStream) throws IOException;
+        void export(NonAsciiOrNonPrintableCharNotice toExport) throws IOException;
 
-        void export(CannotDownloadArchiveFromNetworkNotice toExport, OutputStream targetStream) throws IOException;
+        void export(UnsupportedGtfsTypeNotice toExport) throws IOException;
 
-        void export(CannotParseFloatNotice toExport, OutputStream targetStream) throws IOException;
+        void export(CannotConstructDataProviderNotice toExport) throws IOException;
 
-        void export(CannotParseIntegerNotice toExport, OutputStream targetStream) throws IOException;
+        void export(CannotDownloadArchiveFromNetworkNotice toExport) throws IOException;
 
-        void export(CannotUnzipInputArchiveNotice toExport, OutputStream targetStream) throws IOException;
+        void export(CannotParseFloatNotice toExport) throws IOException;
 
-        void export(FloatFieldValueOutOfRangeNotice toExport, OutputStream targetStream) throws IOException;
+        void export(CannotParseIntegerNotice toExport) throws IOException;
 
-        void export(IntegerFieldValueOutOfRangeNotice toExport, OutputStream targetStream) throws IOException;
+        void export(CannotUnzipInputArchiveNotice toExport) throws IOException;
 
-        void export(InvalidRowLengthNotice toExport, OutputStream targetStream) throws IOException;
+        void export(FloatFieldValueOutOfRangeNotice toExport) throws IOException;
 
-        void export(InvalidTimezoneNotice toExport, OutputStream targetStream) throws IOException;
+        void export(IntegerFieldValueOutOfRangeNotice toExport) throws IOException;
 
-        void export(InvalidUrlNotice toExport, OutputStream targetStream) throws IOException;
+        void export(InvalidRowLengthNotice toExport) throws IOException;
 
-        void export(MissingHeaderNotice toExport, OutputStream targetStream) throws IOException;
+        void export(InvalidTimezoneNotice toExport) throws IOException;
 
-        void export(MissingRequiredFileNotice toExport, OutputStream targetStream) throws IOException;
+        void export(InvalidUrlNotice toExport) throws IOException;
 
-        void export(MissingRequiredValueNotice toExport, OutputStream targetStream) throws IOException;
+        void export(MissingHeaderNotice toExport) throws IOException;
 
-        void export(CouldNotCleanOrCreatePathNotice toExport, OutputStream targetStream) throws IOException;
+        void export(MissingRequiredFileNotice toExport) throws IOException;
 
-        void export(InvalidColorNotice toExport, OutputStream targetStream) throws IOException;
+        void export(MissingRequiredValueNotice toExport) throws IOException;
+
+        void export(CouldNotCleanOrCreatePathNotice toExport) throws IOException;
+
+        void export(InvalidColorNotice toExport) throws IOException;
     }
 }
