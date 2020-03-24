@@ -58,7 +58,8 @@ public class Transfer {
         return transferType;
     }
 
-    public int getMinTransferTime() {
+    @Nullable
+    public Integer getMinTransferTime() {
         return minTransferTime;
     }
 
