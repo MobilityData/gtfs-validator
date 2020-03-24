@@ -178,5 +178,10 @@ public class Calendar {
             this.endDate = endDate;
             return this;
         }
+
+        public Calendar build() {
+            return new Calendar(serviceId, monday, tuesday, wednesday, thursday, friday, saturday,
+                    sunday, startDate, endDate);
+        }
     }
 }
