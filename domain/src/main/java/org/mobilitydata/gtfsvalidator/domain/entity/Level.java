@@ -10,6 +10,8 @@ public class Level {
 
     @NotNull
     private final Float levelIndex;
+
+    @Nullable
     private final String levelName;
 
     private Level(@NotNull final String levelId,
@@ -30,13 +32,18 @@ public class Level {
         return levelIndex;
     }
 
+    @Nullable
     public String getLevelName() {
         return levelName;
     }
 
     public static class LevelBuilder {
+        @NotNull
         private String levelId;
-        private Float levelIndex;
+
+        private float levelIndex;
+
+        @Nullable
         private String levelName;
 
         LevelBuilder(@NotNull String levelId, float levelIndex) {
