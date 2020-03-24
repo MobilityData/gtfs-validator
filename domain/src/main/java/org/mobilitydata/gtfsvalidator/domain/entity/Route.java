@@ -24,30 +24,43 @@ public class Route {
     @NotNull
     private final String routeId;
 
+    @Nullable
     private final String agencyId;
+
+    @Nullable
     private final String routeShortName;
+
+    @Nullable
     private final String routeLongName;
+
+    @Nullable
     private final String routeDesc;
 
     @NotNull
     private final RouteType routeType;
 
+    @Nullable
     private final String routeUrl;
-    private final String routeColor;
-    private final String routeTextColor;
-    private final int routeSortOrder;
 
+    @Nullable
+    private final String routeColor;
+
+    @Nullable
+    private final String routeTextColor;
+
+    @Nullable
+    private final Integer routeSortOrder;
 
     private Route(@NotNull final String routeId,
-                  final String agencyId,
-                  final String routeShortName,
-                  final String routeLongName,
-                  final String routeDesc,
+                  @Nullable final String agencyId,
+                  @Nullable final String routeShortName,
+                  @Nullable final String routeLongName,
+                  @Nullable final String routeDesc,
                   @NotNull final RouteType routeType,
-                  final String routeUrl,
-                  final String routeColor,
-                  final String routeTextColor,
-                  final int routeSortOrder) {
+                  @Nullable final String routeUrl,
+                  @Nullable final String routeColor,
+                  @Nullable final String routeTextColor,
+                  @Nullable final Integer routeSortOrder) {
         this.routeId = routeId;
         this.agencyId = agencyId;
         this.routeShortName = routeShortName;
@@ -60,23 +73,28 @@ public class Route {
         this.routeSortOrder = routeSortOrder;
     }
 
+
     @NotNull
     public String getRouteId() {
         return routeId;
     }
 
+    @Nullable
     public String getAgencyId() {
         return agencyId;
     }
 
+    @Nullable
     public String getRouteShortName() {
         return routeShortName;
     }
 
+    @Nullable
     public String getRouteLongName() {
         return routeLongName;
     }
 
+    @Nullable
     public String getRouteDesc() {
         return routeDesc;
     }
@@ -86,19 +104,23 @@ public class Route {
         return routeType;
     }
 
+    @Nullable
     public String getRouteUrl() {
         return routeUrl;
     }
 
+    @Nullable
     public String getRouteColor() {
         return routeColor;
     }
 
+    @Nullable
     public String getRouteTextColor() {
         return routeTextColor;
     }
 
-    public int getRouteSortOrder() {
+    @Nullable
+    public Integer getRouteSortOrder() {
         return routeSortOrder;
     }
 
