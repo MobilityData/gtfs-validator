@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class Agency {
 
+    @Nullable
     private final String agencyId;
 
     @NotNull
@@ -32,19 +33,27 @@ public class Agency {
     @NotNull
     private final String agencyTimezone;
 
+    @Nullable
     private final String agencyLang;
+
+    @Nullable
     private final String agencyPhone;
+
+    @Nullable
     private final String agencyFareUrl;
+
+    @Nullable
     private final String agencyEmail;
 
-    private Agency(final String agencyId,
+
+    private Agency(@Nullable final String agencyId,
                    @NotNull final String agencyName,
                    @NotNull final String agencyUrl,
                    @NotNull final String agencyTimezone,
-                   final String agencyLang,
-                   final String agencyPhone,
-                   final String agencyFareUrl,
-                   final String agencyEmail) {
+                   @Nullable final String agencyLang,
+                   @Nullable final String agencyPhone,
+                   @Nullable final String agencyFareUrl,
+                   @Nullable final String agencyEmail) {
 
         this.agencyId = agencyId;
         this.agencyName = agencyName;
@@ -56,6 +65,7 @@ public class Agency {
         this.agencyEmail = agencyEmail;
     }
 
+    @Nullable
     public String getAgencyId() {
         return agencyId;
     }
@@ -75,18 +85,22 @@ public class Agency {
         return agencyTimezone;
     }
 
+    @Nullable
     public String getAgencyLang() {
         return agencyLang;
     }
 
+    @Nullable
     public String getAgencyPhone() {
         return agencyPhone;
     }
 
+    @Nullable
     public String getAgencyFareUrl() {
         return agencyFareUrl;
     }
 
+    @Nullable
     public String getAgencyEmail() {
         return agencyEmail;
     }
