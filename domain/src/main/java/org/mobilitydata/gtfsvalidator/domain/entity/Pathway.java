@@ -128,17 +128,40 @@ public class Pathway {
     }
 
     public static class PathwayBuilder {
+        @NotNull
         private String pathwayId;
+
+        @NotNull
         private String fromStopId;
+
+        @NotNull
         private String toStopId;
+
+        @NotNull
         private PathwayMode pathwayMode;
+
+        @NotNull
         private IsBidirectional isBidirectional;
+
+        @Nullable
         private Float length;
+
+        @Nullable
         private Integer traversalTime;
+
+        @Nullable
         private Integer stairCount;
+
+        @Nullable
         private Float maxSlope;
+
+        @Nullable
         private Float minWidth;
+
+        @Nullable
         private String signpostedAs;
+
+        @Nullable
         private String reversedSignpostedAs;
 
         PathwayBuilder(@NotNull final String pathwayId,
