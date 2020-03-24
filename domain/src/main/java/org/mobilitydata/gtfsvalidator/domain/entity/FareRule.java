@@ -1,22 +1,30 @@
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class FareRule {
 
     @NotNull
     final String fareId;
 
+    @Nullable
     private final String routeId;
+
+    @Nullable
     private final String originId;
+
+    @Nullable
     private final String destinationId;
+
+    @Nullable
     private final String containsId;
 
     private FareRule(@NotNull final String fareId,
-                     final String routeId,
-                     final String originId,
-                     final String destinationId,
-                     final String containsId) {
+                     @Nullable final String routeId,
+                     @Nullable final String originId,
+                     @Nullable final String destinationId,
+                     @Nullable final String containsId) {
         this.fareId = fareId;
         this.routeId = routeId;
         this.originId = originId;
@@ -29,28 +37,37 @@ public class FareRule {
         return fareId;
     }
 
+    @Nullable
     public String getRouteId() {
         return routeId;
     }
 
+    @Nullable
     public String getOriginId() {
         return originId;
     }
 
+    @Nullable
     public String getDestinationId() {
         return destinationId;
     }
 
+    @Nullable
     public String getContainsId() {
         return containsId;
     }
 
     public static class FareRuleBuilder {
 
+        @NotNull
         private String fareId;
+        @Nullable
         private String routeId;
+        @Nullable
         private String originId;
+        @Nullable
         private String destinationId;
+        @Nullable
         private String containsId;
 
         public FareRuleBuilder(@NotNull final String fareId) {
@@ -62,22 +79,22 @@ public class FareRule {
             return this;
         }
 
-        public FareRuleBuilder routeId(final String routeId) {
+        public FareRuleBuilder routeId(@Nullable final String routeId) {
             this.routeId = routeId;
             return this;
         }
 
-        public FareRuleBuilder originId(final String originId) {
+        public FareRuleBuilder originId(@Nullable final String originId) {
             this.originId = originId;
             return this;
         }
 
-        public FareRuleBuilder destinationId(final String destinationId) {
+        public FareRuleBuilder destinationId(@Nullable final String destinationId) {
             this.destinationId = destinationId;
             return this;
         }
 
-        public FareRuleBuilder containsId(final String containsId) {
+        public FareRuleBuilder containsId(@Nullable final String containsId) {
             this.containsId = containsId;
             return this;
         }
