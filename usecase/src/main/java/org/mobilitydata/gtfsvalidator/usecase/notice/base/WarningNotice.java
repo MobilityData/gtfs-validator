@@ -24,6 +24,7 @@ public class WarningNotice extends Notice {
     protected static final String W_002 = "W002";
     protected static final String W_003 = "W003";
     protected static final String W_004 = "W004";
+    protected static final String W_005 = "W005";
 
     public WarningNotice(final String filename,
                          final String noticeId,
