@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Shape {
 
@@ -25,13 +26,15 @@ public class Shape {
     private final float shapePtLat;
     private final float shapePtLon;
     private final int shapePtSequence;
+
+    @Nullable
     private final Float shapeDistTraveled;
 
     private Shape(@NotNull final String shapeId,
                   float shapePtLat,
                   float shapePtLon,
                   final int shapePtSequence,
-                  final Float shapeDistTraveled) {
+                  @Nullable final Float shapeDistTraveled) {
         this.shapeId = shapeId;
         this.shapePtLat = shapePtLat;
         this.shapePtLon = shapePtLon;
@@ -59,16 +62,21 @@ public class Shape {
         return shapePtSequence;
     }
 
+    @Nullable
     public Float getShapeDistTraveled() {
         return shapeDistTraveled;
     }
 
     public static class ShapeBuilder {
 
+        @NotNull
         private String shapeId;
+
         private float shapePtLat;
         private float shapePtLon;
         private int shapePtSequence;
+
+        @Nullable
         private Float shapeDistTraveled;
 
         public ShapeBuilder(@NotNull final String shapeId,
@@ -101,7 +109,7 @@ public class Shape {
             return this;
         }
 
-        public ShapeBuilder shapeDistTraveled(final Float shapeDistTraveled) {
+        public ShapeBuilder shapeDistTraveled(@Nullable final Float shapeDistTraveled) {
             this.shapeDistTraveled = shapeDistTraveled;
             return this;
         }
