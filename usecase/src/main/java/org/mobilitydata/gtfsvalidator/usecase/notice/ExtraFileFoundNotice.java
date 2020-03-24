@@ -17,10 +17,18 @@
 package org.mobilitydata.gtfsvalidator.usecase.notice;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+
+import java.io.IOException;
 
 public class ExtraFileFoundNotice extends WarningNotice {
 
     public ExtraFileFoundNotice(String filename) {
         super(filename, W_004, "Non standard file found", "Extra file " + filename + " found in archive");
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) throws IOException {
+        exporter.export(this);
     }
 }

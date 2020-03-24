@@ -71,15 +71,26 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     /**
-     * Adds an error notice to the repository and returns the notice
+     * Adds an error notice to the repository and returns the notice. Useful for automatic type inference
      *
-     * @param newError an error notice
-     * @return the error notice that was added to the repository
+     * @param newError notice
+     * @return the notice that was added to the repository
      */
     @Override
     public ErrorNotice addNotice(ErrorNotice newError) {
         errorNoticeList.add(newError);
         return newError;
+    }
+
+    /**
+     * Visit a generic notice to add it to the rpeository and returns the notice. Useful for automatic type inference
+     *
+     * @param newNotice notice
+     * @return the notice that was added to the repository
+     */
+    @Override
+    public Notice addNotice(Notice newNotice) {
+        return newNotice.visit(this);
     }
 
     /**
@@ -97,12 +108,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    /**
-     * Adds an error notice to the repository and returns the notice. Useful for automatic type inference
-     *
-     * @param newNotice notice
-     * @return the notice that was added to the repository
-     */
+
     @Override
     public NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException {
         if (outputAsProto) {

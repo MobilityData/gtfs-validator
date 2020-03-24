@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.exporter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.mobilitydata.gtfsvalidator.usecase.notice.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
 import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
@@ -147,6 +148,11 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
 
     @Override
     public void export(InvalidColorNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(ExtraFileFoundNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

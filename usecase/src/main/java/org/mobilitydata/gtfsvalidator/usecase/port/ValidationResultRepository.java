@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import org.mobilitydata.gtfsvalidator.usecase.notice.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
@@ -92,5 +93,7 @@ public interface ValidationResultRepository {
         void export(CouldNotCleanOrCreatePathNotice toExport) throws IOException;
 
         void export(InvalidColorNotice toExport) throws IOException;
+
+        void export(ExtraFileFoundNotice toExport) throws IOException;
     }
 }

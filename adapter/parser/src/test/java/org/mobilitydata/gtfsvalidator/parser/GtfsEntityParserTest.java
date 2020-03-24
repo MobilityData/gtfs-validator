@@ -23,9 +23,9 @@ import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseFloatNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseFloatNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseIntegerNotice;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

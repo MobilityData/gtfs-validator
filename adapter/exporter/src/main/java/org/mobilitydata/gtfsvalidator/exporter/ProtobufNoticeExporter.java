@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
+import org.mobilitydata.gtfsvalidator.usecase.notice.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
 import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
@@ -262,6 +263,15 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getFieldName())
                 .setAltEntityValue(toExport.getColorValue())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(ExtraFileFoundNotice toExport) throws IOException {
+        protoBuilder.setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_UNKNOWN_FILE)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

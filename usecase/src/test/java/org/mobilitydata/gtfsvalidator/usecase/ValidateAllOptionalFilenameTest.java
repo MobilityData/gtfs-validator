@@ -210,6 +210,11 @@ class ValidateAllOptionalFilenameTest {
         }
 
         @Override
+        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
+            return null;
+        }
+
+        @Override
         public Notice addNotice(Notice newNotice) {
             return null;
         }
