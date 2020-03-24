@@ -28,22 +28,32 @@ public class Trip {
     @NotNull
     private final String tripId;
 
+    @Nullable
     private final String tripHeadsign;
+
+    @Nullable
     private final String tripShortName;
+
+    @Nullable
     private final Direction directionId;
+
+    @Nullable
     private final String blockId;
+
+    @Nullable
     private final String shapeId;
+
     private final WheelchairAccessibleStatus wheelchairAccessibleStatus;
     private final BikesAllowedStatus bikesAllowedStatus;
 
     private Trip(@NotNull final String routeId,
                  @NotNull final String serviceId,
                  @NotNull final String tripId,
-                 final String tripHeadsign,
-                 final String tripShortName,
-                 final Direction directionId,
-                 final String blockId,
-                 final String shapeId,
+                 @Nullable final String tripHeadsign,
+                 @Nullable final String tripShortName,
+                 @Nullable final Direction directionId,
+                 @Nullable final String blockId,
+                 @Nullable final String shapeId,
                  final WheelchairAccessibleStatus wheelchairAccessibleStatus,
                  final BikesAllowedStatus bikesAllowedStatus) {
         this.routeId = routeId;
@@ -57,7 +67,6 @@ public class Trip {
         this.wheelchairAccessibleStatus = wheelchairAccessibleStatus;
         this.bikesAllowedStatus = bikesAllowedStatus;
     }
-
 
     @NotNull
     public String getRouteId() {
@@ -74,22 +83,27 @@ public class Trip {
         return tripId;
     }
 
+    @Nullable
     public String getTripHeadsign() {
         return tripHeadsign;
     }
 
+    @Nullable
     public String getTripShortName() {
         return tripShortName;
     }
 
+    @Nullable
     public Direction getDirectionId() {
         return directionId;
     }
 
+    @Nullable
     public String getBlockId() {
         return blockId;
     }
 
+    @Nullable
     public String getShapeId() {
         return shapeId;
     }
@@ -104,15 +118,25 @@ public class Trip {
 
     public static class TripBuilder {
 
+        @NotNull
         private String routeId;
+        @NotNull
         private String serviceId;
+        @NotNull
         private String tripId;
+        @Nullable
         private String tripHeadsign;
+        @Nullable
         private String tripShortName;
+        @Nullable
         private Direction directionId;
+        @Nullable
         private String blockId;
+        @Nullable
         private String shapeId;
+        @Nullable
         private WheelchairAccessibleStatus wheelchairAccessibleStatus;
+        @Nullable
         private BikesAllowedStatus bikesAllowedStatus;
 
         public TripBuilder(@NotNull final String routeId,
