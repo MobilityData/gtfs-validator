@@ -48,6 +48,8 @@ public class Main {
         options.addOption("o", "output", true, "Relative path where to place output" +
                 " files");
         options.addOption("h", "help", false, "Print this message");
+        options.addOption("j", "json", false, "Export validation results as JSON");
+        options.addOption("p", "proto", false, "Export validation results as proto");
 
         //TODO: add configurable warning threshold for GTFS time type validation - when we support time type again
 
@@ -139,9 +141,24 @@ public class Main {
                 }
             });
 
+            boolean asProto = false;
+            if (!cmd.hasOption("j") & !cmd.hasOption("p")) {
+                logger.info("Results are exported as JSON");
+            }
+
+            if (cmd.hasOption("j")) {
+                logger.info("Results are exported as JSON");
+            }
+
+            if (cmd.hasOption("p")) {
+                logger.info("Results are exported as proto");
+                asProto = true;
+            }
+
             logger.info("Exporting validation repo content:" + config.getValidationResult());
             config.cleanOrCreatePath(outputPath).execute();
-            config.exportResultAsFile(false, outputPath).execute();
+
+            config.exportResultAsFile(asProto, outputPath).execute();
 
         } catch (ParseException e) {
             logger.error("Could not parse command line arguments: " + e.getMessage());
