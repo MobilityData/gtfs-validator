@@ -175,9 +175,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .setAltEntityId(entityId)
                 .addCsvColumnName(fieldName)
                 .setValue(rangeMinAsString)
-                //TODO: FIXME - can't set altValue twice
                 .setAltValue(rangeMaxAsString)
-                .setAltValue(actualValueAsString)
+                .setAltEntityValue(actualValueAsString)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

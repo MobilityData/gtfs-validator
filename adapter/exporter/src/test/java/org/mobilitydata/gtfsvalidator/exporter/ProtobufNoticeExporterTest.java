@@ -367,9 +367,10 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setValue(
                 ArgumentMatchers.eq("0.0"));
-        //TODO: FIXME - can't set altValue twice
-        verify(mockBuilder, times(2)).setAltValue(
-                ArgumentMatchers.any());
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("66.0"));
+        verify(mockBuilder, times(1)).setAltEntityValue(
+                ArgumentMatchers.eq("666.0"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -405,9 +406,10 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setValue(
                 ArgumentMatchers.eq("0"));
-        //TODO: FIXME - can't set altValue twice
-        verify(mockBuilder, times(2)).setAltValue(
-                ArgumentMatchers.any());
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("66"));
+        verify(mockBuilder, times(1)).setAltEntityValue(
+                ArgumentMatchers.eq("666"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
 
