@@ -16,7 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import org.mobilitydata.gtfsvalidator.usecase.entity.Agency;
+
 public interface GtfsDataRepository {
+
+    public Agency addEntity(Agency newAgency);
 
     //public void loadStop
 
