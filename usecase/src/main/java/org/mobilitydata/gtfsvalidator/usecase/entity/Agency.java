@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.usecase.entity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-public class Agency {
+public class Agency extends Entity {
+
+    // todo: add hash field for agency file
 
     @Nullable
     private final String agencyId;
@@ -103,6 +106,11 @@ public class Agency {
     @Nullable
     public String getAgencyEmail() {
         return agencyEmail;
+    }
+
+    @Override
+    public Entity solveType(GtfsDataRepository gtfsDataRepository) {
+        return gtfsDataRepository.addEntity(this);
     }
 
     public static class AgencyBuilder {

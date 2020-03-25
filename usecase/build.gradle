@@ -31,9 +31,11 @@ dependencies {
     implementation(
             project(':domain'),
     )
+    implementation 'org.jetbrains:annotations:19.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+    testCompile "org.mockito:mockito-core:2.+"
 }
 
 test {
