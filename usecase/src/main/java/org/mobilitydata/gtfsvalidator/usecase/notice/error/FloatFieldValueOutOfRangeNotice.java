@@ -41,7 +41,7 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
                         " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue);
         this.rangeMax = rangeMax;
         this.rangeMin = rangeMin;
-        this.entityId = entityId;
+        this.entityId = entityId != null ? entityId : "no id";
         this.fieldName = fieldName;
         this.actualValue = actualValue;
     }

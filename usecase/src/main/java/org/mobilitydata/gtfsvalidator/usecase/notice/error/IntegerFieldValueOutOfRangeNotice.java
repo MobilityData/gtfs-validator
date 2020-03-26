@@ -40,7 +40,7 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
                 "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
                         " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue);
         this.fieldName = fieldName;
-        this.entityId = entityId;
+        this.entityId = entityId != null ? entityId : "no id";
         this.rangeMax = rangeMax;
         this.rangeMin = rangeMin;
         this.actualValue = actualValue;

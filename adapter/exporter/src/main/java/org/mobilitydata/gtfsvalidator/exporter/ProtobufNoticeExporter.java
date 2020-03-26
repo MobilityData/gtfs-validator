@@ -32,7 +32,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ProtobufNoticeExporter implements ValidationResultRepository.NoticeExporter {
 
@@ -68,6 +67,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_UNKNOWN_COLUMN)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING)
                 .setAltEntityValue(toExport.getExtraHeader())
+                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -77,6 +77,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
         protoBuilder.setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -108,6 +109,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
         protoBuilder.setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -117,6 +119,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
         protoBuilder.setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_FILE_CORRUPTED)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -133,6 +136,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setCsvColumnName(lineNumber, fieldName)
                 .setEntityValue(rawValue)
+                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -148,6 +152,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
         protoBuilder.setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -161,8 +166,11 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(IntegerFieldValueOutOfRangeNotice toExport) throws IOException {
-        outOfRangeNoticeToProto(toExport.getFilename(), toExport.getEntityId(), toExport.getFieldName(),
-                String.valueOf(toExport.getRangeMin()), String.valueOf(toExport.getRangeMax()),
+        outOfRangeNoticeToProto(toExport.getFilename(),
+                toExport.getEntityId(),
+                toExport.getFieldName(),
+                String.valueOf(toExport.getRangeMin()),
+                String.valueOf(toExport.getRangeMax()),
                 String.valueOf(toExport.getActualValue()));
     }
 
@@ -177,6 +185,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .setValue(rangeMinAsString)
                 .setAltValue(rangeMaxAsString)
                 .setAltEntityValue(actualValueAsString)
+                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -188,6 +197,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityRow(toExport.getRowIndex())
                 .setAltEntityValue(String.valueOf(toExport.getExpectedLength()))
+                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -271,6 +281,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
         protoBuilder.setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_UNKNOWN_FILE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -279,6 +290,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();
+        private int streamCounter;
 
         public ProtobufOutputStreamGenerator(final String outputPath) {
             this.targetPath = outputPath;
@@ -286,9 +298,10 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
         public OutputStream getStream() throws IOException {
             OutputStream newStream = Files.newOutputStream(Paths.get(
-                    targetPath + File.separator + TimeUnit.NANOSECONDS.toMillis(System.nanoTime()) +
+                    targetPath + File.separator + streamCounter +
                             ProtobufNoticeExporter.FILE_EXTENSION
             ));
+            ++streamCounter;
             openedStreamCollection.add(newStream);
             return newStream;
         }

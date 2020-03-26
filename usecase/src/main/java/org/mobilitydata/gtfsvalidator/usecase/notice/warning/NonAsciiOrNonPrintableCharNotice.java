@@ -32,7 +32,7 @@ public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
                 "Non ascii or non printable character(s) in:" + idValue + " in field:"
                         + fieldName + " for entity with id:" + entityId);
 
-        this.entityId = entityId;
+        this.entityId = entityId != null ? entityId : "no id";
         this.fieldName = fieldName;
     }
 
@@ -49,5 +49,4 @@ public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
     public String getEntityId() {
         return entityId;
     }
-
 }

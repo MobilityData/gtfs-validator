@@ -92,6 +92,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING));
         verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("extra"));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -120,6 +121,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -210,6 +212,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -240,6 +243,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_FILE_CORRUPTED));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -272,6 +276,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setCsvColumnName(
                 ArgumentMatchers.eq(666), ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("abc"));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -304,6 +309,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setCsvColumnName(
                 ArgumentMatchers.eq(666), ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("abc"));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -332,6 +338,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -371,6 +378,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("66.0"));
         verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("666.0"));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -410,6 +418,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("66"));
         verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("666"));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
 
@@ -692,6 +701,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_UNKNOWN_FILE));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
+        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

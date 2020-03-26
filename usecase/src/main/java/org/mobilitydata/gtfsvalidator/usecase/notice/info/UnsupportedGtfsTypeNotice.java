@@ -31,7 +31,7 @@ public class UnsupportedGtfsTypeNotice extends InfoNotice {
                 "Tried to validate an unsupported Gtfs type in file:" + filename +
                         ", entityId:" + entityId + ", field name:" + fieldName + " -->IGNORED");
         this.fieldName = fieldName;
-        this.entityId = entityId;
+        this.entityId = entityId != null ? entityId : "no id";
     }
 
     @Override
