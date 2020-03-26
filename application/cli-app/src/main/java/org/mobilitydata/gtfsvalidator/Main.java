@@ -116,28 +116,8 @@ public class Main {
             logger.info("Unzipping archive");
             config.unzipInputArchive(zipInputPath, config.cleanOrCreatePath(zipExtractTargetPath).execute()).execute();
 
-            List<String> filenameList = config.validateAllRequiredFilePresence().execute();
-
-            filenameList.addAll(config.validateAllOptionalFileName().execute());
-
-            // FIXME: removing files with unsupported field types
-            filenameList.remove("calendar.txt");
-            filenameList.remove("calendar_dates.txt");
-            filenameList.remove("stop_times.txt");
-            filenameList.remove("frequencies.txt");
-
-            // base validation
-            filenameList.forEach(filename -> {
-                logger.info("Validating: " + filename);
-
-                config.validateHeadersForFile(filename).execute();
-                config.validateAllRowLengthForFile(filename).execute();
-
-                ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
-                while (parseSingleRowForFile.hasNext()) {
-                    config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
-                }
-            });
+            executeCsvValidation(logger, config);
+//            todo: executeGtfsValidation(parameterListToBeDefined);
 
             logger.info("validation repo content:" + config.getValidationResult());
 
@@ -152,6 +132,31 @@ public class Main {
         }
 
         logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
+    }
+
+    private static void executeCsvValidation(Logger logger, DefaultConfig config) {
+        List<String> filenameList = config.validateAllRequiredFilePresence().execute();
+
+        filenameList.addAll(config.validateAllOptionalFileName().execute());
+
+        // FIXME: removing files with unsupported field types
+        filenameList.remove("calendar.txt");
+        filenameList.remove("calendar_dates.txt");
+        filenameList.remove("stop_times.txt");
+        filenameList.remove("frequencies.txt");
+
+        // base validation
+        filenameList.forEach(filename -> {
+            logger.info("Validating: " + filename);
+
+            config.validateHeadersForFile(filename).execute();
+            config.validateAllRowLengthForFile(filename).execute();
+
+            ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
+            while (parseSingleRowForFile.hasNext()) {
+                config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
+            }
+        });
     }
 
     //TODO: make a use case out of this
