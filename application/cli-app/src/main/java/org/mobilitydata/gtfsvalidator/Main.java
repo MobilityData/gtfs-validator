@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -48,6 +50,7 @@ public class Main {
         options.addOption("o", "output", true, "Relative path where to place output" +
                 " files");
         options.addOption("h", "help", false, "Print this message");
+        options.addOption("e", "exclude", true, "exclude files in GTFS validation");
 
         //TODO: add configurable warning threshold for GTFS time type validation - when we support time type again
 
@@ -58,6 +61,8 @@ public class Main {
             final DefaultConfig config = new DefaultConfig();
 
             final CommandLine cmd = parser.parse(options, args);
+
+            final List<String> filenameListToExclude = new ArrayList<>();
 
             if (args.length == 0) {
                 printHelp(options);
@@ -113,11 +118,16 @@ public class Main {
                 config.downloadArchiveFromNetwork(cmd.getOptionValue("u"), zipInputPath).execute();
             }
 
+            if (cmd.hasOption("e")) {
+                filenameListToExclude.addAll(Arrays.asList(cmd.getOptionValues("e")));
+                logger.info("Excluding files: " + filenameListToExclude + " from GTFS validation");
+            }
+
             logger.info("Unzipping archive");
             config.unzipInputArchive(zipInputPath, config.cleanOrCreatePath(zipExtractTargetPath).execute()).execute();
 
             executeCsvValidation(logger, config);
-//            todo: executeGtfsValidation(parameterListToBeDefined);
+            executeGtfsValidation(logger, config, filenameListToExclude);
 
             logger.info("validation repo content:" + config.getValidationResult());
 
@@ -134,7 +144,13 @@ public class Main {
         logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
     }
 
-    private static void executeCsvValidation(Logger logger, DefaultConfig config) {
+    private static void executeGtfsValidation(final Logger logger,
+                                              final DefaultConfig config,
+                                              final List<String> filenameListToExclude) {
+        // todo: implement with relevant usecases
+    }
+
+    private static void executeCsvValidation(final Logger logger, final DefaultConfig config) {
         List<String> filenameList = config.validateAllRequiredFilePresence().execute();
 
         filenameList.addAll(config.validateAllOptionalFileName().execute());
