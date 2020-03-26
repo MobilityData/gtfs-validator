@@ -16,15 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
-import org.mobilitydata.gtfsvalidator.usecase.entity.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfsentity.Agency;
 
 public interface GtfsDataRepository {
 
-    public Agency addEntity(Agency newAgency);
+    Agency addEntity(Agency newAgency);
 
-    //public void loadStop
-
-    //public List<Stop> getStopList();
-    //public
+    Agency getAgencyById(String agencyId);
 
 }

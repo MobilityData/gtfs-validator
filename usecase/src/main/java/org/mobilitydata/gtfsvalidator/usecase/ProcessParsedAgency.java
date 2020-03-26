@@ -1,7 +1,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.usecase.entity.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfsentity.Agency;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;

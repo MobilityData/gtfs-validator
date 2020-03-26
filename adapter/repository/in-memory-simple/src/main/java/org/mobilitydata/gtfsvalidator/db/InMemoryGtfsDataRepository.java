@@ -1,7 +1,6 @@
 package org.mobilitydata.gtfsvalidator.db;
 
-import org.mobilitydata.gtfsvalidator.usecase.entity.Agency;
-import org.mobilitydata.gtfsvalidator.usecase.entity.Entity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfsentity.Agency;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.util.ArrayList;
@@ -16,12 +15,19 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final List<Agency> agencyList = new ArrayList<>();
 
     @Override
-    public Agency addEntity(Agency newAgency) {
+    public Agency addEntity(final Agency newAgency) {
         agencyList.add(newAgency);
         return newAgency;
     }
 
-    public Entity addEntity(Entity newEntity) {
-        return newEntity.solveType(this);
+    @Override
+    public Agency getAgencyById(final String agencyId) {
+        return agencyList.stream()
+                .filter(agency -> {
+                    assert agency.getAgencyId() != null;
+                    return agency.getAgencyId().equals(agencyId);
+                })
+                .findAny()
+                .orElse(null);
     }
 }
