@@ -48,7 +48,6 @@ public class Main {
         options.addOption("o", "output", true, "Relative path where to place output" +
                 " files");
         options.addOption("h", "help", false, "Print this message");
-        options.addOption("j", "json", false, "Export validation results as JSON");
         options.addOption("p", "proto", false, "Export validation results as proto");
 
         //TODO: add configurable warning threshold for GTFS time type validation - when we support time type again
@@ -69,11 +68,12 @@ public class Main {
 
             String zipInputPath = cmd.getOptionValue("z") != null ? cmd.getOptionValue("z") :
                     System.getProperty("user.dir");
-            String zipExtractTargetPath = cmd.getOptionValue("i") != null ? cmd.getOptionValue("i") :
+            final String zipExtractTargetPath = cmd.getOptionValue("i") != null ? cmd.getOptionValue("i") :
                     System.getProperty("user.dir") + File.separator + "input";
-            String outputPath = cmd.getOptionValue("o") != null ?
+            final String outputPath = cmd.getOptionValue("o") != null ?
                     System.getProperty("user.dir") + File.separator + cmd.getOptionValue("o") :
                     System.getProperty("user.dir") + File.separator + "output";
+            final boolean asProto = cmd.hasOption("p");
 
             if (cmd.hasOption("u") & !cmd.hasOption("z")) {
                 logger.info("--url provided but no location to place zip (--zip option). Using default: " +
@@ -141,18 +141,10 @@ public class Main {
                 }
             });
 
-            boolean asProto = false;
-            if (!cmd.hasOption("j") & !cmd.hasOption("p")) {
-                logger.info("Results are exported as JSON");
-            }
-
-            if (cmd.hasOption("j")) {
-                logger.info("Results are exported as JSON");
-            }
-
-            if (cmd.hasOption("p")) {
+            if (asProto) {
                 logger.info("Results are exported as proto");
-                asProto = true;
+            } else {
+                logger.info("Results are exported as JSON by default");
             }
 
             logger.info("Exporting validation repo content:" + config.getValidationResult());
@@ -173,7 +165,8 @@ public class Main {
     private static void printHelp(Options options) {
         final String HELP = String.join("\n",
                 "Loads input GTFS feed from url or disk.",
-                "Checks files integrity, and converts CSV to proto file on disk");
+                "Checks files integrity, and converts CSV to proto file on disk", "Validation results are exported to " +
+                        "JSON file by default");
         HelpFormatter formatter = new HelpFormatter();
         System.out.println(); // blank line for legibility
         formatter.printHelp(HELP, options);
