@@ -23,7 +23,6 @@ import java.io.IOException;
 
 public class UnsupportedGtfsTypeNotice extends InfoNotice {
     private String fieldName;
-    private String entityId;
 
     public UnsupportedGtfsTypeNotice(String filename, String fieldName, String entityId) {
         super(filename, I_001,
@@ -31,7 +30,7 @@ public class UnsupportedGtfsTypeNotice extends InfoNotice {
                 "Tried to validate an unsupported Gtfs type in file:" + filename +
                         ", entityId:" + entityId + ", field name:" + fieldName + " -->IGNORED");
         this.fieldName = fieldName;
-        this.entityId = entityId != null ? entityId : "no id";
+        setEntityId(entityId);
     }
 
     @Override
@@ -44,7 +43,4 @@ public class UnsupportedGtfsTypeNotice extends InfoNotice {
         return fieldName;
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
 }

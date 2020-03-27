@@ -25,6 +25,7 @@ public abstract class Notice {
     private final String noticeId;
     private final String title;
     private final String description;
+    private String entityId;
 
     protected Notice(final String filename,
                      final String noticeId,
@@ -55,6 +56,15 @@ public abstract class Notice {
 
     public String getDescription() {
         return description;
+    }
+
+    protected void setEntityId(String entityId) {
+        this.entityId = entityId != null ? entityId : "no id";
+
+    }
+
+    public String getEntityId() {
+        return entityId;
     }
 
     @Override

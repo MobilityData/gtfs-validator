@@ -63,7 +63,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(final NonStandardHeaderNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_UNKNOWN_COLUMN)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING)
                 .setAltEntityValue(toExport.getExtraHeader())
@@ -74,17 +75,18 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(final InputZipContainsFolderNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
 
     @Override
     public void export(final NonAsciiOrNonPrintableCharNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING)
                 .setAltEntityValue(toExport.getFieldName())
@@ -95,7 +97,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(final UnsupportedGtfsTypeNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
                 .setAltEntityValue(toExport.getFieldName())
@@ -106,20 +109,20 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(final CannotConstructDataProviderNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
 
     @Override
     public void export(CannotDownloadArchiveFromNetworkNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_FILE_CORRUPTED)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -131,12 +134,12 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
     }
 
     private void parsingNoticeToProto(String filename, int lineNumber, String fieldName, String rawValue) throws IOException {
-        protoBuilder.setCsvFileName(filename)
+        protoBuilder.clear()
+                .setCsvFileName(filename)
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setCsvColumnName(lineNumber, fieldName)
                 .setEntityValue(rawValue)
-                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -149,10 +152,10 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(CannotUnzipInputArchiveNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -177,7 +180,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
     private void outOfRangeNoticeToProto(String filename, String entityId, String fieldName, String rangeMinAsString,
                                          String rangeMaxAsString, String actualValueAsString)
             throws IOException {
-        protoBuilder.setCsvFileName(filename)
+        protoBuilder.clear()
+                .setCsvFileName(filename)
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_OUT_OF_RANGE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(entityId)
@@ -185,26 +189,26 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .setValue(rangeMinAsString)
                 .setAltValue(rangeMaxAsString)
                 .setAltEntityValue(actualValueAsString)
-                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
 
     @Override
     public void export(InvalidRowLengthNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_VALUES)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityRow(toExport.getRowIndex())
                 .setAltEntityValue(String.valueOf(toExport.getExpectedLength()))
-                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
 
     @Override
     public void export(InvalidTimezoneNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_INVALID_TIMEZONE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getFieldName())
@@ -215,7 +219,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(InvalidUrlNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_INVALID_URL)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getFieldName())
@@ -226,7 +231,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(MissingHeaderNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_COLUMN)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getMissingHeaderName())
@@ -236,7 +242,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(MissingRequiredFileNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_TABLE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getFilename())
@@ -246,7 +253,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(MissingRequiredValueNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_VALUE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getFieldName())
@@ -257,7 +265,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(CouldNotCleanOrCreatePathNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getPathToCleanOrCreate())
@@ -267,7 +276,8 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(InvalidColorNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getFieldName())
@@ -278,10 +288,10 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
 
     @Override
     public void export(ExtraFileFoundNotice toExport) throws IOException {
-        protoBuilder.setCsvFileName(toExport.getFilename())
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_UNKNOWN_FILE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
-                .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

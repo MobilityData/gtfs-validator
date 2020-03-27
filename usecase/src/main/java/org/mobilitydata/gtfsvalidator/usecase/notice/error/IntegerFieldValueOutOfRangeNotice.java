@@ -23,7 +23,6 @@ import java.io.IOException;
 
 public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
     private String fieldName;
-    private String entityId;
     private int rangeMin;
     private int rangeMax;
     private int actualValue;
@@ -40,7 +39,7 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
                 "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
                         " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue);
         this.fieldName = fieldName;
-        this.entityId = entityId != null ? entityId : "no id";
+        setEntityId(entityId);
         this.rangeMax = rangeMax;
         this.rangeMin = rangeMin;
         this.actualValue = actualValue;
@@ -54,10 +53,6 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
 
     public String getFieldName() {
         return fieldName;
-    }
-
-    public String getEntityId() {
-        return entityId;
     }
 
     public int getRangeMin() {

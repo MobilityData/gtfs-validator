@@ -86,13 +86,13 @@ class ProtobufNoticeExporterTest {
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new NonStandardHeaderNotice(FILENAME, "extra"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_UNKNOWN_COLUMN));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING));
         verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("extra"));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -116,12 +116,12 @@ class ProtobufNoticeExporterTest {
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new InputZipContainsFolderNotice(FILENAME, "extraFolder"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -146,6 +146,7 @@ class ProtobufNoticeExporterTest {
         underTest.export(new NonAsciiOrNonPrintableCharNotice(FILENAME, "field_name", "entity_id",
                 "entity_id_value"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED));
@@ -177,6 +178,7 @@ class ProtobufNoticeExporterTest {
         underTest.export(new UnsupportedGtfsTypeNotice(FILENAME, "field_name", "entity_id")
         );
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR));
@@ -207,12 +209,12 @@ class ProtobufNoticeExporterTest {
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new CannotConstructDataProviderNotice(FILENAME));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -237,13 +239,13 @@ class ProtobufNoticeExporterTest {
         underTest.export(new CannotDownloadArchiveFromNetworkNotice(new URL("https://mobilitydata.org"))
         );
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(
                 ArgumentMatchers.eq("https://mobilitydata.org"));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_FILE_CORRUPTED));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -268,6 +270,7 @@ class ProtobufNoticeExporterTest {
         underTest.export(new CannotParseFloatNotice(FILENAME, "field_name", 666, "abc")
         );
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR));
@@ -276,7 +279,6 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setCsvColumnName(
                 ArgumentMatchers.eq(666), ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("abc"));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -301,6 +303,7 @@ class ProtobufNoticeExporterTest {
         underTest.export(new CannotParseIntegerNotice(FILENAME, "field_name", 666, "abc")
         );
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR));
@@ -309,7 +312,6 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setCsvColumnName(
                 ArgumentMatchers.eq(666), ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("abc"));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -333,12 +335,12 @@ class ProtobufNoticeExporterTest {
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new CannotUnzipInputArchiveNotice(FILENAME));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -364,6 +366,7 @@ class ProtobufNoticeExporterTest {
                 0, 66, 666
         ));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_OUT_OF_RANGE));
@@ -378,7 +381,6 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("66.0"));
         verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("666.0"));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -404,6 +406,7 @@ class ProtobufNoticeExporterTest {
                 0, 66, 666
         ));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_OUT_OF_RANGE));
@@ -418,7 +421,6 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("66"));
         verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("666"));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
 
@@ -443,6 +445,7 @@ class ProtobufNoticeExporterTest {
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new InvalidRowLengthNotice(FILENAME, 666, 10, 8));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_VALUES));
@@ -474,6 +477,7 @@ class ProtobufNoticeExporterTest {
         underTest.export(new InvalidTimezoneNotice(FILENAME, "field_name", "entity_id",
                 "neverland"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_INVALID_TIMEZONE));
@@ -507,6 +511,7 @@ class ProtobufNoticeExporterTest {
         underTest.export(new InvalidUrlNotice(FILENAME, "field_name", "entity_id",
                 "ftp://truc.bidule"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_INVALID_URL));
@@ -539,6 +544,7 @@ class ProtobufNoticeExporterTest {
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new MissingHeaderNotice(FILENAME, "missing_header"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_COLUMN));
@@ -569,6 +575,7 @@ class ProtobufNoticeExporterTest {
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new MissingRequiredFileNotice(FILENAME));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_TABLE));
@@ -600,6 +607,7 @@ class ProtobufNoticeExporterTest {
         underTest.export(new MissingRequiredValueNotice(FILENAME, "field_name", "entity_id")
         );
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_VALUE));
@@ -633,6 +641,7 @@ class ProtobufNoticeExporterTest {
         underTest.export(new CouldNotCleanOrCreatePathNotice("../output")
         );
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(""));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR));
@@ -664,6 +673,7 @@ class ProtobufNoticeExporterTest {
         underTest.export(new InvalidColorNotice(FILENAME, "field_name", "entity_id", "#zz")
         );
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR));
@@ -696,12 +706,12 @@ class ProtobufNoticeExporterTest {
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new ExtraFileFoundNotice(FILENAME));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_UNKNOWN_FILE));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
-        verify(mockBuilder, times(1)).clearAltEntityId();
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

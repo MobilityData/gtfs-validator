@@ -23,7 +23,6 @@ import java.io.IOException;
 
 public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
     private String fieldName;
-    private String entityId;
     private float rangeMin;
     private float rangeMax;
     private float actualValue;
@@ -41,7 +40,7 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
                         " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue);
         this.rangeMax = rangeMax;
         this.rangeMin = rangeMin;
-        this.entityId = entityId != null ? entityId : "no id";
+        setEntityId(entityId);
         this.fieldName = fieldName;
         this.actualValue = actualValue;
     }
@@ -54,10 +53,6 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
 
     public String getFieldName() {
         return fieldName;
-    }
-
-    public String getEntityId() {
-        return entityId;
     }
 
     public float getRangeMin() {

@@ -23,7 +23,6 @@ import java.io.IOException;
 
 public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
 
-    private String entityId;
     private String fieldName;
 
     public NonAsciiOrNonPrintableCharNotice(String filename, String fieldName, String entityId, String idValue) {
@@ -32,7 +31,7 @@ public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
                 "Non ascii or non printable character(s) in:" + idValue + " in field:"
                         + fieldName + " for entity with id:" + entityId);
 
-        this.entityId = entityId != null ? entityId : "no id";
+        setEntityId(entityId);
         this.fieldName = fieldName;
     }
 
@@ -44,9 +43,5 @@ public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
 
     public String getFieldName() {
         return fieldName;
-    }
-
-    public String getEntityId() {
-        return entityId;
     }
 }
