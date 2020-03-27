@@ -41,6 +41,8 @@ dependencies {
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
     implementation 'com.google.api.grpc:proto-google-common-protos:1.16.0'
 
+    implementation 'commons-validator:commons-validator:1.6'
+
     implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.1'
