@@ -159,7 +159,9 @@ public class Main {
     private static void printHelp(Options options) {
         final String HELP = String.join("\n",
                 "Loads input GTFS feed from url or disk.",
-                "Checks files integrity, and converts CSV to proto file on disk", "Validation results are exported to " +
+                "Checks files integrity, numeric type parsing and ranges as well as " +
+                        "string format according to GTFS spec",
+                "Validation results are exported to " +
                         "JSON file by default");
         HelpFormatter formatter = new HelpFormatter();
         System.out.println(); // blank line for legibility
