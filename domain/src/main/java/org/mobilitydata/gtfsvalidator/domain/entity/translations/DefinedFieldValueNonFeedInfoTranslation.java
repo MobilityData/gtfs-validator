@@ -17,14 +17,13 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.translations;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class DefinedFieldValueNonFeedInfoTranslation extends TableNameBase {
 
-    @Nullable
+    @NotNull
     private final String fieldValue;
 
-    @Nullable
+    @NotNull
     public String getFieldValue() {
         return fieldValue;
     }
@@ -32,7 +31,7 @@ public class DefinedFieldValueNonFeedInfoTranslation extends TableNameBase {
     public DefinedFieldValueNonFeedInfoTranslation(@NotNull final String fieldName,
                                                    @NotNull final String language,
                                                    @NotNull final String translation,
-                                                   @Nullable final String fieldValue) {
+                                                   @NotNull final String fieldValue) {
         super(fieldName, language, translation);
         this.fieldValue = fieldValue;
     }
@@ -49,7 +48,7 @@ public class DefinedFieldValueNonFeedInfoTranslation extends TableNameBase {
             this.fieldValue = fieldValue;
         }
 
-        public DefinedFieldValueNonFeedInfoTranslationBuilder fieldValue(final String fieldValue) {
+        public DefinedFieldValueNonFeedInfoTranslationBuilder fieldValue(@NotNull final String fieldValue) {
             this.fieldValue = fieldValue;
             return this;
         }
