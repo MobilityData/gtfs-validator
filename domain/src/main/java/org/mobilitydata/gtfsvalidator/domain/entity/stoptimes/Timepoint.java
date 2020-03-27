@@ -20,45 +20,38 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
- * Indicates pickup method. Valid options are:
- * <p>
- * 0 or empty - Regularly scheduled pickup.
- * 1 - No pickup available.
- * 2 - Must phone agency to arrange pickup.
- * 3 - Must coordinate with driver to arrange pickup.
+ * Represent the possible values for timepoint field in stop_times.txt.
+ * Indicates if arrival and departure times for a stop are strictly adhered to by the vehicle or if they
+ * are instead approximate and/or interpolated times.
  */
-public enum PickupType {
+public enum Timepoint {
 
-    REGULAR_PICKUP(0),
-    NO_PICKUP(1),
-    MUST_PHONE_PICKUP(2),
-    MUST_ASK_DRIVER_PICKUP(3);
+    APPROXIMATED_TIMES(0),
+    EXACT_TIMES(1);
 
     private int value;
 
-    PickupType(int value) {
+    Timepoint(int value) {
         this.value = value;
     }
 
     /**
-     * Returns the enum value associated to an {@link Integer} provided in the parameters. Throws {@link IllegalArgumentException}
+     * Returns the enum value associated to an int provided in the parameters. Throws {@link IllegalArgumentException}
      * if the parameter value is not expected.
-     * If the parameter is null, returns REGULAR_PICKUP as default value.
      *
-     * @param fromValue {@link Integer} to match with an enum value
-     * @return If fromValue is null returns REGULAR_PICKUP by default, else returns the
-     * enum value matching the {@link Integer} provided in the parameters.
+     * @param fromValue int to match with an enum value
+     * @return enum value matching the int provided in the parameters
      * @throws IllegalArgumentException in case of unexpected value
      */
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    static public PickupType fromInt(Integer fromValue) throws IllegalArgumentException {
+    static public Timepoint fromInt(Integer fromValue) throws IllegalArgumentException {
         if (fromValue == null) {
-            return REGULAR_PICKUP;
+            return EXACT_TIMES;
         }
-        if (Arrays.asList(PickupType.values()).contains(fromValue)) {
-            throw new IllegalArgumentException("Unexpected enum value for pickup_type");
+        if (!Arrays.asList(Timepoint.values()).contains(fromValue)) {
+            throw new IllegalArgumentException("Unexpected enum value for timepoint");
         }
-        return Stream.of(PickupType.values())
+        return Stream.of(Timepoint.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
                 .get();

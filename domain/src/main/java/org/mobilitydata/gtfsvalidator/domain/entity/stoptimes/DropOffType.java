@@ -1,13 +1,38 @@
+/*
+ * Copyright (c) 2020. MobilityData IO.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.domain.entity.stoptimes;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
+/**
+ * Indicates drop off method. Valid options are:
+ * <p>
+ * 0 or empty - Regularly scheduled drop off.
+ * 1 - No drop off available.
+ * 2 - Must phone agency to arrange drop off.
+ * 3 - Must coordinate with driver to arrange drop off.
+ */
 public enum DropOffType {
 
-    REGULAR_DROPOFF(0),
-    NO_DROPOFF(1),
-    MUST_PHONE_DROPOFF(2),
-    MUST_ASK_DRIVER_DROPOFF(3);
+    REGULAR_DROP_OFF(0),
+    NO_DROP_OFF(1),
+    MUST_PHONE_DROP_OFF(2),
+    MUST_ASK_DRIVER_DROP_OFF(3);
 
     private int value;
 
@@ -15,13 +40,27 @@ public enum DropOffType {
         this.value = value;
     }
 
-    static public DropOffType fromInt(Integer fromValue) {
+    /**
+     * Returns the enum value associated to an {@link Integer} provided in the parameters.
+     * Throws {@link IllegalArgumentException} if the parameter value is not expected.
+     * If the parameter is null, returns REGULAR_DROP_OFF as default value.
+     *
+     * @param fromValue {@link Integer} to match with an enum value
+     * @return If fromValue is null returns REGULAR_DROP_OFF by default, else returns the
+     * enum value matching the {@link Integer} provided in the parameters.
+     * @throws IllegalArgumentException in case of unexpected value
+     */
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    static public DropOffType fromInt(Integer fromValue) throws IllegalArgumentException {
         if (fromValue == null) {
-            return REGULAR_DROPOFF;
+            return REGULAR_DROP_OFF;
+        }
+        if (Arrays.asList(DropOffType.values()).contains(fromValue)) {
+            throw new IllegalArgumentException("Unexpected enum value for drop_off_type");
         }
         return Stream.of(DropOffType.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .orElse(REGULAR_DROPOFF);
+                .get();
     }
 }
