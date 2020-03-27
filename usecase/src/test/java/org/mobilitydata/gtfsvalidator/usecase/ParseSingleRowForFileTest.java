@@ -20,11 +20,11 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -169,7 +169,7 @@ class ParseSingleRowForFileTest {
         @Override
         public RawEntityParser getParserForFile(RawFileInfo file) {
             if (file.getFilename().contains("invalid")) {
-                ErrorNotice fakeNotice = new ErrorNotice(file.getFilename(), "E666", "test", "test");
+                ErrorNotice fakeNotice = new CannotConstructDataProviderNotice(file.getFilename());
                 parser = new MockEntityParser(List.of(fakeNotice, fakeNotice, fakeNotice));
                 return parser;
             }
@@ -239,9 +239,11 @@ class ParseSingleRowForFileTest {
             if (file.getFilename().contains("invalid")) {
                 return Optional.of(new MockEntityProvider(
                         List.of(
-                                Map.of("header0_string", "header0_string", "header1_float", "header1_float",
+                                Map.of("header0_string", "header0_string",
+                                        "header1_float", "header1_float",
                                         "header2_integer", "header2_integer"),
-                                Map.of("header0_string", "invalid_string", "header1_float", "valid_float",
+                                Map.of("header0_string", "invalid_string",
+                                        "header1_float", "valid_float",
                                         "header2_integer", "invalid_integer"),
                                 Map.of("header0_string", "valid", "header1_float", "invalid_float",
                                         "header2_integer", "valid_integer"),
@@ -287,12 +289,17 @@ class ParseSingleRowForFileTest {
         }
 
         @Override
+        public Notice addNotice(Notice newNotice) {
+            return null;
+        }
+
+        @Override
         public Collection<Notice> getAll() {
             return null;
         }
 
         @Override
-        public Notice addNotice(Notice newNotice) {
+        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
             return null;
         }
     }

@@ -33,6 +33,7 @@ dependencies {
             project(':usecase'),
             project(':adapter:protos'),
             project(':adapter:parser'),
+            project(':adapter:exporter'),
             project(':adapter:validator')
     )
 

@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotDownloadArchiveFromNetworkNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotDownloadArchiveFromNetworkNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
