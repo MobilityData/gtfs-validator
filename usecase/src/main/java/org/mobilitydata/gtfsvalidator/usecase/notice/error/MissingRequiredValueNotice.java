@@ -23,14 +23,13 @@ import java.io.IOException;
 
 public class MissingRequiredValueNotice extends ErrorNotice {
     private String fieldName;
-    private String entityId;
 
     public MissingRequiredValueNotice(String filename, String fieldName, String entityId) {
         super(filename, E_015,
                 "Missing required value",
                 "Missing value for field:" + fieldName
                         + " marked as required in entity with id:" + entityId);
-        this.entityId = entityId;
+        setEntityId(entityId);
         this.fieldName = fieldName;
     }
 
@@ -44,7 +43,4 @@ public class MissingRequiredValueNotice extends ErrorNotice {
         return fieldName;
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
 }
