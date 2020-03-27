@@ -498,8 +498,7 @@ class GtfsEntityParserTest {
 
         verify(mockDateValidator, times(1)).isValid(
                 ArgumentMatchers.eq("not_a_date"),
-                ArgumentMatchers.eq("yyyyMMdd"),
-                ArgumentMatchers.any()
+                ArgumentMatchers.eq("yyyyMMdd")
         );
     }
 
