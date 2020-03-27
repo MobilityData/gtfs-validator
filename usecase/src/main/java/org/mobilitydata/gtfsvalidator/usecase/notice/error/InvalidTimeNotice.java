@@ -14,15 +14,36 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+
+import java.io.IOException;
 
 public class InvalidTimeNotice extends ErrorNotice {
+    private final String fieldName;
+    private final String timeValue;
 
     public InvalidTimeNotice(String filename, String fieldName, String entityId, String timeValue) {
         super(filename, E_016,
                 "Invalid time",
-                "Invalid time:" + timeValue + " in field:" + fieldName + " for entity with id:" + entityId);
+                "Invalid time:" + timeValue + " in field:" + fieldName + " for entity with id:" + entityId,
+                entityId);
+        this.fieldName = fieldName;
+        this.timeValue = timeValue;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public String getTimeValue() {
+        return timeValue;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) throws IOException {
+        exporter.export(this);
     }
 }

@@ -16,13 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
@@ -62,8 +61,6 @@ public interface ValidationResultRepository {
 
         void export(NonAsciiOrNonPrintableCharNotice toExport) throws IOException;
 
-        void export(UnsupportedGtfsTypeNotice toExport) throws IOException;
-
         void export(CannotConstructDataProviderNotice toExport) throws IOException;
 
         void export(CannotDownloadArchiveFromNetworkNotice toExport) throws IOException;
@@ -95,5 +92,9 @@ public interface ValidationResultRepository {
         void export(InvalidColorNotice toExport) throws IOException;
 
         void export(ExtraFileFoundNotice toExport) throws IOException;
+
+        void export(InvalidTimeNotice toExport) throws IOException;
+
+        void export(CannotParseDateNotice toExport) throws IOException;
     }
 }

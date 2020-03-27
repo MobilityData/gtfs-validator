@@ -23,9 +23,12 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseFloatNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotParseIntegerNotice;
+import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseDateNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseFloatNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseIntegerNotice;
+import org.mockito.ArgumentMatchers;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;

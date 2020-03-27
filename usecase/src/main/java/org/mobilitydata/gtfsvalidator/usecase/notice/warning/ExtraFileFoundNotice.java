@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;

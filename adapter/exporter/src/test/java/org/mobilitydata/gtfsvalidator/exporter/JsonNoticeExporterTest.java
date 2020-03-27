@@ -18,9 +18,8 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.usecase.notice.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
@@ -103,20 +102,6 @@ class JsonNoticeExporterTest {
                 "entity_id",
                 "entity_id_value"
         );
-        underTest.export(toExport);
-
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
-        verifyNoMoreInteractions(mockGenerator);
-    }
-
-    @Test
-    void exportUnsupportedGtfsTypeNoticeShouldWriteObject() throws IOException {
-
-        JsonGenerator mockGenerator = mock(JsonGenerator.class);
-
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        UnsupportedGtfsTypeNotice toExport = new UnsupportedGtfsTypeNotice(FILENAME, "field_name",
-                "entity_id");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

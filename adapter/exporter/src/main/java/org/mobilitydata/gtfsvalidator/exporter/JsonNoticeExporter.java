@@ -17,9 +17,8 @@
 package org.mobilitydata.gtfsvalidator.exporter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.mobilitydata.gtfsvalidator.usecase.notice.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
@@ -68,11 +67,6 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
 
     @Override
     public void export(final NonAsciiOrNonPrintableCharNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
-    public void export(final UnsupportedGtfsTypeNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
@@ -153,6 +147,16 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
 
     @Override
     public void export(ExtraFileFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(InvalidTimeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(CannotParseDateNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

@@ -17,9 +17,8 @@
 package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
-import org.mobilitydata.gtfsvalidator.usecase.notice.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.info.UnsupportedGtfsTypeNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
@@ -89,18 +88,6 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING)
-                .setAltEntityValue(toExport.getFieldName())
-                .setAltEntityId(toExport.getEntityId())
-                .build()
-                .writeTo(streamGenerator.getStream());
-    }
-
-    @Override
-    public void export(final UnsupportedGtfsTypeNotice toExport) throws IOException {
-        protoBuilder.clear()
-                .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
                 .setAltEntityValue(toExport.getFieldName())
                 .setAltEntityId(toExport.getEntityId())
                 .build()
@@ -294,6 +281,24 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
                 .build()
                 .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(InvalidTimeNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltEntityId(toExport.getFieldName())
+                .setAltEntityValue(toExport.getTimeValue())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(CannotParseDateNotice toExport) throws IOException {
+        parsingNoticeToProto(toExport.getFilename(), toExport.getLineNumber(), toExport.getFieldName(),
+                toExport.getRawValue());
     }
 
 

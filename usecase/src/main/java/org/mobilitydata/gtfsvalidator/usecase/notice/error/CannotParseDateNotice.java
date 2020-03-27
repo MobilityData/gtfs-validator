@@ -14,16 +14,43 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.error;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+
+import java.io.IOException;
 
 public class CannotParseDateNotice extends ErrorNotice {
+    private final int lineNumber;
+    private final String rawValue;
+    private final String fieldName;
 
     public CannotParseDateNotice(String filename, String fieldName, int lineNumber, String rawValue) {
         super(filename, E_017,
                 "Invalid date value",
                 "Value: '" + rawValue + "' of field: " + fieldName +
-                        " with type date can't be parsed in file: " + filename + " at row: " + lineNumber);
+                        " with type date can't be parsed in file: " + filename + " at row: " + lineNumber,
+                null);
+        this.rawValue = rawValue;
+        this.fieldName = fieldName;
+        this.lineNumber = lineNumber;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    public String getRawValue() {
+        return rawValue;
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) throws IOException {
+        exporter.export(this);
     }
 }
