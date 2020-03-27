@@ -111,7 +111,17 @@ public abstract class TimepointBase {
                                     final @Nullable String arrivalTime,
                                     final @Nullable String departureTime,
                                     final @NotNull String stopId,
-                                    final int stopSequence) {
+                                    final int stopSequence) throws IllegalArgumentException {
+
+            //noinspection ConstantConditions
+            if (tripId == null) {
+                throw new IllegalArgumentException("null value for tripId");
+            }
+            //noinspection ConstantConditions
+            if (stopId == null) {
+                throw new IllegalArgumentException("null value for stopId");
+            }
+
             this.tripId = tripId;
             this.arrivalTime = arrivalTime;
             this.departureTime = departureTime;
