@@ -116,9 +116,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                 } else if (columnSpecProto.getType().getType() ==
                         GtfsSpecificationProto.ColumnInputType.InputType.DATE) {
 
-                    //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
-                    //from feed_lang in feed_info.txt before defaulting to Locale.US
-                    if (!dateValidator.isValid(rawField, DATE_PATTERN, Locale.US)) {
+                    if (!dateValidator.isValid(rawField, DATE_PATTERN)) {
                         toReturn.add(new CannotParseDateNotice(
                                         fileSchema.getFilename(),
                                         columnSpecProto.getName(),
