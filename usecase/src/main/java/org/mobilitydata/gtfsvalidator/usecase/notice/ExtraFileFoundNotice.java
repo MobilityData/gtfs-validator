@@ -24,7 +24,11 @@ import java.io.IOException;
 public class ExtraFileFoundNotice extends WarningNotice {
 
     public ExtraFileFoundNotice(String filename) {
-        super(filename, W_004, "Non standard file found", "Extra file " + filename + " found in archive");
+        super(filename,
+                W_004,
+                "Non standard file found",
+                "Extra file " + filename + " found in archive",
+                null);
     }
 
     @Override

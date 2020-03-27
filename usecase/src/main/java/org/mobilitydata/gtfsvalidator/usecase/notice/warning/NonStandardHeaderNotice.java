@@ -28,7 +28,8 @@ public class NonStandardHeaderNotice extends WarningNotice {
     public NonStandardHeaderNotice(String filename, String extra) {
         super(filename, W_002,
                 "Non standard header",
-                "Unexpected header:" + extra + " in file:" + filename);
+                "Unexpected header:" + extra + " in file:" + filename,
+                null);
         this.extraHeader = extra;
     }
 

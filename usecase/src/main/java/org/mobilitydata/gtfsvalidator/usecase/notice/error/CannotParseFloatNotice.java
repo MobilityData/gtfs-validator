@@ -30,7 +30,8 @@ public class CannotParseFloatNotice extends ErrorNotice {
         super(filename, E_006,
                 "Invalid float value",
                 "Value: '" + rawValue + "' of field: " + fieldName
-                        + " with type float can't be parsed in file: " + filename + " at row: " + lineNumber);
+                        + " with type float can't be parsed in file: " + filename + " at row: " + lineNumber,
+                null);
         this.rawValue = rawValue;
         this.fieldName = fieldName;
         this.lineNumber = lineNumber;

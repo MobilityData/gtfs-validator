@@ -27,7 +27,8 @@ public class CannotUnzipInputArchiveNotice extends ErrorNotice {
         super(filename,
                 E_008,
                 "Unzipping error",
-                "An error occurred while trying to unzip archive: " + filename);
+                "An error occurred while trying to unzip archive: " + filename,
+                null);
     }
 
     @Override

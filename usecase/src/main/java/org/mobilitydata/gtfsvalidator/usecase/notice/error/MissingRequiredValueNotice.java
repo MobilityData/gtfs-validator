@@ -28,8 +28,8 @@ public class MissingRequiredValueNotice extends ErrorNotice {
         super(filename, E_015,
                 "Missing required value",
                 "Missing value for field:" + fieldName
-                        + " marked as required in entity with id:" + entityId);
-        setEntityId(entityId);
+                        + " marked as required in entity with id:" + entityId,
+                entityId);
         this.fieldName = fieldName;
     }
 

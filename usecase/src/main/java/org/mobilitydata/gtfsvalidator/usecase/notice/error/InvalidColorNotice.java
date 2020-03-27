@@ -29,7 +29,8 @@ public class InvalidColorNotice extends ErrorNotice {
         super(filename, E_014,
                 "Invalid color",
                 "Invalid color:" + colorValue + " in field:" + fieldName
-                        + " for entity with id:" + entityId);
+                        + " for entity with id:" + entityId,
+                entityId);
         this.fieldName = fieldName;
         this.colorValue = colorValue;
     }

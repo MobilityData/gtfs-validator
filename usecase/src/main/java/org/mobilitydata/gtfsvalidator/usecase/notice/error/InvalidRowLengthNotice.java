@@ -30,7 +30,8 @@ public class InvalidRowLengthNotice extends ErrorNotice {
         super(filename, E_004,
                 "Invalid row length",
                 "Invalid length for row:" + rowIndex +
-                        " -- expected:" + expectedLength + " actual:" + actualLength);
+                        " -- expected:" + expectedLength + " actual:" + actualLength,
+                null);
         this.rowIndex = rowIndex;
         this.expectedLength = expectedLength;
         this.actualLength = actualLength;

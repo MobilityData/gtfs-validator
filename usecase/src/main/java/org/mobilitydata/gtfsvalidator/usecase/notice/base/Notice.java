@@ -25,16 +25,17 @@ public abstract class Notice {
     private final String noticeId;
     private final String title;
     private final String description;
-    private String entityId;
+    protected final String entityId;
 
     protected Notice(final String filename,
                      final String noticeId,
                      final String title,
-                     final String description) {
+                     final String description, String entityId) {
         this.filename = filename;
         this.noticeId = noticeId;
         this.title = title;
         this.description = description;
+        this.entityId = entityId != null ? entityId : "no id";
     }
 
     public abstract Notice visit(ValidationResultRepository resultRepo);
@@ -56,11 +57,6 @@ public abstract class Notice {
 
     public String getDescription() {
         return description;
-    }
-
-    protected void setEntityId(String entityId) {
-        this.entityId = entityId != null ? entityId : "no id";
-
     }
 
     public String getEntityId() {

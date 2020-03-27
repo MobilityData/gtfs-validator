@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import java.io.IOException;
 
 public class InvalidTimezoneNotice extends ErrorNotice {
-    private String entityId;
     private String fieldName;
     private String timezoneValue;
 
@@ -30,8 +29,8 @@ public class InvalidTimezoneNotice extends ErrorNotice {
         super(filename, E_013,
                 "Invalid timezone",
                 "Invalid timezone:" + timezoneValue + " in field:" + fieldName
-                        + " for entity with id:" + entityId);
-        this.entityId = entityId;
+                        + " for entity with id:" + entityId,
+                entityId);
         this.fieldName = fieldName;
         this.timezoneValue = timezoneValue;
     }

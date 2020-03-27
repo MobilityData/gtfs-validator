@@ -25,7 +25,8 @@ public class MissingRequiredFileNotice extends ErrorNotice {
     public MissingRequiredFileNotice(String filename) {
         super(filename, E_003,
                 "Missing required file",
-                "File " + filename + " is required.");
+                "File " + filename + " is required.",
+                null);
     }
 
     @Override

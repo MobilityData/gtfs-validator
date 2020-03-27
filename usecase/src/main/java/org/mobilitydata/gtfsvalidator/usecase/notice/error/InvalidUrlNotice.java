@@ -23,14 +23,13 @@ import java.io.IOException;
 
 public class InvalidUrlNotice extends ErrorNotice {
     private String urlValue;
-    private String entityId;
     private String fieldName;
 
     public InvalidUrlNotice(String filename, String fieldName, String entityId, String urlValue) {
         super(filename, E_012,
                 "Invalid url",
-                "Invalid url:" + urlValue + " in field:" + fieldName + " for entity with id:" + entityId);
-        this.entityId = entityId;
+                "Invalid url:" + urlValue + " in field:" + fieldName + " for entity with id:" + entityId,
+                entityId);
         this.fieldName = fieldName;
         this.urlValue = urlValue;
     }

@@ -37,10 +37,10 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
         super(filename, E_011,
                 "Out of range float value",
                 "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
-                        " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue);
+                        " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                entityId);
         this.rangeMax = rangeMax;
         this.rangeMin = rangeMin;
-        setEntityId(entityId);
         this.fieldName = fieldName;
         this.actualValue = actualValue;
     }

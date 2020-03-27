@@ -27,7 +27,8 @@ public class MissingHeaderNotice extends ErrorNotice {
     public MissingHeaderNotice(final String filename, final String missingHeaderName) {
         super(filename, E_001,
                 "Missing required header",
-                "File " + filename + " is missing required header: " + missingHeaderName);
+                "File " + filename + " is missing required header: " + missingHeaderName,
+                null);
         this.missingHeaderName = missingHeaderName;
     }
 

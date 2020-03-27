@@ -29,8 +29,8 @@ public abstract class WarningNotice extends Notice {
     public WarningNotice(final String filename,
                          final String noticeId,
                          final String title,
-                         final String description) {
-        super(filename, noticeId, title, description);
+                         final String description, String entityId) {
+        super(filename, noticeId, title, description, entityId);
     }
 
     @Override

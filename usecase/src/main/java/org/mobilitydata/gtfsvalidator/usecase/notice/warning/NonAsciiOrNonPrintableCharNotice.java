@@ -29,9 +29,8 @@ public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
         super(filename, W_003,
                 "Suspicious id",
                 "Non ascii or non printable character(s) in:" + idValue + " in field:"
-                        + fieldName + " for entity with id:" + entityId);
-
-        setEntityId(entityId);
+                        + fieldName + " for entity with id:" + entityId,
+                entityId);
         this.fieldName = fieldName;
     }
 

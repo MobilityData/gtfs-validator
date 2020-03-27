@@ -37,9 +37,9 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
         super(filename, E_010,
                 "Out of range integer value",
                 "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
-                        " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue);
+                        " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                entityId);
         this.fieldName = fieldName;
-        setEntityId(entityId);
         this.rangeMax = rangeMax;
         this.rangeMin = rangeMin;
         this.actualValue = actualValue;

@@ -29,7 +29,8 @@ public class InputZipContainsFolderNotice extends WarningNotice {
         super(filename,
                 W_001,
                 "Non empty folder",
-                "File: " + filename + "contains folder named: " + folderName);
+                "File: " + filename + "contains folder named: " + folderName,
+                null);
 
         this.folderName = folderName;
     }

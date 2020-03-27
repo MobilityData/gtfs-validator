@@ -29,7 +29,8 @@ public class CouldNotCleanOrCreatePathNotice extends ErrorNotice {
         super("",
                 E_009,
                 "Path cleaning or creation error",
-                "An error occurred while trying clean or create path: " + pathToCleanOrCreate);
+                "An error occurred while trying clean or create path: " + pathToCleanOrCreate,
+                null);
         this.pathToCleanOrCreate = pathToCleanOrCreate;
     }
 

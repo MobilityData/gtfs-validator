@@ -30,7 +30,8 @@ public class CannotParseIntegerNotice extends ErrorNotice {
         super(filename, E_005,
                 "Invalid integer value",
                 "Value: '" + rawValue + "' of field: " + fieldName
-                        + " with type integer can't be parsed in file: " + filename + " at row: " + lineNumber);
+                        + " with type integer can't be parsed in file: " + filename + " at row: " + lineNumber,
+                null);
         this.rawValue = rawValue;
         this.fieldName = fieldName;
         this.lineNumber = lineNumber;

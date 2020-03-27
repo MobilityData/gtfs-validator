@@ -25,8 +25,8 @@ public abstract class InfoNotice extends Notice {
     public InfoNotice(final String filename,
                       final String noticeId,
                       final String title,
-                      final String description) {
-        super(filename, noticeId, title, description);
+                      final String description, String entityId) {
+        super(filename, noticeId, title, description, entityId);
     }
 
     @Override

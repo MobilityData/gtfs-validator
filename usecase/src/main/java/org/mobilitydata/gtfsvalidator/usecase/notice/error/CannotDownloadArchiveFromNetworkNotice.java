@@ -29,7 +29,8 @@ public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
         super(String.valueOf(url),
                 E_007,
                 "Downloading error",
-                "An error occurred while trying to download archive from network: " + url);
+                "An error occurred while trying to download archive from network: " + url,
+                null);
         this.url = url;
     }
 
