@@ -19,7 +19,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version '1.0.0-SNAPSHOT'
+version '1.0.1-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_11
 
@@ -39,7 +39,7 @@ dependencies {
     implementation 'commons-validator:commons-validator:1.6'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
-    testImplementation 'org.hamcrest:hamcrest-library:2.2'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
 }
 

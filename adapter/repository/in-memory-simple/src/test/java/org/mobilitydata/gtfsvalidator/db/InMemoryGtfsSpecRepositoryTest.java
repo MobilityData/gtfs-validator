@@ -63,7 +63,6 @@ class InMemoryGtfsSpecRepositoryTest {
 
     }
 
-
     @Test
     void headerMarkedRequiredInRequiredFileShouldBeListed() throws IOException {
 
@@ -104,7 +103,6 @@ class InMemoryGtfsSpecRepositoryTest {
         assertTrue(requiredHeaderListForOptionalFile1.contains(REQUIRED_HEADER0));
     }
 
-
     @Test
     void headerMarkedOptionalInRequiredFileShouldBeListed() throws IOException {
 
@@ -122,7 +120,6 @@ class InMemoryGtfsSpecRepositoryTest {
 
         assertEquals(0, optionalHeaderListForRequiredFile1.size());
     }
-
 
     @Test
     void headerMarkedOptionalInOptionalFileShouldBeListed() throws IOException {

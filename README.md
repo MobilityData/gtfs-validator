@@ -1,4 +1,4 @@
-# gtfs-validator
+# gtfs-validator [![Java CI](https://github.com/MobilityData/gtfs-validator/workflows/Java%20CI/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Java+CI%22) [![Join the gtfs-validator chat](https://mobilitydata-io.herokuapp.com/badge.svg)](https://mobilitydata-io.herokuapp.com/)
 
 A GTFS static feed validator
 
@@ -10,7 +10,7 @@ Java code to parse and validate a GTFS feed Zip archive
 
 `--help` command available
 
-TODO: improve description
+Sample usage `java -jar gtfs-validator.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -i input -o output`
 
 # Tests
 * To run tests : `./gradlew check`
