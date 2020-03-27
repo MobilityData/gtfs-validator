@@ -60,9 +60,8 @@ public class Main {
 
             final CommandLine cmd = parser.parse(options, args);
 
-            if (args.length == 0) {
+            if (args.length == 0 || cmd.hasOption("h")) {
                 printHelp(options);
-            } else if (cmd.hasOption("h")) {
                 return;
             }
 
