@@ -17,53 +17,16 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.domain.entity.translations.DefinedFieldValueNonFeedInfoTranslation;
-import org.mobilitydata.gtfsvalidator.domain.entity.translations.DefinedRecordIdStopTimeTranslation;
-import org.mobilitydata.gtfsvalidator.domain.entity.translations.FeedInfoTranslation;
-import org.mobilitydata.gtfsvalidator.domain.entity.translations.UndefinedFieldValueNonFeedIntoTranslation;
+import org.mobilitydata.gtfsvalidator.domain.entity.translations.TranslationDeepness00;
+import org.mobilitydata.gtfsvalidator.domain.entity.translations.TranslationDeepness01;
+import org.mobilitydata.gtfsvalidator.domain.entity.translations.TranslationDeepness02;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
-import java.util.Objects;
-import java.util.stream.Stream;
 
 /*
  * This use case turns a parsed entity to a concrete class depending on the 'table_name', and 'record_id' fields
  */
 public class ProcessParsedTranslation {
-
-    /**
-     * This enum matches types that can be found in the table_name field of translations.txt
-     * // see https://gtfs.org/reference/static#translationstxt
-     * It's used to decide which concrete type derived from {@link org.mobilitydata.gtfsvalidator.domain.entity.translations.TableNameBase} to instantiate
-     */
-    private enum TableName {
-        AGENCY("agency"),
-        STOPS("stops"),
-        ROUTES("routes"),
-        TRIPS("trips"),
-        STOP_TIMES("stop_times"),
-        LEVELS("levels"),
-        FEED_INFO("feed_info"),
-        PATHWAYS("pathways"),
-        FARE_RULES("fare_rules"),
-        FARE_ATTRIBUTES("fare_attributes"),
-        ATTRIBUTIONS("attributions");
-
-        private String value;
-
-        TableName(final String value) {
-            this.value = value;
-        }
-
-        @SuppressWarnings("OptionalGetWithoutIsPresent")
-        static public TableName fromString(final String tableName) {
-            return Stream.of(TableName.values())
-                    .filter(enumItem -> Objects.equals(enumItem.value, tableName))
-                    .findAny()
-                    .get(); // todo: implement solution to handle unexpected enum values
-        }
-    }
 
     private final GtfsSpecRepository specRepo;
     private final ValidationResultRepository resultRepo;
@@ -84,62 +47,25 @@ public class ProcessParsedTranslation {
         String recordSubId = (String) validatedTranslationEntity.get("record_sub_id");
         String fieldValue = (String) validatedTranslationEntity.get("field_value");
 
-        switch (TableName.fromString(tableName)) {
+        if (tableName.equals("feed_info")) {
+            TranslationDeepness00.TranslationDeepness00Builder builder =
+                    new TranslationDeepness00.TranslationDeepness00Builder(tableName, fieldName, language, translation);
 
-            case FEED_INFO: {
-                FeedInfoTranslation.FeedInfoTranslationBuilder builder =
-                        new FeedInfoTranslation.FeedInfoTranslationBuilder(fieldName, language, translation);
+            TranslationDeepness00 translationDeepness00 = builder.build();
+        } else if (tableName.equals("stop_times") && recordId.equals("")) {
+            TranslationDeepness02.TranslationDeepness02Builder builder =
+                    new TranslationDeepness02.TranslationDeepness02Builder(tableName, fieldName, language, translation,
+                            recordId, recordSubId);
 
-                FeedInfoTranslation feedInfoTranslation = builder.build(); // todo: add to GtfsDataRepository
-                break;
-            }
-            case STOP_TIMES: {
+            TranslationDeepness02 translationDeepness02 = builder.build();
+        } else {
+            TranslationDeepness01.TranslationDeepness01Builder builder =
+                    new TranslationDeepness01.TranslationDeepness01Builder(tableName, fieldName, language, translation);
+            builder.recordId(recordId)
+                    .recordSubId(recordSubId)
+                    .fieldValue(fieldValue);
 
-                if (recordId != null) {
-                    DefinedRecordIdStopTimeTranslation.DefinedRecordIdStopTimeTranslationBuilder builder =
-                            new DefinedRecordIdStopTimeTranslation.DefinedRecordIdStopTimeTranslationBuilder(fieldName,
-                                    language, translation, recordId, recordSubId);
-                    // todo: add to GtfsDataRepository
-                    DefinedRecordIdStopTimeTranslation definedRecordIdStopTimeTranslation = builder.build();
-                } else {
-                    DefinedFieldValueNonFeedInfoTranslation.DefinedFieldValueNonFeedInfoTranslationBuilder builder =
-                            new DefinedFieldValueNonFeedInfoTranslation.DefinedFieldValueNonFeedInfoTranslationBuilder(
-                                    fieldName, language, translation, fieldValue);
-                }
-
-                break;
-            }
-            case AGENCY:
-
-            case ROUTES:
-
-            case TRIPS:
-
-            case LEVELS:
-
-            case PATHWAYS:
-
-            case ATTRIBUTIONS:
-
-            case FARE_RULES:
-
-            case FARE_ATTRIBUTES:
-
-            case STOPS: {
-
-                if (recordId != null) {
-                    UndefinedFieldValueNonFeedIntoTranslation.UndefinedFieldValueNonFeedInfoTranslationBuilder builder =
-                            new UndefinedFieldValueNonFeedIntoTranslation.UndefinedFieldValueNonFeedInfoTranslationBuilder(fieldName, language, translation, recordId);
-                    // todo: add to GtfsDataRepository
-                    UndefinedFieldValueNonFeedIntoTranslation undefinedRecordIdStopTimeTranslation = builder.build();
-                } else {
-                    DefinedFieldValueNonFeedInfoTranslation.DefinedFieldValueNonFeedInfoTranslationBuilder builder =
-                            new DefinedFieldValueNonFeedInfoTranslation.DefinedFieldValueNonFeedInfoTranslationBuilder(
-                                    fieldName, language, translation, fieldValue);
-                }
-                break;
-
-            }
+            TranslationDeepness01 translationDeepness01 = builder.build();
         }
     }
 }

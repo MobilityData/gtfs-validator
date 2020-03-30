@@ -18,7 +18,13 @@ package org.mobilitydata.gtfsvalidator.domain.entity.translations;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class TableNameBase {
+/**
+ * Base class for all entities defined in translations.txt
+ */
+public abstract class TranslationBase {
+
+    @NotNull
+    private final TableName tableName;
 
     @NotNull
     private final String fieldName;
@@ -29,12 +35,19 @@ public abstract class TableNameBase {
     @NotNull
     private final String translation;
 
-    protected TableNameBase(@NotNull final String fieldName,
-                            @NotNull final String language,
-                            @NotNull final String translation) {
+    protected TranslationBase(@NotNull final TableName tableName,
+                              @NotNull final String fieldName,
+                              @NotNull final String language,
+                              @NotNull final String translation) {
+        this.tableName = tableName;
         this.fieldName = fieldName;
         this.language = language;
         this.translation = translation;
+    }
+
+    @NotNull
+    public TableName getTableName() {
+        return tableName;
     }
 
     @NotNull
@@ -55,6 +68,9 @@ public abstract class TableNameBase {
     public static abstract class TableNameBaseBuilder {
 
         @NotNull
+        protected TableName tableName;
+
+        @NotNull
         protected String fieldName;
 
         @NotNull
@@ -63,12 +79,19 @@ public abstract class TableNameBase {
         @NotNull
         protected String translation;
 
-        public TableNameBaseBuilder(@NotNull final String fieldName,
+        public TableNameBaseBuilder(@NotNull final String tableName,
+                                    @NotNull final String fieldName,
                                     @NotNull final String language,
                                     @NotNull final String translation) {
+            this.tableName = TableName.fromString(tableName);
             this.fieldName = fieldName;
             this.language = language;
             this.translation = translation;
+        }
+
+        public TableNameBaseBuilder tableName(@NotNull final String tableName) {
+            this.tableName = TableName.fromString(tableName);
+            return this;
         }
 
         public TableNameBaseBuilder fieldName(@NotNull final String fieldName) {
