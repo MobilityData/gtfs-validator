@@ -155,7 +155,7 @@ public class StopTime {
          * @param stopSequence  order of stops for a particular trip
          * @param timepoint     Indicates if arrival and departure times for a stop are strictly adhered to by the
          *                      vehicle or if they are instead approximate and/or interpolated times
-         * @throws IllegalArgumentException if parameters annotated by @NotNull are null
+         * @throws IllegalArgumentException if parameters annotated `@NotNull` are null
          */
         public StopTimeBuilder(@NotNull final String tripId,
                                @Nullable final String arrivalTime,
@@ -163,19 +163,6 @@ public class StopTime {
                                @NotNull final String stopId,
                                final int stopSequence,
                                @NotNull final Timepoint timepoint) throws IllegalArgumentException {
-
-            //noinspection ConstantConditions
-            if (tripId == null) {
-                throw new IllegalArgumentException("null value for tripId");
-            }
-            //noinspection ConstantConditions
-            if (stopId == null) {
-                throw new IllegalArgumentException("null value for stopId");
-            }
-            //noinspection ConstantConditions
-            if (timepoint == null) {
-                throw new IllegalArgumentException("null value for timepoint");
-            }
 
             this.tripId = tripId;
             this.arrivalTime = arrivalTime;
@@ -295,7 +282,30 @@ public class StopTime {
             return this;
         }
 
+        /**
+         * Creates a {@link StopTime} objects from fields provided via {@link StopTimeBuilder} methods. Throws
+         * {@link IllegalArgumentException} if fields arrivalTime, departureTime, are not defined when field timepoint
+         * is set as {@link Timepoint#EXACT_TIMES}
+         *
+         * @return Entity representing a row from stop_times.txt
+         * @throws IllegalArgumentException if fields arrivalTime, departureTime, are not defined when field timepoint
+         *                                  is set as {@link Timepoint#EXACT_TIMES}
+         */
         public StopTime build() {
+            if (tripId == null) {
+                throw new IllegalArgumentException("null value for tripId");
+            }
+            if (stopId == null) {
+                throw new IllegalArgumentException("null value for stopId");
+            }
+            if (timepoint == Timepoint.EXACT_TIMES) {
+                if (arrivalTime == null) {
+                    throw new IllegalArgumentException("arrivalTime can not be null for timepoint");
+                }
+                if (departureTime == null) {
+                    throw new IllegalArgumentException("departureTime can not be null for timepoint");
+                }
+            }
             return new StopTime(tripId, arrivalTime, departureTime, stopId, stopSequence, stopHeadsign, pickupType,
                     dropOffType, shapeDistTraveled, timepoint);
         }
