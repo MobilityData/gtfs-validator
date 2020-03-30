@@ -8,7 +8,16 @@ Java code to parse and validate a GTFS feed Zip archive
 
 # Usage
 
-`--help` command available
+Loads input GTFS feed from url or disk.
+ Checks files integrity, numeric type parsing and ranges as well as string
+format according to [GTFS specification](http://gtfs.org/reference/static)
+
+Schema file can be found [here](https://github.com/MobilityData/gtfs-validator/blob/v1.1.0/README.md)
+ 
+ For a list of all available commands, use `--help`
+              
+ Validation results are exported to JSON file by default
+
 
 Sample usage `java -jar gtfs-validator.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -i input -o output`
 
