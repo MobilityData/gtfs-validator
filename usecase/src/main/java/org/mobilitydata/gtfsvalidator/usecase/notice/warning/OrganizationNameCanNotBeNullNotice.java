@@ -14,15 +14,30 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice;
+package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-public class AttributionMustHaveRoleNotice extends WarningNotice {
+import java.io.IOException;
 
-    public AttributionMustHaveRoleNotice(String organizationName) {
-        super("attributions.txt", W_005,
+public class OrganizationNameCanNotBeNullNotice extends WarningNotice {
+
+    private static String FILENAME = "attributions.txt";
+
+    public OrganizationNameCanNotBeNullNotice() {
+        super(FILENAME, W_006,
                 "Attribution error",
-                "Organization: " + organizationName + "in file attributions.txt has no role");
+                "Organization name in " + FILENAME + " can not be null",
+                null);
+    }
+
+    @Override
+    public void export(ValidationResultRepository.NoticeExporter exporter) throws IOException {
+        exporter.export(this);
+    }
+
+    public String getFilename() {
+        return FILENAME;
     }
 }

@@ -18,10 +18,7 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
@@ -157,6 +154,16 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
 
     @Override
     public void export(CannotParseDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(AttributionMustHaveRoleNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(OrganizationNameCanNotBeNullNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

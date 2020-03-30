@@ -18,13 +18,15 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.Attribution;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.usecase.notice.AttributionMustHaveRoleNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.AttributionMustHaveRoleNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.OrganizationNameCanNotBeNullNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.Vector;
-
+/**
+ * Use case to process a {@link ParsedEntity} with an internal representation defined by {@link Attribution}
+ */
 public class ProcessParsedAttribution {
 
     private final GtfsSpecRepository specRepo;
@@ -39,6 +41,18 @@ public class ProcessParsedAttribution {
         this.gtfsRepo = gtfsRepo;
     }
 
+    /**
+     * Use case execution method to go from a row from attributions.txt to an internal representation of the
+     * {@link Attribution} object. Each {@link Attribution} is added to the {@link GtfsDataRepository}.
+     * <p>
+     * This use case extracts values from a {@link ParsedEntity} and creates a {@link Attribution} object. If the
+     * required conditions to create such object are not met, either a {@link OrganizationNameCanNotBeNullNotice} is
+     * created or a {@link AttributionMustHaveRoleNotice} is created; then added to the validation result repository
+     * provided in the use case constructor.
+     *
+     * @param validatedAttributionEntity entity to be process and added to the {@link GtfsDataRepository}
+     */
+    @SuppressWarnings("ConstantConditions")
     public void execute(final ParsedEntity validatedAttributionEntity) {
 
         String attributionId = (String) validatedAttributionEntity.get("attribution_id");
@@ -55,19 +69,7 @@ public class ProcessParsedAttribution {
 
         Attribution.AttributionBuilder builder = new Attribution.AttributionBuilder(organizationName);
 
-        Vector<Integer> roleVector = new Vector<>(3);
-        roleVector.addElement(isProducer);
-        roleVector.addElement(isAuthority);
-        roleVector.addElement(isOperator);
-
-        Vector<Integer> nullVector = new Vector<>(3);
-        roleVector.addElement(0);
-        roleVector.addElement(0);
-        roleVector.addElement(0);
-
-        if (roleVector.equals(nullVector)) {
-            resultRepo.addNotice(new AttributionMustHaveRoleNotice(organizationName));
-        } else {
+        try {
             builder.attributionId(attributionId)
                     .agencyId(agencyId)
                     .routeId(routeId)
@@ -79,8 +81,13 @@ public class ProcessParsedAttribution {
                     .attributionUrl(attributionUrl)
                     .attributionPhone(attributionPhone)
                     .build();
-        }
 
-        // TODO: add to GtfsDataRepository
+        } catch (IllegalArgumentException e) {
+            if (organizationName == null) {
+                resultRepo.addNotice(new OrganizationNameCanNotBeNullNotice());
+            } else {
+                resultRepo.addNotice(new AttributionMustHaveRoleNotice(organizationName));
+            }
+        }
     }
 }

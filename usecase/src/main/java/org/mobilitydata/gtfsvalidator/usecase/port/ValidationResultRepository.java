@@ -21,10 +21,7 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.*;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -96,5 +93,9 @@ public interface ValidationResultRepository {
         void export(InvalidTimeNotice toExport) throws IOException;
 
         void export(CannotParseDateNotice toExport) throws IOException;
+
+        void export(AttributionMustHaveRoleNotice toExport) throws IOException;
+
+        void export(OrganizationNameCanNotBeNullNotice toExport) throws IOException;
     }
 }
