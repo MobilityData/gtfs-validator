@@ -18,23 +18,30 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.base;
 
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.IOException;
+
 public abstract class Notice {
     private final String filename;
     private final String noticeId;
     private final String title;
     private final String description;
+    protected final String entityId;
 
     protected Notice(final String filename,
                      final String noticeId,
                      final String title,
-                     final String description) {
+                     final String description, String entityId) {
         this.filename = filename;
         this.noticeId = noticeId;
         this.title = title;
         this.description = description;
+        this.entityId = entityId != null ? entityId : "no id";
     }
 
     public abstract Notice visit(ValidationResultRepository resultRepo);
+
+    public abstract void export(ValidationResultRepository.NoticeExporter exporter)
+            throws IOException;
 
     public String getFilename() {
         return filename;
@@ -50,6 +57,10 @@ public abstract class Notice {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getEntityId() {
+        return entityId;
     }
 
     @Override
