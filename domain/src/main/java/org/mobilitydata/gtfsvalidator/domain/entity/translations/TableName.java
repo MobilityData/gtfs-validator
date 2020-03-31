@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 /**
  * This enum matches types that can be found in the table_name field of translations.txt
  * // see https://gtfs.org/reference/static#translationstxt
- * It's used to decide which concrete type derived from {@link TranslationBase} to instantiate
+ * It's used to decide which concrete type derived from {@link TranslationTableBase} to instantiate
  */
 public enum TableName {
     AGENCY("agency"),

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Model class for an entity defined in translations.txt with table_name = stop_times and record_id defined
  */
-public class TranslationDeepness02 extends TranslationBase {
+public class TranslationTableCompositeKey extends TranslationTableBase {
 
     @NotNull
     final private String recordId;
@@ -39,12 +39,12 @@ public class TranslationDeepness02 extends TranslationBase {
      * @param recordSubId helps the record that contains the field to be translated when the table doesn’t have
      *                    a unique ID
      */
-    private TranslationDeepness02(@NotNull final TableName tableName,
-                                  @NotNull final String fieldName,
-                                  @NotNull final String language,
-                                  @NotNull final String translation,
-                                  @NotNull final String recordId,
-                                  @NotNull final String recordSubId) {
+    private TranslationTableCompositeKey(@NotNull final TableName tableName,
+                                         @NotNull final String fieldName,
+                                         @NotNull final String language,
+                                         @NotNull final String translation,
+                                         @NotNull final String recordId,
+                                         @NotNull final String recordSubId) {
         super(tableName, fieldName, language, translation);
         this.recordId = recordId;
         this.recordSubId = recordSubId;
@@ -67,10 +67,10 @@ public class TranslationDeepness02 extends TranslationBase {
     }
 
     /**
-     * Builder class to create {@link TranslationDeepness02} objects.  Allows an unordered
-     * definition of the different attributes of {@link TranslationDeepness02}.
+     * Builder class to create {@link TranslationTableCompositeKey} objects.  Allows an unordered
+     * definition of the different attributes of {@link TranslationTableCompositeKey}.
      */
-    public static class TranslationDeepness02Builder extends TableNameBaseBuilder {
+    public static class TranslationTableCompositeKeyBuilder extends TableNameBaseBuilder {
 
         @NotNull
         private String recordId;
@@ -79,8 +79,8 @@ public class TranslationDeepness02 extends TranslationBase {
         private String recordSubId;
 
         /**
-         * Builder class to create {@link TranslationDeepness02} objects.  Allows an unordered
-         * definition of the different attributes of {@link TranslationDeepness02}.
+         * Builder class to create {@link TranslationTableCompositeKey} objects.  Allows an unordered
+         * definition of the different attributes of {@link TranslationTableCompositeKey}.
          *
          * @param tableName   defines the table that contains the field to be translated
          * @param fieldName   name of the field to be translated
@@ -90,12 +90,12 @@ public class TranslationDeepness02 extends TranslationBase {
          * @param recordSubId helps the record that contains the field to be translated when the table doesn’t have
          *                    a unique ID
          */
-        public TranslationDeepness02Builder(@NotNull final String tableName,
-                                            @NotNull final String fieldName,
-                                            @NotNull final String language,
-                                            @NotNull final String translation,
-                                            @NotNull final String recordId,
-                                            @NotNull final String recordSubId) {
+        public TranslationTableCompositeKeyBuilder(@NotNull final String tableName,
+                                                   @NotNull final String fieldName,
+                                                   @NotNull final String language,
+                                                   @NotNull final String translation,
+                                                   @NotNull final String recordId,
+                                                   @NotNull final String recordSubId) {
             super(tableName, fieldName, language, translation);
             this.recordId = recordId;
             this.recordSubId = recordSubId;
@@ -107,7 +107,7 @@ public class TranslationDeepness02 extends TranslationBase {
          * @param recordId defines the record that corresponds to the field to be translated
          * @return builder for future object creation
          */
-        public TranslationDeepness02Builder recordId(@NotNull final String recordId) {
+        public TranslationTableCompositeKeyBuilder recordId(@NotNull final String recordId) {
             this.recordId = recordId;
             return this;
         }
@@ -119,22 +119,22 @@ public class TranslationDeepness02 extends TranslationBase {
          *                    a unique ID.
          * @return builder for future object creation
          */
-        public TranslationDeepness02Builder recordSubId(@NotNull final String recordSubId) {
+        public TranslationTableCompositeKeyBuilder recordSubId(@NotNull final String recordSubId) {
             this.recordSubId = recordSubId;
             return this;
         }
 
         /**
-         * Returns a {@link TranslationDeepness02} objects from fields provided via {@link TranslationDeepness02Builder}
-         * methods. Throws {@link IllegalArgumentException} if fields fieldName, language, translation, recordId,
-         * or recordSubId are null
+         * Returns a {@link TranslationTableCompositeKey} object from fields provided via
+         * {@link TranslationTableCompositeKeyBuilder} methods. Throws {@link IllegalArgumentException} if fields
+         * fieldName, language, translation, recordId, or recordSubId are null.
          *
          * @return Entity representing a row from translations.txt with table_name = stop_times and record_id defined
          * @throws IllegalArgumentException if fields fieldName, language, translation, recordId, or recordSubId are
          *                                  null
          */
         @SuppressWarnings("ConstantConditions")
-        public TranslationDeepness02 build() {
+        public TranslationTableCompositeKey build() {
             if (fieldName == null) {
                 throw new IllegalArgumentException("fieldName must be specified");
             } else if (language == null) {
@@ -146,7 +146,7 @@ public class TranslationDeepness02 extends TranslationBase {
             } else if (recordId == null) {
                 throw new IllegalArgumentException("recordId must be specified");
             }
-            return new TranslationDeepness02(tableName, fieldName, language, translation, recordId, recordSubId);
+            return new TranslationTableCompositeKey(tableName, fieldName, language, translation, recordId, recordSubId);
         }
     }
 }

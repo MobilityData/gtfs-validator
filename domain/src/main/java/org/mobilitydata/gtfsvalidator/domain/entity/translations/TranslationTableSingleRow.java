@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Model class for an entity defined in translations.txt with table_name = feed_info
  */
-public class TranslationDeepness00 extends TranslationBase {
+public class TranslationTableSingleRow extends TranslationTableBase {
 
     /**
      * @param tableName   defines the table that contains the field to be translated
@@ -29,10 +29,10 @@ public class TranslationDeepness00 extends TranslationBase {
      * @param language    language of translation
      * @param translation translated value
      */
-    private TranslationDeepness00(@NotNull TableName tableName,
-                                  @NotNull String fieldName,
-                                  @NotNull String language,
-                                  @NotNull String translation) {
+    private TranslationTableSingleRow(@NotNull TableName tableName,
+                                      @NotNull String fieldName,
+                                      @NotNull String language,
+                                      @NotNull String translation) {
         super(tableName, fieldName, language, translation);
     }
 
@@ -52,33 +52,33 @@ public class TranslationDeepness00 extends TranslationBase {
     }
 
     /**
-     * Builder class to create {@link TranslationDeepness00} objects.  Allows an unordered
-     * definition of the different attributes of {@link TranslationDeepness00}.
+     * Builder class to create {@link TranslationTableSingleRow} objects.  Allows an unordered
+     * definition of the different attributes of {@link TranslationTableSingleRow}.
      */
-    public static class TranslationDeepness00Builder extends TableNameBaseBuilder {
+    public static class TranslationTableSingleRowBuilder extends TableNameBaseBuilder {
         /**
          * @param tableName   defines the table that contains the field to be translated
          * @param fieldName   name of the field to be translated
          * @param language    language of translation
          * @param translation translated value
          */
-        public TranslationDeepness00Builder(@NotNull final String tableName,
-                                            @NotNull final String fieldName,
-                                            @NotNull final String language,
-                                            @NotNull final String translation) {
+        public TranslationTableSingleRowBuilder(@NotNull final String tableName,
+                                                @NotNull final String fieldName,
+                                                @NotNull final String language,
+                                                @NotNull final String translation) {
             super(tableName, fieldName, language, translation);
         }
 
         /**
-         * Returns a {@link TranslationDeepness00} objects from fields provided via {@link TranslationDeepness00Builder}
-         * methods. Throws {@link IllegalArgumentException} if fields fieldName, fieldName, language or translation
-         * are null.
+         * Returns a {@link TranslationTableSingleRow} object from fields provided via
+         * {@link TranslationTableSingleRowBuilder} methods. Throws {@link IllegalArgumentException} if fields
+         * fieldName, fieldName, language or translation are null.
          *
          * @return Entity representing a row from translations.txt with table_name = feed_info
          * @throws IllegalArgumentException if fields fieldName, fieldName, language or translation are null
          */
         @SuppressWarnings("ConstantConditions")
-        public TranslationDeepness00 build() throws IllegalArgumentException {
+        public TranslationTableSingleRow build() throws IllegalArgumentException {
             if (fieldName == null) {
                 throw new IllegalArgumentException("fieldName can not be null");
             }
@@ -88,7 +88,7 @@ public class TranslationDeepness00 extends TranslationBase {
             if (translation == null) {
                 throw new IllegalArgumentException("translation can not be null");
             }
-            return new TranslationDeepness00(tableName, fieldName, language, translation);
+            return new TranslationTableSingleRow(tableName, fieldName, language, translation);
         }
     }
 }

@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Base class for all entities defined in translations.txt
  */
-public abstract class TranslationBase {
+public abstract class TranslationTableBase {
 
     @NotNull
     private final TableName tableName;
@@ -35,10 +35,10 @@ public abstract class TranslationBase {
     @NotNull
     private final String translation;
 
-    protected TranslationBase(@NotNull final TableName tableName,
-                              @NotNull final String fieldName,
-                              @NotNull final String language,
-                              @NotNull final String translation) {
+    protected TranslationTableBase(@NotNull final TableName tableName,
+                                   @NotNull final String fieldName,
+                                   @NotNull final String language,
+                                   @NotNull final String translation) {
         this.tableName = tableName;
         this.fieldName = fieldName;
         this.language = language;

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Model class for an entity defined in translations.txt with table_name!=stop_times or table_name!=feed_info
  */
-public class TranslationDeepness01 extends TranslationBase {
+public class TranslationTableSimpleKey extends TranslationTableBase {
 
     @Nullable
     final private String recordId;
@@ -42,13 +42,13 @@ public class TranslationDeepness01 extends TranslationBase {
      * @param recordSubId helps the record that contains the field to be translated when the table doesn’t have a
      *                    unique ID
      */
-    private TranslationDeepness01(@NotNull final TableName tableName,
-                                  @NotNull final String fieldName,
-                                  @NotNull final String language,
-                                  @NotNull final String translation,
-                                  @Nullable final String recordId,
-                                  @Nullable final String recordSubId,
-                                  @Nullable final String fieldValue) {
+    private TranslationTableSimpleKey(@NotNull final TableName tableName,
+                                      @NotNull final String fieldName,
+                                      @NotNull final String language,
+                                      @NotNull final String translation,
+                                      @Nullable final String recordId,
+                                      @Nullable final String recordSubId,
+                                      @Nullable final String fieldValue) {
         super(tableName, fieldName, language, translation);
         this.recordId = recordId;
         this.recordSubId = recordSubId;
@@ -71,9 +71,9 @@ public class TranslationDeepness01 extends TranslationBase {
     }
 
     /**
-     * Builder class to create {@link TranslationDeepness01} objects.
+     * Builder class to create {@link TranslationTableSimpleKey} objects.
      */
-    public static class TranslationDeepness01Builder extends TableNameBaseBuilder {
+    public static class TranslationTableSimpleKeyBuilder extends TableNameBaseBuilder {
 
         @Nullable
         private String recordId;
@@ -85,18 +85,18 @@ public class TranslationDeepness01 extends TranslationBase {
         private String fieldValue;
 
         /**
-         * Builder class to create {@link TranslationDeepness01} objects. Allows an unordered definition of the
-         * different attributes of {@link TranslationDeepness01}.
+         * Builder class to create {@link TranslationTableSimpleKey} object. Allows an unordered definition of the
+         * different attributes of {@link TranslationTableSimpleKey}.
          *
          * @param tableName   defines the table that contains the field to be translated
          * @param fieldName   name of the field to be translated
          * @param language    language of translation
          * @param translation translated value
          */
-        public TranslationDeepness01Builder(@NotNull final String tableName,
-                                            @NotNull final String fieldName,
-                                            @NotNull final String language,
-                                            @NotNull final String translation) {
+        public TranslationTableSimpleKeyBuilder(@NotNull final String tableName,
+                                                @NotNull final String fieldName,
+                                                @NotNull final String language,
+                                                @NotNull final String translation) {
             super(tableName, fieldName, language, translation);
         }
 
@@ -106,7 +106,7 @@ public class TranslationDeepness01 extends TranslationBase {
          * @param recordId defines the record that corresponds to the field to be translated
          * @return builder for future object creation
          */
-        public TranslationDeepness01Builder recordId(@Nullable final String recordId) {
+        public TranslationTableSimpleKeyBuilder recordId(@Nullable final String recordId) {
             this.recordId = recordId;
             return this;
         }
@@ -118,7 +118,7 @@ public class TranslationDeepness01 extends TranslationBase {
          *                    unique ID
          * @return builder for future object creation
          */
-        public TranslationDeepness01Builder recordSubId(@Nullable final String recordSubId) {
+        public TranslationTableSimpleKeyBuilder recordSubId(@Nullable final String recordSubId) {
             this.recordSubId = recordSubId;
             return this;
         }
@@ -129,15 +129,16 @@ public class TranslationDeepness01 extends TranslationBase {
          * @param fieldValue can be used to define the value which should be translated
          * @return builder for future object creation
          */
-        public TranslationDeepness01Builder fieldValue(@Nullable final String fieldValue) {
+        public TranslationTableSimpleKeyBuilder fieldValue(@Nullable final String fieldValue) {
             this.fieldValue = fieldValue;
             return this;
         }
 
         /**
-         * Returns a {@link TranslationDeepness01} objects from fields provided via
-         * {@link TranslationDeepness01.TranslationDeepness01Builder} methods. Throws {@link IllegalArgumentException}
-         * if fields fieldName, language, translation, recordId to not meet the requirements from the specification:
+         * Returns a {@link TranslationTableSimpleKey} objects from fields provided via
+         * {@link TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder} methods.
+         * Throws {@link IllegalArgumentException} if fields fieldName, language, translation, recordId to not meet the
+         * requirements from the specification:
          * - recordId and fieldValue can not be defined at the same time
          * - recordSubId and fieldValue can not be defined at the same time
          * - recordId and fieldValue can not be undefined at the same time
@@ -152,7 +153,7 @@ public class TranslationDeepness01 extends TranslationBase {
          *                                  - fieldName, language, and translation fields can not be null
          */
         @SuppressWarnings("ConstantConditions")
-        public TranslationDeepness01 build() {
+        public TranslationTableSimpleKey build() {
             if (fieldValue != null) {
                 if (recordId != null) {
                     throw new IllegalArgumentException("recordId and fieldValue can not both be defined");
@@ -169,7 +170,7 @@ public class TranslationDeepness01 extends TranslationBase {
             } else if (translation == null) {
                 throw new IllegalArgumentException("translation must be specified");
             }
-            return new TranslationDeepness01(tableName, fieldName, language, translation, recordId, recordSubId,
+            return new TranslationTableSimpleKey(tableName, fieldName, language, translation, recordId, recordSubId,
                     fieldValue);
         }
     }
