@@ -26,7 +26,7 @@ public class IncoherentValuesForFields extends ErrorNotice {
     private String conflictingFieldName;
 
     public IncoherentValuesForFields(String filename, String fieldName, String conflictingFieldName, String entityId) {
-        super(filename, E_013,
+        super(filename, E_018,
                 "Conflicting field values",
                 "Conflicting field values for fields:" + fieldName + " and field:" + conflictingFieldName
                         + " for entity with id:" + entityId,
