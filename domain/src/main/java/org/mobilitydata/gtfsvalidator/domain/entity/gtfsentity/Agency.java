@@ -19,9 +19,11 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfsentity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Class for all entities defined in agency.txt. Can not be directly instantiated: user must use the
+ * {@link AgencyBuilder} to create this.
+ */
 public class Agency extends GtfsEntity {
-
-    // todo: add hash field for agency file
 
     @Nullable
     private final String agencyId;
@@ -47,7 +49,19 @@ public class Agency extends GtfsEntity {
     @Nullable
     private final String agencyEmail;
 
-
+    /**
+     * Class for all entities defined in agency.txt
+     *
+     * @param agencyId       identifies a transit brand which is often synonymous with a transit agency
+     * @param agencyName     full name of the transit agency
+     * @param agencyUrl      URL of the transit agency
+     * @param agencyTimezone timezone where the transit agency is located
+     * @param agencyLang     primary language used by this transit agency
+     * @param agencyPhone    a voice telephone number for the specified agency
+     * @param agencyFareUrl  URL of a web page that allows a rider to purchase tickets or other fare instruments for
+     *                       that agency online
+     * @param agencyEmail    email address actively monitored by the agency’s customer service department
+     */
     private Agency(@Nullable final String agencyId,
                    @NotNull final String agencyName,
                    @NotNull final String agencyUrl,
@@ -107,6 +121,10 @@ public class Agency extends GtfsEntity {
         return agencyEmail;
     }
 
+    /**
+     * Builder class to create {@link Agency} objects. Allows an unordered definition of the different attributes of
+     * {@link Agency}.
+     */
     public static class AgencyBuilder {
 
         private String agencyId;
@@ -118,55 +136,111 @@ public class Agency extends GtfsEntity {
         private String agencyFareUrl;
         private String agencyEmail;
 
-        public AgencyBuilder(@NotNull final String agencyName,
-                             @NotNull final String agencyUrl,
-                             @NotNull final String agencyTimezone) {
-            this.agencyName = agencyName;
-            this.agencyUrl = agencyUrl;
-            this.agencyTimezone = agencyTimezone;
-        }
-
-        public AgencyBuilder agencyName(@Nullable final String agencyName) {
+        /**
+         * Sets field agencyName value and returns this
+         *
+         * @param agencyName defines the record that corresponds to the field to be translated
+         * @return builder for future object creation
+         */
+        public AgencyBuilder agencyName(@NotNull final String agencyName) {
             this.agencyName = agencyName;
             return this;
         }
 
-        public AgencyBuilder agencyUrl(@Nullable final String agencyUrl) {
+        /**
+         * Sets field agencyUrl value and returns this
+         *
+         * @param agencyUrl defines the record that corresponds to the field to be translated
+         * @return builder for future object creation
+         */
+        public AgencyBuilder agencyUrl(@NotNull final String agencyUrl) {
             this.agencyUrl = agencyUrl;
             return this;
         }
 
-        public AgencyBuilder agencyTimezone(@Nullable final String agencyTimezone) {
+        /**
+         * Sets field agencyTimezone value and returns this
+         *
+         * @param agencyTimezone timezone where the transit agency is located
+         * @return builder for future object creation
+         */
+        public AgencyBuilder agencyTimezone(@NotNull final String agencyTimezone) {
             this.agencyTimezone = agencyTimezone;
             return this;
         }
 
+        /**
+         * Sets field agencyId value and returns this
+         *
+         * @param agencyId identifies a transit brand which is often synonymous with a transit agency
+         * @return builder for future object creation
+         */
         public AgencyBuilder agencyId(@Nullable final String agencyId) {
             this.agencyId = agencyId;
             return this;
         }
 
+        /**
+         * Sets field agencyLang value and returns this
+         *
+         * @param agencyLang primary language used by this transit agency
+         * @return builder for future object creation
+         */
         public AgencyBuilder agencyLang(@Nullable final String agencyLang) {
             this.agencyLang = agencyLang;
             return this;
         }
 
+        /**
+         * Sets field agencyPhone value and returns this
+         *
+         * @param agencyPhone a voice telephone number for the specified agency
+         * @return builder for future object creation
+         */
         public AgencyBuilder agencyPhone(@Nullable final String agencyPhone) {
             this.agencyPhone = agencyPhone;
             return this;
         }
 
+        /**
+         * Sets field agencyFareUrl value and returns this
+         *
+         * @param agencyFareUrl URL of a web page that allows a rider to purchase tickets or other fare instruments for
+         *                      that agency online         * @return builder for future object creation
+         */
         public AgencyBuilder agencyFareUrl(@Nullable final String agencyFareUrl) {
             this.agencyFareUrl = agencyFareUrl;
             return this;
         }
 
+        /**
+         * Sets field agencyEmail value and returns this
+         *
+         * @param agencyEmail email address actively monitored by the agency’s customer service department
+         * @return builder for future object creation
+         */
         public AgencyBuilder agencyEmail(@Nullable final String agencyEmail) {
             this.agencyEmail = agencyEmail;
             return this;
         }
 
-        public Agency build() {
+        /**
+         * Returns a {@link Agency} object from fields provided via {@link AgencyBuilder} methods.
+         * Throws {@link NullPointerException} if fields agencyName, agencyUrl, or agencyTimezone are null.
+         *
+         * @return Entity representing a row from agency.txt
+         * @throws NullPointerException if fields agencyName, agencyUrl, or agencyTimezone are null.
+         */
+        public Agency build() throws NullPointerException {
+            if (agencyName == null) {
+                throw new NullPointerException("agency_name can not be null");
+            }
+            if (agencyUrl == null) {
+                throw new NullPointerException("agency_url can not be null");
+            }
+            if (agencyTimezone == null) {
+                throw new NullPointerException("agency_timezone can not be null");
+            }
             return new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang, agencyPhone,
                     agencyFareUrl, agencyEmail);
         }
