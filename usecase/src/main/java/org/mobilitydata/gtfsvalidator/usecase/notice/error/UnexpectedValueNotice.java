@@ -22,10 +22,10 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import java.io.IOException;
 
 public class UnexpectedValueNotice extends ErrorNotice {
-    private String enumValue;
+    private int enumValue;
     private String fieldName;
 
-    public UnexpectedValueNotice(String filename, String fieldName, String entityId, String enumValue) {
+    public UnexpectedValueNotice(String filename, String fieldName, String entityId, int enumValue) {
         super(filename, E_018,
                 "Unexpected enum value",
                 "Invalid value :" + enumValue + " - for field:" + fieldName + " in file:" + filename +
@@ -41,7 +41,7 @@ public class UnexpectedValueNotice extends ErrorNotice {
     }
 
     public String getEnumValue() {
-        return enumValue;
+        return String.valueOf(enumValue);
     }
 
     public String getFieldName() {
