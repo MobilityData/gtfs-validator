@@ -764,7 +764,7 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new UnexpectedValueNotice(FILENAME, "field_name",
-                "entity_id", "enum_value"));
+                "entity_id", 2));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
@@ -773,7 +773,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("field_name"));
-        verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("enum_value"));
+        verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("2"));
         verify(mockBuilder, times(1)).setAltEntityId("entity_id");
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
