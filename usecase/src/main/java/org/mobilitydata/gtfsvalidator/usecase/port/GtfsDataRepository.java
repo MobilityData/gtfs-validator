@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfsentity.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 
 public interface GtfsDataRepository {
 
