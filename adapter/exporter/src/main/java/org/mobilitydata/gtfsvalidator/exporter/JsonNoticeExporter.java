@@ -159,4 +159,9 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
     public void export(CannotParseDateNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(UnexpectedValueNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

@@ -301,6 +301,18 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 toExport.getRawValue());
     }
 
+    @Override
+    public void export(UnexpectedValueNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getFieldName())
+                .setEntityValue(toExport.getEnumValue())
+                .setAltEntityId(toExport.getEntityId())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
 
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
