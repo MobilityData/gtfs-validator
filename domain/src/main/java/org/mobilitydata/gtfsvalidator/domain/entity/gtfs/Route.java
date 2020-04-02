@@ -137,22 +137,12 @@ public class Route {
         private String routeTextColor;
         private Integer routeSortOrder;
 
-        public RouteBuilder(@NotNull final String routeId, @NotNull final RouteType routeType) {
-            this.routeId = routeId;
-            this.routeType = routeType;
-        }
-
         public RouteBuilder routeId(@NotNull final String routeId) {
             this.routeId = routeId;
             return this;
         }
 
-        public RouteBuilder routeType(@NotNull final RouteType routeType) {
-            this.routeType = routeType;
-            return this;
-        }
-
-        public RouteBuilder routeAgencyId(@Nullable final String agencyId) {
+        public RouteBuilder agencyId(@Nullable final String agencyId) {
             this.agencyId = agencyId;
             return this;
         }
@@ -169,6 +159,11 @@ public class Route {
 
         public RouteBuilder routeDesc(@Nullable final String routeDesc) {
             this.routeDesc = routeDesc;
+            return this;
+        }
+
+        public RouteBuilder routeType(final int routeType) {
+            this.routeType = RouteType.fromInt(routeType);
             return this;
         }
 
@@ -192,7 +187,11 @@ public class Route {
             return this;
         }
 
-        public Route build() {
+        public Route build() throws NullPointerException {
+
+            if (routeId == null) {
+                throw new NullPointerException("route_id can not be null in routes.txt");
+            }
             return new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,
                     routeUrl, routeColor, routeTextColor, routeSortOrder);
         }

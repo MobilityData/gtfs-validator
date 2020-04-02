@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public enum RouteType {
@@ -37,7 +39,16 @@ public enum RouteType {
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
-    static public RouteType fromInt(Integer fromValue) {
+    static public RouteType fromInt(Integer fromValue) throws NullPointerException {
+
+        List<Integer> enumValues = new ArrayList<>();
+
+        Stream.of(RouteType.values()).forEach(enumItem -> enumValues.add(enumItem.value));
+
+        if (!enumValues.contains(fromValue)) {
+            throw new NullPointerException("Unexpected value for field route_type in routes.txt");
+        }
+
         return Stream.of(RouteType.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
