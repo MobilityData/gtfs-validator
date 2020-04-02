@@ -16,5 +16,15 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Route;
+
+import java.util.List;
+
 public interface GtfsDataRepository {
+
+    List<Route> getRouteCollection();
+
+    Route getRouteById(String routeId);
+
+    Route addEntity(Route newRoute);
 }

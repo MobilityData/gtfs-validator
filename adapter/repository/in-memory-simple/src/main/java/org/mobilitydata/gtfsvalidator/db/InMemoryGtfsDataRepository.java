@@ -16,7 +16,29 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
+
+    private final HashMap<String, Route> routeCollection = new HashMap<>();
+
+    public List<Route> getRouteCollection() {
+        return new ArrayList<>(routeCollection.values());
+    }
+
+    @Override
+    public Route getRouteById(String routeId) {
+        return routeCollection.get(routeId);
+    }
+
+    @Override
+    public Route addEntity(final Route newRoute) {
+        routeCollection.put(newRoute.getRouteId(), newRoute);
+        return newRoute;
+    }
 }
