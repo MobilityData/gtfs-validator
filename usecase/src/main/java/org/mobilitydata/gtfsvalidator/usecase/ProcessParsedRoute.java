@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020. MobilityData IO.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
@@ -7,6 +23,9 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+/**
+ * This use case turns a parsed entity representing a row from routes.txt into a concrete class
+ */
 public class ProcessParsedRoute {
 
     private final ValidationResultRepository resultRepository;
@@ -21,6 +40,23 @@ public class ProcessParsedRoute {
         this.builder = builder;
     }
 
+    /**
+     * Use case execution method to go from a row from routes.txt to an internal representation.
+     * <p>
+     * This use case extracts values from a {@link ParsedEntity} and creates a {@link Route} object.
+     * <p>
+     * If value for route_id field is null, a {@link MissingRequiredValueNotice} is created and added to the validation
+     * result repository provided in the use case constructor.
+     * <p>
+     * If an unexpected value is passed to field route_type a {@link UnexpectedValueNotice} is created and added to the
+     * validation result repository provided in the use case constructor.
+     * <p>
+     * In both cases a {@link NullPointerException} is thrown.
+     *
+     * @param validatedParsedRoute entity to be processed and added to the GTFS data repository
+     * @throws NullPointerException if specification requirements are not met regarding values for agency_name,
+     *                              route_id and route type
+     */
     public void execute(final ParsedEntity validatedParsedRoute) throws NullPointerException {
 
         String routeId = (String) validatedParsedRoute.get("route_id");
