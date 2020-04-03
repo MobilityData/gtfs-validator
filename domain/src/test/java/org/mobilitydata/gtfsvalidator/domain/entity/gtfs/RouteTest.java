@@ -22,51 +22,124 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.RouteType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class RouteTest {
 
-    private static final String VALUE = "test_value";
+    private static final String STRING_TEST_VALUE = "test_value";
+    private static final int INT_TEST_VALUE = 0;
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void createRouteWithNullRouteIdShouldThrowException() {
+
+        Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        underTest.routeId(null)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(INT_TEST_VALUE)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE);
+
+        Exception exception = assertThrows(NullPointerException.class, underTest::build);
+
+        assertEquals("route_id can not be null in routes.txt", exception.getMessage());
+    }
 
     @Test
-    public void createRouteWithNullValueForRequiredFieldShouldThrowException() {
+    public void createRouteWithInvalidRouteTypeShouldThrowException() {
 
-        Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
+        Route.RouteBuilder underTest = new Route.RouteBuilder();
 
-        when(mockBuilder.build()).thenCallRealMethod();
+        underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(15)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE);
 
-        assertThrows(NullPointerException.class, mockBuilder::build);
+        Exception exception = assertThrows(NullPointerException.class, underTest::build);
 
+        assertEquals("Unexpected value for field route_type in routes.txt", exception.getMessage());
+    }
+
+    @Test
+    public void createRouteWithEmptyRouteColorShouldNotThrowException() {
+
+        Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(INT_TEST_VALUE)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(null)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE);
+
+        Route route = underTest.build();
+
+        assertEquals("FFFFFF", route.getRouteColor());
+
+    }
+
+    @Test
+    public void createRouteWithEmptyRouteTextColorShouldNotThrowException() {
+        Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(INT_TEST_VALUE)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(null)
+                .routeSortOrder(INT_TEST_VALUE);
+
+        Route route = underTest.build();
+
+        assertEquals("000000", route.getRouteColor());
     }
 
     @Test
     public void createRouteWithValidValuesForFieldShouldNotThrowException() {
 
-        Route.RouteBuilder builder = new Route.RouteBuilder();
+        Route.RouteBuilder underTest = new Route.RouteBuilder();
 
-        builder.routeId(VALUE)
-                .agencyId(VALUE)
-                .routeShortName(VALUE)
-                .routeLongName(VALUE)
-                .routeDesc(VALUE)
-                .routeType(3)
-                .routeUrl(VALUE)
-                .routeColor(VALUE)
-                .routeTextColor(VALUE)
-                .routeSortOrder(1);
+        underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(INT_TEST_VALUE)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE);
 
-        Route route = builder.build();
+        Route route = underTest.build();
 
-        assertEquals(route.getRouteId(), VALUE);
-        assertEquals(route.getAgencyId(), VALUE);
-        assertEquals(route.getRouteShortName(), VALUE);
-        assertEquals(route.getRouteLongName(), VALUE);
-        assertEquals(route.getRouteDesc(), VALUE);
-        assertEquals(route.getRouteType(), RouteType.BUS);
-        assertEquals(route.getRouteUrl(), VALUE);
-        assertEquals(route.getRouteColor(), VALUE);
-        assertEquals(route.getRouteTextColor(), VALUE);
-        assertEquals(route.getRouteSortOrder(), 1);
+        assertEquals(route.getRouteId(), STRING_TEST_VALUE);
+        assertEquals(route.getAgencyId(), STRING_TEST_VALUE);
+        assertEquals(route.getRouteShortName(), STRING_TEST_VALUE);
+        assertEquals(route.getRouteLongName(), STRING_TEST_VALUE);
+        assertEquals(route.getRouteDesc(), STRING_TEST_VALUE);
+        assertEquals(route.getRouteType(), RouteType.LIGHT_RAIL);
+        assertEquals(route.getRouteUrl(), STRING_TEST_VALUE);
+        assertEquals(route.getRouteColor(), STRING_TEST_VALUE);
+        assertEquals(route.getRouteTextColor(), STRING_TEST_VALUE);
+        assertEquals(route.getRouteSortOrder(), INT_TEST_VALUE);
     }
 }

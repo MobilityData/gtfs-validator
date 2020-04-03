@@ -13,7 +13,9 @@ class RouteTypeTest {
 
         Integer unexpectedEnumValue = null;
 
-        assertThrows(NullPointerException.class, () -> RouteType.fromInt(unexpectedEnumValue));
+        Exception exception = assertThrows(NullPointerException.class, () -> RouteType.fromInt(unexpectedEnumValue));
+
+        assertEquals("Unexpected value for field route_type in routes.txt", exception.getMessage());
     }
 
     @Test
