@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.util.List;
 

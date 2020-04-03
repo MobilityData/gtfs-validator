@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 
 /**
  * Class for all entities defined in routes.txt. Can not be directly instantiated: user must use the

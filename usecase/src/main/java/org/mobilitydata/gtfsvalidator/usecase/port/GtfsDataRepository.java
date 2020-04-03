@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.util.List;
 

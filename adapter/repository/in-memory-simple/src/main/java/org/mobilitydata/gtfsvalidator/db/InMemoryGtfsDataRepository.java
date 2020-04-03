@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.util.ArrayList;
