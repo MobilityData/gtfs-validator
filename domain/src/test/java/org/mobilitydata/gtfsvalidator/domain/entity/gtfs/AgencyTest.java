@@ -16,50 +16,98 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AgencyTest {
 
-    private static final String VALUE = "test_value";
+    private static final String STRING_TEST_VALUE = "test_value";
 
     @Test
-    public void createAgencyWithNullValueForRequiredFieldShouldThrowException() {
+    public void createAgencyWithNullAgencyNameShouldThrowException() {
 
-        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
-        when(mockBuilder.build()).thenCallRealMethod();
+        //noinspection ConstantConditions
+        underTest.agencyId(STRING_TEST_VALUE)
+                .agencyName(null)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
 
-        Assertions.assertThrows(NullPointerException.class, mockBuilder::build);
+        Exception exception = assertThrows(NullPointerException.class, underTest::build);
+
+        assertEquals("agency_name can not be null", exception.getMessage());
+    }
+
+    @Test
+    public void createAgencyWithNullAgencyUrlShouldThrowException() {
+
+        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+
+        //noinspection ConstantConditions
+        underTest.agencyId(STRING_TEST_VALUE)
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(null)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        Exception exception = assertThrows(NullPointerException.class, underTest::build);
+
+        assertEquals("agency_url can not be null", exception.getMessage());
+    }
+
+    @Test
+    public void createAgencyWithTimezoneAgencyUrlShouldThrowException() {
+
+        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+
+        //noinspection ConstantConditions
+        underTest.agencyId(STRING_TEST_VALUE)
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(null)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        Exception exception = assertThrows(NullPointerException.class, underTest::build);
+
+        assertEquals("agency_timezone can not be null", exception.getMessage());
     }
 
     @Test
     public void createAgencyWithValidValuesForFieldShouldNotThrowException() {
 
-        Agency.AgencyBuilder builder = new Agency.AgencyBuilder();
+        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
-        builder.agencyId(VALUE);
-        builder.agencyName(VALUE);
-        builder.agencyUrl(VALUE);
-        builder.agencyTimezone(VALUE);
-        builder.agencyLang(VALUE);
-        builder.agencyPhone(VALUE);
-        builder.agencyFareUrl(VALUE);
-        builder.agencyEmail(VALUE);
+        underTest.agencyId(STRING_TEST_VALUE);
+        underTest.agencyName(STRING_TEST_VALUE);
+        underTest.agencyUrl(STRING_TEST_VALUE);
+        underTest.agencyTimezone(STRING_TEST_VALUE);
+        underTest.agencyLang(STRING_TEST_VALUE);
+        underTest.agencyPhone(STRING_TEST_VALUE);
+        underTest.agencyFareUrl(STRING_TEST_VALUE);
+        underTest.agencyEmail(STRING_TEST_VALUE);
 
-        Agency agency = builder.build();
+        Agency agency = underTest.build();
 
-        assertEquals(agency.getAgencyId(), VALUE);
-        assertEquals(agency.getAgencyName(), VALUE);
-        assertEquals(agency.getAgencyUrl(), VALUE);
-        assertEquals(agency.getAgencyTimezone(), VALUE);
-        assertEquals(agency.getAgencyLang(), VALUE);
-        assertEquals(agency.getAgencyPhone(), VALUE);
-        assertEquals(agency.getAgencyFareUrl(), VALUE);
-        assertEquals(agency.getAgencyEmail(), VALUE);
+        assertEquals(agency.getAgencyId(), STRING_TEST_VALUE);
+        assertEquals(agency.getAgencyName(), STRING_TEST_VALUE);
+        assertEquals(agency.getAgencyUrl(), STRING_TEST_VALUE);
+        assertEquals(agency.getAgencyTimezone(), STRING_TEST_VALUE);
+        assertEquals(agency.getAgencyLang(), STRING_TEST_VALUE);
+        assertEquals(agency.getAgencyPhone(), STRING_TEST_VALUE);
+        assertEquals(agency.getAgencyFareUrl(), STRING_TEST_VALUE);
+        assertEquals(agency.getAgencyEmail(), STRING_TEST_VALUE);
     }
 }
