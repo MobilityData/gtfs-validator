@@ -16,7 +16,31 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TableName;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableBase;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
+
+    private final HashMap<TableName, TranslationTableBase> translationTableCollection = new HashMap<>();
+
+    @Override
+    public List<TranslationTableBase> getTranslationTableCollection() {
+        return new ArrayList<>(translationTableCollection.values());
+    }
+
+    @Override
+    public TranslationTableBase getTranslationTableByTableName(String tableName) {
+        return translationTableCollection.get(TableName.fromString(tableName));
+    }
+
+    @Override
+    public TranslationTableBase addEntity(final TranslationTableBase newTranslationTable) {
+        translationTableCollection.put(newTranslationTable.getTableName(), newTranslationTable);
+        return newTranslationTable;
+    }
 }

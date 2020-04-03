@@ -16,5 +16,15 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableBase;
+
+import java.util.List;
+
 public interface GtfsDataRepository {
+
+    List<TranslationTableBase> getTranslationTableCollection();
+
+    TranslationTableBase getTranslationTableByTableName(String tableName);
+
+    TranslationTableBase addEntity(TranslationTableBase newTranslationTable);
 }
