@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.translations;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

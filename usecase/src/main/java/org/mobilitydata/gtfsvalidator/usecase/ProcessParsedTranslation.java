@@ -17,10 +17,10 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.domain.entity.translations.TableName;
-import org.mobilitydata.gtfsvalidator.domain.entity.translations.TranslationTableCompositeKey;
-import org.mobilitydata.gtfsvalidator.domain.entity.translations.TranslationTableSimpleKey;
-import org.mobilitydata.gtfsvalidator.domain.entity.translations.TranslationTableSingleRow;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TableName;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableCompositeKey;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableSimpleKey;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableSingleRow;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.IncoherentValuesForFields;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
@@ -47,7 +47,7 @@ public class ProcessParsedTranslation {
      * Use case execution method to go from a row from translations.txt to an internal representation.
      * <p>
      * This use case extracts values from a {@link ParsedEntity} and creates a
-     * {@link org.mobilitydata.gtfsvalidator.domain.entity.translations.TranslationTableBase} object. If the
+     * {@link org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableBase} object. If the
      * required conditions to create such object are not met, the execution is aborted and a
      * {@link IncoherentValuesForFields} or {@link MissingRequiredValueNotice} is created and added to the validation
      * result repository provided in the use case constructor.
