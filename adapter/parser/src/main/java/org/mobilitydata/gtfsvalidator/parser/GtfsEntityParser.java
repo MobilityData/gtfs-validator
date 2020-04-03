@@ -135,7 +135,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
     /**
      * Returns a parsed entity where fields' type have been determined. The {@link ParsedEntity} is formatted as follows:
      * - the entityId is the header name
-     * - the contentByHeaderMap is a Map<String, Object> matching columns' header names with the type validated values
+     * - the contentByHeaderMap is a Map(String, Object) matching columns' header names with the type validated values
      * associated to the {@link RawEntity} to parse
      * - the {@link RawFileInfo} associated to the file being processed
      *
