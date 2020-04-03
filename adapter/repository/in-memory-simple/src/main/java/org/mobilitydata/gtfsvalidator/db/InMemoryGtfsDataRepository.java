@@ -33,12 +33,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     @Override
     public Agency addEntity(final Agency newAgency) {
-        agencyCollection.put(newAgency.getAgencyId(), newAgency);
+        agencyCollection.put(newAgency.getAgencyName(), newAgency);
         return newAgency;
     }
 
     @Override
-    public Agency getAgencyById(final String agencyId) {
-        return agencyCollection.get(agencyId);
+    public Agency getAgencyByName(final String agencyName) {
+        return agencyCollection.get(agencyName);
     }
 }

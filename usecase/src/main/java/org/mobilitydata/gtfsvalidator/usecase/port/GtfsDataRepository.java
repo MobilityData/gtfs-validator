@@ -18,10 +18,13 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 
+import java.util.List;
+
 public interface GtfsDataRepository {
 
     Agency addEntity(Agency newAgency);
 
-    Agency getAgencyById(String agencyId);
+    Agency getAgencyByName(String agencyName);
 
+    List<Agency> getAgencyCollection();
 }
