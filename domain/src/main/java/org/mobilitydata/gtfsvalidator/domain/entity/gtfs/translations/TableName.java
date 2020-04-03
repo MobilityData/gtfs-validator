@@ -16,8 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -43,25 +44,31 @@ public enum TableName {
     FEED_INFO("feed_info"),
     ATTRIBUTIONS("attributions");
 
-    private String value;
+    private final String value;
 
     TableName(final String value) {
         this.value = value;
     }
 
+    static public List<String> getValues() {
+        return Stream.of(TableName.values()).map(enumItem -> enumItem.value).collect(Collectors.toList());
+    }
+
     /**
-     * Matches table_name field defined in translations.txt to its enum value. Throws an {@link IllegalArgumentException}
+     * Matches table_name field defined in translations.txt to its enum value. Throws an {@link NullPointerException}
      * if the value is unexpected; else returns the matching enum value
      *
      * @param tableName defines the table that contains the field to be translated
      * @return the matching enum value
-     * @throws IllegalArgumentException if the value is unexpected
+     * @throws NullPointerException if the value is unexpected
      */
-    @SuppressWarnings({"OptionalGetWithoutIsPresent", "SuspiciousMethodCalls"})
-    static public TableName fromString(final String tableName) throws IllegalArgumentException {
-        if (Arrays.asList(TableName.values()).contains(tableName)) {
-            throw new IllegalArgumentException("Unexpected enum value for table_name");
+    @SuppressWarnings({"OptionalGetWithoutIsPresent"})
+    static public TableName fromString(final String tableName) throws NullPointerException {
+
+        if (!getValues().contains(tableName)) {
+            throw new NullPointerException("Unexpected value for field table_name in translations.txt");
         }
+
         return Stream.of(TableName.values())
                 .filter(enumItem -> Objects.equals(enumItem.value, tableName))
                 .findAny()

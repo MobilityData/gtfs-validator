@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Model class for an entity defined in translations.txt with table_name = feed_info
@@ -32,23 +33,11 @@ public class TranslationTableSingleRow extends TranslationTableBase {
     private TranslationTableSingleRow(@NotNull TableName tableName,
                                       @NotNull String fieldName,
                                       @NotNull String language,
-                                      @NotNull String translation) {
-        super(tableName, fieldName, language, translation);
-    }
-
-    @SuppressWarnings("SameReturnValue")
-    public Object getRecordId() {
-        return null;
-    }
-
-    @SuppressWarnings("SameReturnValue")
-    public Object getRecordSubId() {
-        return null;
-    }
-
-    @SuppressWarnings("SameReturnValue")
-    public Object getFieldValue() {
-        return null;
+                                      @NotNull String translation,
+                                      @Nullable String recordId,
+                                      @Nullable String recordSubId,
+                                      @Nullable String fieldValue) {
+        super(tableName, fieldName, language, translation, recordId, recordSubId, fieldValue);
     }
 
     /**
@@ -56,39 +45,38 @@ public class TranslationTableSingleRow extends TranslationTableBase {
      * definition of the different attributes of {@link TranslationTableSingleRow}.
      */
     public static class TranslationTableSingleRowBuilder extends TableNameBaseBuilder {
-        /**
-         * @param tableName   defines the table that contains the field to be translated
-         * @param fieldName   name of the field to be translated
-         * @param language    language of translation
-         * @param translation translated value
-         */
-        public TranslationTableSingleRowBuilder(@NotNull final String tableName,
-                                                @NotNull final String fieldName,
-                                                @NotNull final String language,
-                                                @NotNull final String translation) {
-            super(tableName, fieldName, language, translation);
-        }
 
         /**
          * Returns a {@link TranslationTableSingleRow} object from fields provided via
-         * {@link TranslationTableSingleRowBuilder} methods. Throws {@link IllegalArgumentException} if fields
-         * fieldName, fieldName, language or translation are null.
+         * {@link TranslationTableSingleRowBuilder} methods. Throws {@link NullPointerException} if fields
+         * fieldName, fieldName, language or translation are null, or if fields record_id, record_sub_id, field_value
+         * are not null
          *
          * @return Entity representing a row from translations.txt with table_name = feed_info
-         * @throws IllegalArgumentException if fields fieldName, fieldName, language or translation are null
+         * @throws NullPointerException if fields fieldName, fieldName, language or translation are null or if fields
+         *                              record_id, record_sub_id, field_value are not null
          */
-        @SuppressWarnings("ConstantConditions")
-        public TranslationTableSingleRow build() throws IllegalArgumentException {
+        public TranslationTableSingleRow build() throws NullPointerException {
             if (fieldName == null) {
-                throw new IllegalArgumentException("fieldName can not be null");
+                throw new NullPointerException("fieldName can not be null");
             }
             if (language == null) {
-                throw new IllegalArgumentException("language can not be null");
+                throw new NullPointerException("language can not be null");
             }
             if (translation == null) {
-                throw new IllegalArgumentException("translation can not be null");
+                throw new NullPointerException("translation can not be null");
             }
-            return new TranslationTableSingleRow(tableName, fieldName, language, translation);
+            if (recordId != null) {
+                throw new NullPointerException("record_id can not be defined");
+            }
+            if (recordSubId != null) {
+                throw new NullPointerException("record_sub_id can not be defined");
+            }
+            if (fieldValue != null) {
+                throw new NullPointerException("field_value can not be defined");
+            }
+            return new TranslationTableSingleRow(tableName, fieldName, language, translation, recordId, recordSubId,
+                    fieldValue);
         }
     }
 }

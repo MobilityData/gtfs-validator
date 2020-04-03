@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Base class for all entities defined in translations.txt
@@ -35,14 +36,29 @@ public abstract class TranslationTableBase {
     @NotNull
     private final String translation;
 
+    @Nullable
+    private final String recordId;
+
+    @Nullable
+    private final String recordSubId;
+
+    @Nullable
+    private final String fieldValue;
+
     protected TranslationTableBase(@NotNull final TableName tableName,
                                    @NotNull final String fieldName,
                                    @NotNull final String language,
-                                   @NotNull final String translation) {
+                                   @NotNull final String translation,
+                                   @Nullable final String recordId,
+                                   @Nullable final String recordSubId,
+                                   @Nullable final String fieldValue) {
         this.tableName = tableName;
         this.fieldName = fieldName;
         this.language = language;
         this.translation = translation;
+        this.recordId = recordId;
+        this.recordSubId = recordSubId;
+        this.fieldValue = fieldValue;
     }
 
     @NotNull
@@ -65,29 +81,31 @@ public abstract class TranslationTableBase {
         return translation;
     }
 
+    @Nullable
+    public String getRecordId() {
+        return recordId;
+    }
+
+    @Nullable
+    public String getRecordSubId() {
+        return recordSubId;
+    }
+
+    @Nullable
+    public String getFieldValue() {
+        return fieldValue;
+    }
+
+
     public static abstract class TableNameBaseBuilder {
 
-        @NotNull
         protected TableName tableName;
-
-        @NotNull
         protected String fieldName;
-
-        @NotNull
         protected String language;
-
-        @NotNull
         protected String translation;
-
-        public TableNameBaseBuilder(@NotNull final String tableName,
-                                    @NotNull final String fieldName,
-                                    @NotNull final String language,
-                                    @NotNull final String translation) {
-            this.tableName = TableName.fromString(tableName);
-            this.fieldName = fieldName;
-            this.language = language;
-            this.translation = translation;
-        }
+        protected String recordId;
+        protected String recordSubId;
+        protected String fieldValue;
 
         public TableNameBaseBuilder tableName(@NotNull final String tableName) {
             this.tableName = TableName.fromString(tableName);
@@ -106,6 +124,21 @@ public abstract class TranslationTableBase {
 
         public TableNameBaseBuilder translation(@NotNull final String translation) {
             this.translation = translation;
+            return this;
+        }
+
+        public TableNameBaseBuilder recordId(@Nullable final String recordId) {
+            this.recordId = recordId;
+            return this;
+        }
+
+        public TableNameBaseBuilder recordSubId(@Nullable final String recordSubId) {
+            this.recordSubId = recordSubId;
+            return this;
+        }
+
+        public TableNameBaseBuilder fieldValue(@Nullable final String fieldValue) {
+            this.fieldValue = fieldValue;
             return this;
         }
     }

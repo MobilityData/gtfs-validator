@@ -24,11 +24,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TranslationTableCompositeKey extends TranslationTableBase {
 
-    @NotNull
-    final private String recordId;
-
-    @NotNull
-    final private String recordSubId;
+//    @NotNull
+//    final private String recordId;
+//
+//    @NotNull
+//    final private String recordSubId;
+//
+//    @Nullable
+//    final private String fieldValue;
 
     /**
      * @param tableName   defines the table that contains the field to be translated
@@ -44,27 +47,11 @@ public class TranslationTableCompositeKey extends TranslationTableBase {
                                          @NotNull final String language,
                                          @NotNull final String translation,
                                          @NotNull final String recordId,
-                                         @NotNull final String recordSubId) {
-        super(tableName, fieldName, language, translation);
-        this.recordId = recordId;
-        this.recordSubId = recordSubId;
+                                         @NotNull final String recordSubId,
+                                         @Nullable final String fieldValue) {
+        super(tableName, fieldName, language, translation, recordId, recordSubId, fieldValue);
     }
 
-    @NotNull
-    public String getRecordId() {
-        return recordId;
-    }
-
-    @NotNull
-    public String getRecordSubId() {
-        return recordSubId;
-    }
-
-    @SuppressWarnings("SameReturnValue")
-    @Nullable
-    public String getFieldValue() {
-        return null;
-    }
 
     /**
      * Builder class to create {@link TranslationTableCompositeKey} objects.  Allows an unordered
@@ -72,81 +59,32 @@ public class TranslationTableCompositeKey extends TranslationTableBase {
      */
     public static class TranslationTableCompositeKeyBuilder extends TableNameBaseBuilder {
 
-        @NotNull
-        private String recordId;
-
-        @NotNull
-        private String recordSubId;
-
-        /**
-         * Builder class to create {@link TranslationTableCompositeKey} objects.  Allows an unordered
-         * definition of the different attributes of {@link TranslationTableCompositeKey}.
-         *
-         * @param tableName   defines the table that contains the field to be translated
-         * @param fieldName   name of the field to be translated
-         * @param language    language of translation
-         * @param translation translated value
-         * @param recordId    defines the record that corresponds to the field to be translated
-         * @param recordSubId helps the record that contains the field to be translated when the table doesn’t have
-         *                    a unique ID
-         */
-        public TranslationTableCompositeKeyBuilder(@NotNull final String tableName,
-                                                   @NotNull final String fieldName,
-                                                   @NotNull final String language,
-                                                   @NotNull final String translation,
-                                                   @NotNull final String recordId,
-                                                   @NotNull final String recordSubId) {
-            super(tableName, fieldName, language, translation);
-            this.recordId = recordId;
-            this.recordSubId = recordSubId;
-        }
-
-        /**
-         * Sets field recordId value and returns this
-         *
-         * @param recordId defines the record that corresponds to the field to be translated
-         * @return builder for future object creation
-         */
-        public TranslationTableCompositeKeyBuilder recordId(@NotNull final String recordId) {
-            this.recordId = recordId;
-            return this;
-        }
-
-        /**
-         * Sets field recordSubId value and returns this
-         *
-         * @param recordSubId helps the record that contains the field to be translated when the table doesn’t have
-         *                    a unique ID.
-         * @return builder for future object creation
-         */
-        public TranslationTableCompositeKeyBuilder recordSubId(@NotNull final String recordSubId) {
-            this.recordSubId = recordSubId;
-            return this;
-        }
-
         /**
          * Returns a {@link TranslationTableCompositeKey} object from fields provided via
-         * {@link TranslationTableCompositeKeyBuilder} methods. Throws {@link IllegalArgumentException} if fields
-         * fieldName, language, translation, recordId, or recordSubId are null.
+         * {@link TranslationTableCompositeKeyBuilder} methods. Throws {@link NullPointerException} if fields
+         * fieldName, language, translation, recordId, or recordSubId are null; or if field fieldValue is not null
          *
          * @return Entity representing a row from translations.txt with table_name = stop_times and record_id defined
-         * @throws IllegalArgumentException if fields fieldName, language, translation, recordId, or recordSubId are
-         *                                  null
+         * @throws NullPointerException if fields fieldName, language, translation, recordId, or recordSubId are
+         *                              null; or if field fieldValue is not null
          */
-        @SuppressWarnings("ConstantConditions")
-        public TranslationTableCompositeKey build() {
+        public TranslationTableCompositeKey build() throws NullPointerException {
             if (fieldName == null) {
-                throw new IllegalArgumentException("fieldName must be specified");
+                throw new NullPointerException("field_name must be specified");
             } else if (language == null) {
-                throw new IllegalArgumentException("language must be specified");
+                throw new NullPointerException("language must be specified");
             } else if (translation == null) {
-                throw new IllegalArgumentException("translation must be specified");
+                throw new NullPointerException("translation must be specified");
             } else if (recordSubId == null) {
-                throw new IllegalArgumentException("recordSubId must be specified");
+                throw new NullPointerException("record_sub_id must be specified");
             } else if (recordId == null) {
-                throw new IllegalArgumentException("recordId must be specified");
+                throw new NullPointerException("record_id must be specified");
             }
-            return new TranslationTableCompositeKey(tableName, fieldName, language, translation, recordId, recordSubId);
+            if (fieldValue != null) {
+                throw new NullPointerException("field_value must be null");
+            }
+            return new TranslationTableCompositeKey(tableName, fieldName, language, translation, recordId, recordSubId,
+                    fieldValue);
         }
     }
 }
