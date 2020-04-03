@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.port;
+package org.mobilitydata.gtfsvalidator.db;
 
-public interface GtfsDataRepository {
+import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
+
+public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 }

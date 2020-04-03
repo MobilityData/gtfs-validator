@@ -51,5 +51,4 @@ public abstract class ErrorNotice extends Notice {
     public Notice visit(ValidationResultRepository resultRepo) {
         return resultRepo.addNotice(this);
     }
-
 }

@@ -387,13 +387,13 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportIncoherentValuesForFieldsShouldWriteObject() throws IOException {
+    void exportUnexpectedValueNoticeShouldWriteObject() throws IOException {
 
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        IncoherentValuesForFields toExport = new IncoherentValuesForFields(FILENAME, "field_name",
-                "conflicting_field_name", "entity_id");
+        UnexpectedValueNotice toExport = new UnexpectedValueNotice(FILENAME, "field_name",
+                "entity_id", 2);
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
