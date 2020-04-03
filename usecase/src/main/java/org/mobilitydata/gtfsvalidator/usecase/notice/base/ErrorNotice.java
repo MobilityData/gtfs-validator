@@ -37,6 +37,8 @@ public abstract class ErrorNotice extends Notice {
     protected static final String E_015 = "E015";
     protected static final String E_016 = "E016";
     protected static final String E_017 = "E017";
+    protected static final String E_018 = "E018";
+    protected static final String E_019 = "E019";
 
     public ErrorNotice(final String filename,
                        final String noticeId,
@@ -50,5 +52,4 @@ public abstract class ErrorNotice extends Notice {
     public Notice visit(ValidationResultRepository resultRepo) {
         return resultRepo.addNotice(this);
     }
-
 }
