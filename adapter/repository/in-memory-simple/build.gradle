@@ -19,7 +19,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version '1.0.1-SNAPSHOT'
+version '1.1.0-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_11
 
@@ -33,12 +33,15 @@ dependencies {
             project(':usecase'),
             project(':adapter:protos'),
             project(':adapter:parser'),
+            project(':adapter:exporter'),
             project(':adapter:validator')
     )
 
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
     implementation 'com.google.api.grpc:proto-google-common-protos:1.16.0'
+
+    implementation 'commons-validator:commons-validator:1.6'
 
     implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
