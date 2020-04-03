@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Route {
+public class Route extends GtfsEntity {
 
     @NotNull
     private final String routeId;
