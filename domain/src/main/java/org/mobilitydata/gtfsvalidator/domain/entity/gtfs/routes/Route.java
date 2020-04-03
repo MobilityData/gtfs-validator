@@ -47,10 +47,10 @@ public class Route extends GtfsEntity {
     @Nullable
     private final String routeUrl;
 
-    @Nullable
+    @NotNull
     private final String routeColor;
 
-    @Nullable
+    @NotNull
     private final String routeTextColor;
 
     @Nullable
@@ -77,8 +77,8 @@ public class Route extends GtfsEntity {
                   @Nullable final String routeDesc,
                   @NotNull final RouteType routeType,
                   @Nullable final String routeUrl,
-                  @Nullable final String routeColor,
-                  @Nullable final String routeTextColor,
+                  @NotNull final String routeColor,
+                  @NotNull final String routeTextColor,
                   @Nullable final Integer routeSortOrder) {
         this.routeId = routeId;
         this.agencyId = agencyId;
@@ -127,12 +127,12 @@ public class Route extends GtfsEntity {
         return routeUrl;
     }
 
-    @Nullable
+    @NotNull
     public String getRouteColor() {
         return routeColor;
     }
 
-    @Nullable
+    @NotNull
     public String getRouteTextColor() {
         return routeTextColor;
     }
@@ -220,8 +220,12 @@ public class Route extends GtfsEntity {
          * @param routeType Indicates the type of transportation used on a route
          * @return builder for future object creation
          */
-        public RouteBuilder routeType(final int routeType) {
-            this.routeType = RouteType.fromInt(routeType);
+        public RouteBuilder routeType(final int routeType) throws NullPointerException {
+
+            try {
+                this.routeType = RouteType.fromInt(routeType);
+            } catch (NullPointerException ignored) {
+            }
             return this;
         }
 
@@ -280,9 +284,19 @@ public class Route extends GtfsEntity {
          */
         public Route build() throws NullPointerException {
 
+            if (routeColor == null) {
+                routeColor = "FFFFFF";
+            }
+            if (routeTextColor == null) {
+                routeColor = "000000";
+            }
+            if (routeType == null) {
+                throw new NullPointerException("Unexpected value for field route_type in routes.txt");
+            }
             if (routeId == null) {
                 throw new NullPointerException("route_id can not be null in routes.txt");
             }
+            //noinspection ConstantConditions
             return new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,
                     routeUrl, routeColor, routeTextColor, routeSortOrder);
         }
