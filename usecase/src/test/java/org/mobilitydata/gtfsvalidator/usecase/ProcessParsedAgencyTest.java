@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 
 class ProcessParsedAgencyTest {
 
-    private static final String TEST_VALUE = "test value";
+    private static final String STRING_TEST_VALUE = "test value";
     private static final String AGENCY_ID = "agency_id";
     private static final String AGENCY_NAME = "agency_name";
     private static final String AGENCY_URL = "agency_url";
@@ -71,7 +71,7 @@ class ProcessParsedAgencyTest {
                 mockBuilder);
 
         ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
-        when(mockParsedAgency.get(anyString())).thenReturn(TEST_VALUE);
+        when(mockParsedAgency.get(anyString())).thenReturn(STRING_TEST_VALUE);
 
         underTest.execute(mockParsedAgency);
 
@@ -103,7 +103,7 @@ class ProcessParsedAgencyTest {
     }
 
     @Test
-    public void invalidAgencyBuilderShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
+    public void invalidAgencyNameShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -116,16 +116,19 @@ class ProcessParsedAgencyTest {
                 builder);
 
         ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
-        when(mockParsedAgency.get(AGENCY_ID)).thenReturn(TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(null);
-        when(mockParsedAgency.get(AGENCY_URL)).thenReturn(null);
-        when(mockParsedAgency.get(AGENCY_TIMEZONE)).thenReturn(null);
-        when(mockParsedAgency.get(AGENCY_LANG)).thenReturn(TEST_VALUE);
-        when(mockParsedAgency.get(AGENCY_PHONE)).thenReturn(TEST_VALUE);
-        when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(TEST_VALUE);
-        when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_TIMEZONE)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_LANG)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_PHONE)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        Assertions.assertThrows(NullPointerException.class, () -> underTest.execute(mockParsedAgency));
+        Exception exception = Assertions.assertThrows(NullPointerException.class,
+                () -> underTest.execute(mockParsedAgency));
+
+        Assertions.assertEquals("agency_name can not be null", exception.getMessage());
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -137,14 +140,11 @@ class ProcessParsedAgencyTest {
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
 
         //noinspection ResultOfMethodCallIgnored
-        verify(mockParsedAgency, times(3)).getEntityId();
-
-        verify(mockResultRepo, times(3))
-                .addNotice(ArgumentMatchers.isA(MissingRequiredValueNotice.class));
+        verify(mockParsedAgency, times(1)).getEntityId();
 
         ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
-        verify(mockResultRepo, times(3)).
+        verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
         List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
@@ -153,13 +153,113 @@ class ProcessParsedAgencyTest {
         assert (noticeList.get(0).getFieldName().equals(AGENCY_NAME));
         assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
 
-        assert (noticeList.get(1).getFilename().equals(FILENAME));
-        assert (noticeList.get(1).getFieldName().equals(AGENCY_URL));
-        assert (noticeList.get(1).getEntityId().equals(ENTITY_ID));
+        verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
+    }
 
-        assert (noticeList.get(2).getFilename().equals(FILENAME));
-        assert (noticeList.get(2).getFieldName().equals(AGENCY_TIMEZONE));
-        assert (noticeList.get(2).getEntityId().equals(ENTITY_ID));
+    @Test
+    public void invalidAgencyUrlShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+
+        Agency.AgencyBuilder builder = new Agency.AgencyBuilder();
+
+        ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
+                builder);
+
+        ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
+        when(mockParsedAgency.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_URL)).thenReturn(null);
+        when(mockParsedAgency.get(AGENCY_TIMEZONE)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_LANG)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_PHONE)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
+
+        Exception exception = Assertions.assertThrows(NullPointerException.class,
+                () -> underTest.execute(mockParsedAgency));
+
+        Assertions.assertEquals("agency_url can not be null", exception.getMessage());
+
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_URL));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_TIMEZONE));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_LANG));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_PHONE));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
+
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockParsedAgency, times(1)).getEntityId();
+
+        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockResultRepo, times(1)).
+                addNotice(captor.capture());
+
+        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assert (noticeList.get(0).getFilename().equals(FILENAME));
+        assert (noticeList.get(0).getFieldName().equals(AGENCY_URL));
+        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+
+        verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
+    }
+
+    @Test
+    public void invalidAgencyTimezoneShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+
+        Agency.AgencyBuilder builder = new Agency.AgencyBuilder();
+
+        ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
+                builder);
+
+        ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
+        when(mockParsedAgency.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_TIMEZONE)).thenReturn(null);
+        when(mockParsedAgency.get(AGENCY_LANG)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_PHONE)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
+
+        Exception exception = Assertions.assertThrows(NullPointerException.class,
+                () -> underTest.execute(mockParsedAgency));
+
+        Assertions.assertEquals("agency_timezone can not be null", exception.getMessage());
+
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_URL));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_TIMEZONE));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_LANG));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_PHONE));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
+
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockParsedAgency, times(1)).getEntityId();
+
+        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockResultRepo, times(1)).
+                addNotice(captor.capture());
+
+        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assert (noticeList.get(0).getFilename().equals(FILENAME));
+        assert (noticeList.get(0).getFieldName().equals(AGENCY_TIMEZONE));
+        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
 
         verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
     }

@@ -19,25 +19,147 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class InMemoryGtfsDataRepositoryTest {
 
+    private final String STRING_TEST_VALUE = "test_value";
+
     @Test
-    void agencyEntityShouldBeAddedToAgencyCollection() {
+    void getAgencyCollectionShouldReturnRouteCollection() {
 
-        Agency mockAgency = mock(Agency.class);
+        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyTimezone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyLang(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyPhone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyFareUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
 
-        InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        mockBuilder.agencyId("test_id_0")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
 
-        underTest.addEntity(mockAgency);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        assertEquals(underTest.getAgencyCollection().size(), 1);
+        final Agency agency00 = mockBuilder.build();
+        underTest.addEntity(agency00);
 
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockAgency, times(1)).getAgencyId();
+        mockBuilder.agencyId("test_id_1")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
 
-        verifyNoMoreInteractions(mockAgency);
+        final Agency agency01 = mockBuilder.build();
+        underTest.addEntity(agency01);
+
+        final List<Agency> toVerify = underTest.getAgencyCollection();
+
+        assertEquals("test_id_0", toVerify.get(1).getAgencyId());
+        assertEquals("test_id_1", toVerify.get(0).getAgencyId());
+    }
+
+    @Test
+    void callToAddEntityShouldAddAgencyToRepoAndReturnSameEntity() {
+
+        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyTimezone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyLang(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyPhone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyFareUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.agencyId("test_id_0")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Agency agency00 = mockBuilder.build();
+        Agency toCheck = underTest.addEntity(agency00);
+
+        assertEquals(1, underTest.getAgencyCollection().size());
+        assertEquals(toCheck, agency00);
+
+        mockBuilder.agencyId("test_id_1")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        final Agency agency01 = mockBuilder.build();
+        toCheck = underTest.addEntity(agency01);
+
+        assertEquals(2, underTest.getAgencyCollection().size());
+        assertEquals(toCheck, agency01);
+    }
+
+    @Test
+    void getAgencyByIdShouldReturnRelatedAgency() {
+
+        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyTimezone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyLang(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyPhone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyFareUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.agencyId("test_id_0")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addEntity(mockBuilder.build());
+
+        mockBuilder.agencyId("test_id_1")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        underTest.addEntity(mockBuilder.build());
+
+        assertEquals("test_id_0", underTest.getAgencyById("test_id_0").getAgencyId());
+        assertEquals("test_id_1", underTest.getAgencyById("test_id_1").getAgencyId());
     }
 }
