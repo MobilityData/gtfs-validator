@@ -315,13 +315,26 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
     }
 
     @Override
-    public void export(IncoherentValuesForFields toExport) throws IOException {
+    public void export(IncoherentValuesForFieldsNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityId(toExport.getFieldName())
                 .setAltEntityId(toExport.getConflictingFieldName())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(UnexpectedDefinedFieldNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getFieldName())
+                .setEntityValue(toExport.getFieldValue())
+                .setAltEntityId(toExport.getEntityId())
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

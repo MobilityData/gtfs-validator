@@ -99,6 +99,9 @@ public interface ValidationResultRepository {
 
         void export(UnexpectedValueNotice toExport) throws IOException;
 
-        void export(IncoherentValuesForFields toExport) throws IOException;
+        void export(IncoherentValuesForFieldsNotice toExport) throws IOException;
+
+        void export(UnexpectedDefinedFieldNotice toExport) throws IOException;
+
     }
 }

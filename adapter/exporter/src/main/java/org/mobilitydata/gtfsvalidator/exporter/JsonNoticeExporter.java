@@ -166,7 +166,12 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
     }
 
     @Override
-    public void export(IncoherentValuesForFields toExport) throws IOException {
+    public void export(IncoherentValuesForFieldsNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(UnexpectedDefinedFieldNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }
