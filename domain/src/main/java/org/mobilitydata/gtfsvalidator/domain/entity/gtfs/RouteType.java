@@ -20,6 +20,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This enum matches types that can be found in the route_type field of route.txt
+ * see https://gtfs.org/reference/static#routesstxt
+ */
 public enum RouteType {
     LIGHT_RAIL(0),
     SUBWAY(1),
@@ -38,11 +42,25 @@ public enum RouteType {
         this.value = value;
     }
 
+    /**
+     * Returns a list containing the int values for enum {@link RouteType}
+     *
+     * @return the int values for enum {@link RouteType}
+     */
     static public List<Integer> getValues() {
 
         return Stream.of(RouteType.values()).map(enumItem -> enumItem.value).collect(Collectors.toList());
     }
 
+    /**
+     * Matches enum values to Integer value. Returns the {@link RouteType} enum item value matching the integer passed
+     * as parameter. Throws {@link NullPointerException} if the integer passed as parameter does not match any
+     * {@link RouteType} enum item
+     *
+     * @param fromValue value to match to {@link RouteType} enum items
+     * @return the enum item matching the integer passed as parameter.
+     * @throws NullPointerException if the integer passed as parameter does not match any {@link RouteType} enum item
+     */
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     static public RouteType fromInt(Integer fromValue) throws NullPointerException {
 

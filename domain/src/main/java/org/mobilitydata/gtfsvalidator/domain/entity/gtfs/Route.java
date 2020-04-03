@@ -19,6 +19,10 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Class for all entities defined in routes.txt. Can not be directly instantiated: user must use the
+ * {@link RouteBuilder} to create this.
+ */
 public class Route extends GtfsEntity {
 
     @NotNull
@@ -51,6 +55,20 @@ public class Route extends GtfsEntity {
     @Nullable
     private final Integer routeSortOrder;
 
+    /**
+     * @param routeId        identifies a route
+     * @param agencyId       agency for the specified route
+     * @param routeShortName short name of a route
+     * @param routeLongName  full name of a route
+     * @param routeDesc      Description of a route that provides useful, quality information.
+     * @param routeType      Indicates the type of transportation used on a route
+     * @param routeUrl       URL of a web page about the particular route
+     * @param routeColor     Route color designation that matches public facing material. Defaults to white (FFFFFF)
+     *                       when omitted or left empty.
+     * @param routeTextColor Legible color to use for text drawn against a background of route_color.
+     *                       Defaults to black (000000) when omitted or left empty
+     * @param routeSortOrder orders the routes in a way which is ideal for presentation to customers
+     */
     private Route(@NotNull final String routeId,
                   @Nullable final String agencyId,
                   @Nullable final String routeShortName,
@@ -72,7 +90,6 @@ public class Route extends GtfsEntity {
         this.routeTextColor = routeTextColor;
         this.routeSortOrder = routeSortOrder;
     }
-
 
     @NotNull
     public String getRouteId() {
@@ -124,6 +141,10 @@ public class Route extends GtfsEntity {
         return routeSortOrder;
     }
 
+    /**
+     * Builder class to create {@link Route} objects. Allows an unordered definition of the different attributes of
+     * {@link Route}.
+     */
     public static class RouteBuilder {
 
         private String routeId;
@@ -137,56 +158,125 @@ public class Route extends GtfsEntity {
         private String routeTextColor;
         private Integer routeSortOrder;
 
+        /**
+         * Sets field routeId value and returns this
+         *
+         * @param routeId identifies a route
+         * @return builder for future object creation
+         */
         public RouteBuilder routeId(@NotNull final String routeId) {
             this.routeId = routeId;
             return this;
         }
 
+        /**
+         * Sets field agencyId value and returns this
+         *
+         * @param agencyId agency for the specified route
+         * @return builder for future object creation
+         */
         public RouteBuilder agencyId(@Nullable final String agencyId) {
             this.agencyId = agencyId;
             return this;
         }
 
+        /**
+         * Sets field routeShortName value and returns this
+         *
+         * @param routeShortName short name of a route
+         * @return builder for future object creation
+         */
         public RouteBuilder routeShortName(@Nullable final String routeShortName) {
             this.routeShortName = routeShortName;
             return this;
         }
 
+        /**
+         * Sets field routeLongName value and returns this
+         *
+         * @param routeLongName full name of a route
+         * @return builder for future object creation
+         */
         public RouteBuilder routeLongName(@Nullable final String routeLongName) {
             this.routeLongName = routeLongName;
             return this;
         }
 
+        /**
+         * Sets field routeDesc value and returns this
+         *
+         * @param routeDesc Description of a route that provides useful, quality information.
+         * @return builder for future object creation
+         */
         public RouteBuilder routeDesc(@Nullable final String routeDesc) {
             this.routeDesc = routeDesc;
             return this;
         }
 
+        /**
+         * Sets field routeType value and returns this
+         *
+         * @param routeType Indicates the type of transportation used on a route
+         * @return builder for future object creation
+         */
         public RouteBuilder routeType(final int routeType) {
             this.routeType = RouteType.fromInt(routeType);
             return this;
         }
 
+        /**
+         * Sets field routeUrl value and returns this
+         *
+         * @param routeUrl URL of a web page about the particular route
+         * @return builder for future object creation
+         */
         public RouteBuilder routeUrl(@Nullable final String routeUrl) {
             this.routeUrl = routeUrl;
             return this;
         }
 
+        /**
+         * Sets field routeColor value and returns this
+         *
+         * @param routeColor Route color designation that matches public facing material. Defaults to white (FFFFFF)
+         *                   when omitted or left empty.
+         * @return builder for future object creation
+         */
         public RouteBuilder routeColor(@Nullable final String routeColor) {
             this.routeColor = routeColor;
             return this;
         }
 
+        /**
+         * Sets field routeTextColor value and returns this
+         *
+         * @param routeTextColor Legible color to use for text drawn against a background of route_color.
+         *                       Defaults to black (000000) when omitted or left empty
+         * @return builder for future object creation
+         */
         public RouteBuilder routeTextColor(@Nullable final String routeTextColor) {
             this.routeTextColor = routeTextColor;
             return this;
         }
 
+        /**
+         * Sets field routeSortOrder value and returns this
+         *
+         * @param routeSortOrder orders the routes in a way which is ideal for presentation to customers
+         * @return builder for future object creation
+         */
         public RouteBuilder routeSortOrder(@Nullable final Integer routeSortOrder) {
             this.routeSortOrder = routeSortOrder;
             return this;
         }
 
+        /**
+         * Returns a {@link Route} object from fields provided via {@link RouteBuilder} methods.
+         * Throws {@link NullPointerException} if field route_id is null.
+         *
+         * @return Entity representing a row from routes.txt
+         * @throws NullPointerException if field route_id is null.
+         */
         public Route build() throws NullPointerException {
 
             if (routeId == null) {
