@@ -33,6 +33,4 @@ dependencies {
             project(':domain'),
             project(':adapter:repository:in-memory-simple')
     )
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
