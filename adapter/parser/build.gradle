@@ -34,6 +34,8 @@ dependencies {
             project(':adapter:protos')
     )
 
+    implementation 'commons-cli:commons-cli:1.4'
+
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'commons-validator:commons-validator:1.6'

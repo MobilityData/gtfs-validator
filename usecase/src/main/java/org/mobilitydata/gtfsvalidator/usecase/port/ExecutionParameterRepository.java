@@ -2,6 +2,8 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecutionParameter;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public interface ExecutionParameterRepository {
@@ -14,5 +16,10 @@ public interface ExecutionParameterRepository {
 
     boolean hasExecutionParameter(String shortName);
 
-    void parse(boolean fromConfigFile, String pathToConfigFile) throws IllegalArgumentException;
+    ExecutionParameterParser getParser(boolean fromConfigFile, String pathToConfigFile);
+
+    interface ExecutionParameterParser {
+
+        List<ExecutionParameter> parse() throws IOException;
+    }
 }
