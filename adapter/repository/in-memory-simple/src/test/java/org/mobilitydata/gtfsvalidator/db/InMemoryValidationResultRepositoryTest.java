@@ -39,7 +39,6 @@ class InMemoryValidationResultRepositoryTest {
 
     private static final String TEST_FILE_NAME = "test.tst";
 
-
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void addingNoticeShouldExtendNoticeList() {
