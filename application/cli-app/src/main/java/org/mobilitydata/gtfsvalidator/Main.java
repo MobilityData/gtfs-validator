@@ -54,7 +54,6 @@ public class Main {
 
         final CommandLineParser parser = new DefaultParser();
 
-
         try {
             final DefaultConfig config = new DefaultConfig();
 

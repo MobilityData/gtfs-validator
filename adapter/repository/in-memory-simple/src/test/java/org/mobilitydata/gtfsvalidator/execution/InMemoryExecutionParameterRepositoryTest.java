@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.execution;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecutionParameter;
 import org.mobilitydata.gtfsvalidator.parser.ApacheExecutionParameterParser;
+import org.mobilitydata.gtfsvalidator.parser.JsonExecutionParameterParser;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecutionParameterRepository;
 import org.mockito.InOrder;
 
@@ -129,7 +130,17 @@ class InMemoryExecutionParameterRepositoryTest {
 
         ExecutionParameterRepository.ExecutionParameterParser toCheck = underTest.getParser(false,
                 null);
-        //noinspection ConstantConditions
         assertTrue(toCheck instanceof ApacheExecutionParameterParser);
+    }
+
+    @Test
+    public void getParserShouldReturnJsonExecutionParameterParser() {
+        String[] mockString = new String[1];
+
+        ExecutionParameterRepository underTest = new InMemoryExecutionParameterRepository(mockString);
+
+        ExecutionParameterRepository.ExecutionParameterParser toCheck = underTest.getParser(true,
+                null);
+        assertTrue(toCheck instanceof JsonExecutionParameterParser);
     }
 }

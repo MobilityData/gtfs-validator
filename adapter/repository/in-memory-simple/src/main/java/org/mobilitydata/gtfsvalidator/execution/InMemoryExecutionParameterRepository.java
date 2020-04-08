@@ -1,9 +1,11 @@
 package org.mobilitydata.gtfsvalidator.execution;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecutionParameter;
 import org.mobilitydata.gtfsvalidator.parser.ApacheExecutionParameterParser;
+import org.mobilitydata.gtfsvalidator.parser.JsonExecutionParameterParser;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecutionParameterRepository;
 
 import java.util.Collections;
@@ -11,7 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class InMemoryExecutionParameterRepository implements ExecutionParameterRepository {
-
     private final Map<String, ExecutionParameter> executionParameterCollection = new LinkedHashMap<>();
     private final String[] arguments;
 
@@ -41,10 +42,11 @@ public class InMemoryExecutionParameterRepository implements ExecutionParameterR
     }
 
     @Override
-    public ApacheExecutionParameterParser getParser(boolean fromConfigFile, String pathToConfigFile) {
+    public ExecutionParameterParser getParser(boolean fromConfigFile, String pathToConfigFile) {
         if (!fromConfigFile) {
             return new ApacheExecutionParameterParser(new DefaultParser(), new Options(), arguments);
+        } else {
+            return new JsonExecutionParameterParser(new ObjectMapper(), pathToConfigFile);
         }
-        return null;
     }
 }

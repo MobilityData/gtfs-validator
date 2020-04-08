@@ -1,18 +1,20 @@
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
 public class ExecutionParameter {
+    private String shortName;
+    private String longName;
+    private String description;
+    private boolean hasArgument;
+    private String value;
 
-    private final String shortName;
-    private final String longName;
-    private final String description;
-    private final boolean hasArgument;
-    private final String value;
+    public ExecutionParameter() {
+    }
 
-    public ExecutionParameter(final String shortName,
-                              final String longName,
-                              final String description,
-                              final boolean hasArgument,
-                              final String value) {
+    public ExecutionParameter(String shortName,
+                              String longName,
+                              String description,
+                              boolean hasArgument,
+                              String value) {
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
@@ -38,5 +40,30 @@ public class ExecutionParameter {
 
     public String getValue() {
         return value;
+    }
+
+    public ExecutionParameter setShortName(final String shortName) {
+        this.shortName = shortName;
+        return this;
+    }
+
+    public ExecutionParameter setLongName(final String longName) {
+        this.longName = longName;
+        return this;
+    }
+
+    public ExecutionParameter setDescription(final String description) {
+        this.description = description;
+        return this;
+    }
+
+    public ExecutionParameter setHasArgument(final boolean hasArgument) {
+        this.hasArgument = hasArgument;
+        return this;
+    }
+
+    public ExecutionParameter setValue(final String value) {
+        this.value = value;
+        return this;
     }
 }
