@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.IntegerFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 public class NoticeMemoryConsumptionTest {
 
@@ -14,7 +15,7 @@ public class NoticeMemoryConsumptionTest {
     // used to provide a 10% safety margin to avoid instability due to the behavior of the garbage collector
     private static final float SAFETY_BUFFER_FACTOR = 1.10f;
 
-    private void generateNotices(InMemoryValidationResultRepository resultRepository, int numberOfNotices) {
+    private void generateNotices(ValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
             resultRepository.addNotice(new IntegerFieldValueOutOfRangeNotice("filename",
                     "fieldname",
@@ -51,27 +52,7 @@ public class NoticeMemoryConsumptionTest {
 
         int noticeCount = 100;
 
-        InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
-
-        generateNotices(resultRepository, noticeCount);
-        resultRepository.getAll();
-
-        long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
-        long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
-
-        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticeCount);
-
-        // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
-        // SAFETY_BUFFER_FACTOR) into account
-        assert (totalMemoryInBytes - freeMemoryInBytes < 7_000_000 * SAFETY_BUFFER_FACTOR);
-    }
-
-    @Test
-    public void creationOf1000NoticeShouldNotExceedMemoryLimit() {
-
-        InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
-
-        int noticeCount = 1_000;
+        ValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
         generateNotices(resultRepository, noticeCount);
         resultRepository.getAll();
@@ -87,13 +68,13 @@ public class NoticeMemoryConsumptionTest {
     }
 
     @Test
-    public void creationOf10000NoticeShouldNotExceedMemoryLimit() {
+    public void creationOf1000NoticeShouldNotExceedMemoryLimit() {
 
-        InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
+        ValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
-        int noticeCount = 10_000;
+        int noticeCount = 1_000;
 
-        generateNotices(resultRepository, 10_000);
+        generateNotices(resultRepository, noticeCount);
         resultRepository.getAll();
 
         long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
@@ -107,9 +88,29 @@ public class NoticeMemoryConsumptionTest {
     }
 
     @Test
+    public void creationOf10000NoticeShouldNotExceedMemoryLimit() {
+
+        ValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
+
+        int noticeCount = 10_000;
+
+        generateNotices(resultRepository, 10_000);
+        resultRepository.getAll();
+
+        long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
+        long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
+
+        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticeCount);
+
+        // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
+        // SAFETY_BUFFER_FACTOR) into account
+        assert (totalMemoryInBytes - freeMemoryInBytes < 10_000_000 * SAFETY_BUFFER_FACTOR);
+    }
+
+    @Test
     public void creationOf100000NoticeShouldNotExceedMemoryLimit() {
 
-        InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
+        ValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
         int noticeCount = 100_000;
 
@@ -129,7 +130,7 @@ public class NoticeMemoryConsumptionTest {
     @Test
     public void creationOf1000000NoticeShouldNotExceedMemoryLimit() {
 
-        InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
+        ValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
         int noticeCount = 1_000_000;
 
@@ -149,7 +150,7 @@ public class NoticeMemoryConsumptionTest {
     @Test
     public void creationOf2000000NoticeShouldNotExceedMemoryLimit() {
 
-        InMemoryValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
+        ValidationResultRepository resultRepository = new InMemoryValidationResultRepository();
 
         int noticeCount = 2_000_000;
 
