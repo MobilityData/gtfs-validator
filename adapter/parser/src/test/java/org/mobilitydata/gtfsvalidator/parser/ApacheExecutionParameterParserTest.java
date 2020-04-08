@@ -7,6 +7,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ExecutionParameter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -45,15 +46,15 @@ class ApacheExecutionParameterParserTest {
         ApacheExecutionParameterParser underTest = new ApacheExecutionParameterParser(mockCommandLineParser,
                 mockOptions, mockArguments);
 
-        Collection<ExecutionParameter> toCheck = underTest.parse();
+        Map<String, ExecutionParameter> toCheck = underTest.parse();
 
-        verify(mockOption0, times(1)).getOpt();
+        verify(mockOption0, times(2)).getOpt();
         verify(mockOption0, times(1)).getLongOpt();
         verify(mockOption0, times(1)).getDescription();
         verify(mockOption0, times(1)).hasArg();
         verify(mockOption0, times(1)).getValue();
 
-        verify(mockOption1, times(1)).getOpt();
+        verify(mockOption1, times(2)).getOpt();
         verify(mockOption1, times(1)).getLongOpt();
         verify(mockOption1, times(1)).getDescription();
         verify(mockOption1, times(1)).hasArg();
