@@ -3,7 +3,7 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecutionParameter;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 public interface ExecutionParameterRepository {
@@ -20,6 +20,6 @@ public interface ExecutionParameterRepository {
 
     interface ExecutionParameterParser {
 
-        List<ExecutionParameter> parse() throws IOException;
+        Collection<ExecutionParameter> parse() throws IOException;
     }
 }

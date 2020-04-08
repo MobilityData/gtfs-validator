@@ -11,10 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 public class ApacheExecutionParameterParser implements ExecutionParameterRepository.ExecutionParameterParser {
-
     private final CommandLineParser commandLineParser;
     private final Options availableOptions;
     private final String[] arguments;
@@ -40,9 +38,7 @@ public class ApacheExecutionParameterParser implements ExecutionParameterReposit
     }
 
     @Override
-    public List<ExecutionParameter> parse() throws IOException {
-        List<ExecutionParameter> toReturn = new ArrayList<>();
-
+    public Collection<ExecutionParameter> parse() throws IOException {
         try {
             CommandLine cmd = commandLineParser.parse(availableOptions, arguments);
 
@@ -55,7 +51,7 @@ public class ApacheExecutionParameterParser implements ExecutionParameterReposit
                             )
                     )
             );
-            return toReturn;
+            return executionParameterAsCollection;
         } catch (ParseException e) {
             throw new IOException();
         }
