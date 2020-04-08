@@ -104,7 +104,8 @@ class InMemoryGtfsSpecRepositoryTest {
                 .thenAnswer(new Answer<List<String>>() {
                     public List<String> answer(InvocationOnMock invocation) {
                         RawFileInfo fileInfo = invocation.getArgument(0);
-                        GtfsSpecificationProto.CsvSpecProto specForFile = csvSpecProtos.getCsvspecList().stream()
+                        GtfsSpecificationProto.CsvSpecProto specForFile = csvSpecProtos.getCsvspecList()
+                                .stream()
                                 .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
                                 .findAny()
                                 .orElse(null);
@@ -144,7 +145,8 @@ class InMemoryGtfsSpecRepositoryTest {
                 .thenAnswer(new Answer<List<String>>() {
                     public List<String> answer(InvocationOnMock invocation) {
                         RawFileInfo fileInfo = invocation.getArgument(0);
-                        GtfsSpecificationProto.CsvSpecProto specForFile = csvSpecProtos.getCsvspecList().stream()
+                        GtfsSpecificationProto.CsvSpecProto specForFile = csvSpecProtos.getCsvspecList()
+                                .stream()
                                 .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
                                 .findAny()
                                 .orElse(null);
@@ -184,7 +186,8 @@ class InMemoryGtfsSpecRepositoryTest {
                 .thenAnswer(new Answer<List<String>>() {
                     public List<String> answer(InvocationOnMock invocation) {
                         RawFileInfo fileInfo = invocation.getArgument(0);
-                        GtfsSpecificationProto.CsvSpecProto specForFile = csvSpecProtos.getCsvspecList().stream()
+                        GtfsSpecificationProto.CsvSpecProto specForFile = csvSpecProtos.getCsvspecList()
+                                .stream()
                                 .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
                                 .findAny()
                                 .orElse(null);
@@ -222,7 +225,8 @@ class InMemoryGtfsSpecRepositoryTest {
                 .thenAnswer(new Answer<List<String>>() {
                     public List<String> answer(InvocationOnMock invocation) {
                         RawFileInfo fileInfo = invocation.getArgument(0);
-                        GtfsSpecificationProto.CsvSpecProto specForFile = csvSpecProtos.getCsvspecList().stream()
+                        GtfsSpecificationProto.CsvSpecProto specForFile = csvSpecProtos.getCsvspecList()
+                                .stream()
                                 .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
                                 .findAny()
                                 .orElse(null);
