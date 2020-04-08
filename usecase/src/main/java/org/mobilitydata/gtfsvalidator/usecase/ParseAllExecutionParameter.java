@@ -22,6 +22,6 @@ public class ParseAllExecutionParameter {
         executionParameterRepository
                 .getParser(fromConfigFile, pathToConfigFile)
                 .parse()
-                .forEach(executionParameterRepository::addExecutionParameter);
+                .forEach((s, executionParameter) -> executionParameterRepository.addExecutionParameter(executionParameter));
     }
 }

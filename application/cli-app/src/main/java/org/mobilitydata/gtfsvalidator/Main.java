@@ -55,7 +55,7 @@ public class Main {
         final CommandLineParser parser = new DefaultParser();
 
         try {
-            final DefaultConfig config = new DefaultConfig();
+            final DefaultConfig config = new DefaultConfig(args);
 
             final CommandLine cmd = parser.parse(options, args);
 

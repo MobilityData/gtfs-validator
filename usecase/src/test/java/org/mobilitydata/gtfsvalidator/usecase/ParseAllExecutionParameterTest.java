@@ -7,8 +7,8 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -32,12 +32,12 @@ class ParseAllExecutionParameterTest {
         ExecutionParameter mockExecutionParameter1 = mock(ExecutionParameter.class);
         when(mockExecutionParameter1.getShortName()).thenReturn("short_name1");
 
-        Collection<ExecutionParameter> mockExecutionParameterCollection = new ArrayList<>();
-        mockExecutionParameterCollection.add(mockExecutionParameter0);
-        mockExecutionParameterCollection.add(mockExecutionParameter1);
+        Map<String, ExecutionParameter> mockExecutionParameterMap = new HashMap<>();
+        mockExecutionParameterMap.put(mockExecutionParameter0.getShortName(), mockExecutionParameter0);
+        mockExecutionParameterMap.put(mockExecutionParameter1.getShortName(), mockExecutionParameter1);
 
         when(mockExecutionParameterRepository.getParser(ArgumentMatchers.eq(false), ArgumentMatchers.eq(null))).thenReturn(mockParser);
-        when(mockParser.parse()).thenReturn(mockExecutionParameterCollection);
+        when(mockParser.parse()).thenReturn(mockExecutionParameterMap);
 
         underTest.execute();
 
