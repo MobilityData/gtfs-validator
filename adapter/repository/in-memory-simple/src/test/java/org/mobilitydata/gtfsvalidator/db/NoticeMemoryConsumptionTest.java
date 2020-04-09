@@ -103,20 +103,19 @@ public class NoticeMemoryConsumptionTest {
     @Test
     @Order(1)
     public void realMemoryLimitTest_100notices() {
-        memoryLimitTest(false,100, 8_000_000);
+        memoryLimitTest(false,100, 9_000_000);
     }
 
     @Test
     @Order(2)
     public void realMemoryLimitTest_1000notices() {
-        System.gc();
-        memoryLimitTest(false,1000, 9_000_000);
+        memoryLimitTest(false,1000, 10_000_000);
     }
 
     @Test
     @Order(3)
     public void realMemoryLimitTest_10_000notices() {
-        memoryLimitTest(false,10_000, 10_000_000);
+        memoryLimitTest(false,10_000, 11_000_000);
     }
 
     @Test
@@ -158,6 +157,6 @@ public class NoticeMemoryConsumptionTest {
     @Test
     @Order(10)
     public void mockMemoryLimitTest_100_000notices() {
-        memoryLimitTest(true,100_000, 100_000_000);
+        memoryLimitTest(true,100_000, 110_000_000);
     }
 }
