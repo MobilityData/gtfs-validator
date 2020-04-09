@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.junit.jupiter.api.Test;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -47,36 +49,48 @@ class InMemoryValidationResultRepositoryTest {
     void addingNoticeShouldExtendNoticeList() {
 
         WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
-
+        List<WarningNotice> warningList = new ArrayList<>();
         ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
-
-        ValidationResultRepository mockRepository = new InMemoryValidationResultRepository();
-
-        mockRepository.addNotice(warningNotice);
-        assertEquals(1, mockRepository.getAll().size());
-
-        /*Notice testedNotice = underTest.getAll().stream()
-
-        Notice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
-        Notice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
-        List<Notice> noticeList = new ArrayList<>();
+        List<ErrorNotice> errorList = new ArrayList<>();
+        List<InfoNotice> infoList = new ArrayList<>();
 
         ValidationResultRepository mockRepository = mock(InMemoryValidationResultRepository.class);
-        when(mockRepository.addNotice(any(Notice.class))).thenAnswer(new Answer<Notice>() {
-            public Notice answer(InvocationOnMock invocation) {
-                Notice notice = invocation.getArgument(0);
-                noticeList.add(notice);
-                return notice;
+        when(mockRepository.addNotice(any(WarningNotice.class))).thenAnswer(new Answer<WarningNotice>() {
+            public WarningNotice answer(InvocationOnMock invocation) {
+                WarningNotice warningNotice = invocation.getArgument(0);
+                warningList.add(warningNotice);
+                return warningNotice;
+            }
+        });
+        when(mockRepository.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<ErrorNotice>() {
+            public ErrorNotice answer(InvocationOnMock invocation) {
+                ErrorNotice errorNotice = invocation.getArgument(0);
+                errorList.add(errorNotice);
+                return errorNotice;
             }
         });
         when(mockRepository.getAll()).thenAnswer(new Answer<Collection<Notice>>() {
             public Collection<Notice> answer(InvocationOnMock invocation) {
-                return noticeList.stream().collect(Collectors.toUnmodifiableList());
+                return Stream.concat(
+                        Stream.concat(
+                            infoList.stream(),
+                            warningList.stream()),
+                        errorList.stream())
+                        .collect(Collectors.toUnmodifiableList());
             }
         });
 
+        //mockRepository.addNotice(warningNotice);
+        //assertEquals(1, mockRepository.getAll().size());
+
+        //WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
+
+        //ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
+
+        //ValidationResultRepository mockRepository = new InMemoryValidationResultRepository();
+
         mockRepository.addNotice(warningNotice);
-        assertEquals(1, mockRepository.getAll().size());*/
+        assertEquals(1, mockRepository.getAll().size());
 
         Notice testedNotice = mockRepository.getAll().stream()
                 .filter(notice -> notice.getId().equals(warningNotice.getId()))
