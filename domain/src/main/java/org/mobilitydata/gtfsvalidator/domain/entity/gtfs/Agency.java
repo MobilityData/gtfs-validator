@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * Class for all entities defined in agency.txt. Can not be directly instantiated: user must use the
  * {@link AgencyBuilder} to create this.
  */
-public class Agency extends GtfsEntity {
+public class Agency {
 
     @Nullable
     private final String agencyId;
