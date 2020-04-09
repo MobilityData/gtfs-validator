@@ -18,20 +18,15 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 class InMemoryGtfsDataRepositoryTest {
     private final String STRING_TEST_VALUE = "test_value";
@@ -248,8 +243,6 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
     }
-
-    private final static String STRING_TEST_VALUE = "test_value";
 
     @Test
     void callToAddEntityShouldAddRouteToRepoAndReturnEntity() {
