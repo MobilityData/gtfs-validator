@@ -48,7 +48,7 @@ class InMemoryValidationResultRepositoryTest {
     @Test
     void addingNoticeShouldExtendNoticeList() {
 
-        WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
+        /*WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
         List<WarningNotice> warningList = new ArrayList<>();
         ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
         List<ErrorNotice> errorList = new ArrayList<>();
@@ -78,16 +78,13 @@ class InMemoryValidationResultRepositoryTest {
                         errorList.stream())
                         .collect(Collectors.toUnmodifiableList());
             }
-        });
+        });*/
 
-        //mockRepository.addNotice(warningNotice);
-        //assertEquals(1, mockRepository.getAll().size());
+        WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
 
-        //WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
+        ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
 
-        //ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
-
-        //ValidationResultRepository mockRepository = new InMemoryValidationResultRepository();
+        ValidationResultRepository mockRepository = new InMemoryValidationResultRepository();
 
         mockRepository.addNotice(warningNotice);
         assertEquals(1, mockRepository.getAll().size());
