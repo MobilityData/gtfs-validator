@@ -55,14 +55,7 @@ class InMemoryGtfsDataRepositoryTest {
         final Agency agency00 = mockBuilder.build();
         underTest.addEntity(agency00);
 
-        mockBuilder.agencyId("test_id1")
-                .agencyName(STRING_TEST_VALUE)
-                .agencyUrl(STRING_TEST_VALUE)
-                .agencyTimezone(STRING_TEST_VALUE)
-                .agencyLang(STRING_TEST_VALUE)
-                .agencyPhone(STRING_TEST_VALUE)
-                .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
+        mockBuilder.agencyId("test_id1");
 
         final Agency agency01 = mockBuilder.build();
         underTest.addEntity(agency01);
@@ -103,14 +96,7 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(1, underTest.getAgencyCollection().size());
         assertEquals(agency00, toCheck);
 
-        mockBuilder.agencyId("test_id1")
-                .agencyName(STRING_TEST_VALUE)
-                .agencyUrl(STRING_TEST_VALUE)
-                .agencyTimezone(STRING_TEST_VALUE)
-                .agencyLang(STRING_TEST_VALUE)
-                .agencyPhone(STRING_TEST_VALUE)
-                .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
+        mockBuilder.agencyId("test_id1");
 
         final Agency agency01 = mockBuilder.build();
         toCheck = underTest.addEntity(agency01);
@@ -145,14 +131,7 @@ class InMemoryGtfsDataRepositoryTest {
 
         underTest.addEntity(mockBuilder.build());
 
-        mockBuilder.agencyId("test_id1")
-                .agencyName(STRING_TEST_VALUE)
-                .agencyUrl(STRING_TEST_VALUE)
-                .agencyTimezone(STRING_TEST_VALUE)
-                .agencyLang(STRING_TEST_VALUE)
-                .agencyPhone(STRING_TEST_VALUE)
-                .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
+        mockBuilder.agencyId("test_id1");
 
         underTest.addEntity(mockBuilder.build());
 
@@ -188,14 +167,7 @@ class InMemoryGtfsDataRepositoryTest {
         Agency agency00 = mockBuilder.build();
         underTest.addEntity(agency00);
 
-        mockBuilder.agencyId("test_id1")
-                .agencyName(STRING_TEST_VALUE)
-                .agencyUrl(STRING_TEST_VALUE)
-                .agencyTimezone(STRING_TEST_VALUE)
-                .agencyLang(STRING_TEST_VALUE)
-                .agencyPhone(STRING_TEST_VALUE)
-                .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
+        mockBuilder.agencyId("test_id1");
 
         Agency agency01 = mockBuilder.build();
         underTest.addEntity(agency01);
@@ -232,14 +204,7 @@ class InMemoryGtfsDataRepositoryTest {
         Agency agency00 = mockBuilder.build();
         underTest.addEntity(agency00);
 
-        mockBuilder.agencyId("test_id1")
-                .agencyName(STRING_TEST_VALUE)
-                .agencyUrl(STRING_TEST_VALUE)
-                .agencyTimezone(STRING_TEST_VALUE)
-                .agencyLang(STRING_TEST_VALUE)
-                .agencyPhone(STRING_TEST_VALUE)
-                .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
+        mockBuilder.agencyId("test_id1");
 
         Agency agency01 = mockBuilder.build();
         assertFalse(underTest.isPresent(agency01));
@@ -271,14 +236,7 @@ class InMemoryGtfsDataRepositoryTest {
 
         underTest.addEntity(mockBuilder.build());
 
-        mockBuilder.agencyId("test_id0")
-                .agencyName(STRING_TEST_VALUE)
-                .agencyUrl(STRING_TEST_VALUE)
-                .agencyTimezone(STRING_TEST_VALUE)
-                .agencyLang(STRING_TEST_VALUE)
-                .agencyPhone(STRING_TEST_VALUE)
-                .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
+        mockBuilder.agencyId("test_id0");
 
         assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
     }

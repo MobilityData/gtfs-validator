@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
@@ -57,7 +58,8 @@ public class ProcessParsedAgency {
      * @throws IllegalArgumentException if specification requirements are not met regarding values for agency_name,
      *                                  agency_url and agency_timezone fields
      */
-    public void execute(final ParsedEntity validatedAgencyEntity) throws IllegalArgumentException, SQLIntegrityConstraintViolationException {
+    public void execute(final ParsedEntity validatedAgencyEntity) throws IllegalArgumentException,
+            SQLIntegrityConstraintViolationException {
 
         String agencyId = (String) validatedAgencyEntity.get("agency_id");
         String agencyName = (String) validatedAgencyEntity.get("agency_name");
@@ -80,7 +82,7 @@ public class ProcessParsedAgency {
 
             gtfsDataRepository.addEntity(builder.build());
 
-        } catch (IllegalArgumentException | SQLIntegrityConstraintViolationException e) {
+        } catch (IllegalArgumentException e) {
 
             if (agencyName == null) {
                 resultRepository.addNotice(new MissingRequiredValueNotice("agency.txt", "agency_name",
@@ -96,6 +98,11 @@ public class ProcessParsedAgency {
                 resultRepository.addNotice(new MissingRequiredValueNotice("agency.txt",
                         "agency_timezone", validatedAgencyEntity.getEntityId()));
             }
+            throw e;
+
+        } catch (SQLIntegrityConstraintViolationException e) {
+            resultRepository.addNotice(new EntityMustBeUniqueNotice("agency.txt", "agency_id",
+                    validatedAgencyEntity.getEntityId()));
             throw e;
         }
     }

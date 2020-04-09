@@ -174,4 +174,9 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
     public void export(UnexpectedDefinedFieldNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(EntityMustBeUniqueNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

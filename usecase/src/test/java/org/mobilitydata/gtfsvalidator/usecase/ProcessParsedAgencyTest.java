@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
@@ -48,7 +49,8 @@ class ProcessParsedAgencyTest {
     private static final String ENTITY_ID = "no id";
 
     @Test
-    public void validatedParsedAgencyShouldCreateAgencyEntityAndBeAddedToGtfsDataRepository() throws SQLIntegrityConstraintViolationException {
+    public void validatedParsedAgencyShouldCreateAgencyEntityAndBeAddedToGtfsDataRepository()
+            throws SQLIntegrityConstraintViolationException {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
@@ -259,5 +261,77 @@ class ProcessParsedAgencyTest {
         assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
 
         verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
+    }
+
+    @Test
+    public void duplicateAgencyShouldThrowExceptionAndGeneratedEntityMustBeUniqueNoticeShouldBeAddedToResultRepo()
+            throws SQLIntegrityConstraintViolationException {
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+
+        Agency mockAgency = mock(Agency.class);
+        when(mockAgency.getAgencyId()).thenReturn(STRING_TEST_VALUE);
+
+        Agency.AgencyBuilder builder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
+        when(builder.build()).thenReturn(mockAgency);
+
+        ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
+                builder);
+
+        ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
+        when(mockParsedAgency.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_TIMEZONE)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_LANG)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_PHONE)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
+
+        when(mockGtfsDataRepo.isPresent(mockAgency)).thenReturn(true);
+        when(mockGtfsDataRepo.addEntity(mockAgency)).thenThrow(new SQLIntegrityConstraintViolationException("agency " +
+                "must be unique in dataset"));
+
+        Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> underTest.execute(mockParsedAgency));
+        Assertions.assertEquals("agency must be unique in dataset", exception.getMessage());
+
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_URL));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_TIMEZONE));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_LANG));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_PHONE));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
+        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
+
+        verify(mockGtfsDataRepo, times(1)).addEntity(ArgumentMatchers.isA(Agency.class));
+
+        verify(builder, times(1)).agencyId(anyString());
+        verify(builder, times(1)).agencyName(anyString());
+        verify(builder, times(1)).agencyUrl(anyString());
+        verify(builder, times(1)).agencyTimezone(anyString());
+        verify(builder, times(1)).agencyLang(anyString());
+        verify(builder, times(1)).agencyPhone(anyString());
+        verify(builder, times(1)).agencyFareUrl(anyString());
+        verify(builder, times(1)).agencyEmail(anyString());
+        verify(builder, times(1)).build();
+
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockParsedAgency, times(1)).getEntityId();
+
+        ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
+
+        assert (noticeList.get(0).getFilename().equals(FILENAME));
+        assert (noticeList.get(0).getFieldName().equals(AGENCY_ID));
+        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+
+        verifyNoMoreInteractions(mockParsedAgency, mockResultRepo, mockSpecRepo, mockGtfsDataRepo, mockAgency, builder);
     }
 }
