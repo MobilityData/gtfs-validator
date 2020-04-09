@@ -139,13 +139,13 @@ public class NoticeMemoryConsumptionTest {
     @Test
     @Order(7)
     public void mockMemoryLimitTest_100notices() {
-        memoryLimitTest(true,100, 10_000_000);
+        memoryLimitTest(true,100, 24_000_000);
     }
 
     @Test
     @Order(8)
     public void mockMemoryLimitTest_1000notices() {
-        memoryLimitTest(true, 1000, 20_000_000);
+        memoryLimitTest(true, 1000, 24_000_000);
     }
 
     @Test
