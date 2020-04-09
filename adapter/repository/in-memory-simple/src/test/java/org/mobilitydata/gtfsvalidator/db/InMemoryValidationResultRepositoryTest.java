@@ -17,7 +17,10 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
+
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -43,6 +46,17 @@ class InMemoryValidationResultRepositoryTest {
     @Test
     void addingNoticeShouldExtendNoticeList() {
 
+        WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
+
+        ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
+
+        ValidationResultRepository mockRepository = new InMemoryValidationResultRepository();
+
+        mockRepository.addNotice(warningNotice);
+        assertEquals(1, mockRepository.getAll().size());
+
+        /*Notice testedNotice = underTest.getAll().stream()
+
         Notice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
         Notice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
         List<Notice> noticeList = new ArrayList<>();
@@ -62,7 +76,7 @@ class InMemoryValidationResultRepositoryTest {
         });
 
         mockRepository.addNotice(warningNotice);
-        assertEquals(1, mockRepository.getAll().size());
+        assertEquals(1, mockRepository.getAll().size());*/
 
         Notice testedNotice = mockRepository.getAll().stream()
                 .filter(notice -> notice.getId().equals(warningNotice.getId()))
