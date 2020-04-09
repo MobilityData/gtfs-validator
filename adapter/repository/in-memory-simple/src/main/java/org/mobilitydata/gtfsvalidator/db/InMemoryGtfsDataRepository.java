@@ -19,16 +19,15 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
-    private final HashMap<String, Agency> agencyCollection = new HashMap<>();
+    private final Map<String, Agency> agencyCollection = new HashMap<>();
 
-    public List<Agency> getAgencyCollection() {
-        return new ArrayList<>(agencyCollection.values());
+    public Map<String, Agency> getAgencyCollection() {
+        return agencyCollection;
     }
 
     @Override

@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 
-import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -68,10 +68,10 @@ class InMemoryGtfsDataRepositoryTest {
         final Agency agency01 = mockBuilder.build();
         underTest.addEntity(agency01);
 
-        final List<Agency> toVerify = underTest.getAgencyCollection();
+        final Map<String, Agency> toVerify = underTest.getAgencyCollection();
 
-        assertEquals("test_name_0", toVerify.get(1).getAgencyName());
-        assertEquals("test_name_1", toVerify.get(0).getAgencyName());
+        assertEquals("test_name_0", toVerify.get("test_name_0").getAgencyName());
+        assertEquals("test_name_1", toVerify.get("test_name_1").getAgencyName());
     }
 
     @Test

@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 
-import java.util.List;
+import java.util.Map;
 
 public interface GtfsDataRepository {
 
@@ -26,5 +26,5 @@ public interface GtfsDataRepository {
 
     Agency getAgencyByName(String agencyName);
 
-    List<Agency> getAgencyCollection();
+    Map<String, Agency> getAgencyCollection();
 }
