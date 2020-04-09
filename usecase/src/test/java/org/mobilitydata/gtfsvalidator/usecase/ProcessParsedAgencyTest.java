@@ -125,7 +125,7 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = Assertions.assertThrows(NullPointerException.class,
+        Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedAgency));
 
         Assertions.assertEquals("agency_name can not be null", exception.getMessage());
@@ -179,7 +179,7 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = Assertions.assertThrows(NullPointerException.class,
+        Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedAgency));
 
         Assertions.assertEquals("agency_url can not be null", exception.getMessage());
@@ -233,7 +233,7 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = Assertions.assertThrows(NullPointerException.class,
+        Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedAgency));
 
         Assertions.assertEquals("agency_timezone can not be null", exception.getMessage());

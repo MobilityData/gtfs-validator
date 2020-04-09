@@ -39,7 +39,7 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(NullPointerException.class, underTest::build);
+        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("agency_name can not be null", exception.getMessage());
     }
@@ -58,7 +58,7 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(NullPointerException.class, underTest::build);
+        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("agency_url can not be null", exception.getMessage());
     }
@@ -77,7 +77,7 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(NullPointerException.class, underTest::build);
+        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("agency_timezone can not be null", exception.getMessage());
     }

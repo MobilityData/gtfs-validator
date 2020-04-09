@@ -226,20 +226,20 @@ public class Agency {
 
         /**
          * Returns a {@link Agency} object from fields provided via {@link AgencyBuilder} methods.
-         * Throws {@link NullPointerException} if fields agencyName, agencyUrl, or agencyTimezone are null.
+         * Throws {@link IllegalArgumentException} if fields agencyName, agencyUrl, or agencyTimezone are null.
          *
          * @return Entity representing a row from agency.txt
-         * @throws NullPointerException if fields agencyName, agencyUrl, or agencyTimezone are null.
+         * @throws IllegalArgumentException if fields agencyName, agencyUrl, or agencyTimezone are null.
          */
-        public Agency build() throws NullPointerException {
+        public Agency build() throws IllegalArgumentException {
             if (agencyName == null) {
-                throw new NullPointerException("agency_name can not be null");
+                throw new IllegalArgumentException("agency_name can not be null");
             }
             if (agencyUrl == null) {
-                throw new NullPointerException("agency_url can not be null");
+                throw new IllegalArgumentException("agency_url can not be null");
             }
             if (agencyTimezone == null) {
-                throw new NullPointerException("agency_timezone can not be null");
+                throw new IllegalArgumentException("agency_timezone can not be null");
             }
             return new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang, agencyPhone,
                     agencyFareUrl, agencyEmail);

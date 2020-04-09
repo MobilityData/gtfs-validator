@@ -48,14 +48,14 @@ public class ProcessParsedAgency {
      * <p>
      * This use case extracts values from a {@link ParsedEntity} and creates a {@link Agency} object. If values for
      * agency_name, agency_url and agency_timezone fields are null, a {@link MissingRequiredValueNotice} is created and
-     * added to the validation result repository provided in the use case constructor; and {@link NullPointerException}
-     * is thrown.
+     * added to the validation result repository provided in the use case constructor; and
+     * {@link IllegalArgumentException} is thrown.
      *
      * @param validatedAgencyEntity entity to be processed and added to the GTFS data repository
-     * @throws NullPointerException if specification requirements are not met regarding values for agency_name,
-     *                              agency_url and agency_timezone fields
+     * @throws IllegalArgumentException if specification requirements are not met regarding values for agency_name,
+     *                                  agency_url and agency_timezone fields
      */
-    public void execute(final ParsedEntity validatedAgencyEntity) throws NullPointerException {
+    public void execute(final ParsedEntity validatedAgencyEntity) throws IllegalArgumentException {
 
         String agencyId = (String) validatedAgencyEntity.get("agency_id");
         String agencyName = (String) validatedAgencyEntity.get("agency_name");
@@ -78,7 +78,7 @@ public class ProcessParsedAgency {
 
             gtfsDataRepository.addEntity(builder.build());
 
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
 
             if (agencyName == null) {
                 resultRepository.addNotice(new MissingRequiredValueNotice("agency.txt", "agency_name",
