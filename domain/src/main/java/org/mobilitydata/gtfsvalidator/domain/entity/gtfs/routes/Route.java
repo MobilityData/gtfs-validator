@@ -46,10 +46,10 @@ public class Route {
     @Nullable
     private final String routeUrl;
 
-    @NotNull
+    @Nullable
     private final String routeColor;
 
-    @NotNull
+    @Nullable
     private final String routeTextColor;
 
     @Nullable
@@ -63,10 +63,8 @@ public class Route {
      * @param routeDesc      Description of a route that provides useful, quality information.
      * @param routeType      Indicates the type of transportation used on a route
      * @param routeUrl       URL of a web page about the particular route
-     * @param routeColor     Route color designation that matches public facing material. Defaults to white (FFFFFF)
-     *                       when omitted or left empty.
+     * @param routeColor     Route color designation that matches public facing material.
      * @param routeTextColor Legible color to use for text drawn against a background of route_color.
-     *                       Defaults to black (000000) when omitted or left empty
      * @param routeSortOrder orders the routes in a way which is ideal for presentation to customers
      */
     private Route(@NotNull final String routeId,
@@ -76,8 +74,8 @@ public class Route {
                   @Nullable final String routeDesc,
                   @NotNull final RouteType routeType,
                   @Nullable final String routeUrl,
-                  @NotNull final String routeColor,
-                  @NotNull final String routeTextColor,
+                  @Nullable final String routeColor,
+                  @Nullable final String routeTextColor,
                   @Nullable final Integer routeSortOrder) {
         this.routeId = routeId;
         this.agencyId = agencyId;
@@ -126,12 +124,12 @@ public class Route {
         return routeUrl;
     }
 
-    @NotNull
+    @Nullable
     public String getRouteColor() {
         return routeColor;
     }
 
-    @NotNull
+    @Nullable
     public String getRouteTextColor() {
         return routeTextColor;
     }
@@ -220,7 +218,6 @@ public class Route {
          * @return builder for future object creation
          */
         public RouteBuilder routeType(final int routeType) throws NullPointerException {
-
             try {
                 this.routeType = RouteType.fromInt(routeType);
             } catch (NullPointerException ignored) {
@@ -242,8 +239,7 @@ public class Route {
         /**
          * Sets field routeColor value and returns this
          *
-         * @param routeColor Route color designation that matches public facing material. Defaults to white (FFFFFF)
-         *                   when omitted or left empty.
+         * @param routeColor Route color designation that matches public facing material.
          * @return builder for future object creation
          */
         public RouteBuilder routeColor(@Nullable final String routeColor) {
@@ -255,7 +251,6 @@ public class Route {
          * Sets field routeTextColor value and returns this
          *
          * @param routeTextColor Legible color to use for text drawn against a background of route_color.
-         *                       Defaults to black (000000) when omitted or left empty
          * @return builder for future object creation
          */
         public RouteBuilder routeTextColor(@Nullable final String routeTextColor) {
@@ -282,20 +277,12 @@ public class Route {
          * @throws IllegalArgumentException if field route_id is null.
          */
         public Route build() throws IllegalArgumentException {
-
-            if (routeColor == null) {
-                routeColor = "FFFFFF";
-            }
-            if (routeTextColor == null) {
-                routeColor = "000000";
-            }
             if (routeType == null) {
                 throw new IllegalArgumentException("Unexpected value for field route_type in routes.txt");
             }
             if (routeId == null) {
                 throw new IllegalArgumentException("route_id can not be null in routes.txt");
             }
-            //noinspection ConstantConditions
             return new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,
                     routeUrl, routeColor, routeTextColor, routeSortOrder);
         }

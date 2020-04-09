@@ -72,48 +72,6 @@ class RouteTest {
     }
 
     @Test
-    public void createRouteWithEmptyRouteColorShouldNotThrowException() {
-
-        Route.RouteBuilder underTest = new Route.RouteBuilder();
-
-        underTest.routeId(STRING_TEST_VALUE)
-                .agencyId(STRING_TEST_VALUE)
-                .routeShortName(STRING_TEST_VALUE)
-                .routeLongName(STRING_TEST_VALUE)
-                .routeDesc(STRING_TEST_VALUE)
-                .routeType(INT_TEST_VALUE)
-                .routeUrl(STRING_TEST_VALUE)
-                .routeColor(null)
-                .routeTextColor(STRING_TEST_VALUE)
-                .routeSortOrder(INT_TEST_VALUE);
-
-        Route route = underTest.build();
-
-        assertEquals("FFFFFF", route.getRouteColor());
-
-    }
-
-    @Test
-    public void createRouteWithEmptyRouteTextColorShouldNotThrowException() {
-        Route.RouteBuilder underTest = new Route.RouteBuilder();
-
-        underTest.routeId(STRING_TEST_VALUE)
-                .agencyId(STRING_TEST_VALUE)
-                .routeShortName(STRING_TEST_VALUE)
-                .routeLongName(STRING_TEST_VALUE)
-                .routeDesc(STRING_TEST_VALUE)
-                .routeType(INT_TEST_VALUE)
-                .routeUrl(STRING_TEST_VALUE)
-                .routeColor(STRING_TEST_VALUE)
-                .routeTextColor(null)
-                .routeSortOrder(INT_TEST_VALUE);
-
-        Route route = underTest.build();
-
-        assertEquals("000000", route.getRouteColor());
-    }
-
-    @Test
     public void createRouteWithValidValuesForFieldShouldNotThrowException() {
 
         Route.RouteBuilder underTest = new Route.RouteBuilder();
