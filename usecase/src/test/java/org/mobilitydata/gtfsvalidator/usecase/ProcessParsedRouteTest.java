@@ -123,7 +123,7 @@ class ProcessParsedRouteTest {
         when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
 
-        Exception exception = assertThrows(NullPointerException.class, () -> underTest.execute(mockParsedRoute));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedRoute));
 
         Assertions.assertEquals("route_id can not be null in routes.txt", exception.getMessage());
 
@@ -183,7 +183,7 @@ class ProcessParsedRouteTest {
         when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
 
-        Exception exception = assertThrows(NullPointerException.class, () -> underTest.execute(mockParsedRoute));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedRoute));
 
         Assertions.assertEquals("Unexpected value for field route_type in routes.txt", exception.getMessage());
 

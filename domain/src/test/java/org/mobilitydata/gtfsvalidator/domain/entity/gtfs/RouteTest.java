@@ -45,7 +45,7 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        Exception exception = assertThrows(NullPointerException.class, underTest::build);
+        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("route_id can not be null in routes.txt", exception.getMessage());
     }
@@ -66,7 +66,7 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        Exception exception = assertThrows(NullPointerException.class, underTest::build);
+        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("Unexpected value for field route_type in routes.txt", exception.getMessage());
     }

@@ -276,12 +276,12 @@ public class Route {
 
         /**
          * Returns a {@link Route} object from fields provided via {@link RouteBuilder} methods.
-         * Throws {@link NullPointerException} if field route_id is null.
+         * Throws {@link IllegalArgumentException} if field route_id is null.
          *
          * @return Entity representing a row from routes.txt
-         * @throws NullPointerException if field route_id is null.
+         * @throws IllegalArgumentException if field route_id is null.
          */
-        public Route build() throws NullPointerException {
+        public Route build() throws IllegalArgumentException {
 
             if (routeColor == null) {
                 routeColor = "FFFFFF";
@@ -290,10 +290,10 @@ public class Route {
                 routeColor = "000000";
             }
             if (routeType == null) {
-                throw new NullPointerException("Unexpected value for field route_type in routes.txt");
+                throw new IllegalArgumentException("Unexpected value for field route_type in routes.txt");
             }
             if (routeId == null) {
-                throw new NullPointerException("route_id can not be null in routes.txt");
+                throw new IllegalArgumentException("route_id can not be null in routes.txt");
             }
             //noinspection ConstantConditions
             return new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,

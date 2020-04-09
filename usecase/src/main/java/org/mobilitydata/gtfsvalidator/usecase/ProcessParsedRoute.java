@@ -51,13 +51,13 @@ public class ProcessParsedRoute {
      * If an unexpected value is passed to field route_type a {@link UnexpectedValueNotice} is created and added to the
      * validation result repository provided in the use case constructor.
      * <p>
-     * In both cases a {@link NullPointerException} is thrown.
+     * In both cases a {@link IllegalArgumentException} is thrown.
      *
      * @param validatedParsedRoute entity to be processed and added to the GTFS data repository
-     * @throws NullPointerException if specification requirements are not met regarding values for agency_name,
+     * @throws IllegalArgumentException if specification requirements are not met regarding values for agency_name,
      *                              route_id and route type
      */
-    public void execute(final ParsedEntity validatedParsedRoute) throws NullPointerException {
+    public void execute(final ParsedEntity validatedParsedRoute) throws IllegalArgumentException {
 
         String routeId = (String) validatedParsedRoute.get("route_id");
         String agencyId = (String) validatedParsedRoute.get("agency_id");
@@ -84,7 +84,7 @@ public class ProcessParsedRoute {
 
             gtfsDataRepository.addEntity(builder.build());
 
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
 
             if (routeId == null) {
                 resultRepository.addNotice(new MissingRequiredValueNotice("routes.txt", "route_id",
