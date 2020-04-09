@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AgencyTest {
-
     private static final String STRING_TEST_VALUE = "test_value";
 
     @Test

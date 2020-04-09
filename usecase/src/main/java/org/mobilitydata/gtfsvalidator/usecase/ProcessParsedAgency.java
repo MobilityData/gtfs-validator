@@ -23,6 +23,8 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 /**
  * This use case turns a parsed entity representing a row from agency.txt into a concrete class
  */
@@ -55,7 +57,7 @@ public class ProcessParsedAgency {
      * @throws IllegalArgumentException if specification requirements are not met regarding values for agency_name,
      *                                  agency_url and agency_timezone fields
      */
-    public void execute(final ParsedEntity validatedAgencyEntity) throws IllegalArgumentException {
+    public void execute(final ParsedEntity validatedAgencyEntity) throws IllegalArgumentException, SQLIntegrityConstraintViolationException {
 
         String agencyId = (String) validatedAgencyEntity.get("agency_id");
         String agencyName = (String) validatedAgencyEntity.get("agency_name");
@@ -78,7 +80,7 @@ public class ProcessParsedAgency {
 
             gtfsDataRepository.addEntity(builder.build());
 
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | SQLIntegrityConstraintViolationException e) {
 
             if (agencyName == null) {
                 resultRepository.addNotice(new MissingRequiredValueNotice("agency.txt", "agency_name",

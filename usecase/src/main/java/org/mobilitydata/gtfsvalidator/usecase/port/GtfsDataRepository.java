@@ -18,13 +18,15 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 
 public interface GtfsDataRepository {
+    Agency addEntity(Agency newAgency) throws SQLIntegrityConstraintViolationException;
 
-    Agency addEntity(Agency newAgency);
-
-    Agency getAgencyByName(String agencyName);
+    Agency getAgencyById(String agencyId);
 
     Map<String, Agency> getAgencyCollection();
+
+    boolean isPresent(Agency agency);
 }

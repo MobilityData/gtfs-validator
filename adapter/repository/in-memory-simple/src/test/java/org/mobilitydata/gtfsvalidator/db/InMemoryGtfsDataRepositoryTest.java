@@ -19,17 +19,17 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class InMemoryGtfsDataRepositoryTest {
-
     private final String STRING_TEST_VALUE = "test_value";
 
     @Test
-    void getAgencyCollectionShouldReturnRouteCollection() {
+    void getAgencyCollectionShouldReturnRouteCollection() throws SQLIntegrityConstraintViolationException {
         Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
@@ -41,8 +41,8 @@ class InMemoryGtfsDataRepositoryTest {
         when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
         when(mockBuilder.build()).thenCallRealMethod();
 
-        mockBuilder.agencyId(STRING_TEST_VALUE)
-                .agencyName("test_name_0")
+        mockBuilder.agencyId("test_id0")
+                .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
@@ -55,8 +55,8 @@ class InMemoryGtfsDataRepositoryTest {
         final Agency agency00 = mockBuilder.build();
         underTest.addEntity(agency00);
 
-        mockBuilder.agencyId(STRING_TEST_VALUE)
-                .agencyName("test_name_1")
+        mockBuilder.agencyId("test_id1")
+                .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
@@ -69,12 +69,12 @@ class InMemoryGtfsDataRepositoryTest {
 
         final Map<String, Agency> toVerify = underTest.getAgencyCollection();
 
-        assertEquals("test_name_0", toVerify.get("test_name_0").getAgencyName());
-        assertEquals("test_name_1", toVerify.get("test_name_1").getAgencyName());
+        assertEquals("test_id0", toVerify.get("test_id0").getAgencyId());
+        assertEquals("test_id1", toVerify.get("test_id1").getAgencyId());
     }
 
     @Test
-    void callToAddEntityShouldAddAgencyToRepoAndReturnSameEntity() {
+    void callToAddEntityShouldAddAgencyToRepoAndReturnSameEntity() throws SQLIntegrityConstraintViolationException {
         Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
@@ -86,8 +86,8 @@ class InMemoryGtfsDataRepositoryTest {
         when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
         when(mockBuilder.build()).thenCallRealMethod();
 
-        mockBuilder.agencyId(STRING_TEST_VALUE)
-                .agencyName("test_name_0")
+        mockBuilder.agencyId("test_id0")
+                .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
@@ -101,10 +101,10 @@ class InMemoryGtfsDataRepositoryTest {
         Agency toCheck = underTest.addEntity(agency00);
 
         assertEquals(1, underTest.getAgencyCollection().size());
-        assertEquals(toCheck, agency00);
+        assertEquals(agency00, toCheck);
 
-        mockBuilder.agencyId(STRING_TEST_VALUE)
-                .agencyName("test_name_1")
+        mockBuilder.agencyId("test_id1")
+                .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
@@ -120,7 +120,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getAgencyByIdShouldReturnRelatedAgency() {
+    void getAgencyByIdShouldReturnRelatedAgency() throws SQLIntegrityConstraintViolationException {
         Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
@@ -132,8 +132,8 @@ class InMemoryGtfsDataRepositoryTest {
         when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
         when(mockBuilder.build()).thenCallRealMethod();
 
-        mockBuilder.agencyId(STRING_TEST_VALUE)
-                .agencyName("test_name_0")
+        mockBuilder.agencyId("test_id0")
+                .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
@@ -145,8 +145,8 @@ class InMemoryGtfsDataRepositoryTest {
 
         underTest.addEntity(mockBuilder.build());
 
-        mockBuilder.agencyId(STRING_TEST_VALUE)
-                .agencyName("test_name_1")
+        mockBuilder.agencyId("test_id1")
+                .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
@@ -156,7 +156,130 @@ class InMemoryGtfsDataRepositoryTest {
 
         underTest.addEntity(mockBuilder.build());
 
-        assertEquals("test_name_0", underTest.getAgencyByName("test_name_0").getAgencyName());
-        assertEquals("test_name_1", underTest.getAgencyByName("test_name_1").getAgencyName());
+        assertEquals("test_id0", underTest.getAgencyById("test_id0").getAgencyId());
+        assertEquals("test_id1", underTest.getAgencyById("test_id1").getAgencyId());
+    }
+
+    @Test
+    public void isPresentShouldReturnTrueIfAgencyIsAlreadyPresentInRepository()
+            throws SQLIntegrityConstraintViolationException {
+        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyTimezone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyLang(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyPhone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyFareUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        mockBuilder.agencyId("test_id0")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        Agency agency00 = mockBuilder.build();
+        underTest.addEntity(agency00);
+
+        mockBuilder.agencyId("test_id1")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        Agency agency01 = mockBuilder.build();
+        underTest.addEntity(agency01);
+
+        assertTrue(underTest.isPresent(agency00));
+        assertTrue(underTest.isPresent(agency01));
+    }
+
+    @Test
+    public void isPresentShouldReturnFalseIfAgencyIsNotAlreadyPresentInRepository()
+            throws SQLIntegrityConstraintViolationException {
+        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyTimezone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyLang(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyPhone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyFareUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        mockBuilder.agencyId("test_id0")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        Agency agency00 = mockBuilder.build();
+        underTest.addEntity(agency00);
+
+        mockBuilder.agencyId("test_id1")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        Agency agency01 = mockBuilder.build();
+        assertFalse(underTest.isPresent(agency01));
+    }
+
+    @Test
+    public void tryToAddTwiceTheSameAgencyShouldThrowError() throws SQLIntegrityConstraintViolationException {
+        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyTimezone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyLang(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyPhone(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyFareUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        mockBuilder.agencyId("test_id0")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        underTest.addEntity(mockBuilder.build());
+
+        mockBuilder.agencyId("test_id0")
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE);
+
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
     }
 }

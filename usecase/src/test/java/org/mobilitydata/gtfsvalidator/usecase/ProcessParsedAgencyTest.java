@@ -29,12 +29,12 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
 class ProcessParsedAgencyTest {
-
     private static final String STRING_TEST_VALUE = "test value";
     private static final String AGENCY_ID = "agency_id";
     private static final String AGENCY_NAME = "agency_name";
@@ -48,7 +48,7 @@ class ProcessParsedAgencyTest {
     private static final String ENTITY_ID = "no id";
 
     @Test
-    public void validatedParsedAgencyShouldCreateAgencyEntityAndBeAddedToGtfsDataRepository() {
+    public void validatedParsedAgencyShouldCreateAgencyEntityAndBeAddedToGtfsDataRepository() throws SQLIntegrityConstraintViolationException {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
@@ -104,7 +104,6 @@ class ProcessParsedAgencyTest {
 
     @Test
     public void invalidAgencyNameShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
@@ -158,7 +157,6 @@ class ProcessParsedAgencyTest {
 
     @Test
     public void invalidAgencyUrlShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
@@ -212,7 +210,6 @@ class ProcessParsedAgencyTest {
 
     @Test
     public void invalidAgencyTimezoneShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
