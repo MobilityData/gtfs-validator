@@ -27,7 +27,6 @@ class AgencyTest {
 
     @Test
     public void createAgencyWithNullAgencyNameShouldThrowException() {
-
         Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
@@ -47,7 +46,6 @@ class AgencyTest {
 
     @Test
     public void createAgencyWithNullAgencyUrlShouldThrowException() {
-
         Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
@@ -67,7 +65,6 @@ class AgencyTest {
 
     @Test
     public void createAgencyWithTimezoneAgencyUrlShouldThrowException() {
-
         Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
@@ -87,7 +84,6 @@ class AgencyTest {
 
     @Test
     public void createAgencyWithValidValuesForFieldShouldNotThrowException() {
-
         Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         underTest.agencyId(STRING_TEST_VALUE);

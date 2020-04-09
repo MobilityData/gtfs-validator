@@ -30,7 +30,6 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void getAgencyCollectionShouldReturnRouteCollection() {
-
         Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
@@ -76,7 +75,6 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void callToAddEntityShouldAddAgencyToRepoAndReturnSameEntity() {
-
         Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
@@ -123,7 +121,6 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void getAgencyByIdShouldReturnRelatedAgency() {
-
         Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
