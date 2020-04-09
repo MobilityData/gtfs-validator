@@ -42,7 +42,7 @@ public class Main {
         options.addOption("u", "url", true, "URL to GTFS zipped archive");
         options.addOption("z", "zip", true, "if --url is used, where to place the " +
                 "downloaded archive." +
-                "Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
+                " Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
         options.addOption("i", "input", true, "Relative path where to extract the zip" +
                 " content");
         options.addOption("o", "output", true, "Relative path where to place output" +

@@ -50,6 +50,7 @@ public class ValidateAllRequiredFilePresence {
      * Use case execution method: checks the presence of all required files in a {@link RawFileRepository} instance
      * A new notice is generated each time a file marked as "required" is missing from a {@link RawFileRepository}
      * instance. This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
+     * @return a list of notices generated each time a file marked as "required" is missing from a {@link RawFileRepository} instance.
      */
     public List<String> execute() {
         if (!rawFileRepo.getFilenameAll().containsAll(specRepo.getRequiredFilenameList())) {

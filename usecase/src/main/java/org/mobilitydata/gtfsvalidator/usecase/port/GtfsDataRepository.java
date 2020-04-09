@@ -20,7 +20,19 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.util.List;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Map;
+
 public interface GtfsDataRepository {
+    Agency addEntity(Agency newAgency) throws SQLIntegrityConstraintViolationException;
+
+    Agency getAgencyById(String agencyId);
+
+    Map<String, Agency> getAgencyCollection();
+
+    boolean isPresent(Agency agency);
 
     List<Route> getRouteCollection();
 

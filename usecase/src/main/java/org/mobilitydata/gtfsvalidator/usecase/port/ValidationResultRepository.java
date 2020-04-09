@@ -98,5 +98,11 @@ public interface ValidationResultRepository {
         void export(CannotParseDateNotice toExport) throws IOException;
 
         void export(UnexpectedValueNotice toExport) throws IOException;
+
+        void export(IncoherentValuesForFieldsNotice toExport) throws IOException;
+
+        void export(UnexpectedDefinedFieldNotice toExport) throws IOException;
+
+        void export(EntityMustBeUniqueNotice toExport) throws IOException;
     }
 }
