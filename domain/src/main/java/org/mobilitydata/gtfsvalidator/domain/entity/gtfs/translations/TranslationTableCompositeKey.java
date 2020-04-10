@@ -64,15 +64,15 @@ public class TranslationTableCompositeKey extends TranslationTableBase {
                         " has been encountered");
             }
             if (fieldName == null) {
-                throw new IllegalArgumentException("field_name must be specified");
+                throw new IllegalArgumentException("field_name can not be null");
             } else if (language == null) {
-                throw new IllegalArgumentException("language must be specified");
+                throw new IllegalArgumentException("language can not be null");
             } else if (translation == null) {
-                throw new IllegalArgumentException("translation must be specified");
+                throw new IllegalArgumentException("translation can not be null");
             } else if (recordSubId == null) {
-                throw new IllegalArgumentException("record_sub_id must be specified");
+                throw new IllegalArgumentException("record_sub_id can not be null");
             } else if (recordId == null) {
-                throw new IllegalArgumentException("record_id must be specified");
+                throw new IllegalArgumentException("record_id can not be null");
             }
             if (fieldValue != null) {
                 throw new IllegalArgumentException("field_value must be null");

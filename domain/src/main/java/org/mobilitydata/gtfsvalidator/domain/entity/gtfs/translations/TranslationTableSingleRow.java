@@ -62,7 +62,7 @@ public class TranslationTableSingleRow extends TranslationTableBase {
                         " has been encountered");
             }
             if (fieldName == null) {
-                throw new IllegalArgumentException("fieldName can not be null");
+                throw new IllegalArgumentException("field_name can not be null");
             }
             if (language == null) {
                 throw new IllegalArgumentException("language can not be null");

@@ -85,15 +85,15 @@ public class TranslationTableSimpleKey extends TranslationTableBase {
             }
 
             if (fieldName == null) {
-                throw new IllegalArgumentException("field_name must be specified");
+                throw new IllegalArgumentException("field_name can not be null");
             }
 
             if (language == null) {
-                throw new IllegalArgumentException("language must be specified");
+                throw new IllegalArgumentException("language can not be null");
             }
 
             if (translation == null) {
-                throw new IllegalArgumentException("translation must be specified");
+                throw new IllegalArgumentException("translation can not be null");
             }
 
             return new TranslationTableSimpleKey(tableName, fieldName, language, translation, recordId, recordSubId,
