@@ -103,5 +103,6 @@ public interface ValidationResultRepository {
 
         void export(UnexpectedDefinedFieldNotice toExport) throws IOException;
 
+        void export(EntityMustBeUniqueNotice toExport) throws IOException;
     }
 }

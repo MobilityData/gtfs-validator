@@ -140,5 +140,4 @@ class InMemoryGtfsSpecRepositoryTest {
         assertTrue(optionalHeaderListForOptionalFile0.contains(OPTIONAL_HEADER_0));
         assertTrue(optionalHeaderListForOptionalFile1.contains(OPTIONAL_HEADER_1));
     }
-
 }

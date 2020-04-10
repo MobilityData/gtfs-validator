@@ -51,7 +51,7 @@ public class ValidateAllRowLengthForFile {
      * Use case execution method: validates the length of all rows of the file linked to the {@link RawFileInfo}.
      * For each row of a GTFS CSV file, a {@link RawEntity} is created with a 1 based index identifying the row location
      * within a GTFS CSV file and its content as a map of strings.
-     * If the process to retrieve data from a file fail, a {@link CannotConstructDataProviderNotice is generated
+     * If the process to retrieve data from a file fail, a {@link CannotConstructDataProviderNotice} is generated
      * and added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {

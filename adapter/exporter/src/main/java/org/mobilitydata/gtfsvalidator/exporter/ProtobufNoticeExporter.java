@@ -339,6 +339,18 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(EntityMustBeUniqueNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getFieldName())
+                .setAltEntityId(toExport.getEntityId())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();
