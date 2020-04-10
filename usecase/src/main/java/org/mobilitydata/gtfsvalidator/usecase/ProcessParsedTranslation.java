@@ -58,20 +58,20 @@ public class ProcessParsedTranslation {
      * This use case extracts values from a {@link ParsedEntity} and creates a
      * {@link org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableBase} object. If the
      * required conditions to create such object are not met, the execution is aborted and a
-     * {@link IncoherentValuesForFieldsNotice} or {@link MissingRequiredValueNotice} is created and added to the validation
-     * result repository provided in the use case constructor.
+     * {@link IncoherentValuesForFieldsNotice} or {@link MissingRequiredValueNotice} is created and added to the
+     * validation result repository provided in the use case constructor.
      *
      * @param validatedTranslationEntity entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedTranslationEntity) throws IllegalArgumentException {
 
-        String tableName = (String) validatedTranslationEntity.get("table_name");
-        String fieldName = (String) validatedTranslationEntity.get("field_name");
-        String language = (String) validatedTranslationEntity.get("language");
-        String translation = (String) validatedTranslationEntity.get("translation");
-        String recordId = (String) validatedTranslationEntity.get("record_id");
-        String recordSubId = (String) validatedTranslationEntity.get("record_sub_id");
-        String fieldValue = (String) validatedTranslationEntity.get("field_value");
+        final String tableName = (String) validatedTranslationEntity.get("table_name");
+        final String fieldName = (String) validatedTranslationEntity.get("field_name");
+        final String language = (String) validatedTranslationEntity.get("language");
+        final String translation = (String) validatedTranslationEntity.get("translation");
+        final String recordId = (String) validatedTranslationEntity.get("record_id");
+        final String recordSubId = (String) validatedTranslationEntity.get("record_sub_id");
+        final String fieldValue = (String) validatedTranslationEntity.get("field_value");
 
         try {
             TableName.fromString(tableName);
@@ -112,7 +112,7 @@ public class ProcessParsedTranslation {
                 throw e;
             }
 
-        } else if (tableName.equals("stop_times") && recordId.equals(null)) {
+        } else if (tableName.equals("stop_times") & !recordId.equals(null)) {
 
             try {
                 compositeKeyTranslationBuilder.tableName(tableName)
@@ -185,7 +185,8 @@ public class ProcessParsedTranslation {
         }
     }
 
-    private void checkRequiredFields(ParsedEntity validatedTranslationEntity, String fieldName, String language, String translation) {
+    private void checkRequiredFields(ParsedEntity validatedTranslationEntity, String fieldName, String language,
+                                     String translation) {
         if (fieldName == null) {
             resultRepo.addNotice(new MissingRequiredValueNotice("translations.txt,",
                     "field_name", validatedTranslationEntity.getEntityId()));
