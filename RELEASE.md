@@ -1,14 +1,19 @@
 # Release instructions
 
-To create a release jar file, we use the IntelliJ artifact build feature
+We create releases from the command-line using the [shadow Gradle plugin](https://github.com/johnrengelman/shadow).
 
-- Go to File->Project Structure
-- Select Artifacts in the left pane
-- Add a new one by clicking the '+' button
-  - of type JAR->From modules with dependencies
-- Select the Main class from cli-app module
-- Place the META-INF file at the project's root
-- In the output Layout, add both cli-app and in-memory-simple modules main resource directory content
+Usage:
 
-- Build the jar through Build->Build Artifacts
+```
+/.gradlew shadowJar
+```
+
+...which will output a file to `\cli-app\build\libs` such as `gtfs-validator-1.1.0-SNAPSHOT-all.jar`.
+
+This file can then be run from the command-line with the normal Java conventions:
+
+```
+java -jar gtfs-validator-1.1.0-SNAPSHOT-all.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -i input -o output
+```
+
 
