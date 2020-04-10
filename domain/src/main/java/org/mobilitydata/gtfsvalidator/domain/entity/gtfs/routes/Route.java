@@ -217,7 +217,7 @@ public class Route {
          * @param routeType Indicates the type of transportation used on a route
          * @return builder for future object creation
          */
-        public RouteBuilder routeType(final int routeType) throws NullPointerException {
+        public RouteBuilder routeType(final int routeType) {
             this.routeType = RouteType.fromInt(routeType);
             return this;
         }

@@ -42,14 +42,14 @@ public enum RouteType {
 
     /**
      * Matches enum values to Integer value. Returns the {@link RouteType} enum item value matching the integer passed
-     * as parameter. Throws {@link NullPointerException} if the integer passed as parameter does not match any
+     * as parameter. Returns null if the integer passed as parameter is null or does not match any
      * {@link RouteType} enum item
      *
      * @param fromValue value to match to {@link RouteType} enum items
-     * @return the enum item matching the integer passed as parameter.
-     * @throws NullPointerException if the integer passed as parameter does not match any {@link RouteType} enum item
+     * @return the enum item matching the integer passed as parameter. Or null if the integer passed as parameter is
+     * null or does not match any {@link RouteType} enum item
      */
-    static public RouteType fromInt(Integer fromValue) throws NullPointerException {
+    static public RouteType fromInt(Integer fromValue) {
 
         if (fromValue == null) {
             return null;
