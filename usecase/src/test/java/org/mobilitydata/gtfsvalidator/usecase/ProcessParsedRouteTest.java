@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -220,5 +221,79 @@ class ProcessParsedRouteTest {
         assertEquals("15", noticeList.get(0).getEnumValue());
 
         verifyNoMoreInteractions(mockParsedRoute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
+    }
+
+    @Test
+    void duplicateRouteShouldThrowExceptionAndAddEntityMustBeUniqueNoticeToResultRepo()
+            throws SQLIntegrityConstraintViolationException {
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+
+        Route mockRoute = mock(Route.class);
+        when(mockRoute.getRouteId()).thenReturn(STRING_TEST_VALUE);
+
+        Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class, RETURNS_SELF);
+        when(mockBuilder.build()).thenReturn(mockRoute);
+
+        ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+
+        ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
+        when(mockParsedRoute.get("route_id")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get("agency_id")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get("route_short_name")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get("route_long_name")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get("route_desc")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get("route_type")).thenReturn(7);
+        when(mockParsedRoute.get("route_url")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get("route_color")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
+
+        when(mockGtfsDataRepo.addEntity(mockRoute)).thenThrow(new SQLIntegrityConstraintViolationException("route " +
+                "must be unique in dataset"));
+
+        Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> underTest.execute(mockParsedRoute));
+        Assertions.assertEquals("route must be unique in dataset", exception.getMessage());
+
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_id"));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("agency_id"));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_short_name"));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_long_name"));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_desc"));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_type"));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_url"));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_color"));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_text_color"));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_sort_order"));
+
+        verify(mockGtfsDataRepo, times(1)).addEntity(ArgumentMatchers.isA(Route.class));
+
+        verify(mockBuilder, times(1)).routeId(anyString());
+        verify(mockBuilder, times(1)).agencyId(anyString());
+        verify(mockBuilder, times(1)).routeShortName(anyString());
+        verify(mockBuilder, times(1)).routeLongName(anyString());
+        verify(mockBuilder, times(1)).routeDesc(anyString());
+        verify(mockBuilder, times(1)).routeType(anyInt());
+        verify(mockBuilder, times(1)).routeUrl(anyString());
+        verify(mockBuilder, times(1)).routeColor(anyString());
+        verify(mockBuilder, times(1)).routeTextColor(anyString());
+        verify(mockBuilder, times(1)).routeSortOrder(anyInt());
+        verify(mockBuilder, times(1)).build();
+
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockParsedRoute, times(1)).getEntityId();
+
+        ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("routes.txt", noticeList.get(0).getFilename());
+        assertEquals("route_id", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
     }
 }

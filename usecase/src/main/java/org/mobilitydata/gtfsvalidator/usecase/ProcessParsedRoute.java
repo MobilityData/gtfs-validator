@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -87,7 +88,7 @@ public class ProcessParsedRoute {
 
             gtfsDataRepository.addEntity(builder.build());
 
-        } catch (IllegalArgumentException | SQLIntegrityConstraintViolationException e) {
+        } catch (IllegalArgumentException e) {
 
             if (routeId == null) {
                 resultRepository.addNotice(new MissingRequiredValueNotice("routes.txt", "route_id",
@@ -96,6 +97,10 @@ public class ProcessParsedRoute {
                 resultRepository.addNotice(new UnexpectedValueNotice("routes.txt",
                         "route_type", validatedParsedRoute.getEntityId(), routeType));
             }
+            throw e;
+        } catch (SQLIntegrityConstraintViolationException e) {
+            resultRepository.addNotice(new EntityMustBeUniqueNotice("routes.txt", "route_id",
+                    validatedParsedRoute.getEntityId()));
             throw e;
         }
     }
