@@ -91,7 +91,7 @@ class RouteTypeTest {
 
         RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
 
-        assertEquals(routeType, RouteType.AERIAL_LIFT);
+        assertEquals(routeType, RouteType.GONDOLA);
     }
 
     @Test
