@@ -3,7 +3,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TableNameTest {
 
@@ -12,19 +12,19 @@ class TableNameTest {
 
         String unexpectedEnumValue = null;
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> TableName.fromString(unexpectedEnumValue));
+        @SuppressWarnings("ConstantConditions") Object underTest = TableName.fromString(unexpectedEnumValue);
 
-        assertEquals("Field table_name in translations.txt can not be null", exception.getMessage());
+        assertNull(underTest);
     }
 
     @Test
-    public void createTableNameWithUnexpectedValueShouldThrowException() {
+    public void createTableNameWithUnexpectedValueShouldReturnNullValue() {
 
         String unexpectedEnumValue = "test";
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> TableName.fromString(unexpectedEnumValue));
+        Object underTest = TableName.fromString(unexpectedEnumValue);
 
-        assertEquals("Unexpected value for field table_name in translations.txt", exception.getMessage());
+        assertNull(underTest);
     }
 
     @Test

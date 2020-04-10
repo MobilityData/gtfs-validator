@@ -16,9 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -41,10 +39,6 @@ public enum TableName {
         this.value = value;
     }
 
-    static public List<String> getValues() {
-        return Stream.of(TableName.values()).map(enumItem -> enumItem.value).collect(Collectors.toList());
-    }
-
     /**
      * Matches table_name field defined in translations.txt to its enum value. Throws an {@link IllegalArgumentException}
      * if the value is unexpected; else returns the matching enum value
@@ -53,18 +47,15 @@ public enum TableName {
      * @return the matching enum value
      * @throws IllegalArgumentException if the value is unexpected
      */
-    @SuppressWarnings({"OptionalGetWithoutIsPresent"})
     static public TableName fromString(final String tableName) throws IllegalArgumentException {
 
         if (tableName == null) {
-            throw new IllegalArgumentException("Field table_name in translations.txt can not be null");
-        } else if (!getValues().contains(tableName)) {
-            throw new IllegalArgumentException("Unexpected value for field table_name in translations.txt");
+            return null;
         } else {
             return Stream.of(TableName.values())
                     .filter(enumItem -> Objects.equals(enumItem.value, tableName))
                     .findAny()
-                    .get();
+                    .orElse(null);
         }
     }
 }
