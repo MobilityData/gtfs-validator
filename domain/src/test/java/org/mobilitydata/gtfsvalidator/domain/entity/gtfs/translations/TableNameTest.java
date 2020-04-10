@@ -22,7 +22,7 @@ class TableNameTest {
 
         String unexpectedEnumValue = "test";
 
-        Exception exception = assertThrows(NullPointerException.class, () -> TableName.fromString(unexpectedEnumValue));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> TableName.fromString(unexpectedEnumValue));
 
         assertEquals("Unexpected value for field table_name in translations.txt", exception.getMessage());
     }

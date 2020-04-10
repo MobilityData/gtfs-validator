@@ -51,7 +51,7 @@ public class TranslationTableSimpleKey extends TranslationTableBase {
         /**
          * Returns a {@link TranslationTableSimpleKey} objects from fields provided via
          * {@link TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder} methods.
-         * Throws {@link NullPointerException} if fields fieldName, language, translation, recordId to not meet the
+         * Throws {@link IllegalArgumentException} if fields fieldName, language, translation, recordId to not meet the
          * requirements from the specification:
          * - recordId and fieldValue can not be defined at the same time
          * - recordSubId and fieldValue can not be defined at the same time
@@ -59,38 +59,38 @@ public class TranslationTableSimpleKey extends TranslationTableBase {
          * - fieldName, language, and translation fields can not be null
          *
          * @return Entity representing a row from translations.txt with table_name!=stop_times or table_name!=feed_info
-         * @throws NullPointerException if fields fieldName, language, translation, recordId and recordSubId do
-         *                              not meet the requirements from the specification:
-         *                              - recordId and fieldValue can not be defined at the same time
-         *                              - recordSubId and fieldValue can not be defined at the same time
-         *                              - recordId and fieldValue can not be undefined at the same time
-         *                              - fieldName, language, and translation fields can not be null
+         * @throws IllegalArgumentException if fields fieldName, language, translation, recordId and recordSubId do
+         *                                  not meet the requirements from the specification:
+         *                                  - recordId and fieldValue can not be defined at the same time
+         *                                  - recordSubId and fieldValue can not be defined at the same time
+         *                                  - recordId and fieldValue can not be undefined at the same time
+         *                                  - fieldName, language, and translation fields can not be null
          */
-        public TranslationTableSimpleKey build() throws NullPointerException {
+        public TranslationTableSimpleKey build() throws IllegalArgumentException {
 
             if (fieldValue != null) {
                 if (recordId != null) {
-                    throw new NullPointerException("record_id and field_value can not both be defined");
+                    throw new IllegalArgumentException("record_id and field_value can not both be defined");
                 }
                 if (recordSubId != null) {
-                    throw new NullPointerException("record_sub_id and field_value can not both be defined");
+                    throw new IllegalArgumentException("record_sub_id and field_value can not both be defined");
                 }
             }
 
             if (recordId == null && fieldValue == null) {
-                throw new NullPointerException("record_id and field_value can not both be undefined");
+                throw new IllegalArgumentException("record_id and field_value can not both be undefined");
             }
 
             if (fieldName == null) {
-                throw new NullPointerException("field_name must be specified");
+                throw new IllegalArgumentException("field_name must be specified");
             }
 
             if (language == null) {
-                throw new NullPointerException("language must be specified");
+                throw new IllegalArgumentException("language must be specified");
             }
 
             if (translation == null) {
-                throw new NullPointerException("translation must be specified");
+                throw new IllegalArgumentException("translation must be specified");
             }
 
             return new TranslationTableSimpleKey(tableName, fieldName, language, translation, recordId, recordSubId,

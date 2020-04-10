@@ -24,15 +24,6 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TranslationTableCompositeKey extends TranslationTableBase {
 
-//    @NotNull
-//    final private String recordId;
-//
-//    @NotNull
-//    final private String recordSubId;
-//
-//    @Nullable
-//    final private String fieldValue;
-
     /**
      * @param tableName   defines the table that contains the field to be translated
      * @param fieldName   name of the field to be translated
@@ -52,7 +43,6 @@ public class TranslationTableCompositeKey extends TranslationTableBase {
         super(tableName, fieldName, language, translation, recordId, recordSubId, fieldValue);
     }
 
-
     /**
      * Builder class to create {@link TranslationTableCompositeKey} objects.  Allows an unordered
      * definition of the different attributes of {@link TranslationTableCompositeKey}.
@@ -61,27 +51,27 @@ public class TranslationTableCompositeKey extends TranslationTableBase {
 
         /**
          * Returns a {@link TranslationTableCompositeKey} object from fields provided via
-         * {@link TranslationTableCompositeKeyBuilder} methods. Throws {@link NullPointerException} if fields
+         * {@link TranslationTableCompositeKeyBuilder} methods. Throws {@link IllegalArgumentException} if fields
          * fieldName, language, translation, recordId, or recordSubId are null; or if field fieldValue is not null
          *
          * @return Entity representing a row from translations.txt with table_name = stop_times and record_id defined
-         * @throws NullPointerException if fields fieldName, language, translation, recordId, or recordSubId are
-         *                              null; or if field fieldValue is not null
+         * @throws IllegalArgumentException if fields fieldName, language, translation, recordId, or recordSubId are
+         *                                  null; or if field fieldValue is not null
          */
-        public TranslationTableCompositeKey build() throws NullPointerException {
+        public TranslationTableCompositeKey build() throws IllegalArgumentException {
             if (fieldName == null) {
-                throw new NullPointerException("field_name must be specified");
+                throw new IllegalArgumentException("field_name must be specified");
             } else if (language == null) {
-                throw new NullPointerException("language must be specified");
+                throw new IllegalArgumentException("language must be specified");
             } else if (translation == null) {
-                throw new NullPointerException("translation must be specified");
+                throw new IllegalArgumentException("translation must be specified");
             } else if (recordSubId == null) {
-                throw new NullPointerException("record_sub_id must be specified");
+                throw new IllegalArgumentException("record_sub_id must be specified");
             } else if (recordId == null) {
-                throw new NullPointerException("record_id must be specified");
+                throw new IllegalArgumentException("record_id must be specified");
             }
             if (fieldValue != null) {
-                throw new NullPointerException("field_value must be null");
+                throw new IllegalArgumentException("field_value must be null");
             }
             return new TranslationTableCompositeKey(tableName, fieldName, language, translation, recordId, recordSubId,
                     fieldValue);

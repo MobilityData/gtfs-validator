@@ -96,7 +96,6 @@ public abstract class TranslationTableBase {
         return fieldValue;
     }
 
-
     public static abstract class TableNameBaseBuilder {
 
         protected TableName tableName;

@@ -63,7 +63,7 @@ public class ProcessParsedTranslation {
      *
      * @param validatedTranslationEntity entity to be processed and added to the GTFS data repository
      */
-    public void execute(final ParsedEntity validatedTranslationEntity) throws NullPointerException {
+    public void execute(final ParsedEntity validatedTranslationEntity) throws IllegalArgumentException {
 
         String tableName = (String) validatedTranslationEntity.get("table_name");
         String fieldName = (String) validatedTranslationEntity.get("field_name");
@@ -75,7 +75,7 @@ public class ProcessParsedTranslation {
 
         try {
             TableName.fromString(tableName);
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
             resultRepo.addNotice(new UnexpectedDefinedFieldNotice("translations.txt,", "table_name",
                     tableName, validatedTranslationEntity.getEntityId()));
             throw e;
@@ -95,7 +95,7 @@ public class ProcessParsedTranslation {
                 TranslationTableSingleRow translationTableSingleRow = singleRowTranslationBuilder.build();
                 gtfsDataRepo.addEntity(translationTableSingleRow);
 
-            } catch (NullPointerException e) {
+            } catch (IllegalArgumentException e) {
 
                 checkRequiredFields(validatedTranslationEntity, fieldName, language, translation);
                 if (fieldValue != null) {
@@ -126,7 +126,7 @@ public class ProcessParsedTranslation {
                 TranslationTableCompositeKey translationTableCompositeKey = compositeKeyTranslationBuilder.build();
                 gtfsDataRepo.addEntity(translationTableCompositeKey);
 
-            } catch (NullPointerException e) {
+            } catch (IllegalArgumentException e) {
 
                 checkRequiredFields(validatedTranslationEntity, fieldName, language, translation);
 
@@ -159,7 +159,7 @@ public class ProcessParsedTranslation {
                 TranslationTableSimpleKey translationTableSimpleKey = simpleKeyTranslationBuilder.build();
                 gtfsDataRepo.addEntity(translationTableSimpleKey);
 
-            } catch (NullPointerException e) {
+            } catch (IllegalArgumentException e) {
 
                 checkRequiredFields(validatedTranslationEntity, fieldName, language, translation);
 

@@ -46,20 +46,20 @@ public enum TableName {
     }
 
     /**
-     * Matches table_name field defined in translations.txt to its enum value. Throws an {@link NullPointerException}
+     * Matches table_name field defined in translations.txt to its enum value. Throws an {@link IllegalArgumentException}
      * if the value is unexpected; else returns the matching enum value
      *
      * @param tableName defines the table that contains the field to be translated
      * @return the matching enum value
-     * @throws NullPointerException if the value is unexpected
+     * @throws IllegalArgumentException if the value is unexpected
      */
     @SuppressWarnings({"OptionalGetWithoutIsPresent"})
-    static public TableName fromString(final String tableName) throws NullPointerException {
+    static public TableName fromString(final String tableName) throws IllegalArgumentException {
 
         if (tableName == null) {
             throw new IllegalArgumentException("Field table_name in translations.txt can not be null");
         } else if (!getValues().contains(tableName)) {
-            throw new NullPointerException("Unexpected value for field table_name in translations.txt");
+            throw new IllegalArgumentException("Unexpected value for field table_name in translations.txt");
         } else {
             return Stream.of(TableName.values())
                     .filter(enumItem -> Objects.equals(enumItem.value, tableName))

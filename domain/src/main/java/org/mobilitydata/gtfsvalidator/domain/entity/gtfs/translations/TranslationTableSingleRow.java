@@ -48,32 +48,32 @@ public class TranslationTableSingleRow extends TranslationTableBase {
 
         /**
          * Returns a {@link TranslationTableSingleRow} object from fields provided via
-         * {@link TranslationTableSingleRowBuilder} methods. Throws {@link NullPointerException} if fields
+         * {@link TranslationTableSingleRowBuilder} methods. Throws {@link IllegalArgumentException} if fields
          * fieldName, fieldName, language or translation are null, or if fields record_id, record_sub_id, field_value
          * are not null
          *
          * @return Entity representing a row from translations.txt with table_name = feed_info
-         * @throws NullPointerException if fields fieldName, fieldName, language or translation are null or if fields
-         *                              record_id, record_sub_id, field_value are not null
+         * @throws IllegalArgumentException if fields fieldName, fieldName, language or translation are null or if fields
+         *                                  record_id, record_sub_id, field_value are not null
          */
-        public TranslationTableSingleRow build() throws NullPointerException {
+        public TranslationTableSingleRow build() throws IllegalArgumentException {
             if (fieldName == null) {
-                throw new NullPointerException("fieldName can not be null");
+                throw new IllegalArgumentException("fieldName can not be null");
             }
             if (language == null) {
-                throw new NullPointerException("language can not be null");
+                throw new IllegalArgumentException("language can not be null");
             }
             if (translation == null) {
-                throw new NullPointerException("translation can not be null");
+                throw new IllegalArgumentException("translation can not be null");
             }
             if (recordId != null) {
-                throw new NullPointerException("record_id can not be defined");
+                throw new IllegalArgumentException("record_id can not be defined");
             }
             if (recordSubId != null) {
-                throw new NullPointerException("record_sub_id can not be defined");
+                throw new IllegalArgumentException("record_sub_id can not be defined");
             }
             if (fieldValue != null) {
-                throw new NullPointerException("field_value can not be defined");
+                throw new IllegalArgumentException("field_value can not be defined");
             }
             return new TranslationTableSingleRow(tableName, fieldName, language, translation, recordId, recordSubId,
                     fieldValue);
