@@ -32,17 +32,8 @@ public enum TableName {
     ROUTES("routes"),
     TRIPS("trips"),
     STOP_TIMES("stop_times"),
-    CALENDAR("calendar"),
-    CALENDAR_DATES("calendar_dates"),
-    FARE_RULES("fare_rules"),
-    FARE_ATTRIBUTES("fare_attributes"),
-    SHAPES("shapes"),
-    FREQUENCIES("frequencies"),
-    TRANSFERS("transfers"),
-    PATHWAYS("pathways"),
     LEVELS("levels"),
-    FEED_INFO("feed_info"),
-    ATTRIBUTIONS("attributions");
+    FEED_INFO("feed_info");
 
     private final String value;
 
@@ -65,13 +56,15 @@ public enum TableName {
     @SuppressWarnings({"OptionalGetWithoutIsPresent"})
     static public TableName fromString(final String tableName) throws NullPointerException {
 
-        if (!getValues().contains(tableName)) {
+        if (tableName == null) {
+            throw new IllegalArgumentException("Field table_name in translations.txt can not be null");
+        } else if (!getValues().contains(tableName)) {
             throw new NullPointerException("Unexpected value for field table_name in translations.txt");
+        } else {
+            return Stream.of(TableName.values())
+                    .filter(enumItem -> Objects.equals(enumItem.value, tableName))
+                    .findAny()
+                    .get();
         }
-
-        return Stream.of(TableName.values())
-                .filter(enumItem -> Objects.equals(enumItem.value, tableName))
-                .findAny()
-                .get();
     }
 }
