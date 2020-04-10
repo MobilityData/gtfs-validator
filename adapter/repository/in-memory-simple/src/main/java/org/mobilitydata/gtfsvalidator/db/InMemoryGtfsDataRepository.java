@@ -21,9 +21,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
@@ -54,10 +53,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return agencyCollection.containsKey(agency.getAgencyId());
     }
 
-    private final HashMap<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, Route> routeCollection = new HashMap<>();
 
-    public List<Route> getRouteCollection() {
-        return new ArrayList<>(routeCollection.values());
+    public Map<String, Route> getRouteCollection() {
+        return Collections.unmodifiableMap(routeCollection);
     }
 
     @Override
@@ -66,8 +65,13 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Route addEntity(final Route newRoute) {
-        routeCollection.put(newRoute.getRouteId(), newRoute);
-        return newRoute;
+    public Route addEntity(final Route newRoute) throws SQLIntegrityConstraintViolationException {
+        if (routeCollection.containsKey(newRoute.getRouteId())) {
+            throw new SQLIntegrityConstraintViolationException("route must be unique in dataset");
+        } else {
+            String routeId = newRoute.getRouteId();
+            routeCollection.put(routeId, newRoute);
+            return newRoute;
+        }
     }
 }

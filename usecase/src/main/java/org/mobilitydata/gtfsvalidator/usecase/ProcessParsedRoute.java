@@ -23,6 +23,8 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 /**
  * This use case turns a parsed entity representing a row from routes.txt into a concrete class
  */
@@ -57,7 +59,8 @@ public class ProcessParsedRoute {
      * @throws IllegalArgumentException if specification requirements are not met regarding values for agency_name,
      *                              route_id and route type
      */
-    public void execute(final ParsedEntity validatedParsedRoute) throws IllegalArgumentException {
+    public void execute(final ParsedEntity validatedParsedRoute) throws IllegalArgumentException,
+            SQLIntegrityConstraintViolationException {
 
         String routeId = (String) validatedParsedRoute.get("route_id");
         String agencyId = (String) validatedParsedRoute.get("agency_id");
@@ -84,7 +87,7 @@ public class ProcessParsedRoute {
 
             gtfsDataRepository.addEntity(builder.build());
 
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | SQLIntegrityConstraintViolationException e) {
 
             if (routeId == null) {
                 resultRepository.addNotice(new MissingRequiredValueNotice("routes.txt", "route_id",

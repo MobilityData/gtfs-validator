@@ -28,6 +28,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +41,8 @@ class ProcessParsedRouteTest {
     private final int INT_TEST_VALUE = 0;
 
     @Test
-    void validatedParsedRouteShouldCreateRouteEntityAndBeAddedToGtfsDataRepository() {
+    void validatedParsedRouteShouldCreateRouteEntityAndBeAddedToGtfsDataRepository()
+            throws SQLIntegrityConstraintViolationException {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -185,7 +187,8 @@ class ProcessParsedRouteTest {
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedRoute));
 
-        Assertions.assertEquals("Unexpected value for field route_type in routes.txt", exception.getMessage());
+        Assertions.assertEquals("Unexpected value, or null value for field route_type in routes.txt",
+                exception.getMessage());
 
         verify(mockParsedRoute, times(10)).get(anyString());
 

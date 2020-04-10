@@ -19,9 +19,9 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -245,7 +245,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddEntityShouldAddRouteToRepoAndReturnEntity() {
+    void callToAddEntityShouldAddRouteToRepoAndReturnEntity() throws SQLIntegrityConstraintViolationException {
 
         Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
         when(mockBuilder.routeId(anyString())).thenCallRealMethod();
@@ -299,7 +299,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getRouteCollectionShouldReturnRouteCollection() {
+    void getRouteCollectionShouldReturnRouteCollection() throws SQLIntegrityConstraintViolationException {
 
         Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
         when(mockBuilder.routeId(anyString())).thenCallRealMethod();
@@ -344,14 +344,14 @@ class InMemoryGtfsDataRepositoryTest {
         final Route route01 = mockBuilder.build();
         underTest.addEntity(route01);
 
-        final List<Route> toVerify = underTest.getRouteCollection();
+        final Map<String, Route> toVerify = underTest.getRouteCollection();
 
-        assertEquals("test_id_0", toVerify.get(1).getRouteId());
-        assertEquals("test_id_1", toVerify.get(0).getRouteId());
+        assertEquals("test_id_0", toVerify.get("test_id_0").getRouteId());
+        assertEquals("test_id_1", toVerify.get("test_id_1").getRouteId());
     }
 
     @Test
-    void getRouteByIdShouldReturnRelatedRoute() {
+    void getRouteByIdShouldReturnRelatedRoute() throws SQLIntegrityConstraintViolationException {
 
         Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
         when(mockBuilder.routeId(anyString())).thenCallRealMethod();
@@ -396,5 +396,39 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals("test_id_0", underTest.getRouteById("test_id_0").getRouteId());
         assertEquals("test_id_1", underTest.getRouteById("test_id_1").getRouteId());
+    }
+
+    @Test
+    public void tryToAddTwiceTheSameRouteShouldThrowException() throws SQLIntegrityConstraintViolationException {
+
+        Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
+        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
+        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
+        when(mockBuilder.routeShortName(anyString())).thenCallRealMethod();
+        when(mockBuilder.routeLongName(anyString())).thenCallRealMethod();
+        when(mockBuilder.routeDesc(anyString())).thenCallRealMethod();
+        when(mockBuilder.routeType(anyInt())).thenCallRealMethod();
+        when(mockBuilder.routeUrl(anyString())).thenCallRealMethod();
+        when(mockBuilder.routeColor(anyString())).thenCallRealMethod();
+        when(mockBuilder.routeTextColor(anyString())).thenCallRealMethod();
+        when(mockBuilder.routeSortOrder(anyInt())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.routeId("test_id_0")
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(3)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(1);
+
+        GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addEntity(mockBuilder.build());
+
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
     }
 }
