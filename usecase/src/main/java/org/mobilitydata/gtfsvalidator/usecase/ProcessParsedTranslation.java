@@ -32,7 +32,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
  */
 @SuppressWarnings("ConstantConditions")
 public class ProcessParsedTranslation {
-
     private final TranslationTableSingleRow.TranslationTableSingleRowBuilder singleRowTranslationBuilder;
     private final TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder simpleKeyTranslationBuilder;
     private final TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder compositeKeyTranslationBuilder;
@@ -64,7 +63,6 @@ public class ProcessParsedTranslation {
      * @param validatedTranslationEntity entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedTranslationEntity) throws IllegalArgumentException {
-
         final String tableName = (String) validatedTranslationEntity.get("table_name");
         final String fieldName = (String) validatedTranslationEntity.get("field_name");
         final String language = (String) validatedTranslationEntity.get("language");

@@ -14,12 +14,10 @@ import org.mockito.InOrder;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedTranslationTest {
-
     private final String STRING_TEST_VALUE = "test_value";
 
     @Test
     public void validTranslationWithFeedInfoAsTableNameShouldCreateTranslationTableSingleRowAndBeAddedToRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -81,7 +79,6 @@ class ProcessParsedTranslationTest {
 
     @Test
     public void validTranslationForStopTimesAndDefinedRecordIdShouldCreateTranslationTableCompositeKeyAndBeAddedToRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -143,7 +140,6 @@ class ProcessParsedTranslationTest {
 
     @Test
     public void validTranslationForTripsShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -205,7 +201,6 @@ class ProcessParsedTranslationTest {
 
     @Test
     public void validTranslationForAgencyShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -267,7 +262,6 @@ class ProcessParsedTranslationTest {
 
     @Test
     public void validTranslationForStopsShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -329,7 +323,6 @@ class ProcessParsedTranslationTest {
 
     @Test
     public void validTranslationForRoutesShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -391,7 +384,6 @@ class ProcessParsedTranslationTest {
 
     @Test
     public void validTranslationForLevelsShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);

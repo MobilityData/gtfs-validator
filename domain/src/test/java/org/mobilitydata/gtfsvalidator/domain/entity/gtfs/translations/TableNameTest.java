@@ -9,7 +9,6 @@ class TableNameTest {
 
     @Test
     public void createTableNameWithNullValueShouldThrowException() {
-
         String unexpectedEnumValue = null;
 
         @SuppressWarnings("ConstantConditions") Object underTest = TableName.fromString(unexpectedEnumValue);
@@ -19,7 +18,6 @@ class TableNameTest {
 
     @Test
     public void createTableNameWithUnexpectedValueShouldReturnNullValue() {
-
         String unexpectedEnumValue = "test";
 
         Object underTest = TableName.fromString(unexpectedEnumValue);
@@ -29,7 +27,6 @@ class TableNameTest {
 
     @Test
     public void createTableNameWithExpectedValueAgencyShouldNotThrowExceptionAndReturnCorrectRouteType() {
-
         String expectedEnumValue = "agency";
 
         TableName tableName = TableName.fromString(expectedEnumValue);
@@ -39,7 +36,6 @@ class TableNameTest {
 
     @Test
     public void createTableNameWithExpectedValueStopsShouldNotThrowExceptionAndReturnCorrectRouteType() {
-
         String expectedEnumValue = "stops";
 
         TableName tableName = TableName.fromString(expectedEnumValue);
@@ -49,7 +45,6 @@ class TableNameTest {
 
     @Test
     public void createTableNameWithExpectedValueRoutesShouldNotThrowExceptionAndReturnCorrectRouteType() {
-
         String expectedEnumValue = "routes";
 
         TableName tableName = TableName.fromString(expectedEnumValue);
@@ -59,7 +54,6 @@ class TableNameTest {
 
     @Test
     public void createTableNameWithExpectedValueTripsShouldNotThrowExceptionAndReturnCorrectRouteType() {
-
         String expectedEnumValue = "trips";
 
         TableName tableName = TableName.fromString(expectedEnumValue);
@@ -69,7 +63,6 @@ class TableNameTest {
 
     @Test
     public void createTableNameWithExpectedValueStopTimesShouldNotThrowExceptionAndReturnCorrectRouteType() {
-
         String expectedEnumValue = "stop_times";
 
         TableName tableName = TableName.fromString(expectedEnumValue);

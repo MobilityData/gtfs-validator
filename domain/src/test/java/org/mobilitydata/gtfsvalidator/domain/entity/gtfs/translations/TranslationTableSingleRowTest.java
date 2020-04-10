@@ -6,12 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TranslationTableSingleRowTest {
-
     private static final String STRING_TEST_VALUE = "test_value";
 
     @Test
     public void createTranslationSingleRowWithInvalidTableNameShouldThrowException() {
-
         TranslationTableSingleRow.TranslationTableSingleRowBuilder underTest = new TranslationTableSingleRow
                 .TranslationTableSingleRowBuilder();
 
@@ -31,7 +29,6 @@ class TranslationTableSingleRowTest {
 
     @Test
     public void createTranslationSingleRowWithInvalidFieldNameShouldThrowException() {
-
         TranslationTableSingleRow.TranslationTableSingleRowBuilder underTest = new TranslationTableSingleRow
                 .TranslationTableSingleRowBuilder();
 
@@ -51,7 +48,6 @@ class TranslationTableSingleRowTest {
 
     @Test
     public void createTranslationSingleRowWithInvalidLanguageShouldThrowException() {
-
         TranslationTableSingleRow.TranslationTableSingleRowBuilder underTest = new TranslationTableSingleRow
                 .TranslationTableSingleRowBuilder();
 
@@ -71,7 +67,6 @@ class TranslationTableSingleRowTest {
 
     @Test
     public void createTranslationSingleRowWithInvalidTranslationShouldThrowException() {
-
         TranslationTableSingleRow.TranslationTableSingleRowBuilder underTest = new TranslationTableSingleRow
                 .TranslationTableSingleRowBuilder();
 
@@ -91,7 +86,6 @@ class TranslationTableSingleRowTest {
 
     @Test
     public void createTranslationSingleRowWithRecordIdShouldThrowException() {
-
         TranslationTableSingleRow.TranslationTableSingleRowBuilder underTest = new TranslationTableSingleRow
                 .TranslationTableSingleRowBuilder();
 
@@ -110,7 +104,6 @@ class TranslationTableSingleRowTest {
 
     @Test
     public void createTranslationSingleRowWithRecordSubIdShouldThrowException() {
-
         TranslationTableSingleRow.TranslationTableSingleRowBuilder underTest = new TranslationTableSingleRow
                 .TranslationTableSingleRowBuilder();
 
@@ -129,7 +122,6 @@ class TranslationTableSingleRowTest {
 
     @Test
     public void createTranslationSingleRowWithFieldValueShouldThrowException() {
-
         TranslationTableSingleRow.TranslationTableSingleRowBuilder underTest = new TranslationTableSingleRow
                 .TranslationTableSingleRowBuilder();
 

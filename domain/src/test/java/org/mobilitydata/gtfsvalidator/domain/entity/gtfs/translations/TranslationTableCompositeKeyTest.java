@@ -6,12 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TranslationTableCompositeKeyTest {
-
     private static final String STRING_TEST_VALUE = "test_value";
 
     @Test
     public void createTranslationCompositeKeyWithInvalidTableNameShouldThrowException() {
-
         TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder underTest = new TranslationTableCompositeKey
                 .TranslationTableCompositeKeyBuilder();
 
@@ -31,7 +29,6 @@ class TranslationTableCompositeKeyTest {
 
     @Test
     public void createTranslationCompositeKeyWithInvalidFieldNameShouldThrowException() {
-
         TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder underTest = new TranslationTableCompositeKey
                 .TranslationTableCompositeKeyBuilder();
 
@@ -51,7 +48,6 @@ class TranslationTableCompositeKeyTest {
 
     @Test
     public void createTranslationCompositeKeyWithInvalidLanguageShouldThrowException() {
-
         TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder underTest = new TranslationTableCompositeKey
                 .TranslationTableCompositeKeyBuilder();
 
@@ -71,7 +67,6 @@ class TranslationTableCompositeKeyTest {
 
     @Test
     public void createTranslationCompositeKeyWithInvalidTranslationShouldThrowException() {
-
         TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder underTest = new TranslationTableCompositeKey
                 .TranslationTableCompositeKeyBuilder();
 
@@ -91,7 +86,6 @@ class TranslationTableCompositeKeyTest {
 
     @Test
     public void createTranslationCompositeKeyWithNullRecordSubIdShouldThrowException() {
-
         TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder underTest = new TranslationTableCompositeKey
                 .TranslationTableCompositeKeyBuilder();
 
@@ -110,7 +104,6 @@ class TranslationTableCompositeKeyTest {
 
     @Test
     public void createTranslationCompositeKeyWithNullRecordIdShouldThrowException() {
-
         TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder underTest = new TranslationTableCompositeKey
                 .TranslationTableCompositeKeyBuilder();
 

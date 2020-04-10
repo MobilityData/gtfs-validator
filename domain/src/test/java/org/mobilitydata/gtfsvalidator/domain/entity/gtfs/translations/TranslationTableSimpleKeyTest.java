@@ -6,12 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TranslationTableSimpleKeyTest {
-
     private static final String STRING_TEST_VALUE = "test_value";
 
     @Test
     public void createTranslationSimpleKeyWithInvalidTableNameShouldThrowException() {
-
         TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder underTest = new TranslationTableSimpleKey
                 .TranslationTableSimpleKeyBuilder();
 
@@ -31,7 +29,6 @@ class TranslationTableSimpleKeyTest {
 
     @Test
     public void createTranslationSimpleKeyWithInvalidFieldNameShouldThrowException() {
-
         TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder underTest = new TranslationTableSimpleKey
                 .TranslationTableSimpleKeyBuilder();
 
@@ -51,7 +48,6 @@ class TranslationTableSimpleKeyTest {
 
     @Test
     public void createTranslationSimpleKeyWithInvalidLanguageShouldThrowException() {
-
         TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder underTest = new TranslationTableSimpleKey
                 .TranslationTableSimpleKeyBuilder();
 
@@ -71,7 +67,6 @@ class TranslationTableSimpleKeyTest {
 
     @Test
     public void createTranslationSimpleKeyWithInvalidTranslationShouldThrowException() {
-
         TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder underTest = new TranslationTableSimpleKey
                 .TranslationTableSimpleKeyBuilder();
 
@@ -91,7 +86,6 @@ class TranslationTableSimpleKeyTest {
 
     @Test
     public void createTranslationSimpleKeyWithInvalidFieldValueAndRecordIdShouldThrowException() {
-
         TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder underTest = new TranslationTableSimpleKey
                 .TranslationTableSimpleKeyBuilder();
 
@@ -110,7 +104,6 @@ class TranslationTableSimpleKeyTest {
 
     @Test
     public void createTranslationSimpleKeyWithInvalidFieldValueAndRecordSubIdShouldThrowException() {
-
         TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder underTest = new TranslationTableSimpleKey
                 .TranslationTableSimpleKeyBuilder();
 
@@ -129,7 +122,6 @@ class TranslationTableSimpleKeyTest {
 
     @Test
     public void createTranslationSimpleKeyWithNullFieldValueAndNullRecordIdShouldThrowException() {
-
         TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder underTest = new TranslationTableSimpleKey
                 .TranslationTableSimpleKeyBuilder();
 
