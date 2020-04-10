@@ -31,7 +31,6 @@ class RouteTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createRouteWithNullRouteIdShouldThrowException() {
-
         Route.RouteBuilder underTest = new Route.RouteBuilder();
 
         underTest.routeId(null)
@@ -52,7 +51,6 @@ class RouteTest {
 
     @Test
     public void createRouteWithInvalidRouteTypeShouldThrowException() {
-
         Route.RouteBuilder underTest = new Route.RouteBuilder();
 
         underTest.routeId(STRING_TEST_VALUE)
@@ -68,12 +66,12 @@ class RouteTest {
 
         Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
-        assertEquals("Unexpected value for field route_type in routes.txt", exception.getMessage());
+        assertEquals("Unexpected value, or null value for field route_type in routes.txt",
+                exception.getMessage());
     }
 
     @Test
     public void createRouteWithValidValuesForFieldShouldNotThrowException() {
-
         Route.RouteBuilder underTest = new Route.RouteBuilder();
 
         underTest.routeId(STRING_TEST_VALUE)

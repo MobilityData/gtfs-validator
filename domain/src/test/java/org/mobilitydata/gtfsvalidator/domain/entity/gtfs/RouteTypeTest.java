@@ -4,26 +4,24 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.RouteType;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class RouteTypeTest {
 
     @Test
-    public void createRouteTypeWithNullValueShouldThrowException() {
+    public void createRouteTypeWithNullValueShouldReturnNull() {
 
         Integer unexpectedEnumValue = null;
 
-        Exception exception = assertThrows(NullPointerException.class, () -> RouteType.fromInt(unexpectedEnumValue));
-
-        assertEquals("Unexpected value for field route_type in routes.txt", exception.getMessage());
+        assertNull(RouteType.fromInt(unexpectedEnumValue));
     }
 
     @Test
-    public void createRouteTypeWithUnexpectedValueShouldThrowException() {
+    public void createRouteTypeWithUnexpectedValueShouldReturnNull() {
 
         int unexpectedEnumValue = 13;
 
-        assertThrows(NullPointerException.class, () -> RouteType.fromInt(unexpectedEnumValue));
+        assertNull(RouteType.fromInt(unexpectedEnumValue));
     }
 
     @Test

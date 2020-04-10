@@ -218,10 +218,7 @@ public class Route {
          * @return builder for future object creation
          */
         public RouteBuilder routeType(final int routeType) throws NullPointerException {
-            try {
-                this.routeType = RouteType.fromInt(routeType);
-            } catch (NullPointerException ignored) {
-            }
+            this.routeType = RouteType.fromInt(routeType);
             return this;
         }
 
@@ -278,7 +275,7 @@ public class Route {
          */
         public Route build() throws IllegalArgumentException {
             if (routeType == null) {
-                throw new IllegalArgumentException("Unexpected value for field route_type in routes.txt");
+                throw new IllegalArgumentException("Unexpected value, or null value for field route_type in routes.txt");
             }
             if (routeId == null) {
                 throw new IllegalArgumentException("route_id can not be null in routes.txt");

@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -43,16 +41,6 @@ public enum RouteType {
     }
 
     /**
-     * Returns a list containing the int values for enum {@link RouteType}
-     *
-     * @return the int values for enum {@link RouteType}
-     */
-    static public List<Integer> getValues() {
-
-        return Stream.of(RouteType.values()).map(enumItem -> enumItem.value).collect(Collectors.toList());
-    }
-
-    /**
      * Matches enum values to Integer value. Returns the {@link RouteType} enum item value matching the integer passed
      * as parameter. Throws {@link NullPointerException} if the integer passed as parameter does not match any
      * {@link RouteType} enum item
@@ -61,16 +49,14 @@ public enum RouteType {
      * @return the enum item matching the integer passed as parameter.
      * @throws NullPointerException if the integer passed as parameter does not match any {@link RouteType} enum item
      */
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     static public RouteType fromInt(Integer fromValue) throws NullPointerException {
 
-        if (!getValues().contains(fromValue)) {
-            throw new NullPointerException("Unexpected value for field route_type in routes.txt");
+        if (fromValue == null) {
+            return null;
         }
-
         return Stream.of(RouteType.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .get();
+                .orElse(null);
     }
 }
