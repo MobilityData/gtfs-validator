@@ -67,7 +67,10 @@ public class TranslationTableSimpleKey extends TranslationTableBase {
          *                                  - fieldName, language, and translation fields can not be null
          */
         public TranslationTableSimpleKey build() throws IllegalArgumentException {
-
+            if (tableName == null) {
+                throw new IllegalArgumentException("table_name is undefined: either null or an unexpected enum value" +
+                        " has been encountered");
+            }
             if (fieldValue != null) {
                 if (recordId != null) {
                     throw new IllegalArgumentException("record_id and field_value can not both be defined");

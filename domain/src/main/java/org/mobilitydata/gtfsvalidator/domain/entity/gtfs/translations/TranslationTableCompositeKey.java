@@ -59,6 +59,10 @@ public class TranslationTableCompositeKey extends TranslationTableBase {
          *                                  null; or if field fieldValue is not null
          */
         public TranslationTableCompositeKey build() throws IllegalArgumentException {
+            if (tableName == null) {
+                throw new IllegalArgumentException("table_name is undefined: either null or an unexpected enum value" +
+                        " has been encountered");
+            }
             if (fieldName == null) {
                 throw new IllegalArgumentException("field_name must be specified");
             } else if (language == null) {

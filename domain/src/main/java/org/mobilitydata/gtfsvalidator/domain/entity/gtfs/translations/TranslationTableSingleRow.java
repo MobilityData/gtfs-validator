@@ -50,13 +50,17 @@ public class TranslationTableSingleRow extends TranslationTableBase {
          * Returns a {@link TranslationTableSingleRow} object from fields provided via
          * {@link TranslationTableSingleRowBuilder} methods. Throws {@link IllegalArgumentException} if fields
          * fieldName, fieldName, language or translation are null, or if fields record_id, record_sub_id, field_value
-         * are not null
+         * are not null.
          *
          * @return Entity representing a row from translations.txt with table_name = feed_info
          * @throws IllegalArgumentException if fields fieldName, fieldName, language or translation are null or if fields
          *                                  record_id, record_sub_id, field_value are not null
          */
         public TranslationTableSingleRow build() throws IllegalArgumentException {
+            if (tableName == null) {
+                throw new IllegalArgumentException("table_name is undefined: either null or an unexpected enum value" +
+                        " has been encountered");
+            }
             if (fieldName == null) {
                 throw new IllegalArgumentException("fieldName can not be null");
             }
