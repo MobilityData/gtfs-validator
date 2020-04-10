@@ -33,6 +33,9 @@ jar {
 }
 
 shadowJar {
+    minimize {
+        exclude(dependency('org.apache.logging.log4j:log4j-core'))
+    }
     // Change the JAR name from cli-app to gtfs-validator
     baseName = rootProject.name
 }
