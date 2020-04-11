@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase.notice.base;
 
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-public class ErrorNotice extends Notice {
+public abstract class ErrorNotice extends Notice {
 
     protected static final String E_001 = "E001";
     protected static final String E_002 = "E002";
@@ -35,12 +35,18 @@ public class ErrorNotice extends Notice {
     protected static final String E_013 = "E013";
     protected static final String E_014 = "E014";
     protected static final String E_015 = "E015";
+    protected static final String E_016 = "E016";
+    protected static final String E_017 = "E017";
+    protected static final String E_018 = "E018";
+    protected static final String E_019 = "E019";
+    protected static final String E_020 = "E020";
 
     public ErrorNotice(final String filename,
                        final String noticeId,
                        final String title,
-                       final String description) {
-        super(filename, noticeId, title, description);
+                       final String description,
+                       String entityId) {
+        super(filename, noticeId, title, description, entityId);
     }
 
     @Override
