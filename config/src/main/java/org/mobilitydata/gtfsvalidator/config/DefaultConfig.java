@@ -103,4 +103,8 @@ public class DefaultConfig {
     public ValidateAllOptionalFilename validateAllOptionalFileName() {
         return new ValidateAllOptionalFilename(specRepo, rawFileRepo, resultRepo);
     }
+
+    public ExportResultAsFile exportResultAsFile(boolean asProto, String outputPath) {
+        return new ExportResultAsFile(resultRepo, outputPath, asProto);
+    }
 }
