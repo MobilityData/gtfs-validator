@@ -6,6 +6,8 @@ import org.junit.jupiter.api.*;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -25,6 +27,11 @@ public class NoticeMemoryConsumptionTest {
 
     // used to provide a 10% safety margin to avoid instability due to the behavior of the garbage collector
     private static final float SAFETY_BUFFER_FACTOR = 1.10f;
+
+    @Mock
+    List<Notice> noticeList = new ArrayList<>();
+    @InjectMocks
+    ValidationResultRepository mockResultRepo;
 
     private void generateNotices(ValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
@@ -48,37 +55,18 @@ public class NoticeMemoryConsumptionTest {
         );
     }
 
-    private ValidationResultRepository getMockRepository() {
-        List<Notice> noticeList = new ArrayList<>();
-
-        ValidationResultRepository mockRepository = mock(InMemoryValidationResultRepository.class);
-        when(mockRepository.addNotice(any(Notice.class))).thenAnswer(new Answer<Notice>() {
-            public Notice answer(InvocationOnMock invocation) {
-                Notice notice = invocation.getArgument(0);
-                noticeList.add(notice);
-                return notice;
-            }
-        });
-        when(mockRepository.getAll()).thenAnswer(new Answer<Collection<Notice>>() {
-            public Collection<Notice> answer(InvocationOnMock invocation) {
-                return noticeList.stream().collect(Collectors.toUnmodifiableList());
-            }
-        });
-        return mockRepository;
-    }
-
     private void memoryLimitTest(boolean isMock, int noticesCount, int maxMemoryLimit) {
 
-        ValidationResultRepository testRepository;
+        ValidationResultRepository mockResultRepo;
 
         if (isMock == true) {
-            testRepository = getMockRepository();
+            mockResultRepo = mockResultRepository();
         } else {
-            testRepository = new InMemoryValidationResultRepository();
+            mockResultRepo = new InMemoryValidationResultRepository();
         }
 
-        generateNotices(testRepository, noticesCount);
-        testRepository.getAll();
+        generateNotices(mockResultRepo, noticesCount);
+        mockResultRepo.getAll();
 
         long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
         long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
@@ -88,6 +76,24 @@ public class NoticeMemoryConsumptionTest {
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
         assert (totalMemoryInBytes - freeMemoryInBytes < maxMemoryLimit * SAFETY_BUFFER_FACTOR);
+    }
+
+    private ValidationResultRepository mockResultRepository() {
+        ValidationResultRepository mockResultRepo = mock(InMemoryValidationResultRepository.class);
+        when(mockResultRepo.addNotice(any(Notice.class))).thenAnswer(new Answer<Notice>() {
+            public Notice answer(InvocationOnMock invocation) {
+                Notice notice = invocation.getArgument(0);
+                noticeList.add(notice);
+                return notice;
+            }
+        });
+        when(mockResultRepo.getAll()).thenAnswer(new Answer<Collection<Notice>>() {
+            public Collection<Notice> answer(InvocationOnMock invocation) {
+                return noticeList.stream().collect(Collectors.toUnmodifiableList());
+            }
+        });
+
+        return mockResultRepo;
     }
 
     @BeforeEach
@@ -108,9 +114,7 @@ public class NoticeMemoryConsumptionTest {
 
     @Test
     @Order(2)
-    public void realMemoryLimitTest_1000notices() {
-        memoryLimitTest(false,1000, 10_000_000);
-    }
+    public void realMemoryLimitTest_1000notices() { memoryLimitTest(false,1000, 10_000_000); }
 
     @Test
     @Order(3)
@@ -159,4 +163,5 @@ public class NoticeMemoryConsumptionTest {
     public void mockMemoryLimitTest_100_000notices() {
         memoryLimitTest(true,100_000, 120_000_000);
     }
+
 }

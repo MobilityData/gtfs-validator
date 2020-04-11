@@ -25,11 +25,12 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
@@ -38,70 +39,16 @@ import static org.mockito.Mockito.*;
 
 class ValidateAllRowLengthForFileTest {
 
-    private ValidationResultRepository getMockResultRepo() {
-        List<Notice> noticeList = new ArrayList<>();
-
-        ValidationResultRepository mockResultRepo =  mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<Notice>() {
-            public ErrorNotice answer(InvocationOnMock invocation) {
-                ErrorNotice notice = invocation.getArgument(0);
-                noticeList.add(notice);
-                return notice;
-            }
-        });
-        when(mockResultRepo.getAll()).thenAnswer(new Answer<Collection<Notice>>() {
-            public Collection<Notice> answer(InvocationOnMock invocation) {
-                return noticeList.stream().collect(Collectors.toUnmodifiableList());
-            }
-        });
-
-        return mockResultRepo;
-    }
-
-    private RawFileRepository getMockFileRepo() {
-        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
-        when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
-        when(mockFileRepo.getProviderForFile(any(RawFileInfo.class)))
-                .thenAnswer(new Answer<Optional<RawFileRepository.RawEntityProvider>>() {
-            public Optional<RawFileRepository.RawEntityProvider> answer(InvocationOnMock invocation) {
-                RawFileInfo file = invocation.getArgument(0);
-                if (file.getFilename().contains("empty")) {
-                    return Optional.empty();
-                }
-
-                if (file.getFilename().contains("invalid")) {
-                    return Optional.of(new EntityProvider(
-                            List.of(
-                                    Map.of("h0", "header0_name", "h1", "header1_name",
-                                            "h2", "header2_name"),
-                                    Map.of("h0", "v0", "h1", "v1"),
-                                    Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
-                                    Map.of("h0", "v0", "h1", "v1", "h2", "v2", "h3", "v3")
-                            )
-                    ));
-                }
-
-                return Optional.of(new EntityProvider(
-                        List.of(
-                                Map.of("h0", "header0_name", "h1", "header1_name",
-                                        "h2", "header2_name"),
-                                Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
-                                Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
-                                Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
-                                Map.of("h0", "v0", "h1", "v1", "h2", "v2")
-                        )
-                ));
-            }
-        });
-
-        return mockFileRepo;
-    }
+    @Mock
+    List<Notice> noticeList = new ArrayList<>();
+    @InjectMocks
+    ValidationResultRepository mockResultRepo;
 
     @Test
     void expectedLengthForAllShouldNotGenerateNotice() {
 
-        ValidationResultRepository mockResultRepo =  getMockResultRepo();
-        RawFileRepository mockFileRepo = getMockFileRepo();
+        ValidationResultRepository mockResultRepo = mockResultRepository();
+        RawFileRepository mockFileRepo = mockFileRepository();
 
         ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
                 RawFileInfo.builder()
@@ -112,16 +59,14 @@ class ValidateAllRowLengthForFileTest {
         );
 
         underTest.execute();
-        List<Notice> mockNoticeList = new ArrayList<>(mockResultRepo.getAll());
-
-        assertEquals(0, mockNoticeList.size());
+        assertEquals(0, noticeList.size());
     }
 
     @Test
     void invalidRowsShouldGenerateError() {
 
-        ValidationResultRepository mockResultRepo =  getMockResultRepo();
-        RawFileRepository mockFileRepo = getMockFileRepo();
+        ValidationResultRepository mockResultRepo = mockResultRepository();
+        RawFileRepository mockFileRepo = mockFileRepository();
 
         ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
                 RawFileInfo.builder()
@@ -132,18 +77,16 @@ class ValidateAllRowLengthForFileTest {
         );
 
         underTest.execute();
-        List<Notice> mockNoticeList = new ArrayList<>(mockResultRepo.getAll());
+        assertEquals(2, noticeList.size());
 
-        assertEquals(2, mockResultRepo.getAll().size());
-
-        Notice notice = mockNoticeList.get(0);
+        Notice notice = noticeList.get(0);
         assertThat(notice, instanceOf(InvalidRowLengthNotice.class));
         assertEquals("E004", notice.getId());
         assertEquals("Invalid row length", notice.getTitle());
         assertEquals("test_invalid.tst", notice.getFilename());
         assertEquals("Invalid length for row:2 -- expected:3 actual:2", notice.getDescription());
 
-        notice = mockNoticeList.get(1);
+        notice = noticeList.get(1);
         assertThat(notice, instanceOf(InvalidRowLengthNotice.class));
         assertEquals("E004", notice.getId());
         assertEquals("Invalid row length", notice.getTitle());
@@ -154,8 +97,8 @@ class ValidateAllRowLengthForFileTest {
     @Test
     void dataProviderConstructionIssueShouldGenerateError() {
 
-        ValidationResultRepository mockResultRepo =  getMockResultRepo();
-        RawFileRepository mockFileRepo = getMockFileRepo();
+        ValidationResultRepository mockResultRepo = mockResultRepository();
+        RawFileRepository mockFileRepo = mockFileRepository();
 
         ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
                 RawFileInfo.builder()
@@ -166,15 +109,66 @@ class ValidateAllRowLengthForFileTest {
         );
 
         underTest.execute();
-        List<Notice> mockNoticeList = new ArrayList<>(mockResultRepo.getAll());
 
-        assertEquals(1, mockNoticeList.size());
-        Notice notice = mockNoticeList.get(0);
+        assertEquals(1, noticeList.size());
+        Notice notice = noticeList.get(0);
         assertThat(notice, instanceOf(CannotConstructDataProviderNotice.class));
         assertEquals("E002", notice.getId());
         assertEquals("Data provider error", notice.getTitle());
         assertEquals("test_empty.tst", notice.getFilename());
         assertEquals("An error occurred while trying to access raw data for file: test_empty.tst", notice.getDescription());
+    }
+
+    private ValidationResultRepository mockResultRepository() {
+        ValidationResultRepository mockResultRepo =  mock(ValidationResultRepository.class);
+        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<Notice>() {
+            public ErrorNotice answer(InvocationOnMock invocation) {
+                ErrorNotice errorNotice = invocation.getArgument(0);
+                noticeList.add(errorNotice);
+                return errorNotice;
+            }
+        });
+
+        return mockResultRepo;
+    }
+
+    private RawFileRepository mockFileRepository() {
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
+        when(mockFileRepo.getProviderForFile(any(RawFileInfo.class)))
+                .thenAnswer(new Answer<Optional<RawFileRepository.RawEntityProvider>>() {
+                    public Optional<RawFileRepository.RawEntityProvider> answer(InvocationOnMock invocation) {
+                        RawFileInfo file = invocation.getArgument(0);
+                        if (file.getFilename().contains("empty")) {
+                            return Optional.empty();
+                        }
+
+                        if (file.getFilename().contains("invalid")) {
+                            return Optional.of(new EntityProvider(
+                                    List.of(
+                                            Map.of("h0", "header0_name", "h1", "header1_name",
+                                                    "h2", "header2_name"),
+                                            Map.of("h0", "v0", "h1", "v1"),
+                                            Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
+                                            Map.of("h0", "v0", "h1", "v1", "h2", "v2", "h3", "v3")
+                                    )
+                            ));
+                        }
+
+                        return Optional.of(new EntityProvider(
+                                List.of(
+                                        Map.of("h0", "header0_name", "h1", "header1_name",
+                                                "h2", "header2_name"),
+                                        Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
+                                        Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
+                                        Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
+                                        Map.of("h0", "v0", "h1", "v1", "h2", "v2")
+                                )
+                        ));
+                    }
+                });
+
+        return mockFileRepo;
     }
 
     private static class EntityProvider implements RawFileRepository.RawEntityProvider {

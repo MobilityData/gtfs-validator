@@ -26,9 +26,9 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotic
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-import org.mockito.ArgumentMatchers;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
+import org.mockito.*;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.*;
 
@@ -39,15 +39,43 @@ import static org.mockito.Mockito.*;
 
 class ValidateAllOptionalFilenameTest {
 
+    @Mock(name = "reqSpecRepo")
+    int reqSpecRepo;
+    @Mock(name = "optSpecRepo")
+    int optSpecRepo;
+    @InjectMocks
+    GtfsSpecRepository mockSpecRepo;
+
+    @Mock(name = "reqFileRepo")
+    int reqFileRepo;
+    @Mock(name = "optFileRepo")
+    int optFileRepo;
+    @Mock(name = "extraFileRepo")
+    int extraFileRepo;
+    @InjectMocks
+    RawFileRepository mockFileRepo;
+
+    @Mock
+    List<Notice> noticeList = new ArrayList<>();
+    @InjectMocks
+    ValidationResultRepository mockResultRepo;
+
     @Test
     void allExtraPresentShouldGenerateNotice() {
-        MockSpecRepo mockSpecRepo = new MockSpecRepo(1, 2);
-        MockRawFileRepo mockRawFileRepo = new MockRawFileRepo(1, 2, 3);
-        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
+
+        reqSpecRepo = 1;
+        optSpecRepo = 2;
+        reqFileRepo = 1;
+        optFileRepo = 2;
+        extraFileRepo = 3;
+
+        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
+        RawFileRepository mockFileRepo = mockFileRepository();
+        ValidationResultRepository mockResultRepo = mockResultRepo();
 
         ValidateAllOptionalFilename underTest = new ValidateAllOptionalFilename(
                 mockSpecRepo,
-                mockRawFileRepo,
+                mockFileRepo,
                 mockResultRepo);
 
         List<String> result = underTest.execute();
@@ -55,23 +83,23 @@ class ValidateAllOptionalFilenameTest {
         assertEquals(2, result.size());
         assertEquals(List.of("opt0.opt", "opt1.opt"), result);
 
-        assertEquals(3, mockResultRepo.notices.size());
+        assertEquals(3, noticeList.size());
 
-        Notice notice = mockResultRepo.notices.get(0);
+        Notice notice = noticeList.get(0);
         assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
         assertEquals("extra0.extra", notice.getFilename());
         assertEquals("W004", notice.getId());
         assertEquals("Non standard file found", notice.getTitle());
         assertEquals("Extra file extra0.extra found in archive", notice.getDescription());
 
-        notice = mockResultRepo.notices.get(1);
+        notice = noticeList.get(1);
         assertEquals("extra2.extra", notice.getFilename());
         assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
         assertEquals("W004", notice.getId());
         assertEquals("Non standard file found", notice.getTitle());
         assertEquals("Extra file extra2.extra found in archive", notice.getDescription());
 
-        notice = mockResultRepo.notices.get(2);
+        notice = noticeList.get(2);
         assertEquals("extra1.extra", notice.getFilename());
         assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
         assertEquals("W004", notice.getId());
@@ -79,149 +107,85 @@ class ValidateAllOptionalFilenameTest {
         assertEquals("Extra file extra1.extra found in archive", notice.getDescription());
     }
 
-    //mock spec repo
-    private static class MockSpecRepo implements GtfsSpecRepository {
+    private GtfsSpecRepository mockSpecRepository() {
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        when(mockSpecRepo.getRequiredFilenameList()).thenAnswer(new Answer<List<String>>() {
+            public List<String> answer(InvocationOnMock invocation) {
+                List<String> toReturn = new ArrayList<>(reqSpecRepo);
 
-        private final int howManyReq;
-        private final int howManyOpt;
+                for (int i = 0; i < reqSpecRepo; ++i) {
+                    toReturn.add("req" + i + ".req");
+                }
 
-        public MockSpecRepo(int howManyReq, int howManyOpt) {
-            this.howManyReq = howManyReq;
-            this.howManyOpt = howManyOpt;
-        }
-
-        @Override
-        public List<String> getRequiredFilenameList() {
-
-            List<String> toReturn = new ArrayList<>(this.howManyReq);
-
-            for (int i = 0; i < this.howManyReq; ++i) {
-                toReturn.add("req" + i + ".req");
+                return toReturn;
             }
+        });
+        when(mockSpecRepo.getOptionalFilenameList()).thenAnswer(new Answer<List<String>>() {
+            public List<String> answer(InvocationOnMock invocation) {
+                List<String> toReturn = new ArrayList<>(optSpecRepo);
 
-            return toReturn;
-        }
+                for (int i = 0; i < optSpecRepo; ++i) {
+                    toReturn.add("opt" + i + ".opt");
+                }
 
-        @Override
-        public List<String> getOptionalFilenameList() {
-            List<String> toReturn = new ArrayList<>(this.howManyOpt);
-
-            for (int i = 0; i < this.howManyOpt; ++i) {
-                toReturn.add("opt" + i + ".opt");
+                return toReturn;
             }
+        });
 
-            return toReturn;
-        }
-
-        @Override
-        public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
-            return null;
-        }
-
-        @Override
-        public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
-            return null;
-        }
-
-        @Override
-        public RawEntityParser getParserForFile(RawFileInfo file) {
-            return null;
-        }
-
-        @Override
-        public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
-            return null;
-        }
+        return mockSpecRepo;
     }
 
-    //mock raw file repo
-    private static class MockRawFileRepo implements RawFileRepository {
+    private RawFileRepository mockFileRepository() {
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
+        when(mockFileRepo.getFilenameAll()).thenAnswer(new Answer<Set<String>>() {
+            public Set<String> answer(InvocationOnMock invocation) {
+                Set<String> toReturn = new HashSet<>(reqFileRepo + optFileRepo);
 
-        private final int howManyReq;
-        private final int homManyOpt;
-        private final int howManyExtra;
+                for (int i = 0; i < reqFileRepo; ++i) {
+                    toReturn.add("req" + i + ".req");
+                }
 
-        public MockRawFileRepo(int howManyReq, int howManyOpt, int howManyExtra) {
-            this.howManyReq = howManyReq;
-            this.homManyOpt = howManyOpt;
-            this.howManyExtra = howManyExtra;
-        }
+                for (int j = 0; j < optFileRepo; ++j) {
+                    toReturn.add("opt" + j + ".opt");
+                }
 
-        @Override
-        public RawFileInfo create(RawFileInfo fileInfo) {
-            return null;
-        }
-
-        @Override
-        public Optional<RawFileInfo> findByName(String filename) {
-            return Optional.empty();
-        }
-
-        @Override
-        public Collection<String> getActualHeadersForFile(RawFileInfo file) {
-            return null;
-        }
-
-        @Override
-        public Set<String> getFilenameAll() {
-            Set<String> toReturn = new HashSet<>(this.howManyReq + this.homManyOpt);
-
-            for (int i = 0; i < this.howManyReq; ++i) {
-                toReturn.add("req" + i + ".req");
+                for (int k = 0; k < extraFileRepo; ++k) {
+                    toReturn.add("extra" + k + ".extra");
+                }
+                return toReturn;
             }
+        });
+        when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.empty());
 
-            for (int j = 0; j < this.homManyOpt; ++j) {
-                toReturn.add("opt" + j + ".opt");
-            }
-
-            for (int k = 0; k < this.howManyExtra; ++k) {
-                toReturn.add("extra" + k + ".extra");
-            }
-            return toReturn;
-        }
-
-        @Override
-        public Optional<RawEntityProvider> getProviderForFile(RawFileInfo file) {
-            return Optional.empty();
-        }
+        return mockFileRepo;
     }
 
-    //mock validation result repo
-    private static class MockValidationResultRepo implements ValidationResultRepository {
-        public final List<Notice> notices = new ArrayList<>();
+    private ValidationResultRepository mockResultRepo() {
+        ValidationResultRepository mockResultRepo =  mock(ValidationResultRepository.class);
+        when(mockResultRepo.addNotice(any(InfoNotice.class))).thenAnswer(new Answer<Notice>() {
+            public InfoNotice answer(InvocationOnMock invocation) {
+                InfoNotice infoNotice = invocation.getArgument(0);
+                noticeList.add(infoNotice);
+                return infoNotice;
+            }
+        });
+        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenAnswer(new Answer<Notice>() {
+            public WarningNotice answer(InvocationOnMock invocation) {
+                WarningNotice warningNotice = invocation.getArgument(0);
+                noticeList.add(warningNotice);
+                return warningNotice;
+            }
+        });
+        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<Notice>() {
+            public ErrorNotice answer(InvocationOnMock invocation) {
+                ErrorNotice errorNotice = invocation.getArgument(0);
+                noticeList.add(errorNotice);
+                return errorNotice;
+            }
+        });
 
-        @Override
-        public InfoNotice addNotice(InfoNotice newInfo) {
-            notices.add(newInfo);
-            return null;
-        }
-
-        @Override
-        public WarningNotice addNotice(WarningNotice newWarning) {
-            notices.add(newWarning);
-            return null;
-        }
-
-        @Override
-        public ErrorNotice addNotice(ErrorNotice newError) {
-            notices.add(newError);
-            return null;
-        }
-
-        @Override
-        public Collection<Notice> getAll() {
-            return null;
-        }
-
-        @Override
-        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
-            return null;
-        }
-
-        @Override
-        public Notice addNotice(Notice newNotice) {
-            return null;
-        }
+        return mockResultRepo;
     }
 
 }
