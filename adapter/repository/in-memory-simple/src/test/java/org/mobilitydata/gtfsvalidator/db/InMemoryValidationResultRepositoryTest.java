@@ -25,6 +25,8 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -44,66 +46,80 @@ class InMemoryValidationResultRepositoryTest {
 
     private static final String TEST_FILE_NAME = "test.tst";
 
+    @Mock(name = "warningNotice")
+    WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
+    @Mock(name = "warningList")
+    List<WarningNotice> warningList = new ArrayList<>();
+    @Mock(name = "errorNotice")
+    ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
+    @Mock(name = "errorList")
+    List<ErrorNotice> errorList = new ArrayList<>();
+    @Mock(name = "infoList")
+    List<InfoNotice> infoList = new ArrayList<>();
+    @InjectMocks
+    ValidationResultRepository mockResultRepo;
+
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void addingNoticeShouldExtendNoticeList() {
 
-        /*WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
-        List<WarningNotice> warningList = new ArrayList<>();
-        ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
-        List<ErrorNotice> errorList = new ArrayList<>();
-        List<InfoNotice> infoList = new ArrayList<>();
+        //WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
 
-        ValidationResultRepository mockRepository = mock(InMemoryValidationResultRepository.class);
-        when(mockRepository.addNotice(any(WarningNotice.class))).thenAnswer(new Answer<WarningNotice>() {
-            public WarningNotice answer(InvocationOnMock invocation) {
-                WarningNotice warningNotice = invocation.getArgument(0);
-                warningList.add(warningNotice);
-                return warningNotice;
-            }
-        });
-        when(mockRepository.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<ErrorNotice>() {
-            public ErrorNotice answer(InvocationOnMock invocation) {
-                ErrorNotice errorNotice = invocation.getArgument(0);
-                errorList.add(errorNotice);
-                return errorNotice;
-            }
-        });
-        when(mockRepository.getAll()).thenAnswer(new Answer<Collection<Notice>>() {
-            public Collection<Notice> answer(InvocationOnMock invocation) {
-                return Stream.concat(
-                        Stream.concat(
-                            infoList.stream(),
-                            warningList.stream()),
-                        errorList.stream())
-                        .collect(Collectors.toUnmodifiableList());
-            }
-        });*/
+        //ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
 
-        WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
+        //ValidationResultRepository mockResultRepo = new InMemoryValidationResultRepository();
 
-        ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
+        ValidationResultRepository mockResultRepo = mockResultRepository();
 
-        ValidationResultRepository mockRepository = new InMemoryValidationResultRepository();
+        mockResultRepo.addNotice(warningNotice);
+        assertEquals(1, mockResultRepo.getAll().size());
 
-        mockRepository.addNotice(warningNotice);
-        assertEquals(1, mockRepository.getAll().size());
-
-        Notice testedNotice = mockRepository.getAll().stream()
+        Notice testedNotice = mockResultRepo.getAll().stream()
                 .filter(notice -> notice.getId().equals(warningNotice.getId()))
                 .findAny()
                 .get();
 
         assertThat(testedNotice, instanceOf(NonStandardHeaderNotice.class));
 
-        mockRepository.addNotice(errorNotice);
-        assertEquals(2, mockRepository.getAll().size());
+        mockResultRepo.addNotice(errorNotice);
+        assertEquals(2, mockResultRepo.getAll().size());
 
-        testedNotice = mockRepository.getAll().stream()
+        testedNotice = mockResultRepo.getAll().stream()
                 .filter(notice -> notice.getId().equals(errorNotice.getId()))
                 .findAny()
                 .get();
 
         assertThat(testedNotice, instanceOf(CannotConstructDataProviderNotice.class));
     }
+
+    private ValidationResultRepository mockResultRepository() {
+        mockResultRepo = mock(InMemoryValidationResultRepository.class);
+        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenAnswer(new Answer<WarningNotice>() {
+            public WarningNotice answer(InvocationOnMock invocation) {
+                WarningNotice warningNotice = invocation.getArgument(0);
+                warningList.add(warningNotice);
+                return warningNotice;
+            }
+        });
+        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<ErrorNotice>() {
+            public ErrorNotice answer(InvocationOnMock invocation) {
+                ErrorNotice errorNotice = invocation.getArgument(0);
+                errorList.add(errorNotice);
+                return errorNotice;
+            }
+        });
+        when(mockResultRepo.getAll()).thenAnswer(new Answer<Collection<Notice>>() {
+            public Collection<Notice> answer(InvocationOnMock invocation) {
+                return Stream.concat(
+                        Stream.concat(
+                                infoList.stream(),
+                                warningList.stream()),
+                        errorList.stream())
+                        .collect(Collectors.toUnmodifiableList());
+            }
+        });
+
+        return mockResultRepo;
+    }
+
 }

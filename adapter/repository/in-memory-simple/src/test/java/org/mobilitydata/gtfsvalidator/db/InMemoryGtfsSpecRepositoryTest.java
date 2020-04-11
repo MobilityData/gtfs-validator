@@ -171,7 +171,7 @@ class InMemoryGtfsSpecRepositoryTest {
     private InMemoryGtfsSpecRepository mockSpecRepository() throws IOException {
         csvSpecProtos = getCsvSpecProtos();
 
-        InMemoryGtfsSpecRepository mockSpecRepo = mock(InMemoryGtfsSpecRepository.class);
+        mockSpecRepo = mock(InMemoryGtfsSpecRepository.class);
         when(mockSpecRepo.getRequiredFilenameList()).thenReturn(csvSpecProtos.getCsvspecList()
                 .stream()
                 .filter(GtfsSpecificationProto.CsvSpecProto::getRequired)
