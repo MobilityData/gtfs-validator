@@ -138,7 +138,4 @@ class ExportResultAsFileTest {
         verifyNoMoreInteractions(mockExporter, mockResultRepo);
     }
 
-
-
-
 }
