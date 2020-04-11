@@ -79,7 +79,7 @@ public class NoticeMemoryConsumptionTest {
     }
 
     private ValidationResultRepository mockResultRepository() {
-        ValidationResultRepository mockResultRepo = mock(InMemoryValidationResultRepository.class);
+        mockResultRepo = mock(InMemoryValidationResultRepository.class);
         when(mockResultRepo.addNotice(any(Notice.class))).thenAnswer(new Answer<Notice>() {
             public Notice answer(InvocationOnMock invocation) {
                 Notice notice = invocation.getArgument(0);
