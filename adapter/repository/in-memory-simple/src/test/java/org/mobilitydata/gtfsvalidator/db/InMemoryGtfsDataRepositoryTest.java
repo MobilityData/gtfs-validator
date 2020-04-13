@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -430,5 +431,111 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addEntity(mockBuilder.build());
 
         assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
+    }
+
+    @Test
+    public void getLevelCollectionShouldReturnLevelCollection() throws SQLIntegrityConstraintViolationException {
+        Level.LevelBuilder mockBuilder = mock(Level.LevelBuilder.class);
+        when(mockBuilder.levelId(anyString())).thenCallRealMethod();
+        when(mockBuilder.levelIndex(anyFloat())).thenCallRealMethod();
+        when(mockBuilder.levelName(anyString())).thenCallRealMethod();
+
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.levelId("test_id_0")
+                .levelIndex(2.0f)
+                .levelName("test_id_0");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Level level00 = mockBuilder.build();
+        underTest.addLevel(level00);
+
+        mockBuilder.levelId("test_id_1");
+
+        final Level level01 = mockBuilder.build();
+        underTest.addLevel(level01);
+
+        final Map<String, Level> toVerify = underTest.getLevelCollection();
+
+        assertEquals("test_id_0", toVerify.get("test_id_0").getLevelId());
+        assertEquals("test_id_1", toVerify.get("test_id_1").getLevelId());
+    }
+
+    @Test
+    public void getLevelByIdShouldReturnRelatedLevel() throws SQLIntegrityConstraintViolationException {
+        Level.LevelBuilder mockBuilder = mock(Level.LevelBuilder.class);
+        when(mockBuilder.levelId(anyString())).thenCallRealMethod();
+        when(mockBuilder.levelIndex(anyFloat())).thenCallRealMethod();
+        when(mockBuilder.levelName(anyString())).thenCallRealMethod();
+
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.levelId("test_id_0")
+                .levelIndex(2.0f)
+                .levelName("test_id_0");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        Level level00 = mockBuilder.build();
+
+        underTest.addLevel(level00);
+
+        mockBuilder.levelId("test_id_1");
+
+        Level level01 = mockBuilder.build();
+
+        underTest.addLevel(level01);
+
+        assertEquals(level00, underTest.getLevelByLevelId("test_id_0"));
+        assertEquals(level01, underTest.getLevelByLevelId("test_id_1"));
+    }
+
+    @Test
+    public void callToAddEntityShouldAddLevelToRepoAndReturnEntity() throws SQLIntegrityConstraintViolationException {
+        Level.LevelBuilder mockBuilder = mock(Level.LevelBuilder.class);
+        when(mockBuilder.levelId(anyString())).thenCallRealMethod();
+        when(mockBuilder.levelIndex(anyFloat())).thenCallRealMethod();
+        when(mockBuilder.levelName(anyString())).thenCallRealMethod();
+
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.levelId("test_id_0")
+                .levelIndex(2.0f)
+                .levelName("test_id_0");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        Level level00 = mockBuilder.build();
+
+        Level toCheck = underTest.addLevel(level00);
+
+        assertEquals(1, underTest.getLevelCollection().size());
+        assertEquals(level00, toCheck);
+    }
+
+    @Test
+    public void duplicateLevelShouldThrowException() throws SQLIntegrityConstraintViolationException {
+        Level.LevelBuilder mockBuilder = mock(Level.LevelBuilder.class);
+        when(mockBuilder.levelId(anyString())).thenCallRealMethod();
+        when(mockBuilder.levelIndex(anyFloat())).thenCallRealMethod();
+        when(mockBuilder.levelName(anyString())).thenCallRealMethod();
+
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.levelId("test_id_0")
+                .levelIndex(2.0f)
+                .levelName("test_id_0");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        Level level = mockBuilder.build();
+
+        underTest.addLevel(level);
+
+        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> underTest.addLevel(level));
+
+        assertEquals("level must be unique in dataset", exception.getMessage());
     }
 }

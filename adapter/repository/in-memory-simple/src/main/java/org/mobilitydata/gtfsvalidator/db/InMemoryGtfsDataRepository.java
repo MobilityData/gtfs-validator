@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -72,6 +73,29 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             String routeId = newRoute.getRouteId();
             routeCollection.put(routeId, newRoute);
             return newRoute;
+        }
+    }
+
+    Map<String, Level> levelCollection = new HashMap<>();
+
+    @Override
+    public Map<String, Level> getLevelCollection() {
+        return Collections.unmodifiableMap(levelCollection);
+    }
+
+    @Override
+    public Level getLevelByLevelId(String levelId) {
+        return levelCollection.get(levelId);
+    }
+
+    @Override
+    public Level addLevel(Level newLevel) throws SQLIntegrityConstraintViolationException {
+        if (levelCollection.containsKey(newLevel.getLevelId())) {
+            throw new SQLIntegrityConstraintViolationException("level must be unique in dataset");
+        } else {
+            String levelId = newLevel.getLevelId();
+            levelCollection.put(levelId, newLevel);
+            return newLevel;
         }
     }
 }
