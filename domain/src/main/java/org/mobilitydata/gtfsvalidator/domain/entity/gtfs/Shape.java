@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class Shape {
+public class Shape implements Comparable<Shape> {
 
     @NotNull
     private final String shapeId;
@@ -47,13 +47,11 @@ public class Shape {
         return shapeId;
     }
 
-    @NotNull
-    public Float getShapePtLat() {
+    public float getShapePtLat() {
         return shapePtLat;
     }
 
-    @NotNull
-    public Float getShapePtLon() {
+    public float getShapePtLon() {
         return shapePtLon;
     }
 
@@ -65,6 +63,15 @@ public class Shape {
     @Nullable
     public Float getShapeDistTraveled() {
         return shapeDistTraveled;
+    }
+
+    @Override
+    public int compareTo(@NotNull Shape shape) {
+        return getShapePtSequence().compareTo(shape.getShapePtSequence());
+    }
+
+    public boolean isGreaterThan(Shape otherShape) {
+        return compareTo(otherShape) > 0;
     }
 
     public static class ShapeBuilder {
