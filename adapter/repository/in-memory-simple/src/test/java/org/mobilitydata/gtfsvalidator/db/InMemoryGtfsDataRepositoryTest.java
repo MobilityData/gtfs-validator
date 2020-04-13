@@ -19,14 +19,15 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 
 class InMemoryGtfsDataRepositoryTest {
     private final String STRING_TEST_VALUE = "test_value";
@@ -430,5 +431,161 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addEntity(mockBuilder.build());
 
         assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
+    }
+
+    @Test
+    public void getTripCollectionShouldShouldReturnTripCollection() throws SQLIntegrityConstraintViolationException {
+        final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
+        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
+        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripId(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripHeadsign(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripShortName(anyString())).thenCallRealMethod();
+        when(mockBuilder.directionId(anyInt())).thenCallRealMethod();
+        when(mockBuilder.blockId(anyString())).thenCallRealMethod();
+        when(mockBuilder.shapeId(anyString())).thenCallRealMethod();
+        when(mockBuilder.wheelchairAccessible(anyInt())).thenCallRealMethod();
+        when(mockBuilder.bikesAllowed(anyInt())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.routeId(STRING_TEST_VALUE)
+                .serviceId(STRING_TEST_VALUE)
+                .tripId("test_id_0")
+                .tripHeadsign("test")
+                .tripShortName("test")
+                .directionId(1)
+                .blockId("test")
+                .shapeId("test")
+                .wheelchairAccessible(1)
+                .bikesAllowed(0);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Trip trip00 = mockBuilder.build();
+        underTest.addTrip(trip00);
+
+        mockBuilder.tripId("test_id_1");
+
+        final Trip trip01 = mockBuilder.build();
+        underTest.addTrip(trip01);
+
+        final Map<String, Trip> mockTripMap = new HashMap<>();
+        mockTripMap.put("test_id_0", trip00);
+        mockTripMap.put("test_id_1", trip01);
+
+        final Map<String, Trip> toVerify = underTest.getTripCollection();
+
+        assertEquals(mockTripMap, toVerify);
+    }
+
+    @Test
+    public void getTripByIdShouldReturnRelatedTrip() throws SQLIntegrityConstraintViolationException {
+        final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
+        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
+        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripId(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripHeadsign(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripShortName(anyString())).thenCallRealMethod();
+        when(mockBuilder.directionId(anyInt())).thenCallRealMethod();
+        when(mockBuilder.blockId(anyString())).thenCallRealMethod();
+        when(mockBuilder.shapeId(anyString())).thenCallRealMethod();
+        when(mockBuilder.wheelchairAccessible(anyInt())).thenCallRealMethod();
+        when(mockBuilder.bikesAllowed(anyInt())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.routeId(STRING_TEST_VALUE)
+                .serviceId(STRING_TEST_VALUE)
+                .tripId("test_id_0")
+                .tripHeadsign("test")
+                .tripShortName("test")
+                .directionId(1)
+                .blockId("test")
+                .shapeId("test")
+                .wheelchairAccessible(1)
+                .bikesAllowed(0);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Trip trip00 = mockBuilder.build();
+        underTest.addTrip(trip00);
+
+        mockBuilder.tripId("test_id_1");
+
+        final Trip trip01 = mockBuilder.build();
+        underTest.addTrip(trip01);
+
+        assertEquals(trip00, underTest.getTripById("test_id_0"));
+        assertEquals(trip01, underTest.getTripById("test_id_1"));
+    }
+
+    @Test
+    public void callToAddTripShouldAddEntityToRepoAndReturnSameEntity() throws SQLIntegrityConstraintViolationException {
+        final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
+        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
+        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripId(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripHeadsign(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripShortName(anyString())).thenCallRealMethod();
+        when(mockBuilder.directionId(anyInt())).thenCallRealMethod();
+        when(mockBuilder.blockId(anyString())).thenCallRealMethod();
+        when(mockBuilder.shapeId(anyString())).thenCallRealMethod();
+        when(mockBuilder.wheelchairAccessible(anyInt())).thenCallRealMethod();
+        when(mockBuilder.bikesAllowed(anyInt())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.routeId(STRING_TEST_VALUE)
+                .serviceId(STRING_TEST_VALUE)
+                .tripId("test_id_0")
+                .tripHeadsign("test")
+                .tripShortName("test")
+                .directionId(1)
+                .blockId("test")
+                .shapeId("test")
+                .wheelchairAccessible(1)
+                .bikesAllowed(0);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Trip trip00 = mockBuilder.build();
+        Trip toCheck = underTest.addTrip(trip00);
+
+        assertEquals(trip00, toCheck);
+    }
+
+    @Test
+    public void tryToAddTwiceTheSameTripShouldThrowException() throws SQLIntegrityConstraintViolationException {
+        final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
+        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
+        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripId(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripHeadsign(anyString())).thenCallRealMethod();
+        when(mockBuilder.tripShortName(anyString())).thenCallRealMethod();
+        when(mockBuilder.directionId(anyInt())).thenCallRealMethod();
+        when(mockBuilder.blockId(anyString())).thenCallRealMethod();
+        when(mockBuilder.shapeId(anyString())).thenCallRealMethod();
+        when(mockBuilder.wheelchairAccessible(anyInt())).thenCallRealMethod();
+        when(mockBuilder.bikesAllowed(anyInt())).thenCallRealMethod();
+        when(mockBuilder.build()).thenCallRealMethod();
+
+        mockBuilder.routeId(STRING_TEST_VALUE)
+                .serviceId(STRING_TEST_VALUE)
+                .tripId("test_id_0")
+                .tripHeadsign("test")
+                .tripShortName("test")
+                .directionId(1)
+                .blockId("test")
+                .shapeId("test")
+                .wheelchairAccessible(1)
+                .bikesAllowed(0);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Trip trip = mockBuilder.build();
+        underTest.addTrip(trip);
+
+        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> underTest.addTrip(trip));
+
+        assertEquals("trip must be unique in dataset", exception.getMessage());
     }
 }

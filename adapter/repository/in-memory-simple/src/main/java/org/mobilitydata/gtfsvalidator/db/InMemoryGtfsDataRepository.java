@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -72,6 +73,29 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             String routeId = newRoute.getRouteId();
             routeCollection.put(routeId, newRoute);
             return newRoute;
+        }
+    }
+
+    private final Map<String, Trip> tripCollection = new HashMap<>();
+
+    @Override
+    public Map<String, Trip> getTripCollection() {
+        return Collections.unmodifiableMap(tripCollection);
+    }
+
+    @Override
+    public Trip getTripById(final String tripId) {
+        return tripCollection.get(tripId);
+    }
+
+    @Override
+    public Trip addTrip(final Trip newTrip) throws SQLIntegrityConstraintViolationException {
+        if (tripCollection.containsKey(newTrip.getTripId())) {
+            throw new SQLIntegrityConstraintViolationException("trip must be unique in dataset");
+        } else {
+            String tripId = newTrip.getTripId();
+            tripCollection.put(tripId, newTrip);
+            return newTrip;
         }
     }
 }
