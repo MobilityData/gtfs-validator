@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
 import java.util.stream.Stream;
 
-public enum WheelchairAccessibleStatus {
-    UNKNOWN_WHEELCHAIR_ACCESSIBILITY(0),
-    WHEELCHAIR_ACCESSIBLE(1),
-    NOT_WHEELCHAIR_ACCESSIBLE(2);
+public enum DirectionId {
+    OUTBOUND(0),
+    INBOUND(1);
 
-    private int value;
+    private final int value;
 
-    WheelchairAccessibleStatus(int value) {
+    DirectionId(int value) {
         this.value = value;
     }
 
-    static public WheelchairAccessibleStatus fromInt(Integer fromValue) {
-        if (fromValue == null) {
-            return UNKNOWN_WHEELCHAIR_ACCESSIBILITY;
-        }
-        return Stream.of(WheelchairAccessibleStatus.values())
+    // TODO: implement behavior for unexpected enum value
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    static public DirectionId fromInt(int fromValue) {
+        return Stream.of(DirectionId.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .orElse(UNKNOWN_WHEELCHAIR_ACCESSIBILITY);
+                .get();
     }
 }

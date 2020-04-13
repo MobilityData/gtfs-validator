@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +35,7 @@ public class Trip {
     private final String tripShortName;
 
     @Nullable
-    private final Direction directionId;
+    private final DirectionId directionId;
 
     @Nullable
     private final String blockId;
@@ -51,7 +51,7 @@ public class Trip {
                  @NotNull final String tripId,
                  @Nullable final String tripHeadsign,
                  @Nullable final String tripShortName,
-                 @Nullable final Direction directionId,
+                 @Nullable final DirectionId directionId,
                  @Nullable final String blockId,
                  @Nullable final String shapeId,
                  final WheelchairAccessibleStatus wheelchairAccessibleStatus,
@@ -94,7 +94,7 @@ public class Trip {
     }
 
     @Nullable
-    public Direction getDirectionId() {
+    public DirectionId getDirectionId() {
         return directionId;
     }
 
@@ -134,7 +134,7 @@ public class Trip {
         private String tripShortName;
 
         @Nullable
-        private Direction directionId;
+        private DirectionId directionId;
 
         @Nullable
         private String blockId;
@@ -178,7 +178,7 @@ public class Trip {
             return this;
         }
 
-        public TripBuilder directionId(@Nullable final Direction directionId) {
+        public TripBuilder directionId(@Nullable final DirectionId directionId) {
             this.directionId = directionId;
             return this;
         }

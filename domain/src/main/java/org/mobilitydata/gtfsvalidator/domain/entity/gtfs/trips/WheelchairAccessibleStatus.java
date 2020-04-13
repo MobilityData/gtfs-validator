@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
 import java.util.stream.Stream;
 
-public enum BikesAllowedStatus {
-    UNKNOWN_BIKES_ALLOWANCE(0),
-    BIKES_ALLOWED(1),
-    NO_BIKES_ALLOWED(2);
+public enum WheelchairAccessibleStatus {
+    UNKNOWN_WHEELCHAIR_ACCESSIBILITY(0),
+    WHEELCHAIR_ACCESSIBLE(1),
+    NOT_WHEELCHAIR_ACCESSIBLE(2);
 
     private int value;
 
-    BikesAllowedStatus(int value) {
+    WheelchairAccessibleStatus(int value) {
         this.value = value;
     }
 
-    static public BikesAllowedStatus fromInt(Integer fromValue) {
+    static public WheelchairAccessibleStatus fromInt(Integer fromValue) {
         if (fromValue == null) {
-            return UNKNOWN_BIKES_ALLOWANCE;
+            return UNKNOWN_WHEELCHAIR_ACCESSIBILITY;
         }
-        return Stream.of(BikesAllowedStatus.values())
+        return Stream.of(WheelchairAccessibleStatus.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .orElse(UNKNOWN_BIKES_ALLOWANCE);
+                .orElse(UNKNOWN_WHEELCHAIR_ACCESSIBILITY);
     }
 }

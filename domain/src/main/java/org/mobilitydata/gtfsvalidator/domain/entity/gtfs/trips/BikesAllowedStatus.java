@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
 import java.util.stream.Stream;
 
-public enum Direction {
-    OUTBOUND(0),
-    INBOUND(1);
+public enum BikesAllowedStatus {
+    UNKNOWN_BIKES_ALLOWANCE(0),
+    BIKES_ALLOWED(1),
+    NO_BIKES_ALLOWED(2);
 
-    private final int value;
+    private int value;
 
-    Direction(int value) {
+    BikesAllowedStatus(int value) {
         this.value = value;
     }
 
-    // TODO: implement behavior for unexpected enum value
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    static public Direction fromInt(int fromValue) {
-        return Stream.of(Direction.values())
+    static public BikesAllowedStatus fromInt(Integer fromValue) {
+        if (fromValue == null) {
+            return UNKNOWN_BIKES_ALLOWANCE;
+        }
+        return Stream.of(BikesAllowedStatus.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .get();
+                .orElse(UNKNOWN_BIKES_ALLOWANCE);
     }
 }
