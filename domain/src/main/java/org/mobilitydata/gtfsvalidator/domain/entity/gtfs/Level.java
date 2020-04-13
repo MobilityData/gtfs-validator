@@ -8,8 +8,7 @@ public class Level {
     @NotNull
     private final String levelId;
 
-    @NotNull
-    private final Float levelIndex;
+    private final float levelIndex;
 
     @Nullable
     private final String levelName;
@@ -39,7 +38,7 @@ public class Level {
 
     public static class LevelBuilder {
         private String levelId;
-        private float levelIndex;
+        private Float levelIndex;
 
         @Nullable
         private String levelName;
@@ -49,7 +48,7 @@ public class Level {
             return this;
         }
 
-        public LevelBuilder levelIndex(final float levelIndex) {
+        public LevelBuilder levelIndex(final Float levelIndex) {
             this.levelIndex = levelIndex;
             return this;
         }
@@ -60,6 +59,12 @@ public class Level {
         }
 
         public Level build() {
+            if (levelId == null) {
+                throw new IllegalArgumentException("field level_id can not be null");
+            }
+            if (levelIndex == null) {
+                throw new IllegalArgumentException("field level_index can not be null");
+            }
             return new Level(levelId, levelIndex, levelName);
         }
     }
