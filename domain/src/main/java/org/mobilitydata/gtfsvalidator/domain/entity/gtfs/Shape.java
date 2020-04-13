@@ -75,9 +75,7 @@ public class Shape implements Comparable<Shape> {
     }
 
     public static class ShapeBuilder {
-
         private String shapeId;
-
         private float shapePtLat;
         private float shapePtLon;
         private int shapePtSequence;
@@ -111,6 +109,25 @@ public class Shape implements Comparable<Shape> {
         }
 
         public Shape build() {
+            if (shapeId == null) {
+                throw new IllegalArgumentException("field shape_id can not be null in file shapes.txt");
+            }
+
+            if (shapePtLat < -90.0f || shapePtLat > 90.0f) {
+                throw new IllegalArgumentException("invalid value for field shape_latitude");
+            }
+
+            if (shapePtLon < -180.0f || shapePtLon > 180.0f) {
+                throw new IllegalArgumentException("invalid value for field shape_longitude");
+            }
+
+            if (shapePtSequence < 0) {
+                throw new IllegalArgumentException("invalid value for field shape_pt_sequence");
+            }
+
+            if (!(shapeDistTraveled == null) && shapeDistTraveled < 0) {
+                throw new IllegalArgumentException("invalid value for field shape_dist_traveled");
+            }
             return new Shape(shapeId, shapePtLat, shapePtLon, shapePtSequence, shapeDistTraveled);
         }
     }
