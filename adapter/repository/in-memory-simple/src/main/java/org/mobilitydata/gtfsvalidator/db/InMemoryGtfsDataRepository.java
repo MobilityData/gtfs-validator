@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -72,6 +73,29 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             String routeId = newRoute.getRouteId();
             routeCollection.put(routeId, newRoute);
             return newRoute;
+        }
+    }
+
+    Map<String, Calendar> calendarCollection = new HashMap<>();
+
+    @Override
+    public Map<String, Calendar> getCalendarCollection() {
+        return Collections.unmodifiableMap(calendarCollection);
+    }
+
+    @Override
+    public Calendar getCalendarByServiceId(final String serviceId) {
+        return calendarCollection.get(serviceId);
+    }
+
+    @Override
+    public Calendar addCalendar(final Calendar newCalendar) throws SQLIntegrityConstraintViolationException {
+        if (calendarCollection.containsKey(newCalendar.getServiceId())) {
+            throw new SQLIntegrityConstraintViolationException("service_id must be unique in calendar.txt");
+        } else {
+            String serviceId = newCalendar.getServiceId();
+            calendarCollection.put(serviceId, newCalendar);
+            return newCalendar;
         }
     }
 }

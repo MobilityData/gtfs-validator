@@ -17,11 +17,14 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -430,5 +433,125 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addEntity(mockBuilder.build());
 
         assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
+    }
+
+    @Test
+    public void getCalendarCollectionShouldReturnCalendarCollection() throws SQLIntegrityConstraintViolationException {
+
+        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+
+        mockBuilder.serviceId("test_id_0")
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Calendar calendar00 = mockBuilder.build();
+        underTest.addCalendar(calendar00);
+
+        mockBuilder.serviceId("test_id_1");
+
+        final Calendar calendar01 = mockBuilder.build();
+
+        underTest.addCalendar(calendar01);
+
+        final Map<String, Calendar> toCheck = underTest.getCalendarCollection();
+
+        Map<String, Calendar> mockCalendarMap = new HashMap<>();
+        mockCalendarMap.put(calendar00.getServiceId(), calendar00);
+        mockCalendarMap.put(calendar01.getServiceId(), calendar01);
+
+        assertEquals(mockCalendarMap, toCheck);
+    }
+
+    @Test
+    public void getCalendarByServiceIdShouldReturnRelatedCalendar() throws SQLIntegrityConstraintViolationException {
+
+        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+
+        mockBuilder.serviceId("test_id_0")
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Calendar calendar00 = mockBuilder.build();
+        underTest.addCalendar(calendar00);
+
+        mockBuilder.serviceId("test_id_1");
+
+        final Calendar calendar01 = mockBuilder.build();
+
+        underTest.addCalendar(calendar01);
+
+        assertEquals(calendar00, underTest.getCalendarByServiceId("test_id_0"));
+        assertEquals(calendar01, underTest.getCalendarByServiceId("test_id_1"));
+    }
+
+    @Test
+    public void callToAddCalendarShouldAddCalendarToRepoAndReturnEntity()
+            throws SQLIntegrityConstraintViolationException {
+
+        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+
+        mockBuilder.serviceId("test_id_0")
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Calendar calendar00 = mockBuilder.build();
+        Calendar toCheck = underTest.addCalendar(calendar00);
+
+        assertEquals(toCheck, calendar00);
+        assertEquals(1, underTest.getCalendarCollection().size());
+    }
+
+    @Test
+    public void duplicateCalendarShouldThrowException()
+            throws SQLIntegrityConstraintViolationException {
+
+        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+
+        mockBuilder.serviceId("test_id_0")
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Calendar calendar00 = mockBuilder.build();
+        underTest.addCalendar(calendar00);
+
+        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> underTest.addCalendar(calendar00));
+        assertEquals("service_id must be unique in calendar.txt", exception.getMessage());
     }
 }
