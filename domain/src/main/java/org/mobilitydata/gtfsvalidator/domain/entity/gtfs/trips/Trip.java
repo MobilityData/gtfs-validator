@@ -108,10 +108,12 @@ public class Trip {
         return shapeId;
     }
 
+    @NotNull
     public WheelchairAccessibleStatus getWheelchairAccessibleStatus() {
         return wheelchairAccessibleStatus;
     }
 
+    @NotNull
     public BikesAllowedStatus getBikesAllowedStatus() {
         return bikesAllowedStatus;
     }
@@ -136,6 +138,7 @@ public class Trip {
         @Nullable
         private String shapeId;
 
+        @Nullable
         private WheelchairAccessibleStatus wheelchairAccessibleStatus;
 
         @Nullable
@@ -166,8 +169,8 @@ public class Trip {
             return this;
         }
 
-        public TripBuilder directionId(@Nullable final DirectionId directionId) {
-            this.directionId = directionId;
+        public TripBuilder directionId(@Nullable final Integer directionId) {
+            this.directionId = DirectionId.fromInt(directionId);
             return this;
         }
 
@@ -181,17 +184,35 @@ public class Trip {
             return this;
         }
 
-        public TripBuilder wheelchairAccessible(@NotNull final WheelchairAccessibleStatus wheelchairAccessibleStatus) {
-            this.wheelchairAccessibleStatus = wheelchairAccessibleStatus;
+        public TripBuilder wheelchairAccessible(@NotNull final Integer wheelchairAccessibleStatus) {
+            this.wheelchairAccessibleStatus = WheelchairAccessibleStatus.fromInt(wheelchairAccessibleStatus);
             return this;
         }
 
-        public TripBuilder bikesAllowed(@NotNull final BikesAllowedStatus bikesAllowedStatus) {
-            this.bikesAllowedStatus = bikesAllowedStatus;
+        public TripBuilder bikesAllowed(@NotNull final Integer bikesAllowedStatus) {
+            this.bikesAllowedStatus = BikesAllowedStatus.fromInt(bikesAllowedStatus);
             return this;
         }
 
         public Trip build() {
+            if (routeId == null) {
+                throw new IllegalArgumentException("field route_id can not be null");
+            }
+            if (serviceId == null) {
+                throw new IllegalArgumentException("field service_id can not be null");
+            }
+            if (tripId == null) {
+                throw new IllegalArgumentException("field trip_id can not be null");
+            }
+            if (directionId == DirectionId.ERROR) {
+                throw new IllegalArgumentException("unexpected value found for field direction_id");
+            }
+            if (wheelchairAccessibleStatus == null) {
+                throw new IllegalArgumentException("unexpected value found for field wheelchair_accessible");
+            }
+            if (bikesAllowedStatus == null) {
+                throw new IllegalArgumentException("unexpected value found for field bikes_allowed");
+            }
             return new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName, directionId, blockId,
                     shapeId, wheelchairAccessibleStatus, bikesAllowedStatus);
         }

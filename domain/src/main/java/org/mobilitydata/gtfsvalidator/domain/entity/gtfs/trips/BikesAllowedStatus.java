@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum BikesAllowedStatus {
@@ -29,13 +31,22 @@ public enum BikesAllowedStatus {
         this.value = value;
     }
 
-    static public BikesAllowedStatus fromInt(Integer fromValue) {
+    static protected List<Integer> getValues() {
+        return Stream.of(BikesAllowedStatus.values()).map(enumItem -> enumItem.value).collect(Collectors.toList());
+    }
+
+    static public BikesAllowedStatus fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return UNKNOWN_BIKES_ALLOWANCE;
         }
-        return Stream.of(BikesAllowedStatus.values())
-                .filter(enumItem -> enumItem.value == fromValue)
-                .findAny()
-                .orElse(UNKNOWN_BIKES_ALLOWANCE);
+        if (getValues().contains(fromValue)) {
+            //noinspection OptionalGetWithoutIsPresent
+            return Stream.of(BikesAllowedStatus.values())
+                    .filter(enumItem -> enumItem.value == fromValue)
+                    .findAny()
+                    .get();
+        } else {
+            return null;
+        }
     }
 }

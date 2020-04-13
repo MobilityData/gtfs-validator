@@ -20,7 +20,8 @@ import java.util.stream.Stream;
 
 public enum DirectionId {
     OUTBOUND(0),
-    INBOUND(1);
+    INBOUND(1),
+    ERROR(-1);
 
     private final int value;
 
@@ -28,12 +29,13 @@ public enum DirectionId {
         this.value = value;
     }
 
-    // TODO: implement behavior for unexpected enum value
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    static public DirectionId fromInt(int fromValue) {
+    static public DirectionId fromInt(Integer fromValue) {
+        if (fromValue == null) {
+            return null;
+        }
         return Stream.of(DirectionId.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .get();
+                .orElse(ERROR);
     }
 }

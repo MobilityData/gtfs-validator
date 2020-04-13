@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum WheelchairAccessibleStatus {
@@ -29,13 +31,22 @@ public enum WheelchairAccessibleStatus {
         this.value = value;
     }
 
-    static public WheelchairAccessibleStatus fromInt(Integer fromValue) {
+    static protected List<Integer> getValues() {
+        return Stream.of(WheelchairAccessibleStatus.values()).map(enumItem -> enumItem.value).collect(Collectors.toList());
+    }
+
+    static public WheelchairAccessibleStatus fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return UNKNOWN_WHEELCHAIR_ACCESSIBILITY;
         }
-        return Stream.of(WheelchairAccessibleStatus.values())
-                .filter(enumItem -> enumItem.value == fromValue)
-                .findAny()
-                .orElse(UNKNOWN_WHEELCHAIR_ACCESSIBILITY);
+        if (getValues().contains(fromValue)) {
+            //noinspection OptionalGetWithoutIsPresent
+            return Stream.of(WheelchairAccessibleStatus.values())
+                    .filter(enumItem -> enumItem.value == fromValue)
+                    .findAny()
+                    .get();
+        } else {
+            return null;
+        }
     }
 }
