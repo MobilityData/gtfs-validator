@@ -17,13 +17,14 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Shape;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 
 public interface GtfsDataRepository {
-    Agency addEntity(Agency newAgency) throws SQLIntegrityConstraintViolationException;
+    Agency addShape(Agency newAgency) throws SQLIntegrityConstraintViolationException;
 
     Agency getAgencyById(String agencyId);
 
@@ -35,5 +36,11 @@ public interface GtfsDataRepository {
 
     Route getRouteById(String routeId);
 
-    Route addEntity(Route newRoute) throws SQLIntegrityConstraintViolationException;
+    Route addShape(Route newRoute) throws SQLIntegrityConstraintViolationException;
+
+    Map<String, Shape> getShapeCollection();
+
+    Shape getShapeById(String shapeId);
+
+    Shape addShape(Shape newShape) throws SQLIntegrityConstraintViolationException;
 }

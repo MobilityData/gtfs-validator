@@ -18,10 +18,12 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Shape;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,12 +58,12 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Agency agency00 = mockBuilder.build();
-        underTest.addEntity(agency00);
+        underTest.addShape(agency00);
 
         mockBuilder.agencyId("test_id1");
 
         final Agency agency01 = mockBuilder.build();
-        underTest.addEntity(agency01);
+        underTest.addShape(agency01);
 
         final Map<String, Agency> toVerify = underTest.getAgencyCollection();
 
@@ -94,7 +96,7 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Agency agency00 = mockBuilder.build();
-        Agency toCheck = underTest.addEntity(agency00);
+        Agency toCheck = underTest.addShape(agency00);
 
         assertEquals(1, underTest.getAgencyCollection().size());
         assertEquals(agency00, toCheck);
@@ -102,7 +104,7 @@ class InMemoryGtfsDataRepositoryTest {
         mockBuilder.agencyId("test_id1");
 
         final Agency agency01 = mockBuilder.build();
-        toCheck = underTest.addEntity(agency01);
+        toCheck = underTest.addShape(agency01);
 
         assertEquals(2, underTest.getAgencyCollection().size());
         assertEquals(toCheck, agency01);
@@ -132,11 +134,11 @@ class InMemoryGtfsDataRepositoryTest {
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addShape(mockBuilder.build());
 
         mockBuilder.agencyId("test_id1");
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addShape(mockBuilder.build());
 
         assertEquals("test_id0", underTest.getAgencyById("test_id0").getAgencyId());
         assertEquals("test_id1", underTest.getAgencyById("test_id1").getAgencyId());
@@ -168,12 +170,12 @@ class InMemoryGtfsDataRepositoryTest {
                 .agencyEmail(STRING_TEST_VALUE);
 
         Agency agency00 = mockBuilder.build();
-        underTest.addEntity(agency00);
+        underTest.addShape(agency00);
 
         mockBuilder.agencyId("test_id1");
 
         Agency agency01 = mockBuilder.build();
-        underTest.addEntity(agency01);
+        underTest.addShape(agency01);
 
         assertTrue(underTest.isPresent(agency00));
         assertTrue(underTest.isPresent(agency01));
@@ -205,7 +207,7 @@ class InMemoryGtfsDataRepositoryTest {
                 .agencyEmail(STRING_TEST_VALUE);
 
         Agency agency00 = mockBuilder.build();
-        underTest.addEntity(agency00);
+        underTest.addShape(agency00);
 
         mockBuilder.agencyId("test_id1");
 
@@ -237,11 +239,11 @@ class InMemoryGtfsDataRepositoryTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addShape(mockBuilder.build());
 
         mockBuilder.agencyId("test_id0");
 
-        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addShape(mockBuilder.build()));
     }
 
     @Test
@@ -274,7 +276,7 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Route route00 = mockBuilder.build();
-        Route toCheck = underTest.addEntity(route00);
+        Route toCheck = underTest.addShape(route00);
 
         assertEquals(1, underTest.getRouteCollection().size());
         assertEquals(toCheck, route00);
@@ -292,7 +294,7 @@ class InMemoryGtfsDataRepositoryTest {
 
 
         final Route route01 = mockBuilder.build();
-        toCheck = underTest.addEntity(route01);
+        toCheck = underTest.addShape(route01);
 
         assertEquals(2, underTest.getRouteCollection().size());
         assertEquals(toCheck, route01);
@@ -328,7 +330,7 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Route route00 = mockBuilder.build();
-        underTest.addEntity(route00);
+        underTest.addShape(route00);
 
         mockBuilder.routeId("test_id_1")
                 .agencyId(STRING_TEST_VALUE)
@@ -342,7 +344,7 @@ class InMemoryGtfsDataRepositoryTest {
                 .routeSortOrder(1);
 
         final Route route01 = mockBuilder.build();
-        underTest.addEntity(route01);
+        underTest.addShape(route01);
 
         final Map<String, Route> toVerify = underTest.getRouteCollection();
 
@@ -379,7 +381,7 @@ class InMemoryGtfsDataRepositoryTest {
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addShape(mockBuilder.build());
 
         mockBuilder.routeId("test_id_1")
                 .agencyId(STRING_TEST_VALUE)
@@ -392,7 +394,7 @@ class InMemoryGtfsDataRepositoryTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(1);
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addShape(mockBuilder.build());
 
         assertEquals("test_id_0", underTest.getRouteById("test_id_0").getRouteId());
         assertEquals("test_id_1", underTest.getRouteById("test_id_1").getRouteId());
@@ -427,8 +429,79 @@ class InMemoryGtfsDataRepositoryTest {
 
         GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addShape(mockBuilder.build());
 
-        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addShape(mockBuilder.build()));
+    }
+
+    @Test
+    void callToAddShapeShouldAddShapeToRepoAndSameReturnEntity() throws SQLIntegrityConstraintViolationException {
+        Shape mockShape = mock(Shape.class);
+        when(mockShape.getShapeId()).thenReturn("test id");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        Shape toCheck = underTest.addShape(mockShape);
+
+        assertEquals(1, underTest.getShapeCollection().size());
+        assertEquals(toCheck, mockShape);
+    }
+
+    @Test
+    void getShapeCollectionShouldReturnShapeCollection() throws SQLIntegrityConstraintViolationException {
+        Shape mockShape00 = mock(Shape.class);
+        when(mockShape00.getShapeId()).thenReturn("test id00");
+
+        Shape mockShape01 = mock(Shape.class);
+        when(mockShape01.getShapeId()).thenReturn("test id01");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        Map<String, Shape> mockShapeMap = new HashMap<>();
+        mockShapeMap.put("test id00", mockShape00);
+        mockShapeMap.put("test id01", mockShape01);
+
+        underTest.addShape(mockShape00);
+        underTest.addShape(mockShape01);
+
+        Map<String, Shape> toCheck = underTest.getShapeCollection();
+
+        assertEquals(2, underTest.getShapeCollection().size());
+        assertEquals(toCheck, mockShapeMap);
+    }
+
+    @Test
+    void getShapeByIdShouldReturnRelatedShape() throws SQLIntegrityConstraintViolationException {
+        Shape mockShape00 = mock(Shape.class);
+        when(mockShape00.getShapeId()).thenReturn("test id00");
+
+        Shape mockShape01 = mock(Shape.class);
+        when(mockShape01.getShapeId()).thenReturn("test id01");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShape(mockShape00);
+        underTest.addShape(mockShape01);
+
+        Shape toCheck = underTest.getShapeById("test id00");
+        assertEquals(mockShape00, toCheck);
+
+        toCheck = underTest.getShapeById("test id01");
+        assertEquals(mockShape01, toCheck);
+    }
+
+    @Test
+    void tryAddingTwiceTheSameShapeShouldThrowException() throws SQLIntegrityConstraintViolationException {
+        Shape mockShape00 = mock(Shape.class);
+        when(mockShape00.getShapeId()).thenReturn("test id00");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShape(mockShape00);
+
+        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> underTest.addShape(mockShape00));
+
+        assertEquals("shape must be unique in dataset", exception.getMessage());
     }
 }

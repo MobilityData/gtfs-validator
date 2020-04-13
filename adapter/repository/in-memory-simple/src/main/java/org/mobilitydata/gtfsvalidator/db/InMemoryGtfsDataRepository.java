@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Shape;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -33,7 +34,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Agency addEntity(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
+    public Agency addShape(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
         String agencyId = newAgency.getAgencyId();
         if (isPresent(newAgency)) {
             throw new SQLIntegrityConstraintViolationException("agency must be unique in dataset");
@@ -65,13 +66,36 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Route addEntity(final Route newRoute) throws SQLIntegrityConstraintViolationException {
+    public Route addShape(final Route newRoute) throws SQLIntegrityConstraintViolationException {
         if (routeCollection.containsKey(newRoute.getRouteId())) {
             throw new SQLIntegrityConstraintViolationException("route must be unique in dataset");
         } else {
             String routeId = newRoute.getRouteId();
             routeCollection.put(routeId, newRoute);
             return newRoute;
+        }
+    }
+
+    private final Map<String, Shape> shapeCollection = new HashMap<>();
+
+    @Override
+    public Map<String, Shape> getShapeCollection() {
+        return Collections.unmodifiableMap(shapeCollection);
+    }
+
+    @Override
+    public Shape getShapeById(final String shapeId) {
+        return shapeCollection.get(shapeId);
+    }
+
+    @Override
+    public Shape addShape(final Shape newShape) throws SQLIntegrityConstraintViolationException {
+        if (shapeCollection.containsKey(newShape.getShapeId())) {
+            throw new SQLIntegrityConstraintViolationException("shape must be unique in dataset");
+        } else {
+            String routeId = newShape.getShapeId();
+            shapeCollection.put(routeId, newShape);
+            return newShape;
         }
     }
 }
