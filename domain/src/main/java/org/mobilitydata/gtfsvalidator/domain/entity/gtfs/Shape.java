@@ -76,7 +76,6 @@ public class Shape implements Comparable<Shape> {
 
     public static class ShapeBuilder {
 
-        @NotNull
         private String shapeId;
 
         private float shapePtLat;
@@ -85,16 +84,6 @@ public class Shape implements Comparable<Shape> {
 
         @Nullable
         private Float shapeDistTraveled;
-
-        public ShapeBuilder(@NotNull final String shapeId,
-                            final float shapePtLat,
-                            final float shapePtLon,
-                            final int shapePtSequence) {
-            this.shapeId = shapeId;
-            this.shapePtLat = shapePtLat;
-            this.shapePtLon = shapePtLon;
-            this.shapePtSequence = shapePtSequence;
-        }
 
         public ShapeBuilder shapeId(@NotNull final String shapeId) {
             this.shapeId = shapeId;
