@@ -58,12 +58,12 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Agency agency00 = mockBuilder.build();
-        underTest.addShape(agency00);
+        underTest.addEntity(agency00);
 
         mockBuilder.agencyId("test_id1");
 
         final Agency agency01 = mockBuilder.build();
-        underTest.addShape(agency01);
+        underTest.addEntity(agency01);
 
         final Map<String, Agency> toVerify = underTest.getAgencyCollection();
 
@@ -96,7 +96,7 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Agency agency00 = mockBuilder.build();
-        Agency toCheck = underTest.addShape(agency00);
+        Agency toCheck = underTest.addEntity(agency00);
 
         assertEquals(1, underTest.getAgencyCollection().size());
         assertEquals(agency00, toCheck);
@@ -104,7 +104,7 @@ class InMemoryGtfsDataRepositoryTest {
         mockBuilder.agencyId("test_id1");
 
         final Agency agency01 = mockBuilder.build();
-        toCheck = underTest.addShape(agency01);
+        toCheck = underTest.addEntity(agency01);
 
         assertEquals(2, underTest.getAgencyCollection().size());
         assertEquals(toCheck, agency01);
@@ -134,11 +134,11 @@ class InMemoryGtfsDataRepositoryTest {
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addShape(mockBuilder.build());
+        underTest.addEntity(mockBuilder.build());
 
         mockBuilder.agencyId("test_id1");
 
-        underTest.addShape(mockBuilder.build());
+        underTest.addEntity(mockBuilder.build());
 
         assertEquals("test_id0", underTest.getAgencyById("test_id0").getAgencyId());
         assertEquals("test_id1", underTest.getAgencyById("test_id1").getAgencyId());
@@ -170,12 +170,12 @@ class InMemoryGtfsDataRepositoryTest {
                 .agencyEmail(STRING_TEST_VALUE);
 
         Agency agency00 = mockBuilder.build();
-        underTest.addShape(agency00);
+        underTest.addEntity(agency00);
 
         mockBuilder.agencyId("test_id1");
 
         Agency agency01 = mockBuilder.build();
-        underTest.addShape(agency01);
+        underTest.addEntity(agency01);
 
         assertTrue(underTest.isPresent(agency00));
         assertTrue(underTest.isPresent(agency01));
@@ -207,7 +207,7 @@ class InMemoryGtfsDataRepositoryTest {
                 .agencyEmail(STRING_TEST_VALUE);
 
         Agency agency00 = mockBuilder.build();
-        underTest.addShape(agency00);
+        underTest.addEntity(agency00);
 
         mockBuilder.agencyId("test_id1");
 
@@ -239,11 +239,11 @@ class InMemoryGtfsDataRepositoryTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        underTest.addShape(mockBuilder.build());
+        underTest.addEntity(mockBuilder.build());
 
         mockBuilder.agencyId("test_id0");
 
-        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addShape(mockBuilder.build()));
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
     }
 
     @Test
@@ -276,7 +276,7 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Route route00 = mockBuilder.build();
-        Route toCheck = underTest.addShape(route00);
+        Route toCheck = underTest.addEntity(route00);
 
         assertEquals(1, underTest.getRouteCollection().size());
         assertEquals(toCheck, route00);
@@ -294,7 +294,7 @@ class InMemoryGtfsDataRepositoryTest {
 
 
         final Route route01 = mockBuilder.build();
-        toCheck = underTest.addShape(route01);
+        toCheck = underTest.addEntity(route01);
 
         assertEquals(2, underTest.getRouteCollection().size());
         assertEquals(toCheck, route01);
@@ -330,7 +330,7 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Route route00 = mockBuilder.build();
-        underTest.addShape(route00);
+        underTest.addEntity(route00);
 
         mockBuilder.routeId("test_id_1")
                 .agencyId(STRING_TEST_VALUE)
@@ -344,7 +344,7 @@ class InMemoryGtfsDataRepositoryTest {
                 .routeSortOrder(1);
 
         final Route route01 = mockBuilder.build();
-        underTest.addShape(route01);
+        underTest.addEntity(route01);
 
         final Map<String, Route> toVerify = underTest.getRouteCollection();
 
@@ -381,7 +381,7 @@ class InMemoryGtfsDataRepositoryTest {
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addShape(mockBuilder.build());
+        underTest.addEntity(mockBuilder.build());
 
         mockBuilder.routeId("test_id_1")
                 .agencyId(STRING_TEST_VALUE)
@@ -394,7 +394,7 @@ class InMemoryGtfsDataRepositoryTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(1);
 
-        underTest.addShape(mockBuilder.build());
+        underTest.addEntity(mockBuilder.build());
 
         assertEquals("test_id_0", underTest.getRouteById("test_id_0").getRouteId());
         assertEquals("test_id_1", underTest.getRouteById("test_id_1").getRouteId());
@@ -429,9 +429,9 @@ class InMemoryGtfsDataRepositoryTest {
 
         GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addShape(mockBuilder.build());
+        underTest.addEntity(mockBuilder.build());
 
-        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addShape(mockBuilder.build()));
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
     }
 
     @Test
