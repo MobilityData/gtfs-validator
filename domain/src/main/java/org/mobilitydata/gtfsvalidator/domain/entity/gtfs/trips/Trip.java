@@ -117,14 +117,8 @@ public class Trip {
     }
 
     public static class TripBuilder {
-
-        @NotNull
         private String routeId;
-
-        @NotNull
         private String serviceId;
-
-        @NotNull
         private String tripId;
 
         @Nullable
@@ -143,15 +137,9 @@ public class Trip {
         private String shapeId;
 
         private WheelchairAccessibleStatus wheelchairAccessibleStatus;
-        private BikesAllowedStatus bikesAllowedStatus;
 
-        public TripBuilder(@NotNull final String routeId,
-                           @NotNull final String serviceId,
-                           @NotNull final String tripId) {
-            this.routeId = routeId;
-            this.serviceId = serviceId;
-            this.tripId = tripId;
-        }
+        @Nullable
+        private BikesAllowedStatus bikesAllowedStatus;
 
         public TripBuilder routeId(@NotNull final String routeId) {
             this.routeId = routeId;
