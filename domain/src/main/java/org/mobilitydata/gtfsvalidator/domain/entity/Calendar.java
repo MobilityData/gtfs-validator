@@ -89,10 +89,7 @@ public class Calendar {
     }
 
     public static class CalendarBuilder {
-
-        @NotNull
         private String serviceId;
-
         private boolean monday;
         private boolean tuesday;
         private boolean wednesday;
@@ -100,34 +97,8 @@ public class Calendar {
         private boolean friday;
         private boolean saturday;
         private boolean sunday;
-
-        @NotNull
         private LocalDateTime startDate;
-
-        @NotNull
         private LocalDateTime endDate;
-
-        public CalendarBuilder(@NotNull String serviceId,
-                               int monday,
-                               int tuesday,
-                               int wednesday,
-                               int thursday,
-                               int friday,
-                               int saturday,
-                               int sunday,
-                               @NotNull LocalDateTime startDate,
-                               @NotNull LocalDateTime endDate) {
-            this.serviceId = serviceId;
-            this.monday = monday == 1;
-            this.tuesday = tuesday == 1;
-            this.wednesday = wednesday == 1;
-            this.thursday = thursday == 1;
-            this.friday = friday == 1;
-            this.saturday = saturday == 1;
-            this.sunday = sunday == 1;
-            this.startDate = startDate;
-            this.endDate = endDate;
-        }
 
         public CalendarBuilder serviceId(@NotNull final String serviceId) {
             this.serviceId = serviceId;
