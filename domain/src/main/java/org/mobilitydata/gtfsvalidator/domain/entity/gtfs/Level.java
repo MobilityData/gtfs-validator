@@ -38,18 +38,11 @@ public class Level {
     }
 
     public static class LevelBuilder {
-        @NotNull
         private String levelId;
-
         private float levelIndex;
 
         @Nullable
         private String levelName;
-
-        LevelBuilder(@NotNull String levelId, float levelIndex) {
-            this.levelId = levelId;
-            this.levelIndex = levelIndex;
-        }
 
         public LevelBuilder levelId(@NotNull final String levelId) {
             this.levelId = levelId;
