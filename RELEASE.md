@@ -5,7 +5,7 @@ We create releases from the command-line using the [shadow Gradle plugin](https:
 Usage:
 
 ```
-/.gradlew shadowJar
+./gradlew shadowJar
 ```
 
 ...which will output a file to `\cli-app\build\libs` such as `gtfs-validator-1.1.0-SNAPSHOT-all.jar`.
