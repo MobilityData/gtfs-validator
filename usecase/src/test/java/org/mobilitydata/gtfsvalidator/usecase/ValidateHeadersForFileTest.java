@@ -18,12 +18,12 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.MissingHeaderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingHeaderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -56,7 +56,8 @@ class ValidateHeadersForFileTest {
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Collections.emptyList()),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2),
+                        Collections.emptyList()),
                 RawFileInfo.builder().build(),
                 new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2)),
                 resultRepo
@@ -74,7 +75,8 @@ class ValidateHeadersForFileTest {
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Collections.emptyList()),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2),
+                        Collections.emptyList()),
                 RawFileInfo.builder().filename(TEST_TST).build(),
                 new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_3, REQUIRED_HEADER_4)),
                 resultRepo
@@ -127,7 +129,10 @@ class ValidateHeadersForFileTest {
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, REQUIRED_HEADER_3), Collections.emptyList()),
+                new MockSpecRepo(
+                        Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, REQUIRED_HEADER_3),
+                        Collections.emptyList()
+                ),
                 RawFileInfo.builder().filename(TEST_TST).build(),
                 new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1)),
                 resultRepo
@@ -163,7 +168,9 @@ class ValidateHeadersForFileTest {
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Collections.emptyList()),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2),
+                        Collections.emptyList()
+                ),
                 RawFileInfo.builder().filename(TEST_TST).build(),
                 new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, EXTRA_HEADER_0)),
                 resultRepo
@@ -206,9 +213,13 @@ class ValidateHeadersForFileTest {
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Arrays.asList(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1)),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2),
+                        Arrays.asList(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1)
+                ),
                 RawFileInfo.builder().filename(TEST_TST).build(),
-                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, OPTIONAL_HEADER_0, OPTIONAL_HEADER_1)),
+                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2,
+                        OPTIONAL_HEADER_0, OPTIONAL_HEADER_1)
+                ),
                 resultRepo
         );
 
@@ -223,9 +234,13 @@ class ValidateHeadersForFileTest {
         MockResultRepo resultRepo = new MockResultRepo();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
-                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2), Arrays.asList(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1)),
+                new MockSpecRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2),
+                        Arrays.asList(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1)
+                ),
                 RawFileInfo.builder().filename(TEST_TST).build(),
-                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, OPTIONAL_HEADER_0, OPTIONAL_HEADER_1, EXTRA_HEADER_0, EXTRA_HEADER_1)),
+                new MockRawFileRepo(Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2,
+                        OPTIONAL_HEADER_0, OPTIONAL_HEADER_1, EXTRA_HEADER_0, EXTRA_HEADER_1)
+                ),
                 resultRepo
         );
 
@@ -349,6 +364,11 @@ class ValidateHeadersForFileTest {
 
         @Override
         public Collection<Notice> getAll() {
+            return null;
+        }
+
+        @Override
+        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
             return null;
         }
 

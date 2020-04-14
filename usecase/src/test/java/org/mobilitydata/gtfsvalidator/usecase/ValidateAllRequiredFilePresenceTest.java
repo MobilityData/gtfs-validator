@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.MissingRequiredFileNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
@@ -219,6 +219,11 @@ class ValidateAllRequiredFilePresenceTest {
 
         @Override
         public Collection<Notice> getAll() {
+            return null;
+        }
+
+        @Override
+        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
             return null;
         }
 
