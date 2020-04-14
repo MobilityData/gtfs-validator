@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -36,4 +37,10 @@ public interface GtfsDataRepository {
     Route getRouteById(String routeId);
 
     Route addEntity(Route newRoute) throws SQLIntegrityConstraintViolationException;
+
+    Map<String, Pathway> getPathwayCollection();
+
+    Pathway getPathwayById(final String pathwayId);
+
+    Pathway addPathway(final Pathway newPathway) throws SQLIntegrityConstraintViolationException;
 }

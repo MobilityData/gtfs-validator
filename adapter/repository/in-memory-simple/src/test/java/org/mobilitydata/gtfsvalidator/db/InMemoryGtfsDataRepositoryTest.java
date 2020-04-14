@@ -18,10 +18,12 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -430,5 +432,129 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addEntity(mockBuilder.build());
 
         assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
+    }
+
+    @Test
+    public void getPathwayCollectionShouldReturnPathwayCollection() throws SQLIntegrityConstraintViolationException {
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+
+        mockBuilder.pathwayId("test_id_0")
+                .fromStopId(STRING_TEST_VALUE)
+                .toStopId(STRING_TEST_VALUE)
+                .pathwayMode(1)
+                .isBidirectional(1)
+                .length(3.0f)
+                .traversalTime(2)
+                .stairCount(2)
+                .maxSlope(20f)
+                .minWidth(10f)
+                .signpostedAs("test")
+                .reversedSignpostedAs("test");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Pathway pathway00 = mockBuilder.build();
+        underTest.addPathway(pathway00);
+
+        mockBuilder.pathwayId("test_id_1");
+
+        final Pathway pathway01 = mockBuilder.build();
+        underTest.addPathway(pathway01);
+
+        final Map<String, Pathway> toVerify = underTest.getPathwayCollection();
+
+        Map<String, Pathway> mockPathwayMap = new HashMap<>();
+        mockPathwayMap.put("test_id_0", pathway00);
+        mockPathwayMap.put("test_id_1", pathway01);
+
+        assertEquals(mockPathwayMap, toVerify);
+    }
+
+    @Test
+    public void getPathwayByIdShouldReturnRelatedPathway() throws SQLIntegrityConstraintViolationException {
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+
+        mockBuilder.pathwayId("test_id_0")
+                .fromStopId(STRING_TEST_VALUE)
+                .toStopId(STRING_TEST_VALUE)
+                .pathwayMode(1)
+                .isBidirectional(1)
+                .length(3.0f)
+                .traversalTime(2)
+                .stairCount(2)
+                .maxSlope(20f)
+                .minWidth(10f)
+                .signpostedAs("test")
+                .reversedSignpostedAs("test");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Pathway pathway00 = mockBuilder.build();
+        underTest.addPathway(pathway00);
+
+        mockBuilder.pathwayId("test_id_1");
+
+        final Pathway pathway01 = mockBuilder.build();
+        underTest.addPathway(pathway01);
+
+        assertEquals(pathway00, underTest.getPathwayById("test_id_0"));
+        assertEquals(pathway01, underTest.getPathwayById("test_id_1"));
+    }
+
+    @Test
+    public void callToAddPathwayShouldAddEntityToGtfsDataRepoAndReturnSameEntity() throws SQLIntegrityConstraintViolationException {
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+
+        mockBuilder.pathwayId("test_id_0")
+                .fromStopId(STRING_TEST_VALUE)
+                .toStopId(STRING_TEST_VALUE)
+                .pathwayMode(1)
+                .isBidirectional(1)
+                .length(3.0f)
+                .traversalTime(2)
+                .stairCount(2)
+                .maxSlope(20f)
+                .minWidth(10f)
+                .signpostedAs("test")
+                .reversedSignpostedAs("test");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Pathway pathway00 = mockBuilder.build();
+        Pathway toCheck = underTest.addPathway(pathway00);
+
+        assertEquals(1, underTest.getPathwayCollection().size());
+        assertEquals(toCheck, pathway00);
+
+        mockBuilder.pathwayId("test_id_1");
+        final Pathway pathway01 = mockBuilder.build();
+        toCheck = underTest.addPathway(pathway01);
+
+        assertEquals(2, underTest.getPathwayCollection().size());
+        assertEquals(toCheck, pathway01);
+    }
+
+    @Test
+    public void tryToAddTwiceTheSamePathwayShouldThrowException() throws SQLIntegrityConstraintViolationException {
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+
+        mockBuilder.pathwayId("test_id_0")
+                .fromStopId(STRING_TEST_VALUE)
+                .toStopId(STRING_TEST_VALUE)
+                .pathwayMode(1)
+                .isBidirectional(1)
+                .length(3.0f)
+                .traversalTime(2)
+                .stairCount(2)
+                .maxSlope(20f)
+                .minWidth(10f)
+                .signpostedAs("test")
+                .reversedSignpostedAs("test");
+
+        final GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addPathway(mockBuilder.build());
+
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addPathway(mockBuilder.build()));
     }
 }

@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -72,6 +73,29 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             String routeId = newRoute.getRouteId();
             routeCollection.put(routeId, newRoute);
             return newRoute;
+        }
+    }
+
+    final Map<String, Pathway> pathwayCollection = new HashMap<>();
+
+    @Override
+    public Map<String, Pathway> getPathwayCollection() {
+        return Collections.unmodifiableMap(pathwayCollection);
+    }
+
+    @Override
+    public Pathway getPathwayById(final String pathwayId) {
+        return pathwayCollection.get(pathwayId);
+    }
+
+    @Override
+    public Pathway addPathway(final Pathway newPathway) throws SQLIntegrityConstraintViolationException {
+        if (pathwayCollection.containsKey(newPathway.getPathwayId())) {
+            throw new SQLIntegrityConstraintViolationException("pathway must be unique in dataset");
+        } else {
+            String pathwayId = newPathway.getPathwayId();
+            pathwayCollection.put(pathwayId, newPathway);
+            return newPathway;
         }
     }
 }
