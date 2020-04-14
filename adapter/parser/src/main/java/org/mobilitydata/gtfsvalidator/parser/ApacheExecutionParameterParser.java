@@ -53,7 +53,7 @@ public class ApacheExecutionParameterParser implements ExecutionParameterReposit
             );
             return toReturn;
         } catch (ParseException e) {
-            throw new IOException();
+            throw new IOException(e.getMessage());
         }
     }
 }
