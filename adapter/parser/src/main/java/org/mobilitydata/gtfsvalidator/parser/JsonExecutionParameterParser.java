@@ -13,7 +13,7 @@ public class JsonExecutionParameterParser implements ExecutionParameterRepositor
     private final String configFileAsString;
     private final ObjectMapper objectMapper;
 
-    public JsonExecutionParameterParser(ObjectMapper objectMapper, String configFileAsString) {
+    public JsonExecutionParameterParser(final ObjectMapper objectMapper, final String configFileAsString) {
         this.configFileAsString = configFileAsString;
         this.objectMapper = objectMapper;
     }
@@ -22,7 +22,8 @@ public class JsonExecutionParameterParser implements ExecutionParameterRepositor
     public Map<String, ExecutionParameter> parse() throws IOException {
         Map<String, ExecutionParameter> toReturn = new HashMap<>();
 
-        Arrays.asList(objectMapper.readValue(configFileAsString, ExecutionParameter[].class)).forEach(executionParameter -> toReturn.put(executionParameter.getShortName(), executionParameter));
+        Arrays.asList(objectMapper.readValue(configFileAsString, ExecutionParameter[].class))
+                .forEach(executionParameter -> toReturn.put(executionParameter.getShortName(), executionParameter));
 
         return toReturn;
     }

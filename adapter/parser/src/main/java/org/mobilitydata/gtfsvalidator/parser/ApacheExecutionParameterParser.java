@@ -17,9 +17,9 @@ public class ApacheExecutionParameterParser implements ExecutionParameterReposit
     private final Options availableOptions;
     private final String[] arguments;
 
-    public ApacheExecutionParameterParser(CommandLineParser commandLineParser,
-                                          Options availableOptions,
-                                          String[] arguments) {
+    public ApacheExecutionParameterParser(final CommandLineParser commandLineParser,
+                                          final Options availableOptions,
+                                          final String[] arguments) {
         this.commandLineParser = commandLineParser;
         this.arguments = arguments;
         this.availableOptions = availableOptions;
