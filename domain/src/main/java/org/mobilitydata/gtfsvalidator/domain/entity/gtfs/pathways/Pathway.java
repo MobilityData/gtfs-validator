@@ -1,8 +1,9 @@
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public class Pathway {
 
     @NotNull
@@ -18,7 +19,7 @@ public class Pathway {
     private final PathwayMode pathwayMode;
 
     @NotNull
-    private final IsBidirectional isBidirectional;
+    private final Boolean isBidirectional;
 
     @Nullable
     private final Float length;
@@ -45,7 +46,7 @@ public class Pathway {
                     @NotNull final String fromStopId,
                     @NotNull final String toStopId,
                     @NotNull final PathwayMode pathwayMode,
-                    @NotNull final IsBidirectional isBidirectional,
+                    @NotNull final Boolean isBidirectional,
                     @Nullable final Float length,
                     @Nullable final Integer traversalTime,
                     @Nullable final Integer stairCount,
@@ -72,76 +73,78 @@ public class Pathway {
         return pathwayId;
     }
 
+    @SuppressWarnings("unused")
     @NotNull
     public String getFromStopId() {
         return fromStopId;
     }
 
+    @SuppressWarnings("unused")
     @NotNull
     public String getToStopId() {
         return toStopId;
     }
 
+    @SuppressWarnings("unused")
     @NotNull
     public PathwayMode getPathwayMode() {
         return pathwayMode;
     }
 
+    @SuppressWarnings("unused")
     @NotNull
-    public IsBidirectional getIsBidirectional() {
+    public Boolean getIsBidirectional() {
         return isBidirectional;
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public Float getLength() {
         return length;
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public Integer getTraversalTime() {
         return traversalTime;
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public Integer getStairCount() {
         return stairCount;
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public Float getMaxSlope() {
         return maxSlope;
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public Float getMinWidth() {
         return minWidth;
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public String getSignpostedAs() {
         return signpostedAs;
     }
 
+    @SuppressWarnings("unused")
     @Nullable
     public String getReversedSignpostedAs() {
         return reversedSignpostedAs;
     }
 
     public static class PathwayBuilder {
-        @NotNull
         private String pathwayId;
-
-        @NotNull
         private String fromStopId;
-
-        @NotNull
         private String toStopId;
-
-        @NotNull
         private PathwayMode pathwayMode;
-
-        @NotNull
-        private IsBidirectional isBidirectional;
+        private Boolean isBidirectional;
 
         @Nullable
         private Float length;
@@ -164,18 +167,6 @@ public class Pathway {
         @Nullable
         private String reversedSignpostedAs;
 
-        PathwayBuilder(@NotNull final String pathwayId,
-                       @NotNull final String fromStopId,
-                       @NotNull final String toStopId,
-                       @NotNull final PathwayMode pathwayMode,
-                       @NotNull final IsBidirectional isBidirectional) {
-            this.pathwayId = pathwayId;
-            this.fromStopId = fromStopId;
-            this.toStopId = toStopId;
-            this.pathwayMode = pathwayMode;
-            this.isBidirectional = isBidirectional;
-        }
-
         public PathwayBuilder pathwayId(@NotNull final String pathwayId) {
             this.pathwayId = pathwayId;
             return this;
@@ -191,13 +182,20 @@ public class Pathway {
             return this;
         }
 
-        public PathwayBuilder pathwayMode(@NotNull final PathwayMode pathwayMode) {
-            this.pathwayMode = pathwayMode;
+        public PathwayBuilder pathwayMode(@NotNull final Integer pathwayMode) {
+            this.pathwayMode = PathwayMode.fromInt(pathwayMode);
             return this;
         }
 
-        public PathwayBuilder isBidirectional(@NotNull final IsBidirectional isBidirectional) {
-            this.isBidirectional = isBidirectional;
+        public PathwayBuilder isBidirectional(@NotNull Integer isBidirectional) {
+            //noinspection ConstantConditions
+            if (isBidirectional == null) {
+                this.isBidirectional = null;
+            } else if (isBidirectional == 0) {
+                this.isBidirectional = false;
+            } else if (isBidirectional == 1) {
+                this.isBidirectional = true;
+            }
             return this;
         }
 
@@ -237,6 +235,33 @@ public class Pathway {
         }
 
         public Pathway build() {
+            if (pathwayId == null) {
+                throw new IllegalArgumentException("field pathway_id can not be null");
+            }
+            if (fromStopId == null) {
+                throw new IllegalArgumentException("field from_stop_id can not be null");
+            }
+            if (toStopId == null) {
+                throw new IllegalArgumentException("field to_stop_id can not be null");
+            }
+            if (pathwayMode == null) {
+                throw new IllegalArgumentException("unexpected value for field pathway_mode");
+            }
+            if (isBidirectional == null) {
+                throw new IllegalArgumentException("invalid value for field is_bidirectional");
+            }
+            if (length != null && length < 0) {
+                throw new IllegalArgumentException("invalid value for field length");
+            }
+            if (traversalTime != null && traversalTime < 0) {
+                throw new IllegalArgumentException("invalid value for field traversal_time");
+            }
+            if (stairCount != null && stairCount < 0) {
+                throw new IllegalArgumentException("invalid value for field stair_count");
+            }
+            if (minWidth != null && minWidth < 0) {
+                throw new IllegalArgumentException("invalid value for field min_width");
+            }
             return new Pathway(pathwayId, fromStopId, toStopId, pathwayMode, isBidirectional, length, traversalTime,
                     stairCount, maxSlope, minWidth, signpostedAs, reversedSignpostedAs);
         }

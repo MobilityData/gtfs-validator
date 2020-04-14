@@ -1,6 +1,4 @@
-package org.mobilitydata.gtfsvalidator.domain.entity;
-
-import org.jetbrains.annotations.NotNull;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways;
 
 import java.util.stream.Stream;
 
@@ -19,12 +17,13 @@ public enum PathwayMode {
         this.value = value;
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    @NotNull
-    static public PathwayMode fromInt(Integer fromValue) {
+    static public PathwayMode fromInt(final Integer fromValue) {
+        if (fromValue == null) {
+            return null;
+        }
         return Stream.of(PathwayMode.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .get(); // TODO: implement solution to handle unexpected enum values
+                .orElse(null);
     }
 }
