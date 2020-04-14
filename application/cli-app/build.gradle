@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.gradle.internal.logging.text.StyledTextOutputFactory
+import org.gradle.internal.logging.text.StyledTextOutput
 
 plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
@@ -57,4 +59,10 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.12.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.12.1'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// Print success message with location of compiled JAR with dependencies
+def out = services.get(StyledTextOutputFactory).create("output")
+tasks.shadowJar.doLast {
+    out.style(StyledTextOutput.Style.SuccessHeader).println "Successfully built the gtfs-validator command-line app: " + archivePath
 }
