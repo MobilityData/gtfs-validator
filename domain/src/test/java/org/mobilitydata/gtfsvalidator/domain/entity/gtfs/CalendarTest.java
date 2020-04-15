@@ -12,7 +12,7 @@ class CalendarTest {
 
     @Test
     public void createCalendarWithNullServiceIdShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         //noinspection ConstantConditions
         underTest.serviceId(null)
@@ -26,14 +26,14 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("field service_id can not be null", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithNullStartDAteShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         //noinspection ConstantConditions
         underTest.serviceId("test id")
@@ -47,14 +47,14 @@ class CalendarTest {
                 .startDate(null)
                 .endDate(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("field start_date can not be null", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithNullEndDateShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         //noinspection ConstantConditions
         underTest.serviceId("test id")
@@ -68,14 +68,14 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(null);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("field end_date can not be null", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithInvalidMondayValueShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         underTest.serviceId("test id")
                 .monday(3)
@@ -88,14 +88,14 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value found for field monday", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithInvalidTuesdayValueShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         underTest.serviceId("test id")
                 .monday(0)
@@ -108,14 +108,14 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value found for field tuesday", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithInvalidWednesdayValueShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         underTest.serviceId("test id")
                 .monday(0)
@@ -128,14 +128,14 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value found for field wednesday", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithInvalidThursdayValueShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         underTest.serviceId("test id")
                 .monday(0)
@@ -148,14 +148,14 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value found for field thursday", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithInvalidFridayValueShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         underTest.serviceId("test id")
                 .monday(0)
@@ -168,14 +168,14 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value found for field friday", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithInvalidSaturdayValueShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         underTest.serviceId("test id")
                 .monday(0)
@@ -188,14 +188,14 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value found for field saturday", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithInvalidSundayValueShouldThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         underTest.serviceId("test id")
                 .monday(0)
@@ -208,14 +208,14 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value found for field sunday", exception.getMessage());
     }
 
     @Test
     public void createCalendarWithValidValuesShouldNotThrowException() {
-        Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
         underTest.serviceId("test id")
                 .monday(0)

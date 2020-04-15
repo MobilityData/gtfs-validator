@@ -93,7 +93,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         if (calendarCollection.containsKey(newCalendar.getServiceId())) {
             throw new SQLIntegrityConstraintViolationException("service_id must be unique in calendar.txt");
         } else {
-            String serviceId = newCalendar.getServiceId();
+            final String serviceId = newCalendar.getServiceId();
             calendarCollection.put(serviceId, newCalendar);
             return newCalendar;
         }

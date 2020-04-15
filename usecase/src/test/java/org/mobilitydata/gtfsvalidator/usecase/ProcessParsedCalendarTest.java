@@ -25,15 +25,15 @@ class ProcessParsedCalendarTest {
     @Test
     public void processValidParsedCalendarShouldAddToGtfsDataRepoWithoutNoticeOrException()
             throws SQLIntegrityConstraintViolationException {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar mockCalendar = mock(Calendar.class);
+        final Calendar mockCalendar = mock(Calendar.class);
 
-        Calendar.CalendarBuilder mockBuilder = mock(Calendar.CalendarBuilder.class, RETURNS_SELF);
+        final Calendar.CalendarBuilder mockBuilder = mock(Calendar.CalendarBuilder.class, RETURNS_SELF);
         when(mockBuilder.build()).thenReturn(mockCalendar);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -46,7 +46,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         underTest.execute(mockParsedCalendar);
 
@@ -62,7 +62,7 @@ class ProcessParsedCalendarTest {
         verify(mockBuilder, times(1)).startDate(ArgumentMatchers.isA(LocalDateTime.class));
         verify(mockBuilder, times(1)).endDate(ArgumentMatchers.isA(LocalDateTime.class));
 
-        InOrder inOrder = inOrder(mockBuilder, mockGtfsDataRepo);
+        final InOrder inOrder = inOrder(mockBuilder, mockGtfsDataRepo);
 
         inOrder.verify(mockBuilder, times(1)).build();
 
@@ -73,15 +73,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullServiceIdShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn(null);
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -94,7 +94,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("field service_id can not be null", exception.getMessage());
@@ -116,12 +116,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("service_id", noticeList.get(0).getFieldName());
@@ -132,15 +133,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithInvalidMondayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(4);
@@ -153,7 +154,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field monday", exception.getMessage());
@@ -174,12 +175,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor = ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("monday", noticeList.get(0).getFieldName());
@@ -192,15 +194,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithInvalidTuesdayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -213,7 +215,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field tuesday", exception.getMessage());
@@ -234,12 +236,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor = ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("tuesday", noticeList.get(0).getFieldName());
@@ -252,15 +255,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithInvalidWednesdayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -273,7 +276,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field wednesday", exception.getMessage());
@@ -294,12 +297,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor = ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("wednesday", noticeList.get(0).getFieldName());
@@ -312,15 +316,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithInvalidThursdayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -333,7 +337,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field thursday", exception.getMessage());
@@ -354,12 +358,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor = ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("thursday", noticeList.get(0).getFieldName());
@@ -372,15 +377,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithInvalidFridayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -393,7 +398,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field friday", exception.getMessage());
@@ -414,12 +419,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor = ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("friday", noticeList.get(0).getFieldName());
@@ -432,15 +438,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithInvalidSaturdayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -453,7 +459,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field saturday", exception.getMessage());
@@ -474,12 +480,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor = ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("saturday", noticeList.get(0).getFieldName());
@@ -492,15 +499,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithInvalidSundayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -513,7 +520,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field sunday", exception.getMessage());
@@ -534,12 +541,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor = ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("sunday", noticeList.get(0).getFieldName());
@@ -552,15 +560,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullMondayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(null);
@@ -573,7 +581,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field monday", exception.getMessage());
@@ -594,12 +602,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("monday", noticeList.get(0).getFieldName());
@@ -610,15 +619,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullTuesdayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -631,7 +640,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field tuesday", exception.getMessage());
@@ -652,12 +661,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("tuesday", noticeList.get(0).getFieldName());
@@ -668,15 +678,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullWednesdayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -689,7 +699,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field wednesday", exception.getMessage());
@@ -710,12 +720,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("wednesday", noticeList.get(0).getFieldName());
@@ -726,15 +737,16 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullThursdayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo,
+                mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -747,7 +759,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field thursday", exception.getMessage());
@@ -768,12 +780,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("thursday", noticeList.get(0).getFieldName());
@@ -784,15 +797,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullFridayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -805,7 +818,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field friday", exception.getMessage());
@@ -826,12 +839,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("friday", noticeList.get(0).getFieldName());
@@ -842,15 +856,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullSaturdayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -863,7 +877,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field saturday", exception.getMessage());
@@ -884,12 +898,12 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("saturday", noticeList.get(0).getFieldName());
@@ -900,15 +914,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullSundayShouldThrowExceptionAndIntegerFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -921,7 +935,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("invalid value found for field sunday", exception.getMessage());
@@ -942,12 +956,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("sunday", noticeList.get(0).getFieldName());
@@ -958,15 +973,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullStartDateShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -979,7 +994,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(null);
         when(mockParsedCalendar.get("end_date")).thenReturn(LocalDateTime.now());
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("field start_date can not be null", exception.getMessage());
@@ -1001,12 +1016,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("start_date", noticeList.get(0).getFieldName());
@@ -1017,15 +1033,15 @@ class ProcessParsedCalendarTest {
 
     @Test
     public void processCalendarWithNullEndDateShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
+        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -1038,7 +1054,7 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get("start_date")).thenReturn(LocalDateTime.now());
         when(mockParsedCalendar.get("end_date")).thenReturn(null);
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("field end_date can not be null", exception.getMessage());
@@ -1060,12 +1076,13 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("end_date", noticeList.get(0).getFieldName());
@@ -1077,17 +1094,18 @@ class ProcessParsedCalendarTest {
     @Test
     public void duplicateCalendarShouldThrowExceptionAndEntityMustBeUniqueNoticeShouldBeAddedToResultRepo()
             throws SQLIntegrityConstraintViolationException {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Calendar mockCalendar = mock(Calendar.class);
-        Calendar.CalendarBuilder mockBuilder = mock(Calendar.CalendarBuilder.class, RETURNS_SELF);
+        final Calendar mockCalendar = mock(Calendar.class);
+        final Calendar.CalendarBuilder mockBuilder = mock(Calendar.CalendarBuilder.class, RETURNS_SELF);
         when(mockBuilder.build()).thenReturn(mockCalendar);
 
-        ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedCalendar underTest = new ProcessParsedCalendar(mockResultRepo, mockGtfsDataRepo,
+                mockBuilder);
 
-        ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedCalendar = mock(ParsedEntity.class);
 
         when(mockParsedCalendar.get("service_id")).thenReturn("test id");
         when(mockParsedCalendar.get("monday")).thenReturn(0);
@@ -1103,7 +1121,7 @@ class ProcessParsedCalendarTest {
         when(mockGtfsDataRepo.addCalendar(mockCalendar)).thenThrow(
                 new SQLIntegrityConstraintViolationException("service_id must be unique in calendar.txt"));
 
-        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+        final Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> underTest.execute(mockParsedCalendar));
 
         assertEquals("service_id must be unique in calendar.txt", exception.getMessage());
@@ -1126,12 +1144,12 @@ class ProcessParsedCalendarTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendar, times(1)).getEntityId();
 
-        ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
+        final ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
+        final List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
         assertEquals("service_id", noticeList.get(0).getFieldName());
