@@ -16,11 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.config;
 
+import org.mobilitydata.gtfsvalidator.db.InMemoryExecutionParameterRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.execution.InMemoryExecutionParameterRepository;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecutionParameterRepository;

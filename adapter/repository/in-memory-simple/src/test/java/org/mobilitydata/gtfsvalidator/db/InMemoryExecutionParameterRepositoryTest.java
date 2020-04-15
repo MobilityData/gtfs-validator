@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.execution;
+package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecutionParameter;

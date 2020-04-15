@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.execution;
+package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.DefaultParser;
