@@ -104,16 +104,15 @@ class ProcessParsedRouteTest {
 
     @Test
     public void nullRouteIdShouldThrowExceptionAndAddMissingRequiredValueNoticeToResultRepo() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Route.RouteBuilder mockBuilder = spy(Route.RouteBuilder.class);
 
-        Route.RouteBuilder mockBuilder = spy(Route.RouteBuilder.class);
+        final ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
 
         when(mockParsedRoute.get("route_id")).thenReturn(null);
         when(mockParsedRoute.get("agency_id")).thenReturn(STRING_TEST_VALUE);
@@ -126,7 +125,8 @@ class ProcessParsedRouteTest {
         when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedRoute));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedRoute));
 
         Assertions.assertEquals("route_id can not be null in routes.txt", exception.getMessage());
 
@@ -148,32 +148,32 @@ class ProcessParsedRouteTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedRoute, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals("routes.txt"));
-        assert (noticeList.get(0).getFieldName().equals("route_id"));
-        assert (noticeList.get(0).getEntityId().equals("no id"));
+        assertEquals("routes.txt", noticeList.get(0).getFilename());
+        assertEquals("route_id", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedRoute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
 
     @Test
     void invalidRouteTypeShouldThrowExceptionAndAddMissingRequiredValueNoticeToResultRepo() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Route.RouteBuilder mockBuilder = spy(Route.RouteBuilder.class);
 
-        Route.RouteBuilder mockBuilder = spy(Route.RouteBuilder.class);
+        final ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
 
         when(mockParsedRoute.get("route_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedRoute.get("agency_id")).thenReturn(STRING_TEST_VALUE);
@@ -186,7 +186,8 @@ class ProcessParsedRouteTest {
         when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedRoute));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedRoute));
 
         Assertions.assertEquals("Unexpected value, or null value for field route_type in routes.txt",
                 exception.getMessage());
@@ -208,12 +209,12 @@ class ProcessParsedRouteTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedRoute, times(1)).getEntityId();
 
-        ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
+        final ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<UnexpectedValueNotice> noticeList = captor.getAllValues();
+        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("routes.txt", noticeList.get(0).getFilename());
         assertEquals("route_type", noticeList.get(0).getFieldName());
@@ -226,20 +227,19 @@ class ProcessParsedRouteTest {
     @Test
     void duplicateRouteShouldThrowExceptionAndAddEntityMustBeUniqueNoticeToResultRepo()
             throws SQLIntegrityConstraintViolationException {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-
-        Route mockRoute = mock(Route.class);
+        final Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteId()).thenReturn(STRING_TEST_VALUE);
 
-        Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class, RETURNS_SELF);
+        final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class, RETURNS_SELF);
         when(mockBuilder.build()).thenReturn(mockRoute);
 
-        ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
         when(mockParsedRoute.get("route_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedRoute.get("agency_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedRoute.get("route_short_name")).thenReturn(STRING_TEST_VALUE);
@@ -254,7 +254,7 @@ class ProcessParsedRouteTest {
         when(mockGtfsDataRepo.addEntity(mockRoute)).thenThrow(new SQLIntegrityConstraintViolationException("route " +
                 "must be unique in dataset"));
 
-        Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
+        final Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> underTest.execute(mockParsedRoute));
         Assertions.assertEquals("route must be unique in dataset", exception.getMessage());
 
@@ -286,11 +286,11 @@ class ProcessParsedRouteTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedRoute, times(1)).getEntityId();
 
-        ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
+        final ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
+        final List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
 
         assertEquals("routes.txt", noticeList.get(0).getFilename());
         assertEquals("route_id", noticeList.get(0).getFieldName());

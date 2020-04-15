@@ -50,7 +50,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public boolean isPresent(Agency agency) {
+    public boolean isPresent(final Agency agency) {
         return agencyCollection.containsKey(agency.getAgencyId());
     }
 
@@ -61,7 +61,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Route getRouteById(String routeId) {
+    public Route getRouteById(final String routeId) {
         return routeCollection.get(routeId);
     }
 
