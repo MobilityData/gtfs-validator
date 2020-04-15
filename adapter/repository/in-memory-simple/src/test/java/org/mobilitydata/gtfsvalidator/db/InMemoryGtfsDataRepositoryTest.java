@@ -57,12 +57,12 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Agency agency00 = mockBuilder.build();
-        underTest.addEntity(agency00);
+        underTest.addAgency(agency00);
 
         mockBuilder.agencyId("test_id1");
 
         final Agency agency01 = mockBuilder.build();
-        underTest.addEntity(agency01);
+        underTest.addAgency(agency01);
 
         final Map<String, Agency> toVerify = underTest.getAgencyCollection();
 
@@ -71,7 +71,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddEntityShouldAddAgencyToRepoAndReturnSameEntity() throws SQLIntegrityConstraintViolationException {
+    void callToAddAgencyShouldAddAgencyToRepoAndReturnSameEntity() throws SQLIntegrityConstraintViolationException {
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
@@ -95,7 +95,7 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Agency agency00 = mockBuilder.build();
-        Agency toCheck = underTest.addEntity(agency00);
+        Agency toCheck = underTest.addAgency(agency00);
 
         assertEquals(1, underTest.getAgencyCollection().size());
         assertEquals(agency00, toCheck);
@@ -103,7 +103,7 @@ class InMemoryGtfsDataRepositoryTest {
         mockBuilder.agencyId("test_id1");
 
         final Agency agency01 = mockBuilder.build();
-        toCheck = underTest.addEntity(agency01);
+        toCheck = underTest.addAgency(agency01);
 
         assertEquals(2, underTest.getAgencyCollection().size());
         assertEquals(toCheck, agency01);
@@ -133,11 +133,11 @@ class InMemoryGtfsDataRepositoryTest {
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addAgency(mockBuilder.build());
 
         mockBuilder.agencyId("test_id1");
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addAgency(mockBuilder.build());
 
         assertEquals("test_id0", underTest.getAgencyById("test_id0").getAgencyId());
         assertEquals("test_id1", underTest.getAgencyById("test_id1").getAgencyId());
@@ -167,11 +167,11 @@ class InMemoryGtfsDataRepositoryTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addAgency(mockBuilder.build());
 
         mockBuilder.agencyId("test_id0");
 
-        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addAgency(mockBuilder.build()));
     }
 
     @Test

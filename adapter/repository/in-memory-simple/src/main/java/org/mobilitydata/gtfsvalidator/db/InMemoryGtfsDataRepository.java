@@ -33,7 +33,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Agency addEntity(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
+    public Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
         final String agencyId = newAgency.getAgencyId();
         if (agencyCollection.containsKey(newAgency.getAgencyId())) {
             throw new SQLIntegrityConstraintViolationException("agency must be unique in dataset");

@@ -23,7 +23,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 
 public interface GtfsDataRepository {
-    Agency addEntity(final Agency newAgency) throws SQLIntegrityConstraintViolationException;
+    Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException;
 
     Agency getAgencyById(final String agencyId);
 
