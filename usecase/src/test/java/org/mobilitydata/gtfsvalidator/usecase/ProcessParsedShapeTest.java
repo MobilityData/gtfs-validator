@@ -25,13 +25,13 @@ class ProcessParsedShapeTest {
     @Test
     public void processValidatedShapeEntityWithNullShapeIdShouldThrowExceptionAndAddMissingRequiredValueNoticeToRepo() {
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
 
-        ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedShape = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
 
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_id"))).thenReturn(null);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_lat"))).thenReturn(0f);
@@ -39,7 +39,7 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
 
         assertEquals("field shape_id can not be null in file shapes.txt", exception.getMessage());
 
@@ -59,10 +59,9 @@ class ProcessParsedShapeTest {
 
         ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("shapes.txt", noticeList.get(0).getFilename());
         assertEquals("shape_id", noticeList.get(0).getFieldName());
@@ -74,13 +73,13 @@ class ProcessParsedShapeTest {
     @Test
     public void processValidatedShapeEntityWithTooBigLatitudeShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
 
-        ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedShape = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
 
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_id"))).thenReturn("test id");
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_lat"))).thenReturn(190.0f);
@@ -88,7 +87,7 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
 
         assertEquals("invalid value for field shape_latitude", exception.getMessage());
 
@@ -104,13 +103,12 @@ class ProcessParsedShapeTest {
 
         verify(mockParsedShape, times(1)).getEntityId();
 
-        ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
 
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("shapes.txt", noticeList.get(0).getFilename());
         assertEquals("shape_pt_lat", noticeList.get(0).getFieldName());
@@ -125,13 +123,13 @@ class ProcessParsedShapeTest {
     @Test
     public void processValidatedShapeEntityWithTooSmallLatitudeShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
 
-        ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedShape = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
 
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_id"))).thenReturn("test id");
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_lat"))).thenReturn(-190.0f);
@@ -155,13 +153,13 @@ class ProcessParsedShapeTest {
 
         verify(mockParsedShape, times(1)).getEntityId();
 
-        ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("shapes.txt", noticeList.get(0).getFilename());
         assertEquals("shape_pt_lat", noticeList.get(0).getFieldName());
@@ -176,13 +174,13 @@ class ProcessParsedShapeTest {
     @Test
     public void processValidatedShapeEntityWithTooBigLongitudeShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
 
-        ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedShape = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
 
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_id"))).thenReturn("test id");
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_lat"))).thenReturn(0f);
@@ -190,7 +188,8 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedShape));
 
         assertEquals("invalid value for field shape_longitude", exception.getMessage());
 
@@ -206,13 +205,13 @@ class ProcessParsedShapeTest {
 
         verify(mockParsedShape, times(1)).getEntityId();
 
-        ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("shapes.txt", noticeList.get(0).getFilename());
         assertEquals("shape_pt_lon", noticeList.get(0).getFieldName());
@@ -227,13 +226,13 @@ class ProcessParsedShapeTest {
     @Test
     public void processValidatedShapeEntityWithTooSmallLongitudeShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
 
-        ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedShape = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
 
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_id"))).thenReturn("test id");
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_lat"))).thenReturn(0f);
@@ -241,7 +240,7 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
 
         assertEquals("invalid value for field shape_longitude", exception.getMessage());
 
@@ -257,13 +256,13 @@ class ProcessParsedShapeTest {
 
         verify(mockParsedShape, times(1)).getEntityId();
 
-        ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("shapes.txt", noticeList.get(0).getFilename());
         assertEquals("shape_pt_lon", noticeList.get(0).getFieldName());
@@ -278,13 +277,13 @@ class ProcessParsedShapeTest {
     @Test
     public void processValidatedShapeEntityWitNegativeShapePtSequenceShouldThrowExceptionAndAddIntegerFieldValueOutOfRangeNoticeToRepo() {
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
 
-        ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedShape = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
 
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_id"))).thenReturn("test id");
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_lat"))).thenReturn(0f);
@@ -292,7 +291,7 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(-1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
 
         assertEquals("invalid value for field shape_pt_sequence", exception.getMessage());
 
@@ -308,13 +307,13 @@ class ProcessParsedShapeTest {
 
         verify(mockParsedShape, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("shapes.txt", noticeList.get(0).getFilename());
         assertEquals("shape_pt_sequence", noticeList.get(0).getFieldName());
@@ -329,13 +328,13 @@ class ProcessParsedShapeTest {
     @Test
     public void processValidatedShapeEntityWitNegativeShapeDistTraveledShouldThrowExceptionAndAddIntegerFieldValueOutOfRangeNoticeToRepo() {
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Shape.ShapeBuilder mockBuilder = spy(Shape.ShapeBuilder.class);
 
-        ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedShape = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
 
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_id"))).thenReturn("test id");
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_lat"))).thenReturn(0f);
@@ -343,7 +342,7 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(-100f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
 
         assertEquals("invalid value for field shape_dist_traveled", exception.getMessage());
 
@@ -359,13 +358,13 @@ class ProcessParsedShapeTest {
 
         verify(mockParsedShape, times(1)).getEntityId();
 
-        ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("shapes.txt", noticeList.get(0).getFilename());
         assertEquals("shape_dist_traveled", noticeList.get(0).getFieldName());
@@ -380,20 +379,19 @@ class ProcessParsedShapeTest {
     @Test
     public void duplicateShapeShouldThrowExceptionAndAddShapeMustBeUniqueNoticeToRepo()
             throws SQLIntegrityConstraintViolationException {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Shape.ShapeBuilder mockBuilder = mock(Shape.ShapeBuilder.class, RETURNS_SELF);
+        final Shape.ShapeBuilder mockBuilder = mock(Shape.ShapeBuilder.class, RETURNS_SELF);
 
-        Shape mockShape = mock(Shape.class);
+        final Shape mockShape = mock(Shape.class);
         when(mockBuilder.build()).thenReturn(mockShape);
-
         when(mockGtfsDataRepo.addShape(mockShape))
                 .thenThrow(new SQLIntegrityConstraintViolationException("shape must be unique in dataset"));
 
-        ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedShape = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
 
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_id"))).thenReturn("test id");
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_lat"))).thenReturn(0f);
@@ -401,7 +399,7 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100.0f);
 
-        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+        final Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> underTest.execute(mockParsedShape));
 
         assertEquals("shape must be unique in dataset", exception.getMessage());
@@ -420,7 +418,7 @@ class ProcessParsedShapeTest {
 
         verify(mockGtfsDataRepo, times(1)).addShape(ArgumentMatchers.isA(Shape.class));
 
-        ArgumentCaptor<EntityMustBeUniqueNotice> captor =
+        final ArgumentCaptor<EntityMustBeUniqueNotice> captor =
                 ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());

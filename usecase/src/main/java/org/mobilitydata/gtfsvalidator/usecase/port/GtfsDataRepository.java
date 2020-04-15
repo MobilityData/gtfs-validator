@@ -40,7 +40,7 @@ public interface GtfsDataRepository {
 
     Map<String, Shape> getShapeCollection();
 
-    Shape getShapeById(String shapeId);
+    Shape getShapeById(final String shapeId);
 
-    Shape addShape(Shape newShape) throws SQLIntegrityConstraintViolationException;
+    Shape addShape(final Shape newShape) throws SQLIntegrityConstraintViolationException;
 }

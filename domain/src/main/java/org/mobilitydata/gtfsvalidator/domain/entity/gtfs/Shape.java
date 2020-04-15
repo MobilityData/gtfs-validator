@@ -66,11 +66,11 @@ public class Shape implements Comparable<Shape> {
     }
 
     @Override
-    public int compareTo(@NotNull Shape shape) {
+    public int compareTo(@NotNull final Shape shape) {
         return getShapePtSequence().compareTo(shape.getShapePtSequence());
     }
 
-    public boolean isGreaterThan(Shape otherShape) {
+    public boolean isGreaterThan(final Shape otherShape) {
         return compareTo(otherShape) > 0;
     }
 

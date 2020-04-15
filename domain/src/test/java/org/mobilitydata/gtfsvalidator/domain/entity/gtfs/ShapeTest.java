@@ -9,7 +9,7 @@ class ShapeTest {
 
     @Test
     public void createShapeWithNullIdShouldThrowException() {
-        Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
 
         //noinspection ConstantConditions
         underTest.shapeId(null)
@@ -18,14 +18,14 @@ class ShapeTest {
                 .shapePtSequence(2)
                 .shapeDistTraveled(2.0f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("field shape_id can not be null in file shapes.txt", exception.getMessage());
     }
 
     @Test
     public void createShapeWithTooBigLatitudeShouldThrowException() {
-        Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
 
         underTest.shapeId("test")
                 .shapePtLat(120)
@@ -33,14 +33,14 @@ class ShapeTest {
                 .shapePtSequence(2)
                 .shapeDistTraveled(2.0f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value for field shape_latitude", exception.getMessage());
     }
 
     @Test
     public void createShapeWithTooSmallLatitudeShouldThrowException() {
-        Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
 
         underTest.shapeId("test")
                 .shapePtLat(-120)
@@ -48,14 +48,14 @@ class ShapeTest {
                 .shapePtSequence(2)
                 .shapeDistTraveled(2.0f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value for field shape_latitude", exception.getMessage());
     }
 
     @Test
     public void createShapeWithTooSmallLongitudeShouldThrowException() {
-        Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
 
         underTest.shapeId("test")
                 .shapePtLat(0)
@@ -63,14 +63,14 @@ class ShapeTest {
                 .shapePtSequence(2)
                 .shapeDistTraveled(2.0f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value for field shape_longitude", exception.getMessage());
     }
 
     @Test
     public void createShapeWithTooBigLongitudeShouldThrowException() {
-        Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
 
         underTest.shapeId("test")
                 .shapePtLat(0)
@@ -78,14 +78,14 @@ class ShapeTest {
                 .shapePtSequence(2)
                 .shapeDistTraveled(2.0f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value for field shape_longitude", exception.getMessage());
     }
 
     @Test
     public void createShapeWithInvalidShapePtSequenceShouldThrowException() {
-        Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
 
         underTest.shapeId("test")
                 .shapePtLat(0)
@@ -93,7 +93,7 @@ class ShapeTest {
                 .shapePtSequence(-3)
                 .shapeDistTraveled(2.0f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value for field shape_pt_sequence", exception.getMessage());
     }
@@ -101,7 +101,7 @@ class ShapeTest {
     @SuppressWarnings("unused")
     @Test
     public void createShapeWithInvalidShapeDistTraveledShouldThrowException() {
-        Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
 
         underTest.shapeId("test")
                 .shapePtLat(0)
@@ -109,14 +109,14 @@ class ShapeTest {
                 .shapePtSequence(0)
                 .shapeDistTraveled(-2.0f);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("invalid value for field shape_dist_traveled", exception.getMessage());
     }
 
     @Test
     public void shapeShouldBeAbleToBeComparedToOtherShape() {
-        Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
 
         underTest.shapeId("test")
                 .shapePtLat(0)
@@ -124,11 +124,11 @@ class ShapeTest {
                 .shapePtSequence(0)
                 .shapeDistTraveled(0f);
 
-        Shape firstShapeInSequence = underTest.build();
+        final Shape firstShapeInSequence = underTest.build();
 
         underTest.shapePtSequence(2);
 
-        Shape secondShapeInSequence = underTest.build();
+        final Shape secondShapeInSequence = underTest.build();
 
         assertTrue(secondShapeInSequence.isGreaterThan(firstShapeInSequence));
     }

@@ -43,11 +43,11 @@ public class ProcessParsedShape {
     public void execute(final ParsedEntity validatedShapeEntity) throws IllegalArgumentException,
             SQLIntegrityConstraintViolationException {
 
-        String shapeId = (String) validatedShapeEntity.get("shape_id");
-        float shapePtLat = (float) validatedShapeEntity.get("shape_pt_lat");
-        float shapePtLon = (float) validatedShapeEntity.get("shape_pt_lon");
-        int shapePtSequence = (int) validatedShapeEntity.get("shape_pt_sequence");
-        Float shapeDistTraveled = (Float) validatedShapeEntity.get("shape_dist_traveled");
+        final String shapeId = (String) validatedShapeEntity.get("shape_id");
+        final float shapePtLat = (float) validatedShapeEntity.get("shape_pt_lat");
+        final float shapePtLon = (float) validatedShapeEntity.get("shape_pt_lon");
+        final int shapePtSequence = (int) validatedShapeEntity.get("shape_pt_sequence");
+        final Float shapeDistTraveled = (Float) validatedShapeEntity.get("shape_dist_traveled");
 
         try {
             builder.shapeId(shapeId)
