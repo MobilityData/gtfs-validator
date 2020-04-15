@@ -33,6 +33,7 @@ import org.mockito.Mockito;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedAgencyTest {
@@ -129,7 +130,7 @@ class ProcessParsedAgencyTest {
         final Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedAgency));
 
-        Assertions.assertEquals("agency_name can not be null", exception.getMessage());
+        assertEquals("agency_name can not be null", exception.getMessage());
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -151,9 +152,9 @@ class ProcessParsedAgencyTest {
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals(FILENAME));
-        assert (noticeList.get(0).getFieldName().equals(AGENCY_NAME));
-        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals(AGENCY_NAME, noticeList.get(0).getFieldName());
+        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
     }
@@ -183,7 +184,7 @@ class ProcessParsedAgencyTest {
         final Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedAgency));
 
-        Assertions.assertEquals("agency_url can not be null", exception.getMessage());
+        assertEquals("agency_url can not be null", exception.getMessage());
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -205,9 +206,9 @@ class ProcessParsedAgencyTest {
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals(FILENAME));
-        assert (noticeList.get(0).getFieldName().equals(AGENCY_URL));
-        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals(AGENCY_URL, noticeList.get(0).getFieldName());
+        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
     }
@@ -237,7 +238,7 @@ class ProcessParsedAgencyTest {
         final Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedAgency));
 
-        Assertions.assertEquals("agency_timezone can not be null", exception.getMessage());
+        assertEquals("agency_timezone can not be null", exception.getMessage());
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -259,9 +260,9 @@ class ProcessParsedAgencyTest {
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals(FILENAME));
-        assert (noticeList.get(0).getFieldName().equals(AGENCY_TIMEZONE));
-        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals(AGENCY_TIMEZONE, noticeList.get(0).getFieldName());
+        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
     }
@@ -299,7 +300,7 @@ class ProcessParsedAgencyTest {
 
         final Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> underTest.execute(mockParsedAgency));
-        Assertions.assertEquals("agency must be unique in dataset", exception.getMessage());
+        assertEquals("agency must be unique in dataset", exception.getMessage());
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -331,9 +332,9 @@ class ProcessParsedAgencyTest {
 
         final List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals(FILENAME));
-        assert (noticeList.get(0).getFieldName().equals(AGENCY_ID));
-        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals(AGENCY_ID, noticeList.get(0).getFieldName());
+        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockResultRepo, mockSpecRepo, mockGtfsDataRepo, mockAgency, builder);
     }
