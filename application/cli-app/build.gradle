@@ -43,6 +43,8 @@ shadowJar {
     archiveBaseName = rootProject.name
     // Remove "-all" from the end of the JAR file name
     archiveClassifier = null
+    // Add "v" to version to match previous releases
+    archiveVersion = "v" + project.version
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
