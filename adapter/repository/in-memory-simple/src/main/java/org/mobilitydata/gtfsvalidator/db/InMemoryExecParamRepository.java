@@ -8,11 +8,11 @@ import org.mobilitydata.gtfsvalidator.parser.JsonExecParamParser;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryExecParamRepository implements ExecParamRepository {
-    private final Map<String, ExecParam> execParamCollection = new LinkedHashMap<>();
+    private final Map<String, ExecParam> execParamCollection = new HashMap<>();
     private final String[] args;
 
     public InMemoryExecParamRepository(String[] arguments) {
