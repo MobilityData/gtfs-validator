@@ -37,6 +37,7 @@ jar {
 shadowJar {
     minimize {
         exclude(dependency('org.apache.logging.log4j:log4j-core'))
+        exclude(dependency('com.fasterxml.jackson.core:jackson-databind'))
     }
     // Change the JAR name from cli-app to gtfs-validator
     archiveBaseName = rootProject.name
