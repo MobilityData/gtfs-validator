@@ -20,7 +20,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     }
 
     @Override
-    public ExecParam getExecParamByShortName(final String execParamShortName) {
+    public ExecParam getExecParamByKey(final String execParamShortName) {
         return execParamCollection.get(execParamShortName);
     }
 
@@ -31,13 +31,13 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
 
     @Override
     public ExecParam addExecParam(final ExecParam newExecParam) {
-        execParamCollection.put(newExecParam.getShortName(), newExecParam);
+        execParamCollection.put(newExecParam.getKey(), newExecParam);
         return newExecParam;
     }
 
     @Override
-    public boolean hasExecParam(String shortName) {
-        return execParamCollection.containsKey(shortName);
+    public boolean hasExecParam(String key) {
+        return execParamCollection.containsKey(key);
     }
 
     @Override

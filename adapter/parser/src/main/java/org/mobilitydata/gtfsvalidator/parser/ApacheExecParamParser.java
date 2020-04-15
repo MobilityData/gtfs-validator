@@ -44,6 +44,7 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
 
             Arrays.stream(cmd.getOptions()).forEach(option ->
                     toReturn.put(option.getOpt(), new ExecParam(option.getOpt(),
+                                    option.getOpt(),
                                     option.getLongOpt(),
                                     option.getDescription(),
                                     option.hasArg(),

@@ -1,6 +1,8 @@
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
 public class ExecParam {
+
+    private String key;
     private String shortName;
     private String longName;
     private String description;
@@ -10,16 +12,22 @@ public class ExecParam {
     public ExecParam() {
     }
 
-    public ExecParam(String shortName,
+    public ExecParam(String key,
+                     String shortName,
                      String longName,
                      String description,
                      boolean hasArgument,
                      String value) {
+        this.key = key;
         this.shortName = shortName;
         this.longName = longName;
         this.description = description;
         this.hasArgument = hasArgument;
         this.value = value;
+    }
+
+    public String getKey() {
+        return key;
     }
 
     public String getShortName() {
@@ -40,6 +48,10 @@ public class ExecParam {
 
     public String getValue() {
         return value;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public ExecParam setShortName(final String shortName) {

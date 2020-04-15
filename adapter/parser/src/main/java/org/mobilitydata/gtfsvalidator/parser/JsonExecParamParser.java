@@ -26,7 +26,7 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
 
         for (Object object : execParamCollectionAsObjectCollection) {
             ExecParam execParam = (ExecParam) object;
-            toReturn.put(execParam.getShortName(), execParam);
+            toReturn.put(execParam.getKey(), execParam);
         }
         return toReturn;
     }

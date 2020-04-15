@@ -7,13 +7,13 @@ import java.util.Map;
 
 public interface ExecParamRepository {
 
-    ExecParam getExecParamByShortName(final String optionName);
+    ExecParam getExecParamByKey(final String optionName);
 
     Map<String, ExecParam> getExecParamCollection();
 
     ExecParam addExecParam(final ExecParam newExecParam);
 
-    boolean hasExecParam(String shortName);
+    boolean hasExecParam(String key);
 
     ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile);
 

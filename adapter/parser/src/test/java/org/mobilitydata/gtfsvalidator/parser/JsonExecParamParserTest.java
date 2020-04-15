@@ -23,24 +23,24 @@ class JsonExecParamParserTest {
         Map<String, ExecParam> toCheck = underTest.parse();
 
         assertEquals(3, toCheck.size());
-        assertTrue(toCheck.containsKey("h"));
-        assertTrue(toCheck.containsKey("i"));
-        assertTrue(toCheck.containsKey("o"));
+        assertTrue(toCheck.containsKey("help"));
+        assertTrue(toCheck.containsKey("input"));
+        assertTrue(toCheck.containsKey("output"));
 
-        ExecParam toTest = toCheck.get("h");
+        ExecParam toTest = toCheck.get("help");
         assertEquals(toTest.getShortName(), "h");
         assertEquals(toTest.getLongName(), "help");
         assertEquals(toTest.getDescription(), "Print this message");
         assertFalse(toTest.hasArgument());
 
-        toTest = toCheck.get("i");
+        toTest = toCheck.get("input");
         assertEquals(toTest.getShortName(), "i");
         assertEquals(toTest.getLongName(), "input");
         assertEquals(toTest.getDescription(), "Relative path where to place extract the zip content");
         assertTrue(toTest.hasArgument());
         assertEquals(toTest.getValue(), "input");
 
-        toTest = toCheck.get("o");
+        toTest = toCheck.get("output");
         assertEquals(toTest.getShortName(), "o");
         assertEquals(toTest.getLongName(), "output");
         assertEquals(toTest.getDescription(), "Relative path where to place output files");
