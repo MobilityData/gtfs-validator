@@ -60,7 +60,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Route addEntity(final Route newRoute) throws SQLIntegrityConstraintViolationException {
+    public Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException {
         if (routeCollection.containsKey(newRoute.getRouteId())) {
             throw new SQLIntegrityConstraintViolationException("route must be unique in dataset");
         } else {

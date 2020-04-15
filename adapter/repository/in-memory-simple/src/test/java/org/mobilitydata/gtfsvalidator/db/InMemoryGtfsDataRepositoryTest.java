@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-
 class InMemoryGtfsDataRepositoryTest {
     private final String STRING_TEST_VALUE = "test_value";
 
@@ -175,7 +174,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddEntityShouldAddRouteToRepoAndReturnEntity() throws SQLIntegrityConstraintViolationException {
+    void callToAddRouteShouldAddRouteToRepoAndReturnEntity() throws SQLIntegrityConstraintViolationException {
         final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
         when(mockBuilder.routeId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
@@ -203,7 +202,7 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Route route00 = mockBuilder.build();
-        Route toCheck = underTest.addEntity(route00);
+        Route toCheck = underTest.addRoute(route00);
 
         assertEquals(1, underTest.getRouteCollection().size());
         assertEquals(toCheck, route00);
@@ -221,7 +220,7 @@ class InMemoryGtfsDataRepositoryTest {
 
 
         final Route route01 = mockBuilder.build();
-        toCheck = underTest.addEntity(route01);
+        toCheck = underTest.addRoute(route01);
 
         assertEquals(2, underTest.getRouteCollection().size());
         assertEquals(toCheck, route01);
@@ -256,7 +255,7 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         final Route route00 = mockBuilder.build();
-        underTest.addEntity(route00);
+        underTest.addRoute(route00);
 
         mockBuilder.routeId("test_id_1")
                 .agencyId(STRING_TEST_VALUE)
@@ -270,7 +269,7 @@ class InMemoryGtfsDataRepositoryTest {
                 .routeSortOrder(1);
 
         final Route route01 = mockBuilder.build();
-        underTest.addEntity(route01);
+        underTest.addRoute(route01);
 
         final Map<String, Route> toVerify = underTest.getRouteCollection();
 
@@ -306,7 +305,7 @@ class InMemoryGtfsDataRepositoryTest {
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addRoute(mockBuilder.build());
 
         mockBuilder.routeId("test_id_1")
                 .agencyId(STRING_TEST_VALUE)
@@ -319,7 +318,7 @@ class InMemoryGtfsDataRepositoryTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(1);
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addRoute(mockBuilder.build());
 
         assertEquals("test_id_0", underTest.getRouteById("test_id_0").getRouteId());
         assertEquals("test_id_1", underTest.getRouteById("test_id_1").getRouteId());
@@ -353,8 +352,8 @@ class InMemoryGtfsDataRepositoryTest {
 
         final GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addEntity(mockBuilder.build());
+        underTest.addRoute(mockBuilder.build());
 
-        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addEntity(mockBuilder.build()));
+        assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addRoute(mockBuilder.build()));
     }
 }
