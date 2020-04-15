@@ -13,7 +13,7 @@ public enum PathwayMode {
 
     private final int value;
 
-    PathwayMode(int value) {
+    PathwayMode(final int value) {
         this.value = value;
     }
 

@@ -41,18 +41,18 @@ public class ProcessParsedPathway {
     public void execute(final ParsedEntity validatedParsedPathway) throws IllegalArgumentException,
             SQLIntegrityConstraintViolationException {
 
-        String pathwayId = (String) validatedParsedPathway.get("pathway_id");
-        String fromStopId = (String) validatedParsedPathway.get("from_stop_id");
-        String toStopId = (String) validatedParsedPathway.get("to_stop_id");
-        Integer pathwayMode = (Integer) validatedParsedPathway.get("pathway_mode");
-        Integer isBidirectional = (Integer) validatedParsedPathway.get("is_bidirectional");
-        Float length = (Float) validatedParsedPathway.get("length");
-        Integer traversalTime = (Integer) validatedParsedPathway.get("traversal_tine");
-        Integer stairCount = (Integer) validatedParsedPathway.get("stair_count");
-        Float maxSlope = (Float) validatedParsedPathway.get("max_slope");
-        Float minWidth = (Float) validatedParsedPathway.get("min_width");
-        String signpostedAs = (String) validatedParsedPathway.get("signposted_as");
-        String reversedSignpostedAs = (String) validatedParsedPathway.get("reserved_signposted_as");
+        final String pathwayId = (String) validatedParsedPathway.get("pathway_id");
+        final String fromStopId = (String) validatedParsedPathway.get("from_stop_id");
+        final String toStopId = (String) validatedParsedPathway.get("to_stop_id");
+        final Integer pathwayMode = (Integer) validatedParsedPathway.get("pathway_mode");
+        final Integer isBidirectional = (Integer) validatedParsedPathway.get("is_bidirectional");
+        final Float length = (Float) validatedParsedPathway.get("length");
+        final Integer traversalTime = (Integer) validatedParsedPathway.get("traversal_tine");
+        final Integer stairCount = (Integer) validatedParsedPathway.get("stair_count");
+        final Float maxSlope = (Float) validatedParsedPathway.get("max_slope");
+        final Float minWidth = (Float) validatedParsedPathway.get("min_width");
+        final String signpostedAs = (String) validatedParsedPathway.get("signposted_as");
+        final String reversedSignpostedAs = (String) validatedParsedPathway.get("reserved_signposted_as");
 
         try {
             builder.pathwayId(pathwayId)

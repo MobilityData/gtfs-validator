@@ -27,13 +27,13 @@ class ProcessParsedPathwayTest {
     @Test
     public void validatedParsedPathwayShouldCreatePathwayEntityAndBeAddedToGtfsDataRepository()
             throws SQLIntegrityConstraintViolationException {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway mockPathway = mock(Pathway.class);
+        final Pathway mockPathway = mock(Pathway.class);
 
-        Pathway.PathwayBuilder mockBuilder = mock(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = mock(Pathway.PathwayBuilder.class);
         when(mockBuilder.pathwayId(anyString())).thenCallRealMethod();
         when(mockBuilder.fromStopId(anyString())).thenCallRealMethod();
         when(mockBuilder.toStopId(anyString())).thenCallRealMethod();
@@ -49,9 +49,9 @@ class ProcessParsedPathwayTest {
 
         when(mockBuilder.build()).thenReturn(mockPathway);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -83,7 +83,7 @@ class ProcessParsedPathwayTest {
         verify(mockBuilder, times(1)).signpostedAs(ArgumentMatchers.anyString());
         verify(mockBuilder, times(1)).reversedSignpostedAs(ArgumentMatchers.anyString());
 
-        InOrder inOrder = inOrder(mockBuilder, mockResultRepo, mockGtfsDataRepo);
+        final InOrder inOrder = inOrder(mockBuilder, mockResultRepo, mockGtfsDataRepo);
 
         inOrder.verify(mockBuilder, times(1)).build();
         inOrder.verify(mockGtfsDataRepo, times(1)).addPathway(ArgumentMatchers.eq(mockPathway));
@@ -93,15 +93,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void nullPathwayIdShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(null);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -116,7 +116,7 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("field pathway_id can not be null", exception.getMessage());
 
@@ -140,12 +140,13 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("pathway_id", noticeList.get(0).getFieldName());
@@ -156,15 +157,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void nullFromStopIdShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(null);
@@ -179,7 +180,7 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("field from_stop_id can not be null", exception.getMessage());
 
@@ -203,32 +204,32 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("from_stop_id", noticeList.get(0).getFieldName());
         assertEquals("no id", noticeList.get(0).getEntityId());
-
 
         verifyNoMoreInteractions(mockParsedPathway, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
 
     @Test
     public void nullToStopIdShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -243,7 +244,8 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("field to_stop_id can not be null", exception.getMessage());
 
@@ -267,12 +269,13 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("to_stop_id", noticeList.get(0).getFieldName());
@@ -283,15 +286,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void nullPathwayModeShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -306,7 +309,8 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("unexpected value for field pathway_mode", exception.getMessage());
 
@@ -330,12 +334,13 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("pathway_mode", noticeList.get(0).getFieldName());
@@ -346,15 +351,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void invalidPathwayModeShouldThrowExceptionAndUnexpectedValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -369,7 +374,7 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("unexpected value for field pathway_mode", exception.getMessage());
 
@@ -392,12 +397,12 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
+        final ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<UnexpectedValueNotice> noticeList = captor.getAllValues();
+        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("pathway_mode", noticeList.get(0).getFieldName());
@@ -409,15 +414,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void nullIsBidirectionalShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -432,7 +437,8 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("invalid value for field is_bidirectional", exception.getMessage());
 
@@ -456,12 +462,13 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("is_bidirectional", noticeList.get(0).getFieldName());
@@ -472,15 +479,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void invalidIsBidirectionalShouldThrowExceptionAndUnexpectedValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -495,7 +502,8 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("invalid value for field is_bidirectional", exception.getMessage());
 
@@ -518,11 +526,11 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
+        final ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<UnexpectedValueNotice> noticeList = captor.getAllValues();
+        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("is_bidirectional", noticeList.get(0).getFieldName());
@@ -534,15 +542,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void invalidLengthShouldThrowExceptionAndFloatFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -557,7 +565,8 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("invalid value for field length", exception.getMessage());
 
@@ -580,12 +589,12 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("length", noticeList.get(0).getFieldName());
@@ -599,15 +608,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void invalidTraversalTimeShouldThrowExceptionAndFloatFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -622,7 +631,8 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("invalid value for field traversal_time", exception.getMessage());
 
@@ -645,12 +655,12 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("traversal_time", noticeList.get(0).getFieldName());
@@ -664,15 +674,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void invalidStairCountShouldThrowExceptionAndFloatFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -687,7 +697,8 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("invalid value for field stair_count", exception.getMessage());
 
@@ -710,12 +721,12 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("stair_count", noticeList.get(0).getFieldName());
@@ -729,15 +740,15 @@ class ProcessParsedPathwayTest {
 
     @Test
     public void invalidMinWidthShouldThrowExceptionAndFloatFieldValueOutOfRangeNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
+        final Pathway.PathwayBuilder mockBuilder = spy(Pathway.PathwayBuilder.class);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -752,7 +763,7 @@ class ProcessParsedPathwayTest {
         when(mockParsedPathway.get("signposted_as")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("reserved_signposted_as")).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedPathway));
 
         Assertions.assertEquals("invalid value for field min_width", exception.getMessage());
 
@@ -775,12 +786,12 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
+        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
                 ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("min_width", noticeList.get(0).getFieldName());
@@ -796,17 +807,17 @@ class ProcessParsedPathwayTest {
     public void
     duplicatePathwayShouldThrowExceptionAndEntityMustBeUniqueNoticeShouldBeAddedToResultRepo()
             throws SQLIntegrityConstraintViolationException {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Pathway mockPathway = mock(Pathway.class);
-        Pathway.PathwayBuilder mockBuilder = mock(Pathway.PathwayBuilder.class, RETURNS_SELF);
+        final Pathway mockPathway = mock(Pathway.class);
+        final Pathway.PathwayBuilder mockBuilder = mock(Pathway.PathwayBuilder.class, RETURNS_SELF);
         when(mockBuilder.build()).thenReturn(mockPathway);
 
         when(mockPathway.getPathwayId()).thenReturn(STRING_TEST_VALUE);
 
-        ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedPathway underTest = new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
@@ -825,7 +836,7 @@ class ProcessParsedPathwayTest {
         when(mockGtfsDataRepo.addPathway(mockPathway))
                 .thenThrow(new SQLIntegrityConstraintViolationException("pathway must be unique in dataset"));
 
-        Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
+        final Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> underTest.execute(mockParsedPathway));
         Assertions.assertEquals("pathway must be unique in dataset", exception.getMessage());
 
@@ -850,11 +861,11 @@ class ProcessParsedPathwayTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
-        ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
+        final ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
+        final List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
         assertEquals("pathway_id", noticeList.get(0).getFieldName());
