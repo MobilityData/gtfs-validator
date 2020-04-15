@@ -436,7 +436,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void getTransferCollectionShouldReturnTransferCollection() throws SQLIntegrityConstraintViolationException {
-        Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
+        final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
         when(mockBuilder.fromStopId(anyString())).thenCallRealMethod();
         when(mockBuilder.toStopId(anyString())).thenCallRealMethod();
         when(mockBuilder.transferType(anyInt())).thenCallRealMethod();
@@ -475,7 +475,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void getTransferByStopPairShouldReturnRelatedTransfer() throws SQLIntegrityConstraintViolationException {
-        Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
+        final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
         when(mockBuilder.fromStopId(anyString())).thenCallRealMethod();
         when(mockBuilder.toStopId(anyString())).thenCallRealMethod();
         when(mockBuilder.transferType(anyInt())).thenCallRealMethod();
@@ -506,7 +506,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void callToAddTransferShouldAddTransferToRepoAndReturnEntity() throws SQLIntegrityConstraintViolationException {
-        Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
+        final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
         when(mockBuilder.fromStopId(anyString())).thenCallRealMethod();
         when(mockBuilder.toStopId(anyString())).thenCallRealMethod();
         when(mockBuilder.transferType(anyInt())).thenCallRealMethod();
@@ -539,7 +539,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void tryToAddTwiceTheSameTransferShouldThrowException() throws SQLIntegrityConstraintViolationException {
-        Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
+        final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
         when(mockBuilder.fromStopId(anyString())).thenCallRealMethod();
         when(mockBuilder.toStopId(anyString())).thenCallRealMethod();
         when(mockBuilder.transferType(anyInt())).thenCallRealMethod();
@@ -555,7 +555,7 @@ class InMemoryGtfsDataRepositoryTest {
 
         underTest.addTransfer(mockBuilder.build());
 
-        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+        final Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> underTest.addTransfer(mockBuilder.build()));
 
         assertEquals("transfer must be unique in dataset", exception.getMessage());

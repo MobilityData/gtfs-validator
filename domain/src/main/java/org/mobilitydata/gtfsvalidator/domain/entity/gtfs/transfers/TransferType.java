@@ -26,11 +26,11 @@ public enum TransferType {
 
     private final int value;
 
-    TransferType(int value) {
+    TransferType(final int value) {
         this.value = value;
     }
 
-    static public TransferType fromInt(Integer fromValue) {
+    static public TransferType fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return RECOMMENDED_TRANSFER_POINT;
         }
