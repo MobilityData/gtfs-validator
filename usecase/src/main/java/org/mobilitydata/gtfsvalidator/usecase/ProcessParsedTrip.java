@@ -42,16 +42,16 @@ public class ProcessParsedTrip {
     public void execute(final ParsedEntity validatedTripEntity) throws IllegalArgumentException,
             SQLIntegrityConstraintViolationException {
 
-        String routeId = (String) validatedTripEntity.get("route_id");
-        String serviceId = (String) validatedTripEntity.get("service_id");
-        String tripId = (String) validatedTripEntity.get("trip_id");
-        String tripHeadsign = (String) validatedTripEntity.get("trip_headsign");
-        String tripShortName = (String) validatedTripEntity.get("trip_short_name");
-        Integer directionId = (Integer) validatedTripEntity.get("direction_id");
-        String blockId = (String) validatedTripEntity.get("block_id");
-        String shapeId = (String) validatedTripEntity.get("shape_id");
-        Integer wheelchairAccessible = (Integer) validatedTripEntity.get("wheelchair_accessible");
-        Integer bikesAllowed = (Integer) validatedTripEntity.get("bikes_allowed");
+        final String routeId = (String) validatedTripEntity.get("route_id");
+        final String serviceId = (String) validatedTripEntity.get("service_id");
+        final String tripId = (String) validatedTripEntity.get("trip_id");
+        final String tripHeadsign = (String) validatedTripEntity.get("trip_headsign");
+        final String tripShortName = (String) validatedTripEntity.get("trip_short_name");
+        final Integer directionId = (Integer) validatedTripEntity.get("direction_id");
+        final String blockId = (String) validatedTripEntity.get("block_id");
+        final String shapeId = (String) validatedTripEntity.get("shape_id");
+        final Integer wheelchairAccessible = (Integer) validatedTripEntity.get("wheelchair_accessible");
+        final Integer bikesAllowed = (Integer) validatedTripEntity.get("bikes_allowed");
 
         try {
             builder.routeId(routeId)

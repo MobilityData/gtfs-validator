@@ -23,10 +23,10 @@ class ProcessParsedTripTest {
 
     @Test
     public void processTripWithValidValuesShouldNotThrowExceptionAndShouldBeAddedToGtfsDataRepo() throws SQLIntegrityConstraintViolationException {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
+        final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
         when(mockBuilder.routeId(anyString())).thenReturn(mockBuilder);
         when(mockBuilder.serviceId(anyString())).thenReturn(mockBuilder);
         when(mockBuilder.tripId(anyString())).thenReturn(mockBuilder);
@@ -38,10 +38,10 @@ class ProcessParsedTripTest {
         when(mockBuilder.wheelchairAccessible(anyInt())).thenReturn(mockBuilder);
         when(mockBuilder.bikesAllowed(anyInt())).thenReturn(mockBuilder);
 
-        Trip mockTrip = mock(Trip.class);
+        final Trip mockTrip = mock(Trip.class);
         when(mockBuilder.build()).thenReturn(mockTrip);
 
-        ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
         when(mockParsedTrip.get("route_id")).thenReturn("route_id");
@@ -57,7 +57,7 @@ class ProcessParsedTripTest {
 
         underTest.execute(mockParsedTrip);
 
-        InOrder inOrder = Mockito.inOrder(mockGtfsDataRepo, mockBuilder);
+        final InOrder inOrder = Mockito.inOrder(mockGtfsDataRepo, mockBuilder);
 
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("route_id"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("service_id"));
@@ -91,14 +91,14 @@ class ProcessParsedTripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void processTripWithNullRouteIdShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
+        final Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
 
-        ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
 
         when(mockParsedTrip.get("route_id")).thenReturn(null);
         when(mockParsedTrip.get("service_id")).thenReturn("service_id");
@@ -111,7 +111,8 @@ class ProcessParsedTripTest {
         when(mockParsedTrip.get("wheelchair_accessible")).thenReturn(1);
         when(mockParsedTrip.get("bikes_allowed")).thenReturn(1);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedTrip));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedTrip));
 
         assertEquals("field route_id can not be null", exception.getMessage());
 
@@ -142,11 +143,12 @@ class ProcessParsedTripTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedTrip, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assert (noticeList.get(0).getFilename().equals("trips.txt"));
         assert (noticeList.get(0).getFieldName().equals("route_id"));
@@ -157,14 +159,14 @@ class ProcessParsedTripTest {
 
     @Test
     public void processTripWithNullServiceIdShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
+        final Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
 
-        ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
 
         when(mockParsedTrip.get("route_id")).thenReturn("route_id");
         when(mockParsedTrip.get("service_id")).thenReturn(null);
@@ -177,7 +179,8 @@ class ProcessParsedTripTest {
         when(mockParsedTrip.get("wheelchair_accessible")).thenReturn(1);
         when(mockParsedTrip.get("bikes_allowed")).thenReturn(1);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedTrip));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedTrip));
 
         assertEquals("field service_id can not be null", exception.getMessage());
 
@@ -209,11 +212,12 @@ class ProcessParsedTripTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedTrip, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assert (noticeList.get(0).getFilename().equals("trips.txt"));
         assert (noticeList.get(0).getFieldName().equals("service_id"));
@@ -224,14 +228,14 @@ class ProcessParsedTripTest {
 
     @Test
     public void processTripWithNullTripIdShouldThrowExceptionAndMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
+        final Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
 
-        ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
 
         when(mockParsedTrip.get("route_id")).thenReturn("route_id");
         when(mockParsedTrip.get("service_id")).thenReturn("service_id");
@@ -244,7 +248,8 @@ class ProcessParsedTripTest {
         when(mockParsedTrip.get("wheelchair_accessible")).thenReturn(1);
         when(mockParsedTrip.get("bikes_allowed")).thenReturn(1);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedTrip));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedTrip));
 
         assertEquals("field trip_id can not be null", exception.getMessage());
 
@@ -276,11 +281,12 @@ class ProcessParsedTripTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedTrip, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
         assert (noticeList.get(0).getFilename().equals("trips.txt"));
         assert (noticeList.get(0).getFieldName().equals("trip_id"));
@@ -291,14 +297,14 @@ class ProcessParsedTripTest {
 
     @Test
     public void processTripWithInvalidDirectionIdShouldThrowExceptionAndUnexpectedValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
+        final Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
 
-        ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
 
         when(mockParsedTrip.get("route_id")).thenReturn("route_id");
         when(mockParsedTrip.get("service_id")).thenReturn("service_id");
@@ -311,7 +317,8 @@ class ProcessParsedTripTest {
         when(mockParsedTrip.get("wheelchair_accessible")).thenReturn(1);
         when(mockParsedTrip.get("bikes_allowed")).thenReturn(1);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedTrip));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedTrip));
 
         assertEquals("unexpected value found for field direction_id", exception.getMessage());
 
@@ -342,11 +349,11 @@ class ProcessParsedTripTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedTrip, times(1)).getEntityId();
 
-        ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
+        final ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<UnexpectedValueNotice> noticeList = captor.getAllValues();
+        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
 
         assert (noticeList.get(0).getFilename().equals("trips.txt"));
         assert (noticeList.get(0).getFieldName().equals("direction_id"));
@@ -357,14 +364,14 @@ class ProcessParsedTripTest {
 
     @Test
     public void processTripWithInvalidWheelchairAccessibleShouldThrowExceptionAndUnexpectedValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
+        final Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
 
-        ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
 
         when(mockParsedTrip.get("route_id")).thenReturn("route_id");
         when(mockParsedTrip.get("service_id")).thenReturn("service_id");
@@ -377,7 +384,8 @@ class ProcessParsedTripTest {
         when(mockParsedTrip.get("wheelchair_accessible")).thenReturn(4);
         when(mockParsedTrip.get("bikes_allowed")).thenReturn(1);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedTrip));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedTrip));
 
         assertEquals("unexpected value found for field wheelchair_accessible", exception.getMessage());
 
@@ -408,11 +416,11 @@ class ProcessParsedTripTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedTrip, times(1)).getEntityId();
 
-        ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
+        final ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<UnexpectedValueNotice> noticeList = captor.getAllValues();
+        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
 
         assert (noticeList.get(0).getFilename().equals("trips.txt"));
         assert (noticeList.get(0).getFieldName().equals("wheelchair_accessible"));
@@ -423,14 +431,14 @@ class ProcessParsedTripTest {
 
     @Test
     public void processTripWithInvalidBikesAllowedShouldThrowExceptionAndUnexpectedValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
+        final Trip.TripBuilder mockBuilder = spy(Trip.TripBuilder.class);
 
-        ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
 
         when(mockParsedTrip.get("route_id")).thenReturn("route_id");
         when(mockParsedTrip.get("service_id")).thenReturn("service_id");
@@ -443,7 +451,8 @@ class ProcessParsedTripTest {
         when(mockParsedTrip.get("wheelchair_accessible")).thenReturn(1);
         when(mockParsedTrip.get("bikes_allowed")).thenReturn(4);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedTrip));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedTrip));
 
         assertEquals("unexpected value found for field bikes_allowed", exception.getMessage());
 
@@ -474,11 +483,11 @@ class ProcessParsedTripTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedTrip, times(1)).getEntityId();
 
-        ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
+        final ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<UnexpectedValueNotice> noticeList = captor.getAllValues();
+        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("trips.txt", noticeList.get(0).getFilename());
         assertEquals("bikes_allowed", noticeList.get(0).getFieldName());

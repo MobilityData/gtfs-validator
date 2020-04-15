@@ -93,7 +93,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         if (tripCollection.containsKey(newTrip.getTripId())) {
             throw new SQLIntegrityConstraintViolationException("trip must be unique in dataset");
         } else {
-            String tripId = newTrip.getTripId();
+            final String tripId = newTrip.getTripId();
             tripCollection.put(tripId, newTrip);
             return newTrip;
         }

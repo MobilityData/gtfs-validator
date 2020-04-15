@@ -10,29 +10,29 @@ class DirectionIdTest {
 
     @Test
     public void createEnumDirectionIdWithInvalidValueShouldReturnError() {
-        int invalidValue = 3;
-        DirectionId underTest = DirectionId.fromInt(invalidValue);
+        final int invalidValue = 3;
+        final DirectionId underTest = DirectionId.fromInt(invalidValue);
         assertEquals(ERROR, underTest);
     }
 
     @Test
     public void createEnumDirectionIdWithNullValueShouldReturnNull() {
-        Integer nullValue = null;
-        @SuppressWarnings("ConstantConditions") DirectionId underTest = DirectionId.fromInt(nullValue);
+        final Integer nullValue = null;
+        @SuppressWarnings("ConstantConditions") final DirectionId underTest = DirectionId.fromInt(nullValue);
         assertNull(underTest);
     }
 
     @Test
     public void createEnumDirectionIdWithValidValue0ShouldReturnOutbound() {
-        int validValue = 0;
-        DirectionId underTest = DirectionId.fromInt(validValue);
+        final int validValue = 0;
+        final DirectionId underTest = DirectionId.fromInt(validValue);
         assertEquals(OUTBOUND, underTest);
     }
 
     @Test
     public void createEnumDirectionIdWithValidValue0ShouldReturnInbound() {
-        int validValue = 1;
-        DirectionId underTest = DirectionId.fromInt(validValue);
+        final int validValue = 1;
+        final DirectionId underTest = DirectionId.fromInt(validValue);
         assertEquals(INBOUND, underTest);
     }
 }

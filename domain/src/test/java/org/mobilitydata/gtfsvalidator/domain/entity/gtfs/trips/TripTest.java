@@ -10,7 +10,7 @@ class TripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullRouteIdShouldThrowException() {
-        Trip.TripBuilder underTest = new Trip.TripBuilder();
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId(null)
                 .serviceId("service id")
@@ -23,7 +23,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 underTest::build);
 
         assertEquals("field route_id can not be null", exception.getMessage());
@@ -32,7 +32,7 @@ class TripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullServiceIdShouldThrowException() {
-        Trip.TripBuilder underTest = new Trip.TripBuilder();
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId(null)
@@ -45,7 +45,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 underTest::build);
 
         assertEquals("field service_id can not be null", exception.getMessage());
@@ -54,7 +54,7 @@ class TripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullTripIdShouldThrowException() {
-        Trip.TripBuilder underTest = new Trip.TripBuilder();
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -67,7 +67,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 underTest::build);
 
         assertEquals("field trip_id can not be null", exception.getMessage());
@@ -75,7 +75,7 @@ class TripTest {
 
     @Test
     public void createTripWithInvalidDirectionIdShouldThrowException() {
-        Trip.TripBuilder underTest = new Trip.TripBuilder();
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -88,7 +88,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        Exception exception = assertThrows(IllegalArgumentException.class,
+        final Exception exception = assertThrows(IllegalArgumentException.class,
                 underTest::build);
 
         assertEquals("unexpected value found for field direction_id", exception.getMessage());
@@ -96,7 +96,7 @@ class TripTest {
 
     @Test
     public void createTripWithValidDirectionIdShouldNotThrowException() {
-        Trip.TripBuilder underTest = new Trip.TripBuilder();
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -109,7 +109,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        Trip toCheck = underTest.build();
+        final Trip toCheck = underTest.build();
 
         assertEquals("route id", toCheck.getRouteId());
         assertEquals("service id", toCheck.getServiceId());
@@ -125,7 +125,7 @@ class TripTest {
 
     @Test
     public void createTripWithInvalidWheelchairAccessibleShouldThrowException() {
-        Trip.TripBuilder underTest = new Trip.TripBuilder();
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -138,14 +138,14 @@ class TripTest {
                 .wheelchairAccessible(4)
                 .bikesAllowed(0);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("unexpected value found for field wheelchair_accessible", exception.getMessage());
     }
 
     @Test
     public void createTripWithInvalidBikesAllowedShouldThrowException() {
-        Trip.TripBuilder underTest = new Trip.TripBuilder();
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -158,7 +158,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(4);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("unexpected value found for field bikes_allowed", exception.getMessage());
     }

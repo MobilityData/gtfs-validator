@@ -25,11 +25,11 @@ public enum DirectionId {
 
     private final int value;
 
-    DirectionId(int value) {
+    DirectionId(final int value) {
         this.value = value;
     }
 
-    static public DirectionId fromInt(Integer fromValue) {
+    static public DirectionId fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return null;
         }

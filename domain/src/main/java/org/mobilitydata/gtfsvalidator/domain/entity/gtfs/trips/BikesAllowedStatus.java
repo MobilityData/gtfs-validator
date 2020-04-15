@@ -27,7 +27,7 @@ public enum BikesAllowedStatus {
 
     private int value;
 
-    BikesAllowedStatus(int value) {
+    BikesAllowedStatus(final int value) {
         this.value = value;
     }
 

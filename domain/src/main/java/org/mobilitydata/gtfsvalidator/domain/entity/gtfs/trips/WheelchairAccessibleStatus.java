@@ -27,7 +27,7 @@ public enum WheelchairAccessibleStatus {
 
     private int value;
 
-    WheelchairAccessibleStatus(int value) {
+    WheelchairAccessibleStatus(final int value) {
         this.value = value;
     }
 
