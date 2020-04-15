@@ -3,7 +3,7 @@ package org.mobilitydata.gtfsvalidator.parser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.ExecutionParameter;
+import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -12,7 +12,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.spy;
 
-class JsonExecutionParameterParserTest {
+class JsonExecParamParserTest {
 
     @SuppressWarnings("UnstableApiUsage")
     @Test
@@ -21,16 +21,16 @@ class JsonExecutionParameterParserTest {
         String pathToConfigFile = "test-config.json";
 
         String configFile = Resources.toString(Resources.getResource(pathToConfigFile), StandardCharsets.UTF_8);
-        JsonExecutionParameterParser underTest = new JsonExecutionParameterParser(mockObjectMapper, configFile);
+        JsonExecParamParser underTest = new JsonExecParamParser(mockObjectMapper, configFile);
 
-        Map<String, ExecutionParameter> toCheck = underTest.parse();
+        Map<String, ExecParam> toCheck = underTest.parse();
 
         assertEquals(3, toCheck.size());
         assertTrue(toCheck.containsKey("h"));
         assertTrue(toCheck.containsKey("i"));
         assertTrue(toCheck.containsKey("o"));
 
-        ExecutionParameter toTest = toCheck.get("h");
+        ExecParam toTest = toCheck.get("h");
         assertEquals(toTest.getShortName(), "h");
         assertEquals(toTest.getLongName(), "help");
         assertEquals(toTest.getDescription(), "Print this message");

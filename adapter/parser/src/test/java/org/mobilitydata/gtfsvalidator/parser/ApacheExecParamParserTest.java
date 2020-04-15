@@ -2,7 +2,7 @@ package org.mobilitydata.gtfsvalidator.parser;
 
 import org.apache.commons.cli.*;
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.ExecutionParameter;
+import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class ApacheExecutionParameterParserTest {
+class ApacheExecParamParserTest {
 
     @Test
     public void apacheCommandLineOptionShouldMapToExecutionParameterCollection() throws IOException, ParseException {
@@ -43,10 +43,10 @@ class ApacheExecutionParameterParserTest {
         when(mockCommandLineParser.parse(mockOptions, mockArguments)).thenReturn(mockCommandLine);
         when(mockCommandLine.getOptions()).thenReturn(mockOptionCollection.toArray(new Option[0]));
 
-        ApacheExecutionParameterParser underTest = new ApacheExecutionParameterParser(mockCommandLineParser,
+        ApacheExecParamParser underTest = new ApacheExecParamParser(mockCommandLineParser,
                 mockOptions, mockArguments);
 
-        Map<String, ExecutionParameter> toCheck = underTest.parse();
+        Map<String, ExecParam> toCheck = underTest.parse();
 
         verify(mockOption0, times(2)).getOpt();
         verify(mockOption0, times(1)).getLongOpt();

@@ -4,24 +4,24 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.mobilitydata.gtfsvalidator.domain.entity.ExecutionParameter;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecutionParameterRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ApacheExecutionParameterParser implements ExecutionParameterRepository.ExecutionParameterParser {
+public class ApacheExecParamParser implements ExecParamRepository.ExecParamParser {
     private final CommandLineParser commandLineParser;
     private final Options availableOptions;
-    private final String[] arguments;
+    private final String[] args;
 
-    public ApacheExecutionParameterParser(final CommandLineParser commandLineParser,
-                                          final Options availableOptions,
-                                          final String[] arguments) {
+    public ApacheExecParamParser(final CommandLineParser commandLineParser,
+                                 final Options availableOptions,
+                                 final String[] args) {
         this.commandLineParser = commandLineParser;
-        this.arguments = arguments;
+        this.args = args;
         this.availableOptions = availableOptions;
 
         availableOptions.addOption("u", "url", true, "URL to GTFS zipped archive");
@@ -37,13 +37,13 @@ public class ApacheExecutionParameterParser implements ExecutionParameterReposit
     }
 
     @Override
-    public Map<String, ExecutionParameter> parse() throws IOException {
-        final Map<String, ExecutionParameter> toReturn = new HashMap<>();
+    public Map<String, ExecParam> parse() throws IOException {
+        final Map<String, ExecParam> toReturn = new HashMap<>();
         try {
-            CommandLine cmd = commandLineParser.parse(availableOptions, arguments);
+            CommandLine cmd = commandLineParser.parse(availableOptions, args);
 
             Arrays.stream(cmd.getOptions()).forEach(option ->
-                    toReturn.put(option.getOpt(), new ExecutionParameter(option.getOpt(),
+                    toReturn.put(option.getOpt(), new ExecParam(option.getOpt(),
                                     option.getLongOpt(),
                                     option.getDescription(),
                                     option.hasArg(),

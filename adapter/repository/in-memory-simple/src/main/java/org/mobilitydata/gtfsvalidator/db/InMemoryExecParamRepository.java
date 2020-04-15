@@ -1,0 +1,52 @@
+package org.mobilitydata.gtfsvalidator.db;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
+import org.mobilitydata.gtfsvalidator.parser.ApacheExecParamParser;
+import org.mobilitydata.gtfsvalidator.parser.JsonExecParamParser;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class InMemoryExecParamRepository implements ExecParamRepository {
+    private final Map<String, ExecParam> execParamCollection = new LinkedHashMap<>();
+    private final String[] args;
+
+    public InMemoryExecParamRepository(String[] arguments) {
+        this.args = arguments;
+    }
+
+    @Override
+    public ExecParam getExecParamByShortName(final String execParamShortName) {
+        return execParamCollection.get(execParamShortName);
+    }
+
+    @Override
+    public Map<String, ExecParam> getExecParamCollection() {
+        return Collections.unmodifiableMap(execParamCollection);
+    }
+
+    @Override
+    public ExecParam addExecParam(final ExecParam newExecParam) {
+        execParamCollection.put(newExecParam.getShortName(), newExecParam);
+        return newExecParam;
+    }
+
+    @Override
+    public boolean hasExecParam(String shortName) {
+        return execParamCollection.containsKey(shortName);
+    }
+
+    @Override
+    public ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile) {
+        if (!fromConfigFile) {
+            return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
+        } else {
+            return new JsonExecParamParser(new ObjectMapper(), pathToConfigFile);
+        }
+    }
+}

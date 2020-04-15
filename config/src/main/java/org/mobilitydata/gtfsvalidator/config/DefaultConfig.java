@@ -16,14 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.config;
 
-import org.mobilitydata.gtfsvalidator.db.InMemoryExecutionParameterRepository;
+import org.mobilitydata.gtfsvalidator.db.InMemoryExecParamRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecutionParameterRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -44,11 +44,11 @@ public class DefaultConfig {
     private final GtfsSpecRepository specRepo = new InMemoryGtfsSpecRepository("gtfs_spec.asciipb");
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
-    private final ExecutionParameterRepository executionParameterRepo;
+    private final ExecParamRepository executionParameterRepo;
 
     public DefaultConfig(String[] arguments) throws IOException {
         this.arguments = arguments;
-        this.executionParameterRepo = new InMemoryExecutionParameterRepository(arguments);
+        this.executionParameterRepo = new InMemoryExecParamRepository(arguments);
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork(final String url, final String targetPath)
@@ -114,8 +114,8 @@ public class DefaultConfig {
         return new ExportResultAsFile(resultRepo, outputPath, asProto);
     }
 
-    public ParseAllExecutionParameter parseAllExecutionParameter(boolean fromConfigFile, String pathToConfigFile) throws
+    public ParseAllExecParam parseAllExecutionParameter(boolean fromConfigFile, String pathToConfigFile) throws
             IllegalArgumentException {
-        return new ParseAllExecutionParameter(fromConfigFile, pathToConfigFile, executionParameterRepo);
+        return new ParseAllExecParam(fromConfigFile, pathToConfigFile, executionParameterRepo);
     }
 }
