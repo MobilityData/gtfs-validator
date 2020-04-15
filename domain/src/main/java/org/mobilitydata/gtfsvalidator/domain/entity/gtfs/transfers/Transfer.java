@@ -69,14 +69,6 @@ public class Transfer {
         private TransferType transferType;
         private Integer minTransferTime;
 
-        public TransferBuilder(@NotNull final String fromStopId,
-                               @NotNull final String toStopId,
-                               @NotNull final TransferType transferType) {
-            this.fromStopId = fromStopId;
-            this.toStopId = toStopId;
-            this.transferType = transferType;
-        }
-
         public TransferBuilder fromStopId(@NotNull final String fromStopId) {
             this.fromStopId = fromStopId;
             return this;
