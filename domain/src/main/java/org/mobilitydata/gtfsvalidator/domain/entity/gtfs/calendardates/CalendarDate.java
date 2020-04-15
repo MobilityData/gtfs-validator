@@ -23,7 +23,6 @@ public class CalendarDate {
         this.exceptionType = exceptionType;
     }
 
-
     @NotNull
     public String getServiceId() {
         return serviceId;
@@ -40,22 +39,12 @@ public class CalendarDate {
     }
 
     public static class CalendarDateBuilder {
-
-        @NotNull
+        @Nullable
         private String serviceId;
-
-        @NotNull
+        @Nullable
         private LocalDateTime date;
-
-        @NotNull ExceptionType exceptionType;
-
-        public CalendarDateBuilder(@NotNull String serviceId,
-                                   @NotNull LocalDateTime date,
-                                   @NotNull ExceptionType exceptionType) {
-            this.serviceId = serviceId;
-            this.date = date;
-            this.exceptionType = exceptionType;
-        }
+        @Nullable
+        private ExceptionType exceptionType;
 
         public CalendarDateBuilder serviceId(@NotNull final String serviceId) {
             this.serviceId = serviceId;
