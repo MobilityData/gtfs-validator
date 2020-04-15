@@ -150,9 +150,9 @@ class ProcessParsedTripTest {
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals("trips.txt"));
-        assert (noticeList.get(0).getFieldName().equals("route_id"));
-        assert (noticeList.get(0).getEntityId().equals("no id"));
+        assertEquals("trips.txt", noticeList.get(0).getFilename());
+        assertEquals("route_id", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedTrip, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
@@ -219,9 +219,9 @@ class ProcessParsedTripTest {
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals("trips.txt"));
-        assert (noticeList.get(0).getFieldName().equals("service_id"));
-        assert (noticeList.get(0).getEntityId().equals("no id"));
+        assertEquals("trips.txt", noticeList.get(0).getFilename());
+        assertEquals("service_id", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedTrip, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
@@ -288,9 +288,9 @@ class ProcessParsedTripTest {
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals("trips.txt"));
-        assert (noticeList.get(0).getFieldName().equals("trip_id"));
-        assert (noticeList.get(0).getEntityId().equals("no id"));
+        assertEquals("trips.txt", noticeList.get(0).getFilename());
+        assertEquals("trip_id", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedTrip, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
@@ -355,9 +355,9 @@ class ProcessParsedTripTest {
 
         final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals("trips.txt"));
-        assert (noticeList.get(0).getFieldName().equals("direction_id"));
-        assert (noticeList.get(0).getEntityId().equals("no id"));
+        assertEquals("trips.txt", noticeList.get(0).getFilename());
+        assertEquals("direction_id", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedTrip, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
@@ -422,9 +422,9 @@ class ProcessParsedTripTest {
 
         final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals("trips.txt"));
-        assert (noticeList.get(0).getFieldName().equals("wheelchair_accessible"));
-        assert (noticeList.get(0).getEntityId().equals("no id"));
+        assertEquals("trips.txt", noticeList.get(0).getFilename());
+        assertEquals("wheelchair_accessible", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedTrip, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
