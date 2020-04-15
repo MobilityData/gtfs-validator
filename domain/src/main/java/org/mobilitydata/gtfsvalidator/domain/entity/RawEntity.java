@@ -45,6 +45,7 @@ public class RawEntity {
     /**
      * Returns the value contained in a row for a given header (column)
      *
+     * @param header a GTFS file column header
      * @return the value contained in a row for a given header (column)
      */
     public String get(final String header) {

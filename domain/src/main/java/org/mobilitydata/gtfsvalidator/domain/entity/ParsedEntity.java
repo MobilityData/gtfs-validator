@@ -54,6 +54,7 @@ public class ParsedEntity {
     /**
      * Returns the value contained in a parsed row for a given header (column)
      *
+     * @param header a GTFS file column header
      * @return the value contained in a parsed row for a given header (column)
      */
     public Object get(final String header) {

@@ -65,7 +65,6 @@ public class InMemoryRawFileRepository implements RawFileRepository {
      */
     @Override
     public Collection<String> getActualHeadersForFile(RawFileInfo file) {
-        //use jackson to open the file and see what API we have
         File csvFile = new File(file.getPath() + File.separator + file.getFilename());
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
