@@ -79,8 +79,8 @@ public class Transfer {
             return this;
         }
 
-        public TransferBuilder transferType(@NotNull final TransferType transferType) {
-            this.transferType = transferType;
+        public TransferBuilder transferType(@NotNull final Integer transferType) {
+            this.transferType = TransferType.fromInt(transferType);
             return this;
         }
 
@@ -90,6 +90,20 @@ public class Transfer {
         }
 
         public Transfer build() {
+            if (fromStopId == null) {
+                throw new IllegalArgumentException("field from_stop_id can not be null in transfers.txt");
+            }
+            if (toStopId == null) {
+                throw new IllegalArgumentException("field to_stop_id can not be null in transfers.txt");
+            }
+            if (transferType == null) {
+                throw new IllegalArgumentException("unexpected value encountered for field transfer_type" +
+                        " transfers.txt");
+            }
+            if (minTransferTime != null && minTransferTime < 0) {
+                throw new IllegalArgumentException("invalid value encountered for field min_transfer_time" +
+                        " transfers.txt");
+            }
             return new Transfer(fromStopId, toStopId, transferType, minTransferTime);
         }
     }

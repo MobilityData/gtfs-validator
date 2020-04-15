@@ -37,6 +37,6 @@ public enum TransferType {
         return Stream.of(TransferType.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .orElse(RECOMMENDED_TRANSFER_POINT);
+                .orElse(null);
     }
 }
