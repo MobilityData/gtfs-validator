@@ -23,13 +23,13 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
 
 public interface GtfsDataRepository {
-    Agency addEntity(Agency newAgency) throws SQLIntegrityConstraintViolationException;
+    Agency addEntity(final Agency newAgency) throws SQLIntegrityConstraintViolationException;
 
-    Agency getAgencyById(String agencyId);
+    Agency getAgencyById(final String agencyId);
 
     Map<String, Agency> getAgencyCollection();
 
-    boolean isPresent(Agency agency);
+    boolean isPresent(final Agency agency);
 
     Map<String, Route> getRouteCollection();
 

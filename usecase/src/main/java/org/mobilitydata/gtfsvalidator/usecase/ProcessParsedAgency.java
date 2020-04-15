@@ -61,14 +61,14 @@ public class ProcessParsedAgency {
     public void execute(final ParsedEntity validatedAgencyEntity) throws IllegalArgumentException,
             SQLIntegrityConstraintViolationException {
 
-        String agencyId = (String) validatedAgencyEntity.get("agency_id");
-        String agencyName = (String) validatedAgencyEntity.get("agency_name");
-        String agencyUrl = (String) validatedAgencyEntity.get("agency_url");
-        String agencyTimezone = (String) validatedAgencyEntity.get("agency_timezone");
-        String agencyLang = (String) validatedAgencyEntity.get("agency_lang");
-        String agencyPhone = (String) validatedAgencyEntity.get("agency_phone");
-        String agencyFareUrl = (String) validatedAgencyEntity.get("agency_fare_url");
-        String agencyEmail = (String) validatedAgencyEntity.get("agency_email");
+        final String agencyId = (String) validatedAgencyEntity.get("agency_id");
+        final String agencyName = (String) validatedAgencyEntity.get("agency_name");
+        final String agencyUrl = (String) validatedAgencyEntity.get("agency_url");
+        final String agencyTimezone = (String) validatedAgencyEntity.get("agency_timezone");
+        final String agencyLang = (String) validatedAgencyEntity.get("agency_lang");
+        final String agencyPhone = (String) validatedAgencyEntity.get("agency_phone");
+        final String agencyFareUrl = (String) validatedAgencyEntity.get("agency_fare_url");
+        final String agencyEmail = (String) validatedAgencyEntity.get("agency_email");
 
         try {
             builder.agencyId(agencyId)

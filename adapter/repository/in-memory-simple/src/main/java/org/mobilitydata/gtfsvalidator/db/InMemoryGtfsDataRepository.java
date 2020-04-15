@@ -49,7 +49,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public boolean isPresent(Agency agency) {
+    public boolean isPresent(final Agency agency) {
         return agencyCollection.containsKey(agency.getAgencyId());
     }
 

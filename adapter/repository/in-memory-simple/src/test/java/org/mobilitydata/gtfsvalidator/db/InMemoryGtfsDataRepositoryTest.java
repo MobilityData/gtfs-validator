@@ -33,7 +33,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void getAgencyCollectionShouldReturnRouteCollection() throws SQLIntegrityConstraintViolationException {
-        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
@@ -71,7 +71,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void callToAddEntityShouldAddAgencyToRepoAndReturnSameEntity() throws SQLIntegrityConstraintViolationException {
-        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
@@ -110,7 +110,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void getAgencyByIdShouldReturnRelatedAgency() throws SQLIntegrityConstraintViolationException {
-        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
@@ -145,7 +145,7 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     public void isPresentShouldReturnTrueIfAgencyIsAlreadyPresentInRepository()
             throws SQLIntegrityConstraintViolationException {
-        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
@@ -167,12 +167,12 @@ class InMemoryGtfsDataRepositoryTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        Agency agency00 = mockBuilder.build();
+        final Agency agency00 = mockBuilder.build();
         underTest.addEntity(agency00);
 
         mockBuilder.agencyId("test_id1");
 
-        Agency agency01 = mockBuilder.build();
+        final Agency agency01 = mockBuilder.build();
         underTest.addEntity(agency01);
 
         assertTrue(underTest.isPresent(agency00));
@@ -182,7 +182,7 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     public void isPresentShouldReturnFalseIfAgencyIsNotAlreadyPresentInRepository()
             throws SQLIntegrityConstraintViolationException {
-        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
@@ -204,18 +204,18 @@ class InMemoryGtfsDataRepositoryTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        Agency agency00 = mockBuilder.build();
+        final Agency agency00 = mockBuilder.build();
         underTest.addEntity(agency00);
 
         mockBuilder.agencyId("test_id1");
 
-        Agency agency01 = mockBuilder.build();
+        final Agency agency01 = mockBuilder.build();
         assertFalse(underTest.isPresent(agency01));
     }
 
     @Test
     public void tryToAddTwiceTheSameAgencyShouldThrowError() throws SQLIntegrityConstraintViolationException {
-        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
