@@ -31,7 +31,7 @@ class RouteTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createRouteWithNullRouteIdShouldThrowException() {
-        Route.RouteBuilder underTest = new Route.RouteBuilder();
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
         underTest.routeId(null)
                 .agencyId(STRING_TEST_VALUE)
@@ -44,14 +44,14 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("route_id can not be null in routes.txt", exception.getMessage());
     }
 
     @Test
     public void createRouteWithInvalidRouteTypeShouldThrowException() {
-        Route.RouteBuilder underTest = new Route.RouteBuilder();
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
         underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
@@ -64,7 +64,7 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("Unexpected value, or null value for field route_type in routes.txt",
                 exception.getMessage());
@@ -72,7 +72,7 @@ class RouteTest {
 
     @Test
     public void createRouteWithValidValuesForFieldShouldNotThrowException() {
-        Route.RouteBuilder underTest = new Route.RouteBuilder();
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
         underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
@@ -85,7 +85,7 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        Route route = underTest.build();
+        final Route route = underTest.build();
 
         assertEquals(route.getRouteId(), STRING_TEST_VALUE);
         assertEquals(route.getAgencyId(), STRING_TEST_VALUE);
