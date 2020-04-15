@@ -38,14 +38,14 @@ csvspec: {
 
   column: {
     name: "optionalHeader0"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: false
 
   }
 
   column: {
       name: "optionalHeader1"
-      type: { type: INT_DEC }
+      type: { type: INTEGER }
       required: false
 
     }
@@ -59,13 +59,13 @@ csvspec: {
 
   column: {
     name: "requiredHeader0"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: true
   }
 
   column: {
       name: "requiredHeader1"
-      type: { type: INT_DEC }
+      type: { type: INTEGER }
       required: true
     }
 }
@@ -82,13 +82,13 @@ csvspec: {
 
   column: {
     name: "requiredHeader1"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: true
   }
 
   column: {
       name: "optionalHeader0"
-      type: { type: INT_DEC }
+      type: { type: INTEGER }
       required: false
     }
 }
@@ -105,14 +105,14 @@ csvspec: {
 
   column: {
     name: "optionalHeader0"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: false
 
   }
 
   column: {
       name: "optionalHeader1"
-      type: { type: INT_DEC }
+      type: { type: INTEGER }
       required: false
     }
 }
