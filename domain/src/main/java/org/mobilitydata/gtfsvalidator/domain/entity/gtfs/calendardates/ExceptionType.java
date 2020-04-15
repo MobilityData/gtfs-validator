@@ -1,4 +1,4 @@
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates;
 
 import java.util.stream.Stream;
 
