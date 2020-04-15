@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers;
 
 import java.util.stream.Stream;
 
