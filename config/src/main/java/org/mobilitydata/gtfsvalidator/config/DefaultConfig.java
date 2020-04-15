@@ -40,14 +40,12 @@ import java.util.zip.ZipFile;
  * process. Hence, this is created before calling the different use case of the validation process in the main method.
  */
 public class DefaultConfig {
-    private final String[] arguments;
     private final GtfsSpecRepository specRepo = new InMemoryGtfsSpecRepository("gtfs_spec.asciipb");
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final ExecParamRepository executionParameterRepo;
 
     public DefaultConfig(String[] arguments) throws IOException {
-        this.arguments = arguments;
         this.executionParameterRepo = new InMemoryExecParamRepository(arguments);
     }
 

@@ -9,7 +9,6 @@ public class ParseAllExecParam {
     private final String pathToConfigFile;
     private final ExecParamRepository execParamRepository;
 
-
     public ParseAllExecParam(boolean fromConfigFile,
                              String pathToConfigFile,
                              ExecParamRepository execParamRepository) {
