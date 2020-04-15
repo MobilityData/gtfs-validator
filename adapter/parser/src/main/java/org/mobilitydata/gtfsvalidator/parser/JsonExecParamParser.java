@@ -1,30 +1,37 @@
 package org.mobilitydata.gtfsvalidator.parser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JsonExecParamParser implements ExecParamRepository.ExecParamParser {
     private final String configFileAsString;
-    private final ObjectMapper objectMapper;
+    private static final ObjectReader objectReader = new ObjectMapper().readerFor(ExecParam.class);
 
-    public JsonExecParamParser(final ObjectMapper objectMapper, final String configFileAsString) {
+    public JsonExecParamParser(final String configFileAsString) {
         this.configFileAsString = configFileAsString;
-        this.objectMapper = objectMapper;
     }
 
     @Override
     public Map<String, ExecParam> parse() throws IOException {
         Map<String, ExecParam> toReturn = new HashMap<>();
 
-        Arrays.asList(objectMapper.readValue(configFileAsString, ExecParam[].class))
-                .forEach(executionParameter -> toReturn.put(executionParameter.getShortName(), executionParameter));
+        List<Object> execParamCollectionAsObjectCollection = getObjectReader().readValues(configFileAsString).readAll();
 
+        for (Object object : execParamCollectionAsObjectCollection) {
+            ExecParam execParam = (ExecParam) object;
+            toReturn.put(execParam.getShortName(), execParam);
+        }
         return toReturn;
+    }
+
+    public ObjectReader getObjectReader() {
+        return objectReader;
     }
 }

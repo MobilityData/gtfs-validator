@@ -1,6 +1,5 @@
 package org.mobilitydata.gtfsvalidator.db;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
@@ -46,7 +45,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
         if (!fromConfigFile) {
             return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
         } else {
-            return new JsonExecParamParser(new ObjectMapper(), pathToConfigFile);
+            return new JsonExecParamParser(pathToConfigFile);
         }
     }
 }
