@@ -294,7 +294,6 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        when(mockGtfsDataRepo.isPresent(mockAgency)).thenReturn(true);
         when(mockGtfsDataRepo.addEntity(mockAgency)).thenThrow(new SQLIntegrityConstraintViolationException("agency " +
                 "must be unique in dataset"));
 

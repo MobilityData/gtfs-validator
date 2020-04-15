@@ -29,8 +29,6 @@ public interface GtfsDataRepository {
 
     Map<String, Agency> getAgencyCollection();
 
-    boolean isPresent(final Agency agency);
-
     Map<String, Route> getRouteCollection();
 
     Route getRouteById(final String routeId);
