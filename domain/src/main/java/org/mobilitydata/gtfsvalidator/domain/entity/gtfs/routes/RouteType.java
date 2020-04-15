@@ -36,7 +36,7 @@ public enum RouteType {
 
     private final int value;
 
-    RouteType(int value) {
+    RouteType(final int value) {
         this.value = value;
     }
 
@@ -49,7 +49,7 @@ public enum RouteType {
      * @return the enum item matching the integer passed as parameter. Or null if the integer passed as parameter is
      * null or does not match any {@link RouteType} enum item
      */
-    static public RouteType fromInt(Integer fromValue) {
+    static public RouteType fromInt(final Integer fromValue) {
 
         if (fromValue == null) {
             return null;

@@ -63,16 +63,16 @@ public class ProcessParsedRoute {
     public void execute(final ParsedEntity validatedParsedRoute) throws IllegalArgumentException,
             SQLIntegrityConstraintViolationException {
 
-        String routeId = (String) validatedParsedRoute.get("route_id");
-        String agencyId = (String) validatedParsedRoute.get("agency_id");
-        String routeShortName = (String) validatedParsedRoute.get("route_short_name");
-        String routeLongName = (String) validatedParsedRoute.get("route_long_name");
-        String routeDesc = (String) validatedParsedRoute.get("route_desc");
-        Integer routeType = (Integer) validatedParsedRoute.get("route_type");
-        String routeUrl = (String) validatedParsedRoute.get("route_url");
-        String routeColor = (String) validatedParsedRoute.get("route_color");
-        String routeTextColor = (String) validatedParsedRoute.get("route_text_color");
-        Integer routeSortOrder = (Integer) validatedParsedRoute.get("route_sort_order");
+        final String routeId = (String) validatedParsedRoute.get("route_id");
+        final String agencyId = (String) validatedParsedRoute.get("agency_id");
+        final String routeShortName = (String) validatedParsedRoute.get("route_short_name");
+        final String routeLongName = (String) validatedParsedRoute.get("route_long_name");
+        final String routeDesc = (String) validatedParsedRoute.get("route_desc");
+        final Integer routeType = (Integer) validatedParsedRoute.get("route_type");
+        final String routeUrl = (String) validatedParsedRoute.get("route_url");
+        final String routeColor = (String) validatedParsedRoute.get("route_color");
+        final String routeTextColor = (String) validatedParsedRoute.get("route_text_color");
+        final Integer routeSortOrder = (Integer) validatedParsedRoute.get("route_sort_order");
 
         try {
             builder.routeId(routeId)

@@ -246,8 +246,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void callToAddEntityShouldAddRouteToRepoAndReturnEntity() throws SQLIntegrityConstraintViolationException {
-
-        Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
+        final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
         when(mockBuilder.routeId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.routeShortName(anyString())).thenCallRealMethod();
@@ -300,8 +299,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void getRouteCollectionShouldReturnRouteCollection() throws SQLIntegrityConstraintViolationException {
-
-        Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
+        final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
         when(mockBuilder.routeId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.routeShortName(anyString())).thenCallRealMethod();
@@ -352,8 +350,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void getRouteByIdShouldReturnRelatedRoute() throws SQLIntegrityConstraintViolationException {
-
-        Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
+        final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
         when(mockBuilder.routeId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.routeShortName(anyString())).thenCallRealMethod();
@@ -400,8 +397,7 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     public void tryToAddTwiceTheSameRouteShouldThrowException() throws SQLIntegrityConstraintViolationException {
-
-        Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
+        final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
         when(mockBuilder.routeId(anyString())).thenCallRealMethod();
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
         when(mockBuilder.routeShortName(anyString())).thenCallRealMethod();
@@ -425,7 +421,7 @@ class InMemoryGtfsDataRepositoryTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(1);
 
-        GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         underTest.addEntity(mockBuilder.build());
 
