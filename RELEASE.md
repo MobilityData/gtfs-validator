@@ -1,6 +1,6 @@
 # Release instructions
 
-We create releases from the command-line using the [shadow Gradle plugin](https://github.com/johnrengelman/shadow), which creates a JAR file with all necessary dependencies.
+We create releases from the command-line using the [shadow Gradle plugin](https://github.com/johnrengelman/shadow), which creates a JAR file including all necessary dependencies.
 
 ### 1. Prepare for release
 Change `version` in the various `build.gradle` files to remove the `-SNAPSHOT` qualifier. 
