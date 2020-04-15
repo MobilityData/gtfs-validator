@@ -17,9 +17,11 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public interface GtfsDataRepository {
@@ -34,4 +36,10 @@ public interface GtfsDataRepository {
     Route getRouteById(final String routeId);
 
     Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
+
+    Map<String, Map<LocalDateTime, CalendarDate>> getCalendarDateCollection();
+
+    CalendarDate getCalendarDateByServiceIdAndDate(final String serviceId, final LocalDateTime date);
+
+    CalendarDate addCalendarDate(final CalendarDate newCalendarDate) throws SQLIntegrityConstraintViolationException;
 }

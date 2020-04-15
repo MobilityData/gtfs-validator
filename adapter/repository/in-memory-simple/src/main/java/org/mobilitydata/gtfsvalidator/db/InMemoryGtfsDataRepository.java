@@ -17,10 +17,12 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +69,34 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             String routeId = newRoute.getRouteId();
             routeCollection.put(routeId, newRoute);
             return newRoute;
+        }
+    }
+
+    Map<String, Map<LocalDateTime, CalendarDate>> calendarDateCollection = new HashMap<>();
+
+    @Override
+    public Map<String, Map<LocalDateTime, CalendarDate>> getCalendarDateCollection() {
+        return Collections.unmodifiableMap(calendarDateCollection);
+    }
+
+    @Override
+    public CalendarDate getCalendarDateByServiceIdAndDate(final String serviceId, final LocalDateTime date) {
+        return calendarDateCollection.get(serviceId).get(date);
+    }
+
+    @Override
+    public CalendarDate addCalendarDate(CalendarDate newCalendarDate) throws SQLIntegrityConstraintViolationException {
+        if ((calendarDateCollection.containsKey(newCalendarDate.getServiceId())) &&
+                (calendarDateCollection.get(newCalendarDate.getServiceId()).containsKey(newCalendarDate.getDate()))) {
+            throw new SQLIntegrityConstraintViolationException("calendar_dates based on service_id and date must be " +
+                    "unique in dataset");
+        } else {
+            String serviceId = newCalendarDate.getServiceId();
+            Map<LocalDateTime, CalendarDate> innerMap = new HashMap<>();
+            innerMap.put(newCalendarDate.getDate(), newCalendarDate);
+            calendarDateCollection.put(serviceId, innerMap);
+
+            return newCalendarDate;
         }
     }
 }
