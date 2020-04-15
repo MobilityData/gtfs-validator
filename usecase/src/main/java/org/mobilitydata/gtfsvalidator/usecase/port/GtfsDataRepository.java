@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Map;
@@ -36,4 +37,10 @@ public interface GtfsDataRepository {
     Route getRouteById(String routeId);
 
     Route addEntity(Route newRoute) throws SQLIntegrityConstraintViolationException;
+
+    Map<String, Map<String, Transfer>> getTransferCollection();
+
+    Transfer getTransferByStopPair(final String fromStopId, final String toStopId);
+
+    Transfer addTransfer(final Transfer newTransfer) throws SQLIntegrityConstraintViolationException;
 }

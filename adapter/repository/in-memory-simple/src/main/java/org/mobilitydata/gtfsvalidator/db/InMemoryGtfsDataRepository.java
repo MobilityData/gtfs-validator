@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -72,6 +73,33 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             String routeId = newRoute.getRouteId();
             routeCollection.put(routeId, newRoute);
             return newRoute;
+        }
+    }
+
+    private final Map<String, Map<String, Transfer>> transferCollection = new HashMap<>();
+
+    @Override
+    public Map<String, Map<String, Transfer>> getTransferCollection() {
+        return Collections.unmodifiableMap(transferCollection);
+    }
+
+    @Override
+    public Transfer getTransferByStopPair(final String fromStopId, final String toStopId) {
+        return transferCollection.get(fromStopId).get(toStopId);
+    }
+
+    @Override
+    public Transfer addTransfer(final Transfer newTransfer) throws SQLIntegrityConstraintViolationException {
+        if ((transferCollection.containsKey(newTransfer.getFromStopId())) &&
+                (transferCollection.get(newTransfer.getFromStopId()).containsKey(newTransfer.getToStopId()))) {
+            throw new SQLIntegrityConstraintViolationException("transfer must be unique in dataset");
+        } else {
+            String fromStopId = newTransfer.getFromStopId();
+            String toStopId = newTransfer.getToStopId();
+            Map<String, Transfer> innerMap = new HashMap<>();
+            innerMap.put(toStopId, newTransfer);
+            transferCollection.put(fromStopId, innerMap);
+            return newTransfer;
         }
     }
 }
