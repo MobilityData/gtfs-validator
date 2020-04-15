@@ -33,6 +33,7 @@ import org.mockito.Mockito;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedAgencyTest {
@@ -52,11 +53,11 @@ class ProcessParsedAgencyTest {
     public void validatedParsedAgencyShouldCreateAgencyEntityAndBeAddedToGtfsDataRepository()
             throws SQLIntegrityConstraintViolationException {
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenReturn(mockBuilder);
         when(mockBuilder.agencyName(anyString())).thenReturn(mockBuilder);
         when(mockBuilder.agencyUrl(anyString())).thenReturn(mockBuilder);
@@ -66,18 +67,18 @@ class ProcessParsedAgencyTest {
         when(mockBuilder.agencyFareUrl(anyString())).thenReturn(mockBuilder);
         when(mockBuilder.agencyEmail(anyString())).thenReturn(mockBuilder);
 
-        Agency mockAgency = mock(Agency.class);
+        final Agency mockAgency = mock(Agency.class);
         when(mockBuilder.build()).thenReturn(mockAgency);
 
-        ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
+        final ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
                 mockBuilder);
 
-        ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
         when(mockParsedAgency.get(anyString())).thenReturn(STRING_TEST_VALUE);
 
         underTest.execute(mockParsedAgency);
 
-        InOrder inOrder = Mockito.inOrder(mockGtfsDataRepo, mockBuilder);
+        final InOrder inOrder = Mockito.inOrder(mockGtfsDataRepo, mockBuilder);
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -106,14 +107,14 @@ class ProcessParsedAgencyTest {
 
     @Test
     public void invalidAgencyNameShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Agency.AgencyBuilder builder = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder builder = new Agency.AgencyBuilder();
 
-        ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
+        final ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
                 builder);
 
         ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
@@ -126,10 +127,10 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
+        final Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedAgency));
 
-        Assertions.assertEquals("agency_name can not be null", exception.getMessage());
+        assertEquals("agency_name can not be null", exception.getMessage());
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -143,33 +144,34 @@ class ProcessParsedAgencyTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedAgency, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals(FILENAME));
-        assert (noticeList.get(0).getFieldName().equals(AGENCY_NAME));
-        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals(AGENCY_NAME, noticeList.get(0).getFieldName());
+        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
     }
 
     @Test
     public void invalidAgencyUrlShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Agency.AgencyBuilder builder = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder builder = new Agency.AgencyBuilder();
 
-        ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
+        final ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
                 builder);
 
-        ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
         when(mockParsedAgency.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_URL)).thenReturn(null);
@@ -179,10 +181,10 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
+        final Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedAgency));
 
-        Assertions.assertEquals("agency_url can not be null", exception.getMessage());
+        assertEquals("agency_url can not be null", exception.getMessage());
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -196,33 +198,34 @@ class ProcessParsedAgencyTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedAgency, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals(FILENAME));
-        assert (noticeList.get(0).getFieldName().equals(AGENCY_URL));
-        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals(AGENCY_URL, noticeList.get(0).getFieldName());
+        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
     }
 
     @Test
     public void invalidAgencyTimezoneShouldThrowExceptionAndGeneratedMissingRequiredValueNoticeShouldBeAddedToResultRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Agency.AgencyBuilder builder = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder builder = new Agency.AgencyBuilder();
 
-        ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
+        final ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
                 builder);
 
-        ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
         when(mockParsedAgency.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_URL)).thenReturn(STRING_TEST_VALUE);
@@ -232,10 +235,10 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
+        final Exception exception = Assertions.assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedAgency));
 
-        Assertions.assertEquals("agency_timezone can not be null", exception.getMessage());
+        assertEquals("agency_timezone can not be null", exception.getMessage());
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -249,16 +252,17 @@ class ProcessParsedAgencyTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedAgency, times(1)).getEntityId();
 
-        ArgumentCaptor<MissingRequiredValueNotice> captor = ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals(FILENAME));
-        assert (noticeList.get(0).getFieldName().equals(AGENCY_TIMEZONE));
-        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals(AGENCY_TIMEZONE, noticeList.get(0).getFieldName());
+        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo);
     }
@@ -268,19 +272,19 @@ class ProcessParsedAgencyTest {
             throws SQLIntegrityConstraintViolationException {
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
-        Agency mockAgency = mock(Agency.class);
+        final Agency mockAgency = mock(Agency.class);
         when(mockAgency.getAgencyId()).thenReturn(STRING_TEST_VALUE);
 
-        Agency.AgencyBuilder builder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
+        final Agency.AgencyBuilder builder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
         when(builder.build()).thenReturn(mockAgency);
 
-        ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
+        final ProcessParsedAgency underTest = new ProcessParsedAgency(mockSpecRepo, mockResultRepo, mockGtfsDataRepo,
                 builder);
 
-        ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
+        final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
         when(mockParsedAgency.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_URL)).thenReturn(STRING_TEST_VALUE);
@@ -294,9 +298,9 @@ class ProcessParsedAgencyTest {
         when(mockGtfsDataRepo.addEntity(mockAgency)).thenThrow(new SQLIntegrityConstraintViolationException("agency " +
                 "must be unique in dataset"));
 
-        Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
+        final Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
                 () -> underTest.execute(mockParsedAgency));
-        Assertions.assertEquals("agency must be unique in dataset", exception.getMessage());
+        assertEquals("agency must be unique in dataset", exception.getMessage());
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -322,15 +326,15 @@ class ProcessParsedAgencyTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedAgency, times(1)).getEntityId();
 
-        ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
+        final ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
+        final List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals(FILENAME));
-        assert (noticeList.get(0).getFieldName().equals(AGENCY_ID));
-        assert (noticeList.get(0).getEntityId().equals(ENTITY_ID));
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals(AGENCY_ID, noticeList.get(0).getFieldName());
+        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockResultRepo, mockSpecRepo, mockGtfsDataRepo, mockAgency, builder);
     }

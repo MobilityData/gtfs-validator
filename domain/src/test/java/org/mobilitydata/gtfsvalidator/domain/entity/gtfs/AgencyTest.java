@@ -26,7 +26,7 @@ class AgencyTest {
 
     @Test
     public void createAgencyWithNullAgencyNameShouldThrowException() {
-        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
         underTest.agencyId(STRING_TEST_VALUE)
@@ -38,14 +38,14 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("agency_name can not be null", exception.getMessage());
     }
 
     @Test
     public void createAgencyWithNullAgencyUrlShouldThrowException() {
-        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
         underTest.agencyId(STRING_TEST_VALUE)
@@ -57,14 +57,14 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("agency_url can not be null", exception.getMessage());
     }
 
     @Test
     public void createAgencyWithTimezoneAgencyUrlShouldThrowException() {
-        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
         underTest.agencyId(STRING_TEST_VALUE)
@@ -76,14 +76,14 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
 
         assertEquals("agency_timezone can not be null", exception.getMessage());
     }
 
     @Test
     public void createAgencyWithValidValuesForFieldShouldNotThrowException() {
-        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         underTest.agencyId(STRING_TEST_VALUE);
         underTest.agencyName(STRING_TEST_VALUE);
@@ -94,7 +94,7 @@ class AgencyTest {
         underTest.agencyFareUrl(STRING_TEST_VALUE);
         underTest.agencyEmail(STRING_TEST_VALUE);
 
-        Agency agency = underTest.build();
+        final Agency agency = underTest.build();
 
         assertEquals(agency.getAgencyId(), STRING_TEST_VALUE);
         assertEquals(agency.getAgencyName(), STRING_TEST_VALUE);
