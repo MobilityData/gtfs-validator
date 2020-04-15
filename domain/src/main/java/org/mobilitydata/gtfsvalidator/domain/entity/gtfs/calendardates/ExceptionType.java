@@ -9,16 +9,17 @@ public enum ExceptionType {
 
     private final int value;
 
-
-    ExceptionType(int value) {
+    ExceptionType(final int value) {
         this.value = value;
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    static public ExceptionType fromInt(Integer fromValue) {
+    static public ExceptionType fromInt(final Integer fromValue) {
+        if (fromValue == null) {
+            return null;
+        }
         return Stream.of(ExceptionType.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .get(); // TODO: implement solution to handle unexpected enum values
+                .orElse(null);
     }
 }

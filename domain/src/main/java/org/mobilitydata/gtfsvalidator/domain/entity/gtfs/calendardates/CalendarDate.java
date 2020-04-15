@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 
@@ -56,12 +57,22 @@ public class CalendarDate {
             return this;
         }
 
-        public CalendarDateBuilder exceptionType(@NotNull final ExceptionType exceptionType) {
-            this.exceptionType = exceptionType;
+        public CalendarDateBuilder exceptionType(@NotNull final Integer exceptionType) {
+            this.exceptionType = ExceptionType.fromInt(exceptionType);
             return this;
         }
 
         public CalendarDate build() {
+            if (serviceId == null) {
+                throw new IllegalArgumentException("field service_id in calendar_dates.txt can not be null");
+            }
+            if (date == null) {
+                throw new IllegalArgumentException("field date in calendar_dates.txt can not be null");
+            }
+            if (exceptionType == null) {
+                throw new IllegalArgumentException("unexpected value found for field exception_type of " +
+                        "calendar_dates.txt");
+            }
             return new CalendarDate(serviceId, date, exceptionType);
         }
     }
