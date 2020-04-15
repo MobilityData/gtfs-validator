@@ -40,9 +40,9 @@ public class ProcessParsedLevel {
 
     public void execute(final ParsedEntity validatedParsedLevel) throws IllegalArgumentException,
             SQLIntegrityConstraintViolationException {
-        String levelId = (String) validatedParsedLevel.get("level_id");
-        Float levelIndex = (Float) validatedParsedLevel.get("level_index");
-        String levelName = (String) validatedParsedLevel.get("level_name");
+        final String levelId = (String) validatedParsedLevel.get("level_id");
+        final Float levelIndex = (Float) validatedParsedLevel.get("level_index");
+        final String levelName = (String) validatedParsedLevel.get("level_name");
 
         try {
             builder.levelId(levelId)

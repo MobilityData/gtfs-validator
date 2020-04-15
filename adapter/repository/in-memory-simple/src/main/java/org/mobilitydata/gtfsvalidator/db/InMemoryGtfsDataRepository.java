@@ -84,16 +84,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Level getLevelByLevelId(String levelId) {
+    public Level getLevelByLevelId(final String levelId) {
         return levelCollection.get(levelId);
     }
 
     @Override
-    public Level addLevel(Level newLevel) throws SQLIntegrityConstraintViolationException {
+    public Level addLevel(final Level newLevel) throws SQLIntegrityConstraintViolationException {
         if (levelCollection.containsKey(newLevel.getLevelId())) {
             throw new SQLIntegrityConstraintViolationException("level must be unique in dataset");
         } else {
-            String levelId = newLevel.getLevelId();
+            final String levelId = newLevel.getLevelId();
             levelCollection.put(levelId, newLevel);
             return newLevel;
         }
