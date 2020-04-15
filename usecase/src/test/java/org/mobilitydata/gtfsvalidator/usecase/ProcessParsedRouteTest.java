@@ -156,9 +156,9 @@ class ProcessParsedRouteTest {
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
 
-        assert (noticeList.get(0).getFilename().equals("routes.txt"));
-        assert (noticeList.get(0).getFieldName().equals("route_id"));
-        assert (noticeList.get(0).getEntityId().equals("no id"));
+        assertEquals("routes.txt", noticeList.get(0).getFilename());
+        assertEquals("route_id", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedRoute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
