@@ -54,15 +54,22 @@ public class CleanOrCreatePath {
      */
     public Path execute() {
         Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
-        try {
-            // to empty any already existing directory
-            if (Files.exists(toCleanOrCreate)) {
-                //noinspection ResultOfMethodCallIgnored
+        // to empty any already existing directory
+        if (Files.exists(toCleanOrCreate)) {
+            //noinspection ResultOfMethodCallIgnored
+            try {
                 Files.walk(toCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
+        try {
+            Thread.sleep(500);
             Files.createDirectory(toCleanOrCreate);
         } catch (IOException e) {
-            resultRepo.addNotice(new CouldNotCleanOrCreatePathNotice(pathToCleanOrCreate));
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         return toCleanOrCreate;
