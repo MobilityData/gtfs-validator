@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -56,19 +57,24 @@ public class CleanOrCreatePath {
         Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
         // to empty any already existing directory
         if (Files.exists(toCleanOrCreate)) {
-            //noinspection ResultOfMethodCallIgnored
             try {
                 Files.walk(toCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        // Create the directory
         try {
-            Thread.sleep(500);
             Files.createDirectory(toCleanOrCreate);
+        } catch (AccessDeniedException e) {
+            // Wait and try again - Windows can initially block creating a directory immediately after a delete when a file lock exists (#112)
+            try {
+                Thread.sleep(500);
+                Files.createDirectory(toCleanOrCreate);
+            } catch (IOException | InterruptedException ex) {
+                ex.printStackTrace();
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
