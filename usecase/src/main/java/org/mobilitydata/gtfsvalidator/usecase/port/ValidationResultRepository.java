@@ -87,8 +87,6 @@ public interface ValidationResultRepository {
 
         void export(MissingRequiredValueNotice toExport) throws IOException;
 
-        void export(CouldNotCleanOrCreatePathNotice toExport) throws IOException;
-
         void export(InvalidColorNotice toExport) throws IOException;
 
         void export(ExtraFileFoundNotice toExport) throws IOException;

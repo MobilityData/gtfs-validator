@@ -28,7 +28,7 @@ public abstract class ErrorNotice extends Notice {
     protected static final String E_006 = "E006";
     protected static final String E_007 = "E007";
     protected static final String E_008 = "E008";
-    protected static final String E_009 = "E009";
+    // protected static final String E_009 = "E009"; // RESERVED - was CouldNotCleanOrCreatePathNotice (#112)
     protected static final String E_010 = "E010";
     protected static final String E_011 = "E011";
     protected static final String E_012 = "E012";

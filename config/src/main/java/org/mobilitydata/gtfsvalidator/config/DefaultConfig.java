@@ -51,7 +51,7 @@ public class DefaultConfig {
     }
 
     public CleanOrCreatePath cleanOrCreatePath(final String toCleanOrCreate) {
-        return new CleanOrCreatePath(toCleanOrCreate, resultRepo);
+        return new CleanOrCreatePath(toCleanOrCreate);
     }
 
     public UnzipInputArchive unzipInputArchive(final String zipInputPath, final Path zipExtractPath)

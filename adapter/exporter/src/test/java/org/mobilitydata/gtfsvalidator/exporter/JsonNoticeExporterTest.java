@@ -315,19 +315,6 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportCouldNotCleanOrCreatePathNoticeShouldWriteObject() throws IOException {
-
-        JsonGenerator mockGenerator = mock(JsonGenerator.class);
-
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        CouldNotCleanOrCreatePathNotice toExport = new CouldNotCleanOrCreatePathNotice("../output");
-        underTest.export(toExport);
-
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
-        verifyNoMoreInteractions(mockGenerator);
-    }
-
-    @Test
     void exportInvalidColorNoticeShouldWriteObject() throws IOException {
 
         JsonGenerator mockGenerator = mock(JsonGenerator.class);

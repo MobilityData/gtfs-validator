@@ -251,17 +251,6 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
     }
 
     @Override
-    public void export(CouldNotCleanOrCreatePathNotice toExport) throws IOException {
-        protoBuilder.clear()
-                .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getPathToCleanOrCreate())
-                .build()
-                .writeTo(streamGenerator.getStream());
-    }
-
-    @Override
     public void export(InvalidColorNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())

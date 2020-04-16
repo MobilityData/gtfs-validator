@@ -16,9 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CouldNotCleanOrCreatePathNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -34,22 +31,17 @@ import java.util.Comparator;
 public class CleanOrCreatePath {
 
     private final String pathToCleanOrCreate;
-    private final ValidationResultRepository resultRepo;
 
     /**
      * @param toCleanOrCreate an path specifying the target location
-     * @param resultRepo      a repository storing information about the validation
      */
-    public CleanOrCreatePath(final String toCleanOrCreate,
-                             final ValidationResultRepository resultRepo) {
+    public CleanOrCreatePath(final String toCleanOrCreate) {
         this.pathToCleanOrCreate = toCleanOrCreate;
-        this.resultRepo = resultRepo;
     }
 
     /**
-     * Execution method for use case: creates a path to the target location. If the target location is not
-     * * empty, all files at target are deleted. If the process fails, a {@link CouldNotCleanOrCreatePathNotice} is
-     * * generated and added to the {@link ValidationResultRepository} provided in the constructor.
+     * Execution method for use case: creates a path to the target location. If the target location is not empty, all
+     * files at target are deleted.
      *
      * @return a path to the target location
      */
