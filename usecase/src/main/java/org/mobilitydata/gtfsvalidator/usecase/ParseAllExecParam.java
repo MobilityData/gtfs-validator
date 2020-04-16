@@ -17,9 +17,9 @@ public class ParseAllExecParam {
         this.execParamRepository = execParamRepository;
     }
 
-    public void execute() throws IOException {
+    public void execute(String[] args) throws IOException {
         execParamRepository
-                .getParser(fromConfigFile, pathToConfigFile)
+                .getParser(fromConfigFile, pathToConfigFile, args)
                 .parse()
                 .forEach((s, execParam) -> execParamRepository.addExecParam(execParam));
     }

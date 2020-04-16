@@ -19,6 +19,7 @@ class ParseAllExecParamTest {
             throws IOException {
         boolean fromConfigFile = false;
         String pathToConfigFile = null;
+        String[] mockString = new String[1];
         ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
 
         ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
@@ -37,16 +38,18 @@ class ParseAllExecParamTest {
         mockExecutionParameterMap.put(mockExecParam0.getShortName(), mockExecParam0);
         mockExecutionParameterMap.put(mockExecParam1.getShortName(), mockExecParam1);
 
-        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(false), ArgumentMatchers.eq(null)))
+        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(false), ArgumentMatchers.eq(null),
+                ArgumentMatchers.eq(mockString)))
                 .thenReturn(mockParser);
         when(mockParser.parse()).thenReturn(mockExecutionParameterMap);
 
-        underTest.execute();
+        underTest.execute(mockString);
 
         InOrder inOrder = inOrder(mockExecParamRepository, mockParser);
 
         inOrder.verify(mockExecParamRepository, times(1))
-                .getParser(ArgumentMatchers.eq(false), ArgumentMatchers.eq(null));
+                .getParser(ArgumentMatchers.eq(false), ArgumentMatchers.eq(null),
+                        ArgumentMatchers.eq(mockString));
         inOrder.verify(mockParser, times(1)).parse();
         inOrder.verify(mockExecParamRepository, times(2))
                 .addExecParam(ArgumentMatchers.isA(ExecParam.class));

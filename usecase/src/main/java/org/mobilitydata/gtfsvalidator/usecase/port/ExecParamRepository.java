@@ -15,7 +15,7 @@ public interface ExecParamRepository {
 
     boolean hasExecParam(String key);
 
-    ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile);
+    ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile, String[] args);
 
     interface ExecParamParser {
 

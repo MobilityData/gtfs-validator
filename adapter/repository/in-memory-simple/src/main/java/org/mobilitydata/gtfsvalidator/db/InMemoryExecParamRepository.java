@@ -13,11 +13,6 @@ import java.util.Map;
 
 public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> execParamCollection = new HashMap<>();
-    private final String[] args;
-
-    public InMemoryExecParamRepository(String[] arguments) {
-        this.args = arguments;
-    }
 
     @Override
     public ExecParam getExecParamByKey(final String execParamShortName) {
@@ -41,7 +36,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     }
 
     @Override
-    public ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile) {
+    public ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile, String[] args) {
         if (!fromConfigFile) {
             return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
         } else {

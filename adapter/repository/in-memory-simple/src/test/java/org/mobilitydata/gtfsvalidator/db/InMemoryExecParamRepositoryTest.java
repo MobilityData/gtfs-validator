@@ -14,17 +14,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class InMemoryExecParamRepositoryTest {
-
     private static final String KEY_0 = "key0";
     private static final String KEY_1 = "key1";
 
     @Test
     public void addExecParamShouldAddItemToRepoAndReturnSameItem() {
-        String[] mockString = new String[1];
-
         ExecParam mockExecParam = mock(ExecParam.class);
 
-        ExecParamRepository underTest = new InMemoryExecParamRepository(mockString);
+        ExecParamRepository underTest = new InMemoryExecParamRepository();
 
         ExecParam toCheck = underTest.addExecParam(mockExecParam);
 
@@ -40,8 +37,6 @@ class InMemoryExecParamRepositoryTest {
 
     @Test
     public void getExecParamByKeyShouldReturnRelatedExecParam() {
-        String[] mockString = new String[1];
-
         ExecParam mockExecParam0 = mock(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
         doReturn(KEY_0).when(mockExecParam0).getKey();
@@ -50,7 +45,7 @@ class InMemoryExecParamRepositoryTest {
         //noinspection ResultOfMethodCallIgnored
         doReturn(KEY_1).when(mockExecParam1).getKey();
 
-        ExecParamRepository underTest = new InMemoryExecParamRepository(mockString);
+        ExecParamRepository underTest = new InMemoryExecParamRepository();
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -61,8 +56,6 @@ class InMemoryExecParamRepositoryTest {
 
     @Test
     public void getExecParamCollectionShouldReturnExecParamCollection() {
-        String[] mockString = new String[1];
-
         ExecParam mockExecParam0 = mock(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
         doReturn(KEY_0).when(mockExecParam0).getKey();
@@ -71,7 +64,7 @@ class InMemoryExecParamRepositoryTest {
         //noinspection ResultOfMethodCallIgnored
         doReturn(KEY_1).when(mockExecParam1).getKey();
 
-        ExecParamRepository underTest = new InMemoryExecParamRepository(mockString);
+        ExecParamRepository underTest = new InMemoryExecParamRepository();
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -86,8 +79,6 @@ class InMemoryExecParamRepositoryTest {
 
     @Test
     public void hasExecParamShouldReturnFalseIfExecParamIsNotPresent() {
-        String[] mockString = new String[1];
-
         ExecParam mockExecParam0 = mock(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
         doReturn(KEY_0).when(mockExecParam0).getKey();
@@ -96,7 +87,7 @@ class InMemoryExecParamRepositoryTest {
         //noinspection ResultOfMethodCallIgnored
         doReturn(KEY_1).when(mockExecParam1).getKey();
 
-        ExecParamRepository underTest = new InMemoryExecParamRepository(mockString);
+        ExecParamRepository underTest = new InMemoryExecParamRepository();
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -106,8 +97,6 @@ class InMemoryExecParamRepositoryTest {
 
     @Test
     public void hasExecParamShouldReturnTrueIfExecParamIsNotPresent() {
-        String[] mockString = new String[1];
-
         ExecParam mockExecParam0 = mock(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
         doReturn(KEY_0).when(mockExecParam0).getKey();
@@ -116,7 +105,7 @@ class InMemoryExecParamRepositoryTest {
         //noinspection ResultOfMethodCallIgnored
         doReturn(KEY_1).when(mockExecParam1).getKey();
 
-        ExecParamRepository underTest = new InMemoryExecParamRepository(mockString);
+        ExecParamRepository underTest = new InMemoryExecParamRepository();
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -129,10 +118,10 @@ class InMemoryExecParamRepositoryTest {
     public void getParserShouldReturnApacheExecParamParser() {
         String[] mockString = new String[1];
 
-        ExecParamRepository underTest = new InMemoryExecParamRepository(mockString);
+        ExecParamRepository underTest = new InMemoryExecParamRepository();
 
-        ExecParamRepository.ExecParamParser toCheck = underTest.getParser(false,
-                null);
+        ExecParamRepository.ExecParamParser toCheck = underTest.getParser(false, null,
+                mockString);
         assertTrue(toCheck instanceof ApacheExecParamParser);
     }
 
@@ -140,10 +129,10 @@ class InMemoryExecParamRepositoryTest {
     public void getParserShouldReturnJsonExecParamParser() {
         String[] mockString = new String[1];
 
-        ExecParamRepository underTest = new InMemoryExecParamRepository(mockString);
+        ExecParamRepository underTest = new InMemoryExecParamRepository();
 
-        ExecParamRepository.ExecParamParser toCheck = underTest.getParser(true,
-                null);
+        ExecParamRepository.ExecParamParser toCheck = underTest.getParser(true, null,
+                mockString);
         assertTrue(toCheck instanceof JsonExecParamParser);
     }
 }

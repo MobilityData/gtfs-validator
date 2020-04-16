@@ -43,10 +43,9 @@ public class DefaultConfig {
     private final GtfsSpecRepository specRepo = new InMemoryGtfsSpecRepository("gtfs_spec.asciipb");
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
-    private final ExecParamRepository executionParameterRepo;
+    private final ExecParamRepository executionParameterRepo = new InMemoryExecParamRepository();
 
-    public DefaultConfig(String[] arguments) throws IOException {
-        this.executionParameterRepo = new InMemoryExecParamRepository(arguments);
+    public DefaultConfig() throws IOException {
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork(final String url, final String targetPath)
