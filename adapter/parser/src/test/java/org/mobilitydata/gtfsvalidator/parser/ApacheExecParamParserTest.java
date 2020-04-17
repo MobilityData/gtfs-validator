@@ -56,14 +56,14 @@ class ApacheExecParamParserTest {
 
         verify(mockCommandLineParser, times(1)).parse(mockOptions, mockArguments);
 
-        verify(mockOption0, times(3)).getOpt();
-        verify(mockOption0, times(1)).getLongOpt();
+        verify(mockOption0, times(2)).getOpt();
+        verify(mockOption0, times(2)).getLongOpt();
         verify(mockOption0, times(1)).getDescription();
         verify(mockOption0, times(1)).hasArg();
         verify(mockOption0, times(1)).getValue();
 
-        verify(mockOption1, times(3)).getOpt();
-        verify(mockOption1, times(1)).getLongOpt();
+        verify(mockOption1, times(2)).getOpt();
+        verify(mockOption1, times(2)).getLongOpt();
         verify(mockOption1, times(1)).getDescription();
         verify(mockOption1, times(1)).hasArg();
         verify(mockOption1, times(1)).getValue();
