@@ -56,10 +56,7 @@ public class DownloadArchiveFromNetwork {
 
             String zipInputPath = execParamRepo.getExecParamValue("zip") != null
                     ? execParamRepo.getExecParamValue("zip")
-                    : System.getProperty("user.dir");
-            if (execParamRepo.getExecParamValue("zip") == null) {
-                zipInputPath += File.separator + "input.zip";
-            }
+                    : System.getProperty("user.dir") + File.separator + "input.zip";
 
             try {
                 URL sourceUrl = new URL(execParamRepo.getExecParamValue("url"));
