@@ -43,7 +43,6 @@ public class CleanOrCreatePath {
      * @param resultRepo a repository storing information about the validation
      */
     public CleanOrCreatePath(final ValidationResultRepository resultRepo, final ExecParamRepository execParamRepos) {
-//        this.pathToCleanOrCreate = toCleanOrCreate;
         this.resultRepo = resultRepo;
         this.execParamRepo = execParamRepos;
     }
@@ -88,7 +87,6 @@ public class CleanOrCreatePath {
         } catch (IOException e) {
             resultRepo.addNotice(new CouldNotCleanOrCreatePathNotice(pathToCleanOrCreate));
         }
-
         return toCleanOrCreate;
     }
 }
