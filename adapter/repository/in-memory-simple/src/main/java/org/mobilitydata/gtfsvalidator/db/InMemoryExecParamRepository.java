@@ -7,6 +7,7 @@ import org.mobilitydata.gtfsvalidator.parser.ApacheExecParamParser;
 import org.mobilitydata.gtfsvalidator.parser.JsonExecParamParser;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,5 +63,26 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     @Override
     public String getExecParamDefaultValue(String key) {
         return execParamCollection.get(key).getDefaultValue();
+    }
+
+    @Override
+    public void setDefaultValueOfMissingItem(String pathToDefaultConfigFile) throws IOException {
+        Map<String, ExecParam> defaultValueCollection = new JsonExecParamParser(pathToDefaultConfigFile).parse();
+
+        for (String key : execParamCollection.keySet()) {
+            final ExecParam execParam = execParamCollection.get(key);
+
+            if (execParam.getValue() == null) {
+                //noinspection ResultOfMethodCallIgnored
+                defaultValueCollection.get(key).getValue();
+                execParam.setDefaultValue(defaultValueCollection.get(key).getDefaultValue());
+            }
+        }
+        for (Map.Entry<String, ExecParam> entry : defaultValueCollection.entrySet()) {
+            final String key = entry.getKey();
+            if (!execParamCollection.containsKey(key)) {
+                execParamCollection.put(key, entry.getValue());
+            }
+        }
     }
 }

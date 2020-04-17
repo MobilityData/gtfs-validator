@@ -25,6 +25,8 @@ public interface ExecParamRepository {
 
     String getExecParamDefaultValue(String key);
 
+    void setDefaultValueOfMissingItem(String pathToDefaultConfigFile) throws IOException;
+
     interface ExecParamParser {
 
         Map<String, ExecParam> parse() throws IOException;
