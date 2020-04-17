@@ -146,9 +146,9 @@ public class Main {
             config.exportResultAsFile(asProto, outputPath).execute();
 
         } catch (ParseException e) {
-            logger.error("Could not parse command line arguments: " + e.getMessage());
+            logger.error("Could not parse command line arguments: " + e);
         } catch (IOException e) {
-            logger.error("An exception occurred: " + e.getMessage());
+            logger.error("An exception occurred: " + e);
         }
 
         logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
