@@ -42,7 +42,7 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:19.0.0'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
