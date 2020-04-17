@@ -83,7 +83,7 @@ public class UnzipInputArchive {
             } else {
                 zipInputPath = zipList.get(0);
             }
-        } else if (execParamRepo.getExecParamValue("zip") != null) {
+        } else if (execParamRepo.getExecParamValue("zip") == null) {
             zipInputPath += File.separator + "input.zip";
         }
 
