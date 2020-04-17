@@ -24,7 +24,7 @@ class ParseAllExecParamTest {
 
         ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
                 pathToConfigFile,
-                mockExecParamRepository);
+                mockExecParamRepository, pathToDefaultConfigfile);
 
         ExecParamRepository.ExecParamParser mockParser =
                 mock(ExecParamRepository.ExecParamParser.class);

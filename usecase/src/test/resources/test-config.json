@@ -1,0 +1,25 @@
+[
+  {
+    "key": "help",
+    "longName": "help",
+    "shortName": "h",
+    "hasArgument": false,
+    "description": "Print this message"
+  },
+  {
+    "key": "input",
+    "longName": "input",
+    "shortName": "i",
+    "hasArgument": true,
+    "description": "Relative path where to place extract the zip content",
+    "value": "input"
+  },
+  {
+    "key": "output",
+    "longName": "output",
+    "shortName": "o",
+    "hasArgument": true,
+    "description": "Relative path where to place output files",
+    "value": "output"
+  }
+]

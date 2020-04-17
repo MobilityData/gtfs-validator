@@ -29,11 +29,8 @@ import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.zip.ZipFile;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -48,18 +45,16 @@ public class DefaultConfig {
     public DefaultConfig() throws IOException {
     }
 
-    public DownloadArchiveFromNetwork downloadArchiveFromNetwork(final String url, final String targetPath)
-            throws MalformedURLException {
-        return new DownloadArchiveFromNetwork(new URL(url), targetPath, resultRepo);
+    public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
+        return new DownloadArchiveFromNetwork(resultRepo, executionParameterRepo);
     }
 
-    public CleanOrCreatePath cleanOrCreatePath(final String toCleanOrCreate) {
-        return new CleanOrCreatePath(toCleanOrCreate, resultRepo);
+    public CleanOrCreatePath cleanOrCreatePath() {
+        return new CleanOrCreatePath(resultRepo, executionParameterRepo);
     }
 
-    public UnzipInputArchive unzipInputArchive(final String zipInputPath, final Path zipExtractPath)
-            throws IOException {
-        return new UnzipInputArchive(rawFileRepo, new ZipFile(zipInputPath), zipExtractPath, resultRepo);
+    public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) {
+        return new UnzipInputArchive(rawFileRepo, zipExtractPath, resultRepo, executionParameterRepo);
     }
 
     public ValidateAllRequiredFilePresence validateAllRequiredFilePresence() {
@@ -113,6 +108,6 @@ public class DefaultConfig {
 
     public ParseAllExecParam parseAllExecutionParameter(boolean fromConfigFile, String pathToConfigFile) throws
             IllegalArgumentException {
-        return new ParseAllExecParam(fromConfigFile, pathToConfigFile, executionParameterRepo);
+        return new ParseAllExecParam(fromConfigFile, pathToConfigFile, executionParameterRepo, pathToDefaultConfigFile);
     }
 }

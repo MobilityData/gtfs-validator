@@ -8,13 +8,16 @@ public class ParseAllExecParam {
     private final boolean fromConfigFile;
     private final String pathToConfigFile;
     private final ExecParamRepository execParamRepository;
+    private final String pathToDefaultConfigFile;
 
     public ParseAllExecParam(boolean fromConfigFile,
                              String pathToConfigFile,
-                             ExecParamRepository execParamRepository) {
+                             ExecParamRepository execParamRepository,
+                             String pathToDefaultConfigFile) {
         this.fromConfigFile = fromConfigFile;
         this.pathToConfigFile = pathToConfigFile;
         this.execParamRepository = execParamRepository;
+        this.pathToDefaultConfigFile = pathToDefaultConfigFile;
     }
 
     public void execute(String[] args) throws IOException {
@@ -22,5 +25,7 @@ public class ParseAllExecParam {
                 .getParser(fromConfigFile, pathToConfigFile, args)
                 .parse()
                 .forEach((s, execParam) -> execParamRepository.addExecParam(execParam));
+
+        execParamRepository.setDefaultValueOfMissingItem(pathToDefaultConfigFile);
     }
 }
