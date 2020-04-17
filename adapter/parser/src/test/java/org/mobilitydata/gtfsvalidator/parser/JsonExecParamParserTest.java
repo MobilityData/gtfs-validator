@@ -12,10 +12,10 @@ class JsonExecParamParserTest {
 
     @Test
     public void jsonFileMapToExecutionParameterMap() throws IOException {
-        String pathToConfigFile = "test-config.json";
-        JsonExecParamParser underTest = new JsonExecParamParser(pathToConfigFile);
+        final String pathToConfigFile = "test-config.json";
+        final JsonExecParamParser underTest = new JsonExecParamParser(pathToConfigFile);
 
-        Map<String, ExecParam> toCheck = underTest.parse();
+        final Map<String, ExecParam> toCheck = underTest.parse();
 
         assertEquals(3, toCheck.size());
         assertTrue(toCheck.containsKey("help"));

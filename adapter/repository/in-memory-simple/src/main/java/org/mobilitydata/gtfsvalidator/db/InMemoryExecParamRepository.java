@@ -37,7 +37,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     }
 
     @Override
-    public ExecParamParser getParser(boolean fromConfigFile, final String pathToConfigFile, final String[] args) {
+    public ExecParamParser getParser(final boolean fromConfigFile, final String pathToConfigFile, final String[] args) {
         if (!fromConfigFile) {
             return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
         } else {
@@ -46,35 +46,33 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     }
 
     @Override
-    public String getExecParamValue(String key) {
+    public String getExecParamValue(final String key) {
         return execParamCollection.get(key).getValue();
     }
 
     @Override
-    public void setExecParamDefaultValue(String key, String value) {
+    public void setExecParamDefaultValue(final String key, final String value) {
         execParamCollection.get(key).setValue(value);
     }
 
     @Override
-    public void setExecParamDefaultValue(String key, Boolean value) {
+    public void setExecParamDefaultValue(final String key, final Boolean value) {
         execParamCollection.get(key).setValue(value);
     }
 
     @Override
-    public String getExecParamDefaultValue(String key) {
+    public String getExecParamDefaultValue(final String key) {
         return execParamCollection.get(key).getDefaultValue();
     }
 
     @Override
-    public void setDefaultValueOfMissingItem(String pathToDefaultConfigFile) throws IOException {
+    public void setDefaultValueOfMissingItem(final String pathToDefaultConfigFile) throws IOException {
         Map<String, ExecParam> defaultValueCollection = new JsonExecParamParser(pathToDefaultConfigFile).parse();
 
         for (String key : execParamCollection.keySet()) {
             final ExecParam execParam = execParamCollection.get(key);
 
             if (execParam.getValue() == null) {
-                //noinspection ResultOfMethodCallIgnored
-                defaultValueCollection.get(key).getValue();
                 execParam.setDefaultValue(defaultValueCollection.get(key).getDefaultValue());
             }
         }

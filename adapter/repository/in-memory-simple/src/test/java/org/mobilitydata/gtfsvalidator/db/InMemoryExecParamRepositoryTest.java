@@ -23,7 +23,7 @@ class InMemoryExecParamRepositoryTest {
     private static final String ZIP_KEY = "zip";
 
     @Test
-    public void addExecParamShouldAddItemToRepoAndReturnSameItem() {
+    void addExecParamShouldAddItemToRepoAndReturnSameItem() {
         final ExecParam mockExecParam = mock(ExecParam.class);
 
         final ExecParamRepository underTest = new InMemoryExecParamRepository();
@@ -41,7 +41,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    public void getExecParamByKeyShouldReturnRelatedExecParam() {
+    void getExecParamByKeyShouldReturnRelatedExecParam() {
         final ExecParam mockExecParam0 = mock(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
         doReturn(HELP_KEY).when(mockExecParam0).getKey();
@@ -60,7 +60,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    public void getExecParamCollectionShouldReturnExecParamCollection() {
+    void getExecParamCollectionShouldReturnExecParamCollection() {
         final ExecParam mockExecParam0 = mock(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
         doReturn(HELP_KEY).when(mockExecParam0).getKey();
@@ -83,7 +83,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    public void hasExecParamShouldReturnFalseIfExecParamIsNotPresent() {
+    void hasExecParamShouldReturnFalseIfExecParamIsNotPresent() {
         final ExecParam mockExecParam0 = mock(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
         doReturn(HELP_KEY).when(mockExecParam0).getKey();
@@ -101,7 +101,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    public void hasExecParamShouldReturnTrueIfExecParamIsNotPresent() {
+    void hasExecParamShouldReturnTrueIfExecParamIsPresent() {
         final ExecParam mockExecParam0 = mock(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
         doReturn(HELP_KEY).when(mockExecParam0).getKey();
@@ -120,7 +120,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    public void getParserShouldReturnApacheExecParamParser() {
+    void getParserShouldReturnApacheExecParamParser() {
         final String[] mockString = new String[1];
 
         final ExecParamRepository underTest = new InMemoryExecParamRepository();
@@ -131,7 +131,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    public void getParserShouldReturnJsonExecParamParser() {
+    void getParserShouldReturnJsonExecParamParser() {
         final String[] mockString = new String[1];
 
         final ExecParamRepository underTest = new InMemoryExecParamRepository();
@@ -142,7 +142,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    public void getExecParamValueShouldReturnValueOfRelatedExecParam() {
+    void getExecParamValueShouldReturnValueOfRelatedExecParam() {
         final ExecParam mockExecParam0 = mock(ExecParam.class);
         when(mockExecParam0.getKey()).thenReturn(HELP_KEY);
         when(mockExecParam0.getValue()).thenReturn("value0");
@@ -165,7 +165,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    void setExecParamDefaultValueShouldSetValueOfRelatedExecParam() {
+    void setExecParamDefaultValueShouldSetDefaultValueOfRelatedExecParam() {
         final ExecParam mockExecParam0 = mock(ExecParam.class);
         when(mockExecParam0.getKey()).thenReturn(HELP_KEY);
         when(mockExecParam0.getValue()).thenReturn("value0");
@@ -192,7 +192,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    public void getExecParamDefaultValueShouldReturnDefaultValueOfRelatedExecParam() {
+    void getExecParamDefaultValueShouldReturnDefaultValueOfRelatedExecParam() {
         final ExecParam mockExecParam0 = mock(ExecParam.class);
         when(mockExecParam0.getKey()).thenReturn(HELP_KEY);
         when(mockExecParam0.getValue()).thenReturn("value0");
@@ -271,7 +271,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    void missingValueFromExecParamShouldPlaceDefaultValues() throws IOException {
+    void missingValuesFromExecParamShouldPlaceDefaultValues() throws IOException {
         final ExecParam mockExecParam0 = spy(ExecParam.class);
         mockExecParam0.setKey(HELP_KEY);
 

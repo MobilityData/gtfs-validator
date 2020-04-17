@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.parser;
 import org.apache.commons.cli.*;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
+import org.mockito.ArgumentMatchers;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +49,13 @@ class ApacheExecParamParserTest {
 
         final Map<String, ExecParam> toCheck = underTest.parse();
 
+        verify(mockOptions, times(5))
+                .addOption(anyString(), anyString(), ArgumentMatchers.eq(true), anyString());
+        verify(mockOptions, times(1))
+                .addOption(anyString(), anyString(), ArgumentMatchers.eq(false), anyString());
+
+        verify(mockCommandLineParser, times(1)).parse(mockOptions, mockArguments);
+
         verify(mockOption0, times(3)).getOpt();
         verify(mockOption0, times(1)).getLongOpt();
         verify(mockOption0, times(1)).getDescription();
@@ -61,5 +69,7 @@ class ApacheExecParamParserTest {
         verify(mockOption1, times(1)).getValue();
 
         assertEquals(2, toCheck.size());
+
+        verifyNoMoreInteractions(mockCommandLineParser, mockOptions, mockOption0, mockOption1);
     }
 }

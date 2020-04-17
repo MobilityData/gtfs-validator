@@ -17,27 +17,30 @@ class ParseAllExecParamTest {
     @Test
     public void allExecParamFromCommandLineShouldBeParsedAndAddedToRepoAsExecParamEntities()
             throws IOException {
-        boolean fromConfigFile = false;
+        final boolean fromConfigFile = false;
         final String pathToConfigFile = null;
-        final String pathToDefaultConfigfile = null;
+        final String pathToDefaultConfigfile = "test-default-config.json";
         final String[] mockString = new String[1];
-        ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
+        final ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
 
-        ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
+        final ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
                 pathToConfigFile,
                 mockExecParamRepository, pathToDefaultConfigfile);
 
-        ExecParamRepository.ExecParamParser mockParser =
-                mock(ExecParamRepository.ExecParamParser.class);
+        final ExecParamRepository.ExecParamParser mockParser =
+                spy(ExecParamRepository.ExecParamParser.class);
 
-        ExecParam mockExecParam0 = mock(ExecParam.class);
-        when(mockExecParam0.getShortName()).thenReturn("short_name0");
-        ExecParam mockExecParam1 = mock(ExecParam.class);
-        when(mockExecParam1.getShortName()).thenReturn("short_name1");
+        final ExecParam mockHelpExecParam = spy(ExecParam.class);
+        when(mockHelpExecParam.getKey()).thenReturn("help");
+        when(mockHelpExecParam.getDefaultValue()).thenCallRealMethod();
 
-        Map<String, ExecParam> mockExecutionParameterMap = new HashMap<>();
-        mockExecutionParameterMap.put(mockExecParam0.getShortName(), mockExecParam0);
-        mockExecutionParameterMap.put(mockExecParam1.getShortName(), mockExecParam1);
+        final ExecParam mockInputExecParam = spy(ExecParam.class);
+        when(mockInputExecParam.getKey()).thenReturn("input");
+        when(mockInputExecParam.getDefaultValue()).thenCallRealMethod();
+
+        final Map<String, ExecParam> mockExecutionParameterMap = new HashMap<>();
+        mockExecutionParameterMap.put(mockHelpExecParam.getKey(), mockHelpExecParam);
+        mockExecutionParameterMap.put(mockInputExecParam.getKey(), mockInputExecParam);
 
         when(mockExecParamRepository.getParser(ArgumentMatchers.eq(false), ArgumentMatchers.eq(null),
                 ArgumentMatchers.eq(mockString)))
@@ -46,7 +49,7 @@ class ParseAllExecParamTest {
 
         underTest.execute(mockString);
 
-        InOrder inOrder = inOrder(mockExecParamRepository, mockParser);
+        final InOrder inOrder = inOrder(mockExecParamRepository, mockParser);
 
         inOrder.verify(mockExecParamRepository, times(1))
                 .getParser(ArgumentMatchers.eq(false), ArgumentMatchers.eq(null),
@@ -54,5 +57,56 @@ class ParseAllExecParamTest {
         inOrder.verify(mockParser, times(1)).parse();
         inOrder.verify(mockExecParamRepository, times(2))
                 .addExecParam(ArgumentMatchers.isA(ExecParam.class));
+
+        inOrder.verify(mockExecParamRepository, times(1))
+                .setDefaultValueOfMissingItem(ArgumentMatchers.eq(pathToDefaultConfigfile));
+    }
+
+    @Test
+    public void allExecParamFromConfigFileShouldBeParsedAndAddedToRepoAsExecParamEntities()
+            throws IOException {
+        final boolean fromConfigFile = true;
+        final String pathToConfigFile = "test-config.json";
+        final String pathToDefaultConfigfile = "test-default-config.json";
+        final String[] mockString = new String[1];
+        final ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
+
+        final ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
+                pathToConfigFile,
+                mockExecParamRepository, pathToDefaultConfigfile);
+
+        final ExecParamRepository.ExecParamParser mockParser =
+                spy(ExecParamRepository.ExecParamParser.class);
+
+        final ExecParam mockHelpExecParam = spy(ExecParam.class);
+        when(mockHelpExecParam.getKey()).thenReturn("help");
+        when(mockHelpExecParam.getDefaultValue()).thenCallRealMethod();
+
+        final ExecParam mockInputExecParam = spy(ExecParam.class);
+        when(mockInputExecParam.getKey()).thenReturn("input");
+        when(mockInputExecParam.getDefaultValue()).thenCallRealMethod();
+
+        final Map<String, ExecParam> mockExecutionParameterMap = new HashMap<>();
+        mockExecutionParameterMap.put(mockHelpExecParam.getKey(), mockHelpExecParam);
+        mockExecutionParameterMap.put(mockInputExecParam.getKey(), mockInputExecParam);
+
+        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(true), ArgumentMatchers.eq(pathToConfigFile),
+                ArgumentMatchers.eq(mockString)))
+                .thenReturn(mockParser);
+        when(mockParser.parse()).thenReturn(mockExecutionParameterMap);
+
+        underTest.execute(mockString);
+
+        final InOrder inOrder = inOrder(mockExecParamRepository, mockParser);
+
+        inOrder.verify(mockExecParamRepository, times(1))
+                .getParser(ArgumentMatchers.eq(true), ArgumentMatchers.eq(pathToConfigFile),
+                        ArgumentMatchers.eq(mockString));
+        inOrder.verify(mockParser, times(1)).parse();
+        inOrder.verify(mockExecParamRepository, times(2))
+                .addExecParam(ArgumentMatchers.isA(ExecParam.class));
+
+        inOrder.verify(mockExecParamRepository, times(1))
+                .setDefaultValueOfMissingItem(ArgumentMatchers.eq(pathToDefaultConfigfile));
     }
 }

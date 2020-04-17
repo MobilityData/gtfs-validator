@@ -10,17 +10,17 @@ public class ParseAllExecParam {
     private final ExecParamRepository execParamRepository;
     private final String pathToDefaultConfigFile;
 
-    public ParseAllExecParam(boolean fromConfigFile,
-                             String pathToConfigFile,
-                             ExecParamRepository execParamRepository,
-                             String pathToDefaultConfigFile) {
+    public ParseAllExecParam(final boolean fromConfigFile,
+                             final String pathToConfigFile,
+                             final ExecParamRepository execParamRepository,
+                             final String pathToDefaultConfigFile) {
         this.fromConfigFile = fromConfigFile;
         this.pathToConfigFile = pathToConfigFile;
         this.execParamRepository = execParamRepository;
         this.pathToDefaultConfigFile = pathToDefaultConfigFile;
     }
 
-    public void execute(String[] args) throws IOException {
+    public void execute(final String[] args) throws IOException {
         execParamRepository
                 .getParser(fromConfigFile, pathToConfigFile, args)
                 .parse()

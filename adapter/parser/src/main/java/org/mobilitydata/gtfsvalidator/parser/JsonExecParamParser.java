@@ -22,15 +22,17 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
 
     @Override
     public Map<String, ExecParam> parse() throws IOException {
-        Map<String, ExecParam> toReturn = new HashMap<>();
+        final Map<String, ExecParam> toReturn = new HashMap<>();
 
         //noinspection UnstableApiUsage
-        String configFileAsString = Resources.toString(Resources.getResource(pathToConfigFile), StandardCharsets.UTF_8);
+        final String configFileAsString =
+                Resources.toString(Resources.getResource(pathToConfigFile), StandardCharsets.UTF_8);
 
-        List<Object> execParamCollectionAsObjectCollection = getObjectReader().readValues(configFileAsString).readAll();
+        final List<Object> execParamCollectionAsObjectCollection = getObjectReader().readValues(configFileAsString)
+                .readAll();
 
         for (Object object : execParamCollectionAsObjectCollection) {
-            ExecParam execParam = (ExecParam) object;
+            final ExecParam execParam = (ExecParam) object;
             toReturn.put(execParam.getKey(), execParam);
         }
         return toReturn;
