@@ -43,4 +43,24 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             return new JsonExecParamParser(pathToConfigFile);
         }
     }
+
+    @Override
+    public String getExecParamValue(String key) {
+        return execParamCollection.get(key).getValue();
+    }
+
+    @Override
+    public void setExecParamDefaultValue(String key, String value) {
+        execParamCollection.get(key).setValue(value);
+    }
+
+    @Override
+    public void setExecParamDefaultValue(String key, Boolean value) {
+        execParamCollection.get(key).setValue(value);
+    }
+
+    @Override
+    public String getExecParamDefaultValue(String key) {
+        return execParamCollection.get(key).getDefaultValue();
+    }
 }

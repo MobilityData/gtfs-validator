@@ -17,6 +17,14 @@ public interface ExecParamRepository {
 
     ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile, String[] args);
 
+    String getExecParamValue(String key);
+
+    void setExecParamDefaultValue(String key, String value);
+
+    void setExecParamDefaultValue(String key, Boolean value);
+
+    String getExecParamDefaultValue(String key);
+
     interface ExecParamParser {
 
         Map<String, ExecParam> parse() throws IOException;

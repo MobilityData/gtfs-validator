@@ -84,7 +84,16 @@ public class ExecParam {
         return this;
     }
 
+    public ExecParam setValue(final Boolean value) {
+        this.defaultValue = String.valueOf(value);
+        return this;
+    }
+
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    public void setDefaultValue(Boolean defaultValue) {
+        this.defaultValue = String.valueOf(defaultValue);
     }
 }

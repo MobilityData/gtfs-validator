@@ -135,4 +135,82 @@ class InMemoryExecParamRepositoryTest {
                 mockString);
         assertTrue(toCheck instanceof JsonExecParamParser);
     }
+
+    @Test
+    public void getExecParamValueShouldReturnValueOfRelatedExecParam() {
+        final ExecParam mockExecParam0 = mock(ExecParam.class);
+        when(mockExecParam0.getKey()).thenReturn(KEY_0);
+        when(mockExecParam0.getValue()).thenReturn("value0");
+        mockExecParam0.setKey(KEY_0);
+        mockExecParam0.setValue("value0");
+
+        final ExecParam mockExecParam1 = spy(ExecParam.class);
+        when(mockExecParam1.getKey()).thenReturn(KEY_1);
+        when(mockExecParam1.getValue()).thenReturn("value1");
+        mockExecParam0.setKey(KEY_1);
+        mockExecParam0.setValue("value1");
+
+        final ExecParamRepository underTest = new InMemoryExecParamRepository();
+
+        underTest.addExecParam(mockExecParam0);
+        underTest.addExecParam(mockExecParam1);
+
+        assertEquals("value0", underTest.getExecParamValue(KEY_0));
+        assertEquals("value1", underTest.getExecParamValue(KEY_1));
+    }
+
+    @Test
+    void setExecParamDefaultValueShouldSetValueOfRelatedExecParam() {
+        final ExecParam mockExecParam0 = mock(ExecParam.class);
+        when(mockExecParam0.getKey()).thenReturn(KEY_0);
+        when(mockExecParam0.getValue()).thenReturn("value0");
+        when(mockExecParam0.getDefaultValue()).thenReturn("default value0");
+        mockExecParam0.setKey(KEY_0);
+        mockExecParam0.setValue("value0");
+        mockExecParam0.setDefaultValue("default value0");
+
+        final ExecParam mockExecParam1 = mock(ExecParam.class);
+        when(mockExecParam1.getKey()).thenReturn(KEY_1);
+        when(mockExecParam1.getValue()).thenReturn("value1");
+        when(mockExecParam1.getDefaultValue()).thenReturn("true");
+        mockExecParam0.setKey(KEY_1);
+        mockExecParam0.setValue("value1");
+        mockExecParam0.setDefaultValue(true);
+
+        final ExecParamRepository underTest = new InMemoryExecParamRepository();
+
+        underTest.addExecParam(mockExecParam0);
+        underTest.addExecParam(mockExecParam1);
+
+        assertEquals("default value0", underTest.getExecParamDefaultValue(KEY_0));
+        assertEquals("true", underTest.getExecParamDefaultValue(KEY_1));
+    }
+
+    @Test
+    public void getExecParamDefaultValueShouldReturnDefaultValueOfRelatedExecParam() {
+        final ExecParam mockExecParam0 = mock(ExecParam.class);
+        when(mockExecParam0.getKey()).thenReturn(KEY_0);
+        when(mockExecParam0.getValue()).thenReturn("value0");
+        when(mockExecParam0.getDefaultValue()).thenReturn("default value0");
+        mockExecParam0.setKey(KEY_0);
+        mockExecParam0.setValue("value0");
+        mockExecParam0.setDefaultValue("default value0");
+
+
+        final ExecParam mockExecParam1 = spy(ExecParam.class);
+        when(mockExecParam1.getKey()).thenReturn(KEY_1);
+        when(mockExecParam1.getValue()).thenReturn("value1");
+        when(mockExecParam1.getDefaultValue()).thenReturn("default value1");
+        mockExecParam0.setKey(KEY_1);
+        mockExecParam0.setValue("value1");
+        mockExecParam0.setDefaultValue("default value1");
+
+        final ExecParamRepository underTest = new InMemoryExecParamRepository();
+
+        underTest.addExecParam(mockExecParam0);
+        underTest.addExecParam(mockExecParam1);
+
+        assertEquals("default value0", underTest.getExecParamDefaultValue(KEY_0));
+        assertEquals("default value1", underTest.getExecParamDefaultValue(KEY_1));
+    }
 }
