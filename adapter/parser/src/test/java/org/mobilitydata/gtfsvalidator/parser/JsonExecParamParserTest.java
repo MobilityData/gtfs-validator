@@ -1,24 +1,19 @@
 package org.mobilitydata.gtfsvalidator.parser;
 
-import com.google.common.io.Resources;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class JsonExecParamParserTest {
 
-    @SuppressWarnings("UnstableApiUsage")
     @Test
     public void jsonFileMapToExecutionParameterMap() throws IOException {
         String pathToConfigFile = "test-config.json";
-
-        String configFile = Resources.toString(Resources.getResource(pathToConfigFile), StandardCharsets.UTF_8);
-        JsonExecParamParser underTest = new JsonExecParamParser(configFile);
+        JsonExecParamParser underTest = new JsonExecParamParser(pathToConfigFile);
 
         Map<String, ExecParam> toCheck = underTest.parse();
 
