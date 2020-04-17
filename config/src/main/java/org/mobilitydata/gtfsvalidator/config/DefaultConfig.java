@@ -102,11 +102,12 @@ public class DefaultConfig {
         return new ValidateAllOptionalFilename(specRepo, rawFileRepo, resultRepo);
     }
 
-    public ExportResultAsFile exportResultAsFile(boolean asProto, String outputPath) {
-        return new ExportResultAsFile(resultRepo, outputPath, asProto);
+    public ExportResultAsFile exportResultAsFile() {
+        return new ExportResultAsFile(resultRepo, executionParameterRepo);
     }
 
-    public ParseAllExecParam parseAllExecutionParameter(boolean fromConfigFile, String pathToConfigFile) throws
+    public ParseAllExecParam parseAllExecutionParameter(final boolean fromConfigFile, final String pathToConfigFile,
+                                                        final String pathToDefaultConfigFile) throws
             IllegalArgumentException {
         return new ParseAllExecParam(fromConfigFile, pathToConfigFile, executionParameterRepo, pathToDefaultConfigFile);
     }

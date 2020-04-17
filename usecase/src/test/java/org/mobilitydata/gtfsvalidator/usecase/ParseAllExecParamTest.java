@@ -18,8 +18,9 @@ class ParseAllExecParamTest {
     public void allExecParamFromCommandLineShouldBeParsedAndAddedToRepoAsExecParamEntities()
             throws IOException {
         boolean fromConfigFile = false;
-        String pathToConfigFile = null;
-        String[] mockString = new String[1];
+        final String pathToConfigFile = null;
+        final String pathToDefaultConfigfile = null;
+        final String[] mockString = new String[1];
         ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
 
         ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
