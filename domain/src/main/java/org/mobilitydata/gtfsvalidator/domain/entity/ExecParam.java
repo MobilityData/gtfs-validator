@@ -8,6 +8,7 @@ public class ExecParam {
     private String description;
     private boolean hasArgument;
     private String value;
+    private String defaultValue;
 
     public ExecParam() {
     }
@@ -50,6 +51,10 @@ public class ExecParam {
         return value;
     }
 
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
     public void setKey(String key) {
         this.key = key;
     }
@@ -77,5 +82,9 @@ public class ExecParam {
     public ExecParam setValue(final String value) {
         this.value = value;
         return this;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 }
