@@ -40,7 +40,7 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
     public Map<String, ExecParam> parse() throws IOException {
         final Map<String, ExecParam> toReturn = new HashMap<>();
         try {
-            CommandLine cmd = commandLineParser.parse(availableOptions, args);
+            final CommandLine cmd = commandLineParser.parse(availableOptions, args);
 
             Arrays.stream(cmd.getOptions()).forEach(option ->
                     toReturn.put(option.getOpt(), new ExecParam(option.getOpt(),

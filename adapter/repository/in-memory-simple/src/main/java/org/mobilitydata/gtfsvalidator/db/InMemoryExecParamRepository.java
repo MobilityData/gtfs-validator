@@ -31,12 +31,12 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     }
 
     @Override
-    public boolean hasExecParam(String key) {
+    public boolean hasExecParam(final String key) {
         return execParamCollection.containsKey(key);
     }
 
     @Override
-    public ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile, String[] args) {
+    public ExecParamParser getParser(boolean fromConfigFile, final String pathToConfigFile, final String[] args) {
         if (!fromConfigFile) {
             return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
         } else {

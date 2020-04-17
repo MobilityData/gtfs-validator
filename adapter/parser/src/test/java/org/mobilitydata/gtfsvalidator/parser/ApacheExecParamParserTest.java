@@ -16,37 +16,37 @@ class ApacheExecParamParserTest {
 
     @Test
     public void apacheCommandLineOptionShouldMapToExecutionParameterCollection() throws IOException, ParseException {
-        CommandLineParser mockCommandLineParser = mock(CommandLineParser.class);
-        Options mockOptions = mock(Options.class);
+        final CommandLineParser mockCommandLineParser = mock(CommandLineParser.class);
+        final Options mockOptions = mock(Options.class);
 
-        Option mockOption0 = mock(Option.class);
+        final Option mockOption0 = mock(Option.class);
         when(mockOption0.getOpt()).thenReturn("short_name0");
         when(mockOption0.getLongOpt()).thenReturn("long_name0");
         when(mockOption0.getDescription()).thenReturn("description0");
         when(mockOption0.hasArg()).thenReturn(true);
         when(mockOption0.getValue()).thenReturn("value0");
 
-        Option mockOption1 = mock(Option.class);
+        final Option mockOption1 = mock(Option.class);
         when(mockOption0.getOpt()).thenReturn("short_name1");
         when(mockOption0.getLongOpt()).thenReturn("long_name1");
         when(mockOption0.getDescription()).thenReturn("description1");
         when(mockOption0.hasArg()).thenReturn(true);
         when(mockOption0.getValue()).thenReturn("value1");
 
-        Collection<Option> mockOptionCollection = new ArrayList<>();
+        final Collection<Option> mockOptionCollection = new ArrayList<>();
         mockOptionCollection.add(mockOption0);
         mockOptionCollection.add(mockOption1);
 
-        String[] mockArguments = new String[1];
+        final String[] mockArguments = new String[1];
 
-        CommandLine mockCommandLine = mock(CommandLine.class);
+        final CommandLine mockCommandLine = mock(CommandLine.class);
         when(mockCommandLineParser.parse(mockOptions, mockArguments)).thenReturn(mockCommandLine);
         when(mockCommandLine.getOptions()).thenReturn(mockOptionCollection.toArray(new Option[0]));
 
-        ApacheExecParamParser underTest = new ApacheExecParamParser(mockCommandLineParser,
+        final ApacheExecParamParser underTest = new ApacheExecParamParser(mockCommandLineParser,
                 mockOptions, mockArguments);
 
-        Map<String, ExecParam> toCheck = underTest.parse();
+        final Map<String, ExecParam> toCheck = underTest.parse();
 
         verify(mockOption0, times(3)).getOpt();
         verify(mockOption0, times(1)).getLongOpt();
