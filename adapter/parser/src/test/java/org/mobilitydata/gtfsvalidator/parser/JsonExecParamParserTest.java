@@ -20,7 +20,7 @@ class JsonExecParamParserTest {
 
     @Test
     public void jsonFileShouldMapToExecutionParameterMap() throws IOException {
-        final String pathToConfigFile = "test-config.json";
+        final String pathToConfigFile = "test-execution-parameters.json";
         final ObjectReader mockObjectReader = mock(ObjectReader.class);
 
         final ExecParam mockHelpExecParam = spy(ExecParam.class);

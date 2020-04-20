@@ -39,7 +39,7 @@ public class Main {
             final DefaultConfig config = new DefaultConfig(logger);
 
             final boolean fromConfigFile = args.length == 0;
-            final String pathToConfigFile = "config.json";
+            final String pathToConfigFile = "execution-parameters.json";
             config.parseAllExecutionParameter(fromConfigFile, pathToConfigFile).execute(args);
 
             ExecParamRepository execParamRepo = config.getExecParamRepo();

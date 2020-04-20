@@ -18,12 +18,12 @@ class ParseAllExecParamTest {
     public void allExecParamFromCommandLineShouldBeParsedAndAddedToRepoAsExecParamEntities()
             throws IOException {
         final boolean fromConfigFile = false;
-        final String pathToConfigFile = null;
+        final String pathToExecParamFile = null;
         final String[] mockString = new String[1];
         final ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
 
         final ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
-                pathToConfigFile,
+                pathToExecParamFile,
                 mockExecParamRepository);
 
         final ExecParamRepository.ExecParamParser mockParser =
@@ -60,12 +60,12 @@ class ParseAllExecParamTest {
     public void allExecParamFromConfigFileShouldBeParsedAndAddedToRepoAsExecParamEntities()
             throws IOException {
         final boolean fromConfigFile = true;
-        final String pathToConfigFile = "test-config.json";
+        final String pathToExecParamFile = "test-execution-parameters.json";
         final String[] mockString = new String[1];
         final ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
 
         final ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
-                pathToConfigFile,
+                pathToExecParamFile,
                 mockExecParamRepository);
 
         final ExecParamRepository.ExecParamParser mockParser =
@@ -81,7 +81,7 @@ class ParseAllExecParamTest {
         mockExecutionParameterMap.put(mockHelpExecParam.getParamKey(), mockHelpExecParam);
         mockExecutionParameterMap.put(mockInputExecParam.getParamKey(), mockInputExecParam);
 
-        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(true), ArgumentMatchers.eq(pathToConfigFile),
+        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(true), ArgumentMatchers.eq(pathToExecParamFile),
                 ArgumentMatchers.eq(mockString)))
                 .thenReturn(mockParser);
         when(mockParser.parse()).thenReturn(mockExecutionParameterMap);
@@ -91,7 +91,7 @@ class ParseAllExecParamTest {
         final InOrder inOrder = inOrder(mockExecParamRepository, mockParser);
 
         inOrder.verify(mockExecParamRepository, times(1))
-                .getParser(ArgumentMatchers.eq(true), ArgumentMatchers.eq(pathToConfigFile),
+                .getParser(ArgumentMatchers.eq(true), ArgumentMatchers.eq(pathToExecParamFile),
                         ArgumentMatchers.eq(mockString));
         inOrder.verify(mockParser, times(1)).parse();
         inOrder.verify(mockExecParamRepository, times(2))

@@ -47,8 +47,8 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> defaultValueCollection;
     private final Logger logger;
 
-    public InMemoryExecParamRepository(String pathToDefaultConfigFile, Logger logger) throws IOException {
-        this.defaultValueCollection = new JsonExecParamParser(pathToDefaultConfigFile,
+    public InMemoryExecParamRepository(String pathToExecParamFile, Logger logger) throws IOException {
+        this.defaultValueCollection = new JsonExecParamParser(pathToExecParamFile,
                 new ObjectMapper().readerFor(ExecParam.class)).parse();
         this.logger = logger;
     }
@@ -126,18 +126,18 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * either returns {@code ApacheExecParamParser} if the boolean value is set to false, or returns
      * {@code JsonExecParamParser} if the boolean value is set to true.
      *
-     * @param fromConfigFile   the boolean to decide on the type of parser to return
-     * @param pathToConfigFile the path to the configuration .json file to parse the execution parameters from
-     * @param args             the argument line to parse {@link ExecParam} from when {@param fromConfigFile} is false
+     * @param fromConfigFile      the boolean to decide on the type of parser to return
+     * @param pathToExecParamFile the path to the configuration .json file to parse the execution parameters from
+     * @param args                the argument line to parse {@link ExecParam} from when {@param fromConfigFile} is false
      * @return {@code ApacheExecParamParser} if the boolean passed as parameter is set to false,
      * or {@code JsonExecParamParser} if this boolean value is set to true.
      */
     @Override
-    public ExecParamParser getParser(final boolean fromConfigFile, final String pathToConfigFile, final String[] args) {
+    public ExecParamParser getParser(final boolean fromConfigFile, final String pathToExecParamFile, final String[] args) {
         if (!fromConfigFile) {
             return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
         } else {
-            return new JsonExecParamParser(pathToConfigFile, new ObjectMapper().readerFor(ExecParam.class));
+            return new JsonExecParamParser(pathToExecParamFile, new ObjectMapper().readerFor(ExecParam.class));
         }
     }
 

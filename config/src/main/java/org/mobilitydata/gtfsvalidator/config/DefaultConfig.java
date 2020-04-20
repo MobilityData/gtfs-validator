@@ -44,7 +44,7 @@ public class DefaultConfig {
     private final ExecParamRepository execParamRepo;
 
     public DefaultConfig(Logger logger) throws IOException {
-        execParamRepo = new InMemoryExecParamRepository("default-config.json", logger);
+        execParamRepo = new InMemoryExecParamRepository("default-execution-parameters.json", logger);
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {

@@ -22,7 +22,7 @@ class InMemoryExecParamRepositoryTest {
     private static final String OUTPUT_KEY = "output";
     private static final String PROTO_KEY = "proto";
     private static final String URL_KEY = "url";
-    private static final String PATH_TO_DEFAULT_CONFIG_FILE = "test-default-config.json";
+    private static final String PATH_TO_DEFAULT_CONFIG_FILE = "test-default-execution-parameters.json";
 
     @Test
     void addExecParamWithNullKeyShouldThrowException() throws IOException {

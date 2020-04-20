@@ -25,20 +25,20 @@ import java.io.IOException;
  */
 public class ParseAllExecParam {
     private final boolean fromConfigFile;
-    private final String pathToConfigFile;
+    private final String pathToExecParamFile;
     private final ExecParamRepository execParamRepository;
 
     /**
      * @param fromConfigFile      boolean specifying if the execution parameters should be retrieved from a .json file
      *                            of from an Apache command line.
-     * @param pathToConfigFile    the path to the .json file to parse execution parameters from
+     * @param pathToExecParamFile the path to the .json file to parse execution parameters from
      * @param execParamRepository the repository containing execution parameters and their values
      */
     public ParseAllExecParam(final boolean fromConfigFile,
-                             final String pathToConfigFile,
+                             final String pathToExecParamFile,
                              final ExecParamRepository execParamRepository) {
         this.fromConfigFile = fromConfigFile;
-        this.pathToConfigFile = pathToConfigFile;
+        this.pathToExecParamFile = pathToExecParamFile;
         this.execParamRepository = execParamRepository;
     }
 
@@ -46,7 +46,7 @@ public class ParseAllExecParam {
      * Use case execution method: parses execution parameters from a .json file or from an Apache command line and adds
      * the resultant {@code ExecParam} to the repository provided to the constructor.
      * If the execution parameters are to be parsed for a .json file, the path to that file is specified in
-     * {@param pathToConfigFile}.
+     * {@param pathToExecParamFile}.
      * If the execution parameter are to be parsed from Apache command line, {@param args} holds the information to be
      * parsed.
      * This method throws {@link IOException} if the parsing operation could not be executed.
@@ -60,7 +60,7 @@ public class ParseAllExecParam {
      */
     public void execute(final String[] args) throws IllegalArgumentException, IOException {
         execParamRepository
-                .getParser(fromConfigFile, pathToConfigFile, args)
+                .getParser(fromConfigFile, pathToExecParamFile, args)
                 .parse()
                 .forEach((s, execParam) -> execParamRepository.addExecParam(execParam));
     }
