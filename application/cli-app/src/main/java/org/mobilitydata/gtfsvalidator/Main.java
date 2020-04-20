@@ -105,7 +105,7 @@ public class Main {
                     Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY)));
 
         } catch (IOException e) {
-            logger.error("An exception occurred: " + e.getMessage());
+            logger.error("An exception occurred: " + e);
         }
         logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
     }

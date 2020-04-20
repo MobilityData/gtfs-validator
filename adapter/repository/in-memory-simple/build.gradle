@@ -44,15 +44,16 @@ dependencies {
 
     implementation 'commons-validator:commons-validator:1.6'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.3'
+
     implementation 'org.apache.logging.log4j:log4j-api:2.12.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.12.1'
 
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testImplementation 'org.hamcrest:hamcrest:2.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testImplementation 'org.mockito:mockito-core:3.3.0'
 }
 
