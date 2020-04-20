@@ -21,16 +21,12 @@ class ApacheExecParamParserTest {
         final Options mockOptions = mock(Options.class);
 
         final Option mockOption0 = mock(Option.class);
-        when(mockOption0.getOpt()).thenReturn("short_name0");
         when(mockOption0.getLongOpt()).thenReturn("long_name0");
-        when(mockOption0.getDescription()).thenReturn("description0");
         when(mockOption0.hasArg()).thenReturn(true);
         when(mockOption0.getValue()).thenReturn("value0");
 
         final Option mockOption1 = mock(Option.class);
-        when(mockOption0.getOpt()).thenReturn("short_name1");
         when(mockOption0.getLongOpt()).thenReturn("long_name1");
-        when(mockOption0.getDescription()).thenReturn("description1");
         when(mockOption0.hasArg()).thenReturn(true);
         when(mockOption0.getValue()).thenReturn("value1");
 
@@ -56,16 +52,10 @@ class ApacheExecParamParserTest {
 
         verify(mockCommandLineParser, times(1)).parse(mockOptions, mockArguments);
 
-        verify(mockOption0, times(1)).getOpt();
-        verify(mockOption0, times(3)).getLongOpt();
-        verify(mockOption0, times(1)).getDescription();
-        verify(mockOption0, times(1)).hasArg();
+        verify(mockOption0, times(2)).getLongOpt();
         verify(mockOption0, times(1)).getValue();
 
-        verify(mockOption1, times(1)).getOpt();
-        verify(mockOption1, times(3)).getLongOpt();
-        verify(mockOption1, times(1)).getDescription();
-        verify(mockOption1, times(1)).hasArg();
+        verify(mockOption1, times(2)).getLongOpt();
         verify(mockOption1, times(1)).getValue();
 
         assertEquals(2, toCheck.size());

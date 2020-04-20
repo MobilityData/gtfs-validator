@@ -9,18 +9,21 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JsonExecParamParserTest {
+    private final static String HELP_KEY = "help";
+    private final static String INPUT_KEY = "input";
+    private final static String OUTPUT_KEY = "output";
 
     @Test
-    public void jsonFileMapToExecutionParameterMap() throws IOException {
+    public void jsonFileShouldMapToExecutionParameterMap() throws IOException {
         final String pathToConfigFile = "test-config.json";
         final JsonExecParamParser underTest = new JsonExecParamParser(pathToConfigFile);
 
         final Map<String, ExecParam> toCheck = underTest.parse();
 
         assertEquals(3, toCheck.size());
-        assertTrue(toCheck.containsKey("help"));
-        assertTrue(toCheck.containsKey("input"));
-        assertTrue(toCheck.containsKey("output"));
+        assertTrue(toCheck.containsKey(HELP_KEY));
+        assertTrue(toCheck.containsKey(INPUT_KEY));
+        assertTrue(toCheck.containsKey(OUTPUT_KEY));
 
         ExecParam toTest = toCheck.get("help");
         assertEquals(toTest.getShortName(), "h");

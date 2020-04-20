@@ -58,9 +58,6 @@ class ExportResultAsFileTest {
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ArgumentMatchers.eq("proto"));
 
-        verify(mockExecParamRepo, times(1))
-                .getExecParamDefaultValue(ArgumentMatchers.eq("proto"));
-
         final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
 
         inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(false),
