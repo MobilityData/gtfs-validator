@@ -17,11 +17,9 @@ public interface ExecParamRepository {
 
     ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile, String[] args);
 
-    String getExecParamValue(String key);
+    String getExecParamValue(String key) throws IllegalArgumentException, IOException;
 
-    void setExecParamDefaultValue(String key, String value);
-
-    void setExecParamDefaultValue(String key, Boolean value);
+    Options getOptions();
 
     String getExecParamDefaultValue(String key);
 
