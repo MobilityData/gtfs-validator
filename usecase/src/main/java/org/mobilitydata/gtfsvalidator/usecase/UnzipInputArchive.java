@@ -19,18 +19,13 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotUnzipInputArchiveNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Enumeration;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -43,7 +38,6 @@ public class UnzipInputArchive {
     private final RawFileRepository rawFileRepo;
     private final Path zipExtractPath;
     private final ValidationResultRepository resultRepo;
-    private final ExecParamRepository execParamRepo;
 
     /**
      * @param fileRepo       a repository storing information about a GTFS dataset
@@ -52,12 +46,10 @@ public class UnzipInputArchive {
      */
     public UnzipInputArchive(final RawFileRepository fileRepo,
                              final Path zipExtractPath,
-                             final ValidationResultRepository resultRepo,
-                             final ExecParamRepository execParamRepo) {
+                             final ValidationResultRepository resultRepo) {
         this.rawFileRepo = fileRepo;
         this.zipExtractPath = zipExtractPath;
         this.resultRepo = resultRepo;
-        this.execParamRepo = execParamRepo;
     }
 
     /**
@@ -65,27 +57,7 @@ public class UnzipInputArchive {
      * a {@link CannotUnzipInputArchiveNotice} is generated and added to the {@link ValidationResultRepository} provided
      * in the constructor.
      */
-    public void execute() throws IOException {
-
-        String zipInputPath = execParamRepo.getExecParamValue("zip") != null
-                ? execParamRepo.getExecParamValue("zip")
-                : System.getProperty("user.dir");
-
-        if (execParamRepo.getExecParamValue("url") != null & execParamRepo.getExecParamValue("zip") != null) {
-            final List<String> zipList = Files.walk(Paths.get(zipInputPath))
-                    .map(Path::toString)
-                    .filter(f -> f.endsWith(".zip"))
-                    .collect(Collectors.toUnmodifiableList());
-            if (zipList.isEmpty()) {
-                System.exit(0);
-            } else if (zipList.size() > 1) {
-                System.exit(0);
-            } else {
-                zipInputPath = zipList.get(0);
-            }
-        } else if (execParamRepo.getExecParamValue("zip") == null) {
-            zipInputPath += File.separator + "input.zip";
-        }
+    public void execute(String zipInputPath) throws IOException {
 
         final ZipFile inputZip = new ZipFile(zipInputPath);
 

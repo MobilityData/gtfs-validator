@@ -1,25 +1,14 @@
 [
   {
-    "key": "help",
-    "longName": "help",
-    "shortName": "h",
-    "hasArgument": false,
-    "description": "Print this message"
+    "paramKey": "help",
+    "value": null
   },
   {
-    "key": "input",
-    "longName": "input",
-    "shortName": "i",
-    "hasArgument": true,
-    "description": "Relative path where to place extract the zip content",
-    "value": "input"
+    "paramKey": "input",
+    "paramValue": "input"
   },
   {
-    "key": "output",
-    "longName": "output",
-    "shortName": "o",
-    "hasArgument": true,
-    "description": "Relative path where to place output files",
-    "value": "output"
+    "paramKey": "output",
+    "paramValue": "output"
   }
 ]

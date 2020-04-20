@@ -17,10 +17,8 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotDownloadArchiveFromNetworkNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -33,15 +31,12 @@ import java.nio.file.StandardCopyOption;
 public class DownloadArchiveFromNetwork {
 
     private final ValidationResultRepository resultRepo;
-    private final ExecParamRepository execParamRepo;
 
     /**
      * @param resultRepo a repository storing information about the validation process
      */
-    public DownloadArchiveFromNetwork(final ValidationResultRepository resultRepo,
-                                      final ExecParamRepository execParamRepo) {
+    public DownloadArchiveFromNetwork(final ValidationResultRepository resultRepo) {
         this.resultRepo = resultRepo;
-        this.execParamRepo = execParamRepo;
     }
 
     /**
@@ -49,28 +44,21 @@ public class DownloadArchiveFromNetwork {
      * a {@link CannotDownloadArchiveFromNetworkNotice} is generated and added to the {@link ValidationResultRepository}
      * provided in the constructor.
      */
-    public void execute() throws IOException {
+    public void execute(String url, String targetPath) throws IOException {
         //TODO: does using File class break clean architecture (make business logic dependant on a framework)?
         //Should the call to File happen in outside layers?
-        if (execParamRepo.getExecParamValue("url") != null) {
-
-            String zipInputPath = execParamRepo.getExecParamValue("zip") != null
-                    ? execParamRepo.getExecParamValue("zip")
-                    : System.getProperty("user.dir") + File.separator + "input.zip";
-
-            try {
-                URL sourceUrl = new URL(execParamRepo.getExecParamValue("url"));
-                Files.copy(
-                        sourceUrl.openStream(), // TODO: think about how to remove dependency on Files. FileCopier interface?
-                        Paths.get(zipInputPath),
-                        StandardCopyOption.REPLACE_EXISTING
-                );
-            } catch (IOException e) {
-                resultRepo.addNotice
-                        (new CannotDownloadArchiveFromNetworkNotice(
-                                new URL(execParamRepo.getExecParamValue("url"))));
-                throw e;
-            }
+        try {
+            URL sourceUrl = new URL(url);
+            Files.copy(
+                    sourceUrl.openStream(), // TODO: think about how to remove dependency on Files. FileCopier interface?
+                    Paths.get(targetPath),
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+        } catch (IOException e) {
+            resultRepo.addNotice
+                    (new CannotDownloadArchiveFromNetworkNotice(
+                            new URL(url)));
+            throw e;
         }
     }
 }

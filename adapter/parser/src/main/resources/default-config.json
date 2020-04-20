@@ -1,50 +1,26 @@
 [
   {
-    "key": "help",
-    "longName": "help",
-    "shortName": "h",
-    "hasArgument": false,
-    "description": "Print this message",
-    "defaultValue": null
+    "paramKey": "help",
+    "paramValue": null
   },
   {
-    "key": "input",
-    "longName": "input",
-    "shortName": "i",
-    "hasArgument": true,
-    "description": "Relative path where to place extract the zip content",
-    "defaultValue": "input"
+    "paramKey": "input",
+    "paramValue": "input"
   },
   {
-    "key": "output",
-    "longName": "output",
-    "shortName": "o",
-    "hasArgument": true,
-    "description": "Relative path where to place output files",
-    "defaultValue": "output"
+    "paramKey": "output",
+    "paramValue": "output"
   },
   {
-    "key": "proto",
-    "longName": "proto",
-    "shortName": "p",
-    "hasArgument": true,
-    "description": "Relative path where to place output files",
-    "defaultValue": false
+    "paramKey": "proto",
+    "paramValue": false
   },
   {
-    "key": "url",
-    "longName": "url",
-    "shortName": "u",
-    "hasArgument": true,
-    "description": "URL to GTFS zipped archive",
-    "defaultValue": null
+    "paramKey": "url",
+    "paramValue": null
   },
   {
-    "key": "zip",
-    "longName": "zip",
-    "shortName": "z",
-    "hasArgument": true,
-    "description": "if --url is used, where to place the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk",
-    "defaultValue": null
+    "paramKey": "zip",
+    "paramValue": null
   }
 ]

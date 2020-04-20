@@ -34,7 +34,8 @@ class ExportResultAsFileTest {
 
     @Test
     void resultRepoShouldBeExportedAsJsonFile() throws IOException {
-        final ValidationResultRepository.NoticeExporter mockExporter = mock(ValidationResultRepository.NoticeExporter.class);
+        final ValidationResultRepository.NoticeExporter mockExporter =
+                mock(ValidationResultRepository.NoticeExporter.class);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
         final CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
@@ -43,20 +44,22 @@ class ExportResultAsFileTest {
         when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), anyString())).thenReturn(mockExporter);
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
 
-        when(mockExecParamRepo.getExecParamValue("output")).thenReturn("output");
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY)).thenReturn(mockExecParamRepo.OUTPUT_KEY);
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn("false");
 
-        final ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo);
+        final ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo);
 
-        underTest.execute();
+        underTest.execute(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY),
+                Boolean.parseBoolean(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)));
 
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
         verify(mockNotice1, times(1)).export(ArgumentMatchers.eq(mockExporter));
 
-        verify(mockExecParamRepo, times(2))
-                .getExecParamValue(ArgumentMatchers.eq("output"));
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.OUTPUT_KEY));
 
         verify(mockExecParamRepo, times(1))
-                .getExecParamValue(ArgumentMatchers.eq("proto"));
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.PROTO_KEY));
 
         final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
 
@@ -64,6 +67,10 @@ class ExportResultAsFileTest {
                 ArgumentMatchers.anyString());
         inOrder.verify(mockExporter, times(1)).exportBegin();
         inOrder.verify(mockResultRepo, times(1)).getAll();
+
+        verify(mockNotice0, times(1)).export(mockExporter);
+        verify(mockNotice1, times(1)).export(mockExporter);
+
         verify(mockExporter, times(1)).exportEnd();
         verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo);
     }
@@ -77,23 +84,24 @@ class ExportResultAsFileTest {
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
 
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
-        when(mockExecParamRepo.getExecParamValue("output")).thenReturn("output");
-        when(mockExecParamRepo.getExecParamValue("proto")).thenReturn(String.valueOf(true));
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY)).thenReturn(mockExecParamRepo.OUTPUT_KEY);
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(String.valueOf(true));
         when(mockResultRepo.getExporter(ArgumentMatchers.eq(true), ArgumentMatchers.anyString()))
                 .thenReturn(mockExporter);
 
-        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo);
+        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo);
 
-        underTest.execute();
+        underTest.execute(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY),
+                Boolean.parseBoolean(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)));
 
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
         verify(mockNotice1, times(1)).export(ArgumentMatchers.eq(mockExporter));
 
-        verify(mockExecParamRepo, times(2))
-                .getExecParamValue(ArgumentMatchers.eq("output"));
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.OUTPUT_KEY));
 
-        verify(mockExecParamRepo, times(3))
-                .getExecParamValue(ArgumentMatchers.eq("proto"));
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.PROTO_KEY));
 
         InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
 
@@ -101,6 +109,10 @@ class ExportResultAsFileTest {
                 ArgumentMatchers.anyString());
         inOrder.verify(mockExporter, times(1)).exportBegin();
         inOrder.verify(mockResultRepo, times(1)).getAll();
+
+        verify(mockNotice0, times(1)).export(mockExporter);
+        verify(mockNotice1, times(1)).export(mockExporter);
+
         verify(mockExporter, times(1)).exportEnd();
         verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo);
     }

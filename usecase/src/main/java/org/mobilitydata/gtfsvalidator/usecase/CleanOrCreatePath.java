@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CouldNotCleanOrCreatePathNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.File;
@@ -33,18 +32,13 @@ import java.util.Comparator;
  */
 public class CleanOrCreatePath {
 
-    //    private final String pathToCleanOrCreate;
     private final ValidationResultRepository resultRepo;
-    private final ExecParamRepository execParamRepo;
 
     /**
-     * //     * @param toCleanOrCreate an path specifying the target location
-     *
      * @param resultRepo a repository storing information about the validation
      */
-    public CleanOrCreatePath(final ValidationResultRepository resultRepo, final ExecParamRepository execParamRepos) {
+    public CleanOrCreatePath(final ValidationResultRepository resultRepo) {
         this.resultRepo = resultRepo;
-        this.execParamRepo = execParamRepos;
     }
 
     /**
@@ -54,28 +48,7 @@ public class CleanOrCreatePath {
      *
      * @return a path to the target location
      */
-    public Path zipExtractTargetPath() {
-
-        final String pathToCleanOrCreate = execParamRepo.getExecParamValue("input") != null
-                ? execParamRepo.getExecParamValue("input")
-                : System.getProperty("user.dir") + File.separator
-                + execParamRepo.getExecParamDefaultValue("input");
-
-        return getPath(pathToCleanOrCreate);
-    }
-
-    public Path outputPath() {
-
-        final String pathToCleanOrCreate = execParamRepo.getExecParamValue("output") != null
-                ? System.getProperty("user.dir") + File.separator
-                + execParamRepo.getExecParamValue("output")
-                : System.getProperty("user.dir") + File.separator
-                + execParamRepo.getExecParamDefaultValue("output");
-
-        return getPath(pathToCleanOrCreate);
-    }
-
-    private Path getPath(String pathToCleanOrCreate) {
+    public Path execute(String pathToCleanOrCreate) {
         Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
         try {
             // to empty any already existing directory
@@ -87,6 +60,7 @@ public class CleanOrCreatePath {
         } catch (IOException e) {
             resultRepo.addNotice(new CouldNotCleanOrCreatePathNotice(pathToCleanOrCreate));
         }
+
         return toCleanOrCreate;
     }
 }

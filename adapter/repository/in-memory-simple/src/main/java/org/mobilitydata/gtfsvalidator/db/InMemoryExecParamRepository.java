@@ -1,86 +1,252 @@
+/*
+ * Copyright (c) 2020. MobilityData IO.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.db;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.parser.ApacheExecParamParser;
 import org.mobilitydata.gtfsvalidator.parser.JsonExecParamParser;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+/**
+ * This holds information about the execution parameter the user of the validation tool passed as arguments of the main
+ * execution method. This repository supports the parsing of execution parameters from either a json file or via
+ * Apache command line. This is created  when creating a new default configuration. Operations on this repository
+ * are executed ihe main execution method and inside the relevant use cases.
+ */
 public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> execParamCollection = new HashMap<>();
+    private final Map<String, ExecParam> defaultValueCollection;
+    private final Logger logger;
 
-    @Override
-    public ExecParam getExecParamByKey(final String execParamShortName) {
-        return execParamCollection.get(execParamShortName);
+    public InMemoryExecParamRepository(String pathToDefaultConfigFile, Logger logger) throws IOException {
+        this.defaultValueCollection = new JsonExecParamParser(pathToDefaultConfigFile,
+                new ObjectMapper().readerFor(ExecParam.class)).parse();
+        this.logger = logger;
     }
 
+    /**
+     * This method returns the {@code ExecParam} that matches the key passed as parameter
+     *
+     * @param key the key of the {@link ExecParam} that is supposed to be retrieved from the query
+     * @return the {@link ExecParam} that matches the key passed as parameter
+     */
+    @Override
+    public ExecParam getExecParamByKey(final String key) {
+        return execParamCollection.get(key);
+    }
+
+    /**
+     * This method returns the collection of {@link ExecParam} mapped on a key
+     *
+     * @return returns the collection of {@link ExecParam} mapped on a key
+     */
     @Override
     public Map<String, ExecParam> getExecParamCollection() {
         return Collections.unmodifiableMap(execParamCollection);
     }
 
+    /**
+     * This method adds a new {@link ExecParam} to the repository if the key of said parameter is handled by the
+     * repository. If the key is not recognized, throws an {@link IllegalArgumentException}. Finally, if the entity
+     * is added to the repository, the methods returns the {@link ExecParam} passed as parameter.
+     *
+     * @param newExecParam the new entity to add to the repository
+     * @return the {@link ExecParam} passed as parameter
+     * @throws IllegalArgumentException if the key of entity passed as parameter is not handled by the repository
+     */
     @Override
-    public ExecParam addExecParam(final ExecParam newExecParam) {
-        execParamCollection.put(newExecParam.getKey(), newExecParam);
-        return newExecParam;
+    public ExecParam addExecParam(final ExecParam newExecParam) throws IllegalArgumentException {
+        if (defaultValueCollection.containsKey(newExecParam.getParamKey())) {
+            execParamCollection.put(newExecParam.getParamKey(), newExecParam);
+            return newExecParam;
+        } else {
+            throw new IllegalArgumentException("Execution parameter with key: " +
+                    newExecParam.getParamKey() + " found in configuration file is not handled");
+        }
     }
 
+    /**
+     * This method verifies if the repository contains an {@link ExecParam} with a specified key passed as parameter
+     *
+     * @param key the key of the {@link ExecParam} that is searched for
+     * @return true if the repository contains an {@link ExecParam} with the same key as the one passed as
+     * parameter, false if no {@link ExecParam} with matching key was found.
+     */
     @Override
     public boolean hasExecParam(final String key) {
         return execParamCollection.containsKey(key);
     }
 
+    /**
+     * This method verifies if the repository contains an {@link ExecParam} with a specified key passed as parameter
+     * and if said {@link ExecParam} has field paramValue not set to null.
+     *
+     * @param key the key of the {@link ExecParam} that is searched for
+     * @return true if the repository contains an {@link ExecParam} with the same key as the one passed as
+     * parameter with field paramValue not null
+     * false if no {@link ExecParam} with matching key was found or if a {@link ExecParam} matching the key
+     * passed as parameter has been found, but its field paramValue is set to null.
+     */
+    @Override
+    public boolean hasExecParamValue(final String key) {
+        return hasExecParam(key) && getExecParamByKey(key).getParamValue() != null;
+    }
+
+    /**
+     * This method returns a parser for execution parameters based on a boolean passed as parameter. This methods
+     * either returns {@code ApacheExecParamParser} if the boolean value is set to false, or returns
+     * {@code JsonExecParamParser} if the boolean value is set to true.
+     *
+     * @param fromConfigFile   the boolean to decide on the type of parser to return
+     * @param pathToConfigFile the path to the configuration .json file to parse the execution parameters from
+     * @param args             the argument line to parse {@link ExecParam} from when {@param fromConfigFile} is false
+     * @return {@code ApacheExecParamParser} if the boolean passed as parameter is set to false,
+     * or {@code JsonExecParamParser} if this boolean value is set to true.
+     */
     @Override
     public ExecParamParser getParser(final boolean fromConfigFile, final String pathToConfigFile, final String[] args) {
         if (!fromConfigFile) {
             return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
         } else {
-            return new JsonExecParamParser(pathToConfigFile);
+            return new JsonExecParamParser(pathToConfigFile, new ObjectMapper().readerFor(ExecParam.class));
         }
     }
 
+    /**
+     * This method constructs and returns path as string variables that correspond to a given key. This method is
+     * used in the main execution method. Throws a {@code IllegalArgumentException} if the key passed as parameter is
+     * not handled by the repository.
+     * If the key is HELP_KEY or PROTO_KEY the method returns the paramValue associated to the key if present, else
+     * the default paramValue.
+     * In other cases, the method constructs paths according to conditions on the repository and the working directory.
+     *
+     * @param key the key associated to the path that is to be built
+     * @return a working path associated to the key provided as parameter
+     * @throws IllegalArgumentException if the key passed as parameter is not handled by the repository.
+     */
     @Override
-    public String getExecParamValue(final String key) {
-        return execParamCollection.get(key).getValue();
-    }
+    public String getExecParamValue(final String key) throws IllegalArgumentException, IOException {
+        final String defaultValue = defaultValueCollection.get(key).getParamValue();
 
-    @Override
-    public void setExecParamDefaultValue(final String key, final String value) {
-        execParamCollection.get(key).setValue(value);
-    }
+        switch (key) {
 
-    @Override
-    public void setExecParamDefaultValue(final String key, final Boolean value) {
-        execParamCollection.get(key).setValue(value);
-    }
+            case HELP_KEY:
+            case PROTO_KEY: {
+                if (hasExecParam(key)) {
+                    final String paramValue = getExecParamByKey(key).getParamValue();
+                    return hasExecParamValue(key) ? paramValue : defaultValue;
+                } else {
+                    return defaultValue;
+                }
+            }
 
-    @Override
-    public String getExecParamDefaultValue(final String key) {
-        return execParamCollection.get(key).getDefaultValue();
-    }
+            case INPUT_KEY: {
+                if (hasExecParam(key)) {
+                    final String paramValue = getExecParamByKey(key).getParamValue();
+                    return hasExecParamValue(key)
+                            ? paramValue
+                            : System.getProperty("user.dir") + File.separator + defaultValue;
+                } else {
+                    return System.getProperty("user.dir") + File.separator + defaultValue;
+                }
+            }
 
-    @Override
-    public void setDefaultValueOfMissingItem(final String pathToDefaultConfigFile) throws IOException {
-        Map<String, ExecParam> defaultValueCollection = new JsonExecParamParser(pathToDefaultConfigFile).parse();
+            case OUTPUT_KEY: {
+                if (hasExecParam(OUTPUT_KEY)) {
+                    final String value = System.getProperty("user.dir") + File.separator
+                            + getExecParamByKey(OUTPUT_KEY).getParamValue();
+                    return hasExecParamValue(OUTPUT_KEY) ? value : System.getProperty("user.dir") + File.separator
+                            + defaultValue;
+                } else {
+                    return System.getProperty("user.dir") + File.separator + defaultValue;
+                }
+            }
 
-        for (String key : execParamCollection.keySet()) {
-            final ExecParam execParam = execParamCollection.get(key);
+            case URL_KEY: {
+                return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getParamValue() : defaultValue;
+            }
 
-            if (execParam.getValue() == null) {
-                execParam.setDefaultValue(defaultValueCollection.get(key).getDefaultValue());
+            case ZIP_KEY: {
+                String zipInputPath = hasExecParamValue(ZIP_KEY)
+                        ? getExecParamByKey(ZIP_KEY).getParamValue()
+                        : System.getProperty("user.dir");
+
+                if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(ZIP_KEY)) {
+                    logger.info("--url and relative path to zip file(--zip option) not provided. Trying to " +
+                            "find zip in: " + zipInputPath);
+                    List<String> zipList = Files.walk(Paths.get(zipInputPath))
+                            .map(Path::toString)
+                            .filter(f -> f.endsWith(".zip"))
+                            .collect(Collectors.toUnmodifiableList());
+
+                    if (zipList.isEmpty()) {
+                        logger.error("no zip file found - exiting");
+                        System.exit(0);
+                    } else if (zipList.size() > 1) {
+                        logger.error("multiple zip files found - exiting");
+                        System.exit(0);
+                    } else {
+                        logger.info("zip file found: " + zipList.get(0));
+                        zipInputPath = zipList.get(0);
+                    }
+                } else if (!hasExecParamValue(ZIP_KEY)) {
+                    zipInputPath += File.separator + "input.zip";
+                }
+                return zipInputPath;
             }
         }
-        for (Map.Entry<String, ExecParam> entry : defaultValueCollection.entrySet()) {
-            final String key = entry.getKey();
-            if (!execParamCollection.containsKey(key)) {
-                execParamCollection.put(key, entry.getValue());
-            }
-        }
+        throw new IllegalArgumentException("Requested key is not handled");
+    }
+
+    /**
+     * This method returns the collection of available {@code Option} as {@code Options}. This method is used to print
+     * help when {@link ExecParam} with key HELP_KEY="help" is present in the repository.
+     *
+     * @return the collection of available {@code Option} as {@code Options}.
+     */
+    @Override
+    public Options getOptions() {
+        Options options = new Options();
+        options.addOption("u", "url", true, "URL to GTFS zipped archive");
+        options.addOption("z", "zip", true, "if --url is used, where to place " +
+                "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
+        options.addOption("i", "input", true, "Relative path where to extract" +
+                " the zip content");
+        options.addOption("o", "output", true, "Relative path where to place" +
+                " output files");
+        options.addOption("h", "help", false, "Print this message");
+        options.addOption("p", "proto", true, "Export validation results as" +
+                " proto");
+
+        return options;
     }
 }

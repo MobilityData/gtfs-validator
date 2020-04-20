@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
 import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,17 +36,45 @@ public class Main {
         final Logger logger = LogManager.getLogger();
 
         try {
-            final DefaultConfig config = new DefaultConfig();
+            final DefaultConfig config = new DefaultConfig(logger);
 
             final boolean fromConfigFile = args.length == 0;
             final String pathToConfigFile = "config.json";
-            final String pathToDefaultConfigFile = "default-config.json";
+            config.parseAllExecutionParameter(fromConfigFile, pathToConfigFile).execute(args);
 
-            config.parseAllExecutionParameter(fromConfigFile, pathToConfigFile, pathToDefaultConfigFile).execute(args);
+            ExecParamRepository execParamRepo = config.getExecParamRepo();
 
-            config.downloadArchiveFromNetwork().execute();
+            if (execParamRepo.hasExecParam(execParamRepo.HELP_KEY)) {
+                printHelp(execParamRepo.getOptions());
+                return;
+            }
 
-            config.unzipInputArchive(config.cleanOrCreatePath().zipExtractTargetPath()).execute();
+            if (!execParamRepo.hasExecParamValue(execParamRepo.URL_KEY) & !execParamRepo
+                    .hasExecParamValue(execParamRepo.ZIP_KEY)) {
+                logger.info("--url provided but no location to place zip (--zip option). Using default: " +
+                        execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY));
+            }
+
+            if (!execParamRepo.hasExecParamValue(execParamRepo.INPUT_KEY)) {
+                logger.info("--input not provided. Will extract zip content in: " + execParamRepo
+                        .getExecParamValue(ExecParamRepository.INPUT_KEY));
+            }
+
+            if (!execParamRepo.hasExecParamValue(execParamRepo.OUTPUT_KEY)) {
+                logger.info("--output not provided. Will place execution results in: " + execParamRepo
+                        .getExecParamValue(execParamRepo.OUTPUT_KEY));
+            }
+
+            if (execParamRepo.hasExecParamValue(execParamRepo.URL_KEY)) {
+                logger.info("Downloading archive");
+                config.downloadArchiveFromNetwork().execute(execParamRepo.getExecParamValue(execParamRepo.URL_KEY),
+                        execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY));
+            }
+
+            logger.info("Unzipping archive");
+            config.unzipInputArchive(config.cleanOrCreatePath()
+                    .execute(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)))
+                    .execute(execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY));
 
             final List<String> filenameList = config.validateAllRequiredFilePresence().execute();
 
@@ -62,9 +91,18 @@ public class Main {
                 }
             });
 
-            config.cleanOrCreatePath().outputPath();
 
-            config.exportResultAsFile().execute();
+            if (execParamRepo.hasExecParamValue(execParamRepo.PROTO_KEY)) {
+                logger.info("Results are exported as proto");
+            } else {
+                logger.info("Results are exported as JSON by default");
+            }
+
+            logger.info("Exporting validation repo content:" + config.getValidationResult());
+            config.cleanOrCreatePath().execute(execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY));
+
+            config.exportResultAsFile().execute(execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY),
+                    Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY)));
 
         } catch (IOException e) {
             logger.error("An exception occurred: " + e.getMessage());

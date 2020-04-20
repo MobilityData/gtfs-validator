@@ -16,7 +16,7 @@ class ExecParamTest {
 
     @Test
     public void getKeyShouldReturnKey() {
-        final ExecParam underTest = new ExecParam(KEY, SHORT_NAME, LONG_NAME, DESCRIPTION, true, VALUE);
-        assertEquals(KEY, underTest.getKey());
+        final ExecParam underTest = new ExecParam(KEY, VALUE);
+        assertEquals(KEY, underTest.getParamKey());
     }
 }

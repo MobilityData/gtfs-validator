@@ -1,50 +1,26 @@
 [
   {
-    "key": "help",
-    "longName": "help",
-    "shortName": "h",
-    "hasArgument": false,
-    "description": "Print this message",
-    "defaultValue": "test help value"
+    "paramKey": "help",
+    "paramValue": "test help value"
   },
   {
-    "key": "input",
-    "longName": "input",
-    "shortName": "i",
-    "hasArgument": true,
-    "description": "Relative path where to place extract the zip content",
-    "defaultValue": "test input value"
+    "paramKey": "input",
+    "paramValue": "test input value"
   },
   {
-    "key": "output",
-    "longName": "output",
-    "shortName": "o",
-    "hasArgument": true,
-    "description": "Relative path where to place output files",
-    "defaultValue": "test output value"
+    "paramKey": "output",
+    "paramValue": "test output value"
   },
   {
-    "key": "proto",
-    "longName": "proto",
-    "shortName": "p",
-    "hasArgument": true,
-    "description": "Relative path where to place output files",
-    "defaultValue": "test proto value"
+    "paramKey": "proto",
+    "paramValue": "test proto value"
   },
   {
-    "key": "url",
-    "longName": "url",
-    "shortName": "u",
-    "hasArgument": true,
-    "description": "URL to GTFS zipped archive",
-    "defaultValue": "test url value"
+    "paramKey": "url",
+    "paramValue": "test url value"
   },
   {
-    "key": "zip",
-    "longName": "zip",
-    "shortName": "z",
-    "hasArgument": true,
-    "description": "if --url is used, where to place the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk",
-    "defaultValue": "test zip value"
+    "paramKey": "zip",
+    "paramValue": "test zip value"
   }
 ]

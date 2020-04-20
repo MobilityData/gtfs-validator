@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.config;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.InMemoryExecParamRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
@@ -40,21 +41,22 @@ public class DefaultConfig {
     private final GtfsSpecRepository specRepo = new InMemoryGtfsSpecRepository("gtfs_spec.asciipb");
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
-    private final ExecParamRepository executionParameterRepo = new InMemoryExecParamRepository();
+    private final ExecParamRepository execParamRepo;
 
-    public DefaultConfig() throws IOException {
+    public DefaultConfig(Logger logger) throws IOException {
+        execParamRepo = new InMemoryExecParamRepository("default-config.json", logger);
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
-        return new DownloadArchiveFromNetwork(resultRepo, executionParameterRepo);
+        return new DownloadArchiveFromNetwork(resultRepo);
     }
 
     public CleanOrCreatePath cleanOrCreatePath() {
-        return new CleanOrCreatePath(resultRepo, executionParameterRepo);
+        return new CleanOrCreatePath(resultRepo);
     }
 
     public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) {
-        return new UnzipInputArchive(rawFileRepo, zipExtractPath, resultRepo, executionParameterRepo);
+        return new UnzipInputArchive(rawFileRepo, zipExtractPath, resultRepo);
     }
 
     public ValidateAllRequiredFilePresence validateAllRequiredFilePresence() {
@@ -103,12 +105,15 @@ public class DefaultConfig {
     }
 
     public ExportResultAsFile exportResultAsFile() {
-        return new ExportResultAsFile(resultRepo, executionParameterRepo);
+        return new ExportResultAsFile(resultRepo);
     }
 
-    public ParseAllExecParam parseAllExecutionParameter(final boolean fromConfigFile, final String pathToConfigFile,
-                                                        final String pathToDefaultConfigFile) throws
-            IllegalArgumentException {
-        return new ParseAllExecParam(fromConfigFile, pathToConfigFile, executionParameterRepo, pathToDefaultConfigFile);
+    public ParseAllExecParam parseAllExecutionParameter(final boolean fromConfigFile, final String pathToConfigFile)
+            throws IllegalArgumentException {
+        return new ParseAllExecParam(fromConfigFile, pathToConfigFile, execParamRepo);
+    }
+
+    public ExecParamRepository getExecParamRepo() {
+        return execParamRepo;
     }
 }

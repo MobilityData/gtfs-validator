@@ -17,35 +17,18 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.io.File;
 import java.io.IOException;
 
 public class ExportResultAsFile {
     private final ValidationResultRepository resultRepo;
-    private final ExecParamRepository execParamRepo;
 
-    public ExportResultAsFile(final ValidationResultRepository resultRepo,
-                              final ExecParamRepository execParamRepo) {
+    public ExportResultAsFile(final ValidationResultRepository resultRepo) {
         this.resultRepo = resultRepo;
-        this.execParamRepo = execParamRepo;
     }
 
-    public void execute() throws IOException {
-        final String outputPath = execParamRepo.getExecParamValue("output") != null
-                ? System.getProperty("user.dir") + File.separator + execParamRepo.getExecParamValue("output")
-                : System.getProperty("user.dir") + File.separator
-                + execParamRepo.getExecParamDefaultValue("output");
-
-        final String asProtoAsString = (execParamRepo.getExecParamValue("proto") != null) &&
-                (!execParamRepo.getExecParamValue("proto").equals("false"))
-                ? execParamRepo.getExecParamValue("proto")
-                : execParamRepo.getExecParamDefaultValue("proto");
-
-        final boolean asProto = Boolean.parseBoolean(asProtoAsString);
-
+    public void execute(String outputPath, boolean asProto) throws IOException {
         ValidationResultRepository.NoticeExporter exporter = resultRepo.getExporter(asProto, outputPath);
 
         exporter.exportBegin();
