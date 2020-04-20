@@ -16,19 +16,39 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
 
 public class ExportResultAsFile {
     private final ValidationResultRepository resultRepo;
+    private final ExecParamRepository execParamRepo;
+    private final Logger logger;
 
-    public ExportResultAsFile(final ValidationResultRepository resultRepo) {
+    public ExportResultAsFile(final ValidationResultRepository resultRepo,
+                              final ExecParamRepository execParamRepo,
+                              final Logger logger) {
         this.resultRepo = resultRepo;
+        this.execParamRepo = execParamRepo;
+        this.logger = logger;
     }
 
-    public void execute(String outputPath, boolean asProto) throws IOException {
+    public void execute() throws IOException {
+
+        if (execParamRepo.hasExecParamValue(execParamRepo.PROTO_KEY)) {
+            logger.info("Results are exported as proto");
+        } else {
+            logger.info("Results are exported as JSON by default");
+        }
+
+        logger.info("Exporting validation repo content:" + resultRepo.getAll());
+
+        final String outputPath = execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY);
+        final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
+
         ValidationResultRepository.NoticeExporter exporter = resultRepo.getExporter(asProto, outputPath);
 
         exporter.exportBegin();

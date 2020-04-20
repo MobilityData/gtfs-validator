@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
@@ -31,7 +30,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collection;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -42,13 +40,16 @@ public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final ExecParamRepository execParamRepo;
+    private final Logger logger;
 
     public DefaultConfig(Logger logger) throws IOException {
-        execParamRepo = new InMemoryExecParamRepository("default-execution-parameters.json", logger);
+        this.logger = logger;
+        execParamRepo = new InMemoryExecParamRepository("default-execution-parameters.json",
+                this.logger);
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
-        return new DownloadArchiveFromNetwork(resultRepo);
+        return new DownloadArchiveFromNetwork(resultRepo, execParamRepo, logger);
     }
 
     public CleanOrCreatePath cleanOrCreatePath() {
@@ -56,7 +57,7 @@ public class DefaultConfig {
     }
 
     public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) {
-        return new UnzipInputArchive(rawFileRepo, zipExtractPath, resultRepo);
+        return new UnzipInputArchive(rawFileRepo, zipExtractPath, resultRepo, execParamRepo, logger);
     }
 
     public ValidateAllRequiredFilePresence validateAllRequiredFilePresence() {
@@ -96,16 +97,12 @@ public class DefaultConfig {
         );
     }
 
-    public Collection<Notice> getValidationResult() {
-        return resultRepo.getAll();
-    }
-
     public ValidateAllOptionalFilename validateAllOptionalFileName() {
         return new ValidateAllOptionalFilename(specRepo, rawFileRepo, resultRepo);
     }
 
     public ExportResultAsFile exportResultAsFile() {
-        return new ExportResultAsFile(resultRepo);
+        return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
 
     public ParseAllExecParam parseAllExecutionParameter(final boolean fromConfigFile, final String pathToConfigFile)
@@ -115,5 +112,13 @@ public class DefaultConfig {
 
     public ExecParamRepository getExecParamRepo() {
         return execParamRepo;
+    }
+
+    public LogExecutionInfo logExecutionInfo() {
+        return new LogExecutionInfo(logger, execParamRepo);
+    }
+
+    public PrintHelp printHelp() {
+        return new PrintHelp(execParamRepo);
     }
 }

@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator;
 
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
@@ -39,42 +37,23 @@ public class Main {
             final DefaultConfig config = new DefaultConfig(logger);
 
             final boolean fromConfigFile = args.length == 0;
-            final String pathToConfigFile = "execution-parameters.json";
-            config.parseAllExecutionParameter(fromConfigFile, pathToConfigFile).execute(args);
+            final String pathToExecParamFile = "execution-parameters.json";
+            config.parseAllExecutionParameter(fromConfigFile, pathToExecParamFile).execute(args);
 
             ExecParamRepository execParamRepo = config.getExecParamRepo();
 
-            if (execParamRepo.hasExecParam(execParamRepo.HELP_KEY)) {
-                printHelp(execParamRepo.getOptions());
-                return;
-            }
+            // use case will inspect parameters and decide if help menu should be displayed or not
+            config.printHelp().execute();
 
-            if (!execParamRepo.hasExecParamValue(execParamRepo.URL_KEY) & !execParamRepo
-                    .hasExecParamValue(execParamRepo.ZIP_KEY)) {
-                logger.info("--url provided but no location to place zip (--zip option). Using default: " +
-                        execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY));
-            }
+            // use case will inspect parameters and display relevant information about the validation execution process
+            config.logExecutionInfo().execute();
 
-            if (!execParamRepo.hasExecParamValue(execParamRepo.INPUT_KEY)) {
-                logger.info("--input not provided. Will extract zip content in: " + execParamRepo
-                        .getExecParamValue(ExecParamRepository.INPUT_KEY));
-            }
+            // use case will inspect parameters and decide if GTFS dataset should be downloaded or not
+            config.downloadArchiveFromNetwork().execute();
 
-            if (!execParamRepo.hasExecParamValue(execParamRepo.OUTPUT_KEY)) {
-                logger.info("--output not provided. Will place execution results in: " + execParamRepo
-                        .getExecParamValue(execParamRepo.OUTPUT_KEY));
-            }
-
-            if (execParamRepo.hasExecParamValue(execParamRepo.URL_KEY)) {
-                logger.info("Downloading archive");
-                config.downloadArchiveFromNetwork().execute(execParamRepo.getExecParamValue(execParamRepo.URL_KEY),
-                        execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY));
-            }
-
-            logger.info("Unzipping archive");
-            config.unzipInputArchive(config.cleanOrCreatePath()
-                    .execute(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)))
-                    .execute(execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY));
+            config.unzipInputArchive(
+                    config.cleanOrCreatePath().execute(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)))
+                    .execute();
 
             final List<String> filenameList = config.validateAllRequiredFilePresence().execute();
 
@@ -91,36 +70,13 @@ public class Main {
                 }
             });
 
-
-            if (execParamRepo.hasExecParamValue(execParamRepo.PROTO_KEY)) {
-                logger.info("Results are exported as proto");
-            } else {
-                logger.info("Results are exported as JSON by default");
-            }
-
-            logger.info("Exporting validation repo content:" + config.getValidationResult());
             config.cleanOrCreatePath().execute(execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY));
 
-            config.exportResultAsFile().execute(execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY),
-                    Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY)));
+            config.exportResultAsFile().execute();
 
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
         }
         logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
-    }
-
-    //TODO: make a use case out of this
-    private static void printHelp(Options options) {
-        final String HELP = String.join("\n",
-                "Loads input GTFS feed from url or disk.",
-                "Checks files integrity, numeric type parsing and ranges as well as " +
-                        "string format according to GTFS spec",
-                "Validation results are exported to " +
-                        "JSON file by default");
-        HelpFormatter formatter = new HelpFormatter();
-        System.out.println(); // blank line for legibility
-        formatter.printHelp(HELP, options);
-        System.out.println(); // blank line for legibility
     }
 }

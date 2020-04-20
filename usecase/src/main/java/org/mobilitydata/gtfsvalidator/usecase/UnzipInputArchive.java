@@ -16,9 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotUnzipInputArchiveNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -38,6 +40,8 @@ public class UnzipInputArchive {
     private final RawFileRepository rawFileRepo;
     private final Path zipExtractPath;
     private final ValidationResultRepository resultRepo;
+    private final ExecParamRepository execParamRepo;
+    private final Logger logger;
 
     /**
      * @param fileRepo       a repository storing information about a GTFS dataset
@@ -46,10 +50,14 @@ public class UnzipInputArchive {
      */
     public UnzipInputArchive(final RawFileRepository fileRepo,
                              final Path zipExtractPath,
-                             final ValidationResultRepository resultRepo) {
+                             final ValidationResultRepository resultRepo,
+                             final ExecParamRepository execParamRepo,
+                             final Logger logger) {
         this.rawFileRepo = fileRepo;
         this.zipExtractPath = zipExtractPath;
         this.resultRepo = resultRepo;
+        this.execParamRepo = execParamRepo;
+        this.logger = logger;
     }
 
     /**
@@ -57,8 +65,11 @@ public class UnzipInputArchive {
      * a {@link CannotUnzipInputArchiveNotice} is generated and added to the {@link ValidationResultRepository} provided
      * in the constructor.
      */
-    public void execute(String zipInputPath) throws IOException {
+    public void execute() throws IOException {
 
+        logger.info("Unzipping archive");
+
+        final String zipInputPath = execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY);
         final ZipFile inputZip = new ZipFile(zipInputPath);
 
         Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();

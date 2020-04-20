@@ -67,7 +67,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     /**
      * This method returns the collection of {@link ExecParam} mapped on a key
      *
-     * @return returns the collection of {@link ExecParam} mapped on a key
+     * @return the collection of {@link ExecParam} mapped on a key
      */
     @Override
     public Map<String, ExecParam> getExecParamCollection() {

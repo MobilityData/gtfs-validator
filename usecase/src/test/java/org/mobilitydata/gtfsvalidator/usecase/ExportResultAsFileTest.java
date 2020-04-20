@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotUnzipInputArchiveNotice;
@@ -46,11 +47,20 @@ class ExportResultAsFileTest {
 
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY)).thenReturn(mockExecParamRepo.OUTPUT_KEY);
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn("false");
+        when(mockExecParamRepo.hasExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(false);
 
-        final ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo);
+        Logger mockLogger = mock(Logger.class);
 
-        underTest.execute(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY),
-                Boolean.parseBoolean(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)));
+        final ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockLogger);
+
+        underTest.execute();
+
+        verify(mockExecParamRepo, times(1)).hasExecParamValue(mockExecParamRepo.PROTO_KEY);
+
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Results are exported as JSON by default"));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
 
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
         verify(mockNotice1, times(1)).export(ArgumentMatchers.eq(mockExporter));
@@ -71,29 +81,38 @@ class ExportResultAsFileTest {
         verify(mockNotice0, times(1)).export(mockExporter);
         verify(mockNotice1, times(1)).export(mockExporter);
 
+        verify(mockResultRepo, times(3)).getAll();
+
         verify(mockExporter, times(1)).exportEnd();
-        verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo);
+        verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo, mockLogger);
     }
 
     @Test
     void resultRepoShouldBeExportedAsProtoFile() throws IOException {
-        final ValidationResultRepository.NoticeExporter mockExporter = mock(ValidationResultRepository.NoticeExporter.class);
+        final ValidationResultRepository.NoticeExporter mockExporter =
+                mock(ValidationResultRepository.NoticeExporter.class);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
         final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
 
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
-        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY)).thenReturn(mockExecParamRepo.OUTPUT_KEY);
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY))
+                .thenReturn(mockExecParamRepo.OUTPUT_KEY);
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(String.valueOf(true));
+        when(mockExecParamRepo.hasExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(true);
         when(mockResultRepo.getExporter(ArgumentMatchers.eq(true), ArgumentMatchers.anyString()))
                 .thenReturn(mockExporter);
 
-        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo);
+        Logger mockLogger = mock(Logger.class);
+        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockLogger);
 
-        underTest.execute(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY),
-                Boolean.parseBoolean(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)));
+        underTest.execute();
 
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Results are exported as proto"));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
         verify(mockNotice1, times(1)).export(ArgumentMatchers.eq(mockExporter));
 
@@ -112,8 +131,10 @@ class ExportResultAsFileTest {
 
         verify(mockNotice0, times(1)).export(mockExporter);
         verify(mockNotice1, times(1)).export(mockExporter);
+        verify(mockResultRepo, times(3)).getAll();
+        verify(mockExecParamRepo, times(1)).hasExecParamValue(mockExecParamRepo.PROTO_KEY);
 
         verify(mockExporter, times(1)).exportEnd();
-        verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo);
+        verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo, mockLogger);
     }
 }
