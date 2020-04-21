@@ -14,7 +14,7 @@ public class NoticeMemoryConsumptionTest {
     private static final Logger LOGGER = LogManager.getLogger();
 
     // used to provide a 15% safety margin to avoid instability due to the behavior of the garbage collector
-    private static final float SAFETY_BUFFER_FACTOR = 1.15f;
+    private static final float SAFETY_BUFFER_FACTOR = 1.10f;
 
     private void generateNotices(InMemoryValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
@@ -65,7 +65,7 @@ public class NoticeMemoryConsumptionTest {
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 8_000_000 * SAFETY_BUFFER_FACTOR);
+        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 9_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class NoticeMemoryConsumptionTest {
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 9_000_000 * SAFETY_BUFFER_FACTOR);
+        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 10_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -105,7 +105,7 @@ public class NoticeMemoryConsumptionTest {
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 10_000_000 * SAFETY_BUFFER_FACTOR);
+        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 11_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -125,7 +125,7 @@ public class NoticeMemoryConsumptionTest {
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 29_000_000 * SAFETY_BUFFER_FACTOR);
+        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 28_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -145,7 +145,7 @@ public class NoticeMemoryConsumptionTest {
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 232_000_000 * SAFETY_BUFFER_FACTOR);
+        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 231_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
@@ -165,6 +165,6 @@ public class NoticeMemoryConsumptionTest {
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 455_000_000 * SAFETY_BUFFER_FACTOR);
+        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 454_000_000 * SAFETY_BUFFER_FACTOR);
     }
 }
