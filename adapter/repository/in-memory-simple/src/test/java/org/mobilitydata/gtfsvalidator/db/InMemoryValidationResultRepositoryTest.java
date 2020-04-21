@@ -25,6 +25,8 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -43,63 +45,31 @@ import static org.mockito.Mockito.*;
 class InMemoryValidationResultRepositoryTest {
 
     private static final String TEST_FILE_NAME = "test.tst";
-
+    
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void addingNoticeShouldExtendNoticeList() {
-
-        /*WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
-        List<WarningNotice> warningList = new ArrayList<>();
-        ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
-        List<ErrorNotice> errorList = new ArrayList<>();
-        List<InfoNotice> infoList = new ArrayList<>();
-
-        ValidationResultRepository mockRepository = mock(InMemoryValidationResultRepository.class);
-        when(mockRepository.addNotice(any(WarningNotice.class))).thenAnswer(new Answer<WarningNotice>() {
-            public WarningNotice answer(InvocationOnMock invocation) {
-                WarningNotice warningNotice = invocation.getArgument(0);
-                warningList.add(warningNotice);
-                return warningNotice;
-            }
-        });
-        when(mockRepository.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<ErrorNotice>() {
-            public ErrorNotice answer(InvocationOnMock invocation) {
-                ErrorNotice errorNotice = invocation.getArgument(0);
-                errorList.add(errorNotice);
-                return errorNotice;
-            }
-        });
-        when(mockRepository.getAll()).thenAnswer(new Answer<Collection<Notice>>() {
-            public Collection<Notice> answer(InvocationOnMock invocation) {
-                return Stream.concat(
-                        Stream.concat(
-                            infoList.stream(),
-                            warningList.stream()),
-                        errorList.stream())
-                        .collect(Collectors.toUnmodifiableList());
-            }
-        });*/
 
         WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
 
         ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
 
-        ValidationResultRepository mockRepository = new InMemoryValidationResultRepository();
+        ValidationResultRepository underTest = new InMemoryValidationResultRepository();
 
-        mockRepository.addNotice(warningNotice);
-        assertEquals(1, mockRepository.getAll().size());
+        underTest.addNotice(warningNotice);
+        assertEquals(1, underTest.getAll().size());
 
-        Notice testedNotice = mockRepository.getAll().stream()
+        Notice testedNotice = underTest.getAll().stream()
                 .filter(notice -> notice.getId().equals(warningNotice.getId()))
                 .findAny()
                 .get();
 
         assertThat(testedNotice, instanceOf(NonStandardHeaderNotice.class));
 
-        mockRepository.addNotice(errorNotice);
-        assertEquals(2, mockRepository.getAll().size());
+        underTest.addNotice(errorNotice);
+        assertEquals(2, underTest.getAll().size());
 
-        testedNotice = mockRepository.getAll().stream()
+        testedNotice = underTest.getAll().stream()
                 .filter(notice -> notice.getId().equals(errorNotice.getId()))
                 .findAny()
                 .get();
