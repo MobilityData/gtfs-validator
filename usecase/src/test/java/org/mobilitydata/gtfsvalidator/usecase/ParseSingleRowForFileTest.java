@@ -44,21 +44,35 @@ import static org.mockito.Mockito.when;
 class ParseSingleRowForFileTest {
 
     @Mock
-    List<Notice> noticeList = new ArrayList<>();
+    private List<Notice> noticeList = new ArrayList<>();
     @InjectMocks
-    ValidationResultRepository mockResultRepo;
+    private ValidationResultRepository mockResultRepo;
 
     @Mock
-    EntityParser mockEntityParser = new EntityParser(Collections.emptyList());
+    private GtfsSpecRepository.RawEntityParser mockEntityParser = buildMockEntityParser();
     @InjectMocks
-    GtfsSpecRepository mockSpecRepo;
+    private GtfsSpecRepository mockSpecRepo;
+
+    private int parserCallsToValidateNumericTypesCount;
+    private int parserCallsToParseCount;
+    @Mock
+    private Collection<ErrorNotice> fakeValidationResult = Collections.emptyList();
+    @InjectMocks
+    private GtfsSpecRepository.RawEntityParser mockParser;
+
+    @Mock(name = "providerCurrentCount")
+    private int providerCurrentCount;
+    @Mock(name = "mockEntityList")
+    private List<Map<String, String>> mockEntityList;
+    @InjectMocks
+    private RawFileRepository.RawEntityProvider mockProvider;
 
     @Test
     void shouldValidateAndParseOneByOne() {
 
-        ValidationResultRepository mockResultRepo = mockResultRepository();
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
 
         ParseSingleRowForFile underTest = new ParseSingleRowForFile(
                 RawFileInfo.builder().filename("test.tst").build(),
@@ -70,20 +84,20 @@ class ParseSingleRowForFileTest {
         assertTrue(underTest.hasNext());
         underTest.execute();
         assertEquals(0, noticeList.size());
-        assertEquals(1, mockEntityParser.callToValidateNumericTypesCount);
-        assertEquals(1, mockEntityParser.callToParseCount);
+        assertEquals(1, parserCallsToValidateNumericTypesCount); //mockEntityParser.callToValidateNumericTypesCount
+        assertEquals(1, parserCallsToParseCount); //mockEntityParser.callToParseCount
 
         assertTrue(underTest.hasNext());
         underTest.execute();
         assertEquals(0, noticeList.size());
-        assertEquals(2, mockEntityParser.callToValidateNumericTypesCount);
-        assertEquals(2, mockEntityParser.callToParseCount);
+        assertEquals(2, parserCallsToValidateNumericTypesCount);
+        assertEquals(2, parserCallsToParseCount);
 
         assertTrue(underTest.hasNext());
         underTest.execute();
         assertEquals(0, noticeList.size());
-        assertEquals(3, mockEntityParser.callToValidateNumericTypesCount);
-        assertEquals(3, mockEntityParser.callToParseCount);
+        assertEquals(3, parserCallsToValidateNumericTypesCount);
+        assertEquals(3, parserCallsToParseCount);
 
         assertFalse(underTest.hasNext());
         assertNull(underTest.execute());
@@ -92,9 +106,9 @@ class ParseSingleRowForFileTest {
     @Test
     void shouldWriteNoticesToRepo() {
 
-        ValidationResultRepository mockResultRepo = mockResultRepository();
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
 
         ParseSingleRowForFile underTest = new ParseSingleRowForFile(
                 RawFileInfo.builder().filename("test_invalid.tst").build(),
@@ -114,9 +128,9 @@ class ParseSingleRowForFileTest {
     @Test
     void providerErrorShouldGenerateNotice() {
 
-        ValidationResultRepository mockResultRepo = mockResultRepository();
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
 
         ParseSingleRowForFile underTest = new ParseSingleRowForFile(
                 RawFileInfo.builder().filename("test_empty.tst").build(),
@@ -135,8 +149,8 @@ class ParseSingleRowForFileTest {
         assertEquals("An error occurred while trying to access raw data for file: test_empty.tst", notice.getDescription());
     }
 
-    private ValidationResultRepository mockResultRepository() {
-        ValidationResultRepository mockResultRepo =  mock(ValidationResultRepository.class);
+    private ValidationResultRepository buildMockResultRepository() {
+        mockResultRepo =  mock(ValidationResultRepository.class);
         when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<Notice>() {
             public ErrorNotice answer(InvocationOnMock invocation) {
                 ErrorNotice errorNotice = invocation.getArgument(0);
@@ -148,14 +162,14 @@ class ParseSingleRowForFileTest {
         return mockResultRepo;
     }
 
-    private GtfsSpecRepository mockSpecRepository() {
-        GtfsSpecRepository mockSpecRepo =  mock(GtfsSpecRepository.class);
+    private GtfsSpecRepository buildMockSpecRepository() {
+        mockSpecRepo =  mock(GtfsSpecRepository.class);
         when(mockSpecRepo.getParserForFile(any(RawFileInfo.class))).thenAnswer(new Answer<GtfsSpecRepository.RawEntityParser>() {
             public GtfsSpecRepository.RawEntityParser answer(InvocationOnMock invocation) {
                 RawFileInfo file = invocation.getArgument(0);
                 if (file.getFilename().contains("invalid")) {
                     ErrorNotice fakeNotice = new CannotConstructDataProviderNotice(file.getFilename());
-                    mockEntityParser = new EntityParser(List.of(fakeNotice, fakeNotice, fakeNotice));
+                    fakeValidationResult = List.of(fakeNotice, fakeNotice, fakeNotice);
                     return mockEntityParser;
                 }
                 return mockEntityParser;
@@ -165,7 +179,7 @@ class ParseSingleRowForFileTest {
         return mockSpecRepo;
     }
 
-    private RawFileRepository mockFileRepository() {
+    private RawFileRepository buildMockFileRepository() {
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class)))
@@ -177,90 +191,76 @@ class ParseSingleRowForFileTest {
                         }
 
                         if (file.getFilename().contains("invalid")) {
-                            return Optional.of(new EntityProvider(
-                                    List.of(
-                                            Map.of("header0_string", "header0_string",
-                                                    "header1_float", "header1_float",
-                                                    "header2_integer", "header2_integer"),
-                                            Map.of("header0_string", "invalid_string",
-                                                    "header1_float", "valid_float",
-                                                    "header2_integer", "invalid_integer"),
-                                            Map.of("header0_string", "valid", "header1_float", "invalid_float",
-                                                    "header2_integer", "valid_integer"),
-                                            Map.of("header0_string", "invalid", "header1_float", "invalid_float",
-                                                    "header2_integer", "invalid_integer")
-                                    )
-                            ));
+                            mockEntityList = List.of(
+                                    Map.of("header0_string", "header0_string",
+                                            "header1_float", "header1_float",
+                                            "header2_integer", "header2_integer"),
+                                    Map.of("header0_string", "invalid_string",
+                                            "header1_float", "valid_float",
+                                            "header2_integer", "invalid_integer"),
+                                    Map.of("header0_string", "valid", "header1_float", "invalid_float",
+                                            "header2_integer", "valid_integer"),
+                                    Map.of("header0_string", "invalid", "header1_float", "invalid_float",
+                                            "header2_integer", "invalid_integer")
+                                    );
+                            mockProvider = buildMockEntityProvider();
+                            return Optional.of(mockProvider);
                         }
 
-                        return Optional.of(new EntityProvider(
-                                List.of(
-                                        Map.of("header0_string", "header0_string", "header1_float", "header1_float",
-                                                "header2_integer", "header2_integer"),
-                                        Map.of("header0_string", "valid_string", "header1_float", "valid_float",
-                                                "header2_integer", "valid_integer"),
-                                        Map.of("header0_string", "valid", "header1_float", "valid_float",
-                                                "header2_integer", "valid_integer"),
-                                        Map.of("header0_string", "valid", "header1_float", "invalid_float",
-                                                "header2_integer", "valid_integer")
-                                )
-                        ));
+                        mockEntityList = List.of(
+                                Map.of("header0_string", "header0_string", "header1_float", "header1_float",
+                                        "header2_integer", "header2_integer"),
+                                Map.of("header0_string", "valid_string", "header1_float", "valid_float",
+                                        "header2_integer", "valid_integer"),
+                                Map.of("header0_string", "valid", "header1_float", "valid_float",
+                                        "header2_integer", "valid_integer"),
+                                Map.of("header0_string", "valid", "header1_float", "invalid_float",
+                                        "header2_integer", "valid_integer")
+                                );
+                        mockProvider = buildMockEntityProvider();
+                        return Optional.of(mockProvider);
                     }
                 });
 
         return mockFileRepo;
     }
 
-    private static class EntityParser implements GtfsSpecRepository.RawEntityParser {
-        public int callToValidateNumericTypesCount = 0;
-        public int callToParseCount = 0;
+    private GtfsSpecRepository.RawEntityParser buildMockEntityParser() {
+        parserCallsToValidateNumericTypesCount = 0;
+        parserCallsToParseCount = 0;
+        mockParser = mock(GtfsSpecRepository.RawEntityParser.class);
+        when(mockParser.validateNonStringTypes(any(RawEntity.class))).thenAnswer(new Answer<Collection<ErrorNotice>>() {
+            public Collection<ErrorNotice> answer(InvocationOnMock invocation) {
+                ++parserCallsToValidateNumericTypesCount;
+                return fakeValidationResult;
+            }
+        });
+        when(mockParser.parse(any(RawEntity.class))).thenAnswer(new Answer<ParsedEntity>() {
+            public ParsedEntity answer(InvocationOnMock invocation) {
+                ++parserCallsToParseCount;
+                return null;
+            }
+        });
 
-        Collection<ErrorNotice> fakeValidationResult;
-
-        public EntityParser(Collection<ErrorNotice> fakeValidationResult) {
-            this.fakeValidationResult = fakeValidationResult;
-        }
-
-        @Override
-        public Collection<ErrorNotice> validateNonStringTypes(RawEntity toValidate) {
-
-            ++callToValidateNumericTypesCount;
-
-            return fakeValidationResult;
-        }
-
-        @Override
-        public ParsedEntity parse(RawEntity toParse) {
-
-            ++callToParseCount;
-
-            return null;
-        }
+        return mockParser;
     }
 
-    private static class EntityProvider implements RawFileRepository.RawEntityProvider {
-        private int currentCount = 0;
-        private List<Map<String, String>> mockEntityList;
-
-        public EntityProvider(final List<Map<String, String>> mockEntityList) {
-            this.mockEntityList = mockEntityList;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return currentCount < mockEntityList.size() - 1;
-        }
-
-        @Override
-        public RawEntity getNext() {
-            ++currentCount;
-            return new RawEntity(mockEntityList.get(currentCount), currentCount + 1);
-        }
-
-        @Override
-        public int getHeaderCount() {
-            return mockEntityList.get(0).size();
-        }
+    private RawFileRepository.RawEntityProvider buildMockEntityProvider() {
+        providerCurrentCount = 0;
+        mockProvider = mock(RawFileRepository.RawEntityProvider.class);
+        when(mockProvider.hasNext()).thenAnswer(new Answer<Boolean>() {
+            public Boolean answer(InvocationOnMock invocation) {
+                return providerCurrentCount < mockEntityList.size() - 1;
+            }
+        });
+        when(mockProvider.getNext()).thenAnswer(new Answer<RawEntity>() {
+            public RawEntity answer(InvocationOnMock invocation) {
+                ++providerCurrentCount;
+                return new RawEntity(mockEntityList.get(providerCurrentCount), providerCurrentCount + 1);
+            }
+        });
+        when(mockProvider.getHeaderCount()).thenReturn(mockEntityList.get(0).size());
+        return mockProvider;
     }
-
+    
 }

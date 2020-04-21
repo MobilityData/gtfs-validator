@@ -44,11 +44,18 @@ class ValidateAllRowLengthForFileTest {
     @InjectMocks
     ValidationResultRepository mockResultRepo;
 
+    @Mock(name = "providerCurrentCount")
+    private int providerCurrentCount;
+    @Mock(name = "mockEntityList")
+    private List<Map<String, String>> mockEntityList;
+    @InjectMocks
+    private RawFileRepository.RawEntityProvider mockProvider;
+
     @Test
     void expectedLengthForAllShouldNotGenerateNotice() {
 
-        ValidationResultRepository mockResultRepo = mockResultRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
 
         ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
                 RawFileInfo.builder()
@@ -65,8 +72,8 @@ class ValidateAllRowLengthForFileTest {
     @Test
     void invalidRowsShouldGenerateError() {
 
-        ValidationResultRepository mockResultRepo = mockResultRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
 
         ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
                 RawFileInfo.builder()
@@ -97,8 +104,8 @@ class ValidateAllRowLengthForFileTest {
     @Test
     void dataProviderConstructionIssueShouldGenerateError() {
 
-        ValidationResultRepository mockResultRepo = mockResultRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
 
         ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
                 RawFileInfo.builder()
@@ -119,8 +126,8 @@ class ValidateAllRowLengthForFileTest {
         assertEquals("An error occurred while trying to access raw data for file: test_empty.tst", notice.getDescription());
     }
 
-    private ValidationResultRepository mockResultRepository() {
-        ValidationResultRepository mockResultRepo =  mock(ValidationResultRepository.class);
+    private ValidationResultRepository buildMockResultRepository() {
+        mockResultRepo =  mock(ValidationResultRepository.class);
         when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<Notice>() {
             public ErrorNotice answer(InvocationOnMock invocation) {
                 ErrorNotice errorNotice = invocation.getArgument(0);
@@ -132,7 +139,7 @@ class ValidateAllRowLengthForFileTest {
         return mockResultRepo;
     }
 
-    private RawFileRepository mockFileRepository() {
+    private RawFileRepository buildMockFileRepository() {
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class)))
@@ -144,56 +151,49 @@ class ValidateAllRowLengthForFileTest {
                         }
 
                         if (file.getFilename().contains("invalid")) {
-                            return Optional.of(new EntityProvider(
-                                    List.of(
-                                            Map.of("h0", "header0_name", "h1", "header1_name",
-                                                    "h2", "header2_name"),
-                                            Map.of("h0", "v0", "h1", "v1"),
-                                            Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
-                                            Map.of("h0", "v0", "h1", "v1", "h2", "v2", "h3", "v3")
-                                    )
-                            ));
+                            mockEntityList = List.of(
+                                    Map.of("h0", "header0_name", "h1", "header1_name",
+                                            "h2", "header2_name"),
+                                    Map.of("h0", "v0", "h1", "v1"),
+                                    Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
+                                    Map.of("h0", "v0", "h1", "v1", "h2", "v2", "h3", "v3")
+                                    );
+                            mockProvider = buildMockEntityProvider();
+                            return Optional.of(mockProvider);
                         }
 
-                        return Optional.of(new EntityProvider(
-                                List.of(
-                                        Map.of("h0", "header0_name", "h1", "header1_name",
-                                                "h2", "header2_name"),
-                                        Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
-                                        Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
-                                        Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
-                                        Map.of("h0", "v0", "h1", "v1", "h2", "v2")
-                                )
-                        ));
+                        mockEntityList = List.of(
+                                Map.of("h0", "header0_name", "h1", "header1_name",
+                                        "h2", "header2_name"),
+                                Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
+                                Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
+                                Map.of("h0", "v0", "h1", "v1", "h2", "v2"),
+                                Map.of("h0", "v0", "h1", "v1", "h2", "v2")
+                                );
+                        mockProvider = buildMockEntityProvider();
+                        return Optional.of(mockProvider);
                     }
                 });
 
         return mockFileRepo;
     }
 
-    private static class EntityProvider implements RawFileRepository.RawEntityProvider {
-        private int currentCount = 0;
-        private List<Map<String, String>> entityList;
-
-        public EntityProvider(final List<Map<String, String>> mockEntityList) {
-            this.entityList = mockEntityList;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return currentCount < entityList.size() - 1;
-        }
-
-        @Override
-        public RawEntity getNext() {
-            ++currentCount;
-            return new RawEntity(entityList.get(currentCount), currentCount + 1);
-        }
-
-        @Override
-        public int getHeaderCount() {
-            return entityList.get(0).size();
-        }
+    private RawFileRepository.RawEntityProvider buildMockEntityProvider() {
+        providerCurrentCount = 0;
+        mockProvider = mock(RawFileRepository.RawEntityProvider.class);
+        when(mockProvider.hasNext()).thenAnswer(new Answer<Boolean>() {
+            public Boolean answer(InvocationOnMock invocation) {
+                return providerCurrentCount < mockEntityList.size() - 1;
+            }
+        });
+        when(mockProvider.getNext()).thenAnswer(new Answer<RawEntity>() {
+            public RawEntity answer(InvocationOnMock invocation) {
+                ++providerCurrentCount;
+                return new RawEntity(mockEntityList.get(providerCurrentCount), providerCurrentCount + 1);
+            }
+        });
+        when(mockProvider.getHeaderCount()).thenReturn(mockEntityList.get(0).size());
+        return mockProvider;
     }
 
 }

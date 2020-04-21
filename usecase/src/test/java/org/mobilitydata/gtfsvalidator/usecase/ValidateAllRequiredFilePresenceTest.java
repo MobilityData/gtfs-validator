@@ -63,9 +63,9 @@ class ValidateAllRequiredFilePresenceTest {
         reqFileRepo = 10;
         optFileRepo = 10;
 
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
-        ValidationResultRepository mockResultRepo = mockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
 
         ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
                 mockSpecRepo,
@@ -87,9 +87,9 @@ class ValidateAllRequiredFilePresenceTest {
         reqFileRepo = 10;
         optFileRepo = 10;
 
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
-        ValidationResultRepository mockResultRepo = mockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
 
         ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
                 mockSpecRepo,
@@ -133,8 +133,8 @@ class ValidateAllRequiredFilePresenceTest {
         assertEquals("req14.req", notice.getFilename());
     }
 
-    private GtfsSpecRepository mockSpecRepository() {
-        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+    private GtfsSpecRepository buildMockSpecRepository() {
+        mockSpecRepo = mock(GtfsSpecRepository.class);
         when(mockSpecRepo.getRequiredFilenameList()).thenAnswer(new Answer<List<String>>() {
             public List<String> answer(InvocationOnMock invocation) {
                 List<String> toReturn = new ArrayList<>(reqSpecRepo);
@@ -150,8 +150,8 @@ class ValidateAllRequiredFilePresenceTest {
         return mockSpecRepo;
     }
 
-    private RawFileRepository mockFileRepository() {
-        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+    private RawFileRepository buildMockFileRepository() {
+        mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
         when(mockFileRepo.getFilenameAll()).thenAnswer(new Answer<Set<String>>() {
             public Set<String> answer(InvocationOnMock invocation) {
@@ -173,8 +173,8 @@ class ValidateAllRequiredFilePresenceTest {
         return mockFileRepo;
     }
 
-    private ValidationResultRepository mockResultRepository() {
-        ValidationResultRepository mockResultRepo =  mock(ValidationResultRepository.class);
+    private ValidationResultRepository buildMockResultRepository() {
+        mockResultRepo =  mock(ValidationResultRepository.class);
         when(mockResultRepo.addNotice(any(InfoNotice.class))).thenAnswer(new Answer<Notice>() {
             public InfoNotice answer(InvocationOnMock invocation) {
                 InfoNotice infoNotice = invocation.getArgument(0);
