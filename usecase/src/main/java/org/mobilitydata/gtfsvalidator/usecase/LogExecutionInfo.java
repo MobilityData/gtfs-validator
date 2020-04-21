@@ -46,9 +46,9 @@ public class LogExecutionInfo {
                     execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY));
         }
 
-        if (!execParamRepo.hasExecParamValue(execParamRepo.INPUT_KEY)) {
+        if (!execParamRepo.hasExecParamValue(execParamRepo.EXTRACT_KEY)) {
             logger.info("--input not provided. Will extract zip content in: " + execParamRepo
-                    .getExecParamValue(ExecParamRepository.INPUT_KEY));
+                    .getExecParamValue(ExecParamRepository.EXTRACT_KEY));
         }
 
         if (!execParamRepo.hasExecParamValue(execParamRepo.OUTPUT_KEY)) {

@@ -4,7 +4,7 @@
     "paramValue": false
   },
   {
-    "paramKey": "input",
+    "paramKey": "extract",
     "paramValue": "input"
   },
   {
@@ -20,7 +20,7 @@
     "paramValue": null
   },
   {
-    "paramKey": "zip",
+    "paramKey": "inputzip",
     "paramValue": null
   }
 ]

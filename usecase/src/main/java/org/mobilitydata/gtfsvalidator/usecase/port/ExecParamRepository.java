@@ -29,11 +29,11 @@ import java.util.Map;
  */
 public interface ExecParamRepository {
     String HELP_KEY = "help";
-    String INPUT_KEY = "input";
+    String EXTRACT_KEY = "extract";
     String OUTPUT_KEY = "output";
     String PROTO_KEY = "proto";
     String URL_KEY = "url";
-    String ZIP_KEY = "zip";
+    String ZIP_KEY = "inputzip";
 
     ExecParam getExecParamByKey(final String optionName);
 

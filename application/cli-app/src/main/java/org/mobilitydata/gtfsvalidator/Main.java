@@ -47,7 +47,7 @@ public class Main {
                 config.downloadArchiveFromNetwork().execute();
 
                 config.unzipInputArchive(
-                        config.cleanOrCreatePath().execute(ExecParamRepository.INPUT_KEY))
+                        config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
                         .execute();
 
                 final List<String> filenameList = config.validateAllRequiredFilePresence().execute();

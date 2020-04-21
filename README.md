@@ -18,7 +18,7 @@ This command-line tool written in Java that performs the following steps:
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -i input -o output
+java -jar gtfs-validator-v1.1.0.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -e input -o output
 ```
 
 ...which will:
@@ -47,7 +47,7 @@ With `execution-parameters.json` file located in the working directory:
 ```
 [
   {
-    "paramKey": "input",
+    "paramKey": "extract",
     "paramValue": "input"
   },
   {
@@ -63,14 +63,11 @@ With `execution-parameters.json` file located in the working directory:
     "paramValue": "https://transitfeeds.com/p/mbta/64/latest/download"
   },
   {
-    "paramKey": "zip",
+    "paramKey": "inputzip",
     "paramValue": input.zip
   }
 ]
 ```
-
-
-
 
 Note that you'll need to change the above JAR file name to whatever [release version](https://github.com/MobilityData/gtfs-validator/releases) you download.
 

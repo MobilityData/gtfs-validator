@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("UnstableApiUsage")
 class InMemoryExecParamRepositoryTest {
     private static final String HELP_KEY = "help";
-    private static final String INPUT_KEY = "input";
+    private static final String INPUT_KEY = "extract";
     private static final String OUTPUT_KEY = "output";
     private static final String PROTO_KEY = "proto";
     private static final String URL_KEY = "url";
@@ -63,7 +63,7 @@ class InMemoryExecParamRepositoryTest {
     @Test
     void addExecParamWithHandledKeyShouldAddExecParamToRepoAndReturnSameEntity() throws IOException {
         final ExecParam mockExecParam = spy(ExecParam.class);
-        mockExecParam.setParamKey("input");
+        mockExecParam.setParamKey(INPUT_KEY);
 
         final Logger mockLogger = mock(Logger.class);
         final String defaultParameterJson = Resources.toString(

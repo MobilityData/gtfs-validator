@@ -1,10 +1,9 @@
 [
   {
-    "paramKey": "help",
-    "value": null
+    "paramKey": "help"
   },
   {
-    "paramKey": "input",
+    "paramKey": "extract",
     "paramValue": "input"
   },
   {

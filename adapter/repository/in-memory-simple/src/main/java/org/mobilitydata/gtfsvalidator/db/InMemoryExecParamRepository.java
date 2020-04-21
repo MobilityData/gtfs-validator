@@ -172,7 +172,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 }
             }
 
-            case INPUT_KEY: {
+            case EXTRACT_KEY: {
                 if (hasExecParam(key)) {
                     final String paramValue = getExecParamByKey(key).getParamValue();
                     return hasExecParamValue(key)
@@ -245,9 +245,9 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     public Options getOptions() {
         Options options = new Options();
         options.addOption("u", "url", true, "URL to GTFS zipped archive");
-        options.addOption("z", "zip", true, "if --url is used, where to place " +
+        options.addOption("z", "inputzip", true, "if --url is used, where to place " +
                 "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
-        options.addOption("i", "input", true, "Relative path where to extract" +
+        options.addOption("e", "extract", true, "Relative path where to extract" +
                 " the zip content");
         options.addOption("o", "output", true, "Relative path where to place" +
                 " output files");
