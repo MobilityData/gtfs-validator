@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.config;
 
+import com.google.common.io.Resources;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.InMemoryExecParamRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
@@ -29,7 +31,10 @@ import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -42,10 +47,18 @@ public class DefaultConfig {
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
 
-    public DefaultConfig(Logger logger) throws IOException {
+    @SuppressWarnings("UnstableApiUsage")
+    public DefaultConfig(final Logger logger) {
         this.logger = logger;
-        execParamRepo = new InMemoryExecParamRepository("default-execution-parameters.json",
-                this.logger);
+        String defaultParameterJsonString;
+        try {
+            defaultParameterJsonString = Resources.toString(
+                    Resources.getResource("default-execution-parameters.json"),
+                    StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            defaultParameterJsonString = "[]";
+        }
+        execParamRepo = new InMemoryExecParamRepository(defaultParameterJsonString, this.logger);
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
@@ -53,7 +66,7 @@ public class DefaultConfig {
     }
 
     public CleanOrCreatePath cleanOrCreatePath() {
-        return new CleanOrCreatePath(resultRepo);
+        return new CleanOrCreatePath(resultRepo, execParamRepo);
     }
 
     public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) {
@@ -64,7 +77,7 @@ public class DefaultConfig {
         return new ValidateAllRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
     }
 
-    public ValidateHeadersForFile validateHeadersForFile(String filename) {
+    public ValidateHeadersForFile validateHeadersForFile(final String filename) {
         return new ValidateHeadersForFile(
                 specRepo,
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
@@ -73,7 +86,7 @@ public class DefaultConfig {
         );
     }
 
-    public ValidateAllRowLengthForFile validateAllRowLengthForFile(String filename) {
+    public ValidateAllRowLengthForFile validateAllRowLengthForFile(final String filename) {
         return new ValidateAllRowLengthForFile(
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
                 rawFileRepo,
@@ -81,7 +94,7 @@ public class DefaultConfig {
         );
     }
 
-    public ParseSingleRowForFile parseSingleRowForFile(String filename) {
+    public ParseSingleRowForFile parseSingleRowForFile(final String filename) {
         return new ParseSingleRowForFile(
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
                 rawFileRepo,
@@ -105,13 +118,9 @@ public class DefaultConfig {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
 
-    public ParseAllExecParam parseAllExecutionParameter(final boolean fromConfigFile, final String pathToConfigFile)
-            throws IllegalArgumentException {
-        return new ParseAllExecParam(fromConfigFile, pathToConfigFile, execParamRepo);
-    }
-
-    public ExecParamRepository getExecParamRepo() {
-        return execParamRepo;
+    public ParseAllExecParam parseAllExecutionParameter() throws IOException {
+        return new ParseAllExecParam(Files.readString(Paths.get("execution-parameters.json")), execParamRepo,
+                logger);
     }
 
     public LogExecutionInfo logExecutionInfo() {
@@ -119,6 +128,6 @@ public class DefaultConfig {
     }
 
     public PrintHelp printHelp() {
-        return new PrintHelp(execParamRepo);
+        return new PrintHelp(execParamRepo, new HelpFormatter());
     }
 }

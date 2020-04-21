@@ -55,7 +55,7 @@ class ExportResultAsFileTest {
 
         underTest.execute();
 
-        verify(mockExecParamRepo, times(1)).hasExecParamValue(mockExecParamRepo.PROTO_KEY);
+        verify(mockExecParamRepo, times(2)).getExecParamValue(mockExecParamRepo.PROTO_KEY);
 
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Results are exported as JSON by default"));
@@ -68,7 +68,7 @@ class ExportResultAsFileTest {
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.OUTPUT_KEY));
 
-        verify(mockExecParamRepo, times(1))
+        verify(mockExecParamRepo, times(2))
                 .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.PROTO_KEY));
 
         final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
@@ -110,7 +110,7 @@ class ExportResultAsFileTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("Results are exported as proto"));
+                .info(ArgumentMatchers.eq("-p provided, exporting results as proto"));
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
@@ -119,7 +119,7 @@ class ExportResultAsFileTest {
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.OUTPUT_KEY));
 
-        verify(mockExecParamRepo, times(1))
+        verify(mockExecParamRepo, times(2))
                 .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.PROTO_KEY));
 
         InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
@@ -132,7 +132,7 @@ class ExportResultAsFileTest {
         verify(mockNotice0, times(1)).export(mockExporter);
         verify(mockNotice1, times(1)).export(mockExporter);
         verify(mockResultRepo, times(3)).getAll();
-        verify(mockExecParamRepo, times(1)).hasExecParamValue(mockExecParamRepo.PROTO_KEY);
+        verify(mockExecParamRepo, times(2)).getExecParamValue(mockExecParamRepo.PROTO_KEY);
 
         verify(mockExporter, times(1)).exportEnd();
         verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo, mockLogger);

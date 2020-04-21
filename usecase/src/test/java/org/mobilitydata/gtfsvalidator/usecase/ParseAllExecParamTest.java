@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
@@ -17,14 +18,13 @@ class ParseAllExecParamTest {
     @Test
     public void allExecParamFromCommandLineShouldBeParsedAndAddedToRepoAsExecParamEntities()
             throws IOException {
-        final boolean fromConfigFile = false;
-        final String pathToExecParamFile = null;
+        final String jsonParameterString = null;
         final String[] mockString = new String[1];
         final ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
+        final Logger mockLogger = mock(Logger.class);
 
-        final ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
-                pathToExecParamFile,
-                mockExecParamRepository);
+        final ParseAllExecParam underTest = new ParseAllExecParam(jsonParameterString, mockExecParamRepository,
+                mockLogger);
 
         final ExecParamRepository.ExecParamParser mockParser =
                 spy(ExecParamRepository.ExecParamParser.class);
@@ -39,8 +39,8 @@ class ParseAllExecParamTest {
         mockExecutionParameterMap.put(mockHelpExecParam.getParamKey(), mockHelpExecParam);
         mockExecutionParameterMap.put(mockInputExecParam.getParamKey(), mockInputExecParam);
 
-        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(false), ArgumentMatchers.eq(null),
-                ArgumentMatchers.eq(mockString)))
+        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(null),
+                ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger)))
                 .thenReturn(mockParser);
         when(mockParser.parse()).thenReturn(mockExecutionParameterMap);
 
@@ -49,8 +49,8 @@ class ParseAllExecParamTest {
         final InOrder inOrder = inOrder(mockExecParamRepository, mockParser);
 
         inOrder.verify(mockExecParamRepository, times(1))
-                .getParser(ArgumentMatchers.eq(false), ArgumentMatchers.eq(null),
-                        ArgumentMatchers.eq(mockString));
+                .getParser(ArgumentMatchers.eq(null),
+                        ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger));
         inOrder.verify(mockParser, times(1)).parse();
         inOrder.verify(mockExecParamRepository, times(2))
                 .addExecParam(ArgumentMatchers.isA(ExecParam.class));
@@ -59,14 +59,14 @@ class ParseAllExecParamTest {
     @Test
     public void allExecParamFromConfigFileShouldBeParsedAndAddedToRepoAsExecParamEntities()
             throws IOException {
-        final boolean fromConfigFile = true;
-        final String pathToExecParamFile = "test-execution-parameters.json";
+        final String testExecParam = "[{ \"key\": \"help\" },{ \"key\": \"input\", \"paramValue\": \"input\" }," +
+                "{ \"key\": \"output\", \"paramValue\": \"output\" }]";
         final String[] mockString = new String[1];
         final ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
+        final Logger mockLogger = mock(Logger.class);
 
-        final ParseAllExecParam underTest = new ParseAllExecParam(fromConfigFile,
-                pathToExecParamFile,
-                mockExecParamRepository);
+        final ParseAllExecParam underTest = new ParseAllExecParam(testExecParam, mockExecParamRepository,
+                mockLogger);
 
         final ExecParamRepository.ExecParamParser mockParser =
                 spy(ExecParamRepository.ExecParamParser.class);
@@ -81,8 +81,8 @@ class ParseAllExecParamTest {
         mockExecutionParameterMap.put(mockHelpExecParam.getParamKey(), mockHelpExecParam);
         mockExecutionParameterMap.put(mockInputExecParam.getParamKey(), mockInputExecParam);
 
-        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(true), ArgumentMatchers.eq(pathToExecParamFile),
-                ArgumentMatchers.eq(mockString)))
+        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(testExecParam),
+                ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger)))
                 .thenReturn(mockParser);
         when(mockParser.parse()).thenReturn(mockExecutionParameterMap);
 
@@ -91,8 +91,8 @@ class ParseAllExecParamTest {
         final InOrder inOrder = inOrder(mockExecParamRepository, mockParser);
 
         inOrder.verify(mockExecParamRepository, times(1))
-                .getParser(ArgumentMatchers.eq(true), ArgumentMatchers.eq(pathToExecParamFile),
-                        ArgumentMatchers.eq(mockString));
+                .getParser(ArgumentMatchers.eq(testExecParam),
+                        ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger));
         inOrder.verify(mockParser, times(1)).parse();
         inOrder.verify(mockExecParamRepository, times(2))
                 .addExecParam(ArgumentMatchers.isA(ExecParam.class));

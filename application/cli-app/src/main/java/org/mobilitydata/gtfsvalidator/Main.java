@@ -30,52 +30,52 @@ public class Main {
 
     public static void main(String[] args) {
 
-        long startTime = System.nanoTime();
+        final long startTime = System.nanoTime();
         final Logger logger = LogManager.getLogger();
+        final DefaultConfig config = new DefaultConfig(logger);
 
         try {
-            final DefaultConfig config = new DefaultConfig(logger);
-
-            final boolean fromConfigFile = args.length == 0;
-            final String pathToExecParamFile = "execution-parameters.json";
-            config.parseAllExecutionParameter(fromConfigFile, pathToExecParamFile).execute(args);
-
-            ExecParamRepository execParamRepo = config.getExecParamRepo();
+            config.parseAllExecutionParameter().execute(args);
 
             // use case will inspect parameters and decide if help menu should be displayed or not
-            config.printHelp().execute();
+            if (!config.printHelp().execute()) {
 
-            // use case will inspect parameters and display relevant information about the validation execution process
-            config.logExecutionInfo().execute();
+                // use case will inspect parameters and display relevant information about the validation execution process
+                config.logExecutionInfo().execute();
 
-            // use case will inspect parameters and decide if GTFS dataset should be downloaded or not
-            config.downloadArchiveFromNetwork().execute();
+                // use case will inspect parameters and decide if GTFS dataset should be downloaded or not
+                config.downloadArchiveFromNetwork().execute();
 
-            config.unzipInputArchive(
-                    config.cleanOrCreatePath().execute(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)))
-                    .execute();
+                config.unzipInputArchive(
+                        config.cleanOrCreatePath().execute(ExecParamRepository.INPUT_KEY))
+                        .execute();
 
-            final List<String> filenameList = config.validateAllRequiredFilePresence().execute();
+                final List<String> filenameList = config.validateAllRequiredFilePresence().execute();
 
-            filenameList.addAll(config.validateAllOptionalFileName().execute());
+                filenameList.addAll(config.validateAllOptionalFileName().execute());
 
-            // base validation
-            filenameList.forEach(filename -> {
-                config.validateHeadersForFile(filename).execute();
-                config.validateAllRowLengthForFile(filename).execute();
+                // base validation
+                filenameList.forEach(filename -> {
+                    config.validateHeadersForFile(filename).execute();
+                    config.validateAllRowLengthForFile(filename).execute();
 
-                ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
-                while (parseSingleRowForFile.hasNext()) {
-                    config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
-                }
-            });
+                    ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
+                    while (parseSingleRowForFile.hasNext()) {
+                        config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
+                    }
+                });
 
-            config.cleanOrCreatePath().execute(execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY));
+                config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
-            config.exportResultAsFile().execute();
+                config.exportResultAsFile().execute();
+            }
 
         } catch (IOException e) {
-            logger.error("An exception occurred: " + e);
+            if (e.getMessage().contains("execution-parameters.json")) {
+                config.printHelp().execute();
+            } else {
+                logger.error("An exception occurred: " + e);
+            }
         }
         logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
     }

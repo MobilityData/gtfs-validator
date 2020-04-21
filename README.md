@@ -32,6 +32,46 @@ For a list of all available commands, use `--help`:
 java -jar gtfs-validator-v1.1.0.jar --help
 ```
 
+Execution parameters are configurable through command-line or via a configuration file `execution-parameters.json`. 
+By default, if no command-line is provided the validation process will look for execution parameters in user configurable configuration file `execution-parameters.json`.
+In the case said file could not be found or is incomplete, default values will be used.
+
+As an example, the sample usage equivalent with configuration file 
+
+``` 
+java -jar gtfs-validator-v1.1.0.jar
+```
+
+With `execution-parameters.json` file located in the working directory:
+ 
+```
+[
+  {
+    "paramKey": "input",
+    "paramValue": "input"
+  },
+  {
+    "paramKey": "output",
+    "paramValue": "output"
+  },
+  {
+    "paramKey": "proto",
+    "paramValue": false
+  },
+  {
+    "paramKey": "url",
+    "paramValue": "https://transitfeeds.com/p/mbta/64/latest/download"
+  },
+  {
+    "paramKey": "zip",
+    "paramValue": input.zip
+  }
+]
+```
+
+
+
+
 Note that you'll need to change the above JAR file name to whatever [release version](https://github.com/MobilityData/gtfs-validator/releases) you download.
 
 # Architecture

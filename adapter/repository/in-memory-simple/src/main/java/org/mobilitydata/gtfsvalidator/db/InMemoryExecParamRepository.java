@@ -47,9 +47,9 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> defaultValueCollection;
     private final Logger logger;
 
-    public InMemoryExecParamRepository(String pathToExecParamFile, Logger logger) throws IOException {
-        this.defaultValueCollection = new JsonExecParamParser(pathToExecParamFile,
-                new ObjectMapper().readerFor(ExecParam.class)).parse();
+    public InMemoryExecParamRepository(final String defaultParameterJsonString, final Logger logger) {
+        this.defaultValueCollection = new JsonExecParamParser(defaultParameterJsonString,
+                new ObjectMapper().readerFor(ExecParam.class), logger).parse();
         this.logger = logger;
     }
 
@@ -126,18 +126,22 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * either returns {@code ApacheExecParamParser} if the boolean value is set to false, or returns
      * {@code JsonExecParamParser} if the boolean value is set to true.
      *
-     * @param fromConfigFile      the boolean to decide on the type of parser to return
-     * @param pathToExecParamFile the path to the configuration .json file to parse the execution parameters from
-     * @param args                the argument line to parse {@link ExecParam} from when {@param fromConfigFile} is false
+     * @param parameterJsonString the configuration .json file content to extract the execution parameters from.
+     *                            If this parameter is null then, execution parameters are extracted from {@param args}.
+     * @param args                the argument line to parse {@link ExecParam} when {@param parameterJsonString} is null
      * @return {@code ApacheExecParamParser} if the boolean passed as parameter is set to false,
      * or {@code JsonExecParamParser} if this boolean value is set to true.
      */
     @Override
-    public ExecParamParser getParser(final boolean fromConfigFile, final String pathToExecParamFile, final String[] args) {
-        if (!fromConfigFile) {
+    public ExecParamParser getParser(final String parameterJsonString,
+                                     final String[] args,
+                                     final Logger logger) {
+        if (args.length != 0) {
+            logger.info("Retrieving execution parameters from command-line");
             return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
         } else {
-            return new JsonExecParamParser(pathToExecParamFile, new ObjectMapper().readerFor(ExecParam.class));
+            logger.info("Retrieving execution parameters from execution-parameters.json file");
+            return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
         }
     }
 
@@ -154,7 +158,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * @throws IllegalArgumentException if the key passed as parameter is not handled by the repository.
      */
     @Override
-    public String getExecParamValue(final String key) throws IllegalArgumentException, IOException {
+    public String getExecParamValue(final String key) throws IllegalArgumentException {
         final String defaultValue = defaultValueCollection.get(key).getParamValue();
 
         switch (key) {
@@ -162,8 +166,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             case HELP_KEY:
             case PROTO_KEY: {
                 if (hasExecParam(key)) {
-                    final String paramValue = getExecParamByKey(key).getParamValue();
-                    return hasExecParamValue(key) ? paramValue : defaultValue;
+                    return hasExecParamValue(key) ? String.valueOf(true) : defaultValue;
                 } else {
                     return defaultValue;
                 }
@@ -203,10 +206,15 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(ZIP_KEY)) {
                     logger.info("--url and relative path to zip file(--zip option) not provided. Trying to " +
                             "find zip in: " + zipInputPath);
-                    List<String> zipList = Files.walk(Paths.get(zipInputPath))
-                            .map(Path::toString)
-                            .filter(f -> f.endsWith(".zip"))
-                            .collect(Collectors.toUnmodifiableList());
+                    List<String> zipList;
+                    try {
+                        zipList = Files.walk(Paths.get(zipInputPath))
+                                .map(Path::toString)
+                                .filter(f -> f.endsWith(".zip"))
+                                .collect(Collectors.toUnmodifiableList());
+                    } catch (IOException e) {
+                        zipList = Collections.emptyList();
+                    }
 
                     if (zipList.isEmpty()) {
                         logger.error("no zip file found - exiting");
@@ -248,5 +256,15 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 " proto");
 
         return options;
+    }
+
+    /**
+     * This method returns true if the repository is empty, else false
+     *
+     * @return true if the repository is empty, else false
+     */
+    @Override
+    public boolean isEmpty() {
+        return execParamCollection.isEmpty();
     }
 }

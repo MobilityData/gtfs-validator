@@ -57,7 +57,7 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         availableOptions.addOption("o", "output", true, "Relative path where to place" +
                 " output files");
         availableOptions.addOption("h", "help", false, "Print this message");
-        availableOptions.addOption("p", "proto", true, "Export validation results as" +
+        availableOptions.addOption("p", "proto", false, "Export validation results as" +
                 " proto");
     }
 

@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.apache.commons.cli.Options;
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 
 import java.io.IOException;
@@ -40,15 +41,17 @@ public interface ExecParamRepository {
 
     ExecParam addExecParam(final ExecParam newExecParam) throws IllegalArgumentException;
 
-    boolean hasExecParam(String key);
+    boolean hasExecParam(final String key);
 
-    boolean hasExecParamValue(String key);
+    boolean hasExecParamValue(final String key);
 
-    ExecParamParser getParser(boolean fromConfigFile, String pathToConfigFile, String[] args);
+    ExecParamParser getParser(final String parameterJsonString, final String[] args, final Logger logger);
 
-    String getExecParamValue(String key) throws IllegalArgumentException, IOException;
+    String getExecParamValue(final String key) throws IllegalArgumentException;
 
     Options getOptions();
+
+    boolean isEmpty();
 
     interface ExecParamParser {
 

@@ -45,9 +45,9 @@ class ApacheExecParamParserTest {
 
         final Map<String, ExecParam> toCheck = underTest.parse();
 
-        verify(mockOptions, times(5))
+        verify(mockOptions, times(4))
                 .addOption(anyString(), anyString(), ArgumentMatchers.eq(true), anyString());
-        verify(mockOptions, times(1))
+        verify(mockOptions, times(2))
                 .addOption(anyString(), anyString(), ArgumentMatchers.eq(false), anyString());
 
         verify(mockCommandLineParser, times(1)).parse(mockOptions, mockArguments);

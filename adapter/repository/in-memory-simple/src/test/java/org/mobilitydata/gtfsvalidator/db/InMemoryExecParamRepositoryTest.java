@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.db;
 
+import com.google.common.io.Resources;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
@@ -10,27 +11,30 @@ import org.mockito.InOrder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("UnstableApiUsage")
 class InMemoryExecParamRepositoryTest {
     private static final String HELP_KEY = "help";
     private static final String INPUT_KEY = "input";
     private static final String OUTPUT_KEY = "output";
     private static final String PROTO_KEY = "proto";
     private static final String URL_KEY = "url";
-    private static final String PATH_TO_DEFAULT_CONFIG_FILE = "test-default-execution-parameters.json";
 
     @Test
     void addExecParamWithNullKeyShouldThrowException() throws IOException {
         final ExecParam mockExecParam = mock(ExecParam.class);
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.addExecParam(mockExecParam));
 
@@ -45,7 +49,10 @@ class InMemoryExecParamRepositoryTest {
 
         final Logger mockLogger = mock(Logger.class);
 
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.addExecParam(mockExecParam));
 
@@ -59,8 +66,10 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam.setParamKey("input");
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         final ExecParam toCheck = underTest.addExecParam(mockExecParam);
 
@@ -85,8 +94,10 @@ class InMemoryExecParamRepositoryTest {
         doReturn(OUTPUT_KEY).when(mockExecParam1).getParamKey();
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -106,8 +117,10 @@ class InMemoryExecParamRepositoryTest {
         doReturn(OUTPUT_KEY).when(mockExecParam1).getParamKey();
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -131,8 +144,10 @@ class InMemoryExecParamRepositoryTest {
         doReturn(OUTPUT_KEY).when(mockExecParam1).getParamKey();
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -151,8 +166,10 @@ class InMemoryExecParamRepositoryTest {
         doReturn(OUTPUT_KEY).when(mockExecParam1).getParamKey();
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -166,24 +183,28 @@ class InMemoryExecParamRepositoryTest {
         final String[] mockString = new String[1];
 
         final Logger mockLogger = mock(Logger.class);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
-
-        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(false, null,
-                mockString);
+        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(null,
+                mockString, mockLogger);
         assertTrue(toCheck instanceof ApacheExecParamParser);
     }
 
     @Test
     void getParserShouldReturnJsonExecParamParser() throws IOException {
-        final String[] mockString = new String[1];
+        final String[] mockString = new String[0];
+        final String mockExecParam = "";
 
         final Logger mockLogger = mock(Logger.class);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
-
-        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(true, null,
-                mockString);
+        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockExecParam, mockString, mockLogger);
         assertTrue(toCheck instanceof JsonExecParamParser);
     }
 
@@ -202,13 +223,15 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam0.setParamValue("input value");
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
 
-        assertEquals("help value", underTest.getExecParamValue(HELP_KEY));
+        assertEquals("true", underTest.getExecParamValue(HELP_KEY));
         assertEquals("input value", underTest.getExecParamValue(INPUT_KEY));
     }
 
@@ -227,19 +250,20 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam0.setParamValue("input value");
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
 
-        assertEquals("help value", underTest.getExecParamValue(HELP_KEY));
+        assertEquals("true", underTest.getExecParamValue(HELP_KEY));
         assertEquals("input value", underTest.getExecParamValue(INPUT_KEY));
         assertEquals(System.getProperty("user.dir") + File.separator + "test output value",
                 underTest.getExecParamValue(OUTPUT_KEY));
         assertEquals("test proto value", underTest.getExecParamValue(PROTO_KEY));
         assertEquals("test url value", underTest.getExecParamValue(URL_KEY));
-//        assertEquals("test zip value", underTest.getExecParamValue(ZIP_KEY));
     }
 
     @Test
@@ -253,8 +277,10 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam0.setParamKey(INPUT_KEY);
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -277,8 +303,10 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam1.setParamValue("output");
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -298,8 +326,10 @@ class InMemoryExecParamRepositoryTest {
         doReturn(OUTPUT_KEY).when(mockExecParam1).getParamKey();
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -319,8 +349,10 @@ class InMemoryExecParamRepositoryTest {
         doReturn(OUTPUT_KEY).when(mockExecParam1).getParamKey();
 
         final Logger mockLogger = mock(Logger.class);
-
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(PATH_TO_DEFAULT_CONFIG_FILE, mockLogger);
+        final String defaultParameterJson = Resources.toString(
+                Resources.getResource("test-default-execution-parameters.json"),
+                StandardCharsets.UTF_8);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(defaultParameterJson, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);

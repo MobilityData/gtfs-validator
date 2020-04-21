@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
@@ -24,22 +25,20 @@ import java.io.IOException;
  * Use case to parse execution parameters from a .json file or from an Apache command line
  */
 public class ParseAllExecParam {
-    private final boolean fromConfigFile;
-    private final String pathToExecParamFile;
+    private final String parameterJsonString;
     private final ExecParamRepository execParamRepository;
+    private final Logger logger;
 
     /**
-     * @param fromConfigFile      boolean specifying if the execution parameters should be retrieved from a .json file
-     *                            of from an Apache command line.
-     * @param pathToExecParamFile the path to the .json file to parse execution parameters from
+     * @param parameterJsonString the .json file content to extract execution parameters from
      * @param execParamRepository the repository containing execution parameters and their values
      */
-    public ParseAllExecParam(final boolean fromConfigFile,
-                             final String pathToExecParamFile,
-                             final ExecParamRepository execParamRepository) {
-        this.fromConfigFile = fromConfigFile;
-        this.pathToExecParamFile = pathToExecParamFile;
+    public ParseAllExecParam(final String parameterJsonString,
+                             final ExecParamRepository execParamRepository,
+                             final Logger logger) {
+        this.parameterJsonString = parameterJsonString;
         this.execParamRepository = execParamRepository;
+        this.logger = logger;
     }
 
     /**
@@ -59,8 +58,9 @@ public class ParseAllExecParam {
      *                                  to the constructor.
      */
     public void execute(final String[] args) throws IllegalArgumentException, IOException {
+
         execParamRepository
-                .getParser(fromConfigFile, pathToExecParamFile, args)
+                .getParser(parameterJsonString, args, logger)
                 .parse()
                 .forEach((s, execParam) -> execParamRepository.addExecParam(execParam));
     }

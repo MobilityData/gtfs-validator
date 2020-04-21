@@ -38,8 +38,8 @@ public class ExportResultAsFile {
 
     public void execute() throws IOException {
 
-        if (execParamRepo.hasExecParamValue(execParamRepo.PROTO_KEY)) {
-            logger.info("Results are exported as proto");
+        if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY))) {
+            logger.info("-p provided, exporting results as proto");
         } else {
             logger.info("Results are exported as JSON by default");
         }

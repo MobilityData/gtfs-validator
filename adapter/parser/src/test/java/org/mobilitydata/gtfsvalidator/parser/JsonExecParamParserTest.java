@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.parser;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,7 +22,10 @@ class JsonExecParamParserTest {
 
     @Test
     public void jsonFileShouldMapToExecutionParameterMap() throws IOException {
-        final String pathToConfigFile = "test-execution-parameters.json";
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        final String pathToExecParamFile = String.valueOf(
+                Objects.requireNonNull(classLoader.getResource("test-execution-parameters.json")).getPath());
+
         final ObjectReader mockObjectReader = mock(ObjectReader.class);
 
         final ExecParam mockHelpExecParam = spy(ExecParam.class);
@@ -45,7 +50,10 @@ class JsonExecParamParserTest {
         when(mockObjectReader.readValues(anyString())).thenReturn(mockIterator);
         when(mockIterator.readAll()).thenReturn(objectCollection);
 
-        final JsonExecParamParser underTest = new JsonExecParamParser(pathToConfigFile, mockObjectReader);
+        Logger mockLogger = mock(Logger.class);
+
+        final JsonExecParamParser underTest = new JsonExecParamParser(pathToExecParamFile, mockObjectReader,
+                mockLogger);
         final Map<String, ExecParam> toCheck = underTest.parse();
 
         assertEquals(3, toCheck.size());

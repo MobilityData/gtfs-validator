@@ -19,8 +19,6 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
-import java.io.IOException;
-
 /**
  * Use case to log information about the validation process
  */
@@ -40,12 +38,9 @@ public class LogExecutionInfo {
 
     /**
      * Use case execution method: logs relevant information concerning the validation process.
-     * Throws {@link IOException} if operation on the repository provided in the constructor fail.
-     *
-     * @throws IOException if operation on the repository provided in the constructor fail.
      */
-    public void execute() throws IOException {
-        if (!execParamRepo.hasExecParamValue(execParamRepo.URL_KEY) & !execParamRepo
+    public void execute() {
+        if (execParamRepo.hasExecParamValue(execParamRepo.URL_KEY) & !execParamRepo
                 .hasExecParamValue(execParamRepo.ZIP_KEY)) {
             logger.info("--url provided but no location to place zip (--zip option). Using default: " +
                     execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY));

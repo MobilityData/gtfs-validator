@@ -17,12 +17,11 @@
 package org.mobilitydata.gtfsvalidator.parser;
 
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.google.common.io.Resources;
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,43 +31,50 @@ import java.util.Map;
  * {@code ExecParam}.
  */
 public class JsonExecParamParser implements ExecParamRepository.ExecParamParser {
-    private final String pathToConfigFile;
+    private final String parameterJsonString;
     private final ObjectReader objectReader;
+    private final Logger logger;
 
     /**
-     * @param pathToConfigFile path to the .json file containing the execution parameters to parse
-     * @param objectReader     reader from jackson library to parse the configuration .json file
+     * @param parameterJsonString the .json containing the execution parameters to parse, as string
+     * @param objectReader        reader from jackson library to parse the configuration .json file
+     * @param logger              logger to log relevant information
      */
-    public JsonExecParamParser(final String pathToConfigFile, ObjectReader objectReader) {
-        this.pathToConfigFile = pathToConfigFile;
+    public JsonExecParamParser(final String parameterJsonString,
+                               final ObjectReader objectReader,
+                               final Logger logger) {
+        this.parameterJsonString = parameterJsonString;
         this.objectReader = objectReader;
+        this.logger = logger;
     }
 
     /**
      * This method allows parsing execution parameters found in a .json file to an internal representation using
      * {@code ExecParam}. Returns a collection of the extracted {@link ExecParam} mapped on their keys. They key of each
      * {@link ExecParam} is associated with the field paramKey of each object to be parsed from the .json file.
-     * This method throws IOException if the parsing operation could not be executed
      *
      * @return a collection of {@link ExecParam} mapped on the name associated to the execution parameter they
      * represent
-     * @throws IOException if the parsing operation could not be executed
      */
     @Override
-    public Map<String, ExecParam> parse() throws IOException {
+    public Map<String, ExecParam> parse() {
         final Map<String, ExecParam> toReturn = new HashMap<>();
 
-        //noinspection UnstableApiUsage
-        final String configFileAsString =
-                Resources.toString(Resources.getResource(pathToConfigFile), StandardCharsets.UTF_8);
+        try {
+            final List<Object> execParamCollectionAsObjectCollection = objectReader
+                    .readValues(parameterJsonString)
+                    .readAll();
 
-        final List<Object> execParamCollectionAsObjectCollection = objectReader.readValues(configFileAsString)
-                .readAll();
-
-        for (Object object : execParamCollectionAsObjectCollection) {
-            final ExecParam execParam = (ExecParam) object;
-            toReturn.put(execParam.getParamKey(), execParam);
+            for (Object object : execParamCollectionAsObjectCollection) {
+                final ExecParam execParam = (ExecParam) object;
+                toReturn.put(execParam.getParamKey(), execParam);
+            }
+            return toReturn;
+        } catch (IOException e) {
+            logger.info("could not find .json file at specified path: "
+                    + parameterJsonString + " -- will consider" +
+                    " default values for execution parameters");
+            return toReturn;
         }
-        return toReturn;
     }
 }

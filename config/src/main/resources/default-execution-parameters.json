@@ -1,7 +1,7 @@
 [
   {
     "paramKey": "help",
-    "paramValue": null
+    "paramValue": false
   },
   {
     "paramKey": "input",
