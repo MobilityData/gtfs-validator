@@ -69,9 +69,9 @@ class ValidateAllOptionalFilenameTest {
         optFileRepo = 2;
         extraFileRepo = 3;
 
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
-        ValidationResultRepository mockResultRepo = mockResultRepo();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepo();
 
         ValidateAllOptionalFilename underTest = new ValidateAllOptionalFilename(
                 mockSpecRepo,
@@ -107,8 +107,8 @@ class ValidateAllOptionalFilenameTest {
         assertEquals("Extra file extra1.extra found in archive", notice.getDescription());
     }
 
-    private GtfsSpecRepository mockSpecRepository() {
-        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+    private GtfsSpecRepository buildMockSpecRepository() {
+        mockSpecRepo = mock(GtfsSpecRepository.class);
         when(mockSpecRepo.getRequiredFilenameList()).thenAnswer(new Answer<List<String>>() {
             public List<String> answer(InvocationOnMock invocation) {
                 List<String> toReturn = new ArrayList<>(reqSpecRepo);
@@ -135,8 +135,8 @@ class ValidateAllOptionalFilenameTest {
         return mockSpecRepo;
     }
 
-    private RawFileRepository mockFileRepository() {
-        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+    private RawFileRepository buildMockFileRepository() {
+        mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
         when(mockFileRepo.getFilenameAll()).thenAnswer(new Answer<Set<String>>() {
             public Set<String> answer(InvocationOnMock invocation) {
@@ -161,8 +161,8 @@ class ValidateAllOptionalFilenameTest {
         return mockFileRepo;
     }
 
-    private ValidationResultRepository mockResultRepo() {
-        ValidationResultRepository mockResultRepo =  mock(ValidationResultRepository.class);
+    private ValidationResultRepository buildMockResultRepo() {
+        mockResultRepo =  mock(ValidationResultRepository.class);
         when(mockResultRepo.addNotice(any(InfoNotice.class))).thenAnswer(new Answer<Notice>() {
             public InfoNotice answer(InvocationOnMock invocation) {
                 InfoNotice infoNotice = invocation.getArgument(0);

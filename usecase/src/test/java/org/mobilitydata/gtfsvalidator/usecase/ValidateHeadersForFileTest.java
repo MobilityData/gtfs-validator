@@ -78,9 +78,9 @@ class ValidateHeadersForFileTest {
         mockOptionalHeaders = Collections.emptyList();
         mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
 
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
-        ValidationResultRepository mockResultRepo = mockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -101,9 +101,9 @@ class ValidateHeadersForFileTest {
         mockOptionalHeaders = Collections.emptyList();
         mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_3, REQUIRED_HEADER_4);
 
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
-        ValidationResultRepository mockResultRepo = mockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -159,9 +159,9 @@ class ValidateHeadersForFileTest {
         mockOptionalHeaders = Collections.emptyList();
         mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1);
 
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
-        ValidationResultRepository mockResultRepo = mockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -200,9 +200,9 @@ class ValidateHeadersForFileTest {
         mockOptionalHeaders = Collections.emptyList();
         mockHeaders = Arrays.asList(REQUIRED_HEADER_0, EXTRA_HEADER_0);
 
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
-        ValidationResultRepository mockResultRepo = mockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -249,9 +249,9 @@ class ValidateHeadersForFileTest {
         mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2,
                 OPTIONAL_HEADER_0, OPTIONAL_HEADER_1);
 
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
-        ValidationResultRepository mockResultRepo = mockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -273,9 +273,9 @@ class ValidateHeadersForFileTest {
         mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2,
                 OPTIONAL_HEADER_0, OPTIONAL_HEADER_1, EXTRA_HEADER_0, EXTRA_HEADER_1);
 
-        GtfsSpecRepository mockSpecRepo = mockSpecRepository();
-        RawFileRepository mockFileRepo = mockFileRepository();
-        ValidationResultRepository mockResultRepo = mockResultRepository();
+        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
+        RawFileRepository mockFileRepo = buildMockFileRepository();
+        ValidationResultRepository mockResultRepo = buildMockResultRepository();
 
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
@@ -305,23 +305,23 @@ class ValidateHeadersForFileTest {
         assertEquals("Unexpected header:" + EXTRA_HEADER_1 + " in file:test.tst", notice.getDescription());
     }
 
-    private GtfsSpecRepository mockSpecRepository() {
-        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+    private GtfsSpecRepository buildMockSpecRepository() {
+        mockSpecRepo = mock(GtfsSpecRepository.class);
         when(mockSpecRepo.getRequiredHeadersForFile(any(RawFileInfo.class))).thenReturn(mockRequiredHeaders);
         when(mockSpecRepo.getOptionalHeadersForFile(any(RawFileInfo.class))).thenReturn(mockOptionalHeaders);
         return mockSpecRepo;
     }
 
-    private RawFileRepository mockFileRepository() {
-        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+    private RawFileRepository buildMockFileRepository() {
+        mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
         when(mockFileRepo.getActualHeadersForFile(any(RawFileInfo.class))).thenReturn(mockHeaders);
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.empty());
         return mockFileRepo;
     }
 
-    private ValidationResultRepository mockResultRepository() {
-        ValidationResultRepository mockResultRepo =  mock(ValidationResultRepository.class);
+    private ValidationResultRepository buildMockResultRepository() {
+        mockResultRepo =  mock(ValidationResultRepository.class);
         when(mockResultRepo.addNotice(any(InfoNotice.class))).thenAnswer(new Answer<Notice>() {
             public InfoNotice answer(InvocationOnMock invocation) {
                 InfoNotice infoNotice = invocation.getArgument(0);
