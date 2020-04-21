@@ -245,7 +245,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     public Options getOptions() {
         Options options = new Options();
         options.addOption("u", "url", true, "URL to GTFS zipped archive");
-        options.addOption("z", "inputzip", true, "if --url is used, where to place " +
+        options.addOption("z", "zipinput", true, "if --url is used, where to place " +
                 "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
         options.addOption("e", "extract", true, "Relative path where to extract" +
                 " the zip content");

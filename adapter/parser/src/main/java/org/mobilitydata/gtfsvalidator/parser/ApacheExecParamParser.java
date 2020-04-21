@@ -50,7 +50,7 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         this.availableOptions = availableOptions;
 
         availableOptions.addOption("u", "url", true, "URL to GTFS zipped archive");
-        availableOptions.addOption("z", "inputzip", true, "if --url is used, where " +
+        availableOptions.addOption("z", "zipinput", true, "if --url is used, where " +
                 "to place the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on" +
                 " disk");
         availableOptions.addOption("e", "extract", true, "Relative path where to " +

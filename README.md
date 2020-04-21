@@ -45,28 +45,12 @@ java -jar gtfs-validator-v1.1.0.jar
 With `execution-parameters.json` file located in the working directory:
  
 ```
-[
-  {
-    "paramKey": "extract",
-    "paramValue": "input"
-  },
-  {
-    "paramKey": "output",
-    "paramValue": "output"
-  },
-  {
-    "paramKey": "proto",
-    "paramValue": false
-  },
-  {
-    "paramKey": "url",
-    "paramValue": "https://transitfeeds.com/p/mbta/64/latest/download"
-  },
-  {
-    "paramKey": "inputzip",
-    "paramValue": input.zip
-  }
-]
+{
+  "extract": "input",
+  "output": "output",
+  "url": "https://transitfeeds.com/p/mbta/64/latest/download",
+  "zipinput": "input.zip"
+}
 ```
 
 Note that you'll need to change the above JAR file name to whatever [release version](https://github.com/MobilityData/gtfs-validator/releases) you download.
