@@ -91,6 +91,14 @@ class ValidateHeadersForFileTest {
 
         underTest.execute();
         assertEquals(0, noticeList.size());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockSpecRepo, times(1)).getOptionalHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockFileRepo, times(1)).getActualHeadersForFile(any(RawFileInfo.class));
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
@@ -148,6 +156,15 @@ class ValidateHeadersForFileTest {
         assertEquals("Non standard header", notice.getTitle());
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("Unexpected header:" + REQUIRED_HEADER_4 + " in file:test.tst", notice.getDescription());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockSpecRepo, times(1)).getOptionalHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockFileRepo, times(1)).getActualHeadersForFile(any(RawFileInfo.class));
+        verify(mockResultRepo, times(2)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(2)).addNotice(any(WarningNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
 
@@ -190,6 +207,15 @@ class ValidateHeadersForFileTest {
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("File test.tst is missing required header: " + REQUIRED_HEADER_3,
                 notice.getDescription());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockSpecRepo, times(1)).getOptionalHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockFileRepo, times(1)).getActualHeadersForFile(any(RawFileInfo.class));
+        verify(mockResultRepo, times(2)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(0)).addNotice(any(WarningNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
@@ -239,6 +265,15 @@ class ValidateHeadersForFileTest {
         assertEquals("Non standard header", notice.getTitle());
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("Unexpected header:" + EXTRA_HEADER_0 + " in file:test.tst", notice.getDescription());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockSpecRepo, times(1)).getOptionalHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockFileRepo, times(1)).getActualHeadersForFile(any(RawFileInfo.class));
+        verify(mockResultRepo, times(2)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(WarningNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
     @Test
@@ -262,6 +297,14 @@ class ValidateHeadersForFileTest {
 
         underTest.execute();
         assertEquals(0, noticeList.size());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockSpecRepo, times(1)).getOptionalHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockFileRepo, times(1)).getActualHeadersForFile(any(RawFileInfo.class));
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
@@ -303,6 +346,15 @@ class ValidateHeadersForFileTest {
         assertEquals("Non standard header", notice.getTitle());
         assertEquals(TEST_TST, notice.getFilename());
         assertEquals("Unexpected header:" + EXTRA_HEADER_1 + " in file:test.tst", notice.getDescription());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockSpecRepo, times(1)).getOptionalHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockFileRepo, times(1)).getActualHeadersForFile(any(RawFileInfo.class));
+        verify(mockResultRepo, times(0)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(2)).addNotice(any(WarningNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
     private GtfsSpecRepository buildMockSpecRepository() {

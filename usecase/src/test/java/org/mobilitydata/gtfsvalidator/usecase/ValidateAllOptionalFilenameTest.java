@@ -17,9 +17,6 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
@@ -105,6 +102,14 @@ class ValidateAllOptionalFilenameTest {
         assertEquals("W004", notice.getId());
         assertEquals("Non standard file found", notice.getTitle());
         assertEquals("Extra file extra1.extra found in archive", notice.getDescription());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockSpecRepo, times(1)).getOptionalFilenameList();
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
+        inOrder.verify(mockFileRepo, times(2)).getFilenameAll();
+        verify(mockResultRepo, times(3)).addNotice(any(WarningNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
     private GtfsSpecRepository buildMockSpecRepository() {
@@ -156,32 +161,17 @@ class ValidateAllOptionalFilenameTest {
                 return toReturn;
             }
         });
-        when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.empty());
 
         return mockFileRepo;
     }
 
     private ValidationResultRepository buildMockResultRepo() {
         mockResultRepo =  mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(InfoNotice.class))).thenAnswer(new Answer<Notice>() {
-            public InfoNotice answer(InvocationOnMock invocation) {
-                InfoNotice infoNotice = invocation.getArgument(0);
-                noticeList.add(infoNotice);
-                return infoNotice;
-            }
-        });
         when(mockResultRepo.addNotice(any(WarningNotice.class))).thenAnswer(new Answer<Notice>() {
             public WarningNotice answer(InvocationOnMock invocation) {
                 WarningNotice warningNotice = invocation.getArgument(0);
                 noticeList.add(warningNotice);
                 return warningNotice;
-            }
-        });
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<Notice>() {
-            public ErrorNotice answer(InvocationOnMock invocation) {
-                ErrorNotice errorNotice = invocation.getArgument(0);
-                noticeList.add(errorNotice);
-                return errorNotice;
             }
         });
 

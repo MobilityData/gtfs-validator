@@ -67,6 +67,13 @@ class ValidateAllRowLengthForFileTest {
 
         underTest.execute();
         assertEquals(0, noticeList.size());
+
+        verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
+        verify(mockProvider, times(5)).hasNext();
+        verify(mockProvider, times(4)).getNext();
+        verify(mockProvider, times(4)).getHeaderCount();
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockFileRepo, mockResultRepo, mockProvider);
     }
 
     @Test
@@ -99,6 +106,13 @@ class ValidateAllRowLengthForFileTest {
         assertEquals("Invalid row length", notice.getTitle());
         assertEquals("test_invalid.tst", notice.getFilename());
         assertEquals("Invalid length for row:4 -- expected:3 actual:4", notice.getDescription());
+
+        verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
+        verify(mockProvider, times(4)).hasNext();
+        verify(mockProvider, times(3)).getNext();
+        verify(mockProvider, times(5)).getHeaderCount();
+        verify(mockResultRepo, times(2)).addNotice(any(ErrorNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockResultRepo, mockProvider);
     }
 
     @Test
@@ -124,6 +138,10 @@ class ValidateAllRowLengthForFileTest {
         assertEquals("Data provider error", notice.getTitle());
         assertEquals("test_empty.tst", notice.getFilename());
         assertEquals("An error occurred while trying to access raw data for file: test_empty.tst", notice.getDescription());
+
+        verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
+        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockResultRepo);
     }
 
     private ValidationResultRepository buildMockResultRepository() {
@@ -141,7 +159,6 @@ class ValidateAllRowLengthForFileTest {
 
     private RawFileRepository buildMockFileRepository() {
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
-        when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class)))
                 .thenAnswer(new Answer<Optional<RawFileRepository.RawEntityProvider>>() {
                     public Optional<RawFileRepository.RawEntityProvider> answer(InvocationOnMock invocation) {

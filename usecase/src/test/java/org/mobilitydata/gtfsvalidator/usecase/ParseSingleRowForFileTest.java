@@ -26,8 +26,7 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataPr
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -37,9 +36,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ParseSingleRowForFileTest {
 
@@ -101,6 +98,17 @@ class ParseSingleRowForFileTest {
 
         assertFalse(underTest.hasNext());
         assertNull(underTest.execute());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
+        inOrder.verify(mockSpecRepo, times(1)).getParserForFile(any(RawFileInfo.class));
+        verify(mockParser, times(3)).validateNonStringTypes(any(RawEntity.class));
+        verify(mockParser, times(3)).parse(any(RawEntity.class));
+        verify(mockProvider, times(8)).hasNext();
+        verify(mockProvider, times(3)).getNext();
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo, mockParser, mockProvider);
     }
 
     @Test
@@ -123,6 +131,17 @@ class ParseSingleRowForFileTest {
         assertEquals(6, noticeList.size());
         underTest.execute();
         assertEquals(9, noticeList.size());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
+        inOrder.verify(mockSpecRepo, times(1)).getParserForFile(any(RawFileInfo.class));
+        verify(mockParser, times(3)).validateNonStringTypes(any(RawEntity.class));
+        verify(mockParser, times(3)).parse(any(RawEntity.class));
+        verify(mockProvider, times(3)).hasNext();
+        verify(mockProvider, times(3)).getNext();
+        verify(mockResultRepo, times(9)).addNotice(any(ErrorNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo, mockParser, mockProvider);
     }
 
     @Test
@@ -147,6 +166,12 @@ class ParseSingleRowForFileTest {
         assertEquals("Data provider error", notice.getTitle());
         assertEquals("test_empty.tst", notice.getFilename());
         assertEquals("An error occurred while trying to access raw data for file: test_empty.tst", notice.getDescription());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockResultRepo);
+
+        inOrder.verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
+        inOrder.verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo, mockParser);
     }
 
     private ValidationResultRepository buildMockResultRepository() {
@@ -181,7 +206,6 @@ class ParseSingleRowForFileTest {
 
     private RawFileRepository buildMockFileRepository() {
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
-        when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class)))
                 .thenAnswer(new Answer<Optional<RawFileRepository.RawEntityProvider>>() {
                     public Optional<RawFileRepository.RawEntityProvider> answer(InvocationOnMock invocation) {
@@ -262,5 +286,5 @@ class ParseSingleRowForFileTest {
         when(mockProvider.getHeaderCount()).thenReturn(mockEntityList.get(0).size());
         return mockProvider;
     }
-    
+
 }
