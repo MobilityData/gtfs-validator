@@ -20,9 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -78,6 +76,13 @@ class ValidateAllRequiredFilePresenceTest {
         assertEquals(10, result.size());
         assertEquals(List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req", "req5.req", "req6.req",
                 "req7.req", "req8.req", "req9.req"), result);
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
+        inOrder.verify(mockSpecRepo, times(2)).getRequiredFilenameList();
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
     @Test
@@ -131,6 +136,15 @@ class ValidateAllRequiredFilePresenceTest {
         assertEquals("E003", notice.getId());
         assertEquals("Missing required file", notice.getTitle());
         assertEquals("req14.req", notice.getFilename());
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
+        inOrder.verify(mockSpecRepo, times(2)).getRequiredFilenameList();
+        inOrder.verify(mockFileRepo, times(15)).getFilenameAll();
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
+        verify(mockResultRepo, times(5)).addNotice(any(ErrorNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
     private GtfsSpecRepository buildMockSpecRepository() {
@@ -152,7 +166,6 @@ class ValidateAllRequiredFilePresenceTest {
 
     private RawFileRepository buildMockFileRepository() {
         mockFileRepo = mock(RawFileRepository.class);
-        when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
         when(mockFileRepo.getFilenameAll()).thenAnswer(new Answer<Set<String>>() {
             public Set<String> answer(InvocationOnMock invocation) {
                 Set<String> toReturn = new HashSet<>(reqFileRepo + optFileRepo);
@@ -175,20 +188,6 @@ class ValidateAllRequiredFilePresenceTest {
 
     private ValidationResultRepository buildMockResultRepository() {
         mockResultRepo =  mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(InfoNotice.class))).thenAnswer(new Answer<Notice>() {
-            public InfoNotice answer(InvocationOnMock invocation) {
-                InfoNotice infoNotice = invocation.getArgument(0);
-                noticeList.add(infoNotice);
-                return infoNotice;
-            }
-        });
-        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenAnswer(new Answer<Notice>() {
-            public WarningNotice answer(InvocationOnMock invocation) {
-                WarningNotice warningNotice = invocation.getArgument(0);
-                noticeList.add(warningNotice);
-                return warningNotice;
-            }
-        });
         when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenAnswer(new Answer<Notice>() {
             public ErrorNotice answer(InvocationOnMock invocation) {
                 ErrorNotice errorNotice = invocation.getArgument(0);
