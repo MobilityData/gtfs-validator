@@ -12,7 +12,7 @@ public class NoticeMemoryConsumptionTest {
     private static final Logger LOGGER = LogManager.getLogger();
 
     // used to provide a 10% safety margin to avoid instability due to the behavior of the garbage collector
-    private static final float SAFETY_BUFFER_FACTOR = 1.10f;
+    private static final float SAFETY_BUFFER_FACTOR = 1.15f;
 
     private void generateNotices(InMemoryValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
