@@ -1,22 +1,7 @@
-[
-  {
-    "paramKey": "extract",
-    "paramValue": "input"
-  },
-  {
-    "paramKey": "output",
-    "paramValue": "output"
-  },
-  {
-    "paramKey": "proto",
-    "paramValue": false
-  },
-  {
-    "paramKey": "url",
-    "paramValue": "https://transitfeeds.com/p/mbta/64/latest/download"
-  },
-  {
-    "paramKey": "inputzip",
-    "paramValue": null
-  }
-]
+{
+  "extract": "input",
+  "output": "output",
+  "proto": false,
+  "url": "https://transitfeeds.com/p/mbta/64/latest/download",
+  "inputzip": null
+}

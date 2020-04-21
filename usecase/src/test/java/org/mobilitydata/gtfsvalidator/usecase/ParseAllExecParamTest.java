@@ -30,14 +30,14 @@ class ParseAllExecParamTest {
                 spy(ExecParamRepository.ExecParamParser.class);
 
         final ExecParam mockHelpExecParam = spy(ExecParam.class);
-        when(mockHelpExecParam.getParamKey()).thenReturn("help");
+        when(mockHelpExecParam.getKey()).thenReturn("help");
 
         final ExecParam mockInputExecParam = spy(ExecParam.class);
-        when(mockInputExecParam.getParamKey()).thenReturn("input");
+        when(mockInputExecParam.getKey()).thenReturn("input");
 
         final Map<String, ExecParam> mockExecutionParameterMap = new HashMap<>();
-        mockExecutionParameterMap.put(mockHelpExecParam.getParamKey(), mockHelpExecParam);
-        mockExecutionParameterMap.put(mockInputExecParam.getParamKey(), mockInputExecParam);
+        mockExecutionParameterMap.put(mockHelpExecParam.getKey(), mockHelpExecParam);
+        mockExecutionParameterMap.put(mockInputExecParam.getKey(), mockInputExecParam);
 
         when(mockExecParamRepository.getParser(ArgumentMatchers.eq(null),
                 ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger)))
@@ -72,14 +72,14 @@ class ParseAllExecParamTest {
                 spy(ExecParamRepository.ExecParamParser.class);
 
         final ExecParam mockHelpExecParam = spy(ExecParam.class);
-        when(mockHelpExecParam.getParamKey()).thenReturn("help");
+        when(mockHelpExecParam.getKey()).thenReturn("help");
 
         final ExecParam mockInputExecParam = spy(ExecParam.class);
-        when(mockInputExecParam.getParamKey()).thenReturn("input");
+        when(mockInputExecParam.getKey()).thenReturn("input");
 
         final Map<String, ExecParam> mockExecutionParameterMap = new HashMap<>();
-        mockExecutionParameterMap.put(mockHelpExecParam.getParamKey(), mockHelpExecParam);
-        mockExecutionParameterMap.put(mockInputExecParam.getParamKey(), mockInputExecParam);
+        mockExecutionParameterMap.put(mockHelpExecParam.getKey(), mockHelpExecParam);
+        mockExecutionParameterMap.put(mockInputExecParam.getKey(), mockInputExecParam);
 
         when(mockExecParamRepository.getParser(ArgumentMatchers.eq(testExecParam),
                 ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger)))

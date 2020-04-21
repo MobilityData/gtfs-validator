@@ -1,26 +1,8 @@
-[
-  {
-    "paramKey": "help",
-    "paramValue": false
-  },
-  {
-    "paramKey": "extract",
-    "paramValue": "input"
-  },
-  {
-    "paramKey": "output",
-    "paramValue": "output"
-  },
-  {
-    "paramKey": "proto",
-    "paramValue": false
-  },
-  {
-    "paramKey": "url",
-    "paramValue": null
-  },
-  {
-    "paramKey": "inputzip",
-    "paramValue": null
-  }
-]
+{
+  "help": false,
+  "extract": "input",
+  "output": "output",
+  "proto": false,
+  "url": null,
+  "inputzip": null
+}

@@ -21,31 +21,31 @@ package org.mobilitydata.gtfsvalidator.domain.entity;
  * (and their values) that are passed are parameters of the main execution method.
  */
 public class ExecParam {
-    private String paramKey;
-    private String paramValue;
+    private String key;
+    private String value;
 
     public ExecParam() {
     }
 
-    public ExecParam(String paramKey,
-                     String paramValue) {
-        this.paramKey = paramKey;
-        this.paramValue = paramValue;
+    public ExecParam(String key,
+                     String value) {
+        this.key = key;
+        this.value = value;
     }
 
-    public String getParamKey() {
-        return paramKey;
+    public String getKey() {
+        return key;
     }
 
-    public String getParamValue() {
-        return paramValue;
+    public String getValue() {
+        return value;
     }
 
-    public void setParamKey(String paramKey) {
-        this.paramKey = paramKey;
+    public void setKey(String key) {
+        this.key = key;
     }
 
-    public void setParamValue(final String paramValue) {
-        this.paramValue = paramValue;
+    public void setValue(final String value) {
+        this.value = value;
     }
 }

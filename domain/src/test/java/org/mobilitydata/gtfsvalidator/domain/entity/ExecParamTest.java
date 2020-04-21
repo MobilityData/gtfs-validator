@@ -11,12 +11,12 @@ class ExecParamTest {
     @Test
     public void getValueShouldReturnValue() {
         final ExecParam underTest = new ExecParam(KEY, VALUE);
-        assertEquals(VALUE, underTest.getParamValue());
+        assertEquals(VALUE, underTest.getValue());
     }
 
     @Test
     public void getKeyShouldReturnKey() {
         final ExecParam underTest = new ExecParam(KEY, VALUE);
-        assertEquals(KEY, underTest.getParamKey());
+        assertEquals(KEY, underTest.getKey());
     }
 }

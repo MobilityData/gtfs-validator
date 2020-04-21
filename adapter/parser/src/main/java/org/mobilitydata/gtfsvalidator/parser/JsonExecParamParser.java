@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,19 +60,16 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
         final Map<String, ExecParam> toReturn = new HashMap<>();
 
         try {
-            final List<Object> execParamCollectionAsObjectCollection = objectReader
-                    .readValues(parameterJsonString)
-                    .readAll();
+            objectReader.readTree(parameterJsonString).fields()
+                    .forEachRemaining(field -> {
+                        final ExecParam execParam = new ExecParam(field.getKey(), field.getValue().asText());
+                        toReturn.put(execParam.getKey(), execParam);
+                    });
 
-            for (Object object : execParamCollectionAsObjectCollection) {
-                final ExecParam execParam = (ExecParam) object;
-                toReturn.put(execParam.getParamKey(), execParam);
-            }
             return toReturn;
         } catch (IOException e) {
-            logger.info("could not find .json file at specified path: "
-                    + parameterJsonString + " -- will consider" +
-                    " default values for execution parameters");
+            logger.info("could not find execution-parameters.json file  -- will consider default values for" +
+                    " execution parameters");
             return toReturn;
         }
     }

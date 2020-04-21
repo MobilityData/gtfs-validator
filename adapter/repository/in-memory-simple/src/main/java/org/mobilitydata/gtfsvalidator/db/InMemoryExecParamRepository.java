@@ -85,12 +85,12 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      */
     @Override
     public ExecParam addExecParam(final ExecParam newExecParam) throws IllegalArgumentException {
-        if (defaultValueCollection.containsKey(newExecParam.getParamKey())) {
-            execParamCollection.put(newExecParam.getParamKey(), newExecParam);
+        if (defaultValueCollection.containsKey(newExecParam.getKey())) {
+            execParamCollection.put(newExecParam.getKey(), newExecParam);
             return newExecParam;
         } else {
             throw new IllegalArgumentException("Execution parameter with key: " +
-                    newExecParam.getParamKey() + " found in configuration file is not handled");
+                    newExecParam.getKey() + " found in configuration file is not handled");
         }
     }
 
@@ -118,7 +118,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      */
     @Override
     public boolean hasExecParamValue(final String key) {
-        return hasExecParam(key) && getExecParamByKey(key).getParamValue() != null;
+        return hasExecParam(key) && getExecParamByKey(key).getValue() != null;
     }
 
     /**
@@ -159,7 +159,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      */
     @Override
     public String getExecParamValue(final String key) throws IllegalArgumentException {
-        final String defaultValue = defaultValueCollection.get(key).getParamValue();
+        final String defaultValue = defaultValueCollection.get(key).getValue();
 
         switch (key) {
 
@@ -174,7 +174,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
 
             case EXTRACT_KEY: {
                 if (hasExecParam(key)) {
-                    final String paramValue = getExecParamByKey(key).getParamValue();
+                    final String paramValue = getExecParamByKey(key).getValue();
                     return hasExecParamValue(key)
                             ? paramValue
                             : System.getProperty("user.dir") + File.separator + defaultValue;
@@ -186,7 +186,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             case OUTPUT_KEY: {
                 if (hasExecParam(OUTPUT_KEY)) {
                     final String value = System.getProperty("user.dir") + File.separator
-                            + getExecParamByKey(OUTPUT_KEY).getParamValue();
+                            + getExecParamByKey(OUTPUT_KEY).getValue();
                     return hasExecParamValue(OUTPUT_KEY) ? value : System.getProperty("user.dir") + File.separator
                             + defaultValue;
                 } else {
@@ -195,12 +195,12 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             }
 
             case URL_KEY: {
-                return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getParamValue() : defaultValue;
+                return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getValue() : defaultValue;
             }
 
             case ZIP_KEY: {
                 String zipInputPath = hasExecParamValue(ZIP_KEY)
-                        ? getExecParamByKey(ZIP_KEY).getParamValue()
+                        ? getExecParamByKey(ZIP_KEY).getValue()
                         : System.getProperty("user.dir");
 
                 if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(ZIP_KEY)) {
