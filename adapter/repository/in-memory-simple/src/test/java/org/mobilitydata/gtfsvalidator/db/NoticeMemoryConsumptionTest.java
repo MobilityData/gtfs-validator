@@ -125,7 +125,7 @@ public class NoticeMemoryConsumptionTest {
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 28_000_000 * SAFETY_BUFFER_FACTOR);
+        assertTrue(totalMemoryInBytes - freeMemoryInBytes < 29_000_000 * SAFETY_BUFFER_FACTOR);
     }
 
     @Test
