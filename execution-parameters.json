@@ -1,7 +1,0 @@
-{
-  "extract": "input",
-  "output": "output",
-  "proto": false,
-  "url": "https://transitfeeds.com/p/mbta/64/latest/download",
-  "zipinput": null
-}
