@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,12 +63,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         }
     }
 
-    Map<String, Map<LocalDateTime, CalendarDate>> calendarDateCollection = new HashMap<>();
-
-    @Override
-    public Map<String, Map<LocalDateTime, CalendarDate>> getCalendarDateCollection() {
-        return Collections.unmodifiableMap(calendarDateCollection);
-    }
+    private final Map<String, Map<LocalDateTime, CalendarDate>> calendarDateCollection = new HashMap<>();
 
     @Override
     public CalendarDate getCalendarDateByServiceIdAndDate(final String serviceId, final LocalDateTime date) {

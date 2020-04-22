@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException;
@@ -32,8 +31,6 @@ public interface GtfsDataRepository {
     Route getRouteById(final String routeId);
 
     Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
-
-    Map<String, Map<LocalDateTime, CalendarDate>> getCalendarDateCollection();
 
     CalendarDate getCalendarDateByServiceIdAndDate(final String serviceId, final LocalDateTime date);
 

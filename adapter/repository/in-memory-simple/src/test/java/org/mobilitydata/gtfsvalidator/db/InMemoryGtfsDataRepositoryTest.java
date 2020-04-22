@@ -24,8 +24,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -268,46 +266,6 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getCalendarDateCollectionShouldReturnCalendarDateCollection() throws SQLIntegrityConstraintViolationException {
-        final CalendarDate.CalendarDateBuilder mockBuilder = mock(CalendarDate.CalendarDateBuilder.class, RETURNS_SELF);
-        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
-        when(mockBuilder.date(any(LocalDateTime.class))).thenCallRealMethod();
-        when(mockBuilder.exceptionType(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        final LocalDateTime date = LocalDateTime.now();
-
-        mockBuilder.serviceId("service_id0")
-                .date(date)
-                .exceptionType(1);
-
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        final CalendarDate calendarDate00 = mockBuilder.build();
-        underTest.addCalendarDate(calendarDate00);
-
-        mockBuilder.serviceId("service_id1")
-                .date(date)
-                .exceptionType(1);
-
-        final CalendarDate calendarDate01 = mockBuilder.build();
-        underTest.addCalendarDate(calendarDate01);
-
-        final Map<String, Map<LocalDateTime, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
-
-        final Map<LocalDateTime, CalendarDate> innerMap0 = new HashMap<>();
-        innerMap0.put(date, calendarDate00);
-
-        final Map<LocalDateTime, CalendarDate> innerMap1 = new HashMap<>();
-        innerMap1.put(date, calendarDate01);
-
-        mockCalendarDateCollection.put("service_id0", innerMap0);
-        mockCalendarDateCollection.put("service_id1", innerMap1);
-
-        assertEquals(mockCalendarDateCollection, underTest.getCalendarDateCollection());
-    }
-
-    @Test
     void getCalendarByServiceIdAndDateShouldReturnRelatedCalendarDate()
             throws SQLIntegrityConstraintViolationException {
         final CalendarDate.CalendarDateBuilder mockBuilder = mock(CalendarDate.CalendarDateBuilder.class, RETURNS_SELF);
@@ -358,7 +316,7 @@ class InMemoryGtfsDataRepositoryTest {
 
         final CalendarDate calendarDate00 = mockBuilder.build();
         assertEquals(calendarDate00, underTest.addCalendarDate(calendarDate00));
-        assertEquals(1, underTest.getCalendarDateCollection().size());
+        assertEquals(calendarDate00, underTest.getCalendarDateByServiceIdAndDate("service_id0", date0));
 
         final LocalDateTime date1 = LocalDateTime.now();
         mockBuilder.serviceId("service_id1")
@@ -368,7 +326,8 @@ class InMemoryGtfsDataRepositoryTest {
         final CalendarDate calendarDate01 = mockBuilder.build();
 
         assertEquals(calendarDate01, underTest.addCalendarDate(calendarDate01));
-        assertEquals(2, underTest.getCalendarDateCollection().size());
+        assertEquals(calendarDate01, underTest.getCalendarDateByServiceIdAndDate("service_id1", date1));
+
     }
 
     @Test
