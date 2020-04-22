@@ -100,7 +100,7 @@ class ProcessParsedAgencyTest {
 
         inOrder.verify(mockBuilder, times(1)).build();
 
-        inOrder.verify(mockGtfsDataRepo, times(1)).addEntity(ArgumentMatchers.eq(mockAgency));
+        inOrder.verify(mockGtfsDataRepo, times(1)).addAgency(ArgumentMatchers.eq(mockAgency));
 
         verifyNoMoreInteractions(mockBuilder, mockAgency, mockParsedAgency, mockGtfsDataRepo);
     }
@@ -294,8 +294,7 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        when(mockGtfsDataRepo.isPresent(mockAgency)).thenReturn(true);
-        when(mockGtfsDataRepo.addEntity(mockAgency)).thenThrow(new SQLIntegrityConstraintViolationException("agency " +
+        when(mockGtfsDataRepo.addAgency(mockAgency)).thenThrow(new SQLIntegrityConstraintViolationException("agency " +
                 "must be unique in dataset"));
 
         final Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
@@ -311,7 +310,7 @@ class ProcessParsedAgencyTest {
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
 
-        verify(mockGtfsDataRepo, times(1)).addEntity(ArgumentMatchers.isA(Agency.class));
+        verify(mockGtfsDataRepo, times(1)).addAgency(ArgumentMatchers.isA(Agency.class));
 
         verify(builder, times(1)).agencyId(anyString());
         verify(builder, times(1)).agencyName(anyString());

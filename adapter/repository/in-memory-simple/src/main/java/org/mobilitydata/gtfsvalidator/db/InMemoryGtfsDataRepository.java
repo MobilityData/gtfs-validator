@@ -34,9 +34,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Agency addEntity(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
-        String agencyId = newAgency.getAgencyId();
-        if (isPresent(newAgency)) {
+    public Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
+        final String agencyId = newAgency.getAgencyId();
+        if (agencyCollection.containsKey(newAgency.getAgencyId())) {
             throw new SQLIntegrityConstraintViolationException("agency must be unique in dataset");
         } else {
             agencyCollection.put(agencyId, newAgency);
@@ -47,11 +47,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Agency getAgencyById(final String agencyId) {
         return agencyCollection.get(agencyId);
-    }
-
-    @Override
-    public boolean isPresent(final Agency agency) {
-        return agencyCollection.containsKey(agency.getAgencyId());
     }
 
     private final Map<String, Route> routeCollection = new HashMap<>();
@@ -66,7 +61,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Route addEntity(final Route newRoute) throws SQLIntegrityConstraintViolationException {
+    public Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException {
         if (routeCollection.containsKey(newRoute.getRouteId())) {
             throw new SQLIntegrityConstraintViolationException("route must be unique in dataset");
         } else {
