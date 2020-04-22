@@ -123,15 +123,10 @@ class ParseSingleRowForFileTest {
     @Test
     void providerErrorShouldGenerateNotice() {
 
-        GtfsSpecRepository.RawEntityParser mockParser = mock(GtfsSpecRepository.RawEntityParser.class);
-        when(mockParser.validateNonStringTypes(any(RawEntity.class))).thenReturn(Collections.emptyList());
-        when(mockParser.parse(any(RawEntity.class))).thenReturn(null);
-
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.empty());
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
-        when(mockSpecRepo.getParserForFile(any(RawFileInfo.class))).thenReturn(mockParser);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
@@ -149,7 +144,7 @@ class ParseSingleRowForFileTest {
 
         inOrder.verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
         inOrder.verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
-        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo, mockParser);
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
 }
