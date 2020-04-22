@@ -86,7 +86,7 @@ public class ProcessParsedRoute {
                     .routeTextColor(routeTextColor)
                     .routeSortOrder(routeSortOrder);
 
-            gtfsDataRepository.addEntity(builder.build());
+            gtfsDataRepository.addRoute(builder.build());
 
         } catch (IllegalArgumentException e) {
 

@@ -16,9 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotUnzipInputArchiveNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -36,24 +38,26 @@ import java.util.zip.ZipFile;
 public class UnzipInputArchive {
 
     private final RawFileRepository rawFileRepo;
-    private final ZipFile inputZip;
     private final Path zipExtractPath;
     private final ValidationResultRepository resultRepo;
+    private final ExecParamRepository execParamRepo;
+    private final Logger logger;
 
     /**
      * @param fileRepo       a repository storing information about a GTFS dataset
-     * @param inputZip       an archive to unzip
      * @param zipExtractPath a path pointing to the target directory
      * @param resultRepo     a repository storing information about the validation process
      */
     public UnzipInputArchive(final RawFileRepository fileRepo,
-                             final ZipFile inputZip,
                              final Path zipExtractPath,
-                             final ValidationResultRepository resultRepo) {
+                             final ValidationResultRepository resultRepo,
+                             final ExecParamRepository execParamRepo,
+                             final Logger logger) {
         this.rawFileRepo = fileRepo;
-        this.inputZip = inputZip;
         this.zipExtractPath = zipExtractPath;
         this.resultRepo = resultRepo;
+        this.execParamRepo = execParamRepo;
+        this.logger = logger;
     }
 
     /**
@@ -61,7 +65,12 @@ public class UnzipInputArchive {
      * a {@link CannotUnzipInputArchiveNotice} is generated and added to the {@link ValidationResultRepository} provided
      * in the constructor.
      */
-    public void execute() {
+    public void execute() throws IOException {
+
+        logger.info("Unzipping archive");
+
+        final String zipInputPath = execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY);
+        final ZipFile inputZip = new ZipFile(zipInputPath);
 
         Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();
         zipEntries.asIterator().forEachRemaining(entry -> {

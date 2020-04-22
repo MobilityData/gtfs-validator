@@ -36,6 +36,7 @@ dependencies {
             project(':adapter:exporter'),
             project(':adapter:validator')
     )
+    implementation 'commons-cli:commons-cli:1.4'
 
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
@@ -43,9 +44,9 @@ dependencies {
 
     implementation 'commons-validator:commons-validator:1.6'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.3'
 
     implementation 'org.apache.logging.log4j:log4j-api:2.12.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.12.1'
