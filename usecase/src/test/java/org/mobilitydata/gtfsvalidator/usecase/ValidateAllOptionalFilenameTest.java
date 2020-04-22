@@ -54,7 +54,6 @@ class ValidateAllOptionalFilenameTest {
 
         List<String> result = underTest.execute();
         assertEquals(2, result.size());
-        assertEquals(List.of("opt1.opt", "opt0.opt"), result);
 
         InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
 
