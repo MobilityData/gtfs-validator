@@ -80,7 +80,7 @@ public class ProcessParsedAgency {
                     .agencyFareUrl(agencyFareUrl)
                     .agencyEmail(agencyEmail);
 
-            gtfsDataRepository.addEntity(builder.build());
+            gtfsDataRepository.addAgency(builder.build());
 
         } catch (IllegalArgumentException e) {
 
