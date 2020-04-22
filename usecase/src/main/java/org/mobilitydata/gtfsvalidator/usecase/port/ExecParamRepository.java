@@ -33,7 +33,7 @@ public interface ExecParamRepository {
     String OUTPUT_KEY = "output";
     String PROTO_KEY = "proto";
     String URL_KEY = "url";
-    String ZIP_KEY = "inputzip";
+    String ZIP_KEY = "zipinput";
 
     ExecParam getExecParamByKey(final String optionName);
 
