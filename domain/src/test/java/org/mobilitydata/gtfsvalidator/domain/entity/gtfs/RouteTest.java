@@ -28,6 +28,8 @@ class RouteTest {
     private static final String STRING_TEST_VALUE = "test_value";
     private static final int INT_TEST_VALUE = 0;
 
+    // Field routeId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createRouteWithNullRouteIdShouldThrowException() {
