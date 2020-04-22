@@ -21,9 +21,11 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-import org.mockito.*;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -34,19 +36,18 @@ class ValidateAllRequiredFilePresenceTest {
     void allRequiredPresentShouldNotGenerateNotice() {
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
-        Set<String> testSet = new HashSet<>(List.of("req0.req","req1.req","req2.req","req3.req","req4.req",
-                                                    "req5.req","req6.req","req7.req","req8.req","req9.req",
-                                                    "opt0.opt","opt1.opt","opt2.opt","opt3.opt","opt4.opt",
-                                                    "opt5.opt","opt6.opt","opt7.opt","opt8.opt","opt9.opt"));
+        Set<String> testSet = Set.of("req0.req","req1.req","req2.req","req3.req","req4.req",
+                                        "req5.req","req6.req","req7.req","req8.req","req9.req",
+                                        "opt0.opt","opt1.opt","opt2.opt","opt3.opt","opt4.opt",
+                                        "opt5.opt","opt6.opt","opt7.opt","opt8.opt","opt9.opt");
         when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
-        List<String> testRequiredList = new ArrayList<>(List.of("req0.req","req1.req","req2.req","req3.req","req4.req",
-                "req5.req","req6.req","req7.req","req8.req","req9.req"));
+        List<String> testRequiredList = List.of("req0.req","req1.req","req2.req","req3.req","req4.req",
+                                                "req5.req","req6.req","req7.req","req8.req","req9.req");
         when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
                 mockSpecRepo,
@@ -71,20 +72,19 @@ class ValidateAllRequiredFilePresenceTest {
     void missingRequiredShouldGenerateOneNoticePerMissingFile() {
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
-        Set<String> testSet = new HashSet<>(List.of("req0.req","req1.req","req2.req","req3.req","req4.req",
-                                                    "req5.req","req6.req","req7.req","req8.req","req9.req",
-                                                    "opt0.opt","opt1.opt","opt2.opt","opt3.opt","opt4.opt",
-                                                    "opt5.opt","opt6.opt","opt7.opt","opt8.opt","opt9.opt"));
+        Set<String> testSet = Set.of("req0.req","req1.req","req2.req","req3.req","req4.req",
+                                        "req5.req","req6.req","req7.req","req8.req","req9.req",
+                                        "opt0.opt","opt1.opt","opt2.opt","opt3.opt","opt4.opt",
+                                        "opt5.opt","opt6.opt","opt7.opt","opt8.opt","opt9.opt");
         when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
-        List<String> testRequiredList = new ArrayList<>(List.of("req0.req","req1.req","req2.req","req3.req","req4.req",
-                                                                "req5.req","req6.req","req7.req","req8.req","req9.req",
-                                                                "req10.req","req11.req","req12.req","req13.req","req14.req"));
+        List<String> testRequiredList = List.of("req0.req","req1.req","req2.req","req3.req","req4.req",
+                                                "req5.req","req6.req","req7.req","req8.req","req9.req",
+                                                "req10.req","req11.req","req12.req","req13.req","req14.req");
         when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
                 mockSpecRepo,

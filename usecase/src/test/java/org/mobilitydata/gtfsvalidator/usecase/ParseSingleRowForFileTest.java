@@ -24,9 +24,13 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataPr
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-import org.mockito.*;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -43,7 +47,6 @@ class ParseSingleRowForFileTest {
 
         GtfsSpecRepository.RawEntityParser mockParser = mock(GtfsSpecRepository.RawEntityParser.class);
         when(mockParser.validateNonStringTypes(any(RawEntity.class))).thenReturn(Collections.emptyList());
-        when(mockParser.parse(any(RawEntity.class))).thenReturn(null);
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.of(mockProvider));
@@ -88,7 +91,6 @@ class ParseSingleRowForFileTest {
         GtfsSpecRepository.RawEntityParser mockParser = mock(GtfsSpecRepository.RawEntityParser.class);
         ErrorNotice testNotice = new CannotConstructDataProviderNotice("testName");
         when(mockParser.validateNonStringTypes(any(RawEntity.class))).thenReturn(List.of(testNotice, testNotice, testNotice));
-        when(mockParser.parse(any(RawEntity.class))).thenReturn(null);
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.of(mockProvider));
@@ -97,7 +99,6 @@ class ParseSingleRowForFileTest {
         when(mockSpecRepo.getParserForFile(any(RawFileInfo.class))).thenReturn(mockParser);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ParseSingleRowForFile underTest = new ParseSingleRowForFile(
                 RawFileInfo.builder().filename("test_invalid.tst").build(),
@@ -131,7 +132,6 @@ class ParseSingleRowForFileTest {
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ParseSingleRowForFile underTest = new ParseSingleRowForFile(
                 RawFileInfo.builder().filename("test_empty.tst").build(),

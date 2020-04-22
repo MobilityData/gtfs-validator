@@ -23,9 +23,11 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-import org.mockito.*;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -48,9 +50,9 @@ class ValidateHeadersForFileTest {
     @Test
     void expectedHeaderCountShouldNotGenerateNotice() {
 
-        List<String> mockRequiredHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
+        List<String> mockRequiredHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
         List<String> mockOptionalHeaders = Collections.emptyList();
-        List<String> mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
+        List<String> mockHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.getActualHeadersForFile(any(RawFileInfo.class))).thenReturn(mockHeaders);
@@ -60,8 +62,6 @@ class ValidateHeadersForFileTest {
         when(mockSpecRepo.getOptionalHeadersForFile(any(RawFileInfo.class))).thenReturn(mockOptionalHeaders);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenReturn(null);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -81,13 +81,12 @@ class ValidateHeadersForFileTest {
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void expectedRequiredHeaderCountAndDifferentContentShouldGenerateNotices() {
 
-        List<String> mockRequiredHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
+        List<String> mockRequiredHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
         List<String> mockOptionalHeaders = Collections.emptyList();
-        List<String> mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_3, REQUIRED_HEADER_4);
+        List<String> mockHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_3, REQUIRED_HEADER_4);
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.getActualHeadersForFile(any(RawFileInfo.class))).thenReturn(mockHeaders);
@@ -97,8 +96,6 @@ class ValidateHeadersForFileTest {
         when(mockSpecRepo.getOptionalHeadersForFile(any(RawFileInfo.class))).thenReturn(mockOptionalHeaders);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenReturn(null);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -119,14 +116,12 @@ class ValidateHeadersForFileTest {
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
-
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void lessRequiredHeaderCountThanExpectedShouldGenerateOneNoticePerMissingHeader() {
 
-        List<String> mockRequiredHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, REQUIRED_HEADER_3);
+        List<String> mockRequiredHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, REQUIRED_HEADER_3);
         List<String> mockOptionalHeaders = Collections.emptyList();
-        List<String> mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1);
+        List<String> mockHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1);
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.getActualHeadersForFile(any(RawFileInfo.class))).thenReturn(mockHeaders);
@@ -136,8 +131,6 @@ class ValidateHeadersForFileTest {
         when(mockSpecRepo.getOptionalHeadersForFile(any(RawFileInfo.class))).thenReturn(mockOptionalHeaders);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenReturn(null);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -158,13 +151,12 @@ class ValidateHeadersForFileTest {
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void lessRequiredHeaderCountThanExpectedAndNonStandardHeadersPresenceShouldGenerateNotices() {
 
-        List<String> mockRequiredHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
+        List<String> mockRequiredHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
         List<String> mockOptionalHeaders = Collections.emptyList();
-        List<String> mockHeaders = Arrays.asList(REQUIRED_HEADER_0, EXTRA_HEADER_0);
+        List<String> mockHeaders = List.of(REQUIRED_HEADER_0, EXTRA_HEADER_0);
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.getActualHeadersForFile(any(RawFileInfo.class))).thenReturn(mockHeaders);
@@ -174,8 +166,6 @@ class ValidateHeadersForFileTest {
         when(mockSpecRepo.getOptionalHeadersForFile(any(RawFileInfo.class))).thenReturn(mockOptionalHeaders);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenReturn(null);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -199,9 +189,9 @@ class ValidateHeadersForFileTest {
     @Test
     void presenceOfKnownOptionalHeaderShouldNotGenerateNotices() {
 
-        List<String> mockRequiredHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
-        List<String> mockOptionalHeaders = Arrays.asList(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1);
-        List<String> mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2,
+        List<String> mockRequiredHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
+        List<String> mockOptionalHeaders = List.of(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1);
+        List<String> mockHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2,
                 OPTIONAL_HEADER_0, OPTIONAL_HEADER_1);
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
@@ -212,8 +202,6 @@ class ValidateHeadersForFileTest {
         when(mockSpecRepo.getOptionalHeadersForFile(any(RawFileInfo.class))).thenReturn(mockOptionalHeaders);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenReturn(null);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,
@@ -233,13 +221,12 @@ class ValidateHeadersForFileTest {
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void unexpectedOptionalHeaderShouldGenerateNotices() {
 
-        List<String> mockRequiredHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
-        List<String> mockOptionalHeaders = Arrays.asList(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1);
-        List<String> mockHeaders = Arrays.asList(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2,
+        List<String> mockRequiredHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
+        List<String> mockOptionalHeaders = List.of(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1);
+        List<String> mockHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2,
                 OPTIONAL_HEADER_0, OPTIONAL_HEADER_1, EXTRA_HEADER_0, EXTRA_HEADER_1);
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
@@ -250,8 +237,6 @@ class ValidateHeadersForFileTest {
         when(mockSpecRepo.getOptionalHeadersForFile(any(RawFileInfo.class))).thenReturn(mockOptionalHeaders);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenReturn(null);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateHeadersForFile underTest = new ValidateHeadersForFile(
                 mockSpecRepo,

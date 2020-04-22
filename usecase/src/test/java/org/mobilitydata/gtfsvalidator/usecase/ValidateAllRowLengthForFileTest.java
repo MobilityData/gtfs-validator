@@ -19,23 +19,13 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ValidateAllRowLengthForFileTest {
@@ -53,7 +43,6 @@ class ValidateAllRowLengthForFileTest {
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.of(mockProvider));
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
                 RawFileInfo.builder()
@@ -87,7 +76,6 @@ class ValidateAllRowLengthForFileTest {
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.of(mockProvider));
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
                 RawFileInfo.builder()
@@ -114,7 +102,6 @@ class ValidateAllRowLengthForFileTest {
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.empty());
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(ErrorNotice.class))).thenReturn(null);
 
         ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
                 RawFileInfo.builder()
