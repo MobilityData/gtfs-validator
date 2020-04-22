@@ -27,3 +27,5 @@ build/
 
 ### Gradle Patch ###
 **/build/
+
+execution-parameters.json
