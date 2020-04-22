@@ -38,7 +38,8 @@ class ParseSingleRowForFileTest {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
         when(mockProvider.hasNext()).thenReturn(true, true, true, false);
-        when(mockProvider.getNext()).thenReturn(new RawEntity(Map.of("testKey","testValue"), 0));
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        when(mockProvider.getNext()).thenReturn(testRawEntity);
 
         GtfsSpecRepository.RawEntityParser mockParser = mock(GtfsSpecRepository.RawEntityParser.class);
         when(mockParser.validateNonStringTypes(any(RawEntity.class))).thenReturn(Collections.emptyList());
@@ -81,10 +82,11 @@ class ParseSingleRowForFileTest {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
         when(mockProvider.hasNext()).thenReturn(true);
-        when(mockProvider.getNext()).thenReturn(new RawEntity(Map.of("testKey","testValue"), 0));
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        when(mockProvider.getNext()).thenReturn(testRawEntity);
 
-        ErrorNotice testNotice = new CannotConstructDataProviderNotice("testName");
         GtfsSpecRepository.RawEntityParser mockParser = mock(GtfsSpecRepository.RawEntityParser.class);
+        ErrorNotice testNotice = new CannotConstructDataProviderNotice("testName");
         when(mockParser.validateNonStringTypes(any(RawEntity.class))).thenReturn(List.of(testNotice, testNotice, testNotice));
         when(mockParser.parse(any(RawEntity.class))).thenReturn(null);
 
