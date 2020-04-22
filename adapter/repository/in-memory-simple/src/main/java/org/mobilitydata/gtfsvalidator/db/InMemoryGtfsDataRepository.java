@@ -22,16 +22,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
-
-    public Map<String, Agency> getAgencyCollection() {
-        return agencyCollection;
-    }
 
     @Override
     public Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
@@ -50,10 +45,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     private final Map<String, Route> routeCollection = new HashMap<>();
-
-    public Map<String, Route> getRouteCollection() {
-        return Collections.unmodifiableMap(routeCollection);
-    }
 
     @Override
     public Route getRouteById(final String routeId) {

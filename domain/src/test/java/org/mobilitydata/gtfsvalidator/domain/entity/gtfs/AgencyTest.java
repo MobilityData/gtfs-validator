@@ -24,6 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class AgencyTest {
     private static final String STRING_TEST_VALUE = "test_value";
 
+    // Field agencyName is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createAgencyWithNullAgencyNameShouldThrowException() {
         final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
@@ -43,6 +45,8 @@ class AgencyTest {
         assertEquals("agency_name can not be null", exception.getMessage());
     }
 
+    // Field agencyUrl is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createAgencyWithNullAgencyUrlShouldThrowException() {
         final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
@@ -62,6 +66,8 @@ class AgencyTest {
         assertEquals("agency_url can not be null", exception.getMessage());
     }
 
+    // Field agencyTimezone is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createAgencyWithTimezoneAgencyUrlShouldThrowException() {
         final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
