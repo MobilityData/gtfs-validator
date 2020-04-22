@@ -22,21 +22,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
 
-    public Map<String, Agency> getAgencyCollection() {
-        return agencyCollection;
-    }
-
     @Override
-    public Agency addEntity(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
-        String agencyId = newAgency.getAgencyId();
-        if (isPresent(newAgency)) {
+    public Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
+        final String agencyId = newAgency.getAgencyId();
+        if (agencyCollection.containsKey(newAgency.getAgencyId())) {
             throw new SQLIntegrityConstraintViolationException("agency must be unique in dataset");
         } else {
             agencyCollection.put(agencyId, newAgency);
@@ -49,16 +44,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return agencyCollection.get(agencyId);
     }
 
-    @Override
-    public boolean isPresent(final Agency agency) {
-        return agencyCollection.containsKey(agency.getAgencyId());
-    }
-
     private final Map<String, Route> routeCollection = new HashMap<>();
-
-    public Map<String, Route> getRouteCollection() {
-        return Collections.unmodifiableMap(routeCollection);
-    }
 
     @Override
     public Route getRouteById(final String routeId) {
@@ -66,7 +52,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public Route addEntity(final Route newRoute) throws SQLIntegrityConstraintViolationException {
+    public Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException {
         if (routeCollection.containsKey(newRoute.getRouteId())) {
             throw new SQLIntegrityConstraintViolationException("route must be unique in dataset");
         } else {
