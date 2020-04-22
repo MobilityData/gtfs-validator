@@ -83,7 +83,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     /**
-     * Visit a generic notice to add it to the rpeository and returns the notice. Useful for automatic type inference
+     * Visit a generic notice to add it to the repository and returns the notice. Useful for automatic type inference
      *
      * @param newNotice notice
      * @return the notice that was added to the repository
@@ -107,7 +107,6 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
                 errorNoticeList.stream())
                 .collect(Collectors.toUnmodifiableList());
     }
-
 
     @Override
     public NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException {

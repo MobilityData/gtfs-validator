@@ -34,11 +34,18 @@ dependencies {
             project(':adapter:protos')
     )
 
+    implementation 'commons-cli:commons-cli:1.4'
+
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'commons-validator:commons-validator:1.6'
 
     implementation 'org.jetbrains:annotations:19.0.0'
+
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
+    implementation 'org.apache.logging.log4j:log4j-api:2.12.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.12.1'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testImplementation 'org.hamcrest:hamcrest:2.2'
