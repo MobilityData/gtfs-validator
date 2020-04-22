@@ -21,7 +21,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,10 +44,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     private final Map<String, Route> routeCollection = new HashMap<>();
-
-    public Map<String, Route> getRouteCollection() {
-        return Collections.unmodifiableMap(routeCollection);
-    }
 
     @Override
     public Route getRouteById(final String routeId) {

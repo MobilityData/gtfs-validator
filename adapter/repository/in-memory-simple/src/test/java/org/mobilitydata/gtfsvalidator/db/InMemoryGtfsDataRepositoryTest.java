@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -164,7 +163,6 @@ class InMemoryGtfsDataRepositoryTest {
         final Route route00 = mockBuilder.build();
         Route toCheck = underTest.addRoute(route00);
 
-        assertEquals(1, underTest.getRouteCollection().size());
         assertEquals(toCheck, route00);
 
         mockBuilder.routeId("test_id_1")
@@ -182,59 +180,7 @@ class InMemoryGtfsDataRepositoryTest {
         final Route route01 = mockBuilder.build();
         toCheck = underTest.addRoute(route01);
 
-        assertEquals(2, underTest.getRouteCollection().size());
         assertEquals(toCheck, route01);
-    }
-
-    @Test
-    void getRouteCollectionShouldReturnRouteCollection() throws SQLIntegrityConstraintViolationException {
-        final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
-        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
-        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeShortName(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeLongName(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeDesc(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeType(anyInt())).thenCallRealMethod();
-        when(mockBuilder.routeUrl(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeColor(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeTextColor(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeSortOrder(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.routeId("test_id_0")
-                .agencyId(STRING_TEST_VALUE)
-                .routeShortName(STRING_TEST_VALUE)
-                .routeLongName(STRING_TEST_VALUE)
-                .routeDesc(STRING_TEST_VALUE)
-                .routeType(3)
-                .routeUrl(STRING_TEST_VALUE)
-                .routeColor(STRING_TEST_VALUE)
-                .routeTextColor(STRING_TEST_VALUE)
-                .routeSortOrder(1);
-
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        final Route route00 = mockBuilder.build();
-        underTest.addRoute(route00);
-
-        mockBuilder.routeId("test_id_1")
-                .agencyId(STRING_TEST_VALUE)
-                .routeShortName(STRING_TEST_VALUE)
-                .routeLongName(STRING_TEST_VALUE)
-                .routeDesc(STRING_TEST_VALUE)
-                .routeType(3)
-                .routeUrl(STRING_TEST_VALUE)
-                .routeColor(STRING_TEST_VALUE)
-                .routeTextColor(STRING_TEST_VALUE)
-                .routeSortOrder(1);
-
-        final Route route01 = mockBuilder.build();
-        underTest.addRoute(route01);
-
-        final Map<String, Route> toVerify = underTest.getRouteCollection();
-
-        assertEquals("test_id_0", toVerify.get("test_id_0").getRouteId());
-        assertEquals("test_id_1", toVerify.get("test_id_1").getRouteId());
     }
 
     @Test
