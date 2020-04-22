@@ -30,9 +30,6 @@ public interface GtfsDataRepository {
     Route getRouteById(final String routeId);
 
     Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
-    Route addEntity(final Route newRoute) throws SQLIntegrityConstraintViolationException;
-
-    Map<String, Shape> getShapeCollection();
 
     Shape getShapeById(final String shapeId);
 

@@ -23,8 +23,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -275,31 +273,8 @@ class InMemoryGtfsDataRepositoryTest {
 
         final Shape toCheck = underTest.addShape(mockShape);
 
-        assertEquals(1, underTest.getShapeCollection().size());
         assertEquals(toCheck, mockShape);
-    }
-
-    @Test
-    void getShapeCollectionShouldReturnShapeCollection() throws SQLIntegrityConstraintViolationException {
-        final Shape mockShape00 = mock(Shape.class);
-        when(mockShape00.getShapeId()).thenReturn("test id00");
-
-        final Shape mockShape01 = mock(Shape.class);
-        when(mockShape01.getShapeId()).thenReturn("test id01");
-
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        Map<String, Shape> mockShapeMap = new HashMap<>();
-        mockShapeMap.put("test id00", mockShape00);
-        mockShapeMap.put("test id01", mockShape01);
-
-        underTest.addShape(mockShape00);
-        underTest.addShape(mockShape01);
-
-        final Map<String, Shape> toCheck = underTest.getShapeCollection();
-
-        assertEquals(2, underTest.getShapeCollection().size());
-        assertEquals(toCheck, mockShapeMap);
+        assertEquals(mockShape, underTest.getShapeById("test id"));
     }
 
     @Test

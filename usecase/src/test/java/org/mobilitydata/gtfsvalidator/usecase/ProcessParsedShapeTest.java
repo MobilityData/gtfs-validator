@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 class ProcessParsedShapeTest {
 
     @Test
-    public void processValidatedShapeEntityWithNullShapeIdShouldThrowExceptionAndAddMissingRequiredValueNoticeToRepo() {
+    public void validatedShapeEntityWithNullShapeIdShouldThrowExceptionAndAddMissingRequiredValueNoticeToRepo() {
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -39,7 +39,8 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100f);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedShape));
 
         assertEquals("field shape_id can not be null in file shapes.txt", exception.getMessage());
 
@@ -71,7 +72,7 @@ class ProcessParsedShapeTest {
     }
 
     @Test
-    public void processValidatedShapeEntityWithTooBigLatitudeShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
+    public void validatedShapeEntityWithTooBigLatShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -87,7 +88,8 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100f);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedShape));
 
         assertEquals("invalid value for field shape_latitude", exception.getMessage());
 
@@ -121,7 +123,7 @@ class ProcessParsedShapeTest {
     }
 
     @Test
-    public void processValidatedShapeEntityWithTooSmallLatitudeShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
+    public void validatedShapeEntityWithTooSmallLatShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -172,7 +174,7 @@ class ProcessParsedShapeTest {
     }
 
     @Test
-    public void processValidatedShapeEntityWithTooBigLongitudeShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
+    public void validatedShapeEntityWithTooBigLongShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -224,7 +226,7 @@ class ProcessParsedShapeTest {
     }
 
     @Test
-    public void processValidatedShapeEntityWithTooSmallLongitudeShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
+    public void validatedShapeEntityWithTooSmallLongShouldThrowExceptionAndAddFloatFieldValueOutOfRangeNoticeToRepo() {
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -240,7 +242,8 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100f);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedShape));
 
         assertEquals("invalid value for field shape_longitude", exception.getMessage());
 
@@ -275,7 +278,7 @@ class ProcessParsedShapeTest {
     }
 
     @Test
-    public void processValidatedShapeEntityWitNegativeShapePtSequenceShouldThrowExceptionAndAddIntegerFieldValueOutOfRangeNoticeToRepo() {
+    public void validatedShapeWitNegShapePtSequenceShouldThrowExceptionAndAddIntegerFieldValueOutOfRangeNoticeToRepo() {
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -291,7 +294,8 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(-1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(100f);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedShape));
 
         assertEquals("invalid value for field shape_pt_sequence", exception.getMessage());
 
@@ -326,7 +330,7 @@ class ProcessParsedShapeTest {
     }
 
     @Test
-    public void processValidatedShapeEntityWitNegativeShapeDistTraveledShouldThrowExceptionAndAddIntegerFieldValueOutOfRangeNoticeToRepo() {
+    public void shapeWitNegShapeDistTraveledShouldThrowExceptionAndAddIntegerFieldValueOutOfRangeNoticeToRepo() {
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -342,7 +346,8 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_pt_sequence"))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq("shape_dist_traveled"))).thenReturn(-100f);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.execute(mockParsedShape));
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.execute(mockParsedShape));
 
         assertEquals("invalid value for field shape_dist_traveled", exception.getMessage());
 

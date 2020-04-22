@@ -65,11 +65,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Shape> shapeCollection = new HashMap<>();
 
     @Override
-    public Map<String, Shape> getShapeCollection() {
-        return Collections.unmodifiableMap(shapeCollection);
-    }
-
-    @Override
     public Shape getShapeById(final String shapeId) {
         return shapeCollection.get(shapeId);
     }
