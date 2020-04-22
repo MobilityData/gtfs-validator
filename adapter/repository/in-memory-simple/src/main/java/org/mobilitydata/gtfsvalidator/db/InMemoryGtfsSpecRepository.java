@@ -28,10 +28,7 @@ import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -50,13 +47,19 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     /**
      * @param specResourceName the path to the GTFS schema resource
-     * @throws IOException in case {@code specResourceName} was not find
      */
-    public InMemoryGtfsSpecRepository(final String specResourceName) throws IOException {
-        //noinspection UnstableApiUsage
-        inMemoryGTFSSpec = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName),
-                StandardCharsets.UTF_8),
-                GtfsSpecificationProto.CsvSpecProtos.class);
+    public InMemoryGtfsSpecRepository(final String specResourceName) {
+        GtfsSpecificationProto.CsvSpecProtos GtfsSpec;
+        try {
+            //noinspection UnstableApiUsage
+            GtfsSpec = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName),
+                    StandardCharsets.UTF_8),
+                    GtfsSpecificationProto.CsvSpecProtos.class);
+        } catch (IOException e) {
+            GtfsSpec = null;
+            e.printStackTrace();
+        }
+        inMemoryGTFSSpec = GtfsSpec;
     }
 
     /**
@@ -147,10 +150,10 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
     @Override
     public RawEntityParser getParserForFile(RawFileInfo file) {
         return new GtfsEntityParser(
-                inMemoryGTFSSpec.getCsvspecList().stream()
+                Objects.requireNonNull(inMemoryGTFSSpec.getCsvspecList().stream()
                         .filter(spec -> file.getFilename().equals(spec.getFilename()))
                         .findAny()
-                        .orElse(null),
+                        .orElse(null)),
                 file,
                 FloatValidator.getInstance(),
                 IntegerValidator.getInstance(),
@@ -169,10 +172,10 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
         if (toReturn == null) {
             toReturn = new GtfsTypeValidator(
-                    inMemoryGTFSSpec.getCsvspecList().stream()
+                    Objects.requireNonNull(inMemoryGTFSSpec.getCsvspecList().stream()
                             .filter(spec -> file.getFilename().equals(spec.getFilename()))
                             .findAny()
-                            .orElse(null),
+                            .orElse(null)),
                     FloatValidator.getInstance(),
                     IntegerValidator.getInstance(),
                     new UrlValidator(VALID_URL_SCHEMES),
