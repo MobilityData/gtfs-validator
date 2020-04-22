@@ -17,58 +17,34 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.*;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.*;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ValidateAllOptionalFilenameTest {
 
-    @Mock(name = "reqSpecRepo")
-    int reqSpecRepo;
-    @Mock(name = "optSpecRepo")
-    int optSpecRepo;
-    @InjectMocks
-    GtfsSpecRepository mockSpecRepo;
-
-    @Mock(name = "reqFileRepo")
-    int reqFileRepo;
-    @Mock(name = "optFileRepo")
-    int optFileRepo;
-    @Mock(name = "extraFileRepo")
-    int extraFileRepo;
-    @InjectMocks
-    RawFileRepository mockFileRepo;
-
-    @Mock
-    List<Notice> noticeList = new ArrayList<>();
-    @InjectMocks
-    ValidationResultRepository mockResultRepo;
-
     @Test
     void allExtraPresentShouldGenerateNotice() {
 
-        reqSpecRepo = 1;
-        optSpecRepo = 2;
-        reqFileRepo = 1;
-        optFileRepo = 2;
-        extraFileRepo = 3;
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        Set<String> testSet = new HashSet<>(List.of("req0.req","opt0.opt","opt1.opt", "extra0.extra", "extra1.extra", "extra2.extra"));
+        when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
 
-        GtfsSpecRepository mockSpecRepo = buildMockSpecRepository();
-        RawFileRepository mockFileRepo = buildMockFileRepository();
-        ValidationResultRepository mockResultRepo = buildMockResultRepo();
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        List<String> testRequiredList = new ArrayList<>(List.of("req0.req"));
+        when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
+        List<String> testOptionalList = new ArrayList<>(List.of("opt0.opt","opt1.opt"));
+        when(mockSpecRepo.getOptionalFilenameList()).thenReturn(testOptionalList);
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenReturn(null);
 
         ValidateAllOptionalFilename underTest = new ValidateAllOptionalFilename(
                 mockSpecRepo,
@@ -76,32 +52,8 @@ class ValidateAllOptionalFilenameTest {
                 mockResultRepo);
 
         List<String> result = underTest.execute();
-
         assertEquals(2, result.size());
-        assertEquals(List.of("opt0.opt", "opt1.opt"), result);
-
-        assertEquals(3, noticeList.size());
-
-        Notice notice = noticeList.get(0);
-        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
-        assertEquals("extra0.extra", notice.getFilename());
-        assertEquals("W004", notice.getId());
-        assertEquals("Non standard file found", notice.getTitle());
-        assertEquals("Extra file extra0.extra found in archive", notice.getDescription());
-
-        notice = noticeList.get(1);
-        assertEquals("extra2.extra", notice.getFilename());
-        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
-        assertEquals("W004", notice.getId());
-        assertEquals("Non standard file found", notice.getTitle());
-        assertEquals("Extra file extra2.extra found in archive", notice.getDescription());
-
-        notice = noticeList.get(2);
-        assertEquals("extra1.extra", notice.getFilename());
-        assertThat(notice, instanceOf(ExtraFileFoundNotice.class));
-        assertEquals("W004", notice.getId());
-        assertEquals("Non standard file found", notice.getTitle());
-        assertEquals("Extra file extra1.extra found in archive", notice.getDescription());
+        assertEquals(List.of("opt1.opt", "opt0.opt"), result);
 
         InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
 
@@ -110,72 +62,6 @@ class ValidateAllOptionalFilenameTest {
         inOrder.verify(mockFileRepo, times(2)).getFilenameAll();
         verify(mockResultRepo, times(3)).addNotice(any(WarningNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
-    }
-
-    private GtfsSpecRepository buildMockSpecRepository() {
-        mockSpecRepo = mock(GtfsSpecRepository.class);
-        when(mockSpecRepo.getRequiredFilenameList()).thenAnswer(new Answer<List<String>>() {
-            public List<String> answer(InvocationOnMock invocation) {
-                List<String> toReturn = new ArrayList<>(reqSpecRepo);
-
-                for (int i = 0; i < reqSpecRepo; ++i) {
-                    toReturn.add("req" + i + ".req");
-                }
-
-                return toReturn;
-            }
-        });
-        when(mockSpecRepo.getOptionalFilenameList()).thenAnswer(new Answer<List<String>>() {
-            public List<String> answer(InvocationOnMock invocation) {
-                List<String> toReturn = new ArrayList<>(optSpecRepo);
-
-                for (int i = 0; i < optSpecRepo; ++i) {
-                    toReturn.add("opt" + i + ".opt");
-                }
-
-                return toReturn;
-            }
-        });
-
-        return mockSpecRepo;
-    }
-
-    private RawFileRepository buildMockFileRepository() {
-        mockFileRepo = mock(RawFileRepository.class);
-        when(mockFileRepo.findByName(anyString())).thenReturn(Optional.empty());
-        when(mockFileRepo.getFilenameAll()).thenAnswer(new Answer<Set<String>>() {
-            public Set<String> answer(InvocationOnMock invocation) {
-                Set<String> toReturn = new HashSet<>(reqFileRepo + optFileRepo);
-
-                for (int i = 0; i < reqFileRepo; ++i) {
-                    toReturn.add("req" + i + ".req");
-                }
-
-                for (int j = 0; j < optFileRepo; ++j) {
-                    toReturn.add("opt" + j + ".opt");
-                }
-
-                for (int k = 0; k < extraFileRepo; ++k) {
-                    toReturn.add("extra" + k + ".extra");
-                }
-                return toReturn;
-            }
-        });
-
-        return mockFileRepo;
-    }
-
-    private ValidationResultRepository buildMockResultRepo() {
-        mockResultRepo =  mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenAnswer(new Answer<Notice>() {
-            public WarningNotice answer(InvocationOnMock invocation) {
-                WarningNotice warningNotice = invocation.getArgument(0);
-                noticeList.add(warningNotice);
-                return warningNotice;
-            }
-        });
-
-        return mockResultRepo;
     }
 
 }
