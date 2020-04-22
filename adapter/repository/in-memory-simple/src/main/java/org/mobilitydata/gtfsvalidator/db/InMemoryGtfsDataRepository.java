@@ -62,12 +62,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         }
     }
 
-    Map<String, Level> levelCollection = new HashMap<>();
-
-    @Override
-    public Map<String, Level> getLevelCollection() {
-        return Collections.unmodifiableMap(levelCollection);
-    }
+    private final Map<String, Level> levelCollection = new HashMap<>();
 
     @Override
     public Level getLevelByLevelId(final String levelId) {

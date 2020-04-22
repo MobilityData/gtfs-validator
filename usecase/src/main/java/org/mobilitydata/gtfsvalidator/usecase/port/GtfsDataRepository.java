@@ -29,9 +29,7 @@ public interface GtfsDataRepository {
 
     Route getRouteById(final String routeId);
 
-    Route addEntity(final Route newRoute) throws SQLIntegrityConstraintViolationException;
-
-    Map<String, Level> getLevelCollection();
+    Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
 
     Level getLevelByLevelId(final String levelId);
 
