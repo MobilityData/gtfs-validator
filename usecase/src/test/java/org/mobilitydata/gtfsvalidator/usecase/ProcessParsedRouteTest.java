@@ -97,7 +97,7 @@ class ProcessParsedRouteTest {
         InOrder inOrder = inOrder(mockBuilder, mockResultRepo, mockGtfsDataRepo);
 
         inOrder.verify(mockBuilder, times(1)).build();
-        inOrder.verify(mockGtfsDataRepo, times(1)).addEntity(ArgumentMatchers.eq(mockRoute));
+        inOrder.verify(mockGtfsDataRepo, times(1)).addRoute(ArgumentMatchers.eq(mockRoute));
 
         verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockParsedRoute);
     }
@@ -251,7 +251,7 @@ class ProcessParsedRouteTest {
         when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
 
-        when(mockGtfsDataRepo.addEntity(mockRoute)).thenThrow(new SQLIntegrityConstraintViolationException("route " +
+        when(mockGtfsDataRepo.addRoute(mockRoute)).thenThrow(new SQLIntegrityConstraintViolationException("route " +
                 "must be unique in dataset"));
 
         final Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
@@ -269,7 +269,7 @@ class ProcessParsedRouteTest {
         verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_text_color"));
         verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_sort_order"));
 
-        verify(mockGtfsDataRepo, times(1)).addEntity(ArgumentMatchers.isA(Route.class));
+        verify(mockGtfsDataRepo, times(1)).addRoute(ArgumentMatchers.isA(Route.class));
 
         verify(mockBuilder, times(1)).routeId(anyString());
         verify(mockBuilder, times(1)).agencyId(anyString());
