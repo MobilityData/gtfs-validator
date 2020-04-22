@@ -89,7 +89,6 @@ public class ProcessParsedTrip {
                         "direction_id", validatedTripEntity.getEntityId(), directionId));
             }
 
-
             if (wheelchairAccessible != 0 && wheelchairAccessible != 1 && wheelchairAccessible != 2) {
                 resultRepository.addNotice(new UnexpectedValueNotice("trips.txt",
                         "wheelchair_accessible", validatedTripEntity.getEntityId(), wheelchairAccessible));

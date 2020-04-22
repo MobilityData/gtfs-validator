@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TripTest {
 
+    // Field routeId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullRouteIdShouldThrowException() {
@@ -29,6 +31,8 @@ class TripTest {
         assertEquals("field route_id can not be null", exception.getMessage());
     }
 
+    // Field serviceId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullServiceIdShouldThrowException() {
@@ -51,6 +55,8 @@ class TripTest {
         assertEquals("field service_id can not be null", exception.getMessage());
     }
 
+    // Field tripId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullTripIdShouldThrowException() {

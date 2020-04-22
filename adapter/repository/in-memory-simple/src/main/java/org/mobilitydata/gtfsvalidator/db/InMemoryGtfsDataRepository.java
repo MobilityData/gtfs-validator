@@ -79,11 +79,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Trip> tripCollection = new HashMap<>();
 
     @Override
-    public Map<String, Trip> getTripCollection() {
-        return Collections.unmodifiableMap(tripCollection);
-    }
-
-    @Override
     public Trip getTripById(final String tripId) {
         return tripCollection.get(tripId);
     }
