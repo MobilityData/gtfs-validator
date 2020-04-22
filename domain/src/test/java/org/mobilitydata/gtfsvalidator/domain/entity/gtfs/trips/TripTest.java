@@ -1,6 +1,8 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.BikesAllowedStatus;
+import org.mobilitydata.gtfsvalidator.domain.entity.WheelchairAccessibleStatus;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

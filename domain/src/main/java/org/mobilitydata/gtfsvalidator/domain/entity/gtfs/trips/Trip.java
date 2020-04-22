@@ -18,6 +18,8 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.BikesAllowedStatus;
+import org.mobilitydata.gtfsvalidator.domain.entity.WheelchairAccessibleStatus;
 
 public class Trip {
 
