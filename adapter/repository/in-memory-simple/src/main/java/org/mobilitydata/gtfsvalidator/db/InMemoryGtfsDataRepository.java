@@ -62,12 +62,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         }
     }
 
-    Map<String, Calendar> calendarCollection = new HashMap<>();
-
-    @Override
-    public Map<String, Calendar> getCalendarCollection() {
-        return Collections.unmodifiableMap(calendarCollection);
-    }
+    private final Map<String, Calendar> calendarCollection = new HashMap<>();
 
     @Override
     public Calendar getCalendarByServiceId(final String serviceId) {

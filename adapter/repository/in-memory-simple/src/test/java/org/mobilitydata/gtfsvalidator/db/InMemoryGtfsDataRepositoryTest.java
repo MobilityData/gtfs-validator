@@ -24,8 +24,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -268,41 +266,6 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void getCalendarCollectionShouldReturnCalendarCollection() throws SQLIntegrityConstraintViolationException {
-        final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
-
-        mockBuilder.serviceId("test_id_0")
-                .monday(0)
-                .tuesday(0)
-                .wednesday(0)
-                .thursday(0)
-                .friday(0)
-                .saturday(0)
-                .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now());
-
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        final Calendar calendar00 = mockBuilder.build();
-        underTest.addCalendar(calendar00);
-
-        mockBuilder.serviceId("test_id_1");
-
-        final Calendar calendar01 = mockBuilder.build();
-
-        underTest.addCalendar(calendar01);
-
-        final Map<String, Calendar> toCheck = underTest.getCalendarCollection();
-
-        final Map<String, Calendar> mockCalendarMap = new HashMap<>();
-        mockCalendarMap.put(calendar00.getServiceId(), calendar00);
-        mockCalendarMap.put(calendar01.getServiceId(), calendar01);
-
-        assertEquals(mockCalendarMap, toCheck);
-    }
-
-    @Test
     public void getCalendarByServiceIdShouldReturnRelatedCalendar() throws SQLIntegrityConstraintViolationException {
         final Calendar.CalendarBuilder mockBuilder = spy(Calendar.CalendarBuilder.class);
 
@@ -354,7 +317,6 @@ class InMemoryGtfsDataRepositoryTest {
         final Calendar toCheck = underTest.addCalendar(calendar00);
 
         assertEquals(toCheck, calendar00);
-        assertEquals(1, underTest.getCalendarCollection().size());
     }
 
     @Test

@@ -31,8 +31,6 @@ public interface GtfsDataRepository {
 
     Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
 
-    Map<String, Calendar> getCalendarCollection();
-
     Calendar getCalendarByServiceId(final String serviceId);
 
     Calendar addCalendar(final Calendar newCalendar) throws SQLIntegrityConstraintViolationException;
