@@ -21,9 +21,11 @@ import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-import org.mockito.*;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -34,17 +36,16 @@ class ValidateAllOptionalFilenameTest {
     void allExtraPresentShouldGenerateNotice() {
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
-        Set<String> testSet = new HashSet<>(List.of("req0.req","opt0.opt","opt1.opt", "extra0.extra", "extra1.extra", "extra2.extra"));
+        Set<String> testSet = Set.of("req0.req","opt0.opt","opt1.opt", "extra0.extra", "extra1.extra", "extra2.extra");
         when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
-        List<String> testRequiredList = new ArrayList<>(List.of("req0.req"));
+        List<String> testRequiredList = List.of("req0.req");
         when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
-        List<String> testOptionalList = new ArrayList<>(List.of("opt0.opt","opt1.opt"));
+        List<String> testOptionalList = List.of("opt0.opt","opt1.opt");
         when(mockSpecRepo.getOptionalFilenameList()).thenReturn(testOptionalList);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        when(mockResultRepo.addNotice(any(WarningNotice.class))).thenReturn(null);
 
         ValidateAllOptionalFilename underTest = new ValidateAllOptionalFilename(
                 mockSpecRepo,

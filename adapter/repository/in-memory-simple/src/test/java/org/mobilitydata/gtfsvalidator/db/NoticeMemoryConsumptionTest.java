@@ -6,6 +6,8 @@ import org.junit.jupiter.api.*;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class NoticeMemoryConsumptionTest {
 
@@ -50,7 +52,7 @@ public class NoticeMemoryConsumptionTest {
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assert (totalMemoryInBytes - freeMemoryInBytes < maxMemoryLimit * SAFETY_BUFFER_FACTOR);
+        assertTrue(totalMemoryInBytes - freeMemoryInBytes < maxMemoryLimit * SAFETY_BUFFER_FACTOR);
     }
 
     @BeforeEach
