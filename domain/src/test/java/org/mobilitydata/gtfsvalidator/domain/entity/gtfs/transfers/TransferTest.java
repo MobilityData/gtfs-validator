@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020. MobilityData IO.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers;
 
 import org.junit.jupiter.api.Test;
@@ -11,6 +27,8 @@ class TransferTest {
     private final static int VALID_TRANSFER_TYPE_VALUE = 1;
     private final static int VALID_MIN_TRANSFER_TIME_VALUE = 20;
 
+    // Field fromStopId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     void createTransferWithNullFromStopIdShouldThrowException() {
         final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();
@@ -26,6 +44,8 @@ class TransferTest {
         assertEquals("field from_stop_id can not be null in transfers.txt", exception.getMessage());
     }
 
+    // Field toStopId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     void createTransferWithNullToStopIdShouldThrowException() {
         final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();

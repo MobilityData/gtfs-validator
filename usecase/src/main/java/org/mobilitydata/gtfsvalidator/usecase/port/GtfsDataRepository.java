@@ -31,8 +31,6 @@ public interface GtfsDataRepository {
 
     Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
 
-    Map<String, Map<String, Transfer>> getTransferCollection();
-
     Transfer getTransferByStopPair(final String fromStopId, final String toStopId);
 
     Transfer addTransfer(final Transfer newTransfer) throws SQLIntegrityConstraintViolationException;

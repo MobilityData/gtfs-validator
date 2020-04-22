@@ -65,11 +65,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Map<String, Transfer>> transferCollection = new HashMap<>();
 
     @Override
-    public Map<String, Map<String, Transfer>> getTransferCollection() {
-        return Collections.unmodifiableMap(transferCollection);
-    }
-
-    @Override
     public Transfer getTransferByStopPair(final String fromStopId, final String toStopId) {
         return transferCollection.get(fromStopId).get(toStopId);
     }
