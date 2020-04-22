@@ -32,44 +32,6 @@ class InMemoryGtfsDataRepositoryTest {
     private final String STRING_TEST_VALUE = "test_value";
 
     @Test
-    void getAgencyCollectionShouldReturnRouteCollection() throws SQLIntegrityConstraintViolationException {
-        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
-        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
-        when(mockBuilder.agencyName(anyString())).thenCallRealMethod();
-        when(mockBuilder.agencyUrl(anyString())).thenCallRealMethod();
-        when(mockBuilder.agencyTimezone(anyString())).thenCallRealMethod();
-        when(mockBuilder.agencyLang(anyString())).thenCallRealMethod();
-        when(mockBuilder.agencyPhone(anyString())).thenCallRealMethod();
-        when(mockBuilder.agencyFareUrl(anyString())).thenCallRealMethod();
-        when(mockBuilder.agencyEmail(anyString())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.agencyId("test_id0")
-                .agencyName(STRING_TEST_VALUE)
-                .agencyUrl(STRING_TEST_VALUE)
-                .agencyTimezone(STRING_TEST_VALUE)
-                .agencyLang(STRING_TEST_VALUE)
-                .agencyPhone(STRING_TEST_VALUE)
-                .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
-
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        final Agency agency00 = mockBuilder.build();
-        underTest.addAgency(agency00);
-
-        mockBuilder.agencyId("test_id1");
-
-        final Agency agency01 = mockBuilder.build();
-        underTest.addAgency(agency01);
-
-        final Map<String, Agency> toVerify = underTest.getAgencyCollection();
-
-        assertEquals("test_id0", toVerify.get("test_id0").getAgencyId());
-        assertEquals("test_id1", toVerify.get("test_id1").getAgencyId());
-    }
-
-    @Test
     void callToAddAgencyShouldAddAgencyToRepoAndReturnSameEntity() throws SQLIntegrityConstraintViolationException {
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
@@ -96,7 +58,6 @@ class InMemoryGtfsDataRepositoryTest {
         final Agency agency00 = mockBuilder.build();
         Agency toCheck = underTest.addAgency(agency00);
 
-        assertEquals(1, underTest.getAgencyCollection().size());
         assertEquals(agency00, toCheck);
 
         mockBuilder.agencyId("test_id1");
@@ -104,7 +65,6 @@ class InMemoryGtfsDataRepositoryTest {
         final Agency agency01 = mockBuilder.build();
         toCheck = underTest.addAgency(agency01);
 
-        assertEquals(2, underTest.getAgencyCollection().size());
         assertEquals(toCheck, agency01);
     }
 

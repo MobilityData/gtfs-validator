@@ -28,10 +28,6 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
 
-    public Map<String, Agency> getAgencyCollection() {
-        return agencyCollection;
-    }
-
     @Override
     public Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
         final String agencyId = newAgency.getAgencyId();
