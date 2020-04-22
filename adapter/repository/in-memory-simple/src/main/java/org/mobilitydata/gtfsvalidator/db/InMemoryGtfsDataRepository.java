@@ -62,12 +62,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         }
     }
 
-    final Map<String, Pathway> pathwayCollection = new HashMap<>();
-
-    @Override
-    public Map<String, Pathway> getPathwayCollection() {
-        return Collections.unmodifiableMap(pathwayCollection);
-    }
+    private final Map<String, Pathway> pathwayCollection = new HashMap<>();
 
     @Override
     public Pathway getPathwayById(final String pathwayId) {

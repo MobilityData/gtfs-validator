@@ -31,8 +31,6 @@ public interface GtfsDataRepository {
 
     Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
 
-    Map<String, Pathway> getPathwayCollection();
-
     Pathway getPathwayById(final String pathwayId);
 
     Pathway addPathway(final Pathway newPathway) throws SQLIntegrityConstraintViolationException;
