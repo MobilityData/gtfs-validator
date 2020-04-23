@@ -16,11 +16,17 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+
+import java.sql.SQLIntegrityConstraintViolationException;
+
 public interface GtfsDataRepository {
+    Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException;
 
-    //public void loadStop
+    Agency getAgencyById(final String agencyId);
 
-    //public List<Stop> getStopList();
-    //public
+    Route getRouteById(final String routeId);
 
+    Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
 }

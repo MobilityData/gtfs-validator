@@ -18,18 +18,17 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import com.google.common.io.Resources;
 import com.google.protobuf.TextFormat;
-import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
+import org.apache.commons.validator.routines.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
+import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -42,15 +41,25 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
     private final GtfsSpecificationProto.CsvSpecProtos inMemoryGTFSSpec;
     private final Map<String, ParsedEntityTypeValidator> validatorByFilenameCache = new HashMap<>();
 
+    private static final String[] VALID_URL_SCHEMES = {"http", "https"};
+    private static final String VALID_COLOR_REGEX_PATTERN = "[0-9a-fA-F]{6}";
+    private static final String VALID_TIME_REGEXP_PATTERN = "([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]";
+
     /**
      * @param specResourceName the path to the GTFS schema resource
-     * @throws IOException in case {@param specResourceName} was not find
      */
-    public InMemoryGtfsSpecRepository(final String specResourceName) throws IOException {
-        //noinspection UnstableApiUsage
-        inMemoryGTFSSpec = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName),
-                StandardCharsets.UTF_8),
-                GtfsSpecificationProto.CsvSpecProtos.class);
+    public InMemoryGtfsSpecRepository(final String specResourceName) {
+        GtfsSpecificationProto.CsvSpecProtos GtfsSpec;
+        try {
+            //noinspection UnstableApiUsage
+            GtfsSpec = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName),
+                    StandardCharsets.UTF_8),
+                    GtfsSpecificationProto.CsvSpecProtos.class);
+        } catch (IOException e) {
+            GtfsSpec = null;
+            e.printStackTrace();
+        }
+        inMemoryGTFSSpec = GtfsSpec;
     }
 
     /**
@@ -103,7 +112,7 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
      * Returns the list of the headers marked as optional for a given GTFS CSV file
      *
      * @param fileInfo information about the file to process: location and expected content
-     * @return the list of the headers marked as optional for file associated to {@param fileInfo}
+     * @return the list of the headers marked as optional for file associated to {@code fileInfo}
      */
     @Override
     public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
@@ -136,23 +145,26 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
      * Returns the parser for raw data associated to a given GTFS CSV file
      *
      * @param file information about the file to process: location and expected content
-     * @return the parser for raw data associated to the file associated to {@param file}
+     * @return the parser for raw data associated to the file associated to {@code file}
      */
     @Override
     public RawEntityParser getParserForFile(RawFileInfo file) {
         return new GtfsEntityParser(
-                inMemoryGTFSSpec.getCsvspecList().stream()
+                Objects.requireNonNull(inMemoryGTFSSpec.getCsvspecList().stream()
                         .filter(spec -> file.getFilename().equals(spec.getFilename()))
                         .findAny()
-                        .orElse(null),
-                file);
+                        .orElse(null)),
+                file,
+                FloatValidator.getInstance(),
+                IntegerValidator.getInstance(),
+                DateValidator.getInstance());
     }
 
     /**
      * Returns the type validator associated to a given GTFS CSV file
      *
      * @param file information about the file to process: location and expected content
-     * @return the type validator associated to file associated to {@param file}
+     * @return the type validator associated to file associated to {@code file}
      */
     @Override
     public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
@@ -160,10 +172,19 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
         if (toReturn == null) {
             toReturn = new GtfsTypeValidator(
-                    inMemoryGTFSSpec.getCsvspecList().stream()
+                    Objects.requireNonNull(inMemoryGTFSSpec.getCsvspecList().stream()
                             .filter(spec -> file.getFilename().equals(spec.getFilename()))
                             .findAny()
-                            .orElse(null));
+                            .orElse(null)),
+                    FloatValidator.getInstance(),
+                    IntegerValidator.getInstance(),
+                    new UrlValidator(VALID_URL_SCHEMES),
+                    new RegexValidator(VALID_COLOR_REGEX_PATTERN),
+                    new RegexValidator(VALID_TIME_REGEXP_PATTERN),
+                    // Uses IANA timezone database shipped with JDK
+                    // to update without updating JDK see
+                    // https://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html
+                    ZoneId.getAvailableZoneIds());
             validatorByFilenameCache.put(file.getFilename(), toReturn);
         }
 

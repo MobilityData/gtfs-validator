@@ -19,7 +19,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version '1.0.1-SNAPSHOT'
+version '1.1.0-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_11
 
@@ -33,20 +33,28 @@ dependencies {
             project(':usecase'),
             project(':adapter:protos'),
             project(':adapter:parser'),
+            project(':adapter:exporter'),
             project(':adapter:validator')
     )
+    implementation 'commons-cli:commons-cli:1.4'
 
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
     implementation 'com.google.api.grpc:proto-google-common-protos:1.16.0'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.1'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.1'
+    implementation 'commons-validator:commons-validator:1.6'
 
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.3'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.3'
+
+    implementation 'org.apache.logging.log4j:log4j-api:2.12.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.12.1'
+
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testImplementation 'org.hamcrest:hamcrest:2.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+    testImplementation 'org.mockito:mockito-core:3.3.0'
 }
 
 test {
