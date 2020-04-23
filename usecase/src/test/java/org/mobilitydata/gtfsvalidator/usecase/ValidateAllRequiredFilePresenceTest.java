@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.MissingRequiredFileNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
@@ -34,6 +34,72 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ValidateAllRequiredFilePresenceTest {
+
+    @Test
+    void allRequiredPresentShouldNotGenerateNotice() {
+
+        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
+
+        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
+                new MockSpecRepo(10),
+                new MockRawFileRepo(10, 10),
+                mockResultRepo
+
+        );
+
+        List<String> result = underTest.execute();
+        assertEquals(0, mockResultRepo.notices.size());
+        assertEquals(10, result.size());
+        assertEquals(List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req", "req5.req", "req6.req",
+                "req7.req", "req8.req", "req9.req"), result);
+    }
+
+    @Test
+    void missingRequiredShouldGenerateOneNoticePerMissingFile() {
+
+        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
+
+        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
+                new MockSpecRepo(15),
+                new MockRawFileRepo(10, 10),
+                mockResultRepo
+        );
+
+        List<String> result = underTest.execute();
+
+        assertEquals(5, mockResultRepo.notices.size());
+        assertEquals(15, result.size());
+
+        Notice notice = mockResultRepo.notices.get(0);
+        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
+        assertEquals("E003", notice.getId());
+        assertEquals("Missing required file", notice.getTitle());
+        assertEquals("req10.req", notice.getFilename());
+
+        notice = mockResultRepo.notices.get(1);
+        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
+        assertEquals("E003", notice.getId());
+        assertEquals("Missing required file", notice.getTitle());
+        assertEquals("req11.req", notice.getFilename());
+
+        notice = mockResultRepo.notices.get(2);
+        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
+        assertEquals("E003", notice.getId());
+        assertEquals("Missing required file", notice.getTitle());
+        assertEquals("req12.req", notice.getFilename());
+
+        notice = mockResultRepo.notices.get(3);
+        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
+        assertEquals("E003", notice.getId());
+        assertEquals("Missing required file", notice.getTitle());
+        assertEquals("req13.req", notice.getFilename());
+
+        notice = mockResultRepo.notices.get(4);
+        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
+        assertEquals("E003", notice.getId());
+        assertEquals("Missing required file", notice.getTitle());
+        assertEquals("req14.req", notice.getFilename());
+    }
 
     //mock spec repo
     private static class MockSpecRepo implements GtfsSpecRepository {
@@ -157,75 +223,14 @@ class ValidateAllRequiredFilePresenceTest {
         }
 
         @Override
+        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
+            return null;
+        }
+
+        @Override
         public Notice addNotice(Notice newNotice) {
             return null;
         }
     }
 
-    @Test
-    void allRequiredPresentShouldNotGenerateNotice() {
-
-        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
-
-        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
-                new MockSpecRepo(10),
-                new MockRawFileRepo(10, 10),
-                mockResultRepo
-
-        );
-
-        List<String> result = underTest.execute();
-        assertEquals(0, mockResultRepo.notices.size());
-        assertEquals(10, result.size());
-        assertEquals(List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req", "req5.req", "req6.req",
-                "req7.req", "req8.req", "req9.req"), result);
-    }
-
-
-    @Test
-    void missingRequiredShouldGenerateOneNoticePerMissingFile() {
-
-        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
-
-        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
-                new MockSpecRepo(15),
-                new MockRawFileRepo(10, 10),
-                mockResultRepo
-        );
-
-        List<String> result = underTest.execute();
-
-        assertEquals(5, mockResultRepo.notices.size());
-        assertEquals(15, result.size());
-
-        Notice notice = mockResultRepo.notices.get(0);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req10.req", notice.getFilename());
-
-        notice = mockResultRepo.notices.get(1);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req11.req", notice.getFilename());
-
-        notice = mockResultRepo.notices.get(2);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req12.req", notice.getFilename());
-
-        notice = mockResultRepo.notices.get(3);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req13.req", notice.getFilename());
-
-        notice = mockResultRepo.notices.get(4);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req14.req", notice.getFilename());
-    }
 }

@@ -18,17 +18,27 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotConstructDataProviderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.InvalidRowLengthNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+/**
+ * Use case to validate the length of rows for a single csv file. It ensures compliance of the length of a row with
+ * the expected number of headers for a csv file. This use case is triggered after the validation of the
+ * presence of all required headers in csv files.
+ */
 public class ValidateAllRowLengthForFile {
 
     private final RawFileInfo rawFileInfo;
     private final RawFileRepository rawFileRepo;
     private final ValidationResultRepository resultRepo;
 
+    /**
+     * @param rawFileInfo an object containing information regarding a file location and expected content
+     * @param rawFileRepo a repository storing information about a GTFS dataset
+     * @param resultRepo  a repository storing information about the validation process
+     */
     public ValidateAllRowLengthForFile(final RawFileInfo rawFileInfo,
                                        final RawFileRepository rawFileRepo,
                                        final ValidationResultRepository resultRepo) {
@@ -37,6 +47,13 @@ public class ValidateAllRowLengthForFile {
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * Use case execution method: validates the length of all rows of the file linked to the {@link RawFileInfo}.
+     * For each row of a GTFS CSV file, a {@link RawEntity} is created with a 1 based index identifying the row location
+     * within a GTFS CSV file and its content as a map of strings.
+     * If the process to retrieve data from a file fail, a {@link CannotConstructDataProviderNotice} is generated
+     * and added to the {@link ValidationResultRepository} provided in the constructor.
+     */
     public void execute() {
         rawFileRepo.getProviderForFile(rawFileInfo).ifPresentOrElse(
                 provider -> {

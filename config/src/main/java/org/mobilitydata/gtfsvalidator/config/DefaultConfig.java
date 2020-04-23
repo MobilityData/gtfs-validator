@@ -16,50 +16,68 @@
 
 package org.mobilitydata.gtfsvalidator.config;
 
+import com.google.common.io.Resources;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.db.InMemoryExecParamRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
 import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.zip.ZipFile;
+import java.nio.file.Paths;
 
+/**
+ * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
+ * process. Hence, this is created before calling the different use case of the validation process in the main method.
+ */
 public class DefaultConfig {
     private final GtfsSpecRepository specRepo = new InMemoryGtfsSpecRepository("gtfs_spec.asciipb");
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
+    private final ExecParamRepository execParamRepo;
+    private final Logger logger;
 
-    public DefaultConfig() throws IOException {
+    @SuppressWarnings("UnstableApiUsage")
+    public DefaultConfig(final Logger logger) {
+        this.logger = logger;
+        String defaultParameterJsonString;
+        try {
+            defaultParameterJsonString = Resources.toString(
+                    Resources.getResource("default-execution-parameters.json"),
+                    StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            defaultParameterJsonString = "[]";
+        }
+        execParamRepo = new InMemoryExecParamRepository(defaultParameterJsonString, this.logger);
     }
 
-    public DownloadArchiveFromNetwork downloadArchiveFromNetwork(final String url, final String targetPath)
-            throws MalformedURLException {
-        return new DownloadArchiveFromNetwork(new URL(url), targetPath, resultRepo);
+    public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
+        return new DownloadArchiveFromNetwork(resultRepo, execParamRepo, logger);
     }
 
-    public CleanOrCreatePath cleanOrCreatePath(final String toCleanOrCreate) {
-        return new CleanOrCreatePath(toCleanOrCreate, resultRepo);
+    public CleanOrCreatePath cleanOrCreatePath() {
+        return new CleanOrCreatePath(resultRepo, execParamRepo);
     }
 
-    public UnzipInputArchive unzipInputArchive(final String zipInputPath, final Path zipExtractPath)
-            throws IOException {
-        return new UnzipInputArchive(rawFileRepo, new ZipFile(zipInputPath), zipExtractPath, resultRepo);
+    public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) {
+        return new UnzipInputArchive(rawFileRepo, zipExtractPath, resultRepo, execParamRepo, logger);
     }
 
     public ValidateAllRequiredFilePresence validateAllRequiredFilePresence() {
         return new ValidateAllRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
     }
 
-    public ValidateHeadersForFile validateHeadersForFile(String filename) {
+    public ValidateHeadersForFile validateHeadersForFile(final String filename) {
         return new ValidateHeadersForFile(
                 specRepo,
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
@@ -68,7 +86,7 @@ public class DefaultConfig {
         );
     }
 
-    public ValidateAllRowLengthForFile validateAllRowLengthForFile(String filename) {
+    public ValidateAllRowLengthForFile validateAllRowLengthForFile(final String filename) {
         return new ValidateAllRowLengthForFile(
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
                 rawFileRepo,
@@ -76,7 +94,7 @@ public class DefaultConfig {
         );
     }
 
-    public ParseSingleRowForFile parseSingleRowForFile(String filename) {
+    public ParseSingleRowForFile parseSingleRowForFile(final String filename) {
         return new ParseSingleRowForFile(
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
                 rawFileRepo,
@@ -92,11 +110,24 @@ public class DefaultConfig {
         );
     }
 
-    public Collection<Notice> getValidationResult() {
-        return resultRepo.getAll();
-    }
-
     public ValidateAllOptionalFilename validateAllOptionalFileName() {
         return new ValidateAllOptionalFilename(specRepo, rawFileRepo, resultRepo);
+    }
+
+    public ExportResultAsFile exportResultAsFile() {
+        return new ExportResultAsFile(resultRepo, execParamRepo, logger);
+    }
+
+    public ParseAllExecParam parseAllExecutionParameter() throws IOException {
+        return new ParseAllExecParam(Files.readString(Paths.get("execution-parameters.json")), execParamRepo,
+                logger);
+    }
+
+    public LogExecutionInfo logExecutionInfo() {
+        return new LogExecutionInfo(logger, execParamRepo);
+    }
+
+    public PrintHelp printHelp() {
+        return new PrintHelp(execParamRepo, new HelpFormatter());
     }
 }

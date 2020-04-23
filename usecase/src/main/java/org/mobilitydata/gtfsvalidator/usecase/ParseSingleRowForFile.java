@@ -19,17 +19,27 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+/**
+ * Use case to parse a single row of a csv file. This use case is triggered after the validation of the length of all
+ * rows for a specific file.
+ */
 public class ParseSingleRowForFile {
 
     private final ValidationResultRepository resultRepo;
     private RawFileRepository.RawEntityProvider provider;
     private GtfsSpecRepository.RawEntityParser parser;
 
+    /**
+     * @param rawFileInfo an object containing information regarding a file location and expected content
+     * @param rawFileRepo a repository storing information about a GTFS dataset
+     * @param specRepo    a repository storing information about the GTFS specification used
+     * @param resultRepo  a repository storing information about the validation process
+     */
     public ParseSingleRowForFile(final RawFileInfo rawFileInfo,
                                  final RawFileRepository rawFileRepo,
                                  final GtfsSpecRepository specRepo,
@@ -45,16 +55,28 @@ public class ParseSingleRowForFile {
         );
     }
 
+    /**
+     * Returns true if a row has a next row, else false
+     *
+     * @return true if a row has a next row, else false
+     */
     public boolean hasNext() {
         return provider != null && provider.hasNext();
     }
 
+    /**
+     * Use case execution method returns a parsed row from a GTFS CSV file. While the processed file has rows, a
+     * {@link RawEntity} is created with 1 based index identifying the row location within a GTFS CSV file and its
+     * content as a map of strings; which allows validation of numeric types.
+     *
+     * @return a parsed row from a GTFS file
+     */
     public ParsedEntity execute() {
         ParsedEntity toReturn = null;
 
         if (hasNext()) {
             RawEntity rawEntity = provider.getNext();
-            parser.validateNumericTypes(rawEntity).forEach(resultRepo::addNotice);
+            parser.validateNonStringTypes(rawEntity).forEach(resultRepo::addNotice);
             toReturn = parser.parse(rawEntity);
         }
 
