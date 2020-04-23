@@ -36,6 +36,7 @@ dependencies {
             project(':adapter:exporter'),
             project(':adapter:validator')
     )
+    implementation 'commons-cli:commons-cli:1.4'
 
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
