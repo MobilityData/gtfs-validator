@@ -68,7 +68,7 @@ public class NoticeMemoryConsumptionTest {
     @Test
     @Order(1)
     public void memoryLimitTest_100notices() {
-        memoryLimitTest(100, 9_000_000);
+        memoryLimitTest(100, 10_000_000);
     }
 
     @Test
