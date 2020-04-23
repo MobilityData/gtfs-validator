@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -58,6 +59,25 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             String routeId = newRoute.getRouteId();
             routeCollection.put(routeId, newRoute);
             return newRoute;
+        }
+    }
+
+    private final Map<String, FareAttribute> fareAttributeCollection = new HashMap<>();
+
+    @Override
+    public FareAttribute getFareAttributeByFareId(final String fareId) {
+        return fareAttributeCollection.get(fareId);
+    }
+
+    @Override
+    public FareAttribute addFareAttribute(final FareAttribute newFareAttribute)
+            throws SQLIntegrityConstraintViolationException {
+        if (fareAttributeCollection.containsKey(newFareAttribute.getFareId())) {
+            throw new SQLIntegrityConstraintViolationException("fare attribute must be unique in dataset");
+        } else {
+            String fareId = newFareAttribute.getFareId();
+            fareAttributeCollection.put(fareId, newFareAttribute);
+            return newFareAttribute;
         }
     }
 }

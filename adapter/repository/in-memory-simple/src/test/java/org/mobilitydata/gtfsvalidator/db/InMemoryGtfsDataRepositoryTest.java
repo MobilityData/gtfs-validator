@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -261,5 +262,65 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addRoute(mockBuilder.build());
 
         assertThrows(SQLIntegrityConstraintViolationException.class, () -> underTest.addRoute(mockBuilder.build()));
+    }
+
+    @Test
+    void getFareAttributeByFareIdShouldReturnRelatedEntity() throws SQLIntegrityConstraintViolationException {
+        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class);
+        when(mockBuilder.fareId(anyString())).thenCallRealMethod();
+
+        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
+        when(mockFareAttribute.getFareId()).thenReturn("fare id");
+        when(mockBuilder.build()).thenReturn(mockFareAttribute);
+
+        mockBuilder.fareId("fare id");
+        final FareAttribute fareAttribute = mockBuilder.build();
+
+        final GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addFareAttribute(fareAttribute);
+
+        assertEquals(fareAttribute, underTest.getFareAttributeByFareId("fare id"));
+    }
+
+    @Test
+    void callToAddFareAttributeShouldAddEntityToRepoAndReturnSameEntity()
+            throws SQLIntegrityConstraintViolationException {
+        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class);
+        when(mockBuilder.fareId(anyString())).thenCallRealMethod();
+
+        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
+        when(mockFareAttribute.getFareId()).thenReturn("fare id");
+        when(mockBuilder.build()).thenReturn(mockFareAttribute);
+
+        mockBuilder.fareId("fare id");
+        final FareAttribute fareAttribute = mockBuilder.build();
+
+        final GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        FareAttribute toCheck = underTest.addFareAttribute(fareAttribute);
+
+        assertEquals(fareAttribute, toCheck);
+    }
+
+    @Test
+    void tryToAddTwiceTheSameFareAttributeShouldThrowException() throws SQLIntegrityConstraintViolationException {
+        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class);
+        when(mockBuilder.fareId(anyString())).thenCallRealMethod();
+
+        final FareAttribute mockFareRule = mock(FareAttribute.class);
+        when(mockFareRule.getFareId()).thenReturn("fare id");
+        when(mockBuilder.build()).thenReturn(mockFareRule);
+
+        mockBuilder.fareId("fare id");
+        final FareAttribute fareAttribute = mockBuilder.build();
+
+        final GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addFareAttribute(fareAttribute);
+
+        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
+                () -> underTest.addFareAttribute(fareAttribute));
+        assertEquals("fare attribute must be unique in dataset", exception.getMessage());
     }
 }
