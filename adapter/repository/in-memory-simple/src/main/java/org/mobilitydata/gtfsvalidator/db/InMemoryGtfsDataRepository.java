@@ -75,8 +75,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         if (fareAttributeCollection.containsKey(newFareAttribute.getFareId())) {
             throw new SQLIntegrityConstraintViolationException("fare attribute must be unique in dataset");
         } else {
-            String fareId = newFareAttribute.getFareId();
-            fareAttributeCollection.put(fareId, newFareAttribute);
+            fareAttributeCollection.put(newFareAttribute.getFareId(), newFareAttribute);
             return newFareAttribute;
         }
     }

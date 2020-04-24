@@ -21,7 +21,8 @@ import java.util.stream.Stream;
 public enum Transfers {
     NO_TRANSFERS_ALLOWED(0),
     ONE_TRANSFER_ALLOWED(1),
-    UNLIMITED_TRANSFERS(2);
+    TWO_TRANSFER_ALLOWED(2),
+    UNLIMITED_TRANSFERS(-1);
 
     private int value;
 
@@ -29,13 +30,17 @@ public enum Transfers {
         this.value = value;
     }
 
-    static public Transfers fromInt(Integer fromValue) {
+    static public Transfers fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return UNLIMITED_TRANSFERS;
         }
-        return Stream.of(Transfers.values())
-                .filter(enumItem -> enumItem.value == fromValue)
-                .findAny()
-                .orElse(null);
+        if (0 <= fromValue && fromValue <= 2) {
+            return Stream.of(Transfers.values())
+                    .filter(enumItem -> enumItem.value == fromValue)
+                    .findAny()
+                    .orElse(null);
+        } else {
+            return null;
+        }
     }
 }

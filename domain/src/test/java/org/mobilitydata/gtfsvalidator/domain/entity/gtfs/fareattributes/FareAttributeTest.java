@@ -56,7 +56,7 @@ class FareAttributeTest {
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
         Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("field `fare_id` in file `fare_attributes.txt` can not be null", exception.getMessage());
+        assertEquals("field `fare_id` in file `fare_attributes.txt` cannot be null", exception.getMessage());
     }
 
     @Test
@@ -72,7 +72,7 @@ class FareAttributeTest {
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
         Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("field `price` in file `fare_attributes.txt` can not be null", exception.getMessage());
+        assertEquals("field `price` in file `fare_attributes.txt` cannot be null", exception.getMessage());
     }
 
     @Test
@@ -88,7 +88,7 @@ class FareAttributeTest {
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
         Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("field `currency_type` in file `fare_attributes.txt` can not be null", exception.getMessage());
+        assertEquals("field `currency_type` in file `fare_attributes.txt` cannot be null", exception.getMessage());
     }
 
     @Test
@@ -138,5 +138,38 @@ class FareAttributeTest {
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
         assertDoesNotThrow(builder::build);
+    }
+
+    @Test
+    void createFareAttributeWithNegativePriceShouldThrowException() {
+        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+
+        builder.fareId(STRING_TEST)
+                .price(-2.0F)
+                .currencyType(STRING_TEST)
+                .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
+                .transfers(VALID_TRANSFERS_INTEGER)
+                .agencyId(STRING_TEST)
+                .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
+        assertEquals("field `price` of file `fare_attributes.txt` cannot be negative", exception.getMessage());
+    }
+
+    @Test
+    void createFareAttributeWithNegativeTimeDurationShouldThrowException() {
+        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+
+        builder.fareId(STRING_TEST)
+                .price(VALID_PRICE_FLOAT)
+                .currencyType(STRING_TEST)
+                .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
+                .transfers(VALID_TRANSFERS_INTEGER)
+                .agencyId(STRING_TEST)
+                .transferDuration(-20);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
+        assertEquals("field `transfer_duration` of file `fare_attributes.txt` " +
+                "cannot be negative", exception.getMessage());
     }
 }

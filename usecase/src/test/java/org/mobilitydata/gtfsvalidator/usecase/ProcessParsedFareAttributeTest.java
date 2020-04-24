@@ -49,7 +49,7 @@ class ProcessParsedFareAttributeTest {
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedFareAttribute));
 
-        Assertions.assertEquals("field `fare_id` in file `fare_attributes.txt` can not be null",
+        Assertions.assertEquals("field `fare_id` in file `fare_attributes.txt` cannot be null",
                 exception.getMessage());
 
         verify(mockParsedFareAttribute, times(7)).get(anyString());
@@ -105,7 +105,7 @@ class ProcessParsedFareAttributeTest {
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedFareAttribute));
 
-        Assertions.assertEquals("field `price` in file `fare_attributes.txt` can not be null",
+        Assertions.assertEquals("field `price` in file `fare_attributes.txt` cannot be null",
                 exception.getMessage());
 
         verify(mockParsedFareAttribute, times(7)).get(anyString());
@@ -161,7 +161,7 @@ class ProcessParsedFareAttributeTest {
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.execute(mockParsedFareAttribute));
 
-        Assertions.assertEquals("field `currency_type` in file `fare_attributes.txt` can not be null",
+        Assertions.assertEquals("field `currency_type` in file `fare_attributes.txt` cannot be null",
                 exception.getMessage());
 
         verify(mockParsedFareAttribute, times(7)).get(anyString());

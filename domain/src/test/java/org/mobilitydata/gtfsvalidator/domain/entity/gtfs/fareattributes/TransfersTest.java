@@ -39,8 +39,8 @@ class TransfersTest {
     }
 
     @Test
-    void createTransferFromIntegerValue2ShouldReturnUnlimitedTransfers() {
-        assertEquals(Transfers.UNLIMITED_TRANSFERS, Transfers.fromInt(2));
+    void createTransferFromIntegerValue2ShouldReturnTwoTransfersAllowed() {
+        assertEquals(Transfers.TWO_TRANSFER_ALLOWED, Transfers.fromInt(2));
     }
 
     @Test
