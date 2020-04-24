@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.base;
-
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
 public abstract class ErrorNotice extends Notice {
 

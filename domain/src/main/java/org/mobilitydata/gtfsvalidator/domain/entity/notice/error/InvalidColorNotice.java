@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class InvalidUrlNotice extends ErrorNotice {
-    private String urlValue;
+public class InvalidColorNotice extends ErrorNotice {
     private String fieldName;
+    private String colorValue;
 
-    public InvalidUrlNotice(String filename, String fieldName, String entityId, String urlValue) {
-        super(filename, E_012,
-                "Invalid url",
-                "Invalid url:" + urlValue + " in field:" + fieldName + " for entity with id:" + entityId,
+    public InvalidColorNotice(String filename, String fieldName, String entityId, String colorValue) {
+        super(filename, E_014,
+                "Invalid color",
+                "Invalid color:" + colorValue + " in field:" + fieldName
+                        + " for entity with id:" + entityId,
                 entityId);
         this.fieldName = fieldName;
-        this.urlValue = urlValue;
+        this.colorValue = colorValue;
     }
 
     @Override
@@ -40,15 +41,11 @@ public class InvalidUrlNotice extends ErrorNotice {
         exporter.export(this);
     }
 
-    public String getUrlValue() {
-        return urlValue;
-    }
-
-    public String getEntityId() {
-        return entityId;
-    }
-
     public String getFieldName() {
         return fieldName;
+    }
+
+    public String getColorValue() {
+        return colorValue;
     }
 }

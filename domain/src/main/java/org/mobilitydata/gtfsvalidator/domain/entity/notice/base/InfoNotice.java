@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.io.IOException;
+//TODO: use those to track progress (no error in file xxx, took xxms) maybe also have verbose level
+public abstract class InfoNotice extends Notice {
+    protected static final String I_001 = "I001";
 
-public class MissingRequiredFileNotice extends ErrorNotice {
-    public MissingRequiredFileNotice(String filename) {
-        super(filename, E_003,
-                "Missing required file",
-                "File " + filename + " is required.",
-                null);
+    public InfoNotice(final String filename,
+                      final String noticeId,
+                      final String title,
+                      final String description, String entityId) {
+        super(filename, noticeId, title, description, entityId);
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
-            throws IOException {
-        exporter.export(this);
+    public Notice visit(ValidationResultRepository resultRepo) {
+        return resultRepo.addNotice(this);
     }
+
 }

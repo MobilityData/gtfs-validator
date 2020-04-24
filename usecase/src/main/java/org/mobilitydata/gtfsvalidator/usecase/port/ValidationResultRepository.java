@@ -16,15 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 
 import java.io.IOException;
 import java.util.Collection;

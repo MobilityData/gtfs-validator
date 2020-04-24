@@ -14,30 +14,20 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
-import java.net.URL;
 
-public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
-    private URL url;
-
-    public CannotDownloadArchiveFromNetworkNotice(final URL url) {
-        super(String.valueOf(url),
-                E_007,
-                "Downloading error",
-                "An error occurred while trying to download archive from network: " + url,
+public class MissingRequiredFileNotice extends ErrorNotice {
+    public MissingRequiredFileNotice(String filename) {
+        super(filename, E_003,
+                "Missing required file",
+                "File " + filename + " is required.",
                 null);
-        this.url = url;
     }
-
-    public URL getUrl() {
-        return url;
-    }
-
 
     @Override
     public void export(ValidationResultRepository.NoticeExporter exporter)

@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class NonStandardHeaderNotice extends WarningNotice {
+public class CannotConstructDataProviderNotice extends ErrorNotice {
 
-    private String extraHeader;
-
-    public NonStandardHeaderNotice(String filename, String extra) {
-        super(filename, W_002,
-                "Non standard header",
-                "Unexpected header:" + extra + " in file:" + filename,
+    public CannotConstructDataProviderNotice(String filename) {
+        super(filename, E_002,
+                "Data provider error",
+                "An error occurred while trying to access raw data for file: " + filename,
                 null);
-        this.extraHeader = extra;
-    }
-
-    public String getExtraHeader() {
-        return extraHeader;
     }
 
     @Override

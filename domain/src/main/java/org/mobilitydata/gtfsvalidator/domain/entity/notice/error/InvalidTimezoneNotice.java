@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
-
+public class InvalidTimezoneNotice extends ErrorNotice {
     private String fieldName;
+    private String timezoneValue;
 
-    public NonAsciiOrNonPrintableCharNotice(String filename, String fieldName, String entityId, String idValue) {
-        super(filename, W_003,
-                "Suspicious id",
-                "Non ascii or non printable character(s) in:" + idValue + " in field:"
-                        + fieldName + " for entity with id:" + entityId,
+    public InvalidTimezoneNotice(String filename, String fieldName, String entityId, String timezoneValue) {
+        super(filename, E_013,
+                "Invalid timezone",
+                "Invalid timezone:" + timezoneValue + " in field:" + fieldName
+                        + " for entity with id:" + entityId,
                 entityId);
         this.fieldName = fieldName;
+        this.timezoneValue = timezoneValue;
     }
 
     @Override
@@ -40,7 +41,15 @@ public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
         exporter.export(this);
     }
 
+    public String getEntityId() {
+        return entityId;
+    }
+
     public String getFieldName() {
         return fieldName;
+    }
+
+    public String getTimezoneValue() {
+        return timezoneValue;
     }
 }

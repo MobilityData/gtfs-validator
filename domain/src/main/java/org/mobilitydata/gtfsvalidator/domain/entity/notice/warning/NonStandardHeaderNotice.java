@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class MissingRequiredValueNotice extends ErrorNotice {
-    private String fieldName;
+public class NonStandardHeaderNotice extends WarningNotice {
 
-    public MissingRequiredValueNotice(String filename, String fieldName, String entityId) {
-        super(filename, E_015,
-                "Missing required value",
-                "Missing value for field:" + fieldName
-                        + " marked as required in entity with id:" + entityId,
-                entityId);
-        this.fieldName = fieldName;
+    private String extraHeader;
+
+    public NonStandardHeaderNotice(String filename, String extra) {
+        super(filename, W_002,
+                "Non standard header",
+                "Unexpected header:" + extra + " in file:" + filename,
+                null);
+        this.extraHeader = extra;
+    }
+
+    public String getExtraHeader() {
+        return extraHeader;
     }
 
     @Override
@@ -38,9 +42,4 @@ public class MissingRequiredValueNotice extends ErrorNotice {
             throws IOException {
         exporter.export(this);
     }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
 }

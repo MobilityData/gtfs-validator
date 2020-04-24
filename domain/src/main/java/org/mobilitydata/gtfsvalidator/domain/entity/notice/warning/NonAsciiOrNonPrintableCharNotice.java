@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class InvalidColorNotice extends ErrorNotice {
-    private String fieldName;
-    private String colorValue;
+public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
 
-    public InvalidColorNotice(String filename, String fieldName, String entityId, String colorValue) {
-        super(filename, E_014,
-                "Invalid color",
-                "Invalid color:" + colorValue + " in field:" + fieldName
-                        + " for entity with id:" + entityId,
+    private String fieldName;
+
+    public NonAsciiOrNonPrintableCharNotice(String filename, String fieldName, String entityId, String idValue) {
+        super(filename, W_003,
+                "Suspicious id",
+                "Non ascii or non printable character(s) in:" + idValue + " in field:"
+                        + fieldName + " for entity with id:" + entityId,
                 entityId);
         this.fieldName = fieldName;
-        this.colorValue = colorValue;
     }
 
     @Override
@@ -43,9 +42,5 @@ public class InvalidColorNotice extends ErrorNotice {
 
     public String getFieldName() {
         return fieldName;
-    }
-
-    public String getColorValue() {
-        return colorValue;
     }
 }

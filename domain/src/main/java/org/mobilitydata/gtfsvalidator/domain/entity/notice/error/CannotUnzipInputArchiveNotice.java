@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class ExtraFileFoundNotice extends WarningNotice {
+public class CannotUnzipInputArchiveNotice extends ErrorNotice {
 
-    public ExtraFileFoundNotice(String filename) {
+    public CannotUnzipInputArchiveNotice(final String filename) {
         super(filename,
-                W_004,
-                "Non standard file found",
-                "Extra file " + filename + " found in archive",
+                E_008,
+                "Unzipping error",
+                "An error occurred while trying to unzip archive: " + filename,
                 null);
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) throws IOException {
+    public void export(ValidationResultRepository.NoticeExporter exporter)
+            throws IOException {
         exporter.export(this);
     }
 }
