@@ -38,7 +38,7 @@ class InMemoryGtfsSpecRepositoryTest {
     private static final String OPTIONAL_HEADER_0 = "optionalHeader0";
     private static final String OPTIONAL_HEADER_1 = "optionalHeader1";
 
-    private static String testAsciiGtfsSpecFileToString() throws IOException {
+    private static String testSpecFileToString() throws IOException {
         return Resources.toString(Resources.getResource("test_gtfs_spec.asciipb"),
                 StandardCharsets.UTF_8);
     }
@@ -46,8 +46,8 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void fileMarkedRequiredInSpecShouldBeListed() throws IOException {
 
-        String testAsciiGtfsString = testAsciiGtfsSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
+        String testSpecString = testSpecFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
 
         final Collection<String> requiredFilenameList = underTest.getRequiredFilenameList();
 
@@ -59,8 +59,8 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void fileMarkedOptionalInSpecShouldBeListed() throws IOException {
 
-        String testAsciiGtfsString = testAsciiGtfsSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
+        String testSpecString = testSpecFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
 
         final Collection<String> optionalFilenameList = underTest.getOptionalFilenameList();
 
@@ -72,8 +72,8 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void headerMarkedRequiredInRequiredFileShouldBeListed() throws IOException {
 
-        String testAsciiGtfsString = testAsciiGtfsSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
+        String testSpecString = testSpecFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
 
         final Collection<String> requiredHeaderListForRequiredFile0 = underTest.getRequiredHeadersForFile(
                 RawFileInfo.builder().filename(REQUIRED_FILE_0).build());
@@ -92,8 +92,8 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void headerMarkedRequiredInOptionalFileShouldBeListed() throws IOException {
 
-        String testAsciiGtfsString = testAsciiGtfsSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
+        String testSpecString = testSpecFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
 
         final Collection<String> requiredHeaderListForOptionalFile0 = underTest.getRequiredHeadersForFile(
                 RawFileInfo.builder().filename(OPTIONAL_FILE_0).build());
@@ -112,8 +112,8 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void headerMarkedOptionalInRequiredFileShouldBeListed() throws IOException {
 
-        String testAsciiGtfsString = testAsciiGtfsSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
+        String testSpecString = testSpecFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
 
         final Collection<String> optionalHeaderListForRequiredFile0 = underTest.getOptionalHeadersForFile(
                 RawFileInfo.builder().filename(REQUIRED_FILE_0).build());
@@ -131,8 +131,8 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void headerMarkedOptionalInOptionalFileShouldBeListed() throws IOException {
 
-        String testAsciiGtfsString = testAsciiGtfsSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
+        String testSpecString = testSpecFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
 
         final Collection<String> optionalHeaderListForOptionalFile0 = underTest.getOptionalHeadersForFile(
                 RawFileInfo.builder().filename(OPTIONAL_FILE_0).build());
