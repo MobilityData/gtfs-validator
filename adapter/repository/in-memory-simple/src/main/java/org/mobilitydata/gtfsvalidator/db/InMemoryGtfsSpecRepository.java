@@ -44,13 +44,13 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
     private static final String VALID_TIME_REGEXP_PATTERN = "([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]";
 
     /**
-     * @param specResourceString the path to the GTFS schema resource
+     * @param specProtobufString the string representation of the GTFS protobuf
      */
-    public InMemoryGtfsSpecRepository(final String specResourceString) {
+    public InMemoryGtfsSpecRepository(final String specProtobufString) {
         GtfsSpecificationProto.CsvSpecProtos GtfsSpec;
         try {
             //noinspection UnstableApiUsage
-            GtfsSpec = TextFormat.parse(specResourceString, GtfsSpecificationProto.CsvSpecProtos.class);
+            GtfsSpec = TextFormat.parse(specProtobufString, GtfsSpecificationProto.CsvSpecProtos.class);
         } catch (IOException e) {
             GtfsSpec = null;
             e.printStackTrace();
