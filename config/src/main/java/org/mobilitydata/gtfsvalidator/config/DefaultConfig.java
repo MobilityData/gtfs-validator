@@ -41,7 +41,7 @@ import java.nio.file.Paths;
  * process. Hence, this is created before calling the different use case of the validation process in the main method.
  */
 public class DefaultConfig {
-    private final GtfsSpecRepository specRepo;// = new InMemoryGtfsSpecRepository("gtfs_spec.asciipb");
+    private final GtfsSpecRepository specRepo;
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final ExecParamRepository execParamRepo;
