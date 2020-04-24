@@ -38,9 +38,7 @@ public abstract class Notice {
         this.entityId = entityId != null ? entityId : "no id";
     }
 
-    public abstract Notice visit(ValidationResultRepository resultRepo);
-
-    public abstract void export(ValidationResultRepository.NoticeExporter exporter)
+    public abstract void export(NoticeExporter exporter)
             throws IOException;
 
     public String getFilename() {

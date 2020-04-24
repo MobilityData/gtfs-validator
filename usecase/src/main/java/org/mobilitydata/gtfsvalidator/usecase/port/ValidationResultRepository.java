@@ -27,12 +27,6 @@ import java.util.Collection;
  */
 public interface ValidationResultRepository {
 
-    InfoNotice addNotice(InfoNotice newInfo);
-
-    WarningNotice addNotice(WarningNotice newWarning);
-
-    ErrorNotice addNotice(ErrorNotice newError);
-
     Notice addNotice(Notice newNotice);
 
     Collection<Notice> getAll();

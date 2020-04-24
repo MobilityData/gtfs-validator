@@ -48,42 +48,6 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
 
     /**
-     * Adds an info notice to the repository and returns the notice
-     *
-     * @param newInfo a info notice
-     * @return the info notice that was added to the repository
-     */
-    @Override
-    public InfoNotice addNotice(InfoNotice newInfo) {
-        infoNoticeList.add(newInfo);
-        return newInfo;
-    }
-
-    /**
-     * Adds an warning notice to the repository and returns the notice
-     *
-     * @param newWarning a warning notice
-     * @return the info notice that was added to the repository
-     */
-    @Override
-    public WarningNotice addNotice(WarningNotice newWarning) {
-        warningNoticeList.add(newWarning);
-        return newWarning;
-    }
-
-    /**
-     * Adds an error notice to the repository and returns the notice. Useful for automatic type inference
-     *
-     * @param newError notice
-     * @return the notice that was added to the repository
-     */
-    @Override
-    public ErrorNotice addNotice(ErrorNotice newError) {
-        errorNoticeList.add(newError);
-        return newError;
-    }
-
-    /**
      * Visit a generic notice to add it to the repository and returns the notice. Useful for automatic type inference
      *
      * @param newNotice notice
@@ -91,7 +55,14 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
      */
     @Override
     public Notice addNotice(Notice newNotice) {
-        return newNotice.visit(this);
+        if (newNotice instanceof InfoNotice) {
+            infoNoticeList.add((InfoNotice) newNotice);
+        } else if (newNotice instanceof WarningNotice) {
+            warningNoticeList.add((WarningNotice) newNotice);
+        } else {
+            errorNoticeList.add((ErrorNotice) newNotice);
+        }
+        return newNotice;
     }
 
     /**

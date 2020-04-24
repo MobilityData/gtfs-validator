@@ -43,10 +43,4 @@ public abstract class ErrorNotice extends Notice {
                        String entityId) {
         super(filename, noticeId, title, description, entityId);
     }
-
-    @Override
-    public Notice visit(ValidationResultRepository resultRepo) {
-        return resultRepo.addNotice(this);
-    }
-
 }

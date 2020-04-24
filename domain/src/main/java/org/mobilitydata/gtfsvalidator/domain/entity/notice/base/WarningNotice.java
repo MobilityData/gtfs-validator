@@ -16,9 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
-
 public abstract class WarningNotice extends Notice {
 
     protected static final String W_001 = "W001";
@@ -31,10 +28,5 @@ public abstract class WarningNotice extends Notice {
                          final String title,
                          final String description, String entityId) {
         super(filename, noticeId, title, description, entityId);
-    }
-
-    @Override
-    public Notice visit(ValidationResultRepository resultRepo) {
-        return resultRepo.addNotice(this);
     }
 }

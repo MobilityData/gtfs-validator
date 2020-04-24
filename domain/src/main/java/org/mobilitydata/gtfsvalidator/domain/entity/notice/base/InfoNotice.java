@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
 //TODO: use those to track progress (no error in file xxx, took xxms) maybe also have verbose level
 public abstract class InfoNotice extends Notice {
     protected static final String I_001 = "I001";
@@ -28,10 +26,4 @@ public abstract class InfoNotice extends Notice {
                       final String description, String entityId) {
         super(filename, noticeId, title, description, entityId);
     }
-
-    @Override
-    public Notice visit(ValidationResultRepository resultRepo) {
-        return resultRepo.addNotice(this);
-    }
-
 }
