@@ -79,7 +79,7 @@ public class DefaultConfig {
     }
 
     public CleanOrCreatePath cleanOrCreatePath() {
-        return new CleanOrCreatePath(resultRepo, execParamRepo);
+        return new CleanOrCreatePath(execParamRepo);
     }
 
     public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) {

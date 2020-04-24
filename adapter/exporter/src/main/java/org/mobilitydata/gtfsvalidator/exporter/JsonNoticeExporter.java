@@ -136,11 +136,6 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
     }
 
     @Override
-    public void export(CouldNotCleanOrCreatePathNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
     public void export(InvalidColorNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
