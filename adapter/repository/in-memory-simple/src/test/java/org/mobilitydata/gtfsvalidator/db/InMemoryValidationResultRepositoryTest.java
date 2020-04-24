@@ -17,30 +17,16 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
-
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import static org.mockito.Mockito.*;
 
 class InMemoryValidationResultRepositoryTest {
 
