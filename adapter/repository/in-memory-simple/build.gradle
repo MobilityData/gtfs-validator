@@ -36,6 +36,7 @@ dependencies {
             project(':adapter:exporter'),
             project(':adapter:validator')
     )
+    implementation 'commons-cli:commons-cli:1.4'
 
     implementation 'com.google.guava:guava:28.1-jre'
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
@@ -50,9 +51,10 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.12.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.12.1'
 
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'org.mockito:mockito-core:3.3.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
 }
 
 test {

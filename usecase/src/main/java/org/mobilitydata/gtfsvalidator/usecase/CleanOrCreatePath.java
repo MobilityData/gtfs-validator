@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -30,13 +32,14 @@ import java.util.Comparator;
  */
 public class CleanOrCreatePath {
 
-    private final String pathToCleanOrCreate;
+    private final ExecParamRepository execParamRepo;
 
     /**
      * @param toCleanOrCreate an path specifying the target location
+     * @param execParamRepo a repository containing execution parameters
      */
-    public CleanOrCreatePath(final String toCleanOrCreate) {
-        this.pathToCleanOrCreate = toCleanOrCreate;
+    public CleanOrCreatePath(final ExecParamRepository execParamRepo) {
+        this.execParamRepo = execParamRepo;
     }
 
     /**
@@ -45,7 +48,8 @@ public class CleanOrCreatePath {
      *
      * @return a path to the target location
      */
-    public Path execute() {
+    public Path execute(String key) {
+        final String pathToCleanOrCreate = execParamRepo.getExecParamValue(key);
         Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
         // to empty any already existing directory
         if (Files.exists(toCleanOrCreate)) {
