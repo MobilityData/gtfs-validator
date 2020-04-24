@@ -17,27 +17,18 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import com.google.common.io.Resources;
-import com.google.protobuf.TextFormat;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.mockito.Mockito.*;
-
 class InMemoryGtfsSpecRepositoryTest {
 
-    private static final String TEST_ASCII_GTFS_FILE = "test_gtfs_spec.asciipb";
     private static final String REQUIRED_FILE_0 = "requiredFile0.txt";
     private static final String REQUIRED_FILE_1 = "requiredFile1.txt";
     private static final String OPTIONAL_FILE_0 = "optionalFile0.txt";
@@ -47,66 +38,18 @@ class InMemoryGtfsSpecRepositoryTest {
     private static final String OPTIONAL_HEADER_0 = "optionalHeader0";
     private static final String OPTIONAL_HEADER_1 = "optionalHeader1";
 
-    private GtfsSpecificationProto.CsvSpecProtos getCsvSpecProtos() throws IOException {
-        final String specResourceName = TEST_ASCII_GTFS_FILE;
-        GtfsSpecificationProto.CsvSpecProtos csvSpecProtos = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName),
-                StandardCharsets.UTF_8),
-                GtfsSpecificationProto.CsvSpecProtos.class);
-        return csvSpecProtos;
-    }
-
-    private GtfsSpecificationProto.CsvSpecProto getSpecForFile(RawFileInfo fileInfo) throws IOException {
-        return getCsvSpecProtos().getCsvspecList().stream()
-                .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
-                .findAny()
-                .orElse(null);
-    }
-
-    private InMemoryGtfsSpecRepository getMockRepository() throws IOException {
-        GtfsSpecificationProto.CsvSpecProtos csvSpecProtos = getCsvSpecProtos();
-
-        InMemoryGtfsSpecRepository mockRepository = mock(InMemoryGtfsSpecRepository.class);
-        when(mockRepository.getRequiredFilenameList()).thenReturn(csvSpecProtos.getCsvspecList()
-                .stream()
-                .filter(GtfsSpecificationProto.CsvSpecProto::getRequired)
-                .map(GtfsSpecificationProto.CsvSpecProto::getFilename)
-                .collect(Collectors.toList()));
-        when(mockRepository.getOptionalFilenameList()).thenReturn(csvSpecProtos.getCsvspecList()
-                .stream()
-                .filter(file -> !file.getRequired())
-                .map(GtfsSpecificationProto.CsvSpecProto::getFilename)
-                .collect(Collectors.toList()));
-        when(mockRepository.getRequiredHeadersForFile(any(RawFileInfo.class)))
-                .thenAnswer(new Answer<List<String>>() {
-                    public List<String> answer(InvocationOnMock invocation) throws IOException {
-                        RawFileInfo fileInfo = invocation.getArgument(0);
-                        return getSpecForFile(fileInfo).getColumnList()
-                                .stream()
-                                .filter(GtfsSpecificationProto.ColumnSpecProto::getRequired)
-                                .map(GtfsSpecificationProto.ColumnSpecProto::getName)
-                                .collect(Collectors.toList());
-                    }
-                });
-        when(mockRepository.getOptionalHeadersForFile(any(RawFileInfo.class)))
-                .thenAnswer(new Answer<List<String>>() {
-                    public List<String> answer(InvocationOnMock invocation) throws IOException {
-                        RawFileInfo fileInfo = invocation.getArgument(0);
-                        return getSpecForFile(fileInfo).getColumnList().stream()
-                                .filter(column -> !column.getRequired())
-                                .map(GtfsSpecificationProto.ColumnSpecProto::getName)
-                                .collect(Collectors.toList());
-                    }
-                });
-
-        return mockRepository;
+    private static String testAsciiGtfsFileToString() throws IOException {
+        return Resources.toString(Resources.getResource("test_gtfs_spec.asciipb"),
+                StandardCharsets.UTF_8);
     }
 
     @Test
     void fileMarkedRequiredInSpecShouldBeListed() throws IOException {
 
-        InMemoryGtfsSpecRepository mockRepository = getMockRepository();
+        String testAsciiGtfsString = testAsciiGtfsFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
 
-        final Collection<String> requiredFilenameList = mockRepository.getRequiredFilenameList();
+        final Collection<String> requiredFilenameList = underTest.getRequiredFilenameList();
 
         assertEquals(2, requiredFilenameList.size());
         assertTrue(requiredFilenameList.contains(REQUIRED_FILE_0));
@@ -116,9 +59,10 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void fileMarkedOptionalInSpecShouldBeListed() throws IOException {
 
-        InMemoryGtfsSpecRepository mockRepository = getMockRepository();
+        String testAsciiGtfsString = testAsciiGtfsFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
 
-        final Collection<String> optionalFilenameList = mockRepository.getOptionalFilenameList();
+        final Collection<String> optionalFilenameList = underTest.getOptionalFilenameList();
 
         assertEquals(2, optionalFilenameList.size());
         assertTrue(optionalFilenameList.contains(OPTIONAL_FILE_0));
@@ -128,12 +72,13 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void headerMarkedRequiredInRequiredFileShouldBeListed() throws IOException {
 
-        InMemoryGtfsSpecRepository mockRepository = getMockRepository();
+        String testAsciiGtfsString = testAsciiGtfsFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
 
-        final Collection<String> requiredHeaderListForRequiredFile0 = mockRepository.getRequiredHeadersForFile(
+        final Collection<String> requiredHeaderListForRequiredFile0 = underTest.getRequiredHeadersForFile(
                 RawFileInfo.builder().filename(REQUIRED_FILE_0).build());
 
-        final Collection<String> requiredHeaderListForRequiredFile1 = mockRepository.getRequiredHeadersForFile(
+        final Collection<String> requiredHeaderListForRequiredFile1 = underTest.getRequiredHeadersForFile(
                 RawFileInfo.builder().filename(REQUIRED_FILE_1).build());
 
         assertEquals(1, requiredHeaderListForRequiredFile0.size());
@@ -147,12 +92,13 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void headerMarkedRequiredInOptionalFileShouldBeListed() throws IOException {
 
-        InMemoryGtfsSpecRepository mockRepository = getMockRepository();
+        String testAsciiGtfsString = testAsciiGtfsFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
 
-        final Collection<String> requiredHeaderListForOptionalFile0 = mockRepository.getRequiredHeadersForFile(
+        final Collection<String> requiredHeaderListForOptionalFile0 = underTest.getRequiredHeadersForFile(
                 RawFileInfo.builder().filename(OPTIONAL_FILE_0).build());
 
-        final Collection<String> requiredHeaderListForOptionalFile1 = mockRepository.getRequiredHeadersForFile(
+        final Collection<String> requiredHeaderListForOptionalFile1 = underTest.getRequiredHeadersForFile(
                 RawFileInfo.builder().filename(OPTIONAL_FILE_1).build());
 
         assertEquals(2, requiredHeaderListForOptionalFile0.size());
@@ -166,12 +112,13 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void headerMarkedOptionalInRequiredFileShouldBeListed() throws IOException {
 
-        InMemoryGtfsSpecRepository mockRepository = getMockRepository();
+        String testAsciiGtfsString = testAsciiGtfsFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
 
-        final Collection<String> optionalHeaderListForRequiredFile0 = mockRepository.getOptionalHeadersForFile(
+        final Collection<String> optionalHeaderListForRequiredFile0 = underTest.getOptionalHeadersForFile(
                 RawFileInfo.builder().filename(REQUIRED_FILE_0).build());
 
-        final Collection<String> optionalHeaderListForRequiredFile1 = mockRepository.getOptionalHeadersForFile(
+        final Collection<String> optionalHeaderListForRequiredFile1 = underTest.getOptionalHeadersForFile(
                 RawFileInfo.builder().filename(REQUIRED_FILE_1).build());
 
         assertEquals(2, optionalHeaderListForRequiredFile0.size());
@@ -184,12 +131,13 @@ class InMemoryGtfsSpecRepositoryTest {
     @Test
     void headerMarkedOptionalInOptionalFileShouldBeListed() throws IOException {
 
-        InMemoryGtfsSpecRepository mockRepository = getMockRepository();
+        String testAsciiGtfsString = testAsciiGtfsFileToString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testAsciiGtfsString);
 
-        final Collection<String> optionalHeaderListForOptionalFile0 = mockRepository.getOptionalHeadersForFile(
+        final Collection<String> optionalHeaderListForOptionalFile0 = underTest.getOptionalHeadersForFile(
                 RawFileInfo.builder().filename(OPTIONAL_FILE_0).build());
 
-        final Collection<String> optionalHeaderListForOptionalFile1 = mockRepository.getOptionalHeadersForFile(
+        final Collection<String> optionalHeaderListForOptionalFile1 = underTest.getOptionalHeadersForFile(
                 RawFileInfo.builder().filename(OPTIONAL_FILE_1).build());
 
         assertEquals(1, optionalHeaderListForOptionalFile0.size());

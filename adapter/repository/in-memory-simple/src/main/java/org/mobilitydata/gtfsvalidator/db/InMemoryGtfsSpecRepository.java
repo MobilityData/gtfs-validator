@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
-import com.google.common.io.Resources;
 import com.google.protobuf.TextFormat;
 import org.apache.commons.validator.routines.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
@@ -26,7 +25,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,15 +44,13 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
     private static final String VALID_TIME_REGEXP_PATTERN = "([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]";
 
     /**
-     * @param specResourceName the path to the GTFS schema resource
+     * @param specResourceString the path to the GTFS schema resource
      */
-    public InMemoryGtfsSpecRepository(final String specResourceName) {
+    public InMemoryGtfsSpecRepository(final String specResourceString) {
         GtfsSpecificationProto.CsvSpecProtos GtfsSpec;
         try {
             //noinspection UnstableApiUsage
-            GtfsSpec = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName),
-                    StandardCharsets.UTF_8),
-                    GtfsSpecificationProto.CsvSpecProtos.class);
+            GtfsSpec = TextFormat.parse(specResourceString, GtfsSpecificationProto.CsvSpecProtos.class);
         } catch (IOException e) {
             GtfsSpec = null;
             e.printStackTrace();
