@@ -40,7 +40,7 @@ public class InputZipContainsFolderNotice extends WarningNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
+    public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
     }

@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.NoticeExporter;
 
 import java.io.IOException;
 

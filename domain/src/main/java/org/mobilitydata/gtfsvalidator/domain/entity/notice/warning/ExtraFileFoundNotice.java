@@ -32,7 +32,7 @@ public class ExtraFileFoundNotice extends WarningNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) throws IOException {
+    public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
 }

@@ -50,7 +50,7 @@ public class ExportResultAsFile {
         final String outputPath = execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY);
         final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
 
-        ValidationResultRepository.NoticeExporter exporter = resultRepo.getExporter(asProto, outputPath);
+        NoticeExporter exporter = resultRepo.getExporter(asProto, outputPath);
 
         exporter.exportBegin();
 
