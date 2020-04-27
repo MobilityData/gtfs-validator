@@ -18,9 +18,9 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 

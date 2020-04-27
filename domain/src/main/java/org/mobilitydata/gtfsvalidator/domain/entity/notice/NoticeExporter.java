@@ -55,4 +55,12 @@ public interface NoticeExporter {
     void export(InvalidTimeNotice toExport) throws IOException;
 
     void export(CannotParseDateNotice toExport) throws IOException;
+
+    void export(EntityMustBeUniqueNotice toExport) throws IOException;
+
+    void export(IncoherentValuesForFieldsNotice toExport) throws IOException;
+
+    void export(UnexpectedDefinedFieldNotice toExport) throws IOException;
+
+    void export(UnexpectedValueNotice toExport) throws IOException;
 }
