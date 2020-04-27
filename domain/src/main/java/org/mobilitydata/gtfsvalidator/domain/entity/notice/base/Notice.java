@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.base;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 
 import java.io.IOException;
 
@@ -38,9 +38,7 @@ public abstract class Notice {
         this.entityId = entityId != null ? entityId : "no id";
     }
 
-    public abstract Notice visit(ValidationResultRepository resultRepo);
-
-    public abstract void export(ValidationResultRepository.NoticeExporter exporter)
+    public abstract void export(NoticeExporter exporter)
             throws IOException;
 
     public String getFilename() {

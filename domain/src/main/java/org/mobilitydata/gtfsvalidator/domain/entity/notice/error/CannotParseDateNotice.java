@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class CannotParseIntegerNotice extends ErrorNotice {
-    private int lineNumber;
-    private String rawValue;
-    private String fieldName;
+public class CannotParseDateNotice extends ErrorNotice {
+    private final int lineNumber;
+    private final String rawValue;
+    private final String fieldName;
 
-    public CannotParseIntegerNotice(String filename, String fieldName, int lineNumber, String rawValue) {
-        super(filename, E_005,
-                "Invalid integer value",
-                "Value: '" + rawValue + "' of field: " + fieldName
-                        + " with type integer can't be parsed in file: " + filename + " at row: " + lineNumber,
+    public CannotParseDateNotice(String filename, String fieldName, int lineNumber, String rawValue) {
+        super(filename, E_017,
+                "Invalid date value",
+                "Value: '" + rawValue + "' of field: " + fieldName +
+                        " with type date can't be parsed in file: " + filename + " at row: " + lineNumber,
                 null);
         this.rawValue = rawValue;
         this.fieldName = fieldName;
@@ -50,8 +50,7 @@ public class CannotParseIntegerNotice extends ErrorNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
-            throws IOException {
+    public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
 }

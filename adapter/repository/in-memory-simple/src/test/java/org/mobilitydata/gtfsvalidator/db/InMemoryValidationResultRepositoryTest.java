@@ -17,11 +17,11 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import static org.hamcrest.MatcherAssert.assertThat;

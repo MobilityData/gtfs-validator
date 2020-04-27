@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
@@ -32,7 +32,7 @@ public class ExtraFileFoundNotice extends WarningNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter) throws IOException {
+    public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
 }

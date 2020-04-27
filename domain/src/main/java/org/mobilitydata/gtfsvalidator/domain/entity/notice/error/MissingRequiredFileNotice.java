@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.port;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
-import java.util.Collection;
 
-/**
- * This hold contains notices generated during the validation process.
- */
-public interface ValidationResultRepository {
+public class MissingRequiredFileNotice extends ErrorNotice {
+    public MissingRequiredFileNotice(String filename) {
+        super(filename, E_003,
+                "Missing required file",
+                "File " + filename + " is required.",
+                null);
+    }
 
-    Notice addNotice(Notice newNotice);
-
-    Collection<Notice> getAll();
-
-    NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException;
+    @Override
+    public void export(final NoticeExporter exporter) throws IOException {
+        exporter.export(this);
+    }
 }

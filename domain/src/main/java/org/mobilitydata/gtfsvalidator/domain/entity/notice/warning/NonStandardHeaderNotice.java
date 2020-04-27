@@ -14,33 +14,31 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.warning;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class InputZipContainsFolderNotice extends WarningNotice {
+public class NonStandardHeaderNotice extends WarningNotice {
 
-    private String folderName;
+    private String extraHeader;
 
-    public InputZipContainsFolderNotice(final String filename, final String folderName) {
-        super(filename,
-                W_001,
-                "Non empty folder",
-                "File: " + filename + "contains folder named: " + folderName,
+    public NonStandardHeaderNotice(String filename, String extra) {
+        super(filename, W_002,
+                "Non standard header",
+                "Unexpected header:" + extra + " in file:" + filename,
                 null);
-
-        this.folderName = folderName;
+        this.extraHeader = extra;
     }
 
-    public String getFolderName() {
-        return folderName;
+    public String getExtraHeader() {
+        return extraHeader;
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
+    public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
     }

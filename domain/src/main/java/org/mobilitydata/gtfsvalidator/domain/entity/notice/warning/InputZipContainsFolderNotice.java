@@ -14,24 +14,33 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class CannotConstructDataProviderNotice extends ErrorNotice {
+public class InputZipContainsFolderNotice extends WarningNotice {
 
-    public CannotConstructDataProviderNotice(String filename) {
-        super(filename, E_002,
-                "Data provider error",
-                "An error occurred while trying to access raw data for file: " + filename,
+    private String folderName;
+
+    public InputZipContainsFolderNotice(final String filename, final String folderName) {
+        super(filename,
+                W_001,
+                "Non empty folder",
+                "File: " + filename + "contains folder named: " + folderName,
                 null);
+
+        this.folderName = folderName;
+    }
+
+    public String getFolderName() {
+        return folderName;
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
+    public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
     }

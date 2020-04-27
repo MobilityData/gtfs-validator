@@ -14,38 +14,41 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class InvalidColorNotice extends ErrorNotice {
+public class InvalidTimezoneNotice extends ErrorNotice {
     private String fieldName;
-    private String colorValue;
+    private String timezoneValue;
 
-    public InvalidColorNotice(String filename, String fieldName, String entityId, String colorValue) {
-        super(filename, E_014,
-                "Invalid color",
-                "Invalid color:" + colorValue + " in field:" + fieldName
+    public InvalidTimezoneNotice(String filename, String fieldName, String entityId, String timezoneValue) {
+        super(filename, E_013,
+                "Invalid timezone",
+                "Invalid timezone:" + timezoneValue + " in field:" + fieldName
                         + " for entity with id:" + entityId,
                 entityId);
         this.fieldName = fieldName;
-        this.colorValue = colorValue;
+        this.timezoneValue = timezoneValue;
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
-            throws IOException {
+    public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
+    }
+
+    public String getEntityId() {
+        return entityId;
     }
 
     public String getFieldName() {
         return fieldName;
     }
 
-    public String getColorValue() {
-        return colorValue;
+    public String getTimezoneValue() {
+        return timezoneValue;
     }
 }
