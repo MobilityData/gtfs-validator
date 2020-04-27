@@ -14,42 +14,33 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class InvalidTimezoneNotice extends ErrorNotice {
-    private String fieldName;
-    private String timezoneValue;
+public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
 
-    public InvalidTimezoneNotice(String filename, String fieldName, String entityId, String timezoneValue) {
-        super(filename, E_013,
-                "Invalid timezone",
-                "Invalid timezone:" + timezoneValue + " in field:" + fieldName
-                        + " for entity with id:" + entityId,
+    private String fieldName;
+
+    public NonAsciiOrNonPrintableCharNotice(String filename, String fieldName, String entityId, String idValue) {
+        super(filename, W_003,
+                "Suspicious id",
+                "Non ascii or non printable character(s) in:" + idValue + " in field:"
+                        + fieldName + " for entity with id:" + entityId,
                 entityId);
         this.fieldName = fieldName;
-        this.timezoneValue = timezoneValue;
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
+    public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
-
     public String getFieldName() {
         return fieldName;
-    }
-
-    public String getTimezoneValue() {
-        return timezoneValue;
     }
 }

@@ -18,11 +18,11 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
@@ -292,18 +292,6 @@ class JsonNoticeExporterTest {
                 "field_name",
                 "entity_id"
         );
-        underTest.export(toExport);
-
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
-        verifyNoMoreInteractions(mockGenerator);
-    }
-
-    @Test
-    void exportCouldNotCleanOrCreatePathNoticeShouldWriteObject() throws IOException {
-        JsonGenerator mockGenerator = mock(JsonGenerator.class);
-
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        CouldNotCleanOrCreatePathNotice toExport = new CouldNotCleanOrCreatePathNotice("../output");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

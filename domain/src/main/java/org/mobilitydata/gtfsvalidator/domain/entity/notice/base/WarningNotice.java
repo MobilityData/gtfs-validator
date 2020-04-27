@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.base;
-
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
 public abstract class WarningNotice extends Notice {
 
@@ -31,10 +28,5 @@ public abstract class WarningNotice extends Notice {
                          final String title,
                          final String description, String entityId) {
         super(filename, noticeId, title, description, entityId);
-    }
-
-    @Override
-    public Notice visit(ValidationResultRepository resultRepo) {
-        return resultRepo.addNotice(this);
     }
 }

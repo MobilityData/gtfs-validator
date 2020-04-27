@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.base;
-
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
 public abstract class ErrorNotice extends Notice {
 
@@ -28,7 +26,7 @@ public abstract class ErrorNotice extends Notice {
     protected static final String E_006 = "E006";
     protected static final String E_007 = "E007";
     protected static final String E_008 = "E008";
-    protected static final String E_009 = "E009";
+    // protected static final String E_009 = "E009"; // RESERVED - was CouldNotCleanOrCreatePathNotice (#112)
     protected static final String E_010 = "E010";
     protected static final String E_011 = "E011";
     protected static final String E_012 = "E012";
@@ -47,10 +45,5 @@ public abstract class ErrorNotice extends Notice {
                        final String description,
                        String entityId) {
         super(filename, noticeId, title, description, entityId);
-    }
-
-    @Override
-    public Notice visit(ValidationResultRepository resultRepo) {
-        return resultRepo.addNotice(this);
     }
 }
