@@ -21,7 +21,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
-import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -30,17 +29,14 @@ import java.sql.SQLIntegrityConstraintViolationException;
  * This use case turns a parsed entity representing a row from agency.txt into a concrete class
  */
 public class ProcessParsedAgency {
-    private final GtfsSpecRepository gtfsSpecRepository;
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
     private final Agency.AgencyBuilder builder;
 
 
-    public ProcessParsedAgency(final GtfsSpecRepository gtfsSpecRepository,
-                               final ValidationResultRepository resultRepository,
+    public ProcessParsedAgency(final ValidationResultRepository resultRepository,
                                final GtfsDataRepository gtfsDataRepository,
                                final Agency.AgencyBuilder builder) {
-        this.gtfsSpecRepository = gtfsSpecRepository;
         this.resultRepository = resultRepository;
         this.gtfsDataRepository = gtfsDataRepository;
         this.builder = builder;
