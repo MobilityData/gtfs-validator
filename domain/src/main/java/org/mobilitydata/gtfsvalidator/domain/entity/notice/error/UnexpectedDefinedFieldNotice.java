@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
 public class UnexpectedDefinedFieldNotice extends ErrorNotice {
-    private String filename;
-    private String fieldName;
-    private String fieldValue;
+    private final String filename;
+    private final String fieldName;
+    private final String fieldValue;
 
-    public UnexpectedDefinedFieldNotice(String filename, String fieldName, String fieldValue, String entityId) {
+    public UnexpectedDefinedFieldNotice(final String filename, final String fieldName, final String fieldValue,
+                                        final String entityId) {
         super(filename, E_019,
                 "Unexpected defined field",
                 "Unexpected defined field :" + fieldName + " - in file:" + filename + " with value:" + fieldValue +
@@ -37,8 +38,7 @@ public class UnexpectedDefinedFieldNotice extends ErrorNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
-            throws IOException {
+    public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
 

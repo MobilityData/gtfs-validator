@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
 public class UnexpectedValueNotice extends ErrorNotice {
-    private int enumValue;
-    private String fieldName;
+    private final int enumValue;
+    private final String fieldName;
 
-    public UnexpectedValueNotice(String filename, String fieldName, String entityId, int enumValue) {
+    public UnexpectedValueNotice(final String filename, final String fieldName, final String entityId,
+                                 final int enumValue) {
         super(filename, E_018,
                 "Unexpected enum value",
                 "Invalid value :" + enumValue + " - for field:" + fieldName + " in file:" + filename +
@@ -35,8 +36,7 @@ public class UnexpectedValueNotice extends ErrorNotice {
     }
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
-            throws IOException {
+    public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
 

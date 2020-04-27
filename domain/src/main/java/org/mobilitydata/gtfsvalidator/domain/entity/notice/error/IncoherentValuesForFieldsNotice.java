@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
 public class IncoherentValuesForFieldsNotice extends ErrorNotice {
-    private String fieldName;
-    private String conflictingFieldName;
+    private final String fieldName;
+    private final String conflictingFieldName;
 
-    public IncoherentValuesForFieldsNotice(String filename, String fieldName, String conflictingFieldName, String entityId) {
+    public IncoherentValuesForFieldsNotice(final String filename, final String fieldName,
+                                           final String conflictingFieldName, final String entityId) {
         super(filename, E_018,
                 "Conflicting field values",
                 "Conflicting field values for fields:" + fieldName + " and field:" + conflictingFieldName, entityId);
@@ -35,8 +36,7 @@ public class IncoherentValuesForFieldsNotice extends ErrorNotice {
 
 
     @Override
-    public void export(ValidationResultRepository.NoticeExporter exporter)
-            throws IOException {
+    public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
 
