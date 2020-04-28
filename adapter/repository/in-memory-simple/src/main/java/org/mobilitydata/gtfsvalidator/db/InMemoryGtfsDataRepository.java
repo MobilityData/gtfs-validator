@@ -20,7 +20,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,22 +30,19 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
 
     /**
-     * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository. This method
-     * throws SQLIntegrityConstraintViolationException if the uniqueness constraint of agency based on
-     * agency_id is not respected.
+     * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of agency based on agency_id is respected, if this requirement is not met, returns null.
      *
      * @param newAgency the internal representation of a row from agency.txt to be added to the repository.
-     * @return the entity added to the repository
-     * @throws SQLIntegrityConstraintViolationException if the uniqueness constraint of agency based on agency_id is not
-     *                                                  respected.
+     * @return the entity added to the repository if the uniqueness constraint of agency based on agency_id is
+     * respected, if this requirement is not met returns null.
      */
     @Override
-    public Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
-        final String agencyId = newAgency.getAgencyId();
+    public Agency addAgency(final Agency newAgency) {
         if (agencyCollection.containsKey(newAgency.getAgencyId())) {
-            throw new SQLIntegrityConstraintViolationException("agency must be unique in dataset");
+            return null;
         } else {
-            agencyCollection.put(agencyId, newAgency);
+            agencyCollection.put(newAgency.getAgencyId(), newAgency);
             return newAgency;
         }
     }
@@ -76,22 +72,19 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Add an Route representing a row from routes.txt to this. Return the entity added to the repository. This method
-     * throws SQLIntegrityConstraintViolationException if the uniqueness constraint of route based on
-     * routeId is not respected.
+     * Add an Route representing a row from routes.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of agency based on route_id is respected, if this requirement is not met, returns null.
      *
      * @param newRoute the internal representation of a row from routes.txt to be added to the repository.
-     * @return the entity added to the repository
-     * @throws SQLIntegrityConstraintViolationException if the uniqueness constraint on table routes based on routeId
-     *                                                  is not respected.
+     * @return the entity added to the repository if the uniqueness constraint of agency based on route_id is
+     * respected, if this requirement is not met returns null.
      */
     @Override
-    public Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException {
+    public Route addRoute(final Route newRoute) {
         if (routeCollection.containsKey(newRoute.getRouteId())) {
-            throw new SQLIntegrityConstraintViolationException("route must be unique in dataset");
+            return null;
         } else {
-            String routeId = newRoute.getRouteId();
-            routeCollection.put(routeId, newRoute);
+            routeCollection.put(newRoute.getRouteId(), newRoute);
             return newRoute;
         }
     }

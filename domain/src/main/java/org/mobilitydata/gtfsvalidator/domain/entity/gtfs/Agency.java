@@ -18,6 +18,10 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+
+import java.util.List;
 
 /**
  * Class for all entities defined in agency.txt. Can not be directly instantiated: user must use the
@@ -135,6 +139,11 @@ public class Agency {
         private String agencyPhone;
         private String agencyFareUrl;
         private String agencyEmail;
+        private final List<Notice> noticeCollection;
+
+        public AgencyBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
 
         /**
          * Sets field agencyName value and returns this
@@ -225,21 +234,39 @@ public class Agency {
         }
 
         /**
-         * Returns a {@link Agency} object from fields provided via {@link AgencyBuilder} methods.
-         * Throws {@link IllegalArgumentException} if fields agencyName, agencyUrl, or agencyTimezone are null.
+         * Returns list of notice generated when building an {@code Agency} from this.
          *
-         * @return Entity representing a row from agency.txt
-         * @throws IllegalArgumentException if fields agencyName, agencyUrl, or agencyTimezone are null.
+         * @return the list of notice generated when building an {@link Agency} from this.
          */
-        public Agency build() throws IllegalArgumentException {
-            if (agencyName == null) {
-                throw new IllegalArgumentException("agency_name can not be null");
-            }
-            if (agencyUrl == null) {
-                throw new IllegalArgumentException("agency_url can not be null");
-            }
-            if (agencyTimezone == null) {
-                throw new IllegalArgumentException("agency_timezone can not be null");
+        public List<Notice> getNoticeCollection() {
+            return noticeCollection;
+        }
+
+        /**
+         * Returns a {@link Agency} object from fields provided via {@link AgencyBuilder} methods.
+         * Adds {@code MissingRequiredValueNotice} to notice collection  if fields agencyName, agencyUrl, or
+         * agencyTimezone are null. If said fields are null, method returns null
+         *
+         * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns null.
+         */
+        public Agency build() {
+            noticeCollection.clear();
+            if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
+
+                if (agencyName == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("agency.txt", "agency_name",
+                            agencyId));
+                }
+                if (agencyUrl == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("agency.txt", "agency_url",
+                            agencyId));
+                }
+                if (agencyTimezone == null) {
+                    noticeCollection.add((new MissingRequiredValueNotice("agency.txt",
+                            "agency_timezone", agencyId)));
+                }
+                return null;
             }
             return new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang, agencyPhone,
                     agencyFareUrl, agencyEmail);
