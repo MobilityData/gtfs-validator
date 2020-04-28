@@ -18,9 +18,12 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+
+import java.util.List;
 
 /**
  * This use case turns a parsed entity representing a row from routes.txt into a concrete class
@@ -50,7 +53,7 @@ public class ProcessParsedRoute {
      *
      * @param validatedParsedRoute entity to be processed and added to the GTFS data repository
      */
-    public void execute(final ParsedEntity validatedParsedRoute) {
+    public void execute(final ParsedEntity validatedParsedRoute, final List<Notice> noticeCollection) {
 
         final String routeId = (String) validatedParsedRoute.get("route_id");
         final String agencyId = (String) validatedParsedRoute.get("agency_id");
@@ -74,15 +77,16 @@ public class ProcessParsedRoute {
                 .routeTextColor(routeTextColor)
                 .routeSortOrder(routeSortOrder);
 
-        final Route route = builder.build();
+        final var route = builder.build(noticeCollection);
 
-        builder.getNoticeCollection().forEach(resultRepository::addNotice);
-
-        if (route != null) {
-            if (gtfsDataRepository.addRoute(route) == null) {
-                resultRepository.addNotice(new EntityMustBeUniqueNotice("routes.txt", "route_id",
-                        validatedParsedRoute.getEntityId()));
+        if (route.getState()) {
+            if (gtfsDataRepository.addRoute((Route) route.getData()) == null) {
+                resultRepository.addNotice(new EntityMustBeUniqueNotice("routes.txt",
+                        "route_id", validatedParsedRoute.getEntityId()));
             }
+        } else {
+            //noinspection unchecked
+            ((List<Notice>) route.getData()).forEach(resultRepository::addNotice);
         }
     }
 }

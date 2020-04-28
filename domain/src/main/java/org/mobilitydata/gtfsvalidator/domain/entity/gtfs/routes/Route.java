@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
@@ -148,6 +149,7 @@ public class Route {
      * Builder class to create {@link Route} objects. Allows an unordered definition of the different attributes of
      * {@link Route}.
      */
+    @SuppressWarnings("rawtypes")
     public static class RouteBuilder {
 
         private String routeId;
@@ -160,12 +162,7 @@ public class Route {
         private String routeColor;
         private String routeTextColor;
         private Integer routeSortOrder;
-        private final List<Notice> noticeCollection;
         private Integer fromValue;
-
-        public RouteBuilder(final List<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
 
         /**
          * Sets field routeId value and returns this
@@ -273,18 +270,10 @@ public class Route {
          * @param routeSortOrder orders the routes in a way which is ideal for presentation to customers
          * @return builder for future object creation
          */
+        @SuppressWarnings("UnusedReturnValue")
         public RouteBuilder routeSortOrder(@Nullable final Integer routeSortOrder) {
             this.routeSortOrder = routeSortOrder;
             return this;
-        }
-
-        /**
-         * Returns list of notice generated when building an {@code Route} from this.
-         *
-         * @return the list of notice generated when building an {@link Route} from this.
-         */
-        public List<Notice> getNoticeCollection() {
-            return noticeCollection;
         }
 
         /**
@@ -292,21 +281,31 @@ public class Route {
          * Adds {@code MissingRequiredValueNotice} to notice collection  if field route_id is null. Adds
          * {@code UnexpectedValueNotice} if an unexpected value has been encountered for field route_type
          *
-         * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
+         * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns null.
          */
-        public Route build() throws IllegalArgumentException {
-            noticeCollection.clear();
-            if (routeId == null) {
-                noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
-                        routeId));
+        public GenericType build(final List<Notice> noticeCollection) throws IllegalArgumentException {
+            if (routeId == null || routeType == null) {
+                if (routeId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
+                            routeId));
+                }
+                if (fromValue == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
+                            routeId));
+                }
+                if (!RouteType.isEnumValueLegal(fromValue)) {
+                    noticeCollection.add(new UnexpectedValueNotice("routes.txt", "route_type",
+                            routeId, fromValue));
+                }
+                //noinspection unchecked
+                return new GenericType(noticeCollection, false);
+            } else {
+                //noinspection unchecked
+                return new GenericType(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
+                        routeType, routeUrl, routeColor, routeTextColor, routeSortOrder),
+                        true);
             }
-            if (routeType == null) {
-                noticeCollection.add(new UnexpectedValueNotice("routes.txt", "route_type", routeId,
-                        fromValue));
-            }
-            return new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,
-                    routeUrl, routeColor, routeTextColor, routeSortOrder);
         }
     }
 }

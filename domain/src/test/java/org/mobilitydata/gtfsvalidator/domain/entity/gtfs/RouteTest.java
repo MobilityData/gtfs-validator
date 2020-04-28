@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.RouteType;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class RouteTest {
@@ -41,7 +41,7 @@ class RouteTest {
     @Test
     public void createRouteWithNullRouteIdShouldMissingRequiredValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
         underTest.routeId(null)
                 .agencyId(STRING_TEST_VALUE)
@@ -54,9 +54,7 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        underTest.build();
-
-        verify(mockNoticeCollection, times(1)).clear();
+        underTest.build(mockNoticeCollection);
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -75,7 +73,7 @@ class RouteTest {
     @Test
     public void createRouteWithInvalidRouteTypeShouldGenerateUnexpectedValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
         underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
@@ -88,9 +86,7 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        underTest.build();
-
-        verify(mockNoticeCollection, times(1)).clear();
+        underTest.build(mockNoticeCollection);
 
         final ArgumentCaptor<UnexpectedValueNotice> captor =
                 ArgumentCaptor.forClass(UnexpectedValueNotice.class);
@@ -110,7 +106,7 @@ class RouteTest {
     @Test
     public void createRouteWithValidValuesForFieldShouldGenerateNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
         underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
@@ -123,20 +119,9 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        final Route route = underTest.build();
+        final var route = underTest.build(mockNoticeCollection);
 
-        verify(mockNoticeCollection, times(1)).clear();
-        assertEquals(route.getRouteId(), STRING_TEST_VALUE);
-        assertEquals(route.getAgencyId(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteShortName(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteLongName(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteDesc(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteType(), RouteType.LIGHT_RAIL);
-        assertEquals(route.getRouteUrl(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteColor(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteTextColor(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteSortOrder(), INT_TEST_VALUE);
-
+        assertTrue(route.getData() instanceof Route);
         verifyNoMoreInteractions(mockNoticeCollection);
     }
 }
