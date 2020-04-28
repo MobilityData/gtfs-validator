@@ -30,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Currency;
 import java.util.Set;
 
 /**
@@ -183,6 +184,19 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                     case TIME: {
                         if (!timeValidator.isValid((String) value)) {
                             toReturn.add(new InvalidTimeNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    (String) value
+                            ));
+                        }
+                        break;
+                    }
+                    case CURRENCY_CODE: {
+                        try {
+                            Currency.getInstance((String) value);
+                        } catch (IllegalArgumentException e) {
+                            toReturn.add(new InvalidCurrencyCodeNotice(
                                     toValidate.getRawFileInfo().getFilename(),
                                     columnSpecProto.getName(),
                                     toValidate.getEntityId(),
