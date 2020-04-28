@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 
