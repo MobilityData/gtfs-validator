@@ -280,6 +280,7 @@ public class Route {
          * Returns an entity representing a row from route.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns a list of notices.
          *
+         * @param noticeCollection list of notice to complete
          * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns a list of notices.
          */
