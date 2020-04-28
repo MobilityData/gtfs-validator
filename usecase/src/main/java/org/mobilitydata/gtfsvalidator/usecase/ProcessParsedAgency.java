@@ -18,9 +18,12 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+
+import java.util.List;
 
 /**
  * This use case turns a parsed entity representing a row from agency.txt into a concrete class
@@ -50,7 +53,7 @@ public class ProcessParsedAgency {
      *
      * @param validatedAgencyEntity entity to be processed and added to the GTFS data repository
      */
-    public void execute(final ParsedEntity validatedAgencyEntity) {
+    public void execute(final ParsedEntity validatedAgencyEntity, final List<Notice> noticeCollection) {
 
         final String agencyId = (String) validatedAgencyEntity.get("agency_id");
         final String agencyName = (String) validatedAgencyEntity.get("agency_name");
@@ -70,15 +73,16 @@ public class ProcessParsedAgency {
                 .agencyFareUrl(agencyFareUrl)
                 .agencyEmail(agencyEmail);
 
-        final Agency agency = builder.build();
+        final var agency = builder.build(noticeCollection);
 
-        builder.getNoticeCollection().forEach(resultRepository::addNotice);
-
-        if (agency != null) {
-            if (gtfsDataRepository.addAgency(agency) == null) {
+        if (agency.getState()) {
+            if (gtfsDataRepository.addAgency((Agency) agency.getData()) == null) {
                 resultRepository.addNotice(new EntityMustBeUniqueNotice("agency.txt", "agency_id",
                         validatedAgencyEntity.getEntityId()));
             }
+        } else {
+            //noinspection unchecked
+            ((List<Notice>) agency.getData()).forEach(resultRepository::addNotice);
         }
     }
 }

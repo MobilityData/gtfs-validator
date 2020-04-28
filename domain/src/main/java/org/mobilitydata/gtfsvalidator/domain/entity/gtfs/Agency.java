@@ -27,6 +27,7 @@ import java.util.List;
  * Class for all entities defined in agency.txt. Can not be directly instantiated: user must use the
  * {@link AgencyBuilder} to create this.
  */
+@SuppressWarnings("ALL")
 public class Agency {
 
     @Nullable
@@ -139,11 +140,6 @@ public class Agency {
         private String agencyPhone;
         private String agencyFareUrl;
         private String agencyEmail;
-        private final List<Notice> noticeCollection;
-
-        public AgencyBuilder(final List<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
 
         /**
          * Sets field agencyName value and returns this
@@ -228,30 +224,21 @@ public class Agency {
          * @param agencyEmail email address actively monitored by the agency’s customer service department
          * @return builder for future object creation
          */
+        @SuppressWarnings("UnusedReturnValue")
         public AgencyBuilder agencyEmail(@Nullable final String agencyEmail) {
             this.agencyEmail = agencyEmail;
             return this;
         }
 
         /**
-         * Returns list of notice generated when building an {@code Agency} from this.
-         *
-         * @return the list of notice generated when building an {@link Agency} from this.
-         */
-        public List<Notice> getNoticeCollection() {
-            return noticeCollection;
-        }
-
-        /**
          * Returns a {@link Agency} object from fields provided via {@link AgencyBuilder} methods.
          * Adds {@code MissingRequiredValueNotice} to notice collection  if fields agencyName, agencyUrl, or
-         * agencyTimezone are null. If said fields are null, method returns null
+         * agencyTimezone are null. If said fields are null, method returns list of {@code Notice}
          *
          * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns null.
+         * are met. Otherwise, method returns list of {@link Notice}.
          */
-        public Agency build() {
-            noticeCollection.clear();
+        public GenericType build(final List<Notice> noticeCollection) {
             if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
 
                 if (agencyName == null) {
@@ -266,10 +253,14 @@ public class Agency {
                     noticeCollection.add((new MissingRequiredValueNotice("agency.txt",
                             "agency_timezone", agencyId)));
                 }
-                return null;
+                //noinspection unchecked
+                return new GenericType(noticeCollection, false);
+            } else {
+                //noinspection unchecked
+                return new GenericType(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
+                        agencyPhone, agencyFareUrl, agencyEmail),
+                        true);
             }
-            return new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang, agencyPhone,
-                    agencyFareUrl, agencyEmail);
         }
     }
 }
