@@ -55,4 +55,6 @@ public interface NoticeExporter {
     void export(InvalidTimeNotice toExport) throws IOException;
 
     void export(CannotParseDateNotice toExport) throws IOException;
+
+    void export(InvalidCurrencyCodeNotice invalidCurrencyCodeNotice) throws IOException;
 }

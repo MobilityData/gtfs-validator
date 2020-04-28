@@ -154,4 +154,9 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(CannotParseDateNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(InvalidCurrencyCodeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }
