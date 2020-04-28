@@ -27,6 +27,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValue
 
 import java.util.List;
 
+/**
+ * Class for all entities defined in fare_attributes.txt. Can not be directly instantiated: user must use the
+ * {@code FareAttribute.FareAttributeBuilder} to create this.
+ */
 public class FareAttribute {
 
     @NotNull
@@ -45,8 +49,36 @@ public class FareAttribute {
 
     @Nullable
     private final String agencyId;
+
     @Nullable
     private final Integer transferDuration;
+
+    /**
+     * Class for all entities defined in fare_attributes.txt
+     *
+     * @param fareId           identifies a fare class
+     * @param price            fare price, in the unit specified by currency_type
+     * @param currencyType     currency used to pay the fare
+     * @param paymentMethod    indicates when the fare must be paid
+     * @param transfers        indicates the number of transfers permitted on this fare
+     * @param agencyId         identifies the relevant agency for a fare
+     * @param transferDuration length of time in seconds before a transfer expires
+     */
+    public FareAttribute(@NotNull final String fareId,
+                         final float price,
+                         @NotNull final String currencyType,
+                         @NotNull final PaymentMethod paymentMethod,
+                         @NotNull final Transfers transfers,
+                         @Nullable final String agencyId,
+                         @Nullable final Integer transferDuration) {
+        this.fareId = fareId;
+        this.price = price;
+        this.currencyType = currencyType;
+        this.paymentMethod = paymentMethod;
+        this.transfers = transfers;
+        this.agencyId = agencyId;
+        this.transferDuration = transferDuration;
+    }
 
     @NotNull
     public String getFareId() {
@@ -82,22 +114,10 @@ public class FareAttribute {
         return transferDuration;
     }
 
-    public FareAttribute(@NotNull final String fareId,
-                         final float price,
-                         @NotNull final String currencyType,
-                         @NotNull final PaymentMethod paymentMethod,
-                         @NotNull final Transfers transfers,
-                         @Nullable final String agencyId,
-                         @Nullable final Integer transferDuration) {
-        this.fareId = fareId;
-        this.price = price;
-        this.currencyType = currencyType;
-        this.paymentMethod = paymentMethod;
-        this.transfers = transfers;
-        this.agencyId = agencyId;
-        this.transferDuration = transferDuration;
-    }
-
+    /**
+     * Builder class to create {@code FareAttribute} objects. Allows an unordered definition of the different attributes
+     * of {@link FareAttribute}.
+     */
     public static class FareAttributeBuilder {
         private String fareId;
         private Float price;
@@ -109,44 +129,94 @@ public class FareAttribute {
         private Integer paymentMethodInteger;
         private Integer transfersInteger;
 
+        /**
+         * Sets field fareId value and returns this
+         *
+         * @param fareId identifies a fare class
+         * @return builder for future object creation
+         */
         public FareAttributeBuilder fareId(final String fareId) {
             this.fareId = fareId;
             return this;
         }
 
+        /**
+         * Sets field price value and returns this
+         *
+         * @param price fare price, in the unit specified by field {@link FareAttribute #currencyType}
+         * @return builder for future object creation
+         */
         public FareAttributeBuilder price(final Float price) {
             this.price = price;
             return this;
         }
 
+        /**
+         * Sets field currencyType value and returns this
+         *
+         * @param currencyType currency used to pay the fare
+         * @return builder for future object creation
+         */
         public FareAttributeBuilder currencyType(final String currencyType) {
             this.currencyType = currencyType;
             return this;
         }
 
+        /**
+         * Sets field paymentMethod value and returns this
+         *
+         * @param paymentMethod indicates when the fare must be paid
+         * @return builder for future object creation
+         */
         public FareAttributeBuilder paymentMethod(final Integer paymentMethod) {
             this.paymentMethod = PaymentMethod.fromInt(paymentMethod);
             this.paymentMethodInteger = paymentMethod;
             return this;
         }
 
+        /**
+         * Sets field transfers value and returns this
+         *
+         * @param transfers indicates the number of transfers permitted on this fare
+         * @return builder for future object creation
+         */
         public FareAttributeBuilder transfers(final Integer transfers) {
             this.transfers = Transfers.fromInt(transfers);
             this.transfersInteger = transfers;
             return this;
         }
 
+        /**
+         * Sets field agencyId value and returns this
+         *
+         * @param agencyId identifies the relevant agency for a fare
+         * @return builder for future object creation
+         */
         public FareAttributeBuilder agencyId(final @Nullable String agencyId) {
             this.agencyId = agencyId; // TODO: to be modified see https://github.com/MobilityData/gtfs-validator/issues/109
             return this;
         }
 
+        /**
+         * Sets field transferDuration value and returns this
+         *
+         * @param transferDuration length of time in seconds before a transfer expires
+         * @return builder for future object creation
+         */
         @SuppressWarnings("UnusedReturnValue")
         public FareAttributeBuilder transferDuration(final int transferDuration) {
             this.transferDuration = transferDuration;
             return this;
         }
 
+        /**
+         * This methods returns an entity representing a row from fare_attributes.txt if the requirements from the
+         * official GTFS specification are met. Otherwise, method returns list of {@link Notice}.
+         *
+         * @param noticeCollection list of notices to complete
+         * @return Entity representing a row from fare_attributes.txt if the requirements from the official GTFS
+         * specification are met. Otherwise, method returns list of {@link Notice}.
+         */
         @SuppressWarnings("rawtypes")
         public GenericType build(final List<Notice> noticeCollection) {
             if (price == null || price < 0 || fareId == null || currencyType == null || paymentMethodInteger == null ||
