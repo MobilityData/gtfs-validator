@@ -18,6 +18,11 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
+
+import java.util.List;
 
 /**
  * Class for all entities defined in routes.txt. Can not be directly instantiated: user must use the
@@ -155,6 +160,12 @@ public class Route {
         private String routeColor;
         private String routeTextColor;
         private Integer routeSortOrder;
+        private final List<Notice> noticeCollection;
+        private Integer fromValue;
+
+        public RouteBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
 
         /**
          * Sets field routeId value and returns this
@@ -212,13 +223,14 @@ public class Route {
         }
 
         /**
-         * Sets field routeType value and returns this
+         * Sets field routeType value and returns this. Updates field fromValue.
          *
          * @param routeType Indicates the type of transportation used on a route
          * @return builder for future object creation
          */
-        public RouteBuilder routeType(final int routeType) {
+        public RouteBuilder routeType(final Integer routeType) {
             this.routeType = RouteType.fromInt(routeType);
+            this.fromValue = routeType;
             return this;
         }
 
@@ -267,18 +279,31 @@ public class Route {
         }
 
         /**
-         * Returns a {@link Route} object from fields provided via {@link RouteBuilder} methods.
-         * Throws {@link IllegalArgumentException} if field route_id is null.
+         * Returns list of notice generated when building an {@code Route} from this.
          *
-         * @return Entity representing a row from routes.txt
-         * @throws IllegalArgumentException if field route_id is null.
+         * @return the list of notice generated when building an {@link Route} from this.
+         */
+        public List<Notice> getNoticeCollection() {
+            return noticeCollection;
+        }
+
+        /**
+         * Returns a {@link Route} object from fields provided via this methods.
+         * Adds {@code MissingRequiredValueNotice} to notice collection  if field route_id is null. Adds
+         * {@code UnexpectedValueNotice} if an unexpected value has been encountered for field route_type
+         *
+         * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns null.
          */
         public Route build() throws IllegalArgumentException {
-            if (routeType == null) {
-                throw new IllegalArgumentException("Unexpected value, or null value for field route_type in routes.txt");
-            }
+            noticeCollection.clear();
             if (routeId == null) {
-                throw new IllegalArgumentException("route_id can not be null in routes.txt");
+                noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
+                        routeId));
+            }
+            if (routeType == null) {
+                noticeCollection.add(new UnexpectedValueNotice("routes.txt", "route_type", routeId,
+                        fromValue));
             }
             return new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,
                     routeUrl, routeColor, routeTextColor, routeSortOrder);
