@@ -14,34 +14,34 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum BikesAllowedStatus {
-    UNKNOWN_BIKES_ALLOWANCE(0),
-    BIKES_ALLOWED(1),
-    NO_BIKES_ALLOWED(2);
+public enum WheelchairAccessibleStatus {
+    UNKNOWN_WHEELCHAIR_ACCESSIBILITY(0),
+    WHEELCHAIR_ACCESSIBLE(1),
+    NOT_WHEELCHAIR_ACCESSIBLE(2);
 
     private int value;
 
-    BikesAllowedStatus(final int value) {
+    WheelchairAccessibleStatus(final int value) {
         this.value = value;
     }
 
     static protected List<Integer> getValues() {
-        return Stream.of(BikesAllowedStatus.values()).map(enumItem -> enumItem.value).collect(Collectors.toList());
+        return Stream.of(WheelchairAccessibleStatus.values()).map(enumItem -> enumItem.value).collect(Collectors.toList());
     }
 
-    static public BikesAllowedStatus fromInt(final Integer fromValue) {
+    static public WheelchairAccessibleStatus fromInt(final Integer fromValue) {
         if (fromValue == null) {
-            return UNKNOWN_BIKES_ALLOWANCE;
+            return UNKNOWN_WHEELCHAIR_ACCESSIBILITY;
         }
         if (getValues().contains(fromValue)) {
             //noinspection OptionalGetWithoutIsPresent
-            return Stream.of(BikesAllowedStatus.values())
+            return Stream.of(WheelchairAccessibleStatus.values())
                     .filter(enumItem -> enumItem.value == fromValue)
                     .findAny()
                     .get();
