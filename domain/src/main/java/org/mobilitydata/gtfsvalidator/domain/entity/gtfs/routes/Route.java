@@ -277,12 +277,11 @@ public class Route {
         }
 
         /**
-         * Returns a {@link Route} object from fields provided via this methods.
-         * Adds {@code MissingRequiredValueNotice} to notice collection  if field route_id is null. Adds
-         * {@code UnexpectedValueNotice} if an unexpected value has been encountered for field route_type
+         * Returns an entity representing a row from route.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns a list of notices.
          *
          * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns null.
+         * are met. Otherwise, method returns a list of notices.
          */
         public GenericType build(final List<Notice> noticeCollection) throws IllegalArgumentException {
             if (routeId == null || routeType == null) {

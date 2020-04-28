@@ -231,9 +231,8 @@ public class Agency {
         }
 
         /**
-         * Returns a {@link Agency} object from fields provided via {@link AgencyBuilder} methods.
-         * Adds {@code MissingRequiredValueNotice} to notice collection  if fields agencyName, agencyUrl, or
-         * agencyTimezone are null. If said fields are null, method returns list of {@code Notice}
+         * Entity representing a row from agency.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns list of {@link Notice}.
          *
          * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns list of {@link Notice}.
