@@ -18,29 +18,22 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
-import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * This use case turns a parsed entity representing a row from agency.txt into a concrete class
  */
 public class ProcessParsedAgency {
-    private final GtfsSpecRepository gtfsSpecRepository;
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
     private final Agency.AgencyBuilder builder;
 
 
-    public ProcessParsedAgency(final GtfsSpecRepository gtfsSpecRepository,
-                               final ValidationResultRepository resultRepository,
+    public ProcessParsedAgency(final ValidationResultRepository resultRepository,
                                final GtfsDataRepository gtfsDataRepository,
                                final Agency.AgencyBuilder builder) {
-        this.gtfsSpecRepository = gtfsSpecRepository;
         this.resultRepository = resultRepository;
         this.gtfsDataRepository = gtfsDataRepository;
         this.builder = builder;
@@ -49,17 +42,15 @@ public class ProcessParsedAgency {
     /**
      * Use case execution method to go from a row from agency.txt to an internal representation.
      * <p>
-     * This use case extracts values from a {@link ParsedEntity} and creates a {@link Agency} object. If values for
-     * agency_name, agency_url and agency_timezone fields are null, a {@link MissingRequiredValueNotice} is created and
-     * added to the validation result repository provided in the use case constructor; and
-     * {@link IllegalArgumentException} is thrown.
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code Agency} object if the requirements
+     * from the official GTFS specification are met. When these requirements are not met, related notices generated in
+     * {@code Agency.AgencyBuilder} are added to the result repository provided in the constructor.
+     * This use case also adds a {@code EntityMustBeUniqueNotice} to said repository if the uniqueness constraint on
+     * agency entities is not respected.
      *
      * @param validatedAgencyEntity entity to be processed and added to the GTFS data repository
-     * @throws IllegalArgumentException if specification requirements are not met regarding values for agency_name,
-     *                                  agency_url and agency_timezone fields
      */
-    public void execute(final ParsedEntity validatedAgencyEntity) throws IllegalArgumentException,
-            SQLIntegrityConstraintViolationException {
+    public void execute(final ParsedEntity validatedAgencyEntity) {
 
         final String agencyId = (String) validatedAgencyEntity.get("agency_id");
         final String agencyName = (String) validatedAgencyEntity.get("agency_name");
@@ -70,40 +61,24 @@ public class ProcessParsedAgency {
         final String agencyFareUrl = (String) validatedAgencyEntity.get("agency_fare_url");
         final String agencyEmail = (String) validatedAgencyEntity.get("agency_email");
 
-        try {
-            builder.agencyId(agencyId)
-                    .agencyName(agencyName)
-                    .agencyUrl(agencyUrl)
-                    .agencyTimezone(agencyTimezone)
-                    .agencyLang(agencyLang)
-                    .agencyPhone(agencyPhone)
-                    .agencyFareUrl(agencyFareUrl)
-                    .agencyEmail(agencyEmail);
+        builder.agencyId(agencyId)
+                .agencyName(agencyName)
+                .agencyUrl(agencyUrl)
+                .agencyTimezone(agencyTimezone)
+                .agencyLang(agencyLang)
+                .agencyPhone(agencyPhone)
+                .agencyFareUrl(agencyFareUrl)
+                .agencyEmail(agencyEmail);
 
-            gtfsDataRepository.addAgency(builder.build());
+        final Agency agency = builder.build();
 
-        } catch (IllegalArgumentException e) {
+        builder.getNoticeCollection().forEach(resultRepository::addNotice);
 
-            if (agencyName == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("agency.txt", "agency_name",
+        if (agency != null) {
+            if (gtfsDataRepository.addAgency(agency) == null) {
+                resultRepository.addNotice(new EntityMustBeUniqueNotice("agency.txt", "agency_id",
                         validatedAgencyEntity.getEntityId()));
             }
-
-            if (agencyUrl == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("agency.txt", "agency_url",
-                        validatedAgencyEntity.getEntityId()));
-            }
-
-            if (agencyTimezone == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("agency.txt",
-                        "agency_timezone", validatedAgencyEntity.getEntityId()));
-            }
-            throw e;
-
-        } catch (SQLIntegrityConstraintViolationException e) {
-            resultRepository.addNotice(new EntityMustBeUniqueNotice("agency.txt", "agency_id",
-                    validatedAgencyEntity.getEntityId()));
-            throw e;
         }
     }
 }

@@ -20,18 +20,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException;
+    Agency addAgency(final Agency newAgency);
 
     Agency getAgencyById(final String agencyId);
 
-    Route getRouteById(final String routeId);
+    Route addRoute(final Route newRoute);
 
-    Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
+    Route getRouteById(final String routeId);
 
     FareAttribute getFareAttributeByFareId(final String fareId);
 
-    FareAttribute addFareAttribute(final FareAttribute newFareAttribute) throws SQLIntegrityConstraintViolationException;
+    FareAttribute addFareAttribute(final FareAttribute newFareAttribute) ;
 }

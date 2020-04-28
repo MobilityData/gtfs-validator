@@ -19,9 +19,16 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.RouteType;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
+import org.mockito.ArgumentCaptor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class RouteTest {
 
@@ -32,8 +39,9 @@ class RouteTest {
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void createRouteWithNullRouteIdShouldThrowException() {
-        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+    public void createRouteWithNullRouteIdShouldMissingRequiredValueNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
 
         underTest.routeId(null)
                 .agencyId(STRING_TEST_VALUE)
@@ -46,14 +54,28 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        underTest.build();
 
-        assertEquals("route_id can not be null in routes.txt", exception.getMessage());
+        verify(mockNoticeCollection, times(1)).clear();
+
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("routes.txt", noticeList.get(0).getFilename());
+        assertEquals("route_id", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
+
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createRouteWithInvalidRouteTypeShouldThrowException() {
-        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+    public void createRouteWithInvalidRouteTypeShouldGenerateUnexpectedValueNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
 
         underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
@@ -66,15 +88,29 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        underTest.build();
 
-        assertEquals("Unexpected value, or null value for field route_type in routes.txt",
-                exception.getMessage());
+        verify(mockNoticeCollection, times(1)).clear();
+
+        final ArgumentCaptor<UnexpectedValueNotice> captor =
+                ArgumentCaptor.forClass(UnexpectedValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("routes.txt", noticeList.get(0).getFilename());
+        assertEquals("route_type", noticeList.get(0).getFieldName());
+        assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
+        assertEquals("15", noticeList.get(0).getEnumValue());
+
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createRouteWithValidValuesForFieldShouldNotThrowException() {
-        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+    public void createRouteWithValidValuesForFieldShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
 
         underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
@@ -89,6 +125,7 @@ class RouteTest {
 
         final Route route = underTest.build();
 
+        verify(mockNoticeCollection, times(1)).clear();
         assertEquals(route.getRouteId(), STRING_TEST_VALUE);
         assertEquals(route.getAgencyId(), STRING_TEST_VALUE);
         assertEquals(route.getRouteShortName(), STRING_TEST_VALUE);
@@ -99,5 +136,7 @@ class RouteTest {
         assertEquals(route.getRouteColor(), STRING_TEST_VALUE);
         assertEquals(route.getRouteTextColor(), STRING_TEST_VALUE);
         assertEquals(route.getRouteSortOrder(), INT_TEST_VALUE);
+
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 }

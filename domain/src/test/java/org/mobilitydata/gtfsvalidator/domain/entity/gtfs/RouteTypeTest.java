@@ -10,105 +10,61 @@ class RouteTypeTest {
 
     @Test
     public void createRouteTypeWithNullValueShouldReturnNull() {
-        final Integer unexpectedEnumValue = null;
-
-        assertNull(RouteType.fromInt(unexpectedEnumValue));
+        assertNull(RouteType.fromInt(null));
     }
 
     @Test
     public void createRouteTypeWithUnexpectedValueShouldReturnNull() {
-        final int unexpectedEnumValue = 13;
-
-        assertNull(RouteType.fromInt(unexpectedEnumValue));
+        assertNull(RouteType.fromInt(13));
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue0ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        final int unexpectedEnumValue = 0;
-
-        final RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.LIGHT_RAIL);
+    public void createRouteTypeWithExpectedValue0ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(0), RouteType.LIGHT_RAIL);
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue1ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        final int unexpectedEnumValue = 1;
-
-        final RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.SUBWAY);
+    public void createRouteTypeWithExpectedValue1ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(1), RouteType.SUBWAY);
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue2ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        final int unexpectedEnumValue = 2;
-
-        final RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.RAIL);
+    public void createRouteTypeWithExpectedValue2ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(2), RouteType.RAIL);
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue3ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        final int unexpectedEnumValue = 3;
-
-        final RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.BUS);
+    public void createRouteTypeWithExpectedValue3ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(3), RouteType.BUS);
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue4ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        final int unexpectedEnumValue = 4;
-
-        final RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.FERRY);
+    public void createRouteTypeWithExpectedValue4ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(4), RouteType.FERRY);
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue5ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        final int unexpectedEnumValue = 5;
-
-        final RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.CABLE_TRAM);
+    public void createRouteTypeWithExpectedValue5ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(5), RouteType.CABLE_TRAM);
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue6ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        int unexpectedEnumValue = 6;
-
-        RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.AERIAL_LIFT);
+    public void createRouteTypeWithExpectedValue6ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(6), RouteType.AERIAL_LIFT);
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue7ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        final int unexpectedEnumValue = 7;
-
-        final RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.FUNICULAR);
+    public void createRouteTypeWithExpectedValue7ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(7), RouteType.FUNICULAR);
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue11ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        final int unexpectedEnumValue = 11;
-
-        final RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.TROLLEY_BUS);
+    public void createRouteTypeWithExpectedValue11ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(11), RouteType.TROLLEY_BUS);
     }
 
     @Test
-    public void createRouteTypeWithExpectedValue12ShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        final int unexpectedEnumValue = 12;
-
-        final RouteType routeType = RouteType.fromInt(unexpectedEnumValue);
-
-        assertEquals(routeType, RouteType.MONORAIL);
+    public void createRouteTypeWithExpectedValue12ShouldReturnCorrectRouteType() {
+        assertEquals(RouteType.fromInt(12), RouteType.MONORAIL);
     }
 }

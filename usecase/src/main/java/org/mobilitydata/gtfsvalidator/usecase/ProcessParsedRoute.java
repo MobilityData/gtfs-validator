@@ -18,13 +18,9 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * This use case turns a parsed entity representing a row from routes.txt into a concrete class
@@ -46,22 +42,15 @@ public class ProcessParsedRoute {
     /**
      * Use case execution method to go from a row from routes.txt to an internal representation.
      * <p>
-     * This use case extracts values from a {@link ParsedEntity} and creates a {@link Route} object.
-     * <p>
-     * If value for route_id field is null, a {@link MissingRequiredValueNotice} is created and added to the validation
-     * result repository provided in the use case constructor.
-     * <p>
-     * If an unexpected value is passed to field route_type a {@link UnexpectedValueNotice} is created and added to the
-     * validation result repository provided in the use case constructor.
-     * <p>
-     * In both cases a {@link IllegalArgumentException} is thrown.
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code Route} object if the requirements
+     * from the official GTFS specification are met. When these requirements are mot met, related notices generated in
+     * {@code Route.RouteBuilder} are added to the result repository provided to the constructor.
+     * This use case also adds a {@code EntityMustBeUniqueNotice} to said repository if the uniqueness constraint on
+     * route entities is not respected.
      *
      * @param validatedParsedRoute entity to be processed and added to the GTFS data repository
-     * @throws IllegalArgumentException if specification requirements are not met regarding values for agency_name,
-     *                              route_id and route type
      */
-    public void execute(final ParsedEntity validatedParsedRoute) throws IllegalArgumentException,
-            SQLIntegrityConstraintViolationException {
+    public void execute(final ParsedEntity validatedParsedRoute) {
 
         final String routeId = (String) validatedParsedRoute.get("route_id");
         final String agencyId = (String) validatedParsedRoute.get("agency_id");
@@ -74,34 +63,26 @@ public class ProcessParsedRoute {
         final String routeTextColor = (String) validatedParsedRoute.get("route_text_color");
         final Integer routeSortOrder = (Integer) validatedParsedRoute.get("route_sort_order");
 
-        try {
-            builder.routeId(routeId)
-                    .agencyId(agencyId)
-                    .routeShortName(routeShortName)
-                    .routeLongName(routeLongName)
-                    .routeDesc(routeDesc)
-                    .routeType(routeType)
-                    .routeUrl(routeUrl)
-                    .routeColor(routeColor)
-                    .routeTextColor(routeTextColor)
-                    .routeSortOrder(routeSortOrder);
+        builder.routeId(routeId)
+                .agencyId(agencyId)
+                .routeShortName(routeShortName)
+                .routeLongName(routeLongName)
+                .routeDesc(routeDesc)
+                .routeType(routeType)
+                .routeUrl(routeUrl)
+                .routeColor(routeColor)
+                .routeTextColor(routeTextColor)
+                .routeSortOrder(routeSortOrder);
 
-            gtfsDataRepository.addRoute(builder.build());
+        final Route route = builder.build();
 
-        } catch (IllegalArgumentException e) {
+        builder.getNoticeCollection().forEach(resultRepository::addNotice);
 
-            if (routeId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("routes.txt", "route_id",
+        if (route != null) {
+            if (gtfsDataRepository.addRoute(route) == null) {
+                resultRepository.addNotice(new EntityMustBeUniqueNotice("routes.txt", "route_id",
                         validatedParsedRoute.getEntityId()));
-            } else {
-                resultRepository.addNotice(new UnexpectedValueNotice("routes.txt",
-                        "route_type", validatedParsedRoute.getEntityId(), routeType));
             }
-            throw e;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            resultRepository.addNotice(new EntityMustBeUniqueNotice("routes.txt", "route_id",
-                    validatedParsedRoute.getEntityId()));
-            throw e;
         }
     }
 }
