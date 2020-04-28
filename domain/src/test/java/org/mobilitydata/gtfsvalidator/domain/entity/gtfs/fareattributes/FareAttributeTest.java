@@ -17,11 +17,22 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+
+@SuppressWarnings("unchecked")
 class FareAttributeTest {
-
     private static final String STRING_TEST = "string test";
     private static final float VALID_PRICE_FLOAT = 2.0f;
     private static final Integer VALID_PAYMENT_METHOD_INTEGER = 1;
@@ -29,10 +40,11 @@ class FareAttributeTest {
     private static final int VALID_TRANSFER_DURATION_INTEGER = 20;
 
     @Test
-    void createFareAttributeWithValidValuesShouldNotThrowException() {
-        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+    void createFareAttributeWithValidValuesShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        builder.fareId(STRING_TEST)
+        underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
@@ -40,14 +52,16 @@ class FareAttributeTest {
                 .agencyId(STRING_TEST)
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
-        assertDoesNotThrow(builder::build);
+        underTest.build(mockNoticeCollection);
+        assertTrue(underTest.build(mockNoticeCollection).getData() instanceof FareAttribute);
     }
 
     @Test
-    void createFareAttributeWithNullFareIdShouldThrowException() {
-        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+    void createFareAttributeWithNullFareIdShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        builder.fareId(null)
+        underTest.fareId(null)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
@@ -55,15 +69,22 @@ class FareAttributeTest {
                 .agencyId(STRING_TEST)
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("field `fare_id` in file `fare_attributes.txt` cannot be null", exception.getMessage());
+        final var fareAttribute = underTest.build(mockNoticeCollection);
+        assertTrue(fareAttribute.getData() instanceof ArrayList);
+
+        final List<MissingRequiredValueNotice> data = (List<MissingRequiredValueNotice>) fareAttribute.getData();
+
+        assertEquals("fare_attributes.txt", data.get(0).getFilename());
+        assertEquals("fare_id", data.get(0).getFieldName());
+        assertEquals("no id", data.get(0).getEntityId());
     }
 
     @Test
-    void createFareAttributeWithNullPriceShouldThrowException() {
-        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+    void createFareAttributeWithNullPriceShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        builder.fareId(STRING_TEST)
+        underTest.fareId(STRING_TEST)
                 .price(null)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
@@ -71,15 +92,22 @@ class FareAttributeTest {
                 .agencyId(STRING_TEST)
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("field `price` in file `fare_attributes.txt` cannot be null", exception.getMessage());
+        final var fareAttribute = underTest.build(mockNoticeCollection);
+        assertTrue(fareAttribute.getData() instanceof ArrayList);
+
+        final List<MissingRequiredValueNotice> data = (List<MissingRequiredValueNotice>) fareAttribute.getData();
+
+        assertEquals("fare_attributes.txt", data.get(0).getFilename());
+        assertEquals("price", data.get(0).getFieldName());
+        assertEquals(STRING_TEST, data.get(0).getEntityId());
     }
 
     @Test
-    void createFareAttributeWithNullCurrencyTypeShouldThrowException() {
-        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+    void createFareAttributeWithNullCurrencyTypeShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        builder.fareId(STRING_TEST)
+        underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(null)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
@@ -87,15 +115,22 @@ class FareAttributeTest {
                 .agencyId(STRING_TEST)
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("field `currency_type` in file `fare_attributes.txt` cannot be null", exception.getMessage());
+        final var fareAttribute = underTest.build(mockNoticeCollection);
+        assertTrue(fareAttribute.getData() instanceof ArrayList);
+
+        final List<MissingRequiredValueNotice> data = (List<MissingRequiredValueNotice>) fareAttribute.getData();
+
+        assertEquals("fare_attributes.txt", data.get(0).getFilename());
+        assertEquals("currency_type", data.get(0).getFieldName());
+        assertEquals(STRING_TEST, data.get(0).getEntityId());
     }
 
     @Test
-    void createFareAttributeWithNullPaymentMethodShouldThrowException() {
-        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+    void createFareAttributeWithNullPaymentMethodGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        builder.fareId(STRING_TEST)
+        underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(null)
@@ -103,16 +138,22 @@ class FareAttributeTest {
                 .agencyId(STRING_TEST)
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("unexpected value encountered for field `payment_method` in file `fare_attributes.txt`",
-                exception.getMessage());
+        final var fareAttribute = underTest.build(mockNoticeCollection);
+        assertTrue(fareAttribute.getData() instanceof ArrayList);
+
+        final List<MissingRequiredValueNotice> data = (List<MissingRequiredValueNotice>) fareAttribute.getData();
+
+        assertEquals("fare_attributes.txt", data.get(0).getFilename());
+        assertEquals("payment_method", data.get(0).getFieldName());
+        assertEquals(STRING_TEST, data.get(0).getEntityId());
     }
 
     @Test
     void createFareAttributeWithInvalidTransfersShouldThrowException() {
-        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        builder.fareId(STRING_TEST)
+        underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
@@ -120,16 +161,23 @@ class FareAttributeTest {
                 .agencyId(STRING_TEST)
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("unexpected value encountered for field `transfers` in file `fare_attributes.txt`",
-                exception.getMessage());
+        final var fareAttribute = underTest.build(mockNoticeCollection);
+        assertTrue(fareAttribute.getData() instanceof ArrayList);
+
+        final List<UnexpectedValueNotice> data = (List<UnexpectedValueNotice>) fareAttribute.getData();
+
+        assertEquals("fare_attributes.txt", data.get(0).getFilename());
+        assertEquals("transfers", data.get(0).getFieldName());
+        assertEquals(STRING_TEST, data.get(0).getEntityId());
+        assertEquals("4", data.get(0).getEnumValue());
     }
 
     @Test
     void createFareAttributeWithNullTransfersShouldNotThrowException() {
-        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        builder.fareId(STRING_TEST)
+        underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
@@ -137,14 +185,14 @@ class FareAttributeTest {
                 .agencyId(STRING_TEST)
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
-        assertDoesNotThrow(builder::build);
+        assertTrue(underTest.build(mockNoticeCollection).getData() instanceof FareAttribute);
     }
 
     @Test
-    void createFareAttributeWithNegativePriceShouldThrowException() {
-        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
-
-        builder.fareId(STRING_TEST)
+    void createFareAttributeWithNegativePriceShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
+        underTest.fareId(STRING_TEST)
                 .price(-2.0F)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
@@ -152,15 +200,24 @@ class FareAttributeTest {
                 .agencyId(STRING_TEST)
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("field `price` of file `fare_attributes.txt` cannot be negative", exception.getMessage());
+        final var fareAttribute = underTest.build(mockNoticeCollection);
+        assertTrue(fareAttribute.getData() instanceof ArrayList);
+
+        final List<FloatFieldValueOutOfRangeNotice> data = (List<FloatFieldValueOutOfRangeNotice>) fareAttribute.getData();
+
+        assertEquals("fare_attributes.txt", data.get(0).getFilename());
+        assertEquals("price", data.get(0).getFieldName());
+        assertEquals(STRING_TEST, data.get(0).getEntityId());
+        assertEquals(0, data.get(0).getRangeMin());
+        assertEquals(Float.MAX_VALUE, data.get(0).getRangeMax());
     }
 
     @Test
     void createFareAttributeWithNegativeTimeDurationShouldThrowException() {
-        FareAttribute.FareAttributeBuilder builder = new FareAttribute.FareAttributeBuilder();
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        builder.fareId(STRING_TEST)
+        underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
@@ -168,8 +225,15 @@ class FareAttributeTest {
                 .agencyId(STRING_TEST)
                 .transferDuration(-20);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, builder::build);
-        assertEquals("field `transfer_duration` of file `fare_attributes.txt` " +
-                "cannot be negative", exception.getMessage());
+        final var fareAttribute = underTest.build(mockNoticeCollection);
+        assertTrue(fareAttribute.getData() instanceof ArrayList);
+
+        final List<IntegerFieldValueOutOfRangeNotice> data = (List<IntegerFieldValueOutOfRangeNotice>) fareAttribute.getData();
+
+        assertEquals("fare_attributes.txt", data.get(0).getFilename());
+        assertEquals("transfer_duration", data.get(0).getFieldName());
+        assertEquals(STRING_TEST, data.get(0).getEntityId());
+        assertEquals(0, data.get(0).getRangeMin());
+        assertEquals(Integer.MAX_VALUE, data.get(0).getRangeMax());
     }
 }

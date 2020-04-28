@@ -22,20 +22,19 @@ public enum PaymentMethod {
     ON_BOARD(0),
     BEF0RE_BOARDING(1);
 
-    private int value;
+    private final int value;
 
     PaymentMethod(int value) {
         this.value = value;
     }
 
     static public PaymentMethod fromInt(Integer fromValue) {
-        if (fromValue == null || fromValue < 0 || fromValue > 1) {
+        if (fromValue == null) {
             return null;
         }
-        //noinspection OptionalGetWithoutIsPresent
         return Stream.of(PaymentMethod.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .get();
+                .orElse(null);
     }
 }

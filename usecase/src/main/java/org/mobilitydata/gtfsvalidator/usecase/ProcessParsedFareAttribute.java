@@ -18,14 +18,16 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
+/**
+ * This use case turns a parsed entity representing a row from fare_attributes.txt into a concrete class
+ */
 public class ProcessParsedFareAttribute {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
@@ -39,8 +41,18 @@ public class ProcessParsedFareAttribute {
         this.builder = builder;
     }
 
-    public void execute(final ParsedEntity validatedFareAttribute) throws IllegalArgumentException,
-            SQLIntegrityConstraintViolationException {
+    /**
+     * Use case execution method to go from a row from fare_attributes.txt to an internal representation.
+     * <p>
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code FareAttribute} object if the
+     * requirements from the official GTFS specification are met. When these requirements are not met, related notices
+     * generated in {@code FareAttribute.FareAttributeBuilder} are added to the result repository provided in the
+     * constructor. This use case also adds a {@code EntityMustBeUniqueNotice} to said repository if the uniqueness
+     * constraint on fare attribute entities is not respected.
+     *
+     * @param validatedFareAttribute entity to be processed and added to the GTFS data repository
+     */
+    public void execute(final ParsedEntity validatedFareAttribute, final List<Notice> noticeCollection) {
 
         final String fareId = (String) validatedFareAttribute.get("fare_id");
         final Float price = (Float) validatedFareAttribute.get("price");
@@ -50,47 +62,24 @@ public class ProcessParsedFareAttribute {
         final String agencyId = (String) validatedFareAttribute.get("agency_id");
         final Integer transferDuration = (Integer) validatedFareAttribute.get("transfer_duration");
 
-        try {
-            builder.fareId(fareId)
-                    .price(price)
-                    .currencyType(currencyType)
-                    .paymentMethod(paymentMethod)
-                    .transfers(transfers)
-                    .agencyId(agencyId)
-                    .transferDuration(transferDuration);
+        builder.fareId(fareId)
+                .price(price)
+                .currencyType(currencyType)
+                .paymentMethod(paymentMethod)
+                .transfers(transfers)
+                .agencyId(agencyId)
+                .transferDuration(transferDuration);
 
-            gtfsDataRepository.addFareAttribute(builder.build());
+        final var fareAttribute = builder.build(noticeCollection);
 
-        } catch (IllegalArgumentException e) {
-
-            if (fareId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("fare_attributes.txt",
+        if (fareAttribute.getState()) {
+            if (gtfsDataRepository.addFareAttribute((FareAttribute) fareAttribute.getData()) == null) {
+                resultRepository.addNotice(new EntityMustBeUniqueNotice("fare_attributes.txt",
                         "fare_id", validatedFareAttribute.getEntityId()));
             }
-            if (price == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("fare_attributes.txt",
-                        "price", validatedFareAttribute.getEntityId()));
-            }
-            if (currencyType == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("fare_attributes.txt",
-                        "currency_type", validatedFareAttribute.getEntityId()));
-            }
-            if (paymentMethod == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("fare_attributes.txt",
-                        "payment_method", validatedFareAttribute.getEntityId()));
-            } else if (paymentMethod < 0 || paymentMethod > 1) {
-                resultRepository.addNotice(new UnexpectedValueNotice("fare_attributes.txt",
-                        "payment_method", validatedFareAttribute.getEntityId(), paymentMethod));
-            }
-            if (transfers > 2) {
-                resultRepository.addNotice(new UnexpectedValueNotice("fare_attributes.txt",
-                        "transfers", validatedFareAttribute.getEntityId(), transfers));
-            }
-            throw e;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            resultRepository.addNotice(new EntityMustBeUniqueNotice("fare_attributes.txt", "fare_id",
-                    validatedFareAttribute.getEntityId()));
-            throw e;
+        } else {
+            //noinspection unchecked
+            ((List<Notice>) fareAttribute.getData()).forEach(resultRepository::addNotice);
         }
     }
 }

@@ -29,7 +29,7 @@ public interface GtfsDataRepository {
 
     Route getRouteById(final String routeId);
 
-    FareAttribute getFareAttributeByFareId(final String fareId);
+    FareAttribute addFareAttribute(final FareAttribute newFareAttribute);
 
-    FareAttribute addFareAttribute(final FareAttribute newFareAttribute) ;
+    FareAttribute getFareAttributeByFareId(final String fareId);
 }

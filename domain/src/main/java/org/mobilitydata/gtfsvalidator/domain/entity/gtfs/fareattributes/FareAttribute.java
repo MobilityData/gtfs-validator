@@ -18,6 +18,14 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
+
+import java.util.List;
 
 public class FareAttribute {
 
@@ -98,6 +106,8 @@ public class FareAttribute {
         private Transfers transfers;
         private String agencyId;
         private Integer transferDuration;
+        private Integer paymentMethodInteger;
+        private Integer transfersInteger;
 
         public FareAttributeBuilder fareId(final String fareId) {
             this.fareId = fareId;
@@ -116,11 +126,13 @@ public class FareAttribute {
 
         public FareAttributeBuilder paymentMethod(final Integer paymentMethod) {
             this.paymentMethod = PaymentMethod.fromInt(paymentMethod);
+            this.paymentMethodInteger = paymentMethod;
             return this;
         }
 
         public FareAttributeBuilder transfers(final Integer transfers) {
             this.transfers = Transfers.fromInt(transfers);
+            this.transfersInteger = transfers;
             return this;
         }
 
@@ -129,37 +141,56 @@ public class FareAttribute {
             return this;
         }
 
+        @SuppressWarnings("UnusedReturnValue")
         public FareAttributeBuilder transferDuration(final int transferDuration) {
             this.transferDuration = transferDuration;
             return this;
         }
 
-        public FareAttribute build() {
-            if (price == null) {
-                throw new IllegalArgumentException("field `price` in file `fare_attributes.txt` cannot be null");
-            } else if (price < 0) {
-                throw new IllegalArgumentException("field `price` of file `fare_attributes.txt` cannot be negative");
+        @SuppressWarnings("rawtypes")
+        public GenericType build(final List<Notice> noticeCollection) {
+            if (price == null || price < 0 || fareId == null || currencyType == null || paymentMethodInteger == null ||
+                    paymentMethodInteger < 0 || paymentMethodInteger > 2 || (transfersInteger != null &&
+                    (transfersInteger < 0 || transfersInteger > 2)) || transferDuration != null && transferDuration < 0) {
+
+                if (price == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
+                            "price", fareId));
+                } else if (price < 0) {
+                    noticeCollection.add(new FloatFieldValueOutOfRangeNotice("fare_attributes.txt",
+                            "price", fareId, 0, Float.MAX_VALUE, price));
+                }
+                if (fareId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
+                            "fare_id", fareId));
+                }
+                if (currencyType == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
+                            "currency_type", fareId));
+                }
+                if (paymentMethodInteger == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
+                            "payment_method", fareId));
+                } else if (paymentMethodInteger < 0 || paymentMethodInteger > 1) {
+                    noticeCollection.add(new UnexpectedValueNotice("fare_attributes.txt",
+                            "payment_method", fareId, paymentMethodInteger));
+                }
+                //noinspection ConstantConditions
+                if (transfersInteger < 0 || transfersInteger > 2) {
+                    noticeCollection.add(new UnexpectedValueNotice("fare_attributes.txt",
+                            "transfers", fareId, transfersInteger));
+                }
+                if (transferDuration < 0) {
+                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("fare_attributes.txt",
+                            "transfer_duration", fareId, 0, Integer.MAX_VALUE, transferDuration));
+                }
+                //noinspection unchecked
+                return new GenericType(noticeCollection, false);
             }
-            if (fareId == null) {
-                throw new IllegalArgumentException("field `fare_id` in file `fare_attributes.txt` cannot be null");
-            }
-            if (currencyType == null) {
-                throw new IllegalArgumentException("field `currency_type` in file `fare_attributes.txt` cannot" +
-                        " be null");
-            }
-            if (paymentMethod == null) {
-                throw new IllegalArgumentException("unexpected value encountered for field `payment_method` in file" +
-                        " `fare_attributes.txt`");
-            }
-            if (transfers == null) {
-                throw new IllegalArgumentException("unexpected value encountered for field `transfers` in file" +
-                        " `fare_attributes.txt`");
-            }
-            if (transferDuration < 0) {
-                throw new IllegalArgumentException("field `transfer_duration` of file `fare_attributes.txt` " +
-                        "cannot be negative");
-            }
-            return new FareAttribute(fareId, price, currencyType, paymentMethod, transfers, agencyId, transferDuration);
+            //noinspection unchecked
+            return new GenericType(new FareAttribute(fareId, price, currencyType, paymentMethod, transfers, agencyId,
+                    transferDuration),
+                    true);
         }
     }
 }

@@ -92,16 +92,31 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     private final Map<String, FareAttribute> fareAttributeCollection = new HashMap<>();
 
+    /**
+     * Return the FareAttribute representing a row from fare_attributes.txt related to the id provided as parameter
+     *
+     * @param fareId the key from fare_attributes.txt related to the FareAttribute to be returned
+     * @return the FareAttribute representing a row from fare_attributes.txt related to the id provided as parameter
+     */
     @Override
     public FareAttribute getFareAttributeByFareId(final String fareId) {
         return fareAttributeCollection.get(fareId);
     }
 
+    /**
+     * Add an FareAttribute representing a row from fare_attributes.txt to this. Return the entity added to the
+     * repository if the uniqueness constraint of agency based on fare_id is respected, if this requirement is not met,
+     * returns null.
+     *
+     * @param newFareAttribute the internal representation of a row from fare_attributes.txt to be added to the
+     *                         repository.
+     * @return the entity added to the repository if the uniqueness constraint of agency based on fare_id is respected,
+     * if this requirement is not met returns null.
+     */
     @Override
-    public FareAttribute addFareAttribute(final FareAttribute newFareAttribute)
-            throws SQLIntegrityConstraintViolationException {
+    public FareAttribute addFareAttribute(final FareAttribute newFareAttribute) {
         if (fareAttributeCollection.containsKey(newFareAttribute.getFareId())) {
-            throw new SQLIntegrityConstraintViolationException("fare attribute must be unique in dataset");
+            return null;
         } else {
             fareAttributeCollection.put(newFareAttribute.getFareId(), newFareAttribute);
             return newFareAttribute;

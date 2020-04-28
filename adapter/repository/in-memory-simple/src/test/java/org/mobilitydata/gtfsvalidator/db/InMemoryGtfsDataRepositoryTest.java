@@ -99,62 +99,38 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getFareAttributeByFareIdShouldReturnRelatedEntity() throws SQLIntegrityConstraintViolationException {
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class);
-        when(mockBuilder.fareId(anyString())).thenCallRealMethod();
+    void getFareAttributeByFareIdShouldReturnRelatedEntity() {
+        final FareAttribute mockFareAttribute00 = mock(FareAttribute.class);
+        final FareAttribute mockFareAttribute01 = mock(FareAttribute.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
-        when(mockFareAttribute.getFareId()).thenReturn("fare id");
-        when(mockBuilder.build()).thenReturn(mockFareAttribute);
+        when(mockFareAttribute00.getFareId()).thenReturn("fare attribute id 00");
+        when(mockFareAttribute01.getFareId()).thenReturn("fare attribute id 01");
 
-        mockBuilder.fareId("fare id");
-        final FareAttribute fareAttribute = mockBuilder.build();
+        underTest.addFareAttribute(mockFareAttribute00);
+        underTest.addFareAttribute(mockFareAttribute01);
 
-        final GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        underTest.addFareAttribute(fareAttribute);
-
-        assertEquals(fareAttribute, underTest.getFareAttributeByFareId("fare id"));
+        assertEquals(mockFareAttribute00, underTest.getFareAttributeByFareId("fare attribute id 00"));
+        assertEquals(mockFareAttribute01, underTest.getFareAttributeByFareId("fare attribute id 01"));
     }
 
     @Test
-    void callToAddFareAttributeShouldAddEntityToRepoAndReturnSameEntity()
-            throws SQLIntegrityConstraintViolationException {
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class);
-        when(mockBuilder.fareId(anyString())).thenCallRealMethod();
-
+    void callToAddFareAttributeShouldAdFareAttributeToRepoAndReturnSameEntity() {
         final FareAttribute mockFareAttribute = mock(FareAttribute.class);
-        when(mockFareAttribute.getFareId()).thenReturn("fare id");
-        when(mockBuilder.build()).thenReturn(mockFareAttribute);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareAttribute.getFareId()).thenReturn("fare attribute id");
 
-        mockBuilder.fareId("fare id");
-        final FareAttribute fareAttribute = mockBuilder.build();
-
-        final GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        FareAttribute toCheck = underTest.addFareAttribute(fareAttribute);
-
-        assertEquals(fareAttribute, toCheck);
+        assertEquals(underTest.addFareAttribute(mockFareAttribute), mockFareAttribute);
     }
 
     @Test
-    void tryToAddTwiceTheSameFareAttributeShouldThrowException() throws SQLIntegrityConstraintViolationException {
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class);
-        when(mockBuilder.fareId(anyString())).thenCallRealMethod();
+    void tryToAddTwiceTheSameFareAttributeShouldThrowException() {
+        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareAttribute.getFareId()).thenReturn("fare attribute id");
 
-        final FareAttribute mockFareRule = mock(FareAttribute.class);
-        when(mockFareRule.getFareId()).thenReturn("fare id");
-        when(mockBuilder.build()).thenReturn(mockFareRule);
+        underTest.addFareAttribute(mockFareAttribute);
 
-        mockBuilder.fareId("fare id");
-        final FareAttribute fareAttribute = mockBuilder.build();
-
-        final GtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        underTest.addFareAttribute(fareAttribute);
-
-        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
-                () -> underTest.addFareAttribute(fareAttribute));
-        assertEquals("fare attribute must be unique in dataset", exception.getMessage());
+        assertNull(underTest.addFareAttribute(mockFareAttribute));
     }
 }

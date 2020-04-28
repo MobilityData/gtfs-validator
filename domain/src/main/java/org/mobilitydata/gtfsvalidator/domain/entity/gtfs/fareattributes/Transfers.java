@@ -24,7 +24,7 @@ public enum Transfers {
     TWO_TRANSFER_ALLOWED(2),
     UNLIMITED_TRANSFERS(-1);
 
-    private int value;
+    private final int value;
 
     Transfers(int value) {
         this.value = value;
@@ -35,10 +35,11 @@ public enum Transfers {
             return UNLIMITED_TRANSFERS;
         }
         if (0 <= fromValue && fromValue <= 2) {
+            //noinspection OptionalGetWithoutIsPresent
             return Stream.of(Transfers.values())
                     .filter(enumItem -> enumItem.value == fromValue)
                     .findAny()
-                    .orElse(null);
+                    .get();
         } else {
             return null;
         }
