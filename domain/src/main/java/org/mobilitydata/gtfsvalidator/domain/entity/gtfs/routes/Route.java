@@ -162,7 +162,7 @@ public class Route {
         private String routeColor;
         private String routeTextColor;
         private Integer routeSortOrder;
-        private Integer fromValue;
+        private Integer originalRouteTypeInteger;
         private List<Notice> noticeCollection;
 
         public RouteBuilder(final List<Notice> noticeCollection) {
@@ -232,7 +232,7 @@ public class Route {
          */
         public RouteBuilder routeType(final Integer routeType) {
             this.routeType = RouteType.fromInt(routeType);
-            this.fromValue = routeType;
+            this.originalRouteTypeInteger = routeType;
             return this;
         }
 
@@ -296,13 +296,13 @@ public class Route {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
                             routeId));
                 }
-                if (fromValue == null) {
+                if (originalRouteTypeInteger == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
                             routeId));
                 }
-                if (!RouteType.isEnumValueLegal(fromValue)) {
+                if (!RouteType.isEnumValueValid(originalRouteTypeInteger)) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
-                            routeId, fromValue));
+                            routeId, originalRouteTypeInteger));
                 }
                 //noinspection unchecked
                 return new EntityBuildResult(noticeCollection, EntityBuildResult.Status.FAILURE);
