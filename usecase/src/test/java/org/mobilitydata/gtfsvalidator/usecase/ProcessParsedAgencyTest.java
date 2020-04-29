@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
@@ -59,11 +59,11 @@ class ProcessParsedAgencyTest {
         final Agency mockAgency = mock(Agency.class);
         final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        @SuppressWarnings("rawtypes") final GenericType mockGenericType = mock(GenericType.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
 
-        when(mockBuilder.build(mockNoticeCollection)).thenReturn(mockGenericType);
-        when(mockGenericType.getState()).thenReturn(true);
-        when(mockGenericType.getData()).thenReturn(mockAgency);
+        when(mockBuilder.build(mockNoticeCollection)).thenReturn(mockEntityBuildResult);
+        when(mockEntityBuildResult.isSuccess()).thenReturn(true);
+        when(mockEntityBuildResult.getData()).thenReturn(mockAgency);
 
         when(mockParsedAgency.get(anyString())).thenReturn(STRING_TEST_VALUE);
 
@@ -111,10 +111,10 @@ class ProcessParsedAgencyTest {
         when(mockNotice.getFilename()).thenReturn(FILENAME);
         when(mockNotice.getFieldName()).thenReturn(AGENCY_NAME);
         when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
-        final var mockGenericType = mock(GenericType.class);
+        final var mockGenericType = mock(EntityBuildResult.class);
 
         when(mockGenericType.getData()).thenReturn(noticeCollection);
-        when(mockGenericType.getState()).thenReturn(false);
+        when(mockGenericType.isSuccess()).thenReturn(false);
         noticeCollection.add(mockNotice);
 
         when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericType);
@@ -179,10 +179,10 @@ class ProcessParsedAgencyTest {
         when(mockNotice.getFilename()).thenReturn(FILENAME);
         when(mockNotice.getFieldName()).thenReturn(AGENCY_URL);
         when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
-        final var mockGenericType = mock(GenericType.class);
+        final var mockGenericType = mock(EntityBuildResult.class);
 
         when(mockGenericType.getData()).thenReturn(noticeCollection);
-        when(mockGenericType.getState()).thenReturn(false);
+        when(mockGenericType.isSuccess()).thenReturn(false);
         noticeCollection.add(mockNotice);
 
         when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericType);
@@ -249,10 +249,10 @@ class ProcessParsedAgencyTest {
         when(mockNotice.getFilename()).thenReturn(FILENAME);
         when(mockNotice.getFieldName()).thenReturn(AGENCY_TIMEZONE);
         when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
-        final var mockGenericType = mock(GenericType.class);
+        final var mockGenericType = mock(EntityBuildResult.class);
 
         when(mockGenericType.getData()).thenReturn(noticeCollection);
-        when(mockGenericType.getState()).thenReturn(false);
+        when(mockGenericType.isSuccess()).thenReturn(false);
         noticeCollection.add(mockNotice);
 
         when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericType);
@@ -313,11 +313,11 @@ class ProcessParsedAgencyTest {
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
         final List<Notice> noticeCollection = new ArrayList<>();
-        final var mockGenericType = mock(GenericType.class);
+        final var mockGenericType = mock(EntityBuildResult.class);
 
         final Agency mockAgency = mock(Agency.class);
         when(mockGenericType.getData()).thenReturn(mockAgency);
-        when(mockGenericType.getState()).thenReturn(true);
+        when(mockGenericType.isSuccess()).thenReturn(true);
 
         when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericType);
         when(mockGtfsDataRepo.addAgency(mockAgency)).thenReturn(null);

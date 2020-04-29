@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
@@ -58,10 +58,10 @@ class ProcessParsedRouteTest {
         final Route mockRoute = mock(Route.class);
         final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        final var mockGenericObject = mock(GenericType.class);
+        final var mockGenericObject = mock(EntityBuildResult.class);
 
         when(mockGenericObject.getData()).thenReturn(mockRoute);
-        when(mockGenericObject.getState()).thenReturn(true);
+        when(mockGenericObject.isSuccess()).thenReturn(true);
 
         when(mockBuilder.build(mockNoticeCollection)).thenReturn(mockGenericObject);
 
@@ -121,9 +121,9 @@ class ProcessParsedRouteTest {
         final List<Notice> noticeCollection = new ArrayList<>();
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         noticeCollection.add(mockNotice);
-        final var mockGenericType = mock(GenericType.class);
+        final var mockGenericType = mock(EntityBuildResult.class);
 
-        when(mockGenericType.getState()).thenReturn(false);
+        when(mockGenericType.isSuccess()).thenReturn(false);
         when(mockGenericType.getData()).thenReturn(noticeCollection);
 
         when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericType);
@@ -180,9 +180,9 @@ class ProcessParsedRouteTest {
         final List<Notice> noticeCollection = new ArrayList<>();
         final Notice mockNotice = mock(Notice.class);
         noticeCollection.add(mockNotice);
-        final var mockGeneticType = mock(GenericType.class);
+        final var mockGeneticType = mock(EntityBuildResult.class);
         when(mockGeneticType.getData()).thenReturn(noticeCollection);
-        when(mockGeneticType.getState()).thenReturn(false);
+        when(mockGeneticType.isSuccess()).thenReturn(false);
 
         when(mockBuilder.build(noticeCollection)).thenReturn(mockGeneticType);
 
@@ -237,8 +237,8 @@ class ProcessParsedRouteTest {
         final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
         final Route mockRoute = mock(Route.class);
         final List<Notice> noticeCollection = new ArrayList<>();
-        final var mockGenericObject = mock(GenericType.class);
-        when(mockGenericObject.getState()).thenReturn(true);
+        final var mockGenericObject = mock(EntityBuildResult.class);
+        when(mockGenericObject.isSuccess()).thenReturn(true);
         when(mockGenericObject.getData()).thenReturn(mockRoute);
 
         when(mockRoute.getRouteId()).thenReturn(STRING_TEST_VALUE);

@@ -75,7 +75,7 @@ public class ProcessParsedAgency {
 
         final var agency = builder.build(noticeCollection);
 
-        if (agency.getState()) {
+        if (agency.isSuccess()) {
             if (gtfsDataRepository.addAgency((Agency) agency.getData()) == null) {
                 resultRepository.addNotice(new DuplicatedEntityNotice("agency.txt", "agency_id",
                         validatedAgencyEntity.getEntityId()));

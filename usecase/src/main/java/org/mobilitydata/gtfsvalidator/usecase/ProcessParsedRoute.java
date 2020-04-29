@@ -79,7 +79,7 @@ public class ProcessParsedRoute {
 
         final var route = builder.build(noticeCollection);
 
-        if (route.getState()) {
+        if (route.isSuccess()) {
             if (gtfsDataRepository.addRoute((Route) route.getData()) == null) {
                 resultRepository.addNotice(new DuplicatedEntityNotice("routes.txt",
                         "route_id", validatedParsedRoute.getEntityId()));

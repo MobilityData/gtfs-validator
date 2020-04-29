@@ -24,17 +24,17 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
  *
  * @param <T> list of {@link Notice} or GTFS entity.
  */
-public class GenericType<T> {
+public class EntityBuildResult<T> {
     private final T data;
-    private final boolean state;
+    private final Status status;
 
     /**
      * Takes a value of "some type" and sets it to the field data. Sets field state according to the success or failure
      * of gtfs entity building
      */
-    public GenericType(T data, boolean state) {
+    public EntityBuildResult(T data, Status status) {
         this.data = data;
-        this.state = state;
+        this.status = status;
     }
 
     /**
@@ -47,11 +47,19 @@ public class GenericType<T> {
     }
 
     /**
-     * Returns true if success, otherwise false
+     * Returns true if entity building succeeded, otherwise returns false
      *
-     * @return true if success, otherwise false
+     * @return true if entity building succeeded, otherwise returns false
      */
-    public boolean getState() {
-        return state;
+    public boolean isSuccess() {
+        return status == Status.SUCCESS;
+    }
+
+    /**
+     * Enum item to clearly define the building status of a gtfs entity.
+     */
+    public enum Status {
+        FAILURE,
+        SUCCESS
     }
 }

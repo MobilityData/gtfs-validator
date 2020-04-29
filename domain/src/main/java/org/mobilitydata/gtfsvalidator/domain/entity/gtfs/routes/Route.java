@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
@@ -284,7 +284,7 @@ public class Route {
          * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns a list of notices.
          */
-        public GenericType build(final List<Notice> noticeCollection) throws IllegalArgumentException {
+        public EntityBuildResult build(final List<Notice> noticeCollection) throws IllegalArgumentException {
             if (routeId == null || routeType == null) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
@@ -299,12 +299,12 @@ public class Route {
                             routeId, fromValue));
                 }
                 //noinspection unchecked
-                return new GenericType(noticeCollection, false);
+                return new EntityBuildResult(noticeCollection, EntityBuildResult.Status.FAILURE);
             } else {
                 //noinspection unchecked
-                return new GenericType(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
+                return new EntityBuildResult(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
                         routeType, routeUrl, routeColor, routeTextColor, routeSortOrder),
-                        true);
+                        EntityBuildResult.Status.SUCCESS);
             }
         }
     }

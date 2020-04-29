@@ -238,7 +238,7 @@ public class Agency {
          * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns list of {@link Notice}.
          */
-        public GenericType build(final List<Notice> noticeCollection) {
+        public EntityBuildResult build(final List<Notice> noticeCollection) {
             if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
 
                 if (agencyName == null) {
@@ -254,12 +254,12 @@ public class Agency {
                             "agency_timezone", agencyId)));
                 }
                 //noinspection unchecked
-                return new GenericType(noticeCollection, false);
+                return new EntityBuildResult(noticeCollection, EntityBuildResult.Status.FAILURE);
             } else {
                 //noinspection unchecked
-                return new GenericType(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
+                return new EntityBuildResult(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
                         agencyPhone, agencyFareUrl, agencyEmail),
-                        true);
+                        EntityBuildResult.Status.SUCCESS);
             }
         }
     }
