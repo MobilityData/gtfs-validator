@@ -69,11 +69,11 @@ class RouteTypeTest {
 
     @Test
     void shouldReturnFalseForUnexpectedValue13() {
-        assertFalse(RouteType.isEnumValueLegal(13));
+        assertFalse(RouteType.isEnumValueValid(13));
     }
 
     @Test
     void shouldReturnTrueForExpectedValue11() {
-        assertTrue(RouteType.isEnumValueLegal(11));
+        assertTrue(RouteType.isEnumValueValid(11));
     }
 }

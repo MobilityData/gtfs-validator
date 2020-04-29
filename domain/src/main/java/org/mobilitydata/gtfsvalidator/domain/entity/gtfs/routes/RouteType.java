@@ -60,7 +60,7 @@ public enum RouteType {
                 .orElse(null);
     }
 
-    static public boolean isEnumValueLegal(final int value) {
+    static public boolean isEnumValueValid(final int value) {
         return Stream.of(RouteType.values())
                 .filter(enumItem -> enumItem.value == value)
                 .findAny()
