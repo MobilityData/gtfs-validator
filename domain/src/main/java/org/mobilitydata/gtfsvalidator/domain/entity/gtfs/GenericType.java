@@ -29,7 +29,8 @@ public class GenericType<T> {
     private final boolean state;
 
     /**
-     * Takes a value of "some type" and set it to the field
+     * Takes a value of "some type" and sets it to the field data. Sets field state according to the success or failure
+     * of gtfs entity building
      */
     public GenericType(T data, boolean state) {
         this.data = data;
@@ -48,7 +49,7 @@ public class GenericType<T> {
     /**
      * Returns true if success, otherwise false
      *
-     * @return if success, otherwise false
+     * @return true if success, otherwise false
      */
     public boolean getState() {
         return state;
