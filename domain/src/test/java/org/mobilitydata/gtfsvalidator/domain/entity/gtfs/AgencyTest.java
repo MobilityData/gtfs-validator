@@ -17,9 +17,16 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mockito.ArgumentCaptor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 class AgencyTest {
     private static final String STRING_TEST_VALUE = "test_value";
@@ -27,7 +34,8 @@ class AgencyTest {
     // Field agencyName is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    public void createAgencyWithNullAgencyNameShouldThrowException() {
+    public void createAgencyWithNullAgencyNameShouldGenerateMissingRequiredValueNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
@@ -40,15 +48,27 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final var data = underTest.build(mockNoticeCollection);
 
-        assertEquals("agency_name can not be null", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("agency.txt", noticeList.get(0).getFilename());
+        assertEquals("agency_name", noticeList.get(0).getFieldName());
+        assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
+
+        assertTrue(data.getData() instanceof List);
     }
 
     // Field agencyUrl is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    public void createAgencyWithNullAgencyUrlShouldThrowException() {
+    public void createAgencyWithNullAgencyUrlShouldGenerateMissingRequiredValueNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
@@ -61,15 +81,27 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final var data = underTest.build(mockNoticeCollection);
 
-        assertEquals("agency_url can not be null", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("agency.txt", noticeList.get(0).getFilename());
+        assertEquals("agency_url", noticeList.get(0).getFieldName());
+        assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
+
+        assertTrue(data.getData() instanceof List);
     }
 
     // Field agencyTimezone is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    public void createAgencyWithTimezoneAgencyUrlShouldThrowException() {
+    public void createAgencyWithTimezoneAgencyUrlShouldGenerateMissingRequiredValueNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
@@ -82,13 +114,25 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final var data = underTest.build(mockNoticeCollection);
 
-        assertEquals("agency_timezone can not be null", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("agency.txt", noticeList.get(0).getFilename());
+        assertEquals("agency_timezone", noticeList.get(0).getFieldName());
+        assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
+
+        assertTrue(data.getData() instanceof List);
     }
 
     @Test
-    public void createAgencyWithValidValuesForFieldShouldNotThrowException() {
+    public void createAgencyWithValidValuesForFieldShouldNotGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         underTest.agencyId(STRING_TEST_VALUE);
@@ -100,15 +144,8 @@ class AgencyTest {
         underTest.agencyFareUrl(STRING_TEST_VALUE);
         underTest.agencyEmail(STRING_TEST_VALUE);
 
-        final Agency agency = underTest.build();
+        final var data = underTest.build(mockNoticeCollection);
 
-        assertEquals(agency.getAgencyId(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyName(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyUrl(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyTimezone(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyLang(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyPhone(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyFareUrl(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyEmail(), STRING_TEST_VALUE);
+        assertTrue(data.getData() instanceof Agency);
     }
 }

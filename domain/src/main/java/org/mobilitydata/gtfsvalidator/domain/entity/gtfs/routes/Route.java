@@ -18,6 +18,12 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
+
+import java.util.List;
 
 /**
  * Class for all entities defined in routes.txt. Can not be directly instantiated: user must use the
@@ -143,6 +149,7 @@ public class Route {
      * Builder class to create {@link Route} objects. Allows an unordered definition of the different attributes of
      * {@link Route}.
      */
+    @SuppressWarnings("rawtypes")
     public static class RouteBuilder {
 
         private String routeId;
@@ -155,6 +162,7 @@ public class Route {
         private String routeColor;
         private String routeTextColor;
         private Integer routeSortOrder;
+        private Integer fromValue;
 
         /**
          * Sets field routeId value and returns this
@@ -212,13 +220,14 @@ public class Route {
         }
 
         /**
-         * Sets field routeType value and returns this
+         * Sets field routeType value and returns this. Updates field fromValue.
          *
          * @param routeType Indicates the type of transportation used on a route
          * @return builder for future object creation
          */
-        public RouteBuilder routeType(final int routeType) {
+        public RouteBuilder routeType(final Integer routeType) {
             this.routeType = RouteType.fromInt(routeType);
+            this.fromValue = routeType;
             return this;
         }
 
@@ -261,27 +270,42 @@ public class Route {
          * @param routeSortOrder orders the routes in a way which is ideal for presentation to customers
          * @return builder for future object creation
          */
+        @SuppressWarnings("UnusedReturnValue")
         public RouteBuilder routeSortOrder(@Nullable final Integer routeSortOrder) {
             this.routeSortOrder = routeSortOrder;
             return this;
         }
 
         /**
-         * Returns a {@link Route} object from fields provided via {@link RouteBuilder} methods.
-         * Throws {@link IllegalArgumentException} if field route_id is null.
+         * Returns an entity representing a row from route.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns a list of notices.
          *
-         * @return Entity representing a row from routes.txt
-         * @throws IllegalArgumentException if field route_id is null.
+         * @param noticeCollection list of notice to complete
+         * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns a list of notices.
          */
-        public Route build() throws IllegalArgumentException {
-            if (routeType == null) {
-                throw new IllegalArgumentException("Unexpected value, or null value for field route_type in routes.txt");
+        public GenericType build(final List<Notice> noticeCollection) throws IllegalArgumentException {
+            if (routeId == null || routeType == null) {
+                if (routeId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
+                            routeId));
+                }
+                if (fromValue == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
+                            routeId));
+                }
+                if (!RouteType.isEnumValueLegal(fromValue)) {
+                    noticeCollection.add(new UnexpectedValueNotice("routes.txt", "route_type",
+                            routeId, fromValue));
+                }
+                //noinspection unchecked
+                return new GenericType(noticeCollection, false);
+            } else {
+                //noinspection unchecked
+                return new GenericType(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
+                        routeType, routeUrl, routeColor, routeTextColor, routeSortOrder),
+                        true);
             }
-            if (routeId == null) {
-                throw new IllegalArgumentException("route_id can not be null in routes.txt");
-            }
-            return new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc, routeType,
-                    routeUrl, routeColor, routeTextColor, routeSortOrder);
         }
     }
 }

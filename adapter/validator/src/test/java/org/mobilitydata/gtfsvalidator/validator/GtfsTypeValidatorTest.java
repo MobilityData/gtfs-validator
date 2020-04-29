@@ -23,10 +23,10 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mockito.ArgumentMatchers;
 
 import java.util.*;
@@ -39,7 +39,6 @@ import static org.mockito.Mockito.*;
 class GtfsTypeValidatorTest {
 
     private static final String TEST_ID = "test_id";
-    public static final String TEST = "test";
     public static final String TEST_FILE_TST = "test_file.tst";
 
     @Test
