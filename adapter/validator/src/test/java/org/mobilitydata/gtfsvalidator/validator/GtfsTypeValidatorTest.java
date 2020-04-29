@@ -1205,7 +1205,7 @@ class GtfsTypeValidatorTest {
 
         Collection<Notice> result = underTest.validate(new ParsedEntity(
                 TEST_ID,
-                Map.of("currency_type", "MXN"), //
+                Map.of("currency_type", "MXN"),
                 new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
         ));
 
