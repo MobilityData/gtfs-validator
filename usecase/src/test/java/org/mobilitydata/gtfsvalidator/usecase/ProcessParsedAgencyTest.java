@@ -98,9 +98,8 @@ class ProcessParsedAgencyTest {
         verifyNoMoreInteractions(mockBuilder, mockAgency, mockParsedAgency, mockGtfsDataRepo);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Test
-    void nullAgencyNameShouldAddMissingRequiredValueNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
+    void invalidAgencyShouldNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
@@ -110,7 +109,8 @@ class ProcessParsedAgencyTest {
         when(mockNotice.getFilename()).thenReturn(FILENAME);
         when(mockNotice.getFieldName()).thenReturn(AGENCY_NAME);
         when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
-        final var mockGenericType = mock(EntityBuildResult.class);
+
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericType = mock(EntityBuildResult.class);
 
         when(mockGenericType.getData()).thenReturn(noticeCollection);
         when(mockGenericType.isSuccess()).thenReturn(false);
@@ -121,7 +121,7 @@ class ProcessParsedAgencyTest {
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         when(mockParsedAgency.get(AGENCY_ID)).thenReturn(AGENCY_ID);
-        when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(null);
+        when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(AGENCY_NAME);
         when(mockParsedAgency.get(AGENCY_URL)).thenReturn(AGENCY_URL);
         when(mockParsedAgency.get(AGENCY_TIMEZONE)).thenReturn(AGENCY_TIMEZONE);
         when(mockParsedAgency.get(AGENCY_LANG)).thenReturn(AGENCY_LANG);
@@ -141,7 +141,7 @@ class ProcessParsedAgencyTest {
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
 
         verify(mockBuilder, times(1)).agencyId(AGENCY_ID);
-        verify(mockBuilder, times(1)).agencyName(null);
+        verify(mockBuilder, times(1)).agencyName(AGENCY_NAME);
         verify(mockBuilder, times(1)).agencyUrl(AGENCY_URL);
         verify(mockBuilder, times(1)).agencyTimezone(AGENCY_TIMEZONE);
         verify(mockBuilder, times(1)).agencyLang(AGENCY_LANG);
@@ -157,150 +157,6 @@ class ProcessParsedAgencyTest {
 
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals(AGENCY_NAME, noticeList.get(0).getFieldName());
-        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @Test
-    void nullAgencyUrlShouldAddMissingRequiredValueNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
-        final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-        final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
-        when(mockNotice.getFilename()).thenReturn(FILENAME);
-        when(mockNotice.getFieldName()).thenReturn(AGENCY_URL);
-        when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
-        final var mockGenericType = mock(EntityBuildResult.class);
-
-        when(mockGenericType.getData()).thenReturn(noticeCollection);
-        when(mockGenericType.isSuccess()).thenReturn(false);
-        noticeCollection.add(mockNotice);
-
-        when(mockBuilder.build()).thenReturn(mockGenericType);
-
-        final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        when(mockParsedAgency.get(AGENCY_ID)).thenReturn(AGENCY_ID);
-        when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(AGENCY_NAME);
-        when(mockParsedAgency.get(AGENCY_URL)).thenReturn(null);
-        when(mockParsedAgency.get(AGENCY_TIMEZONE)).thenReturn(AGENCY_TIMEZONE);
-        when(mockParsedAgency.get(AGENCY_LANG)).thenReturn(AGENCY_LANG);
-        when(mockParsedAgency.get(AGENCY_PHONE)).thenReturn(AGENCY_PHONE);
-        when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(AGENCY_FARE_URL);
-        when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(AGENCY_EMAIL);
-
-        underTest.execute(mockParsedAgency);
-
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_URL));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_TIMEZONE));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_LANG));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_PHONE));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
-
-        verify(mockBuilder, times(1)).agencyId(AGENCY_ID);
-        verify(mockBuilder, times(1)).agencyName(AGENCY_NAME);
-        //noinspection ConstantConditions
-        verify(mockBuilder, times(1)).agencyUrl(null);
-        verify(mockBuilder, times(1)).agencyTimezone(AGENCY_TIMEZONE);
-        verify(mockBuilder, times(1)).agencyLang(AGENCY_LANG);
-        verify(mockBuilder, times(1)).agencyPhone(AGENCY_PHONE);
-        verify(mockBuilder, times(1)).agencyFareUrl(AGENCY_FARE_URL);
-        verify(mockBuilder, times(1)).agencyEmail(AGENCY_EMAIL);
-        verify(mockBuilder, times(1)).build();
-
-        verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals(AGENCY_URL, noticeList.get(0).getFieldName());
-        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    @Test
-    void nullAgencyTimezoneShouldAddMissingRequiredValueNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
-        final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-        final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
-        when(mockNotice.getFilename()).thenReturn(FILENAME);
-        when(mockNotice.getFieldName()).thenReturn(AGENCY_TIMEZONE);
-        when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
-        final var mockGenericType = mock(EntityBuildResult.class);
-
-        when(mockGenericType.getData()).thenReturn(noticeCollection);
-        when(mockGenericType.isSuccess()).thenReturn(false);
-        noticeCollection.add(mockNotice);
-
-        when(mockBuilder.build()).thenReturn(mockGenericType);
-
-        final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        when(mockParsedAgency.get(AGENCY_ID)).thenReturn(AGENCY_ID);
-        when(mockParsedAgency.get(AGENCY_NAME)).thenReturn(AGENCY_NAME);
-        when(mockParsedAgency.get(AGENCY_URL)).thenReturn(AGENCY_URL);
-        when(mockParsedAgency.get(AGENCY_TIMEZONE)).thenReturn(null);
-        when(mockParsedAgency.get(AGENCY_LANG)).thenReturn(AGENCY_LANG);
-        when(mockParsedAgency.get(AGENCY_PHONE)).thenReturn(AGENCY_PHONE);
-        when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(AGENCY_FARE_URL);
-        when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(AGENCY_EMAIL);
-
-        underTest.execute(mockParsedAgency);
-
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_URL));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_TIMEZONE));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_LANG));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_PHONE));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
-        verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
-
-        verify(mockBuilder, times(1)).agencyId(AGENCY_ID);
-        verify(mockBuilder, times(1)).agencyName(AGENCY_NAME);
-        verify(mockBuilder, times(1)).agencyUrl(AGENCY_URL);
-        verify(mockBuilder, times(1)).agencyTimezone(null);
-        verify(mockBuilder, times(1)).agencyLang(AGENCY_LANG);
-        verify(mockBuilder, times(1)).agencyPhone(AGENCY_PHONE);
-        verify(mockBuilder, times(1)).agencyFareUrl(AGENCY_FARE_URL);
-        verify(mockBuilder, times(1)).agencyEmail(AGENCY_EMAIL);
-        verify(mockBuilder, times(1)).build();
-
-        verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals(AGENCY_TIMEZONE, noticeList.get(0).getFieldName());
-        assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
@@ -311,7 +167,7 @@ class ProcessParsedAgencyTest {
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
-        final var mockGenericType = mock(EntityBuildResult.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericType = mock(EntityBuildResult.class);
 
         final Agency mockAgency = mock(Agency.class);
         when(mockGenericType.getData()).thenReturn(mockAgency);

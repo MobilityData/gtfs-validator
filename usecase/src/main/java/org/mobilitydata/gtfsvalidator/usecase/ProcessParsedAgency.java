@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -73,7 +74,7 @@ public class ProcessParsedAgency {
                 .agencyFareUrl(agencyFareUrl)
                 .agencyEmail(agencyEmail);
 
-        final var agency = builder.build();
+        @SuppressWarnings("rawtypes") final EntityBuildResult agency = builder.build();
 
         if (agency.isSuccess()) {
             if (gtfsDataRepository.addAgency((Agency) agency.getData()) == null) {

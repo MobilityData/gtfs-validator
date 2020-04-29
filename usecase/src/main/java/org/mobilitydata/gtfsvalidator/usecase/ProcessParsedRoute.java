@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
@@ -77,7 +78,7 @@ public class ProcessParsedRoute {
                 .routeTextColor(routeTextColor)
                 .routeSortOrder(routeSortOrder);
 
-        final var route = builder.build();
+        @SuppressWarnings("rawtypes") final EntityBuildResult route = builder.build();
 
         if (route.isSuccess()) {
             if (gtfsDataRepository.addRoute((Route) route.getData()) == null) {
