@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
 import java.util.List;
 
@@ -295,7 +295,7 @@ public class Route {
                             routeId));
                 }
                 if (!RouteType.isEnumValueLegal(fromValue)) {
-                    noticeCollection.add(new UnexpectedValueNotice("routes.txt", "route_type",
+                    noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
                             routeId, fromValue));
                 }
                 //noinspection unchecked

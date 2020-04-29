@@ -21,7 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -307,7 +307,7 @@ class ProcessParsedAgencyTest {
     }
 
     @Test
-    void duplicateAgencyShouldAddEntityMustBeUniqueNoticeToResultRepoAndNotBeAddedToGtfsDataRepo() {
+    void duplicateAgencyShouldAddDuplicatedEntityNoticeToResultRepoAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
@@ -358,11 +358,11 @@ class ProcessParsedAgencyTest {
         verify(mockBuilder, times(1)).agencyEmail(anyString());
         verify(mockBuilder, times(1)).build(noticeCollection);
 
-        final ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
+        final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
+        final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals(FILENAME, noticeList.get(0).getFilename());
         assertEquals(AGENCY_ID, noticeList.get(0).getFieldName());

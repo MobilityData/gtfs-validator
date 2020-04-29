@@ -291,7 +291,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(UnexpectedValueNotice toExport) throws IOException {
+    public void export(UnexpectedEnumValueNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
@@ -304,7 +304,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(IncoherentValuesForFieldsNotice toExport) throws IOException {
+    public void export(IllegalFieldValueCombination toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
@@ -316,20 +316,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(UnexpectedDefinedFieldNotice toExport) throws IOException {
-        protoBuilder.clear()
-                .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setEntityId(toExport.getFieldName())
-                .setEntityValue(toExport.getFieldValue())
-                .setAltEntityId(toExport.getEntityId())
-                .build()
-                .writeTo(streamGenerator.getStream());
-    }
-
-    @Override
-    public void export(EntityMustBeUniqueNotice toExport) throws IOException {
+    public void export(DuplicatedEntityNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)

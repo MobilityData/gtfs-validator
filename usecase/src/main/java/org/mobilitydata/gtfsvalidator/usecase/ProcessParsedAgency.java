@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -77,7 +77,7 @@ public class ProcessParsedAgency {
 
         if (agency.getState()) {
             if (gtfsDataRepository.addAgency((Agency) agency.getData()) == null) {
-                resultRepository.addNotice(new EntityMustBeUniqueNotice("agency.txt", "agency_id",
+                resultRepository.addNotice(new DuplicatedEntityNotice("agency.txt", "agency_id",
                         validatedAgencyEntity.getEntityId()));
             }
         } else {

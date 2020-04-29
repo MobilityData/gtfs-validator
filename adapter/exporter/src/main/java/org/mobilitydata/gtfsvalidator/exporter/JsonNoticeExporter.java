@@ -156,22 +156,17 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(UnexpectedValueNotice toExport) throws IOException {
+    public void export(UnexpectedEnumValueNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(IncoherentValuesForFieldsNotice toExport) throws IOException {
+    public void export(IllegalFieldValueCombination toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(UnexpectedDefinedFieldNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
-    public void export(EntityMustBeUniqueNotice toExport) throws IOException {
+    public void export(DuplicatedEntityNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

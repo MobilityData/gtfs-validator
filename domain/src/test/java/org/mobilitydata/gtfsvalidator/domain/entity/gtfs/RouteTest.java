@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 import org.mockito.ArgumentCaptor;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ class RouteTest {
     }
 
     @Test
-    public void createRouteWithInvalidRouteTypeShouldGenerateUnexpectedValueNotice() {
+    public void createRouteWithInvalidRouteTypeShouldGenerateUnexpectedEnumValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
@@ -88,12 +88,12 @@ class RouteTest {
 
         underTest.build(mockNoticeCollection);
 
-        final ArgumentCaptor<UnexpectedValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedValueNotice.class);
+        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
+                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
 
         verify(mockNoticeCollection, times(1)).add(captor.capture());
 
-        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
+        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
 
         assertEquals("routes.txt", noticeList.get(0).getFilename());
         assertEquals("route_type", noticeList.get(0).getFieldName());
