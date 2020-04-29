@@ -20,8 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -45,6 +44,13 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addAgency(mockAgency);
 
         assertNull(underTest.addAgency(mockAgency));
+    }
+
+    @Test
+    void addNullAgencyShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        //noinspection ConstantConditions
+        assertThrows(IllegalArgumentException.class, () -> underTest.addAgency(null));
     }
 
     @Test
@@ -80,6 +86,13 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addRoute(mockRoute);
 
         assertNull(underTest.addRoute(mockRoute));
+    }
+
+    @Test
+    void addNullRouteShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        //noinspection ConstantConditions
+        assertThrows(IllegalArgumentException.class, () -> underTest.addRoute(null));
     }
 
     @Test

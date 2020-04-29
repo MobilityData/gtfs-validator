@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -39,12 +40,17 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * respected, if this requirement is not met returns null.
      */
     @Override
-    public Agency addAgency(final Agency newAgency) {
-        if (agencyCollection.containsKey(newAgency.getAgencyId())) {
-            return null;
+    public Agency addAgency(@NotNull final Agency newAgency) throws IllegalArgumentException {
+        //noinspection ConstantConditions
+        if (newAgency != null) {
+            if (agencyCollection.containsKey(newAgency.getAgencyId())) {
+                return null;
+            } else {
+                agencyCollection.put(newAgency.getAgencyId(), newAgency);
+                return newAgency;
+            }
         } else {
-            agencyCollection.put(newAgency.getAgencyId(), newAgency);
-            return newAgency;
+            throw new IllegalArgumentException("Cannot add null agency to data repository");
         }
     }
 
@@ -68,12 +74,17 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * respected, if this requirement is not met returns null.
      */
     @Override
-    public Route addRoute(final Route newRoute) {
-        if (routeCollection.containsKey(newRoute.getRouteId())) {
-            return null;
+    public Route addRoute(@NotNull final Route newRoute) throws IllegalArgumentException {
+        //noinspection ConstantConditions
+        if (newRoute != null) {
+            if (routeCollection.containsKey(newRoute.getRouteId())) {
+                return null;
+            } else {
+                routeCollection.put(newRoute.getRouteId(), newRoute);
+                return newRoute;
+            }
         } else {
-            routeCollection.put(newRoute.getRouteId(), newRoute);
-            return newRoute;
+            throw new IllegalArgumentException("Cannot add null route to data repository");
         }
     }
 
