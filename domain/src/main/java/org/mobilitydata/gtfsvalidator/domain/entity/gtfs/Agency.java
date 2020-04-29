@@ -140,6 +140,14 @@ public class Agency {
         private String agencyPhone;
         private String agencyFareUrl;
         private String agencyEmail;
+        private List<Notice> noticeCollection;
+
+        public AgencyBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
+
+        public AgencyBuilder() {
+        }
 
         /**
          * Sets field agencyName value and returns this
@@ -234,11 +242,12 @@ public class Agency {
          * Entity representing a row from agency.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns list of {@link Notice}.
          *
-         * @param noticeCollection list of notice to complete
          * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns list of {@link Notice}.
          */
-        public EntityBuildResult build(final List<Notice> noticeCollection) {
+        public EntityBuildResult build() {
+            noticeCollection.clear();
+
             if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
 
                 if (agencyName == null) {

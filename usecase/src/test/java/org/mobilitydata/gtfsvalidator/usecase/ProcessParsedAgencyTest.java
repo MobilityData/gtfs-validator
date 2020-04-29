@@ -58,10 +58,9 @@ class ProcessParsedAgencyTest {
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
         final Agency mockAgency = mock(Agency.class);
         final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
         @SuppressWarnings("rawtypes") final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
 
-        when(mockBuilder.build(mockNoticeCollection)).thenReturn(mockEntityBuildResult);
+        when(mockBuilder.build()).thenReturn(mockEntityBuildResult);
         when(mockEntityBuildResult.isSuccess()).thenReturn(true);
         when(mockEntityBuildResult.getData()).thenReturn(mockAgency);
 
@@ -71,7 +70,7 @@ class ProcessParsedAgencyTest {
 
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        underTest.execute(mockParsedAgency, mockNoticeCollection);
+        underTest.execute(mockParsedAgency);
 
         final InOrder inOrder = Mockito.inOrder(mockGtfsDataRepo, mockBuilder, mockParsedAgency);
 
@@ -93,7 +92,7 @@ class ProcessParsedAgencyTest {
         verify(mockBuilder, times(1)).agencyFareUrl(anyString());
         verify(mockBuilder, times(1)).agencyEmail(anyString());
 
-        inOrder.verify(mockBuilder, times(1)).build(ArgumentMatchers.eq(mockNoticeCollection));
+        inOrder.verify(mockBuilder, times(1)).build();
         inOrder.verify(mockGtfsDataRepo, times(1)).addAgency(ArgumentMatchers.eq(mockAgency));
 
         verifyNoMoreInteractions(mockBuilder, mockAgency, mockParsedAgency, mockGtfsDataRepo);
@@ -117,7 +116,7 @@ class ProcessParsedAgencyTest {
         when(mockGenericType.isSuccess()).thenReturn(false);
         noticeCollection.add(mockNotice);
 
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericType);
+        when(mockBuilder.build()).thenReturn(mockGenericType);
 
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -130,7 +129,7 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(AGENCY_FARE_URL);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(AGENCY_EMAIL);
 
-        underTest.execute(mockParsedAgency, noticeCollection);
+        underTest.execute(mockParsedAgency);
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -149,7 +148,7 @@ class ProcessParsedAgencyTest {
         verify(mockBuilder, times(1)).agencyPhone(AGENCY_PHONE);
         verify(mockBuilder, times(1)).agencyFareUrl(AGENCY_FARE_URL);
         verify(mockBuilder, times(1)).agencyEmail(AGENCY_EMAIL);
-        verify(mockBuilder, times(1)).build(noticeCollection);
+        verify(mockBuilder, times(1)).build();
 
         verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
 
@@ -185,7 +184,7 @@ class ProcessParsedAgencyTest {
         when(mockGenericType.isSuccess()).thenReturn(false);
         noticeCollection.add(mockNotice);
 
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericType);
+        when(mockBuilder.build()).thenReturn(mockGenericType);
 
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -198,7 +197,7 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(AGENCY_FARE_URL);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(AGENCY_EMAIL);
 
-        underTest.execute(mockParsedAgency, noticeCollection);
+        underTest.execute(mockParsedAgency);
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -218,7 +217,7 @@ class ProcessParsedAgencyTest {
         verify(mockBuilder, times(1)).agencyPhone(AGENCY_PHONE);
         verify(mockBuilder, times(1)).agencyFareUrl(AGENCY_FARE_URL);
         verify(mockBuilder, times(1)).agencyEmail(AGENCY_EMAIL);
-        verify(mockBuilder, times(1)).build(noticeCollection);
+        verify(mockBuilder, times(1)).build();
 
         verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
 
@@ -255,7 +254,7 @@ class ProcessParsedAgencyTest {
         when(mockGenericType.isSuccess()).thenReturn(false);
         noticeCollection.add(mockNotice);
 
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericType);
+        when(mockBuilder.build()).thenReturn(mockGenericType);
 
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -268,7 +267,7 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(AGENCY_FARE_URL);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(AGENCY_EMAIL);
 
-        underTest.execute(mockParsedAgency, noticeCollection);
+        underTest.execute(mockParsedAgency);
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -287,7 +286,7 @@ class ProcessParsedAgencyTest {
         verify(mockBuilder, times(1)).agencyPhone(AGENCY_PHONE);
         verify(mockBuilder, times(1)).agencyFareUrl(AGENCY_FARE_URL);
         verify(mockBuilder, times(1)).agencyEmail(AGENCY_EMAIL);
-        verify(mockBuilder, times(1)).build(noticeCollection);
+        verify(mockBuilder, times(1)).build();
 
         verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
 
@@ -312,14 +311,13 @@ class ProcessParsedAgencyTest {
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
         final var mockGenericType = mock(EntityBuildResult.class);
 
         final Agency mockAgency = mock(Agency.class);
         when(mockGenericType.getData()).thenReturn(mockAgency);
         when(mockGenericType.isSuccess()).thenReturn(true);
 
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericType);
+        when(mockBuilder.build()).thenReturn(mockGenericType);
         when(mockGtfsDataRepo.addAgency(mockAgency)).thenReturn(null);
 
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
@@ -333,7 +331,7 @@ class ProcessParsedAgencyTest {
         when(mockParsedAgency.get(AGENCY_FARE_URL)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedAgency.get(AGENCY_EMAIL)).thenReturn(STRING_TEST_VALUE);
 
-        underTest.execute(mockParsedAgency, noticeCollection);
+        underTest.execute(mockParsedAgency);
 
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_NAME));
@@ -356,7 +354,7 @@ class ProcessParsedAgencyTest {
         verify(mockBuilder, times(1)).agencyPhone(anyString());
         verify(mockBuilder, times(1)).agencyFareUrl(anyString());
         verify(mockBuilder, times(1)).agencyEmail(anyString());
-        verify(mockBuilder, times(1)).build(noticeCollection);
+        verify(mockBuilder, times(1)).build();
 
         final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
 

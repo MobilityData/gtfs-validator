@@ -36,7 +36,7 @@ class AgencyTest {
     @Test
     public void createAgencyWithNullAgencyNameShouldGenerateMissingRequiredValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
 
         //noinspection ConstantConditions
         underTest.agencyId(STRING_TEST_VALUE)
@@ -48,11 +48,12 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        final var data = underTest.build(mockNoticeCollection);
+        final var data = underTest.build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
+        verify(mockNoticeCollection, times(1)).clear();
         verify(mockNoticeCollection, times(1)).add(captor.capture());
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
@@ -62,6 +63,7 @@ class AgencyTest {
         assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
 
         assertTrue(data.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     // Field agencyUrl is annotated as `@NonNull` but test require this field to be null. Therefore annotation
@@ -69,7 +71,7 @@ class AgencyTest {
     @Test
     public void createAgencyWithNullAgencyUrlShouldGenerateMissingRequiredValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
 
         //noinspection ConstantConditions
         underTest.agencyId(STRING_TEST_VALUE)
@@ -81,11 +83,12 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        final var data = underTest.build(mockNoticeCollection);
+        final var data = underTest.build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
+        verify(mockNoticeCollection, times(1)).clear();
         verify(mockNoticeCollection, times(1)).add(captor.capture());
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
@@ -95,6 +98,7 @@ class AgencyTest {
         assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
 
         assertTrue(data.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     // Field agencyTimezone is annotated as `@NonNull` but test require this field to be null. Therefore annotation
@@ -102,7 +106,7 @@ class AgencyTest {
     @Test
     public void createAgencyWithTimezoneAgencyUrlShouldGenerateMissingRequiredValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
 
         //noinspection ConstantConditions
         underTest.agencyId(STRING_TEST_VALUE)
@@ -114,11 +118,12 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        final var data = underTest.build(mockNoticeCollection);
+        final var data = underTest.build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
+        verify(mockNoticeCollection, times(1)).clear();
         verify(mockNoticeCollection, times(1)).add(captor.capture());
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
@@ -128,12 +133,13 @@ class AgencyTest {
         assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
 
         assertTrue(data.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
     public void createAgencyWithValidValuesForFieldShouldNotGenerateNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
 
         underTest.agencyId(STRING_TEST_VALUE);
         underTest.agencyName(STRING_TEST_VALUE);
@@ -144,8 +150,11 @@ class AgencyTest {
         underTest.agencyFareUrl(STRING_TEST_VALUE);
         underTest.agencyEmail(STRING_TEST_VALUE);
 
-        final var data = underTest.build(mockNoticeCollection);
+        final var data = underTest.build();
+
+        verify(mockNoticeCollection, times(1)).clear();
 
         assertTrue(data.getData() instanceof Agency);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 }

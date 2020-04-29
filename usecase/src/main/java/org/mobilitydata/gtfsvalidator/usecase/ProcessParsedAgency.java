@@ -53,7 +53,7 @@ public class ProcessParsedAgency {
      *
      * @param validatedAgencyEntity entity to be processed and added to the GTFS data repository
      */
-    public void execute(final ParsedEntity validatedAgencyEntity, final List<Notice> noticeCollection) {
+    public void execute(final ParsedEntity validatedAgencyEntity) {
 
         final String agencyId = (String) validatedAgencyEntity.get("agency_id");
         final String agencyName = (String) validatedAgencyEntity.get("agency_name");
@@ -73,7 +73,7 @@ public class ProcessParsedAgency {
                 .agencyFareUrl(agencyFareUrl)
                 .agencyEmail(agencyEmail);
 
-        final var agency = builder.build(noticeCollection);
+        final var agency = builder.build();
 
         if (agency.isSuccess()) {
             if (gtfsDataRepository.addAgency((Agency) agency.getData()) == null) {
