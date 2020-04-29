@@ -104,7 +104,7 @@ class AgencyTest {
     // Field agencyTimezone is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    public void createAgencyWithTimezoneAgencyUrlShouldGenerateMissingRequiredValueNotice() {
+    public void createAgencyWithNullTimezoneShouldGenerateMissingRequiredValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
 
@@ -137,7 +137,7 @@ class AgencyTest {
     }
 
     @Test
-    public void createAgencyWithValidValuesForFieldShouldNotGenerateNotice() {
+    public void createAgencyWithValidValuesShouldNotGenerateNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
 

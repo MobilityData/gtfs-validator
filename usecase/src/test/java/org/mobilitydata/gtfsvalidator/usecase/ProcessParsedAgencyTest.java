@@ -100,7 +100,7 @@ class ProcessParsedAgencyTest {
 
     @SuppressWarnings("ConstantConditions")
     @Test
-    void nullAgencyNameAddNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
+    void nullAgencyNameShouldAddMissingRequiredValueNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
