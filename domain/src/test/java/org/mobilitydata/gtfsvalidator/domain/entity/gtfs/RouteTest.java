@@ -41,7 +41,7 @@ class RouteTest {
     @Test
     public void createRouteWithNullRouteIdShouldMissingRequiredValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
 
         underTest.routeId(null)
                 .agencyId(STRING_TEST_VALUE)
@@ -54,11 +54,12 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        underTest.build(mockNoticeCollection);
+        underTest.build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
 
+        verify(mockNoticeCollection, times(1)).clear();
         verify(mockNoticeCollection, times(1)).add(captor.capture());
 
         final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
@@ -73,7 +74,7 @@ class RouteTest {
     @Test
     public void createRouteWithInvalidRouteTypeShouldGenerateUnexpectedEnumValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
 
         underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
@@ -86,11 +87,12 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        underTest.build(mockNoticeCollection);
+        underTest.build();
 
         final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
                 ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
 
+        verify(mockNoticeCollection, times(1)).clear();
         verify(mockNoticeCollection, times(1)).add(captor.capture());
 
         final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
@@ -106,7 +108,7 @@ class RouteTest {
     @Test
     public void createRouteWithValidValuesForFieldShouldGenerateNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
 
         underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
@@ -119,7 +121,8 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        final var route = underTest.build(mockNoticeCollection);
+        final var route = underTest.build();
+        verify(mockNoticeCollection, times(1)).clear();
 
         assertTrue(route.getData() instanceof Route);
         verifyNoMoreInteractions(mockNoticeCollection);

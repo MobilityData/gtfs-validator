@@ -163,6 +163,14 @@ public class Route {
         private String routeTextColor;
         private Integer routeSortOrder;
         private Integer fromValue;
+        private List<Notice> noticeCollection;
+
+        public RouteBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
+
+        public RouteBuilder() {
+        }
 
         /**
          * Sets field routeId value and returns this
@@ -280,11 +288,12 @@ public class Route {
          * Returns an entity representing a row from route.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns a list of notices.
          *
-         * @param noticeCollection list of notice to complete
          * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns a list of notices.
          */
-        public EntityBuildResult build(final List<Notice> noticeCollection) throws IllegalArgumentException {
+        public EntityBuildResult build() throws IllegalArgumentException {
+            noticeCollection.clear();
+
             if (routeId == null || routeType == null) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
