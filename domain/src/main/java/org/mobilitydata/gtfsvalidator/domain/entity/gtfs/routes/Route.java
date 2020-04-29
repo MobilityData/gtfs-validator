@@ -169,9 +169,6 @@ public class Route {
             this.noticeCollection = noticeCollection;
         }
 
-        public RouteBuilder() {
-        }
-
         /**
          * Sets field routeId value and returns this
          *

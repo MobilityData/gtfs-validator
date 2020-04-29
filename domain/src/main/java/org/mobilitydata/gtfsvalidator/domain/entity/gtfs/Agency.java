@@ -140,13 +140,10 @@ public class Agency {
         private String agencyPhone;
         private String agencyFareUrl;
         private String agencyEmail;
-        private List<Notice> noticeCollection;
+        private final List<Notice> noticeCollection;
 
         public AgencyBuilder(final List<Notice> noticeCollection) {
             this.noticeCollection = noticeCollection;
-        }
-
-        public AgencyBuilder() {
         }
 
         /**
