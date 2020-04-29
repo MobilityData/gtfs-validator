@@ -1143,7 +1143,7 @@ class GtfsTypeValidatorTest {
     }
 
     @Test
-    void invalidCurrencyCodeGenerateNotice() {
+    void checkCurrencyCodeValidation() {
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
@@ -1164,51 +1164,28 @@ class GtfsTypeValidatorTest {
                 Collections.emptySet()
         );
 
-        Collection<Notice> result = underTest.validate(new ParsedEntity(
+        Collection<Notice> invalidResult = underTest.validate(new ParsedEntity(
                 TEST_ID,
-                Map.of("currency_type", "JAN"), //
+                Map.of("currency_type", "JAN"),
                 new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
         ));
 
-        assertEquals(1, result.size());
+        assertEquals(1, invalidResult.size());
 
-        Notice notice = new ArrayList<>(result).get(0);
+        Notice notice = new ArrayList<>(invalidResult).get(0);
         assertThat(notice, instanceOf(InvalidCurrencyCodeNotice.class));
         assertEquals("E018", notice.getId());
         assertEquals("Invalid currency code", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
         assertEquals("Invalid currency code: JAN in field: currency_type for entity with id: test_id",
                 notice.getDescription());
-    }
 
-    @Test
-    void validCurrencyCodeDoNotGenerateNotice() {
-
-        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
-        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
-        when(mockColumnSpec.getName()).thenReturn("currency_type");
-
-        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
-        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.CURRENCY_CODE);
-
-        when(mockColumnSpec.getType()).thenReturn(mockInputType);
-        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
-
-        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
-                mock(FloatValidator.class),
-                mock(IntegerValidator.class),
-                mock(UrlValidator.class),
-                mock(RegexValidator.class),
-                mock(RegexValidator.class),
-                Collections.emptySet()
-        );
-
-        Collection<Notice> result = underTest.validate(new ParsedEntity(
+        Collection<Notice> validResult = underTest.validate(new ParsedEntity(
                 TEST_ID,
                 Map.of("currency_type", "MXN"),
                 new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
         ));
 
-        assertEquals(0, result.size());
+        assertEquals(0, validResult.size());
     }
 }
