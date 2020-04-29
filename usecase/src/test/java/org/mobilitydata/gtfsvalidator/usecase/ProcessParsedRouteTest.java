@@ -172,7 +172,7 @@ class ProcessParsedRouteTest {
     }
 
     @Test
-    void invalidRouteTypeShouldNoticeToResultRepoAndNotBeAddedToGtfsDataRepo() {
+    void invalidRouteTypeShouldAddNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class, RETURNS_SELF);
@@ -230,7 +230,7 @@ class ProcessParsedRouteTest {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void duplicateRouteShouldAddNoticeToResultRepoAndNotBeAddedToGtfsDataRepo() {
+    void duplicateRouteShouldAddNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class, RETURNS_SELF);
