@@ -37,7 +37,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddAgencyShouldReturnNull() {
+    void addSameAgencyTwiceShouldReturnNull() {
         final Agency mockAgency = mock(Agency.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockAgency.getAgencyId()).thenReturn("agency id");
@@ -72,7 +72,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddRouteShouldReturnNull() {
+    void addSameRouteTwiceShouldReturnNull() {
         final Route mockRoute = mock(Route.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockRoute.getRouteId()).thenReturn("route id");
