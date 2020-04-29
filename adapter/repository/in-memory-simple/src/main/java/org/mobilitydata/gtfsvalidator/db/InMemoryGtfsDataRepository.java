@@ -28,6 +28,7 @@ import java.util.Map;
  */
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
+    private final Map<String, Route> routeCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -58,19 +59,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return agencyCollection.get(agencyId);
     }
 
-    private final Map<String, Route> routeCollection = new HashMap<>();
-
-    /**
-     * Return the Routes representing a row from routes.txt related to the id provided as parameter
-     *
-     * @param routeId the key from routes.txt related to the Route to be returned
-     * @return the Agency representing a row from routes.txt related to the id provided as parameter
-     */
-    @Override
-    public Route getRouteById(final String routeId) {
-        return routeCollection.get(routeId);
-    }
-
     /**
      * Add an Route representing a row from routes.txt to this. Return the entity added to the repository if the
      * uniqueness constraint of agency based on route_id is respected, if this requirement is not met, returns null.
@@ -87,5 +75,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             routeCollection.put(newRoute.getRouteId(), newRoute);
             return newRoute;
         }
+    }
+
+    /**
+     * Return the Routes representing a row from routes.txt related to the id provided as parameter
+     *
+     * @param routeId the key from routes.txt related to the Route to be returned
+     * @return the Agency representing a row from routes.txt related to the id provided as parameter
+     */
+    @Override
+    public Route getRouteById(final String routeId) {
+        return routeCollection.get(routeId);
     }
 }
