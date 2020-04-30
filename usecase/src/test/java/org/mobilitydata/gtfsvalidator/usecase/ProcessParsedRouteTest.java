@@ -16,72 +16,83 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedRouteTest {
 
+    private static final String ROUTE_ID = "route_id";
+    private static final String AGENCY_ID = "agency_id";
+    private static final String ROUTE_SHORT_NAME = "route_short_name";
+    private static final String ROUTE_LONG_NAME = "route_long_name";
+    private static final String ROUTE_DESC = "route_desc";
+    private static final String ROUTE_TYPE = "route_type";
+    private static final String ROUTE_URL = "route_url";
+    private static final String ROUTE_COLOR = "route_color";
+    private static final String ROUTE_TEXT_COLOR = "route_text_color";
+    private static final String ROUTE_SORT_ORDER = "route_sort_order";
     private final String STRING_TEST_VALUE = "test_value";
     private final int INT_TEST_VALUE = 0;
 
     @Test
-    void validatedParsedRouteShouldCreateRouteEntityAndBeAddedToGtfsDataRepository()
-            throws SQLIntegrityConstraintViolationException {
+    void validatedParsedRouteShouldCreateRouteEntityAndBeAddedToGtfsDataRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class, RETURNS_SELF);
+        final Route mockRoute = mock(Route.class);
+        final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
 
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        when(mockGenericObject.getData()).thenReturn(mockRoute);
+        when(mockGenericObject.isSuccess()).thenReturn(true);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
 
-        Route mockRoute = mock(Route.class);
+        when(mockParsedRoute.get(ROUTE_ID)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_SHORT_NAME)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_LONG_NAME)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_DESC)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_TYPE)).thenReturn(INT_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_COLOR)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_TEXT_COLOR)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_SORT_ORDER)).thenReturn(INT_TEST_VALUE);
 
-        Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class);
-        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
-        when(mockBuilder.agencyId(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeShortName(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeLongName(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeDesc(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeType(anyInt())).thenCallRealMethod();
-        when(mockBuilder.routeUrl(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeColor(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeTextColor(anyString())).thenCallRealMethod();
-        when(mockBuilder.routeSortOrder(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenReturn(mockRoute);
+        when(mockGtfsDataRepo.addRoute(mockRoute)).thenReturn(mockRoute);
 
-        ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
-
-        when(mockParsedRoute.get("route_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("agency_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_short_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_long_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_desc")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_type")).thenReturn(INT_TEST_VALUE);
-        when(mockParsedRoute.get("route_url")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_color")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
+        final ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         underTest.execute(mockParsedRoute);
 
-        verify(mockParsedRoute, times(10)).get(ArgumentMatchers.anyString());
+        final InOrder inOrder = inOrder(mockBuilder, mockGtfsDataRepo, mockParsedRoute);
+
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_ID));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_SHORT_NAME));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_LONG_NAME));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_DESC));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_TYPE));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_URL));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_COLOR));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_TEXT_COLOR));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_SORT_ORDER));
 
         verify(mockBuilder, times(1)).routeId(ArgumentMatchers.anyString());
         verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.anyString());
@@ -94,8 +105,6 @@ class ProcessParsedRouteTest {
         verify(mockBuilder, times(1)).routeTextColor(ArgumentMatchers.anyString());
         verify(mockBuilder, times(1)).routeSortOrder(ArgumentMatchers.anyInt());
 
-        InOrder inOrder = inOrder(mockBuilder, mockResultRepo, mockGtfsDataRepo);
-
         inOrder.verify(mockBuilder, times(1)).build();
         inOrder.verify(mockGtfsDataRepo, times(1)).addRoute(ArgumentMatchers.eq(mockRoute));
 
@@ -103,37 +112,50 @@ class ProcessParsedRouteTest {
     }
 
     @Test
-    public void nullRouteIdShouldThrowExceptionAndAddMissingRequiredValueNoticeToResultRepo() {
+    public void invalidRouteIdShouldAddNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
 
-        final Route.RouteBuilder mockBuilder = spy(Route.RouteBuilder.class);
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
+        mockNoticeCollection.add(mockNotice);
+
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericType = mock(EntityBuildResult.class);
+
+        when(mockGenericType.isSuccess()).thenReturn(false);
+        when(mockGenericType.getData()).thenReturn(mockNoticeCollection);
+
+        when(mockBuilder.build()).thenReturn(mockGenericType);
 
         final ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
+        when(mockParsedRoute.get(ROUTE_ID)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_SHORT_NAME)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_LONG_NAME)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_DESC)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_TYPE)).thenReturn(INT_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_COLOR)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_TEXT_COLOR)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_SORT_ORDER)).thenReturn(INT_TEST_VALUE);
 
-        when(mockParsedRoute.get("route_id")).thenReturn(null);
-        when(mockParsedRoute.get("agency_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_short_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_long_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_desc")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_type")).thenReturn(INT_TEST_VALUE);
-        when(mockParsedRoute.get("route_url")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_color")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
+        underTest.execute(mockParsedRoute);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> underTest.execute(mockParsedRoute));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_ID));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_SHORT_NAME));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_LONG_NAME));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_DESC));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_TYPE));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_URL));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_COLOR));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_TEXT_COLOR));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_SORT_ORDER));
 
-        Assertions.assertEquals("route_id can not be null in routes.txt", exception.getMessage());
-
-        verify(mockParsedRoute, times(10)).get(anyString());
-
-        //noinspection ConstantConditions
-        verify(mockBuilder, times(1)).routeId(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).routeId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).routeShortName(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).routeLongName(ArgumentMatchers.eq(STRING_TEST_VALUE));
@@ -143,131 +165,57 @@ class ProcessParsedRouteTest {
         verify(mockBuilder, times(1)).routeColor(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).routeTextColor(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).routeSortOrder(ArgumentMatchers.eq(INT_TEST_VALUE));
-
         verify(mockBuilder, times(1)).build();
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockParsedRoute, times(1)).getEntityId();
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("routes.txt", noticeList.get(0).getFilename());
-        assertEquals("route_id", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
+        verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
         verifyNoMoreInteractions(mockParsedRoute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void invalidRouteTypeShouldThrowExceptionAndAddMissingRequiredValueNoticeToResultRepo() {
+    void duplicateRouteShouldAddNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-
-        final Route.RouteBuilder mockBuilder = spy(Route.RouteBuilder.class);
-
-        final ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
-
-        when(mockParsedRoute.get("route_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("agency_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_short_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_long_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_desc")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_type")).thenReturn(15);
-        when(mockParsedRoute.get("route_url")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_color")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
-
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> underTest.execute(mockParsedRoute));
-
-        Assertions.assertEquals("Unexpected value, or null value for field route_type in routes.txt",
-                exception.getMessage());
-
-        verify(mockParsedRoute, times(10)).get(anyString());
-
-        verify(mockBuilder, times(1)).routeId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1)).routeShortName(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1)).routeLongName(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1)).routeDesc(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1)).routeType(ArgumentMatchers.eq(15));
-        verify(mockBuilder, times(1)).routeUrl(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1)).routeColor(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1)).routeTextColor(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1)).routeSortOrder(ArgumentMatchers.eq(INT_TEST_VALUE));
-
-        verify(mockBuilder, times(1)).build();
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockParsedRoute, times(1)).getEntityId();
-
-        final ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
-
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
-
-        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("routes.txt", noticeList.get(0).getFilename());
-        assertEquals("route_type", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-        assertEquals("15", noticeList.get(0).getEnumValue());
-
-        verifyNoMoreInteractions(mockParsedRoute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @Test
-    void duplicateRouteShouldThrowExceptionAndAddEntityMustBeUniqueNoticeToResultRepo()
-            throws SQLIntegrityConstraintViolationException {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-
-        final Route mockRoute = mock(Route.class);
-        when(mockRoute.getRouteId()).thenReturn(STRING_TEST_VALUE);
-
         final Route.RouteBuilder mockBuilder = mock(Route.RouteBuilder.class, RETURNS_SELF);
-        when(mockBuilder.build()).thenReturn(mockRoute);
+        final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
+        final Route mockRoute = mock(Route.class);
+
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        when(mockGenericObject.isSuccess()).thenReturn(true);
+        when(mockGenericObject.getData()).thenReturn(mockRoute);
+
+        when(mockRoute.getRouteId()).thenReturn(STRING_TEST_VALUE);
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGtfsDataRepo.addRoute(mockRoute)).thenReturn(null);
 
         final ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        final ParsedEntity mockParsedRoute = mock(ParsedEntity.class);
-        when(mockParsedRoute.get("route_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("agency_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_short_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_long_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_desc")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_type")).thenReturn(7);
-        when(mockParsedRoute.get("route_url")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_color")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_text_color")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedRoute.get("route_sort_order")).thenReturn(INT_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_ID)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(AGENCY_ID)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_SHORT_NAME)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_LONG_NAME)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_DESC)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_TYPE)).thenReturn(7);
+        when(mockParsedRoute.get(ROUTE_URL)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_COLOR)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_TEXT_COLOR)).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedRoute.get(ROUTE_SORT_ORDER)).thenReturn(INT_TEST_VALUE);
 
-        when(mockGtfsDataRepo.addRoute(mockRoute)).thenThrow(new SQLIntegrityConstraintViolationException("route " +
-                "must be unique in dataset"));
+        underTest.execute(mockParsedRoute);
 
-        final Exception exception = Assertions.assertThrows(SQLIntegrityConstraintViolationException.class,
-                () -> underTest.execute(mockParsedRoute));
-        Assertions.assertEquals("route must be unique in dataset", exception.getMessage());
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_ID));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_SHORT_NAME));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_LONG_NAME));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_DESC));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_TYPE));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_URL));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_COLOR));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_TEXT_COLOR));
+        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_SORT_ORDER));
 
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_id"));
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_short_name"));
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_long_name"));
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_desc"));
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_type"));
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_url"));
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_color"));
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_text_color"));
-        verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq("route_sort_order"));
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockParsedRoute, times(1)).getEntityId();
 
         verify(mockGtfsDataRepo, times(1)).addRoute(ArgumentMatchers.isA(Route.class));
 
@@ -283,17 +231,18 @@ class ProcessParsedRouteTest {
         verify(mockBuilder, times(1)).routeSortOrder(anyInt());
         verify(mockBuilder, times(1)).build();
 
-        //noinspection ResultOfMethodCallIgnored
         verify(mockParsedRoute, times(1)).getEntityId();
 
-        final ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
+        final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
+        final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("routes.txt", noticeList.get(0).getFilename());
-        assertEquals("route_id", noticeList.get(0).getFieldName());
+        assertEquals(ROUTE_ID, noticeList.get(0).getFieldName());
         assertEquals("no id", noticeList.get(0).getEntityId());
+
+        verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedRoute, mockRoute);
     }
 }

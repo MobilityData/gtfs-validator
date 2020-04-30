@@ -59,4 +59,11 @@ public enum RouteType {
                 .findAny()
                 .orElse(null);
     }
+
+    static public boolean isEnumValueValid(final int value) {
+        return Stream.of(RouteType.values())
+                .filter(enumItem -> enumItem.value == value)
+                .findAny()
+                .orElse(null) != null;
+    }
 }
