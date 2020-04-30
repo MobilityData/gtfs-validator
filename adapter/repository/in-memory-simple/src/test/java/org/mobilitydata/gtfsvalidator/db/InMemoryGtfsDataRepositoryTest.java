@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -113,113 +112,44 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void getTripByIdShouldReturnRelatedTrip() throws SQLIntegrityConstraintViolationException {
-        final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
-        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
-        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
-        when(mockBuilder.tripId(anyString())).thenCallRealMethod();
-        when(mockBuilder.tripHeadsign(anyString())).thenCallRealMethod();
-        when(mockBuilder.tripShortName(anyString())).thenCallRealMethod();
-        when(mockBuilder.directionId(anyInt())).thenCallRealMethod();
-        when(mockBuilder.blockId(anyString())).thenCallRealMethod();
-        when(mockBuilder.shapeId(anyString())).thenCallRealMethod();
-        when(mockBuilder.wheelchairAccessible(anyInt())).thenCallRealMethod();
-        when(mockBuilder.bikesAllowed(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.routeId(STRING_TEST_VALUE)
-                .serviceId(STRING_TEST_VALUE)
-                .tripId("test_id_0")
-                .tripHeadsign("test")
-                .tripShortName("test")
-                .directionId(1)
-                .blockId("test")
-                .shapeId("test")
-                .wheelchairAccessible(1)
-                .bikesAllowed(0);
-
+    public void callToAddTripShouldAddTripToRepoAndReturnSameEntity() {
+        final Trip mockTrip = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTrip.getTripId()).thenReturn("trip id");
 
-        final Trip trip00 = mockBuilder.build();
-        underTest.addTrip(trip00);
-
-        mockBuilder.tripId("test_id_1");
-
-        final Trip trip01 = mockBuilder.build();
-        underTest.addTrip(trip01);
-
-        assertEquals(trip00, underTest.getTripById("test_id_0"));
-        assertEquals(trip01, underTest.getTripById("test_id_1"));
+        assertEquals(underTest.addTrip(mockTrip), mockTrip);
     }
 
     @Test
-    public void callToAddTripShouldAddEntityToRepoAndReturnSameEntity() throws SQLIntegrityConstraintViolationException {
-        final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
-        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
-        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
-        when(mockBuilder.tripId(anyString())).thenCallRealMethod();
-        when(mockBuilder.tripHeadsign(anyString())).thenCallRealMethod();
-        when(mockBuilder.tripShortName(anyString())).thenCallRealMethod();
-        when(mockBuilder.directionId(anyInt())).thenCallRealMethod();
-        when(mockBuilder.blockId(anyString())).thenCallRealMethod();
-        when(mockBuilder.shapeId(anyString())).thenCallRealMethod();
-        when(mockBuilder.wheelchairAccessible(anyInt())).thenCallRealMethod();
-        when(mockBuilder.bikesAllowed(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.routeId(STRING_TEST_VALUE)
-                .serviceId(STRING_TEST_VALUE)
-                .tripId("test_id_0")
-                .tripHeadsign("test")
-                .tripShortName("test")
-                .directionId(1)
-                .blockId("test")
-                .shapeId("test")
-                .wheelchairAccessible(1)
-                .bikesAllowed(0);
-
+    public void addSameTripTwiceShouldReturnNull() {
+        final Trip mockTrip = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTrip.getTripId()).thenReturn("trip id");
 
-        final Trip trip00 = mockBuilder.build();
-        Trip toCheck = underTest.addTrip(trip00);
+        underTest.addTrip(mockTrip);
 
-        assertEquals(trip00, toCheck);
+        assertNull(underTest.addTrip(mockTrip));
     }
 
     @Test
-    public void tryToAddTwiceTheSameTripShouldThrowException() throws SQLIntegrityConstraintViolationException {
-        final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
-        when(mockBuilder.routeId(anyString())).thenCallRealMethod();
-        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
-        when(mockBuilder.tripId(anyString())).thenCallRealMethod();
-        when(mockBuilder.tripHeadsign(anyString())).thenCallRealMethod();
-        when(mockBuilder.tripShortName(anyString())).thenCallRealMethod();
-        when(mockBuilder.directionId(anyInt())).thenCallRealMethod();
-        when(mockBuilder.blockId(anyString())).thenCallRealMethod();
-        when(mockBuilder.shapeId(anyString())).thenCallRealMethod();
-        when(mockBuilder.wheelchairAccessible(anyInt())).thenCallRealMethod();
-        when(mockBuilder.bikesAllowed(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.routeId(STRING_TEST_VALUE)
-                .serviceId(STRING_TEST_VALUE)
-                .tripId("test_id_0")
-                .tripHeadsign("test")
-                .tripShortName("test")
-                .directionId(1)
-                .blockId("test")
-                .shapeId("test")
-                .wheelchairAccessible(1)
-                .bikesAllowed(0);
-
+    void addNullTripShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        final Trip trip = mockBuilder.build();
-        underTest.addTrip(trip);
-
-        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
-                () -> underTest.addTrip(trip));
-
-        assertEquals("trip must be unique in dataset", exception.getMessage());
+        assertThrows(IllegalArgumentException.class, () -> underTest.addTrip(null));
     }
+
+    @Test
+    public void getTripByIdShouldReturnRelatedTrip() {
+        final Trip mockTrip00 = mock(Trip.class);
+        final Trip mockTrip01 = mock(Trip.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTrip00.getTripId()).thenReturn("trip id00");
+        when(mockTrip01.getTripId()).thenReturn("trip id01");
+
+        underTest.addTrip(mockTrip00);
+        underTest.addTrip(mockTrip01);
+
+        assertEquals(mockTrip00, underTest.getTripById("trip id00"));
+        assertEquals(mockTrip01, underTest.getTripById("trip id01"));
+    }
+
 }

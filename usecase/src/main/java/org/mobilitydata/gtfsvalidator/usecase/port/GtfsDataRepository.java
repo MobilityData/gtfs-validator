@@ -29,7 +29,7 @@ public interface GtfsDataRepository {
 
     Route getRouteById(final String routeId);
 
-    Trip addTrip(final Trip newTrip) throws SQLIntegrityConstraintViolationException;
+    Trip addTrip(final Trip newTrip) throws IllegalArgumentException;
 
     Trip getTripById(final String tripId);
 }

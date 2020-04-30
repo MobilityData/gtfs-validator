@@ -31,6 +31,7 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, Trip> tripCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -100,21 +101,24 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
-    private final Map<String, Trip> tripCollection = new HashMap<>();
+    @Override
+    public Trip addTrip(final Trip newTrip) throws IllegalArgumentException {
+        if (newTrip != null) {
+            if (tripCollection.containsKey(newTrip.getTripId())) {
+                return null;
+            } else {
+                final String tripId = newTrip.getTripId();
+                tripCollection.put(tripId, newTrip);
+                return newTrip;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null trip to data repository");
+        }
+    }
 
     @Override
     public Trip getTripById(final String tripId) {
         return tripCollection.get(tripId);
     }
 
-    @Override
-    public Trip addTrip(final Trip newTrip) throws SQLIntegrityConstraintViolationException {
-        if (tripCollection.containsKey(newTrip.getTripId())) {
-            throw new SQLIntegrityConstraintViolationException("trip must be unique in dataset");
-        } else {
-            final String tripId = newTrip.getTripId();
-            tripCollection.put(tripId, newTrip);
-            return newTrip;
-        }
-    }
 }
