@@ -20,8 +20,7 @@ import java.util.stream.Stream;
 
 public enum DirectionId {
     OUTBOUND(0),
-    INBOUND(1),
-    ERROR(-1);
+    INBOUND(1);
 
     private final int value;
 
@@ -32,10 +31,25 @@ public enum DirectionId {
     static public DirectionId fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return null;
+        } else if (isEnumValueValid(fromValue)) {
+            //noinspection OptionalGetWithoutIsPresent
+            return Stream.of(DirectionId.values())
+                    .filter(enumItem -> enumItem.value == fromValue)
+                    .findAny()
+                    .get();
+        } else {
+            return null;
         }
-        return Stream.of(DirectionId.values())
-                .filter(enumItem -> enumItem.value == fromValue)
-                .findAny()
-                .orElse(ERROR);
+    }
+
+    static public boolean isEnumValueValid(final Integer value) {
+        if (value == null) {
+            return true;
+        } else {
+            return Stream.of(DirectionId.values())
+                    .filter(enumItem -> enumItem.value == value)
+                    .findAny()
+                    .orElse(null) != null;
+        }
     }
 }
