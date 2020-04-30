@@ -163,7 +163,7 @@ public class Route {
         private String routeTextColor;
         private Integer routeSortOrder;
         private Integer originalRouteTypeInteger;
-        private List<Notice> noticeCollection;
+        private final List<Notice> noticeCollection;
 
         public RouteBuilder(final List<Notice> noticeCollection) {
             this.noticeCollection = noticeCollection;
@@ -225,7 +225,7 @@ public class Route {
         }
 
         /**
-         * Sets field routeType value and returns this. Updates field fromValue.
+         * Sets fields routeType, originalRouteTypeInteger and returns this
          *
          * @param routeType Indicates the type of transportation used on a route
          * @return builder for future object creation
@@ -288,7 +288,7 @@ public class Route {
          * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns a list of notices.
          */
-        public EntityBuildResult build() throws IllegalArgumentException {
+        public EntityBuildResult<?> build() throws IllegalArgumentException {
             noticeCollection.clear();
 
             if (routeId == null || routeType == null) {
