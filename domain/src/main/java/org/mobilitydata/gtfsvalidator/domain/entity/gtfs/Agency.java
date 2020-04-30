@@ -27,7 +27,6 @@ import java.util.List;
  * Class for all entities defined in agency.txt. Can not be directly instantiated: user must use the
  * {@link AgencyBuilder} to create this.
  */
-@SuppressWarnings("ALL")
 public class Agency {
 
     @Nullable
@@ -242,7 +241,7 @@ public class Agency {
          * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns list of {@link Notice}.
          */
-        public EntityBuildResult build() {
+        public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
             if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
@@ -259,10 +258,10 @@ public class Agency {
                     noticeCollection.add((new MissingRequiredValueNotice("agency.txt",
                             "agency_timezone", agencyId)));
                 }
-                //noinspection unchecked
+                //noinspection unchecked,rawtypes
                 return new EntityBuildResult(noticeCollection, EntityBuildResult.Status.FAILURE);
             } else {
-                //noinspection unchecked
+                //noinspection unchecked,rawtypes
                 return new EntityBuildResult(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
                         agencyPhone, agencyFareUrl, agencyEmail),
                         EntityBuildResult.Status.SUCCESS);
