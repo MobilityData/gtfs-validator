@@ -94,7 +94,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the Route representing a row from routes.txt related to the id provided as parameter
      *
      * @param routeId the key from routes.txt related to the Route to be returned
-     * @return the Agency representing a row from routes.txt related to the id provided as parameter
+     * @return the Route representing a row from routes.txt related to the id provided as parameter
      */
     @Override
     public Route getRouteById(final String routeId) {
