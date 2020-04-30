@@ -101,6 +101,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
+    /**
+     * Add an Calendar representing a row from calendar.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of agency based on service_id is respected, if this requirement is not met, returns null.
+     * This method throws {@code IllegalArgumentException} if the entity is already present in the data repository.
+     *
+     * @param newCalendar the internal representation of a row from calendar.txt to be added to the repository.
+     * @return the entity added to the repository if the
+     * uniqueness constraint of agency based on service_id is respected, if this requirement is not met, returns null.
+     * @throws IllegalArgumentException if the entity is already present in the data repository.
+     */
     @Override
     public Calendar addCalendar(final Calendar newCalendar) throws IllegalArgumentException {
         if (newCalendar != null) {
@@ -116,6 +126,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         }
     }
 
+    /**
+     * Return the entity representing a row from calendar.txt related to the id provided as parameter
+     *
+     * @param serviceId the key from calendar.txt related to the Calendar to be returned
+     * @return the {@link Calendar} representing a row from calendar.txt related to the id provided as parameter
+     */
     @Override
     public Calendar getCalendarByServiceId(final String serviceId) {
         return calendarCollection.get(serviceId);

@@ -25,6 +25,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequired
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Class for all entities defined in calendar.txt. Can not be directly instantiated: user must use
+ * {@link CalendarBuilder} to create this.
+ */
 public class Calendar {
 
     @NotNull
@@ -57,6 +61,21 @@ public class Calendar {
     @NotNull
     private final LocalDateTime endDate;
 
+    /**
+     * Class for all entities defined in calendar.txt
+     *
+     * @param serviceId uniquely identifies a set of dates when service is available for one or more routes
+     * @param monday    indicates whether the service operates on all mondays in the date range specified
+     *                  by {@param startDate} and {@param endDate} fields
+     * @param tuesday   functions in the same way as monday except applies to tuesdays
+     * @param wednesday functions in the same way as monday except applies to wednesday
+     * @param thursday  functions in the same way as monday except applies to thursday
+     * @param friday    functions in the same way as monday except applies to friday
+     * @param saturday  functions in the same way as monday except applies to saturday
+     * @param sunday    functions in the same way as monday except applies to sunday
+     * @param startDate start service day for the service interval
+     * @param endDate   end service day for the service interval
+     */
     private Calendar(@NotNull final String serviceId,
                      final boolean monday,
                      final boolean tuesday,
@@ -122,6 +141,10 @@ public class Calendar {
         return endDate;
     }
 
+    /**
+     * Builder class to create {@link Calendar} objects. Allows an unordered definition of the different attributes of
+     * {@link Calendar}.
+     */
     public static class CalendarBuilder {
         private String serviceId;
         private Boolean monday;
@@ -146,11 +169,24 @@ public class Calendar {
             this.noticeCollection = noticeCollection;
         }
 
+        /**
+         * Sets field serviceId value and returns this
+         *
+         * @param serviceId uniquely identifies a set of dates when service is available for one or more routes
+         * @return builder for future object creation
+         */
         public CalendarBuilder serviceId(@NotNull final String serviceId) {
             this.serviceId = serviceId;
             return this;
         }
 
+        /**
+         * Sets fields monday and originalMondayInteger value and returns this
+         *
+         * @param monday indicates whether the service operates on all mondays in the date range specified
+         *               by {@param startDate} and {@param endDate} fields
+         * @return builder for future object creation
+         */
         public CalendarBuilder monday(final Integer monday) {
             if (monday == null) {
                 this.monday = null;
@@ -165,6 +201,13 @@ public class Calendar {
             return this;
         }
 
+        /**
+         * Sets field tuesday and originalTuesdayInteger value and returns this
+         *
+         * @param tuesday indicates whether the service operates on all tuesday in the date range specified
+         *                by {@param startDate} and {@param endDate} fields
+         * @return builder for future object creation
+         */
         public CalendarBuilder tuesday(final Integer tuesday) {
             if (tuesday == null) {
                 this.tuesday = null;
@@ -179,6 +222,13 @@ public class Calendar {
             return this;
         }
 
+        /**
+         * Sets field wednesday and originalWednesdayInteger value and returns this
+         *
+         * @param wednesday indicates whether the service operates on all wednesday in the date range specified
+         *                  by {@param startDate} and {@param endDate} fields
+         * @return builder for future object creation
+         */
         public CalendarBuilder wednesday(final Integer wednesday) {
             if (wednesday == null) {
                 this.wednesday = null;
@@ -193,6 +243,13 @@ public class Calendar {
             return this;
         }
 
+        /**
+         * Sets field thursday and originalThursdayInteger value and returns this
+         *
+         * @param thursday indicates whether the service operates on all thursday in the date range specified
+         *                 by {@param startDate} and {@param endDate} fields
+         * @return builder for future object creation
+         */
         public CalendarBuilder thursday(final Integer thursday) {
             if (thursday == null) {
                 this.thursday = null;
@@ -207,6 +264,13 @@ public class Calendar {
             return this;
         }
 
+        /**
+         * Sets field friday and originalFridayInteger value and returns this
+         *
+         * @param friday indicates whether the service operates on friday thursday in the date range specified
+         *               by {@param startDate} and {@param endDate} fields
+         * @return builder for future object creation
+         */
         public CalendarBuilder friday(final Integer friday) {
             if (friday == null) {
                 this.friday = null;
@@ -221,6 +285,13 @@ public class Calendar {
             return this;
         }
 
+        /**
+         * Sets field saturday and originalSaturdayInteger value and returns this
+         *
+         * @param saturday indicates whether the service operates on friday saturday in the date range specified
+         *                 by {@param startDate} and {@param endDate} fields
+         * @return builder for future object creation
+         */
         public CalendarBuilder saturday(final Integer saturday) {
             if (saturday == null) {
                 this.saturday = null;
@@ -235,6 +306,13 @@ public class Calendar {
             return this;
         }
 
+        /**
+         * Sets field saturday and originalSundayInteger value and returns this
+         *
+         * @param sunday indicates whether the service operates on sunday saturday in the date range specified
+         *               by {@param startDate} and {@param endDate} fields
+         * @return builder for future object creation
+         */
         public CalendarBuilder sunday(final Integer sunday) {
             if (sunday == null) {
                 this.sunday = null;
@@ -249,16 +327,35 @@ public class Calendar {
             return this;
         }
 
+        /**
+         * Sets field startDate value and returns this
+         *
+         * @param startDate start service day for the service interval
+         * @return builder for future object creation
+         */
         public CalendarBuilder startDate(@NotNull final LocalDateTime startDate) {
             this.startDate = startDate;
             return this;
         }
 
+        /**
+         * Sets field endDate value and returns this
+         *
+         * @param endDate start service day for the service interval
+         * @return builder for future object creation
+         */
         public CalendarBuilder endDate(@NotNull final LocalDateTime endDate) {
             this.endDate = endDate;
             return this;
         }
 
+        /**
+         * Entity representing a row from calendar.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns list of {@link Notice}.
+         *
+         * @return Entity representing a row from calendar.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns list of {@link Notice}.
+         */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
             if (monday == null || tuesday == null || wednesday == null || thursday == null || friday == null
