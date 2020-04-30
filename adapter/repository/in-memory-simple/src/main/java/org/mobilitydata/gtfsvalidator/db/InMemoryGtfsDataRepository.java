@@ -101,6 +101,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
+    /**
+     * Add a trip representing a row from trip.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of trip based on trip_id is respected, if this requirement is not met, returns null.
+     *
+     * @param newTrip the internal representation of a row from trips.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of trip based on trip_id is
+     * respected, if this requirement is not met returns null.
+     */
     @Override
     public Trip addTrip(final Trip newTrip) throws IllegalArgumentException {
         if (newTrip != null) {
@@ -116,9 +124,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         }
     }
 
+    /**
+     * Return the Trip representing a row from trips.txt related to the id provided as parameter
+     *
+     * @param tripId the key from trips.txt related to the Trip to be returned
+     * @return the Trip representing a row from trips.txt related to the id provided as parameter
+     */
     @Override
     public Trip getTripById(final String tripId) {
         return tripCollection.get(tripId);
     }
-
 }

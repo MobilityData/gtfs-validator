@@ -26,6 +26,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.ArrayList;
 
+/**
+ * This use case turns a parsed entity representing a row from trips.txt into a concrete class
+ */
 public class ProcessParsedTrip {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
@@ -39,6 +42,17 @@ public class ProcessParsedTrip {
         this.builder = builder;
     }
 
+    /**
+     * Use case execution method to go from a row from trips.txt to an internal representation.
+     * <p>
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code Trip} object if the requirements
+     * from the official GTFS specification are met. When these requirements are mot met, related notices generated in
+     * {@code Trip.TripBuilder} are added to the result repository provided to the constructor.
+     * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
+     * trip entities is not respected.
+     *
+     * @param validatedTripEntity entity to be processed and added to the GTFS data repository
+     */
     public void execute(final ParsedEntity validatedTripEntity) {
         final String routeId = (String) validatedTripEntity.get("route_id");
         final String serviceId = (String) validatedTripEntity.get("service_id");
