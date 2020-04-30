@@ -19,12 +19,13 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.BikesAllowedStatus;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.WheelchairAccessibleStatus;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Trip {
 
@@ -131,9 +132,9 @@ public class Trip {
         private String tripId;
 
         @NotNull
-        private final List<Notice> noticeCollection;
+        private final ArrayList<Notice> noticeCollection;
 
-        public TripBuilder(@NotNull final List<Notice> noticeCollection) {
+        public TripBuilder(@NotNull final ArrayList<Notice> noticeCollection) {
             this.noticeCollection = noticeCollection;
         }
 
@@ -218,33 +219,42 @@ public class Trip {
             return this;
         }
 
-        public Trip build() {
+        public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
-            if (routeId == null) {
-                noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "route_id", tripId));
+            if (routeId == null || serviceId == null || tripId == null ||
+                    !DirectionId.isEnumValueValid(originalDirectionIdInteger) ||
+                    !WheelchairAccessibleStatus.isEnumValueValid(originalWheelchairAccessibleStatusInteger) ||
+                    !BikesAllowedStatus.isEnumValueValid(originalBikesAllowedStatusInteger)) {
+
+                if (routeId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "route_id", tripId));
+                }
+                if (serviceId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "service_id",
+                            tripId));
+                }
+                if (tripId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "trip_id", tripId));
+                }
+                if (!DirectionId.isEnumValueValid(originalDirectionIdInteger)) {
+                    noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt",
+                            "direction_id", tripId, originalDirectionIdInteger));
+                }
+                if (!WheelchairAccessibleStatus.isEnumValueValid(originalWheelchairAccessibleStatusInteger)) {
+                    noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt",
+                            "wheelchair_accessible", tripId, originalWheelchairAccessibleStatusInteger));
+                }
+                if (!BikesAllowedStatus.isEnumValueValid(originalBikesAllowedStatusInteger)) {
+                    noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt", "bikes_allowed",
+                            tripId, originalBikesAllowedStatusInteger));
+                }
+                return new EntityBuildResult<>(noticeCollection, EntityBuildResult.Status.FAILURE);
+            } else {
+                return new EntityBuildResult<>(new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName,
+                        directionId, blockId, shapeId, wheelchairAccessibleStatus, bikesAllowedStatus),
+                        EntityBuildResult.Status.SUCCESS);
             }
-            if (serviceId == null) {
-                noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "service_id",
-                        tripId));
-            }
-            if (tripId == null) {
-                noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "trip_id", tripId));
-            }
-            if (!DirectionId.isEnumValueValid(originalDirectionIdInteger)) {
-                noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt",
-                        "direction_id", tripId, originalDirectionIdInteger));
-            }
-            if (!WheelchairAccessibleStatus.isEnumValueValid(originalWheelchairAccessibleStatusInteger)) {
-                noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt",
-                        "wheelchair_accessible", tripId, originalWheelchairAccessibleStatusInteger));
-            }
-            if (!BikesAllowedStatus.isEnumValueValid(originalBikesAllowedStatusInteger)) {
-                noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt", "bikes_allowed",
-                        tripId, originalBikesAllowedStatusInteger));
-            }
-            return new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName, directionId, blockId,
-                    shapeId, wheelchairAccessibleStatus, bikesAllowedStatus);
         }
     }
 }

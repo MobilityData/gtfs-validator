@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.BikesAllowedStatus;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.WheelchairAccessibleStatus;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class TripTest {
@@ -21,7 +23,7 @@ class TripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullRouteIdShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
 
         underTest.routeId(null)
@@ -35,7 +37,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        underTest.build();
+        assertTrue(underTest.build().getData() instanceof ArrayList);
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -57,7 +59,7 @@ class TripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullServiceIdShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
 
         underTest.routeId("route id")
@@ -71,7 +73,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        underTest.build();
+        assertTrue(underTest.build().getData() instanceof ArrayList);
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -93,7 +95,7 @@ class TripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullTripIdShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
 
         underTest.routeId("route id")
@@ -107,7 +109,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        underTest.build();
+        assertTrue(underTest.build().getData() instanceof ArrayList);
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -126,7 +128,7 @@ class TripTest {
 
     @Test
     public void createTripWithInvalidDirectionIdShouldGenerateUnexpectedEnumValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
 
         underTest.routeId("route id")
@@ -140,7 +142,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        underTest.build();
+        assertTrue(underTest.build().getData() instanceof ArrayList);
 
         final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
                 ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
@@ -160,7 +162,7 @@ class TripTest {
 
     @Test
     public void createTripWithValidDirectionIdShouldNotGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
 
         underTest.routeId("route id")
@@ -174,7 +176,11 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        final Trip toCheck = underTest.build();
+        final EntityBuildResult<?> buildResult = underTest.build();
+
+        assertTrue(buildResult.getData() instanceof Trip);
+
+        final Trip toCheck = (Trip) buildResult.getData();
 
         verify(mockNoticeCollection, times(1)).clear();
 
@@ -194,7 +200,7 @@ class TripTest {
 
     @Test
     public void createTripWithInvalidWheelchairAccessibleShouldGenerateUnexpectedEnumValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
 
         underTest.routeId("route id")
@@ -208,7 +214,7 @@ class TripTest {
                 .wheelchairAccessible(4)
                 .bikesAllowed(0);
 
-        underTest.build();
+        assertTrue(underTest.build().getData() instanceof ArrayList);
 
         final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
                 ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
@@ -227,8 +233,8 @@ class TripTest {
     }
 
     @Test
-    public void createTripWithInvalidBikesAllowedShouldThrowException() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+    public void createTripWithInvalidBikesAllowedShouldGenerateUnexpectedEnumValueNotice() {
+        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
 
         underTest.routeId("route id")
@@ -242,7 +248,7 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(4);
 
-        underTest.build();
+        assertTrue(underTest.build().getData() instanceof ArrayList);
 
         final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
                 ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
