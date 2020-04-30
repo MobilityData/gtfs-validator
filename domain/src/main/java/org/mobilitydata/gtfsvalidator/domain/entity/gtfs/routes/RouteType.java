@@ -60,6 +60,12 @@ public enum RouteType {
                 .orElse(null);
     }
 
+    /**
+     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
+     *
+     * @param value the integer to associate with this enum values
+     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
+     */
     static public boolean isEnumValueValid(final int value) {
         return Stream.of(RouteType.values())
                 .filter(enumItem -> enumItem.value == value)
