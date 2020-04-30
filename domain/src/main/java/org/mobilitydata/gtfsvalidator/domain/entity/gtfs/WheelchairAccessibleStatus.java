@@ -62,7 +62,10 @@ public enum WheelchairAccessibleStatus {
      * @param value the integer to associate with this enum values
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
-    static public boolean isEnumValueValid(final int value) {
+    static public boolean isEnumValueValid(final Integer value) {
+        if (value == null) {
+            return true;
+        }
         return Stream.of(WheelchairAccessibleStatus.values())
                 .filter(enumItem -> enumItem.value == value)
                 .findAny()
