@@ -17,14 +17,14 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 
 public class ProcessParsedTrip {
     private final ValidationResultRepository resultRepository;
@@ -39,9 +39,7 @@ public class ProcessParsedTrip {
         this.builder = builder;
     }
 
-    public void execute(final ParsedEntity validatedTripEntity) throws IllegalArgumentException,
-            SQLIntegrityConstraintViolationException {
-
+    public void execute(final ParsedEntity validatedTripEntity) {
         final String routeId = (String) validatedTripEntity.get("route_id");
         final String serviceId = (String) validatedTripEntity.get("service_id");
         final String tripId = (String) validatedTripEntity.get("trip_id");
@@ -53,56 +51,27 @@ public class ProcessParsedTrip {
         final Integer wheelchairAccessible = (Integer) validatedTripEntity.get("wheelchair_accessible");
         final Integer bikesAllowed = (Integer) validatedTripEntity.get("bikes_allowed");
 
-        try {
-            builder.routeId(routeId)
-                    .serviceId(serviceId)
-                    .tripId(tripId)
-                    .tripHeadsign(tripHeadsign)
-                    .tripShortName(tripShortName)
-                    .directionId(directionId)
-                    .blockId(blockId)
-                    .shapeId(shapeId)
-                    .wheelchairAccessible(wheelchairAccessible)
-                    .bikesAllowed(bikesAllowed);
+        builder.routeId(routeId)
+                .serviceId(serviceId)
+                .tripId(tripId)
+                .tripHeadsign(tripHeadsign)
+                .tripShortName(tripShortName)
+                .directionId(directionId)
+                .blockId(blockId)
+                .shapeId(shapeId)
+                .wheelchairAccessible(wheelchairAccessible)
+                .bikesAllowed(bikesAllowed);
 
-            gtfsDataRepository.addTrip(builder.build());
+        final EntityBuildResult<?> trip = builder.build();
 
-        } catch (IllegalArgumentException e) {
-
-            if (routeId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("trips.txt", "route_id",
+        if (trip.isSuccess()) {
+            if (gtfsDataRepository.addTrip((Trip) trip.getData()) == null) {
+                resultRepository.addNotice(new DuplicatedEntityNotice("trips.txt", "trip_id",
                         validatedTripEntity.getEntityId()));
             }
-
-            if (serviceId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("trips.txt", "service_id",
-                        validatedTripEntity.getEntityId()));
-            }
-
-            if (tripId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("trips.txt", "trip_id",
-                        validatedTripEntity.getEntityId()));
-            }
-
-            if (directionId != null && directionId != 0 && directionId != 1) {
-                resultRepository.addNotice(new UnexpectedValueNotice("trips.txt",
-                        "direction_id", validatedTripEntity.getEntityId(), directionId));
-            }
-
-            if (wheelchairAccessible != 0 && wheelchairAccessible != 1 && wheelchairAccessible != 2) {
-                resultRepository.addNotice(new UnexpectedValueNotice("trips.txt",
-                        "wheelchair_accessible", validatedTripEntity.getEntityId(), wheelchairAccessible));
-            }
-
-            if (bikesAllowed != 0 && bikesAllowed != 1 && bikesAllowed != 2) {
-                resultRepository.addNotice(new UnexpectedValueNotice("trips.txt",
-                        "bikes_allowed", validatedTripEntity.getEntityId(), bikesAllowed));
-            }
-            throw e;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            resultRepository.addNotice(new EntityMustBeUniqueNotice("trips.txt", "trip_id",
-                    validatedTripEntity.getEntityId()));
-            throw e;
+        } else {
+            //noinspection unchecked
+            ((ArrayList<Notice>) trip.getData()).forEach(resultRepository::addNotice);
         }
     }
 }
