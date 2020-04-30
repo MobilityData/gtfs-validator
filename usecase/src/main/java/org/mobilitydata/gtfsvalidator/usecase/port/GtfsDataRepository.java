@@ -29,7 +29,7 @@ public interface GtfsDataRepository {
 
     Route getRouteById(final String routeId);
 
-    Calendar addCalendar(final Calendar newCalendar) throws SQLIntegrityConstraintViolationException;
+    Calendar addCalendar(final Calendar newCalendar) throws IllegalArgumentException;
 
     Calendar getCalendarByServiceId(final String serviceId);
 }

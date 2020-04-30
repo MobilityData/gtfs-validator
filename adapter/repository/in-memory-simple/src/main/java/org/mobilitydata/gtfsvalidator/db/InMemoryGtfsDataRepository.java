@@ -16,8 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.Calendar;
 import org.jetbrains.annotations.NotNull;
+import org.mobilitydata.gtfsvalidator.domain.entity.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -31,6 +31,7 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, Calendar> calendarCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -100,21 +101,24 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
-    private final Map<String, Calendar> calendarCollection = new HashMap<>();
+    @Override
+    public Calendar addCalendar(final Calendar newCalendar) throws IllegalArgumentException {
+        if (newCalendar != null) {
+            if (calendarCollection.containsKey(newCalendar.getServiceId())) {
+                return null;
+            } else {
+                final String serviceId = newCalendar.getServiceId();
+                calendarCollection.put(serviceId, newCalendar);
+                return newCalendar;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null route to data repository");
+        }
+    }
 
     @Override
     public Calendar getCalendarByServiceId(final String serviceId) {
         return calendarCollection.get(serviceId);
     }
 
-    @Override
-    public Calendar addCalendar(final Calendar newCalendar) throws SQLIntegrityConstraintViolationException {
-        if (calendarCollection.containsKey(newCalendar.getServiceId())) {
-            throw new SQLIntegrityConstraintViolationException("service_id must be unique in calendar.txt");
-        } else {
-            final String serviceId = newCalendar.getServiceId();
-            calendarCollection.put(serviceId, newCalendar);
-            return newCalendar;
-        }
-    }
 }
