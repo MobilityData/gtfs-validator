@@ -66,11 +66,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Add an Route representing a row from routes.txt to this. Return the entity added to the repository if the
-     * uniqueness constraint of agency based on route_id is respected, if this requirement is not met, returns null.
+     * Add a Route representing a row from routes.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of route based on route_id is respected, if this requirement is not met, returns null.
      *
      * @param newRoute the internal representation of a row from routes.txt to be added to the repository.
-     * @return the entity added to the repository if the uniqueness constraint of agency based on route_id is
+     * @return the entity added to the repository if the uniqueness constraint of route based on route_id is
      * respected, if this requirement is not met returns null.
      */
     @Override
@@ -89,7 +89,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the Routes representing a row from routes.txt related to the id provided as parameter
+     * Return the Route representing a row from routes.txt related to the id provided as parameter
      *
      * @param routeId the key from routes.txt related to the Route to be returned
      * @return the Agency representing a row from routes.txt related to the id provided as parameter
