@@ -18,8 +18,13 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mobilitydata.gtfsvalidator.domain.entity.BikesAllowedStatus;
-import org.mobilitydata.gtfsvalidator.domain.entity.WheelchairAccessibleStatus;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.BikesAllowedStatus;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.WheelchairAccessibleStatus;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
+
+import java.util.List;
 
 public class Trip {
 
@@ -125,6 +130,13 @@ public class Trip {
         private String serviceId;
         private String tripId;
 
+        @NotNull
+        private final List<Notice> noticeCollection;
+
+        public TripBuilder(@NotNull final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
+
         @Nullable
         private String tripHeadsign;
 
@@ -145,6 +157,13 @@ public class Trip {
 
         @Nullable
         private BikesAllowedStatus bikesAllowedStatus;
+
+        @Nullable
+        private Integer originalWheelchairAccessibleStatusInteger;
+        @Nullable
+        private Integer originalBikesAllowedStatusInteger;
+        @Nullable
+        private Integer originalDirectionIdInteger;
 
         public TripBuilder routeId(@NotNull final String routeId) {
             this.routeId = routeId;
@@ -173,6 +192,7 @@ public class Trip {
 
         public TripBuilder directionId(@Nullable final Integer directionId) {
             this.directionId = DirectionId.fromInt(directionId);
+            this.originalDirectionIdInteger = directionId;
             return this;
         }
 
@@ -188,32 +208,40 @@ public class Trip {
 
         public TripBuilder wheelchairAccessible(@NotNull final Integer wheelchairAccessibleStatus) {
             this.wheelchairAccessibleStatus = WheelchairAccessibleStatus.fromInt(wheelchairAccessibleStatus);
+            this.originalWheelchairAccessibleStatusInteger = wheelchairAccessibleStatus;
             return this;
         }
 
         public TripBuilder bikesAllowed(@NotNull final Integer bikesAllowedStatus) {
             this.bikesAllowedStatus = BikesAllowedStatus.fromInt(bikesAllowedStatus);
+            this.originalBikesAllowedStatusInteger = bikesAllowedStatus;
             return this;
         }
 
         public Trip build() {
+            noticeCollection.clear();
+
             if (routeId == null) {
-                throw new IllegalArgumentException("field route_id can not be null");
+                noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "route_id", tripId));
             }
             if (serviceId == null) {
-                throw new IllegalArgumentException("field service_id can not be null");
+                noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "service_id",
+                        tripId));
             }
             if (tripId == null) {
-                throw new IllegalArgumentException("field trip_id can not be null");
+                noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "trip_id", tripId));
             }
-            if (directionId == DirectionId.ERROR) {
-                throw new IllegalArgumentException("unexpected value found for field direction_id");
+            if (!DirectionId.isEnumValueValid(originalDirectionIdInteger)) {
+                noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt",
+                        "direction_id", tripId, originalDirectionIdInteger));
             }
-            if (wheelchairAccessibleStatus == null) {
-                throw new IllegalArgumentException("unexpected value found for field wheelchair_accessible");
+            if (!WheelchairAccessibleStatus.isEnumValueValid(originalWheelchairAccessibleStatusInteger)) {
+                noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt",
+                        "wheelchair_accessible", tripId, originalWheelchairAccessibleStatusInteger));
             }
-            if (bikesAllowedStatus == null) {
-                throw new IllegalArgumentException("unexpected value found for field bikes_allowed");
+            if (!BikesAllowedStatus.isEnumValueValid(originalBikesAllowedStatusInteger)) {
+                noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt", "bikes_allowed",
+                        tripId, originalBikesAllowedStatusInteger));
             }
             return new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName, directionId, blockId,
                     shapeId, wheelchairAccessibleStatus, bikesAllowedStatus);
