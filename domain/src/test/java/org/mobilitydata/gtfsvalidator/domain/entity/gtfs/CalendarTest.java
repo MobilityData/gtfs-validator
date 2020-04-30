@@ -18,17 +18,28 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.Calendar;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 class CalendarTest {
 
+    private static final String FILENAME = "calendar.txt";
+    private static final String SERVICE_ID = "service_id";
+
     @Test
-    public void createCalendarWithNullServiceIdShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    public void createCalendarWithNullServiceIdShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
         //noinspection ConstantConditions
         underTest.serviceId(null)
@@ -42,17 +53,31 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> buildResult = underTest.build();
 
-        assertEquals("field service_id can not be null", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals(SERVICE_ID, noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createCalendarWithNullStartDAteShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    public void createCalendarWithNullStartDateShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
         //noinspection ConstantConditions
-        underTest.serviceId("test id")
+        underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -63,17 +88,31 @@ class CalendarTest {
                 .startDate(null)
                 .endDate(LocalDateTime.now());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> buildResult = underTest.build();
 
-        assertEquals("field start_date can not be null", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("start_date", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createCalendarWithNullEndDateShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    public void createCalendarWithNullEndDateShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
         //noinspection ConstantConditions
-        underTest.serviceId("test id")
+        underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -84,16 +123,30 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(null);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> buildResult = underTest.build();
 
-        assertEquals("field end_date can not be null", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("end_date", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createCalendarWithInvalidMondayValueShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    public void createCalendarWithInvalidMondayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
-        underTest.serviceId("test id")
+        underTest.serviceId(SERVICE_ID)
                 .monday(3)
                 .tuesday(0)
                 .wednesday(0)
@@ -104,18 +157,35 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> buildResult = underTest.build();
 
-        assertEquals("invalid value found for field monday", exception.getMessage());
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("monday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+        assertEquals(3, noticeList.get(0).getActualValue());
+        assertEquals(1, noticeList.get(0).getRangeMax());
+        assertEquals(0, noticeList.get(0).getRangeMin());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createCalendarWithInvalidTuesdayValueShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    void createCalendarWithNullMondayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
-        underTest.serviceId("test id")
-                .monday(0)
-                .tuesday(2)
+        underTest.serviceId(SERVICE_ID)
+                .monday(null)
+                .tuesday(0)
                 .wednesday(0)
                 .thursday(0)
                 .friday(0)
@@ -124,16 +194,101 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> buildResult = underTest.build();
 
-        assertEquals("invalid value found for field tuesday", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("monday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createCalendarWithInvalidWednesdayValueShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    public void createCalendarWithInvalidTuesdayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
-        underTest.serviceId("test id")
+        underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(3)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final EntityBuildResult<?> buildResult = underTest.build();
+
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("tuesday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+        assertEquals(3, noticeList.get(0).getActualValue());
+        assertEquals(1, noticeList.get(0).getRangeMax());
+        assertEquals(0, noticeList.get(0).getRangeMin());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
+    }
+
+    @Test
+    void createCalendarWithNullTuesdayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
+
+        underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(null)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final EntityBuildResult<?> buildResult = underTest.build();
+
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("tuesday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
+    }
+
+    @Test
+    public void createCalendarWithInvalidWednesdayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
+
+        underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(3)
@@ -144,96 +299,355 @@ class CalendarTest {
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> buildResult = underTest.build();
 
-        assertEquals("invalid value found for field wednesday", exception.getMessage());
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("wednesday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+        assertEquals(3, noticeList.get(0).getActualValue());
+        assertEquals(1, noticeList.get(0).getRangeMax());
+        assertEquals(0, noticeList.get(0).getRangeMin());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createCalendarWithInvalidThursdayValueShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    public void createCalendarWithNullWednesdayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
-        underTest.serviceId("test id")
+        underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
-                .wednesday(0)
-                .thursday(2)
+                .wednesday(null)
+                .thursday(0)
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> buildResult = underTest.build();
 
-        assertEquals("invalid value found for field thursday", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("wednesday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createCalendarWithInvalidFridayValueShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    public void createCalendarWithInvalidThursdayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
-        underTest.serviceId("test id")
+        underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
-                .thursday(0)
-                .friday(2)
+                .thursday(3)
+                .friday(0)
                 .saturday(0)
                 .sunday(0)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> buildResult = underTest.build();
 
-        assertEquals("invalid value found for field friday", exception.getMessage());
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("thursday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+        assertEquals(3, noticeList.get(0).getActualValue());
+        assertEquals(1, noticeList.get(0).getRangeMax());
+        assertEquals(0, noticeList.get(0).getRangeMin());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createCalendarWithInvalidSaturdayValueShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    public void createCalendarWithNullThursdayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
-        underTest.serviceId("test id")
+        underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(null)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final EntityBuildResult<?> buildResult = underTest.build();
+
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("thursday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
+    }
+
+    @Test
+    public void createCalendarWithInvalidFridayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
+
+        underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(3)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final EntityBuildResult<?> buildResult = underTest.build();
+
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("friday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+        assertEquals(3, noticeList.get(0).getActualValue());
+        assertEquals(1, noticeList.get(0).getRangeMax());
+        assertEquals(0, noticeList.get(0).getRangeMin());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
+    }
+
+    @Test
+    public void createCalendarWithNullFridayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
+
+        underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(null)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final EntityBuildResult<?> buildResult = underTest.build();
+
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("friday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+
+        assertTrue(buildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
+    }
+
+    @Test
+    public void createCalendarWithInvalidSaturdayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
+
+        underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
                 .thursday(0)
                 .friday(0)
-                .saturday(2)
+                .saturday(3)
                 .sunday(0)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> buildResult = underTest.build();
 
-        assertEquals("invalid value found for field saturday", exception.getMessage());
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("saturday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+        assertEquals(3, noticeList.get(0).getActualValue());
+        assertEquals(1, noticeList.get(0).getRangeMax());
+        assertEquals(0, noticeList.get(0).getRangeMin());
+
+        assertTrue(buildResult.getData() instanceof List);
+
+        verifyNoMoreInteractions(mockNoticeCollection);
+    }
+
+    @Test
+    public void createCalendarWithNullSaturdayValueShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
+
+        underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(null)
+                .sunday(0)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final EntityBuildResult<?> buildResult = underTest.build();
+
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("saturday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+
+        assertTrue(buildResult.getData() instanceof List);
+
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
     public void createCalendarWithInvalidSundayValueShouldThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
-        underTest.serviceId("test id")
+        underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
                 .thursday(0)
                 .friday(0)
                 .saturday(0)
-                .sunday(2)
+                .sunday(3)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now());
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
-        assertEquals("invalid value found for field sunday", exception.getMessage());
+        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
+                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("sunday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+        assertEquals(3, noticeList.get(0).getActualValue());
+        assertEquals(1, noticeList.get(0).getRangeMax());
+        assertEquals(0, noticeList.get(0).getRangeMin());
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createCalendarWithValidValuesShouldNotThrowException() {
-        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+    public void createCalendarWithNullSundayValueShouldThrowException() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
 
-        underTest.serviceId("test id")
+        underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(null)
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now());
+
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
+
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals(FILENAME, noticeList.get(0).getFilename());
+        assertEquals("sunday", noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getEntityId());
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+
+        verifyNoMoreInteractions(mockNoticeCollection);
+    }
+
+    @Test
+    public void createCalendarWithValidValuesShouldNotGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder(mockNoticeCollection);
+
+        underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -242,7 +656,10 @@ class CalendarTest {
                 .saturday(0)
                 .sunday(0)
                 .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
-                .build();
+                .endDate(LocalDateTime.now());
+
+        assertTrue(underTest.build().getData() instanceof Calendar);
+        verify(mockNoticeCollection, times(1)).clear();
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 }

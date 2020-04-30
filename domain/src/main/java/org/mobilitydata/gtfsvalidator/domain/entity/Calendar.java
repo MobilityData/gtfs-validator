@@ -17,8 +17,13 @@
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
 import org.jetbrains.annotations.NotNull;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Calendar {
 
@@ -120,15 +125,26 @@ public class Calendar {
     public static class CalendarBuilder {
         private String serviceId;
         private Boolean monday;
+        private Integer originalMondayInteger;
         private Boolean tuesday;
+        private Integer originalTuesdayInteger;
         private Boolean wednesday;
+        private Integer originalWednesdayInteger;
         private Boolean thursday;
+        private Integer originalThursdayInteger;
         private Boolean friday;
+        private Integer originalFridayInteger;
         private Boolean saturday;
+        private Integer originalSaturdayInteger;
         private Boolean sunday;
+        private Integer originalSundayInteger;
         private LocalDateTime startDate;
         private LocalDateTime endDate;
+        private final List<Notice> noticeCollection;
 
+        public CalendarBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
 
         public CalendarBuilder serviceId(@NotNull final String serviceId) {
             this.serviceId = serviceId;
@@ -142,7 +158,10 @@ public class Calendar {
                 this.monday = true;
             } else if (monday.equals(0)) {
                 this.monday = false;
+            } else {
+                this.monday = null;
             }
+            this.originalMondayInteger = monday;
             return this;
         }
 
@@ -153,7 +172,10 @@ public class Calendar {
                 this.tuesday = true;
             } else if (tuesday.equals(0)) {
                 this.tuesday = false;
+            } else {
+                this.tuesday = null;
             }
+            this.originalTuesdayInteger = tuesday;
             return this;
         }
 
@@ -164,7 +186,10 @@ public class Calendar {
                 this.wednesday = true;
             } else if (wednesday.equals(0)) {
                 this.wednesday = false;
+            } else {
+                this.wednesday = null;
             }
+            this.originalWednesdayInteger = wednesday;
             return this;
         }
 
@@ -175,7 +200,10 @@ public class Calendar {
                 this.thursday = true;
             } else if (thursday.equals(0)) {
                 this.thursday = false;
+            } else {
+                this.thursday = null;
             }
+            this.originalThursdayInteger = thursday;
             return this;
         }
 
@@ -186,7 +214,10 @@ public class Calendar {
                 this.friday = true;
             } else if (friday.equals(0)) {
                 this.friday = false;
+            } else {
+                this.friday = null;
             }
+            this.originalFridayInteger = friday;
             return this;
         }
 
@@ -197,7 +228,10 @@ public class Calendar {
                 this.saturday = true;
             } else if (saturday.equals(0)) {
                 this.saturday = false;
+            } else {
+                this.saturday = null;
             }
+            this.originalSaturdayInteger = saturday;
             return this;
         }
 
@@ -208,7 +242,10 @@ public class Calendar {
                 this.sunday = true;
             } else if (sunday.equals(0)) {
                 this.sunday = false;
+            } else {
+                this.sunday = null;
             }
+            this.originalSundayInteger = sunday;
             return this;
         }
 
@@ -222,39 +259,85 @@ public class Calendar {
             return this;
         }
 
-        public Calendar build() {
-            if (monday == null) {
-                throw new IllegalArgumentException("invalid value found for field monday");
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+            if (monday == null || tuesday == null || wednesday == null || thursday == null || friday == null
+                    || saturday == null || sunday == null || startDate == null || endDate == null || serviceId == null) {
+                if (originalMondayInteger == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "monday", serviceId));
+                } else if (originalMondayInteger < 0 || originalMondayInteger > 1) {
+                    noticeCollection.add(
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "monday", serviceId,
+                                    0, 1, originalMondayInteger));
+                }
+                if (originalTuesdayInteger == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "tuesday", serviceId));
+                } else if (originalTuesdayInteger < 0 || originalTuesdayInteger > 1) {
+                    noticeCollection.add(
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "tuesday",
+                                    serviceId, 0, 1, originalTuesdayInteger));
+                }
+                if (originalWednesdayInteger == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "wednesday", serviceId));
+                } else if (originalWednesdayInteger < 0 || originalWednesdayInteger > 1) {
+                    noticeCollection.add(
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "wednesday",
+                                    serviceId, 0, 1, originalWednesdayInteger));
+                }
+                if (originalThursdayInteger == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "thursday", serviceId));
+                } else if (originalThursdayInteger < 0 || originalThursdayInteger > 1) {
+                    noticeCollection.add(
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "thursday",
+                                    serviceId, 0, 1, originalThursdayInteger));
+                }
+                if (originalFridayInteger == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "friday",
+                                    serviceId));
+                } else if (originalFridayInteger < 0 || originalFridayInteger > 1) {
+                    noticeCollection.add(
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "friday", serviceId,
+                                    0, 1, originalFridayInteger));
+                }
+                if (originalSaturdayInteger == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "saturday", serviceId));
+                } else if (originalSaturdayInteger < 0 || originalSaturdayInteger > 1) {
+                    noticeCollection.add(
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "saturday",
+                                    serviceId, 0, 1, originalSaturdayInteger));
+                }
+                if (originalSundayInteger == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "sunday", serviceId));
+                } else if (originalSundayInteger < 0 || originalSundayInteger > 1) {
+                    noticeCollection.add(
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "sunday",
+                                    serviceId, 0, 1, originalSundayInteger));
+                }
+                if (serviceId == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "service_id", serviceId));
+                }
+                if (startDate == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "start_date", serviceId));
+                }
+                if (endDate == null) {
+                    noticeCollection.add(
+                            new MissingRequiredValueNotice("calendar.txt", "end_date", serviceId));
+                }
+                return new EntityBuildResult<>(noticeCollection, EntityBuildResult.Status.FAILURE);
+            } else {
+                return new EntityBuildResult<>(new Calendar(serviceId, monday, tuesday, wednesday, thursday, friday,
+                        saturday, sunday, startDate, endDate),
+                        EntityBuildResult.Status.SUCCESS);
             }
-            if (tuesday == null) {
-                throw new IllegalArgumentException("invalid value found for field tuesday");
-            }
-            if (wednesday == null) {
-                throw new IllegalArgumentException("invalid value found for field wednesday");
-            }
-            if (thursday == null) {
-                throw new IllegalArgumentException("invalid value found for field thursday");
-            }
-            if (friday == null) {
-                throw new IllegalArgumentException("invalid value found for field friday");
-            }
-            if (saturday == null) {
-                throw new IllegalArgumentException("invalid value found for field saturday");
-            }
-            if (sunday == null) {
-                throw new IllegalArgumentException("invalid value found for field sunday");
-            }
-            if (serviceId == null) {
-                throw new IllegalArgumentException("field service_id can not be null");
-            }
-            if (startDate == null) {
-                throw new IllegalArgumentException("field start_date can not be null");
-            }
-            if (endDate == null) {
-                throw new IllegalArgumentException("field end_date can not be null");
-            }
-            return new Calendar(serviceId, monday, tuesday, wednesday, thursday, friday, saturday,
-                    sunday, startDate, endDate);
         }
     }
 }
