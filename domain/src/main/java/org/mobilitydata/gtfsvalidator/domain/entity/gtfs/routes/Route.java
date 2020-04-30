@@ -225,7 +225,7 @@ public class Route {
         }
 
         /**
-         * Sets field routeType value and returns this. Updates field fromValue.
+         * Sets fields routeType, originalRouteTypeInteger and returns this
          *
          * @param routeType Indicates the type of transportation used on a route
          * @return builder for future object creation
