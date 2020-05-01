@@ -36,6 +36,7 @@ public abstract class ErrorNotice extends Notice {
     protected static final String E_016 = "E016";
     protected static final String E_017 = "E017";
     protected static final String E_018 = "E018";
+    protected static final String E_018 = "E018";
     protected static final String E_019 = "E019";
     protected static final String E_020 = "E020";
 
