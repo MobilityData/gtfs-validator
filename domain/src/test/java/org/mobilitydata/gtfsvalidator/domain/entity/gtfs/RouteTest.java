@@ -39,7 +39,7 @@ class RouteTest {
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void createRouteWithNullRouteIdShouldMissingRequiredValueNotice() {
+    public void createRouteWithNullRouteIdShouldGenerateMissingRequiredValueNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
 
@@ -54,7 +54,7 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -67,6 +67,7 @@ class RouteTest {
         assertEquals("routes.txt", noticeList.get(0).getFilename());
         assertEquals("route_id", noticeList.get(0).getFieldName());
         assertEquals("no id", noticeList.get(0).getEntityId());
+        assertTrue(entityBuildResult.getData() instanceof List);
 
         verifyNoMoreInteractions(mockNoticeCollection);
     }
@@ -87,7 +88,7 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
         final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
                 ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
@@ -101,12 +102,13 @@ class RouteTest {
         assertEquals("route_type", noticeList.get(0).getFieldName());
         assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
         assertEquals("15", noticeList.get(0).getEnumValue());
+        assertTrue(entityBuildResult.getData() instanceof List);
 
         verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    public void createRouteWithValidValuesForFieldShouldGenerateNotice() {
+    public void createRouteWithValidValuesForFieldShouldNotGenerateNotice() {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
 
@@ -121,10 +123,10 @@ class RouteTest {
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE);
 
-        final var route = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
         verify(mockNoticeCollection, times(1)).clear();
 
-        assertTrue(route.getData() instanceof Route);
+        assertTrue(entityBuildResult.getData() instanceof Route);
         verifyNoMoreInteractions(mockNoticeCollection);
     }
 }

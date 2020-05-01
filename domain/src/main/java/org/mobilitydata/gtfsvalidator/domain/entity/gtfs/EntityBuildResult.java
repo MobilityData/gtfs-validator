@@ -16,7 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+
+import java.util.List;
 
 /**
  * Generic class to handle values generated at building stage of entities.
@@ -29,12 +32,33 @@ public class EntityBuildResult<T> {
     private final Status status;
 
     /**
-     * Takes a value of "some type" and sets it to the field data. Sets field state according to the success or failure
+     * Takes a value of type list and sets it to the field data. Sets field status to Failure.
      * of gtfs entity building
      */
-    public EntityBuildResult(T data, Status status) {
-        this.data = data;
-        this.status = status;
+    public EntityBuildResult(final List<Notice> data) {
+        //noinspection unchecked
+        this.data = (T) data;
+        this.status = Status.FAILURE;
+    }
+
+    /**
+     * Takes a value of type Agency and sets it to the field data. Sets field status to Success.
+     * of gtfs entity building
+     */
+    public EntityBuildResult(final Agency agency) {
+        //noinspection unchecked
+        this.data = (T) agency;
+        this.status = Status.SUCCESS;
+    }
+
+    /**
+     * Takes a value of type Route and sets it to the field data. Sets field status to Success.
+     * of gtfs entity building
+     */
+    public EntityBuildResult(final Route route) {
+        //noinspection unchecked
+        this.data = (T) route;
+        this.status = Status.SUCCESS;
     }
 
     /**
@@ -58,7 +82,7 @@ public class EntityBuildResult<T> {
     /**
      * Enum item to clearly define the building status of a gtfs entity.
      */
-    public enum Status {
+    private enum Status {
         FAILURE,
         SUCCESS
     }

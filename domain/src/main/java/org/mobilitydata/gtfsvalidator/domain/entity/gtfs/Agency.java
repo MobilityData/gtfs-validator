@@ -28,28 +28,20 @@ import java.util.List;
  * {@link AgencyBuilder} to create this.
  */
 public class Agency {
-
     @Nullable
     private final String agencyId;
-
     @NotNull
     private final String agencyName;
-
     @NotNull
     private final String agencyUrl;
-
     @NotNull
     private final String agencyTimezone;
-
     @Nullable
     private final String agencyLang;
-
     @Nullable
     private final String agencyPhone;
-
     @Nullable
     private final String agencyFareUrl;
-
     @Nullable
     private final String agencyEmail;
 
@@ -130,7 +122,6 @@ public class Agency {
      * {@link Agency}.
      */
     public static class AgencyBuilder {
-
         private String agencyId;
         private String agencyName;
         private String agencyUrl;
@@ -258,13 +249,10 @@ public class Agency {
                     noticeCollection.add((new MissingRequiredValueNotice("agency.txt",
                             "agency_timezone", agencyId)));
                 }
-                //noinspection unchecked,rawtypes
-                return new EntityBuildResult(noticeCollection, EntityBuildResult.Status.FAILURE);
+                return new EntityBuildResult<>(noticeCollection);
             } else {
-                //noinspection unchecked,rawtypes
-                return new EntityBuildResult(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
-                        agencyPhone, agencyFareUrl, agencyEmail),
-                        EntityBuildResult.Status.SUCCESS);
+                return new EntityBuildResult<>(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
+                        agencyPhone, agencyFareUrl, agencyEmail));
             }
         }
     }

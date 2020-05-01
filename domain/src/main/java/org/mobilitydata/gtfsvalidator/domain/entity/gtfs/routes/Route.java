@@ -30,34 +30,24 @@ import java.util.List;
  * {@link RouteBuilder} to create this.
  */
 public class Route {
-
     @NotNull
     private final String routeId;
-
     @Nullable
     private final String agencyId;
-
     @Nullable
     private final String routeShortName;
-
     @Nullable
     private final String routeLongName;
-
     @Nullable
     private final String routeDesc;
-
     @NotNull
     private final RouteType routeType;
-
     @Nullable
     private final String routeUrl;
-
     @Nullable
     private final String routeColor;
-
     @Nullable
     private final String routeTextColor;
-
     @Nullable
     private final Integer routeSortOrder;
 
@@ -151,7 +141,6 @@ public class Route {
      */
     @SuppressWarnings("rawtypes")
     public static class RouteBuilder {
-
         private String routeId;
         private String agencyId;
         private String routeShortName;
@@ -304,13 +293,10 @@ public class Route {
                     noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
                             routeId, originalRouteTypeInteger));
                 }
-                //noinspection unchecked
-                return new EntityBuildResult(noticeCollection, EntityBuildResult.Status.FAILURE);
+                return new EntityBuildResult(noticeCollection);
             } else {
-                //noinspection unchecked
                 return new EntityBuildResult(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
-                        routeType, routeUrl, routeColor, routeTextColor, routeSortOrder),
-                        EntityBuildResult.Status.SUCCESS);
+                        routeType, routeUrl, routeColor, routeTextColor, routeSortOrder));
             }
         }
     }
