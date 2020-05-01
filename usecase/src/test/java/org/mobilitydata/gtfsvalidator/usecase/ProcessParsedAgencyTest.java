@@ -60,6 +60,7 @@ class ProcessParsedAgencyTest {
         final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
         @SuppressWarnings("rawtypes") final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
 
+        //noinspection unchecked
         when(mockBuilder.build()).thenReturn(mockEntityBuildResult);
         when(mockEntityBuildResult.isSuccess()).thenReturn(true);
         when(mockEntityBuildResult.getData()).thenReturn(mockAgency);
@@ -110,13 +111,14 @@ class ProcessParsedAgencyTest {
         when(mockNotice.getFieldName()).thenReturn(AGENCY_NAME);
         when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericType = mock(EntityBuildResult.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
 
-        when(mockGenericType.getData()).thenReturn(noticeCollection);
-        when(mockGenericType.isSuccess()).thenReturn(false);
+        when(mockGenericObject.getData()).thenReturn(noticeCollection);
+        when(mockGenericObject.isSuccess()).thenReturn(false);
         noticeCollection.add(mockNotice);
 
-        when(mockBuilder.build()).thenReturn(mockGenericType);
+        //noinspection unchecked
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
 
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -150,6 +152,10 @@ class ProcessParsedAgencyTest {
         verify(mockBuilder, times(1)).agencyEmail(AGENCY_EMAIL);
         verify(mockBuilder, times(1)).build();
 
+        verify(mockGenericObject, times(1)).isSuccess();
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockGenericObject, times(1)).getData();
+
         verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
@@ -158,7 +164,7 @@ class ProcessParsedAgencyTest {
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo, mockBuilder, mockResultRepo);
+        verifyNoMoreInteractions(mockParsedAgency, mockGtfsDataRepo, mockBuilder, mockResultRepo, mockGenericObject);
     }
 
     @Test
@@ -167,13 +173,14 @@ class ProcessParsedAgencyTest {
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedAgency = mock(ParsedEntity.class);
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericType = mock(EntityBuildResult.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
 
         final Agency mockAgency = mock(Agency.class);
-        when(mockGenericType.getData()).thenReturn(mockAgency);
-        when(mockGenericType.isSuccess()).thenReturn(true);
+        when(mockGenericObject.getData()).thenReturn(mockAgency);
+        when(mockGenericObject.isSuccess()).thenReturn(true);
 
-        when(mockBuilder.build()).thenReturn(mockGenericType);
+        //noinspection unchecked
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
         when(mockGtfsDataRepo.addAgency(mockAgency)).thenReturn(null);
 
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
@@ -212,6 +219,10 @@ class ProcessParsedAgencyTest {
         verify(mockBuilder, times(1)).agencyEmail(anyString());
         verify(mockBuilder, times(1)).build();
 
+        verify(mockGenericObject, times(1)).isSuccess();
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockGenericObject, times(1)).getData();
+
         final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
@@ -222,6 +233,7 @@ class ProcessParsedAgencyTest {
         assertEquals(AGENCY_ID, noticeList.get(0).getFieldName());
         assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
-        verifyNoMoreInteractions(mockParsedAgency, mockResultRepo, mockGtfsDataRepo, mockAgency, mockBuilder);
+        verifyNoMoreInteractions(mockParsedAgency, mockResultRepo, mockGtfsDataRepo, mockAgency, mockBuilder,
+                mockGenericObject);
     }
 }
