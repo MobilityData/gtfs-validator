@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
@@ -26,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumV
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class CalendarDate {
+public class CalendarDate extends GtfsEntity {
     @NotNull
     private final String serviceId;
     @NotNull
