@@ -24,6 +24,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequired
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Class for all entities defined in feed_info.txt. Can not be directly instantiated: user must use the
+ * {@link FeedInfoBuilder} to create this.
+ */
 public class FeedInfo {
     @NotNull
     private final String feedPublisherName;
@@ -42,6 +46,20 @@ public class FeedInfo {
     @Nullable
     private final String feedContactUrl;
 
+    /**
+     * Class for all entities defined in feed_info.txt
+     *
+     * @param feedPublisherName full name of the organization that publishes the dataset
+     * @param feedPublisherUrl  URL of the dataset publishing organization's website
+     * @param feedLang          default language used for the text in this dataset
+     * @param feedStartDate     date from which the services defined in dataset are valid
+     * @param feedEndDate       date until which the services defined in dataset are valid
+     * @param feedVersion       indicates the current version of their GTFS dataset
+     * @param feedContactEmail  email address for communication regarding the GTFS dataset and data publishing
+     *                          practices
+     * @param feedContactUrl    URL for contact information, a web-form, support desk, or other tools for communication
+     *                          regarding the GTFS dataset and data publishing practices
+     */
     private FeedInfo(@NotNull String feedPublisherName,
                      @NotNull String feedPublisherUrl,
                      @NotNull String feedLang,
@@ -100,6 +118,10 @@ public class FeedInfo {
         return feedContactUrl;
     }
 
+    /**
+     * Builder class to create {@code FeedInfo} objects. Allows an unordered definition of the different attributes of
+     * {@link FeedInfo}.
+     */
     public static class FeedInfoBuilder {
         private String feedPublisherName;
         private String feedPublisherUrl;
@@ -120,46 +142,103 @@ public class FeedInfo {
             this.noticeCollection = noticeCollection;
         }
 
-        public FeedInfoBuilder feedPublisherName(@NotNull String feedPublisherName) {
+        /**
+         * Sets field feedPublisherName value and returns this
+         *
+         * @param feedPublisherName full name of the organization that publishes the dataset
+         * @return builder for future object creation
+         */
+        public FeedInfoBuilder feedPublisherName(final String feedPublisherName) {
             this.feedPublisherName = feedPublisherName;
             return this;
         }
 
-        public FeedInfoBuilder feedPublisherUrl(@NotNull String feedPublisherUrl) {
+        /**
+         * Sets field feedPublisherUrl value and returns this
+         *
+         * @param feedPublisherUrl URL of the dataset publishing organization's website
+         * @return builder for future object creation
+         */
+        public FeedInfoBuilder feedPublisherUrl(final String feedPublisherUrl) {
             this.feedPublisherUrl = feedPublisherUrl;
             return this;
         }
 
-        public FeedInfoBuilder feedLang(@NotNull String feedLang) {
+        /**
+         * Sets field feedLang value and returns this
+         *
+         * @param feedLang default language used for the text in this dataset
+         * @return builder for future object creation
+         */
+        public FeedInfoBuilder feedLang(final String feedLang) {
             this.feedLang = feedLang;
             return this;
         }
 
-        public FeedInfoBuilder feedStartDate(@NotNull LocalDateTime feedStartDate) {
+        /**
+         * Sets field feedStartDate value and returns this
+         *
+         * @param feedStartDate date from which the services defined in dataset are valid
+         * @return builder for future object creation
+         */
+        public FeedInfoBuilder feedStartDate(final LocalDateTime feedStartDate) {
             this.feedStartDate = feedStartDate;
             return this;
         }
 
-        public FeedInfoBuilder feedEndDate(@NotNull LocalDateTime feedEndDate) {
+        /**
+         * Sets field feedEndDate value and returns this
+         *
+         * @param feedEndDate date until which the services defined in dataset are valid
+         * @return builder for future object creation
+         */
+        public FeedInfoBuilder feedEndDate(final LocalDateTime feedEndDate) {
             this.feedEndDate = feedEndDate;
             return this;
         }
 
-        public FeedInfoBuilder feedVersion(@NotNull String feedVersion) {
+        /**
+         * Sets field feedVersion value and returns this
+         *
+         * @param feedVersion indicates the current version of their GTFS dataset
+         * @return builder for future object creation
+         */
+        public FeedInfoBuilder feedVersion(final String feedVersion) {
             this.feedVersion = feedVersion;
             return this;
         }
 
-        public FeedInfoBuilder feedContactEmail(@NotNull String feedContactEmail) {
+        /**
+         * Sets field feedContactEmail value and returns this
+         *
+         * @param feedContactEmail email address for communication regarding the GTFS dataset and data publishing
+         *                         practices
+         * @return builder for future object creation
+         */
+        public FeedInfoBuilder feedContactEmail(final String feedContactEmail) {
             this.feedContactEmail = feedContactEmail;
             return this;
         }
 
-        public FeedInfoBuilder feedContactUrl(@NotNull String feedContactUrl) {
+        /**
+         * Sets field feedContactUrl value and returns this
+         *
+         * @param feedContactUrl URL for contact information, a web-form, support desk, or other tools for
+         *                       communication regarding the GTFS dataset and data publishing practices
+         * @return builder for future object creation
+         */
+        public FeedInfoBuilder feedContactUrl(final String feedContactUrl) {
             this.feedContactUrl = feedContactUrl;
             return this;
         }
 
+        /**
+         * Entity representing a row from feed_info.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of {@link Notice}.
+         *
+         * @return entity representing a row from feed_info.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of {@link Notice}.
+         */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
