@@ -28,7 +28,7 @@ import java.util.List;
  * Class for all entities defined in calendar.txt. Can not be directly instantiated: user must use
  * {@link CalendarBuilder} to create this.
  */
-public class Calendar {
+public class Calendar extends GtfsEntity {
     @NotNull
     private final String serviceId;
     @NotNull
