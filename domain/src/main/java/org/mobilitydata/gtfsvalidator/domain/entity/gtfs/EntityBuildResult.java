@@ -62,6 +62,16 @@ public class EntityBuildResult<T> {
     }
 
     /**
+     * Takes a value of type FeedInfo and sets it to the field data. Sets field status to Success.
+     * of gtfs entity building
+     */
+    public EntityBuildResult(final FeedInfo feedInfo) {
+        //noinspection unchecked
+        this.data = (T) feedInfo;
+        this.status = Status.SUCCESS;
+    }
+
+    /**
      * Returns a value of "some type"
      *
      * @return a value of "some type"

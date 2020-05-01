@@ -176,11 +176,10 @@ public class FeedInfo {
                     noticeCollection.add(new MissingRequiredValueNotice("feed_info.txt",
                             "feed_lang", null));
                 }
-                return new EntityBuildResult<>(noticeCollection, EntityBuildResult.Status.FAILURE);
+                return new EntityBuildResult<>(noticeCollection);
             } else {
                 return new EntityBuildResult<>(new FeedInfo(feedPublisherName, feedPublisherUrl, feedLang,
-                        feedStartDate, feedEndDate, feedVersion, feedContactEmail, feedContactUrl),
-                        EntityBuildResult.Status.SUCCESS);
+                        feedStartDate, feedEndDate, feedVersion, feedContactEmail, feedContactUrl));
             }
         }
     }

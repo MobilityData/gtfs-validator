@@ -56,7 +56,6 @@ public class ProcessParsedFeedInfo {
      * @param validatedFeedInfo entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedFeedInfo) {
-
         final String feedPublisherName = (String) validatedFeedInfo.get("feed_publisher_name");
         final String feedPublisherUrl = (String) validatedFeedInfo.get("feed_publisher_url");
         final String feedLang = (String) validatedFeedInfo.get("feed_lang");
