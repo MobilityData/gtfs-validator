@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 
 import java.util.List;
@@ -58,6 +59,16 @@ public class EntityBuildResult<T> {
     public EntityBuildResult(final Route route) {
         //noinspection unchecked
         this.data = (T) route;
+        this.status = Status.SUCCESS;
+    }
+
+    /**
+     * Takes a value of type Trip and sets it to the field data. Sets field status to Success.
+     * of gtfs entity building
+     */
+    public EntityBuildResult(final Trip trip) {
+        //noinspection unchecked
+        this.data = (T) trip;
         this.status = Status.SUCCESS;
     }
 

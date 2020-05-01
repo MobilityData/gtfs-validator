@@ -32,29 +32,22 @@ import java.util.ArrayList;
  * {@link TripBuilder} to create this.
  */
 public class Trip {
-
     @NotNull
     private final String routeId;
     @NotNull
     private final String serviceId;
     @NotNull
     private final String tripId;
-
     @Nullable
     private final String tripHeadsign;
-
     @Nullable
     private final String tripShortName;
-
     @Nullable
     private final DirectionId directionId;
-
     @Nullable
     private final String blockId;
-
     @Nullable
     private final String shapeId;
-
     private final WheelchairAccessibleStatus wheelchairAccessibleStatus;
     private final BikesAllowedStatus bikesAllowedStatus;
 
@@ -329,11 +322,10 @@ public class Trip {
                     noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt", "bikes_allowed",
                             tripId, originalBikesAllowedStatusInteger));
                 }
-                return new EntityBuildResult<>(noticeCollection, EntityBuildResult.Status.FAILURE);
+                return new EntityBuildResult<>(noticeCollection);
             } else {
                 return new EntityBuildResult<>(new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName,
-                        directionId, blockId, shapeId, wheelchairAccessibleStatus, bikesAllowedStatus),
-                        EntityBuildResult.Status.SUCCESS);
+                        directionId, blockId, shapeId, wheelchairAccessibleStatus, bikesAllowedStatus));
             }
         }
     }
