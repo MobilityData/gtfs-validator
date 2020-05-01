@@ -18,32 +18,27 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class FeedInfo {
-
     @NotNull
     private final String feedPublisherName;
-
     @NotNull
     private final String feedPublisherUrl;
-
     @NotNull
     private final String feedLang;
-
     @Nullable
     private final LocalDateTime feedStartDate;
-
     @Nullable
     private final LocalDateTime feedEndDate;
-
     @Nullable
     private final String feedVersion;
-
     @Nullable
     private final String feedContactEmail;
-
     @Nullable
     private final String feedContactUrl;
 
@@ -64,7 +59,6 @@ public class FeedInfo {
         this.feedContactEmail = feedContactEmail;
         this.feedContactUrl = feedContactUrl;
     }
-
 
     @NotNull
     public String getFeedPublisherName() {
@@ -107,36 +101,23 @@ public class FeedInfo {
     }
 
     public static class FeedInfoBuilder {
-        @NotNull
         private String feedPublisherName;
-
-        @NotNull
         private String feedPublisherUrl;
-
-        @NotNull
         private String feedLang;
-
         @Nullable
         private LocalDateTime feedStartDate;
-
         @Nullable
         private LocalDateTime feedEndDate;
-
         @Nullable
         private String feedVersion;
-
         @Nullable
         private String feedContactEmail;
-
         @Nullable
         private String feedContactUrl;
+        private final List<Notice> noticeCollection;
 
-        public FeedInfoBuilder(@NotNull String feedPublisherName,
-                               @NotNull String feedPublisherUrl,
-                               @NotNull String feedLang) {
-            this.feedPublisherName = feedPublisherName;
-            this.feedPublisherUrl = feedPublisherUrl;
-            this.feedLang = feedLang;
+        public FeedInfoBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
         }
 
         public FeedInfoBuilder feedPublisherName(@NotNull String feedPublisherName) {
@@ -154,7 +135,7 @@ public class FeedInfo {
             return this;
         }
 
-        public FeedInfoBuilder startDate(@NotNull LocalDateTime feedStartDate) {
+        public FeedInfoBuilder feedStartDate(@NotNull LocalDateTime feedStartDate) {
             this.feedStartDate = feedStartDate;
             return this;
         }
@@ -179,9 +160,28 @@ public class FeedInfo {
             return this;
         }
 
-        public FeedInfo build() {
-            return new FeedInfo(feedPublisherName, feedPublisherUrl, feedLang, feedStartDate, feedEndDate, feedVersion,
-                    feedContactEmail, feedContactUrl);
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+
+            if (feedPublisherName == null || feedPublisherUrl == null || feedLang == null) {
+                if (feedPublisherName == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("feed_info.txt",
+                            "feed_publisher_name", null));
+                }
+                if (feedPublisherUrl == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("feed_info.txt",
+                            "feed_contact_url", null));
+                }
+                if (feedLang == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("feed_info.txt",
+                            "feed_lang", null));
+                }
+                return new EntityBuildResult<>(noticeCollection, EntityBuildResult.Status.FAILURE);
+            } else {
+                return new EntityBuildResult<>(new FeedInfo(feedPublisherName, feedPublisherUrl, feedLang,
+                        feedStartDate, feedEndDate, feedVersion, feedContactEmail, feedContactUrl),
+                        EntityBuildResult.Status.SUCCESS);
+            }
         }
     }
 }
