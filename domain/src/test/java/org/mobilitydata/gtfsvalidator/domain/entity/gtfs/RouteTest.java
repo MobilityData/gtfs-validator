@@ -102,7 +102,7 @@ class RouteTest {
         assertEquals("route_type", noticeList.get(0).getFieldName());
         assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
         assertEquals("15", noticeList.get(0).getEnumValue());
-        assertTrue(entityBuildResult instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
 
         verifyNoMoreInteractions(mockNoticeCollection);
     }
