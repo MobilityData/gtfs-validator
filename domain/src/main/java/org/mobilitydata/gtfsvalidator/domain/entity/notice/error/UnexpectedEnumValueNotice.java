@@ -27,7 +27,7 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
 
     public UnexpectedEnumValueNotice(final String filename, final String fieldName, final String entityId,
                                      final Integer enumValue) {
-        super(filename, E_018,
+        super(filename, E_021,
                 "Unexpected enum value",
                 "Invalid value :" + enumValue + " - for field:" + fieldName + " in file:" + filename +
                         " for entity with id:" + entityId, entityId);
