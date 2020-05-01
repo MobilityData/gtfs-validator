@@ -48,7 +48,7 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        final var data = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -62,7 +62,7 @@ class AgencyTest {
         assertEquals("agency_name", noticeList.get(0).getFieldName());
         assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
 
-        assertTrue(data.getData() instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
         verifyNoMoreInteractions(mockNoticeCollection);
     }
 
@@ -83,7 +83,7 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        final var data = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -97,7 +97,7 @@ class AgencyTest {
         assertEquals("agency_url", noticeList.get(0).getFieldName());
         assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
 
-        assertTrue(data.getData() instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
         verifyNoMoreInteractions(mockNoticeCollection);
     }
 
@@ -118,7 +118,7 @@ class AgencyTest {
                 .agencyFareUrl(STRING_TEST_VALUE)
                 .agencyEmail(STRING_TEST_VALUE);
 
-        final var data = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -132,7 +132,7 @@ class AgencyTest {
         assertEquals("agency_timezone", noticeList.get(0).getFieldName());
         assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
 
-        assertTrue(data.getData() instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
         verifyNoMoreInteractions(mockNoticeCollection);
     }
 
@@ -150,11 +150,11 @@ class AgencyTest {
         underTest.agencyFareUrl(STRING_TEST_VALUE);
         underTest.agencyEmail(STRING_TEST_VALUE);
 
-        final var data = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
         verify(mockNoticeCollection, times(1)).clear();
 
-        assertTrue(data.getData() instanceof Agency);
+        assertTrue(entityBuildResult.getData() instanceof Agency);
         verifyNoMoreInteractions(mockNoticeCollection);
     }
 }

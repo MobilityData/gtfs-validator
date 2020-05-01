@@ -34,7 +34,6 @@ public class ProcessParsedAgency {
     private final GtfsDataRepository gtfsDataRepository;
     private final Agency.AgencyBuilder builder;
 
-
     public ProcessParsedAgency(final ValidationResultRepository resultRepository,
                                final GtfsDataRepository gtfsDataRepository,
                                final Agency.AgencyBuilder builder) {
@@ -55,7 +54,6 @@ public class ProcessParsedAgency {
      * @param validatedAgencyEntity entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedAgencyEntity) {
-
         final String agencyId = (String) validatedAgencyEntity.get("agency_id");
         final String agencyName = (String) validatedAgencyEntity.get("agency_name");
         final String agencyUrl = (String) validatedAgencyEntity.get("agency_url");
