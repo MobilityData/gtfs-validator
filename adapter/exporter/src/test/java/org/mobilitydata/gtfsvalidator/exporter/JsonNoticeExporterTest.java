@@ -18,11 +18,11 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
@@ -299,18 +299,6 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportCouldNotCleanOrCreatePathNoticeShouldWriteObject() throws IOException {
-        JsonGenerator mockGenerator = mock(JsonGenerator.class);
-
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        CouldNotCleanOrCreatePathNotice toExport = new CouldNotCleanOrCreatePathNotice("../output");
-        underTest.export(toExport);
-
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
-        verifyNoMoreInteractions(mockGenerator);
-    }
-
-    @Test
     void exportInvalidColorNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
@@ -366,11 +354,11 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportUnexpectedValueNoticeShouldWriteObject() throws IOException {
+    void exportUnexpectedEnumValueNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        UnexpectedValueNotice toExport = new UnexpectedValueNotice(FILENAME, "field_name",
+        UnexpectedEnumValueNotice toExport = new UnexpectedEnumValueNotice(FILENAME, "field_name",
                 "entity_id", 2);
         underTest.export(toExport);
 
@@ -379,11 +367,11 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportIncoherentValuesForFieldsNoticeShouldWriteObject() throws IOException {
+    void exportIllegalFieldValueCombinationNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        IncoherentValuesForFieldsNotice toExport = new IncoherentValuesForFieldsNotice(FILENAME, "field_name",
+        IllegalFieldValueCombination toExport = new IllegalFieldValueCombination(FILENAME, "field_name",
                 "conflicting_field_name", "entity_id");
         underTest.export(toExport);
 
@@ -392,24 +380,11 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportUnexpectedDefinedFieldNoticeShouldWriteObject() throws IOException {
+    void exportDuplicatedEntityNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        UnexpectedDefinedFieldNotice toExport = new UnexpectedDefinedFieldNotice(FILENAME, "field_name",
-                "field_value", "entity_id");
-        underTest.export(toExport);
-
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
-        verifyNoMoreInteractions(mockGenerator);
-    }
-
-    @Test
-    void exportEntityMustBeUniqueNoticeShouldWriteObject() throws IOException {
-        JsonGenerator mockGenerator = mock(JsonGenerator.class);
-
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        EntityMustBeUniqueNotice toExport = new EntityMustBeUniqueNotice(FILENAME, "field_name",
+        DuplicatedEntityNotice toExport = new DuplicatedEntityNotice(FILENAME, "field_name",
                 "entity_id");
         underTest.export(toExport);
 

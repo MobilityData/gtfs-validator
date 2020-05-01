@@ -17,16 +17,16 @@
 package org.mobilitydata.gtfsvalidator.exporter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 
 import java.io.IOException;
 
-public class JsonNoticeExporter implements ValidationResultRepository.NoticeExporter {
+public class JsonNoticeExporter implements NoticeExporter {
 
     private final JsonGenerator jsonGenerator;
 
@@ -136,11 +136,6 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
     }
 
     @Override
-    public void export(CouldNotCleanOrCreatePathNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
     public void export(InvalidColorNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
@@ -161,22 +156,17 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
     }
 
     @Override
-    public void export(UnexpectedValueNotice toExport) throws IOException {
+    public void export(UnexpectedEnumValueNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(IncoherentValuesForFieldsNotice toExport) throws IOException {
+    public void export(IllegalFieldValueCombination toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(UnexpectedDefinedFieldNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
-    public void export(EntityMustBeUniqueNotice toExport) throws IOException {
+    public void export(DuplicatedEntityNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }
