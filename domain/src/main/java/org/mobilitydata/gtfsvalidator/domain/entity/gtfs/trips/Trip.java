@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.BikesAllowedStatus;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.WheelchairAccessibleStatus;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
  * Class for all entities defined in trips.txt. Can not be directly instantiated: user must use the
  * {@link TripBuilder} to create this.
  */
-public class Trip {
+public class Trip extends GtfsEntity {
     @NotNull
     private final String routeId;
     @NotNull
