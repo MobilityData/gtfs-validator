@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
@@ -29,7 +30,7 @@ import java.util.List;
  * Class for all entities defined in routes.txt. Can not be directly instantiated: user must use the
  * {@link RouteBuilder} to create this.
  */
-public class Route {
+public class Route extends GtfsEntity {
     @NotNull
     private final String routeId;
     @Nullable
@@ -272,10 +273,10 @@ public class Route {
 
         /**
          * Returns an entity representing a row from route.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns a list of notices.
+         * are met. Otherwise, method returns an entity representing a list of notices.
          *
-         * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns a list of notices.
+         * @return entity representing a row from route.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() throws IllegalArgumentException {
             noticeCollection.clear();

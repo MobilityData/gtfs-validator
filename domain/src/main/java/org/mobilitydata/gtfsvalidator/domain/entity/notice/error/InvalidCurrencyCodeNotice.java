@@ -21,18 +21,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class UnexpectedEnumValueNotice extends ErrorNotice {
-    private final Integer enumValue;
+public class InvalidCurrencyCodeNotice extends ErrorNotice {
     private final String fieldName;
+    private String currencyCode;
 
-    public UnexpectedEnumValueNotice(final String filename, final String fieldName, final String entityId,
-                                     final Integer enumValue) {
-        super(filename, E_021,
-                "Unexpected enum value",
-                "Invalid value :" + enumValue + " - for field:" + fieldName + " in file:" + filename +
-                        " for entity with id:" + entityId, entityId);
+    public InvalidCurrencyCodeNotice(final String filename, final String fieldName, final String entityId,
+                                     String currencyCode) {
+        super(filename, E_018, "Invalid currency code", "Invalid currency code: " + currencyCode +
+                " in field: " + fieldName + " for entity with id: " + entityId, entityId);
         this.fieldName = fieldName;
-        this.enumValue = enumValue;
+        this.currencyCode = currencyCode;
     }
 
     @Override
@@ -40,11 +38,11 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
         exporter.export(this);
     }
 
-    public String getEnumValue() {
-        return String.valueOf(enumValue);
-    }
-
     public String getFieldName() {
         return fieldName;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
     }
 }

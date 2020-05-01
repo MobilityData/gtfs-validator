@@ -27,7 +27,7 @@ import java.util.List;
  * Class for all entities defined in agency.txt. Can not be directly instantiated: user must use the
  * {@link AgencyBuilder} to create this.
  */
-public class Agency {
+public class Agency extends GtfsEntity {
     @Nullable
     private final String agencyId;
     @NotNull
@@ -227,10 +227,10 @@ public class Agency {
 
         /**
          * Entity representing a row from agency.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns list of {@link Notice}.
+         * are met. Otherwise, method returns an entity representing a list of notices.
          *
          * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns list of {@link Notice}.
+         * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
