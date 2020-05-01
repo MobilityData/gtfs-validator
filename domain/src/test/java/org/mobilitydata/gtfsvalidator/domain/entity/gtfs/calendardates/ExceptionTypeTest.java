@@ -18,8 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ExceptionTypeTest {
 
@@ -51,5 +50,20 @@ class ExceptionTypeTest {
     @Test
     void createExceptionTypeWithNullValueShouldReturnNull() {
         assertNull(ExceptionType.fromInt(null));
+    }
+
+    @Test
+    void invalidValue6ShouldReturnFalse() {
+        assertFalse(ExceptionType.isEnumValueValid(6));
+    }
+
+    @Test
+    void validValue1ShouldReturnFalse() {
+        assertTrue(ExceptionType.isEnumValueValid(1));
+    }
+
+    @Test
+    void validValue2ShouldReturnFalse() {
+        assertTrue(ExceptionType.isEnumValueValid(2));
     }
 }

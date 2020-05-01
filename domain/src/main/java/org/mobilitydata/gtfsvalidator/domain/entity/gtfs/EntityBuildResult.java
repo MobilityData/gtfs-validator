@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 
@@ -58,6 +59,16 @@ public class EntityBuildResult<T> {
     public EntityBuildResult(final Route route) {
         //noinspection unchecked
         this.data = (T) route;
+        this.status = Status.SUCCESS;
+    }
+
+    /**
+     * Takes a value of type CalendarDate and sets it to the field data. Sets field status to Success.
+     * of gtfs entity building
+     */
+    public EntityBuildResult(final CalendarDate calendarDate) {
+        //noinspection unchecked
+        this.data = (T) calendarDate;
         this.status = Status.SUCCESS;
     }
 

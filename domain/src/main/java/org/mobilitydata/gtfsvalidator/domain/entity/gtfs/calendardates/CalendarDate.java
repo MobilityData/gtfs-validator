@@ -18,17 +18,19 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CalendarDate {
-
     @NotNull
     private final String serviceId;
-
     @NotNull
     private final LocalDateTime date;
-
     @NotNull
     final ExceptionType exceptionType;
 
@@ -62,6 +64,12 @@ public class CalendarDate {
         private LocalDateTime date;
         @Nullable
         private ExceptionType exceptionType;
+        private Integer originalExceptionTypeInteger;
+        private final List<Notice> noticeCollection;
+
+        public CalendarDateBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
 
         public CalendarDateBuilder serviceId(@NotNull final String serviceId) {
             this.serviceId = serviceId;
@@ -75,21 +83,34 @@ public class CalendarDate {
 
         public CalendarDateBuilder exceptionType(@NotNull final Integer exceptionType) {
             this.exceptionType = ExceptionType.fromInt(exceptionType);
+            this.originalExceptionTypeInteger = exceptionType;
             return this;
         }
 
-        public CalendarDate build() {
-            if (serviceId == null) {
-                throw new IllegalArgumentException("field service_id in calendar_dates.txt can not be null");
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+            if (serviceId == null || date == null || exceptionType == null) {
+                if (serviceId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("calendar_dates.txt",
+                            "service_id", serviceId));
+                }
+                if (date == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("calendar_dates.txt",
+                            "date", serviceId));
+                }
+                if (exceptionType == null) {
+                    if (originalExceptionTypeInteger == null) {
+                        noticeCollection.add(new MissingRequiredValueNotice("calendar_dates.txt",
+                                "exception_type", serviceId));
+                    } else if (!ExceptionType.isEnumValueValid(originalExceptionTypeInteger)) {
+                        noticeCollection.add(new UnexpectedEnumValueNotice("calendar_dates.txt",
+                                "exception_type", serviceId, originalExceptionTypeInteger));
+                    }
+                }
+                return new EntityBuildResult<>(noticeCollection);
+            } else {
+                return new EntityBuildResult<>(new CalendarDate(serviceId, date, exceptionType));
             }
-            if (date == null) {
-                throw new IllegalArgumentException("field date in calendar_dates.txt can not be null");
-            }
-            if (exceptionType == null) {
-                throw new IllegalArgumentException("unexpected value found for field exception_type of " +
-                        "calendar_dates.txt");
-            }
-            return new CalendarDate(serviceId, date, exceptionType);
         }
     }
 }

@@ -17,17 +17,25 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
+import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 class CalendarDateTest {
 
     @Test
-    void createCalendarDateWithValidValueShouldNotThrowException() {
-        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+    void createCalendarDateWithValidValueShouldNotGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder(mockNoticeCollection);
         underTest.serviceId("service_id")
                 .date(LocalDateTime.now())
                 .exceptionType(1);
@@ -36,63 +44,118 @@ class CalendarDateTest {
     // Field serviceId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    void createCalendarDateWithNullServiceIdShouldThrowException() {
-        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+    void createCalendarDateWithNullServiceIdShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder(mockNoticeCollection);
+
         //noinspection ConstantConditions
         underTest.serviceId(null)
                 .date(LocalDateTime.now())
                 .exceptionType(1);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                underTest::build);
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
-        assertEquals("field service_id in calendar_dates.txt can not be null", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("calendar_dates.txt", noticeList.get(0).getFilename());
+        assertEquals("service_id", noticeList.get(0).getFieldName());
+        assertEquals("no id", noticeList.get(0).getEntityId());
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     // Field date is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    void createCalendarDateWithNullDateShouldThrowException() {
-        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+    void createCalendarDateWithNullDateShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder(mockNoticeCollection);
+
         //noinspection ConstantConditions
-        underTest.serviceId("test")
+        underTest.serviceId("service_id")
                 .date(null)
                 .exceptionType(1);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                underTest::build);
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
-        assertEquals("field date in calendar_dates.txt can not be null", exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("calendar_dates.txt", noticeList.get(0).getFilename());
+        assertEquals("date", noticeList.get(0).getFieldName());
+        assertEquals("service_id", noticeList.get(0).getEntityId());
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     // Field exceptionType is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    void createCalendarDateWithNullExceptionTypeShouldThrowException() {
-        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+    void createCalendarDateWithNullExceptionTypeShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder(mockNoticeCollection);
+
         //noinspection ConstantConditions
-        underTest.serviceId("test")
+        underTest.serviceId("service_id")
                 .date(LocalDateTime.now())
                 .exceptionType(null);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                underTest::build);
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
-        assertEquals("unexpected value found for field exception_type of calendar_dates.txt",
-                exception.getMessage());
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("calendar_dates.txt", noticeList.get(0).getFilename());
+        assertEquals("exception_type", noticeList.get(0).getFieldName());
+        assertEquals("service_id", noticeList.get(0).getEntityId());
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
-    void createCalendarDateWithInvalidExceptionTypeShouldThrowException() {
-        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
-        underTest.serviceId("test")
+    void createCalendarDateWithInvalidExceptionTypeShouldGenerateNotice() {
+        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder(mockNoticeCollection);
+
+        underTest.serviceId("service_id")
                 .date(LocalDateTime.now())
                 .exceptionType(5);
 
-        final Exception exception = assertThrows(IllegalArgumentException.class,
-                underTest::build);
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
-        assertEquals("unexpected value found for field exception_type of calendar_dates.txt",
-                exception.getMessage());
+        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
+                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
+
+        verify(mockNoticeCollection, times(1)).clear();
+        verify(mockNoticeCollection, times(1)).add(captor.capture());
+
+        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
+
+        assertEquals("calendar_dates.txt", noticeList.get(0).getFilename());
+        assertEquals("exception_type", noticeList.get(0).getFieldName());
+        assertEquals("service_id", noticeList.get(0).getEntityId());
+        assertEquals("5", noticeList.get(0).getEnumValue());
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        verifyNoMoreInteractions(mockNoticeCollection);
     }
 }

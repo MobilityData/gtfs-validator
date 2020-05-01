@@ -38,4 +38,14 @@ public enum ExceptionType {
                 .findAny()
                 .orElse(null);
     }
+
+    static public boolean isEnumValueValid(final Integer value) {
+        if (value == null) {
+            return false;
+        }
+        return Stream.of(ExceptionType.values())
+                .filter(enumItem -> enumItem.value == value)
+                .findAny()
+                .orElse(null) != null;
+    }
 }
