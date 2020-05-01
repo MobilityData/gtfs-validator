@@ -17,15 +17,15 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProcessParsedCalendarDate {
     private final ValidationResultRepository resultRepository;
@@ -40,42 +40,26 @@ public class ProcessParsedCalendarDate {
         this.builder = builder;
     }
 
-    public void execute(final ParsedEntity validatedParsedRoute) throws IllegalArgumentException,
-            SQLIntegrityConstraintViolationException {
+    public void execute(final ParsedEntity validatedParsedRoute) {
 
         final String serviceId = (String) validatedParsedRoute.get("service_id");
         final LocalDateTime date = (LocalDateTime) validatedParsedRoute.get("date");
         final Integer exceptionType = (Integer) validatedParsedRoute.get("exception_type");
 
-        try {
-            builder.serviceId(serviceId)
-                    .date(date)
-                    .exceptionType(exceptionType);
+        builder.serviceId(serviceId)
+                .date(date)
+                .exceptionType(exceptionType);
 
-            gtfsDataRepository.addCalendarDate(builder.build());
+        @SuppressWarnings("rawtypes") final EntityBuildResult calendarDate = builder.build();
 
-        } catch (IllegalArgumentException e) {
-
-            if (serviceId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("calendar_dates.txt",
+        if (calendarDate.isSuccess()) {
+            if (gtfsDataRepository.addCalendarDate((CalendarDate) calendarDate.getData()) == null) {
+                resultRepository.addNotice(new DuplicatedEntityNotice("calendar_dates.txt",
                         "service_id", validatedParsedRoute.getEntityId()));
             }
-            if (date == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("calendar_dates.txt",
-                        "date", validatedParsedRoute.getEntityId()));
-            }
-            if (exceptionType == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("calendar_dates.txt",
-                        "exception_type", validatedParsedRoute.getEntityId()));
-            } else if (exceptionType < 1 || exceptionType > 2) {
-                resultRepository.addNotice(new UnexpectedValueNotice("calendar_dates.txt",
-                        "exception_type", validatedParsedRoute.getEntityId(), exceptionType));
-            }
-            throw e;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            resultRepository.addNotice(new EntityMustBeUniqueNotice("calendar_dates.txt", "service_id",
-                    validatedParsedRoute.getEntityId()));
-            throw e;
+        } else {
+            //noinspection unchecked
+            ((List<Notice>) calendarDate.getData()).forEach(resultRepository::addNotice);
         }
     }
 }
