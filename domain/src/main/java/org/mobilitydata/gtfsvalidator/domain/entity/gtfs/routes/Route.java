@@ -272,10 +272,10 @@ public class Route {
 
         /**
          * Returns an entity representing a row from route.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns a list of notices.
+         * are met. Otherwise, method returns an entity representing a list of notices.
          *
-         * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns a list of notices.
+         * @return entity representing a row from route.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() throws IllegalArgumentException {
             noticeCollection.clear();
