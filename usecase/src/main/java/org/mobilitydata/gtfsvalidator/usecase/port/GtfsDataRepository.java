@@ -24,13 +24,13 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 
 public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException;
+    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
 
-    Route getRouteById(final String routeId);
+    Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
-    Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
+    Route getRouteById(final String routeId);
 
     CalendarDate getCalendarDateByServiceIdAndDate(final String serviceId, final LocalDateTime date);
 
