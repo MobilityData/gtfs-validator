@@ -28,7 +28,7 @@ import java.util.List;
  * Class for all entities defined in feed_info.txt. Can not be directly instantiated: user must use the
  * {@link FeedInfoBuilder} to create this.
  */
-public class FeedInfo {
+public class FeedInfo extends GtfsEntity {
     @NotNull
     private final String feedPublisherName;
     @NotNull
