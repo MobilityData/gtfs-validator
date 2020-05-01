@@ -49,7 +49,7 @@ public class ProcessParsedRoute {
      * This use case extracts values from a {@code ParsedEntity} and creates a {@code Route} object if the requirements
      * from the official GTFS specification are met. When these requirements are mot met, related notices generated in
      * {@code Route.RouteBuilder} are added to the result repository provided to the constructor.
-     * This use case also adds a {@code EntityMustBeUniqueNotice} to said repository if the uniqueness constraint on
+     * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
      * route entities is not respected.
      *
      * @param validatedParsedRoute entity to be processed and added to the GTFS data repository

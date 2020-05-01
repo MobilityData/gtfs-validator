@@ -62,6 +62,7 @@ class ProcessParsedRouteTest {
         when(mockGenericObject.getData()).thenReturn(mockRoute);
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
+        //noinspection unchecked
         when(mockBuilder.build()).thenReturn(mockGenericObject);
 
         when(mockParsedRoute.get(ROUTE_ID)).thenReturn(STRING_TEST_VALUE);
@@ -105,10 +106,14 @@ class ProcessParsedRouteTest {
         verify(mockBuilder, times(1)).routeTextColor(ArgumentMatchers.anyString());
         verify(mockBuilder, times(1)).routeSortOrder(ArgumentMatchers.anyInt());
 
+        verify(mockGenericObject, times(1)).isSuccess();
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockGenericObject, times(1)).getData();
+
         inOrder.verify(mockBuilder, times(1)).build();
         inOrder.verify(mockGtfsDataRepo, times(1)).addRoute(ArgumentMatchers.eq(mockRoute));
 
-        verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockParsedRoute);
+        verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockParsedRoute, mockGenericObject);
     }
 
     @Test
@@ -122,12 +127,13 @@ class ProcessParsedRouteTest {
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         mockNoticeCollection.add(mockNotice);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericType = mock(EntityBuildResult.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
 
-        when(mockGenericType.isSuccess()).thenReturn(false);
-        when(mockGenericType.getData()).thenReturn(mockNoticeCollection);
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+        when(mockGenericObject.getData()).thenReturn(mockNoticeCollection);
 
-        when(mockBuilder.build()).thenReturn(mockGenericType);
+        //noinspection unchecked
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
 
         final ProcessParsedRoute underTest = new ProcessParsedRoute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -167,8 +173,12 @@ class ProcessParsedRouteTest {
         verify(mockBuilder, times(1)).routeSortOrder(ArgumentMatchers.eq(INT_TEST_VALUE));
         verify(mockBuilder, times(1)).build();
 
+        verify(mockGenericObject, times(1)).isSuccess();
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockGenericObject, times(1)).getData();
+
         verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
-        verifyNoMoreInteractions(mockParsedRoute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
+        verifyNoMoreInteractions(mockParsedRoute, mockGtfsDataRepo, mockBuilder, mockResultRepo, mockGenericObject);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -185,6 +195,7 @@ class ProcessParsedRouteTest {
         when(mockGenericObject.getData()).thenReturn(mockRoute);
 
         when(mockRoute.getRouteId()).thenReturn(STRING_TEST_VALUE);
+        //noinspection unchecked
         when(mockBuilder.build()).thenReturn(mockGenericObject);
         when(mockGtfsDataRepo.addRoute(mockRoute)).thenReturn(null);
 
@@ -233,6 +244,9 @@ class ProcessParsedRouteTest {
 
         verify(mockParsedRoute, times(1)).getEntityId();
 
+        verify(mockGenericObject, times(1)).isSuccess();
+        verify(mockGenericObject, times(1)).getData();
+
         final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
@@ -243,6 +257,7 @@ class ProcessParsedRouteTest {
         assertEquals(ROUTE_ID, noticeList.get(0).getFieldName());
         assertEquals("no id", noticeList.get(0).getEntityId());
 
-        verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedRoute, mockRoute);
+        verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedRoute, mockRoute,
+                mockGenericObject);
     }
 }
