@@ -56,6 +56,8 @@ public interface NoticeExporter {
 
     void export(CannotParseDateNotice toExport) throws IOException;
 
+    void export(InvalidCurrencyCodeNotice invalidCurrencyCodeNotice) throws IOException;
+
     void export(DuplicatedEntityNotice toExport) throws IOException;
 
     void export(IllegalFieldValueCombination toExport) throws IOException;
