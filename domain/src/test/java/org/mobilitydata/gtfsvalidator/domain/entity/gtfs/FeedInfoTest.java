@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class FeedInfoTest {
-
     private static final String STRING_TEST_VALUE = "string test value";
 
     @Test
@@ -54,15 +53,16 @@ class FeedInfoTest {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder(mockNoticeCollection);
 
-        @SuppressWarnings("ConstantConditions") final EntityBuildResult<?> entityBuildResult = underTest.feedPublisherName(STRING_TEST_VALUE)
-                .feedPublisherUrl(null)
-                .feedLang(STRING_TEST_VALUE)
-                .feedStartDate(LocalDateTime.now())
-                .feedEndDate(LocalDateTime.now())
-                .feedVersion(STRING_TEST_VALUE)
-                .feedContactEmail(STRING_TEST_VALUE)
-                .feedContactUrl(STRING_TEST_VALUE)
-                .build();
+        @SuppressWarnings("ConstantConditions") final EntityBuildResult<?> entityBuildResult =
+                underTest.feedPublisherName(STRING_TEST_VALUE)
+                        .feedPublisherUrl(null)
+                        .feedLang(STRING_TEST_VALUE)
+                        .feedStartDate(LocalDateTime.now())
+                        .feedEndDate(LocalDateTime.now())
+                        .feedVersion(STRING_TEST_VALUE)
+                        .feedContactEmail(STRING_TEST_VALUE)
+                        .feedContactUrl(STRING_TEST_VALUE)
+                        .build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -85,15 +85,16 @@ class FeedInfoTest {
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
         final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder(mockNoticeCollection);
 
-        @SuppressWarnings("ConstantConditions") final EntityBuildResult<?> entityBuildResult = underTest.feedPublisherName(STRING_TEST_VALUE)
-                .feedPublisherUrl(STRING_TEST_VALUE)
-                .feedLang(null)
-                .feedStartDate(LocalDateTime.now())
-                .feedEndDate(LocalDateTime.now())
-                .feedVersion(STRING_TEST_VALUE)
-                .feedContactEmail(STRING_TEST_VALUE)
-                .feedContactUrl(STRING_TEST_VALUE)
-                .build();
+        @SuppressWarnings("ConstantConditions") final EntityBuildResult<?> entityBuildResult =
+                underTest.feedPublisherName(STRING_TEST_VALUE)
+                        .feedPublisherUrl(STRING_TEST_VALUE)
+                        .feedLang(null)
+                        .feedStartDate(LocalDateTime.now())
+                        .feedEndDate(LocalDateTime.now())
+                        .feedVersion(STRING_TEST_VALUE)
+                        .feedContactEmail(STRING_TEST_VALUE)
+                        .feedContactUrl(STRING_TEST_VALUE)
+                        .build();
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);

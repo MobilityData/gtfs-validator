@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -108,5 +109,48 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockRoute00, underTest.getRouteById("route id0"));
         assertEquals(mockRoute01, underTest.getRouteById("route id1"));
+    }
+
+    @Test
+    void callToAddFeedInfoShouldAddFeedIntoAndReturnEntity() {
+        final FeedInfo mockFeedInfo = mock(FeedInfo.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFeedInfo.getFeedPublisherName()).thenReturn("feed publisher name");
+
+        assertEquals(mockFeedInfo, underTest.addFeedInfo(mockFeedInfo));
+    }
+
+    @Test
+    void addSameFeedInfoTwiceShouldReturnNull() {
+        final FeedInfo mockFeedInfo = mock(FeedInfo.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFeedInfo.getFeedPublisherName()).thenReturn("feed publisher name");
+
+        underTest.addFeedInfo(mockFeedInfo);
+
+        assertNull(underTest.addFeedInfo(mockFeedInfo));
+    }
+
+    @Test
+    void addNullFeedInfoShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addFeedInfo(null));
+        assertEquals("Cannot add null feedInfo to data repository", exception.getMessage());
+    }
+
+    @Test
+    void getFeedInfoByFeedPublisherNameShouldReturnRelatedEntity() {
+        final FeedInfo mockFeedInfo00 = mock(FeedInfo.class);
+        final FeedInfo mockFeedInfo01 = mock(FeedInfo.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFeedInfo00.getFeedPublisherName()).thenReturn("feed publisher 0");
+        when(mockFeedInfo01.getFeedPublisherName()).thenReturn("feed publisher 1");
+
+        underTest.addFeedInfo(mockFeedInfo00);
+        underTest.addFeedInfo(mockFeedInfo01);
+
+        assertEquals(mockFeedInfo00, underTest.getFeedInfoByFeedPublisherName("feed publisher 0"));
+        assertEquals(mockFeedInfo01, underTest.getFeedInfoByFeedPublisherName("feed publisher 1"));
     }
 }

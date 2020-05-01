@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -30,6 +31,7 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, FeedInfo> feedInfoCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -97,5 +99,24 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Route getRouteById(final String routeId) {
         return routeCollection.get(routeId);
+    }
+
+    @Override
+    public FeedInfo addFeedInfo(FeedInfo newFeedInfo) throws IllegalArgumentException {
+        if (newFeedInfo != null) {
+            if (feedInfoCollection.containsKey(newFeedInfo.getFeedPublisherName())) {
+                return null;
+            } else {
+                feedInfoCollection.put(newFeedInfo.getFeedPublisherName(), newFeedInfo);
+                return newFeedInfo;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null feedInfo to data repository");
+        }
+    }
+
+    @Override
+    public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
+        return feedInfoCollection.get(feedPublisherName);
     }
 }
