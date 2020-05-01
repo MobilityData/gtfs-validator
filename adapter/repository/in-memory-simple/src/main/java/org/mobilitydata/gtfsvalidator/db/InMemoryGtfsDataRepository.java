@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarD
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +32,7 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, Map<LocalDateTime, CalendarDate>> calendarDateCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -102,26 +102,27 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
-    private final Map<String, Map<LocalDateTime, CalendarDate>> calendarDateCollection = new HashMap<>();
+    @Override
+    public CalendarDate addCalendarDate(@NotNull final CalendarDate newCalendarDate) throws IllegalArgumentException {
+        //noinspection ConstantConditions
+        if (newCalendarDate != null) {
+            if ((calendarDateCollection.containsKey(newCalendarDate.getServiceId())) &&
+                    (calendarDateCollection.get(newCalendarDate.getServiceId()).containsKey(newCalendarDate.getDate()))) {
+                return null;
+            } else {
+                final String serviceId = newCalendarDate.getServiceId();
+                final Map<LocalDateTime, CalendarDate> innerMap = new HashMap<>();
+                innerMap.put(newCalendarDate.getDate(), newCalendarDate);
+                calendarDateCollection.put(serviceId, innerMap);
+                return newCalendarDate;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null calendar date to data repository");
+        }
+    }
 
     @Override
     public CalendarDate getCalendarDateByServiceIdAndDate(final String serviceId, final LocalDateTime date) {
         return calendarDateCollection.get(serviceId).get(date);
-    }
-
-    @Override
-    public CalendarDate addCalendarDate(CalendarDate newCalendarDate) throws SQLIntegrityConstraintViolationException {
-        if ((calendarDateCollection.containsKey(newCalendarDate.getServiceId())) &&
-                (calendarDateCollection.get(newCalendarDate.getServiceId()).containsKey(newCalendarDate.getDate()))) {
-            throw new SQLIntegrityConstraintViolationException("calendar_dates based on service_id and date must be " +
-                    "unique in dataset");
-        } else {
-            String serviceId = newCalendarDate.getServiceId();
-            Map<LocalDateTime, CalendarDate> innerMap = new HashMap<>();
-            innerMap.put(newCalendarDate.getDate(), newCalendarDate);
-            calendarDateCollection.put(serviceId, innerMap);
-
-            return newCalendarDate;
-        }
     }
 }

@@ -21,15 +21,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 class InMemoryGtfsDataRepositoryTest {
 
@@ -123,94 +119,49 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getCalendarByServiceIdAndDateShouldReturnRelatedCalendarDate()
-            throws SQLIntegrityConstraintViolationException {
-        final CalendarDate.CalendarDateBuilder mockBuilder = mock(CalendarDate.CalendarDateBuilder.class, RETURNS_SELF);
-        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
-        when(mockBuilder.date(any(LocalDateTime.class))).thenCallRealMethod();
-        when(mockBuilder.exceptionType(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        final LocalDateTime date0 = LocalDateTime.now();
-
-        mockBuilder.serviceId("service_id0")
-                .date(date0)
-                .exceptionType(1);
-
+    void callToAddCalendarDateShouldAddEntityToGtfsDataRepoAndReturnSameEntity() {
+        final CalendarDate calendarDate = mock(CalendarDate.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        final CalendarDate calendarDate00 = mockBuilder.build();
-        underTest.addCalendarDate(calendarDate00);
+        assertEquals(calendarDate, underTest.addCalendarDate(calendarDate));
+    }
 
+    @Test
+    void addSameCalendarDateShouldReturnNull() {
+        final CalendarDate calendarDate = mock(CalendarDate.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addCalendarDate(calendarDate);
+        assertNull(underTest.addCalendarDate(calendarDate));
+    }
+
+
+    @Test
+    void addNullCalendarDateShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        //noinspection ConstantConditions
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addRoute(null));
+
+        assertEquals("Cannot add null calendar date to data repository", exception.getMessage());
+    }
+
+    @Test
+    void getCalendarByServiceIdAndDateShouldReturnRelatedCalendarDate() {
+        final CalendarDate calendarDate00 = mock(CalendarDate.class);
+        final CalendarDate calendarDate01 = mock(CalendarDate.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final LocalDateTime date0 = LocalDateTime.now();
         final LocalDateTime date1 = LocalDateTime.now();
-        mockBuilder.serviceId("service_id1")
-                .date(date1)
-                .exceptionType(2);
+        when(calendarDate00.getServiceId()).thenReturn("service id 00");
+        when(calendarDate00.getDate()).thenReturn(date0);
+        when(calendarDate01.getServiceId()).thenReturn("service id 01");
+        when(calendarDate01.getDate()).thenReturn(date1);
 
-        final CalendarDate calendarDate01 = mockBuilder.build();
+        underTest.addCalendarDate(calendarDate00);
         underTest.addCalendarDate(calendarDate01);
 
-        assertEquals(calendarDate00, underTest.getCalendarDateByServiceIdAndDate("service_id0", date0));
-        assertEquals(calendarDate01, underTest.getCalendarDateByServiceIdAndDate("service_id1", date1));
-    }
-
-    @Test
-    void callToAddCalendarDateShouldAddEntityToGtfsDataRepoAndReturnSameEntity()
-            throws SQLIntegrityConstraintViolationException {
-        final CalendarDate.CalendarDateBuilder mockBuilder = mock(CalendarDate.CalendarDateBuilder.class, RETURNS_SELF);
-        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
-        when(mockBuilder.date(any(LocalDateTime.class))).thenCallRealMethod();
-        when(mockBuilder.exceptionType(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        final LocalDateTime date0 = LocalDateTime.now();
-
-        mockBuilder.serviceId("service_id0")
-                .date(date0)
-                .exceptionType(1);
-
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        final CalendarDate calendarDate00 = mockBuilder.build();
         assertEquals(calendarDate00, underTest.addCalendarDate(calendarDate00));
-        assertEquals(calendarDate00, underTest.getCalendarDateByServiceIdAndDate("service_id0", date0));
-
-        final LocalDateTime date1 = LocalDateTime.now();
-        mockBuilder.serviceId("service_id1")
-                .date(date1)
-                .exceptionType(2);
-
-        final CalendarDate calendarDate01 = mockBuilder.build();
-
         assertEquals(calendarDate01, underTest.addCalendarDate(calendarDate01));
-        assertEquals(calendarDate01, underTest.getCalendarDateByServiceIdAndDate("service_id1", date1));
-
-    }
-
-    @Test
-    void tryToAddTwiceSameCalendarDateBasedOnServiceIdAndDateShouldThrowException()
-            throws SQLIntegrityConstraintViolationException {
-        final CalendarDate.CalendarDateBuilder mockBuilder = mock(CalendarDate.CalendarDateBuilder.class, RETURNS_SELF);
-        when(mockBuilder.serviceId(anyString())).thenCallRealMethod();
-        when(mockBuilder.date(any(LocalDateTime.class))).thenCallRealMethod();
-        when(mockBuilder.exceptionType(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        final LocalDateTime date = LocalDateTime.now();
-
-        mockBuilder.serviceId("service_id0")
-                .date(date)
-                .exceptionType(1);
-
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        final CalendarDate calendarDate = mockBuilder.build();
-        underTest.addCalendarDate(calendarDate);
-
-        final Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
-                () -> underTest.addCalendarDate(calendarDate));
-
-        assertEquals("calendar_dates based on service_id and date must be unique in dataset",
-                exception.getMessage());
     }
 }
