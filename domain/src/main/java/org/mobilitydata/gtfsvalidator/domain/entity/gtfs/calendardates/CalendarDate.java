@@ -27,6 +27,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumV
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Class for all entities defined in calendar_dates.txt. Can not be directly instantiated: user must use the
+ * {@link CalendarDate.CalendarDateBuilder} to create this.
+ */
 public class CalendarDate extends GtfsEntity {
     @NotNull
     private final String serviceId;
@@ -35,6 +39,11 @@ public class CalendarDate extends GtfsEntity {
     @NotNull
     final ExceptionType exceptionType;
 
+    /**
+     * @param serviceId     identifies a set of dates when a service exception occurs for one or more routes
+     * @param date          date when service exception occurs
+     * @param exceptionType indicates whether service is available on the date specified in the date field
+     */
     private CalendarDate(@NotNull String serviceId,
                          @NotNull LocalDateTime date,
                          @NotNull ExceptionType exceptionType) {
@@ -58,6 +67,10 @@ public class CalendarDate extends GtfsEntity {
         return exceptionType;
     }
 
+    /**
+     * Builder class to create {@link CalendarDate} objects. Allows an unordered definition of the different attributes
+     * of {@link CalendarDate}.
+     */
     public static class CalendarDateBuilder {
         @Nullable
         private String serviceId;
@@ -72,22 +85,47 @@ public class CalendarDate extends GtfsEntity {
             this.noticeCollection = noticeCollection;
         }
 
+        /**
+         * Sets field serviceId value and returns this
+         *
+         * @param serviceId identifies a set of dates when a service exception occurs for one or more routes
+         * @return builder for future object creation
+         */
         public CalendarDateBuilder serviceId(@NotNull final String serviceId) {
             this.serviceId = serviceId;
             return this;
         }
 
+        /**
+         * Sets field date value and returns this
+         *
+         * @param date date when service exception occurs
+         * @return builder for future object creation
+         */
         public CalendarDateBuilder date(@NotNull final LocalDateTime date) {
             this.date = date;
             return this;
         }
 
+        /**
+         * Sets field exceptionType value and returns this
+         *
+         * @param exceptionType indicates whether service is available on the date specified in the date field
+         * @return builder for future object creation
+         */
         public CalendarDateBuilder exceptionType(@NotNull final Integer exceptionType) {
             this.exceptionType = ExceptionType.fromInt(exceptionType);
             this.originalExceptionTypeInteger = exceptionType;
             return this;
         }
 
+        /**
+         * Returns an entity representing a row from calendar_dates.txt if the requirements from the official GTFS
+         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         *
+         * @return entity representing a row from calendar_dates.txt if the requirements from the official GTFS
+         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
             if (serviceId == null || date == null || exceptionType == null) {

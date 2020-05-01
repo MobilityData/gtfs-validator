@@ -52,7 +52,6 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addNullAgencyShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        //noinspection ConstantConditions
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addAgency(null));
         assertEquals("Cannot add null agency to data repository", exception.getMessage());
@@ -96,7 +95,6 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addNullRouteShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        //noinspection ConstantConditions
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addRoute(null));
 
@@ -139,9 +137,8 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addNullCalendarDateShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        //noinspection ConstantConditions
         final Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> underTest.addRoute(null));
+                () -> underTest.addCalendarDate(null));
 
         assertEquals("Cannot add null calendar date to data repository", exception.getMessage());
     }
@@ -151,15 +148,13 @@ class InMemoryGtfsDataRepositoryTest {
         final CalendarDate calendarDate00 = mock(CalendarDate.class);
         final CalendarDate calendarDate01 = mock(CalendarDate.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        final LocalDateTime date0 = LocalDateTime.now();
-        final LocalDateTime date1 = LocalDateTime.now();
-        when(calendarDate00.getServiceId()).thenReturn("service id 00");
-        when(calendarDate00.getDate()).thenReturn(date0);
-        when(calendarDate01.getServiceId()).thenReturn("service id 01");
-        when(calendarDate01.getDate()).thenReturn(date1);
+        final LocalDateTime mockDate = mock(LocalDateTime.class);
 
-        underTest.addCalendarDate(calendarDate00);
-        underTest.addCalendarDate(calendarDate01);
+        when(calendarDate00.getServiceId()).thenReturn("service id 00");
+        when(calendarDate00.getDate()).thenReturn(mockDate);
+
+        when(calendarDate01.getServiceId()).thenReturn("service id 01");
+        when(calendarDate01.getDate()).thenReturn(mockDate);
 
         assertEquals(calendarDate00, underTest.addCalendarDate(calendarDate00));
         assertEquals(calendarDate01, underTest.addCalendarDate(calendarDate01));

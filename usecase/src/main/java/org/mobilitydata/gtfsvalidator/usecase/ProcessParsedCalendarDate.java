@@ -27,6 +27,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * This use case turns a parsed entity representing a row from calendar_dates.txt into a concrete class
+ */
 public class ProcessParsedCalendarDate {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
@@ -40,6 +43,17 @@ public class ProcessParsedCalendarDate {
         this.builder = builder;
     }
 
+    /**
+     * Use case execution method to go from a row from calendar_dates.txt to an internal representation.
+     * <p>
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code CalendarDate} object if the
+     * requirements from the official GTFS specification are met. When these requirements are not met, related notices
+     * generated in {@code CalendarDate.CalendarDateBuilder} are added to the result repository provided in the
+     * constructor. This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness
+     * constraint on CalendarDate entities is not respected.
+     *
+     * @param validatedParsedRoute entity to be processed and added to the GTFS data repository
+     */
     public void execute(final ParsedEntity validatedParsedRoute) {
 
         final String serviceId = (String) validatedParsedRoute.get("service_id");
