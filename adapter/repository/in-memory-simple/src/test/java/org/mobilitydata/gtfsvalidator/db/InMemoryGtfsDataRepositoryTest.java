@@ -105,7 +105,6 @@ class InMemoryGtfsDataRepositoryTest {
                 () -> underTest.addRoute(null));
 
         assertEquals("Cannot add null route to data repository", exception.getMessage());
-
     }
 
     @Test
