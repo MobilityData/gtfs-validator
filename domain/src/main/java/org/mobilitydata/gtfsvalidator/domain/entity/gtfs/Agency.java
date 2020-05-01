@@ -27,7 +27,7 @@ import java.util.List;
  * Class for all entities defined in agency.txt. Can not be directly instantiated: user must use the
  * {@link AgencyBuilder} to create this.
  */
-public class Agency {
+public class Agency extends GtfsEntity {
     @Nullable
     private final String agencyId;
     @NotNull

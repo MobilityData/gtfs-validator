@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 
 import java.util.List;
@@ -43,32 +41,12 @@ public class EntityBuildResult<T> {
     }
 
     /**
-     * Takes a value of type Agency and sets it to the field data. Sets field status to Success.
+     * Takes a value of type GtfsEntity and sets it to the field data. Sets field status to Success.
      * of gtfs entity building
      */
-    public EntityBuildResult(final Agency agency) {
+    public EntityBuildResult(final GtfsEntity entity) {
         //noinspection unchecked
-        this.data = (T) agency;
-        this.status = Status.SUCCESS;
-    }
-
-    /**
-     * Takes a value of type Route and sets it to the field data. Sets field status to Success.
-     * of gtfs entity building
-     */
-    public EntityBuildResult(final Route route) {
-        //noinspection unchecked
-        this.data = (T) route;
-        this.status = Status.SUCCESS;
-    }
-
-    /**
-     * Takes a value of type CalendarDate and sets it to the field data. Sets field status to Success.
-     * of gtfs entity building
-     */
-    public EntityBuildResult(final CalendarDate calendarDate) {
-        //noinspection unchecked
-        this.data = (T) calendarDate;
+        this.data = (T) entity;
         this.status = Status.SUCCESS;
     }
 

@@ -27,7 +27,7 @@ public class IllegalFieldValueCombination extends ErrorNotice {
 
     public IllegalFieldValueCombination(final String filename, final String fieldName,
                                         final String conflictingFieldName, final String entityId) {
-        super(filename, E_018,
+        super(filename, E_019,
                 "Conflicting field values",
                 "Conflicting field values for fields:" + fieldName + " and field:" + conflictingFieldName, entityId);
         this.fieldName = fieldName;

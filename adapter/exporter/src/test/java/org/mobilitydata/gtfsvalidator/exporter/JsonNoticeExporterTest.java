@@ -354,6 +354,20 @@ class JsonNoticeExporterTest {
     }
 
     @Test
+    void exportInvalidCurrencyCodeNoticeShouldWriteObject() throws IOException {
+
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        InvalidCurrencyCodeNotice toExport = new InvalidCurrencyCodeNotice(FILENAME, "field_name", "entity_id",
+                "currency_code");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
     void exportUnexpectedEnumValueNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
