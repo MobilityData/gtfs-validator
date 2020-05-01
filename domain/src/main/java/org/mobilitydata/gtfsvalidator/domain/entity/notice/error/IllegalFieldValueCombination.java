@@ -21,16 +21,19 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class EntityMustBeUniqueNotice extends ErrorNotice {
+public class IllegalFieldValueCombination extends ErrorNotice {
     private final String fieldName;
+    private final String conflictingFieldName;
 
-    public EntityMustBeUniqueNotice(final String filename, final String fieldName, final String entityId) {
-        super(filename, E_020,
-                "Duplicate entity",
-                "Entity must be unique in file: " + filename + "found other entity with same value for " +
-                        "field: " + fieldName, entityId);
+    public IllegalFieldValueCombination(final String filename, final String fieldName,
+                                        final String conflictingFieldName, final String entityId) {
+        super(filename, E_018,
+                "Conflicting field values",
+                "Conflicting field values for fields:" + fieldName + " and field:" + conflictingFieldName, entityId);
         this.fieldName = fieldName;
+        this.conflictingFieldName = conflictingFieldName;
     }
+
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
@@ -39,5 +42,9 @@ public class EntityMustBeUniqueNotice extends ErrorNotice {
 
     public String getFieldName() {
         return fieldName;
+    }
+
+    public String getConflictingFieldName() {
+        return conflictingFieldName;
     }
 }

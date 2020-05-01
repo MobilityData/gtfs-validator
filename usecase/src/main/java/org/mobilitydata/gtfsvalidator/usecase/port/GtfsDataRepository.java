@@ -21,11 +21,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttr
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency);
+    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
 
-    Route addRoute(final Route newRoute);
+    Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
     Route getRouteById(final String routeId);
 

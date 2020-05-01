@@ -21,20 +21,15 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class UnexpectedDefinedFieldNotice extends ErrorNotice {
-    private final String filename;
+public class DuplicatedEntityNotice extends ErrorNotice {
     private final String fieldName;
-    private final String fieldValue;
 
-    public UnexpectedDefinedFieldNotice(final String filename, final String fieldName, final String fieldValue,
-                                        final String entityId) {
-        super(filename, E_019,
-                "Unexpected defined field",
-                "Unexpected defined field :" + fieldName + " - in file:" + filename + " with value:" + fieldValue +
-                        " for entity with id:" + entityId, entityId);
-        this.filename = filename;
+    public DuplicatedEntityNotice(final String filename, final String fieldName, final String entityId) {
+        super(filename, E_020,
+                "Duplicate entity",
+                "Entity must be unique in file: " + filename + "found other entity with same value for " +
+                        "field: " + fieldName, entityId);
         this.fieldName = fieldName;
-        this.fieldValue = fieldValue;
     }
 
     @Override
@@ -42,15 +37,7 @@ public class UnexpectedDefinedFieldNotice extends ErrorNotice {
         exporter.export(this);
     }
 
-    public String getFieldValue() {
-        return fieldValue;
-    }
-
     public String getFieldName() {
         return fieldName;
-    }
-
-    public String getFilename() {
-        return filename;
     }
 }

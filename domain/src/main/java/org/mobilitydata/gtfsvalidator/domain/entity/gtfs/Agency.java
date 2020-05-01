@@ -27,30 +27,21 @@ import java.util.List;
  * Class for all entities defined in agency.txt. Can not be directly instantiated: user must use the
  * {@link AgencyBuilder} to create this.
  */
-@SuppressWarnings("ALL")
 public class Agency {
-
     @Nullable
     private final String agencyId;
-
     @NotNull
     private final String agencyName;
-
     @NotNull
     private final String agencyUrl;
-
     @NotNull
     private final String agencyTimezone;
-
     @Nullable
     private final String agencyLang;
-
     @Nullable
     private final String agencyPhone;
-
     @Nullable
     private final String agencyFareUrl;
-
     @Nullable
     private final String agencyEmail;
 
@@ -131,7 +122,6 @@ public class Agency {
      * {@link Agency}.
      */
     public static class AgencyBuilder {
-
         private String agencyId;
         private String agencyName;
         private String agencyUrl;
@@ -140,6 +130,11 @@ public class Agency {
         private String agencyPhone;
         private String agencyFareUrl;
         private String agencyEmail;
+        private final List<Notice> noticeCollection;
+
+        public AgencyBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
 
         /**
          * Sets field agencyName value and returns this
@@ -234,11 +229,12 @@ public class Agency {
          * Entity representing a row from agency.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns list of {@link Notice}.
          *
-         * @param noticeCollection list of notice to complete
          * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns list of {@link Notice}.
          */
-        public GenericType build(final List<Notice> noticeCollection) {
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+
             if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
 
                 if (agencyName == null) {
@@ -253,13 +249,10 @@ public class Agency {
                     noticeCollection.add((new MissingRequiredValueNotice("agency.txt",
                             "agency_timezone", agencyId)));
                 }
-                //noinspection unchecked
-                return new GenericType(noticeCollection, false);
+                return new EntityBuildResult<>(noticeCollection);
             } else {
-                //noinspection unchecked
-                return new GenericType(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
-                        agencyPhone, agencyFareUrl, agencyEmail),
-                        true);
+                return new EntityBuildResult<>(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
+                        agencyPhone, agencyFareUrl, agencyEmail));
             }
         }
     }
