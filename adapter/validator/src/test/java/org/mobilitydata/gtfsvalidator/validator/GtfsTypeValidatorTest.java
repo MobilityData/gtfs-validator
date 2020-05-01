@@ -37,13 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class GtfsTypeValidatorTest {
-
     private static final String TEST_ID = "test_id";
     public static final String TEST_FILE_TST = "test_file.tst";
 
     @Test
     void inRangeFloatDoNotGenerateNotice() {
-
         FloatValidator mockFloatValidator = mock(FloatValidator.class);
         when(mockFloatValidator.isInRange(ArgumentMatchers.eq(Float.valueOf(-5.0f)),
                 ArgumentMatchers.eq(-6.66f),
@@ -87,7 +85,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void outOfRangeFloatGenerateNotice() {
-
         FloatValidator mockFloatValidator = mock(FloatValidator.class);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
@@ -137,7 +134,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void inRangeIntegerDoNotGenerateNotice() {
-
         IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
         when(mockIntegerValidator.isInRange(ArgumentMatchers.eq(Integer.valueOf(5)),
                 ArgumentMatchers.eq(-6),
@@ -181,7 +177,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void outOfRangeIntegerGenerateNotice() {
-
         IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
@@ -231,7 +226,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void colorInCorrectFormatDoNotGenerateNotice() {
-
         RegexValidator mockColorValidator = mock(RegexValidator.class);
         when(mockColorValidator.isValid(ArgumentMatchers.any())).thenReturn(true);
 
@@ -267,7 +261,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void colorInIncorrectFormatGenerateNotice() {
-
         RegexValidator mockColorValidator = mock(RegexValidator.class);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
@@ -309,7 +302,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void timeInCorrectFormatDoNotGenerateNotice() {
-
         RegexValidator mockTimeValidator = mock(RegexValidator.class);
         when(mockTimeValidator.isValid(ArgumentMatchers.any())).thenReturn(true);
 
@@ -345,7 +337,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void timeInIncorrectFormatGenerateNotice() {
-
         RegexValidator mockTimeValidator = mock(RegexValidator.class);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
@@ -387,7 +378,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void urlInCorrectFormatDoNotGenerateNotice() {
-
         UrlValidator mockUrlValidator = mock(UrlValidator.class);
         when(mockUrlValidator.isValid(ArgumentMatchers.any())).thenReturn(true);
 
@@ -424,7 +414,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void urlInInCorrectFormatGenerateNotice() {
-
         UrlValidator mockUrlValidator = mock(UrlValidator.class);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
@@ -467,7 +456,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void timezoneValidDoNotGenerateNotice() {
-
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
         when(mockColumnSpec.getName()).thenReturn("type_timezone");
@@ -498,7 +486,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void timezoneInvalidGenerateNotice() {
-
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
         when(mockColumnSpec.getName()).thenReturn("type_timezone");
@@ -537,7 +524,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void idAsciiDoNotGenerateNotice() {
-
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
         when(mockColumnSpec.getName()).thenReturn("type_id");
@@ -568,7 +554,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void idNonAsciiGenerateNotice() {
-
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
         when(mockColumnSpec.getName()).thenReturn("type_id");
@@ -608,7 +593,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void idNonPrintableAsciiGenerateNotice() {
-
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
         when(mockColumnSpec.getName()).thenReturn("type_id");
@@ -649,7 +633,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void nullOrEmptyOptionalValueDoNotGenerateError() {
-
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
 
         GtfsSpecificationProto.ColumnSpecProto mockUnspecifiedColumnSpec =
@@ -752,11 +735,7 @@ class GtfsTypeValidatorTest {
 
     @Test
     void nullRequiredValueGenerateError() {
-
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
-        //GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
-        //when(mockColumnSpec.getName()).thenReturn("type_id");
-        //when(mockColumnSpec.getValueRequired()).thenReturn(true);
 
         GtfsSpecificationProto.ColumnSpecProto mockUnspecifiedColumnSpec =
                 mock(GtfsSpecificationProto.ColumnSpecProto.class);
@@ -946,7 +925,6 @@ class GtfsTypeValidatorTest {
 
     @Test
     void emptyRequiredValueGenerateError() {
-
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
 
         GtfsSpecificationProto.ColumnSpecProto mockUnspecifiedColumnSpec =
@@ -1140,5 +1118,73 @@ class GtfsTypeValidatorTest {
         assertEquals(TEST_FILE_TST, notice.getFilename());
         assertEquals("Missing value for field:type_date marked as required in entity with id:test_id",
                 notice.getDescription());
+    }
+
+    @Test
+    void invalidCurrencyCodeGenerateNotice() {
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("currency_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.CURRENCY_CODE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("currency_type", "JAN"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(1, result.size());
+
+        Notice notice = new ArrayList<>(result).get(0);
+        assertThat(notice, instanceOf(InvalidCurrencyCodeNotice.class));
+        assertEquals("E018", notice.getId());
+        assertEquals("Invalid currency code", notice.getTitle());
+        assertEquals(TEST_FILE_TST, notice.getFilename());
+        assertEquals("Invalid currency code: JAN in field: currency_type for entity with id: test_id",
+                notice.getDescription());
+    }
+
+    @Test
+    void validCurrencyCodeDoNotGenerateNotice() {
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("currency_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.CURRENCY_CODE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("currency_type", "MXN"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(0, result.size());
     }
 }

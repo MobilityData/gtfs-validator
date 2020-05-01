@@ -290,6 +290,18 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 toExport.getRawValue());
     }
 
+    @Override
+    public void export(InvalidCurrencyCodeNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltEntityId(toExport.getFieldName())
+                .setEntityId(toExport.getEntityId())
+                .setAltEntityValue(toExport.getCurrencyCode())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
 
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
