@@ -29,34 +29,24 @@ import java.util.List;
  * {@link CalendarBuilder} to create this.
  */
 public class Calendar {
-
     @NotNull
     private final String serviceId;
-
     @NotNull
     private final Boolean monday;
-
     @NotNull
     private final Boolean tuesday;
-
     @NotNull
     private final Boolean wednesday;
-
     @NotNull
     private final Boolean thursday;
-
     @NotNull
     private final Boolean friday;
-
     @NotNull
     private final Boolean saturday;
-
     @NotNull
     private final Boolean sunday;
-
     @NotNull
     private final LocalDateTime startDate;
-
     @NotNull
     private final LocalDateTime endDate;
 
@@ -343,6 +333,7 @@ public class Calendar {
          * @param endDate start service day for the service interval
          * @return builder for future object creation
          */
+        @SuppressWarnings("UnusedReturnValue")
         public CalendarBuilder endDate(@NotNull final LocalDateTime endDate) {
             this.endDate = endDate;
             return this;
@@ -428,11 +419,10 @@ public class Calendar {
                     noticeCollection.add(
                             new MissingRequiredValueNotice("calendar.txt", "end_date", serviceId));
                 }
-                return new EntityBuildResult<>(noticeCollection, EntityBuildResult.Status.FAILURE);
+                return new EntityBuildResult<>(noticeCollection);
             } else {
                 return new EntityBuildResult<>(new Calendar(serviceId, monday, tuesday, wednesday, thursday, friday,
-                        saturday, sunday, startDate, endDate),
-                        EntityBuildResult.Status.SUCCESS);
+                        saturday, sunday, startDate, endDate));
             }
         }
     }
