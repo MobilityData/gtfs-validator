@@ -29,7 +29,7 @@ public interface GtfsDataRepository {
 
     Route getRouteById(final String routeId);
 
-    Level getLevelByLevelId(final String levelId);
+    Level addLevel(final Level newLevel) throws IllegalArgumentException;
 
-    Level addLevel(final Level newLevel) throws SQLIntegrityConstraintViolationException;
+    Level getLevelByLevelId(final String levelId);
 }

@@ -18,17 +18,28 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
-public class Level {
+import java.util.List;
 
+/**
+ * Class for all entities defined in levels.txt. Can not be directly instantiated: user must use the
+ * {@code Level.LevelBuilder} to create this.
+ */
+public class Level extends GtfsEntity {
     @NotNull
     private final String levelId;
-
     private final float levelIndex;
-
     @Nullable
     private final String levelName;
 
+    /**
+     * @param levelId    id of the level that can be referenced from stops.txt
+     * @param levelIndex numeric index of the level that indicates relative position of this level in relation to other
+     *                   levels
+     * @param levelName  optional name of the level
+     */
     private Level(@NotNull final String levelId,
                   final float levelIndex,
                   @Nullable final String levelName) {
@@ -55,10 +66,20 @@ public class Level {
     public static class LevelBuilder {
         private String levelId;
         private Float levelIndex;
-
         @Nullable
         private String levelName;
+        private final List<Notice> noticeCollection;
 
+        public LevelBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
+
+        /**
+         * Sets field levelId value and returns this
+         *
+         * @param levelId id of the level that can be referenced from stops.txt
+         * @return builder for future object creation
+         */
         public LevelBuilder levelId(@NotNull final String levelId) {
             this.levelId = levelId;
             return this;

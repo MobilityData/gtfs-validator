@@ -31,6 +31,7 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, Level> levelCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -100,21 +101,38 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
-    private final Map<String, Level> levelCollection = new HashMap<>();
+    /**
+     * Add a Level representing a row from levels.txt to this {@link GtfsDataRepository}. Return the entity added to the
+     * repository if the uniqueness constraint of route based on level_id is respected, if this requirement is not met,
+     * returns null.
+     *
+     * @param newLevel the internal representation of a row from levels.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on level_id is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public Level addLevel(final Level newLevel) throws IllegalArgumentException {
+        if (newLevel != null) {
+            if (levelCollection.containsKey(newLevel.getLevelId())) {
+                return null;
+            } else {
+                final String levelId = newLevel.getLevelId();
+                levelCollection.put(levelId, newLevel);
+                return newLevel;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null level to data repository");
+        }
+    }
 
+    /**
+     * Return the Route representing a row from levels.txt related to the id provided as parameter
+     *
+     * @param levelId the key from levels.txt related to the Level to be returned
+     * @return the Level representing a row from levels.txt related to the id provided as parameter
+     */
     @Override
     public Level getLevelByLevelId(final String levelId) {
         return levelCollection.get(levelId);
-    }
-
-    @Override
-    public Level addLevel(final Level newLevel) throws SQLIntegrityConstraintViolationException {
-        if (levelCollection.containsKey(newLevel.getLevelId())) {
-            throw new SQLIntegrityConstraintViolationException("level must be unique in dataset");
-        } else {
-            final String levelId = newLevel.getLevelId();
-            levelCollection.put(levelId, newLevel);
-            return newLevel;
-        }
     }
 }

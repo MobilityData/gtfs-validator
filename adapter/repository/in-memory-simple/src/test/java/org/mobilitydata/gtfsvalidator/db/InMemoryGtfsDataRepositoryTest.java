@@ -116,79 +116,44 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void getLevelByIdShouldReturnRelatedLevel() throws SQLIntegrityConstraintViolationException {
-        Level.LevelBuilder mockBuilder = mock(Level.LevelBuilder.class);
-        when(mockBuilder.levelId(anyString())).thenCallRealMethod();
-        when(mockBuilder.levelIndex(anyFloat())).thenCallRealMethod();
-        when(mockBuilder.levelName(anyString())).thenCallRealMethod();
-
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.levelId("test_id_0")
-                .levelIndex(2.0f)
-                .levelName("test_id_0");
-
+    void callToAddLevelShouldAddLevelToRepoAndReturnEntity() {
+        final Level mockLevel = mock(Level.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockLevel.getLevelId()).thenReturn("level id");
 
-        Level level00 = mockBuilder.build();
-
-        underTest.addLevel(level00);
-
-        mockBuilder.levelId("test_id_1");
-
-        Level level01 = mockBuilder.build();
-
-        underTest.addLevel(level01);
-
-        assertEquals(level00, underTest.getLevelByLevelId("test_id_0"));
-        assertEquals(level01, underTest.getLevelByLevelId("test_id_1"));
+        assertEquals(mockLevel, underTest.addLevel(mockLevel));
     }
 
     @Test
-    public void callToAddEntityShouldAddLevelToRepoAndReturnEntity() throws SQLIntegrityConstraintViolationException {
-        Level.LevelBuilder mockBuilder = mock(Level.LevelBuilder.class);
-        when(mockBuilder.levelId(anyString())).thenCallRealMethod();
-        when(mockBuilder.levelIndex(anyFloat())).thenCallRealMethod();
-        when(mockBuilder.levelName(anyString())).thenCallRealMethod();
-
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.levelId("test_id_0")
-                .levelIndex(2.0f)
-                .levelName("test_id_0");
-
+    void addSameLevelTwiceShouldReturnNull() {
+        final Level mockLevel = mock(Level.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockLevel.getLevelId()).thenReturn("level id");
 
-        Level level00 = mockBuilder.build();
-
-        Level toCheck = underTest.addLevel(level00);
-
-        assertEquals(level00, toCheck);
-        assertEquals(level00, underTest.getLevelByLevelId("test_id_0"));
+        underTest.addLevel(mockLevel);
+        assertNull(underTest.addLevel(mockLevel));
     }
 
     @Test
-    public void duplicateLevelShouldThrowException() throws SQLIntegrityConstraintViolationException {
-        Level.LevelBuilder mockBuilder = mock(Level.LevelBuilder.class);
-        when(mockBuilder.levelId(anyString())).thenCallRealMethod();
-        when(mockBuilder.levelIndex(anyFloat())).thenCallRealMethod();
-        when(mockBuilder.levelName(anyString())).thenCallRealMethod();
+    void addNullLevelShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addLevel(null));
+        assertEquals("Cannot add null level to data repository", exception.getMessage());
+    }
 
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.levelId("test_id_0")
-                .levelIndex(2.0f)
-                .levelName("test_id_0");
+    @Test
+    public void getLevelByIdShouldReturnRelatedLevel() {
+        final Level mockLevel00 = mock(Level.class);
+        final Level mockLevel01 = mock(Level.class);
+        when(mockLevel00.getLevelId()).thenReturn("level id 0");
+        when(mockLevel01.getLevelId()).thenReturn("level id 1");
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        underTest.addLevel(mockLevel00);
+        underTest.addLevel(mockLevel01);
 
-        Level level = mockBuilder.build();
-
-        underTest.addLevel(level);
-
-        Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
-                () -> underTest.addLevel(level));
-
-        assertEquals("level must be unique in dataset", exception.getMessage());
+        assertEquals(mockLevel00, underTest.getLevelByLevelId("level id 0"));
+        assertEquals(mockLevel01, underTest.getLevelByLevelId("level id 1"));
     }
 }
