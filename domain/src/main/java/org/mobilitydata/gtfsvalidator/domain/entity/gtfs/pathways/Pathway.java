@@ -266,7 +266,7 @@ public class Pathway extends GtfsEntity {
                     }
                 }
                 if (isBidirectional == null) {
-                    if (originalPathwayModeInteger == null) {
+                    if (originalIsBiDirectionalInteger == null) {
                         noticeCollection.add(new MissingRequiredValueNotice("pathways.txt",
                                 "is_bidirectional", pathwayId));
                     } else {

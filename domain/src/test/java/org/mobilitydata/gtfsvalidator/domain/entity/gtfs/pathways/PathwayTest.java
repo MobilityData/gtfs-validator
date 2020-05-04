@@ -278,7 +278,7 @@ class PathwayTest {
     }
 
     @Test
-    void createPathwayWillNullIsBidirectionalShouldGenerateNotice() {
+    void createPathwayWithNullIsBidirectionalShouldGenerateNotice() {
         @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
         //noinspection unchecked
         final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
