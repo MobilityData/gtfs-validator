@@ -17,14 +17,18 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
+/**
+ * This use case turns a parsed entity representing a row from levels.txt into a concrete class
+ */
 public class ProcessParsedLevel {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
@@ -38,34 +42,35 @@ public class ProcessParsedLevel {
         this.builder = builder;
     }
 
-    public void execute(final ParsedEntity validatedParsedLevel) throws IllegalArgumentException,
-            SQLIntegrityConstraintViolationException {
+    /**
+     * Use case execution method to go from a row from levels.txt to an internal representation.
+     * <p>
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code Level} object if the requirements
+     * from the official GTFS specification are met. When these requirements are mot met, related notices generated in
+     * {@code Level.LevelBuilder} are added to the result repository provided to the constructor.
+     * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
+     * route entities is not respected.
+     *
+     * @param validatedParsedLevel entity to be processed and added to the GTFS data repository
+     */
+    public void execute(final ParsedEntity validatedParsedLevel) {
         final String levelId = (String) validatedParsedLevel.get("level_id");
         final Float levelIndex = (Float) validatedParsedLevel.get("level_index");
         final String levelName = (String) validatedParsedLevel.get("level_name");
 
-        try {
-            builder.levelId(levelId)
-                    .levelIndex(levelIndex)
-                    .levelName(levelName);
+        builder.levelId(levelId)
+                .levelIndex(levelIndex)
+                .levelName(levelName);
+        @SuppressWarnings("rawtypes") final EntityBuildResult level = builder.build();
 
-            gtfsDataRepository.addLevel(builder.build());
-
-        } catch (IllegalArgumentException e) {
-
-            if (levelId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("levels.txt", "level_id",
-                        validatedParsedLevel.getEntityId()));
+        if (level.isSuccess()) {
+            if (gtfsDataRepository.addLevel((Level) level.getData()) == null) {
+                resultRepository.addNotice(new DuplicatedEntityNotice("levels.txt",
+                        "level_id", validatedParsedLevel.getEntityId()));
             }
-            if (levelIndex == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("levels.txt", "level_index",
-                        validatedParsedLevel.getEntityId()));
-            }
-            throw e;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            resultRepository.addNotice(new EntityMustBeUniqueNotice("levels.txt", "level_id",
-                    validatedParsedLevel.getEntityId()));
-            throw e;
+        } else {
+            //noinspection unchecked
+            ((List<Notice>) level.getData()).forEach(resultRepository::addNotice);
         }
     }
 }
