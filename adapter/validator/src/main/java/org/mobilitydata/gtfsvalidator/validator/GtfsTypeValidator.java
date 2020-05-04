@@ -22,14 +22,15 @@ import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Currency;
 import java.util.Set;
 
 /**
@@ -183,6 +184,19 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                     case TIME: {
                         if (!timeValidator.isValid((String) value)) {
                             toReturn.add(new InvalidTimeNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    (String) value
+                            ));
+                        }
+                        break;
+                    }
+                    case CURRENCY_CODE: {
+                        try {
+                            Currency.getInstance((String) value);
+                        } catch (IllegalArgumentException e) {
+                            toReturn.add(new InvalidCurrencyCodeNotice(
                                     toValidate.getRawFileInfo().getFilename(),
                                     columnSpecProto.getName(),
                                     toValidate.getEntityId(),

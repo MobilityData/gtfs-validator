@@ -18,8 +18,9 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotUnzipInputArchiveNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentMatchers;
@@ -35,8 +36,8 @@ class ExportResultAsFileTest {
 
     @Test
     void resultRepoShouldBeExportedAsJsonFile() throws IOException {
-        final ValidationResultRepository.NoticeExporter mockExporter =
-                mock(ValidationResultRepository.NoticeExporter.class);
+        final NoticeExporter mockExporter =
+                mock(NoticeExporter.class);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
         final CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
@@ -89,8 +90,8 @@ class ExportResultAsFileTest {
 
     @Test
     void resultRepoShouldBeExportedAsProtoFile() throws IOException {
-        final ValidationResultRepository.NoticeExporter mockExporter =
-                mock(ValidationResultRepository.NoticeExporter.class);
+        final NoticeExporter mockExporter =
+                mock(NoticeExporter.class);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
         final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
