@@ -29,7 +29,7 @@ public interface GtfsDataRepository {
 
     Route getRouteById(final String routeId);
 
-    Transfer getTransferByStopPair(final String fromStopId, final String toStopId);
+    Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 
-    Transfer addTransfer(final Transfer newTransfer) throws SQLIntegrityConstraintViolationException;
+    Transfer getTransferByStopPair(final String fromStopId, final String toStopId);
 }

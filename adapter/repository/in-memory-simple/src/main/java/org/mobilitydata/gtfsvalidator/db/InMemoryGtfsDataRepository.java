@@ -31,6 +31,7 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, Map<String, Transfer>> transferCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -100,25 +101,46 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
-    private final Map<String, Map<String, Transfer>> transferCollection = new HashMap<>();
+    /**
+     * Add a Transfer representing a row from transfers.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of route based on composite key from_stop_id and to_stop_id is respected, if this
+     * requirement is not met, returns null.
+     *
+     * @param newTransfer the internal representation of a row from transfers.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on composite key
+     * from_stop_id and to_stop_id is respected, if this requirement is not met, returns null.
+     */
+    @Override
+    public Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException {
+        if (newTransfer != null) {
+            if ((transferCollection.containsKey(newTransfer.getFromStopId())) &&
+                    (transferCollection.get(newTransfer.getFromStopId()).containsKey(newTransfer.getToStopId()))) {
+                return null;
+            } else {
+                String fromStopId = newTransfer.getFromStopId();
+                String toStopId = newTransfer.getToStopId();
+                Map<String, Transfer> innerMap = new HashMap<>();
+                innerMap.put(toStopId, newTransfer);
+                transferCollection.put(fromStopId, innerMap);
+                return newTransfer;
+            }
 
+        } else {
+            throw new IllegalArgumentException("Cannot add null transfer to data repository");
+        }
+    }
+
+    /**
+     * Return the Transfer representing a row from transfers.txt related to the composite key provided as parameter
+     *
+     * @param fromStopId first part of the composite key: identifies a stop or station where a connection between
+     *                   routes begins
+     * @param toStopId   second part of the composite key: identifies a stop or station where a connection between
+     *                   routes ends
+     * @return the Transfer representing a row from transfers.txt related to the composite key provided as parameter
+     */
     @Override
     public Transfer getTransferByStopPair(final String fromStopId, final String toStopId) {
         return transferCollection.get(fromStopId).get(toStopId);
-    }
-
-    @Override
-    public Transfer addTransfer(final Transfer newTransfer) throws SQLIntegrityConstraintViolationException {
-        if ((transferCollection.containsKey(newTransfer.getFromStopId())) &&
-                (transferCollection.get(newTransfer.getFromStopId()).containsKey(newTransfer.getToStopId()))) {
-            throw new SQLIntegrityConstraintViolationException("transfer must be unique in dataset");
-        } else {
-            String fromStopId = newTransfer.getFromStopId();
-            String toStopId = newTransfer.getToStopId();
-            Map<String, Transfer> innerMap = new HashMap<>();
-            innerMap.put(toStopId, newTransfer);
-            transferCollection.put(fromStopId, innerMap);
-            return newTransfer;
-        }
     }
 }

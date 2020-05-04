@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
-import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -118,90 +117,51 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getTransferByStopPairShouldReturnRelatedTransfer() throws SQLIntegrityConstraintViolationException {
-        final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
-        when(mockBuilder.fromStopId(anyString())).thenCallRealMethod();
-        when(mockBuilder.toStopId(anyString())).thenCallRealMethod();
-        when(mockBuilder.transferType(anyInt())).thenCallRealMethod();
-        when(mockBuilder.minTransferTime(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.fromStopId("from_stop_id_0")
-                .toStopId("to_stop_id_1")
-                .transferType(2)
-                .minTransferTime(20);
-
+    void callToAddTransferShouldAddTransferToRepoAndReturnSameEntity() {
+        final Transfer mockTransfer = mock(Transfer.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTransfer.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer.getToStopId()).thenReturn("stop id 1");
 
-        final Transfer transfer00 = mockBuilder.build();
-        underTest.addTransfer(transfer00);
-
-        mockBuilder.fromStopId("from_stop_id_1")
-                .toStopId("to_stop_id_2")
-                .transferType(3)
-                .minTransferTime(null);
-
-        final Transfer transfer01 = mockBuilder.build();
-        underTest.addTransfer(transfer01);
-
-        assertEquals(transfer00, underTest.getTransferByStopPair("from_stop_id_0", "to_stop_id_1"));
-        assertEquals(transfer01, underTest.getTransferByStopPair("from_stop_id_1", "to_stop_id_2"));
+        assertEquals(mockTransfer, underTest.addTransfer(mockTransfer));
     }
 
     @Test
-    void callToAddTransferShouldAddTransferToRepoAndReturnEntity() throws SQLIntegrityConstraintViolationException {
-        final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
-        when(mockBuilder.fromStopId(anyString())).thenCallRealMethod();
-        when(mockBuilder.toStopId(anyString())).thenCallRealMethod();
-        when(mockBuilder.transferType(anyInt())).thenCallRealMethod();
-        when(mockBuilder.minTransferTime(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
-
-        mockBuilder.fromStopId("from_stop_id_0")
-                .toStopId("to_stop_id_1")
-                .transferType(2)
-                .minTransferTime(20);
-
+    void addSameTransferTwiceShouldReturnNull() {
+        final Transfer mockTransfer = mock(Transfer.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTransfer.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer.getToStopId()).thenReturn("stop id 1");
 
-        final Transfer transfer00 = mockBuilder.build();
+        underTest.addTransfer(mockTransfer);
 
-        Transfer toCheck = underTest.addTransfer(transfer00);
-        assertEquals(transfer00, toCheck);
-        assertEquals(transfer00, underTest.getTransferByStopPair("from_stop_id_0", "to_stop_id_1"));
-
-        mockBuilder.fromStopId("from_stop_id_1")
-                .toStopId("to_stop_id_2")
-                .transferType(3)
-                .minTransferTime(null);
-
-        final Transfer transfer01 = mockBuilder.build();
-        toCheck = underTest.addTransfer(transfer01);
-        assertEquals(transfer01, toCheck);
-        assertEquals(transfer01, underTest.getTransferByStopPair("from_stop_id_1", "to_stop_id_2"));
+        assertNull(underTest.addTransfer(mockTransfer));
     }
 
     @Test
-    void tryToAddTwiceTheSameTransferShouldThrowException() throws SQLIntegrityConstraintViolationException {
-        final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class);
-        when(mockBuilder.fromStopId(anyString())).thenCallRealMethod();
-        when(mockBuilder.toStopId(anyString())).thenCallRealMethod();
-        when(mockBuilder.transferType(anyInt())).thenCallRealMethod();
-        when(mockBuilder.minTransferTime(anyInt())).thenCallRealMethod();
-        when(mockBuilder.build()).thenCallRealMethod();
+    void addNullTransferShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addTransfer(null));
+        assertEquals("Cannot add null transfer to data repository", exception.getMessage());
+    }
 
-        mockBuilder.fromStopId("from_stop_id_0")
-                .toStopId("to_stop_id_1")
-                .transferType(2)
-                .minTransferTime(20);
-
+    @Test
+    void getTransferByStopPairShouldReturnRelatedTransfer() {
+        final Transfer mockTransfer00 = mock(Transfer.class);
+        final Transfer mockTransfer01 = mock(Transfer.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addTransfer(mockBuilder.build());
+        when(mockTransfer00.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer00.getToStopId()).thenReturn("stop id 1");
 
-        final Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
-                () -> underTest.addTransfer(mockBuilder.build()));
+        when(mockTransfer01.getFromStopId()).thenReturn("stop id 1");
+        when(mockTransfer01.getToStopId()).thenReturn("stop id 0");
 
-        assertEquals("transfer must be unique in dataset", exception.getMessage());
+        underTest.addTransfer(mockTransfer00);
+        underTest.addTransfer(mockTransfer01);
+
+        assertEquals(mockTransfer00, underTest.getTransferByStopPair("stop id 0", "stop id 1"));
+        assertEquals(mockTransfer01, underTest.getTransferByStopPair("stop id 1", "stop id 0"));
     }
 }
