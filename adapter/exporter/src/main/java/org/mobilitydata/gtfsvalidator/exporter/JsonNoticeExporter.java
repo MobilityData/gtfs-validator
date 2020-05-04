@@ -159,4 +159,19 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(InvalidCurrencyCodeNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(UnexpectedEnumValueNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(IllegalFieldValueCombination toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(DuplicatedEntityNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

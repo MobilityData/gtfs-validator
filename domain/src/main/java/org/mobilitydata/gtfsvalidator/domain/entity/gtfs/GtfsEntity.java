@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.port;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-
-public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
-
-    Agency getAgencyById(final String agencyId);
-
-    Route addRoute(final Route newRoute) throws IllegalArgumentException;
-
-    Route getRouteById(final String routeId);
+/**
+ * This is the super class from which all gtfs entities inherit. This implementation allows manipulation of generic
+ * lists of gtfs entities. At present, this class is empty. We will add fields and methods according to the progress of
+ * the project.
+ */
+public abstract class GtfsEntity {
 }

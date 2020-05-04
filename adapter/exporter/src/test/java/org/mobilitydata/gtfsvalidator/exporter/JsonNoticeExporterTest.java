@@ -66,7 +66,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportNonStandardHeaderNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -79,7 +78,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportInputZipContainsFolderNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -92,7 +90,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportNonAsciiOrNonPrintableCharNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -110,7 +107,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportCannotConstructDataProviderNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -123,7 +119,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportCannotDownloadArchiveFromNetworkNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -138,7 +133,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportCannotParseFloatNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -155,7 +149,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportCannotParseIntegerNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -173,7 +166,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportCannotUnzipInputArchiveNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -186,7 +178,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportFloatFieldValueOutOfRangeNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -204,7 +195,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportIntegerFieldValueOutOfRangeNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -222,7 +212,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportInvalidRowLengthNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -237,7 +226,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportInvalidTimezoneNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -255,7 +243,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportInvalidUrlNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -273,7 +260,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportMissingHeaderNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -286,7 +272,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportMissingRequiredFileNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -299,7 +284,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportMissingRequiredValueNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -316,7 +300,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportInvalidColorNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -334,7 +317,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportExtraFileFoundNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -347,7 +329,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportInvalidTimeNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -361,7 +342,6 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportCannotParseDateNoticeShouldWriteObject() throws IOException {
-
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -381,6 +361,45 @@ class JsonNoticeExporterTest {
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         InvalidCurrencyCodeNotice toExport = new InvalidCurrencyCodeNotice(FILENAME, "field_name", "entity_id",
                 "currency_code");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportUnexpectedEnumValueNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        UnexpectedEnumValueNotice toExport = new UnexpectedEnumValueNotice(FILENAME, "field_name",
+                "entity_id", 2);
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportIllegalFieldValueCombinationNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        IllegalFieldValueCombination toExport = new IllegalFieldValueCombination(FILENAME, "field_name",
+                "conflicting_field_name", "entity_id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportDuplicatedEntityNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        DuplicatedEntityNotice toExport = new DuplicatedEntityNotice(FILENAME, "field_name",
+                "entity_id");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
