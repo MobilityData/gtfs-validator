@@ -31,6 +31,7 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, Pathway> pathwayCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -100,21 +101,38 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
-    private final Map<String, Pathway> pathwayCollection = new HashMap<>();
+    /**
+     * Add a Pathway representing a row from pathways.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint of route based on pathway_id is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newPathway the internal representation of a row from routes.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on pathway_id is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException {
+        if (newPathway != null) {
+            if (pathwayCollection.containsKey(newPathway.getPathwayId())) {
+                return null;
+            } else {
+                String pathwayId = newPathway.getPathwayId();
+                pathwayCollection.put(pathwayId, newPathway);
+                return newPathway;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null pathway to data repository");
+        }
+    }
 
+    /**
+     * Return the Pathway representing a row from pathways.txt related to the id provided as parameter
+     *
+     * @param pathwayId the key from pathways.txt related to the Pathway to be returned
+     * @return the Pathway representing a row from pathways.txt related to the id provided as parameter
+     */
     @Override
     public Pathway getPathwayById(final String pathwayId) {
         return pathwayCollection.get(pathwayId);
-    }
-
-    @Override
-    public Pathway addPathway(final Pathway newPathway) throws SQLIntegrityConstraintViolationException {
-        if (pathwayCollection.containsKey(newPathway.getPathwayId())) {
-            throw new SQLIntegrityConstraintViolationException("pathway must be unique in dataset");
-        } else {
-            String pathwayId = newPathway.getPathwayId();
-            pathwayCollection.put(pathwayId, newPathway);
-            return newPathway;
-        }
     }
 }

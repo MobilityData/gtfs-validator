@@ -18,6 +18,10 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways;
 
 import java.util.stream.Stream;
 
+/**
+ * This enum matches types that can be found in the route_type field of pathways.txt
+ * see https://gtfs.org/reference/static#pathwaystxt
+ */
 public enum PathwayMode {
     WALKWAY(1),
     STAIRS(2),
@@ -33,6 +37,15 @@ public enum PathwayMode {
         this.value = value;
     }
 
+    /**
+     * Matches enum values to Integer value. Returns the {@link PathwayMode} enum item value matching the integer passed
+     * as parameter. Returns null if the integer passed as parameter is null or does not match any
+     * {@link PathwayMode} enum item
+     *
+     * @param fromValue value to match to {@link PathwayMode} enum items
+     * @return the enum item matching the integer passed as parameter. Or null if the integer passed as parameter is
+     * null or does not match any {@link PathwayMode} enum item
+     */
     static public PathwayMode fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return null;
@@ -41,5 +54,21 @@ public enum PathwayMode {
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
                 .orElse(null);
+    }
+
+    /**
+     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
+     *
+     * @param value the integer to associate with this enum values
+     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
+     */
+    static public boolean isEnumValueValid(final Integer value) {
+        if (value == null) {
+            return false;
+        }
+        return Stream.of(PathwayMode.values())
+                .filter(enumItem -> enumItem.value == value)
+                .findAny()
+                .orElse(null) != null;
     }
 }

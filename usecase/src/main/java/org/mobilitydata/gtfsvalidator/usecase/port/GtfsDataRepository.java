@@ -29,7 +29,7 @@ public interface GtfsDataRepository {
 
     Route getRouteById(final String routeId);
 
-    Pathway getPathwayById(final String pathwayId);
+    Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException;
 
-    Pathway addPathway(final Pathway newPathway) throws SQLIntegrityConstraintViolationException;
+    Pathway getPathwayById(final String pathwayId);
 }

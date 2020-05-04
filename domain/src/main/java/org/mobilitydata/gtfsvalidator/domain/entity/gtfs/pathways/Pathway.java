@@ -18,42 +18,39 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
-public class Pathway {
+import java.util.List;
 
+public class Pathway extends GtfsEntity {
     @NotNull
     private final String pathwayId;
-
     @NotNull
     private final String fromStopId;
-
     @NotNull
     private final String toStopId;
-
     @NotNull
     private final PathwayMode pathwayMode;
-
     @NotNull
     private final Boolean isBidirectional;
-
     @Nullable
     private final Float length;
-
     @Nullable
     private final Integer traversalTime;
-
     @Nullable
     private final Integer stairCount;
-
     @Nullable
     private final Float maxSlope;
-
     @Nullable
     private final Float minWidth;
-
     @Nullable
     private final String signpostedAs;
-
     @Nullable
     private final String reversedSignpostedAs;
 
@@ -88,67 +85,56 @@ public class Pathway {
         return pathwayId;
     }
 
-    @SuppressWarnings("unused")
     @NotNull
     public String getFromStopId() {
         return fromStopId;
     }
 
-    @SuppressWarnings("unused")
     @NotNull
     public String getToStopId() {
         return toStopId;
     }
 
-    @SuppressWarnings("unused")
     @NotNull
     public PathwayMode getPathwayMode() {
         return pathwayMode;
     }
 
-    @SuppressWarnings("unused")
     @NotNull
     public Boolean getIsBidirectional() {
         return isBidirectional;
     }
 
-    @SuppressWarnings("unused")
     @Nullable
     public Float getLength() {
         return length;
     }
 
-    @SuppressWarnings("unused")
     @Nullable
     public Integer getTraversalTime() {
         return traversalTime;
     }
 
-    @SuppressWarnings("unused")
     @Nullable
     public Integer getStairCount() {
         return stairCount;
     }
 
-    @SuppressWarnings("unused")
     @Nullable
     public Float getMaxSlope() {
         return maxSlope;
     }
 
-    @SuppressWarnings("unused")
     @Nullable
     public Float getMinWidth() {
         return minWidth;
     }
 
-    @SuppressWarnings("unused")
     @Nullable
     public String getSignpostedAs() {
         return signpostedAs;
     }
 
-    @SuppressWarnings("unused")
     @Nullable
     public String getReversedSignpostedAs() {
         return reversedSignpostedAs;
@@ -160,27 +146,27 @@ public class Pathway {
         private String toStopId;
         private PathwayMode pathwayMode;
         private Boolean isBidirectional;
-
         @Nullable
         private Float length;
-
         @Nullable
         private Integer traversalTime;
-
         @Nullable
         private Integer stairCount;
-
         @Nullable
         private Float maxSlope;
-
         @Nullable
         private Float minWidth;
-
         @Nullable
         private String signpostedAs;
-
         @Nullable
         private String reversedSignpostedAs;
+        private Integer originalPathwayModeInteger;
+        private Integer originalIsBiDirectionalInteger;
+        private final List<Notice> noticeCollection;
+
+        public PathwayBuilder(List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
 
         public PathwayBuilder pathwayId(@NotNull final String pathwayId) {
             this.pathwayId = pathwayId;
@@ -199,6 +185,7 @@ public class Pathway {
 
         public PathwayBuilder pathwayMode(@NotNull final Integer pathwayMode) {
             this.pathwayMode = PathwayMode.fromInt(pathwayMode);
+            this.originalPathwayModeInteger = pathwayMode;
             return this;
         }
 
@@ -211,6 +198,7 @@ public class Pathway {
             } else if (isBidirectional == 1) {
                 this.isBidirectional = true;
             }
+            this.originalIsBiDirectionalInteger = isBidirectional;
             return this;
         }
 
@@ -249,36 +237,67 @@ public class Pathway {
             return this;
         }
 
-        public Pathway build() {
-            if (pathwayId == null) {
-                throw new IllegalArgumentException("field pathway_id can not be null");
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+
+            if (pathwayId == null || fromStopId == null || toStopId == null || isBidirectional == null ||
+                    (length != null && length < 0) || (traversalTime != null && traversalTime < 0) ||
+                    (stairCount != null && stairCount < 0) || (minWidth != null && minWidth < 0) || pathwayMode == null) {
+
+                if (pathwayId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("pathways.txt",
+                            "pathway_id", pathwayId));
+                }
+                if (fromStopId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("pathways.txt",
+                            "from_stop_id", pathwayId));
+                }
+                if (toStopId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("pathways.txt",
+                            "to_stop_id", pathwayId));
+                }
+                if (pathwayMode == null) {
+                    if (originalPathwayModeInteger == null) {
+                        noticeCollection.add(new MissingRequiredValueNotice("pathways.txt",
+                                "pathway_mode", pathwayId));
+                    } else {
+                        noticeCollection.add(new UnexpectedEnumValueNotice("pathways.txt",
+                                "pathway_mode", pathwayId, originalPathwayModeInteger));
+                    }
+                }
+                if (isBidirectional == null) {
+                    if (originalPathwayModeInteger == null) {
+                        noticeCollection.add(new MissingRequiredValueNotice("pathways.txt",
+                                "is_bidirectional", pathwayId));
+                    } else {
+                        noticeCollection.add(new UnexpectedEnumValueNotice("pathways.txt",
+                                "is_bidirectional", pathwayId, originalIsBiDirectionalInteger));
+                    }
+                }
+                if (length != null && length < 0) {
+                    noticeCollection.add(new FloatFieldValueOutOfRangeNotice("pathways.txt",
+                            "length", pathwayId, 0, Float.MAX_VALUE, length));
+                }
+                if (traversalTime != null && traversalTime < 0) {
+                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("pathways.txt",
+                            "traversal_time", pathwayId, 0, Integer.MAX_VALUE,
+                            traversalTime));
+                }
+                if (stairCount != null && stairCount < 0) {
+                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("pathways.txt",
+                            "stair_count", pathwayId, 0, Integer.MAX_VALUE,
+                            stairCount));
+                }
+                if (minWidth != null && minWidth < 0) {
+                    noticeCollection.add(new FloatFieldValueOutOfRangeNotice("pathways.txt",
+                            "min_width", pathwayId, 0, Float.MAX_VALUE,
+                            minWidth));
+                }
+                return new EntityBuildResult<>(noticeCollection);
+            } else {
+                return new EntityBuildResult<>(new Pathway(pathwayId, fromStopId, toStopId, pathwayMode, isBidirectional,
+                        length, traversalTime, stairCount, maxSlope, minWidth, signpostedAs, reversedSignpostedAs));
             }
-            if (fromStopId == null) {
-                throw new IllegalArgumentException("field from_stop_id can not be null");
-            }
-            if (toStopId == null) {
-                throw new IllegalArgumentException("field to_stop_id can not be null");
-            }
-            if (pathwayMode == null) {
-                throw new IllegalArgumentException("unexpected value for field pathway_mode");
-            }
-            if (isBidirectional == null) {
-                throw new IllegalArgumentException("invalid value for field is_bidirectional");
-            }
-            if (length != null && length < 0) {
-                throw new IllegalArgumentException("invalid value for field length");
-            }
-            if (traversalTime != null && traversalTime < 0) {
-                throw new IllegalArgumentException("invalid value for field traversal_time");
-            }
-            if (stairCount != null && stairCount < 0) {
-                throw new IllegalArgumentException("invalid value for field stair_count");
-            }
-            if (minWidth != null && minWidth < 0) {
-                throw new IllegalArgumentException("invalid value for field min_width");
-            }
-            return new Pathway(pathwayId, fromStopId, toStopId, pathwayMode, isBidirectional, length, traversalTime,
-                    stairCount, maxSlope, minWidth, signpostedAs, reversedSignpostedAs);
         }
     }
 }
