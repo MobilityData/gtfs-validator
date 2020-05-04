@@ -63,6 +63,10 @@ public class Level extends GtfsEntity {
         return levelName;
     }
 
+    /**
+     * Builder class to create {@link Level} objects. Allows an unordered definition of the different attributes of
+     * {@link Level}.
+     */
     public static class LevelBuilder {
         private String levelId;
         private Float levelIndex;
@@ -85,24 +89,52 @@ public class Level extends GtfsEntity {
             return this;
         }
 
+        /**
+         * Sets field levelIndex value and returns this
+         *
+         * @param levelIndex numeric index of the level that indicates relative position of this level in relation to other
+         *                   levels
+         * @return builder for future object creation
+         */
         public LevelBuilder levelIndex(final Float levelIndex) {
             this.levelIndex = levelIndex;
             return this;
         }
 
+        /**
+         * Sets field levelName value and returns this
+         *
+         * @param levelName optional name of the level
+         * @return builder for future object creation
+         */
         public LevelBuilder levelName(@Nullable final String levelName) {
             this.levelName = levelName;
             return this;
         }
 
-        public Level build() {
-            if (levelId == null) {
-                throw new IllegalArgumentException("field level_id can not be null");
+        /**
+         * Entity representing a row from levels.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of notices.
+         *
+         * @return Entity representing a row from levels.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of notices.
+         */
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+
+            if (levelId == null || levelIndex == null) {
+                if (levelId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("levels.txt", "level_id",
+                            levelId));
+                }
+                if (levelIndex == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("levels.txt", "level_index",
+                            levelId));
+                }
+                return new EntityBuildResult<>(noticeCollection);
+            } else {
+                return new EntityBuildResult<>(new Level(levelId, levelIndex, levelName));
             }
-            if (levelIndex == null) {
-                throw new IllegalArgumentException("field level_index can not be null");
-            }
-            return new Level(levelId, levelIndex, levelName);
         }
     }
 }

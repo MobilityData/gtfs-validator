@@ -61,7 +61,7 @@ public class ProcessParsedLevel {
         builder.levelId(levelId)
                 .levelIndex(levelIndex)
                 .levelName(levelName);
-        @SuppressWarnings("rawtypes") final EntityBuildResult level = builder.build();
+        final EntityBuildResult<?> level = builder.build();
 
         if (level.isSuccess()) {
             if (gtfsDataRepository.addLevel((Level) level.getData()) == null) {
