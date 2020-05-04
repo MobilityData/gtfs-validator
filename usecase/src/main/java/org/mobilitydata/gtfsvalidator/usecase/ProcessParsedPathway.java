@@ -17,13 +17,18 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
+/**
+ * This use case turns a parsed entity representing a row from agency.txt into a concrete class
+ */
 public class ProcessParsedPathway {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
@@ -37,10 +42,18 @@ public class ProcessParsedPathway {
         this.builder = builder;
     }
 
-    @SuppressWarnings("unused")
-    public void execute(final ParsedEntity validatedParsedPathway) throws IllegalArgumentException,
-            SQLIntegrityConstraintViolationException {
-
+    /**
+     * Use case execution method to go from a row from pathways.txt to an internal representation.
+     * <p>
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code Pathway} object if the
+     * requirements from the official GTFS specification are met. When these requirements are not met, related notices
+     * generated in {@code Pathway.PathwayBuilder} are added to the result repository provided in the constructor.
+     * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
+     * agency entities is not respected.
+     *
+     * @param validatedParsedPathway entity to be processed and added to the GTFS data repository
+     */
+    public void execute(final ParsedEntity validatedParsedPathway) {
         final String pathwayId = (String) validatedParsedPathway.get("pathway_id");
         final String fromStopId = (String) validatedParsedPathway.get("from_stop_id");
         final String toStopId = (String) validatedParsedPathway.get("to_stop_id");
@@ -54,82 +67,29 @@ public class ProcessParsedPathway {
         final String signpostedAs = (String) validatedParsedPathway.get("signposted_as");
         final String reversedSignpostedAs = (String) validatedParsedPathway.get("reserved_signposted_as");
 
-        try {
-            builder.pathwayId(pathwayId)
-                    .fromStopId(fromStopId)
-                    .toStopId(toStopId)
-                    .pathwayMode(pathwayMode)
-                    .isBidirectional(isBidirectional)
-                    .length(length)
-                    .traversalTime(traversalTime)
-                    .stairCount(stairCount)
-                    .maxSlope(maxSlope)
-                    .minWidth(minWidth)
-                    .signpostedAs(signpostedAs)
-                    .reversedSignpostedAs(reversedSignpostedAs);
+        builder.pathwayId(pathwayId)
+                .fromStopId(fromStopId)
+                .toStopId(toStopId)
+                .pathwayMode(pathwayMode)
+                .isBidirectional(isBidirectional)
+                .length(length)
+                .traversalTime(traversalTime)
+                .stairCount(stairCount)
+                .maxSlope(maxSlope)
+                .minWidth(minWidth)
+                .signpostedAs(signpostedAs)
+                .reversedSignpostedAs(reversedSignpostedAs);
 
-            gtfsDataRepository.addPathway(builder.build());
+        @SuppressWarnings("rawtypes") final EntityBuildResult pathway = builder.build();
 
-        } catch (IllegalArgumentException e) {
-            if (pathwayId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("pathways.txt",
-                        "pathway_id", validatedParsedPathway.getEntityId()));
+        if (pathway.isSuccess()) {
+            if (gtfsDataRepository.addPathway((Pathway) pathway.getData()) == null) {
+                resultRepository.addNotice(new DuplicatedEntityNotice("pathways.txt", "pathway_id",
+                        validatedParsedPathway.getEntityId()));
             }
-
-            if (fromStopId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("pathways.txt",
-                        "from_stop_id", validatedParsedPathway.getEntityId()));
-            }
-
-            if (toStopId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("pathways.txt",
-                        "to_stop_id", validatedParsedPathway.getEntityId()));
-            }
-
-            if (pathwayMode == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("pathways.txt",
-                        "pathway_mode", validatedParsedPathway.getEntityId()));
-            } else if (pathwayMode < 1 || pathwayMode > 7) {
-                resultRepository.addNotice(new UnexpectedValueNotice("pathways.txt",
-                        "pathway_mode", validatedParsedPathway.getEntityId(), pathwayMode));
-            }
-
-            if (isBidirectional == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("pathways.txt",
-                        "is_bidirectional", validatedParsedPathway.getEntityId()));
-            } else if (isBidirectional < 0 || isBidirectional > 1) {
-                resultRepository.addNotice(new UnexpectedValueNotice("pathways.txt",
-                        "is_bidirectional", validatedParsedPathway.getEntityId(), isBidirectional));
-            }
-
-            if (length != null && length < 0) {
-                resultRepository.addNotice(new FloatFieldValueOutOfRangeNotice("pathways.txt",
-                        "length", validatedParsedPathway.getEntityId(), 0, Float.MAX_VALUE, length));
-            }
-
-            if (traversalTime != null && traversalTime < 0) {
-                resultRepository.addNotice(new IntegerFieldValueOutOfRangeNotice("pathways.txt",
-                        "traversal_time", validatedParsedPathway.getEntityId(), 0, Integer.MAX_VALUE,
-                        traversalTime));
-            }
-
-            if (stairCount != null && stairCount < 0) {
-                resultRepository.addNotice(new IntegerFieldValueOutOfRangeNotice("pathways.txt",
-                        "stair_count", validatedParsedPathway.getEntityId(), 0, Integer.MAX_VALUE,
-                        stairCount));
-            }
-
-            if (minWidth != null && minWidth < 0) {
-                resultRepository.addNotice(new FloatFieldValueOutOfRangeNotice("pathways.txt",
-                        "min_width", validatedParsedPathway.getEntityId(), 0, Float.MAX_VALUE,
-                        minWidth));
-            }
-            throw e;
-
-        } catch (SQLIntegrityConstraintViolationException e) {
-            resultRepository.addNotice(new EntityMustBeUniqueNotice("pathways.txt", "pathway_id",
-                    validatedParsedPathway.getEntityId()));
-            throw e;
+        } else {
+            //noinspection unchecked
+            ((List<Notice>) pathway.getData()).forEach(resultRepository::addNotice);
         }
     }
 }
