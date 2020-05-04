@@ -20,16 +20,14 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException;
+    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
 
-    Route getRouteById(final String routeId);
+    Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
-    Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
+    Route getRouteById(final String routeId);
 
     Pathway getPathwayById(final String pathwayId);
 
