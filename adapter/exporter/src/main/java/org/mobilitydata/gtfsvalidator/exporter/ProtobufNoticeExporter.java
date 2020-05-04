@@ -17,12 +17,12 @@
 package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +32,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProtobufNoticeExporter implements ValidationResultRepository.NoticeExporter {
+public class ProtobufNoticeExporter implements NoticeExporter {
 
     private final GtfsValidationOutputProto.GtfsProblem.Builder protoBuilder;
     private final ProtobufOutputStreamGenerator streamGenerator;
@@ -251,17 +251,6 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
     }
 
     @Override
-    public void export(CouldNotCleanOrCreatePathNotice toExport) throws IOException {
-        protoBuilder.clear()
-                .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getPathToCleanOrCreate())
-                .build()
-                .writeTo(streamGenerator.getStream());
-    }
-
-    @Override
     public void export(InvalidColorNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
@@ -302,7 +291,20 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
     }
 
     @Override
-    public void export(UnexpectedValueNotice toExport) throws IOException {
+    public void export(InvalidCurrencyCodeNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltEntityId(toExport.getFieldName())
+                .setEntityId(toExport.getEntityId())
+                .setAltEntityValue(toExport.getCurrencyCode())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(UnexpectedEnumValueNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
@@ -315,7 +317,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
     }
 
     @Override
-    public void export(IncoherentValuesForFieldsNotice toExport) throws IOException {
+    public void export(IllegalFieldValueCombination toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
@@ -327,20 +329,7 @@ public class ProtobufNoticeExporter implements ValidationResultRepository.Notice
     }
 
     @Override
-    public void export(UnexpectedDefinedFieldNotice toExport) throws IOException {
-        protoBuilder.clear()
-                .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setEntityId(toExport.getFieldName())
-                .setEntityValue(toExport.getFieldValue())
-                .setAltEntityId(toExport.getEntityId())
-                .build()
-                .writeTo(streamGenerator.getStream());
-    }
-
-    @Override
-    public void export(EntityMustBeUniqueNotice toExport) throws IOException {
+    public void export(DuplicatedEntityNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)

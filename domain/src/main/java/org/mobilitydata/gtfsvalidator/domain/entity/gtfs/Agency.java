@@ -18,34 +18,30 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+
+import java.util.List;
 
 /**
  * Class for all entities defined in agency.txt. Can not be directly instantiated: user must use the
  * {@link AgencyBuilder} to create this.
  */
-public class Agency {
-
+public class Agency extends GtfsEntity {
     @Nullable
     private final String agencyId;
-
     @NotNull
     private final String agencyName;
-
     @NotNull
     private final String agencyUrl;
-
     @NotNull
     private final String agencyTimezone;
-
     @Nullable
     private final String agencyLang;
-
     @Nullable
     private final String agencyPhone;
-
     @Nullable
     private final String agencyFareUrl;
-
     @Nullable
     private final String agencyEmail;
 
@@ -126,7 +122,6 @@ public class Agency {
      * {@link Agency}.
      */
     public static class AgencyBuilder {
-
         private String agencyId;
         private String agencyName;
         private String agencyUrl;
@@ -135,6 +130,11 @@ public class Agency {
         private String agencyPhone;
         private String agencyFareUrl;
         private String agencyEmail;
+        private final List<Notice> noticeCollection;
+
+        public AgencyBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
 
         /**
          * Sets field agencyName value and returns this
@@ -219,30 +219,41 @@ public class Agency {
          * @param agencyEmail email address actively monitored by the agency’s customer service department
          * @return builder for future object creation
          */
+        @SuppressWarnings("UnusedReturnValue")
         public AgencyBuilder agencyEmail(@Nullable final String agencyEmail) {
             this.agencyEmail = agencyEmail;
             return this;
         }
 
         /**
-         * Returns a {@link Agency} object from fields provided via {@link AgencyBuilder} methods.
-         * Throws {@link IllegalArgumentException} if fields agencyName, agencyUrl, or agencyTimezone are null.
+         * Entity representing a row from agency.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of notices.
          *
-         * @return Entity representing a row from agency.txt
-         * @throws IllegalArgumentException if fields agencyName, agencyUrl, or agencyTimezone are null.
+         * @return Entity representing a row from agency.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of notices.
          */
-        public Agency build() throws IllegalArgumentException {
-            if (agencyName == null) {
-                throw new IllegalArgumentException("agency_name can not be null");
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+
+            if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
+
+                if (agencyName == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("agency.txt", "agency_name",
+                            agencyId));
+                }
+                if (agencyUrl == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("agency.txt", "agency_url",
+                            agencyId));
+                }
+                if (agencyTimezone == null) {
+                    noticeCollection.add((new MissingRequiredValueNotice("agency.txt",
+                            "agency_timezone", agencyId)));
+                }
+                return new EntityBuildResult<>(noticeCollection);
+            } else {
+                return new EntityBuildResult<>(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
+                        agencyPhone, agencyFareUrl, agencyEmail));
             }
-            if (agencyUrl == null) {
-                throw new IllegalArgumentException("agency_url can not be null");
-            }
-            if (agencyTimezone == null) {
-                throw new IllegalArgumentException("agency_timezone can not be null");
-            }
-            return new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang, agencyPhone,
-                    agencyFareUrl, agencyEmail);
         }
     }
 }
