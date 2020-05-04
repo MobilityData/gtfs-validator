@@ -17,16 +17,18 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.EntityMustBeUniqueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.IntegerFieldValueOutOfRangeNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
+/**
+ * This use case turns a parsed entity representing a row from transfers.txt into a concrete class
+ */
 public class ProcessParsedTransfer {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
@@ -40,45 +42,39 @@ public class ProcessParsedTransfer {
         this.builder = builder;
     }
 
-    public void execute(final ParsedEntity validatedParsedTransfer) throws IllegalArgumentException,
-            SQLIntegrityConstraintViolationException {
+    /**
+     * Use case execution method to go from a row from transfers.txt to an internal representation.
+     * <p>
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code Transfer} object if the
+     * requirements from the official GTFS specification are met. When these requirements are mot met, related notices
+     * generated in {@code Transfer.TransferBuilder} are added to the result repository provided to the constructor.
+     * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
+     * route entities is not respected.
+     *
+     * @param validatedParsedTransfer entity to be processed and added to the GTFS data repository
+     */
+    public void execute(final ParsedEntity validatedParsedTransfer) {
 
         String fromStopId = (String) validatedParsedTransfer.get("from_stop_id");
         String toStopId = (String) validatedParsedTransfer.get("to_stop_id");
         Integer transferType = (Integer) validatedParsedTransfer.get("transfer_type");
         Integer minTransferTime = (Integer) validatedParsedTransfer.get("min_transfer_time");
 
-        try {
-            builder.fromStopId(fromStopId)
-                    .toStopId(toStopId)
-                    .transferType(transferType)
-                    .minTransferTime(minTransferTime);
+        builder.fromStopId(fromStopId)
+                .toStopId(toStopId)
+                .transferType(transferType)
+                .minTransferTime(minTransferTime);
 
-            gtfsDataRepository.addTransfer(builder.build());
+        @SuppressWarnings("rawtypes") final EntityBuildResult transfer = builder.build();
 
-        } catch (IllegalArgumentException e) {
-            if (fromStopId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("transfers.txt",
-                        "from_stop_id", validatedParsedTransfer.getEntityId()));
+        if (transfer.isSuccess()) {
+            if (gtfsDataRepository.addTransfer((Transfer) transfer.getData()) == null) {
+                resultRepository.addNotice(new DuplicatedEntityNotice("transfers.txt",
+                        "from_stop_id;to_stop_id", validatedParsedTransfer.getEntityId()));
             }
-            if (toStopId == null) {
-                resultRepository.addNotice(new MissingRequiredValueNotice("transfers.txt",
-                        "to_stop_id", validatedParsedTransfer.getEntityId()));
-            }
-            if (transferType < 1 || transferType > 3) {
-                resultRepository.addNotice(new UnexpectedValueNotice("transfers.txt", "transfer_type",
-                        validatedParsedTransfer.getEntityId(), transferType));
-            }
-            if (minTransferTime != null && minTransferTime < 0) {
-                resultRepository.addNotice(new IntegerFieldValueOutOfRangeNotice("transfers.txt",
-                        "transfer_type", validatedParsedTransfer.getEntityId(), 0, Integer.MAX_VALUE,
-                        minTransferTime));
-            }
-            throw e;
-        } catch (SQLIntegrityConstraintViolationException e) {
-            resultRepository.addNotice(new EntityMustBeUniqueNotice("transfers.txt", "from_stop_id",
-                    validatedParsedTransfer.getEntityId()));
-            throw e;
+        } else {
+            //noinspection unchecked
+            ((List<Notice>) transfer.getData()).forEach(resultRepository::addNotice);
         }
     }
 }
