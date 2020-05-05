@@ -18,8 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TransfersTest {
 
@@ -51,5 +50,31 @@ class TransfersTest {
     @Test
     void createTransferFromInvalidIntegerValue4ShouldReturnNull() {
         assertNull(Transfers.fromInt(4));
+    }
+
+    @Test
+    void validValue0ShouldReturnTrue() {
+        assertTrue(Transfers.isEnumValueValid(0));
+    }
+
+    @Test
+    void validValue1ShouldReturnTrue() {
+        assertTrue(Transfers.isEnumValueValid(1));
+    }
+
+    @Test
+    void validValue2ShouldReturnTrue() {
+        assertTrue(Transfers.isEnumValueValid(2));
+    }
+
+    @Test
+    void validNullValueShouldReturnTrue() {
+        //noinspection ConstantConditions to avoid lint
+        assertTrue(Transfers.isEnumValueValid(null));
+    }
+
+    @Test
+    void invalidNullValue5ShouldReturnFalse() {
+        assertFalse(Transfers.isEnumValueValid(5));
     }
 }

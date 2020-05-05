@@ -18,6 +18,10 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes;
 
 import java.util.stream.Stream;
 
+/**
+ * This enum matches types that can be found in the transfer field of fare_attributes.txt
+ * see https://gtfs.org/reference/static#fare_attributestxt
+ */
 public enum Transfers {
     NO_TRANSFERS_ALLOWED(0),
     ONE_TRANSFER_ALLOWED(1),
@@ -30,6 +34,15 @@ public enum Transfers {
         this.value = value;
     }
 
+    /**
+     * Matches enum values to Integer value. Returns the {@link Transfers} enum item value matching the integer passed
+     * as parameter. Returns null if the integer passed as parameter is null or does not match any
+     * {@link Transfers} enum item
+     *
+     * @param fromValue value to match to {@link Transfers} enum items
+     * @return the enum item matching the integer passed as parameter. Or null if the integer passed as parameter is
+     * null or does not match any {@link Transfers} enum item
+     */
     static public Transfers fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return UNLIMITED_TRANSFERS;
@@ -43,5 +56,18 @@ public enum Transfers {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
+     *
+     * @param value the integer to associate with this enum values
+     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
+     */
+    static public boolean isEnumValueValid(final Integer value) {
+        if (value == null) {
+            return true;
+        }
+        return (0 <= value && value <= 2);
     }
 }

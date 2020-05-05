@@ -18,8 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PaymentMethodTest {
 
@@ -41,5 +40,25 @@ class PaymentMethodTest {
     @Test
     void createPaymentMethodFromValidValue1ShouldReturnNull() {
         assertEquals(PaymentMethod.BEF0RE_BOARDING, PaymentMethod.fromInt(1));
+    }
+
+    @Test
+    void validValue0ShouldReturnTrue() {
+        assertTrue(PaymentMethod.isEnumValueValid(0));
+    }
+
+    @Test
+    void validValue1ShouldReturnTrue() {
+        assertTrue(PaymentMethod.isEnumValueValid(1));
+    }
+
+    @Test
+    void nullValueShouldReturnFalse() {
+        assertFalse(PaymentMethod.isEnumValueValid(null));
+    }
+
+    @Test
+    void invalidValue5ShouldReturnFalse() {
+        assertFalse(PaymentMethod.isEnumValueValid(5));
     }
 }
