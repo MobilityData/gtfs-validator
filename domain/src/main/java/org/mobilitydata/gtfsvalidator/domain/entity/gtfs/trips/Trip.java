@@ -146,8 +146,6 @@ public class Trip extends GtfsEntity {
         private String routeId;
         private String serviceId;
         private String tripId;
-        @NotNull
-        private final ArrayList<Notice> noticeCollection;
         @Nullable
         private String tripHeadsign;
         @Nullable
@@ -168,10 +166,7 @@ public class Trip extends GtfsEntity {
         private Integer originalBikesAllowedStatusInteger;
         @Nullable
         private Integer originalDirectionIdInteger;
-
-        public TripBuilder(@NotNull final ArrayList<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
+        private final ArrayList<Notice> noticeCollection = new ArrayList<>();
 
         /**
          * Sets field routeId value and returns this

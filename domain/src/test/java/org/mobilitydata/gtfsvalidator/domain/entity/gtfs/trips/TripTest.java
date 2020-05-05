@@ -20,17 +20,14 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.BikesAllowedStatus;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.WheelchairAccessibleStatus;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
-import org.mockito.ArgumentCaptor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 class TripTest {
 
@@ -39,8 +36,7 @@ class TripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullRouteIdShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId(null)
                 .serviceId("service id")
@@ -53,21 +49,19 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        assertTrue(underTest.build().getData() instanceof ArrayList);
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult entityBuildResult = underTest.build();
+        assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("trips.txt", noticeList.get(0).getFilename());
-        assertEquals("route_id", noticeList.get(0).getFieldName());
-        assertEquals("trip id", noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("trips.txt", notice.getFilename());
+        assertEquals("route_id", notice.getFieldName());
+        assertEquals("trip id", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     // Field serviceId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
@@ -75,8 +69,7 @@ class TripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullServiceIdShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId(null)
@@ -89,21 +82,19 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        assertTrue(underTest.build().getData() instanceof ArrayList);
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult entityBuildResult = underTest.build();
+        assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("trips.txt", noticeList.get(0).getFilename());
-        assertEquals("service_id", noticeList.get(0).getFieldName());
-        assertEquals("trip id", noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("trips.txt", notice.getFilename());
+        assertEquals("service_id", notice.getFieldName());
+        assertEquals("trip id", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     // Field tripId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
@@ -111,8 +102,7 @@ class TripTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createTripWithNullTripIdShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -125,27 +115,24 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        assertTrue(underTest.build().getData() instanceof ArrayList);
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult entityBuildResult = underTest.build();
+        assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("trips.txt", noticeList.get(0).getFilename());
-        assertEquals("trip_id", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("trips.txt", notice.getFilename());
+        assertEquals("trip_id", notice.getFieldName());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createTripWithInvalidDirectionIdShouldGenerateUnexpectedEnumValueNotice() {
-        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -158,28 +145,24 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        assertTrue(underTest.build().getData() instanceof ArrayList);
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult entityBuildResult = underTest.build();
+        assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("trips.txt", noticeList.get(0).getFilename());
-        assertEquals("direction_id", noticeList.get(0).getFieldName());
-        assertEquals("trip id", noticeList.get(0).getEntityId());
-        assertEquals("3", noticeList.get(0).getEnumValue());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("trips.txt", notice.getFilename());
+        assertEquals("direction_id", notice.getFieldName());
+        assertEquals("trip id", notice.getEntityId());
+        assertEquals("3", notice.getEnumValue());
     }
 
     @Test
     public void createTripWithValidDirectionIdShouldNotGenerateNotice() {
-        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -198,8 +181,6 @@ class TripTest {
 
         final Trip toCheck = (Trip) buildResult.getData();
 
-        verify(mockNoticeCollection, times(1)).clear();
-
         assertEquals("route id", toCheck.getRouteId());
         assertEquals("service id", toCheck.getServiceId());
         assertEquals("trip id", toCheck.getTripId());
@@ -210,14 +191,11 @@ class TripTest {
         assertEquals("test", toCheck.getShapeId());
         assertEquals(WheelchairAccessibleStatus.WHEELCHAIR_ACCESSIBLE, toCheck.getWheelchairAccessibleStatus());
         assertEquals(BikesAllowedStatus.UNKNOWN_BIKES_ALLOWANCE, toCheck.getBikesAllowedStatus());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
     public void createTripWithInvalidWheelchairAccessibleShouldGenerateUnexpectedEnumValueNotice() {
-        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -230,28 +208,24 @@ class TripTest {
                 .wheelchairAccessible(4)
                 .bikesAllowed(0);
 
-        assertTrue(underTest.build().getData() instanceof ArrayList);
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult entityBuildResult = underTest.build();
+        assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("trips.txt", noticeList.get(0).getFilename());
-        assertEquals("wheelchair_accessible", noticeList.get(0).getFieldName());
-        assertEquals("trip id", noticeList.get(0).getEntityId());
-        assertEquals("4", noticeList.get(0).getEnumValue());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("trips.txt", notice.getFilename());
+        assertEquals("wheelchair_accessible", notice.getFieldName());
+        assertEquals("trip id", notice.getEntityId());
+        assertEquals("4", notice.getEnumValue());
     }
 
     @Test
     public void createTripWithInvalidBikesAllowedShouldGenerateUnexpectedEnumValueNotice() {
-        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Trip.TripBuilder underTest = new Trip.TripBuilder(mockNoticeCollection);
+        final Trip.TripBuilder underTest = new Trip.TripBuilder();
 
         underTest.routeId("route id")
                 .serviceId("service id")
@@ -264,21 +238,18 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(4);
 
-        assertTrue(underTest.build().getData() instanceof ArrayList);
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult entityBuildResult = underTest.build();
+        assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("trips.txt", noticeList.get(0).getFilename());
-        assertEquals("bikes_allowed", noticeList.get(0).getFieldName());
-        assertEquals("trip id", noticeList.get(0).getEntityId());
-        assertEquals("4", noticeList.get(0).getEnumValue());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("trips.txt", notice.getFilename());
+        assertEquals("bikes_allowed", notice.getFieldName());
+        assertEquals("trip id", notice.getEntityId());
+        assertEquals("4", notice.getEnumValue());
     }
 }
