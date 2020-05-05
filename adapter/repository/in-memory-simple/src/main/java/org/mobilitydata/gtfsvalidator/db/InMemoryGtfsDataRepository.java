@@ -31,6 +31,8 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // map storing feedInfo entities on key feed_publisher_name found in file feed_info.txt
     private final Map<String, FeedInfo> feedInfoCollection = new HashMap<>();
 
     /**
