@@ -17,59 +17,49 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 class FeedInfoTest {
     private static final String STRING_TEST_VALUE = "string test value";
 
     @Test
     void createFeedInfoWithNullFeedPublisherNameShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder(mockNoticeCollection);
+        final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder();
 
-        //noinspection ConstantConditions
-        underTest.feedPublisherName(null)
+        final EntityBuildResult<?> entityBuildResult = underTest.feedPublisherName(null)
                 .feedPublisherUrl(STRING_TEST_VALUE)
                 .feedLang(STRING_TEST_VALUE)
                 .feedStartDate(LocalDateTime.now())
                 .feedEndDate(LocalDateTime.now())
                 .feedVersion(STRING_TEST_VALUE)
                 .feedContactEmail(STRING_TEST_VALUE)
-                .feedContactUrl(STRING_TEST_VALUE);
+                .feedContactUrl(STRING_TEST_VALUE)
+                .build();
 
-        underTest.build();
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection
+                = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        assertEquals(1, noticeCollection.size());
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("feed_info.txt", noticeList.get(0).getFilename());
-        assertEquals("feed_publisher_name", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("feed_info.txt", notice.getFilename());
+        assertEquals("feed_publisher_name", notice.getFieldName());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createFeedInfoWithNullFeedPublisherUrlShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder(mockNoticeCollection);
+        final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder();
 
-        @SuppressWarnings("ConstantConditions") final EntityBuildResult<?> entityBuildResult =
+        final EntityBuildResult<?> entityBuildResult =
                 underTest.feedPublisherName(STRING_TEST_VALUE)
                         .feedPublisherUrl(null)
                         .feedLang(STRING_TEST_VALUE)
@@ -80,28 +70,23 @@ class FeedInfoTest {
                         .feedContactUrl(STRING_TEST_VALUE)
                         .build();
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("feed_info.txt", noticeList.get(0).getFilename());
-        assertEquals("feed_contact_url", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("feed_info.txt", notice.getFilename());
+        assertEquals("feed_contact_url", notice.getFieldName());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createFeedInfoWithNullFeedLangShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder(mockNoticeCollection);
+        final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder();
 
-        @SuppressWarnings("ConstantConditions") final EntityBuildResult<?> entityBuildResult =
+        final EntityBuildResult<?> entityBuildResult =
                 underTest.feedPublisherName(STRING_TEST_VALUE)
                         .feedPublisherUrl(STRING_TEST_VALUE)
                         .feedLang(null)
@@ -112,26 +97,23 @@ class FeedInfoTest {
                         .feedContactUrl(STRING_TEST_VALUE)
                         .build();
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("feed_info.txt", noticeList.get(0).getFilename());
-        assertEquals("feed_lang", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("feed_info.txt", notice.getFilename());
+        assertEquals("feed_lang", notice.getFieldName());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
+        assertTrue(entityBuildResult.getData() instanceof List);
     }
 
     @Test
     void createFeedInfoWithValidValuesShouldNotGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder(mockNoticeCollection);
+        final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.feedPublisherName(STRING_TEST_VALUE)
                 .feedPublisherUrl(STRING_TEST_VALUE)
@@ -139,7 +121,5 @@ class FeedInfoTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof FeedInfo);
-        verify(mockNoticeCollection, times(1)).clear();
-        verifyNoMoreInteractions(mockNoticeCollection);
     }
 }

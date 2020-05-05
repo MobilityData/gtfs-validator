@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -136,11 +137,7 @@ public class FeedInfo extends GtfsEntity {
         private String feedContactEmail;
         @Nullable
         private String feedContactUrl;
-        private final List<Notice> noticeCollection;
-
-        public FeedInfoBuilder(final List<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
+        private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
          * Sets field feedPublisherName value and returns this
