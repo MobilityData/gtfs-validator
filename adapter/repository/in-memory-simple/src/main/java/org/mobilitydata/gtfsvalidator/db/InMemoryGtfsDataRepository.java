@@ -102,9 +102,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Add a Transfer representing a row from transfers.txt to this. Return the entity added to the repository if the
-     * uniqueness constraint of route based on composite key from_stop_id and to_stop_id is respected, if this
-     * requirement is not met, returns null.
+     * Add a Transfer representing a row from transfers.txt to this {@link GtfsDataRepository}. Return the entity added
+     * to the repository if the uniqueness constraint of route based on composite key from_stop_id and to_stop_id is
+     * respected, if this requirement is not met, returns null.
      *
      * @param newTransfer the internal representation of a row from transfers.txt to be added to the repository.
      * @return the entity added to the repository if the uniqueness constraint of route based on composite key
@@ -131,12 +131,19 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the Transfer representing a row from transfers.txt related to the composite key provided as parameter
+     * Return the Transfer representing a row from transfers.txt related to the composite key provided as parameter.
      *
      * @param fromStopId first part of the composite key: identifies a stop or station where a connection between
-     *                   routes begins
+     *                   routes begins. Querying on {@param fromStopId}, the method will will only return records
+     *                   containing {@param fromStopId} in the from_stop_id column of transfers.txt GTFS file. This
+     *                   method will not return any records where {@param fromStopId} is in the to_stop_id column of the
+     *                   same pre-mentioned GTFS file.
+     *
      * @param toStopId   second part of the composite key: identifies a stop or station where a connection between
-     *                   routes ends
+     *                   routes ends. Querying on {@param toStopId}, the method will will only return records
+     *                   containing {@param toStopId} in the to_stop_id column of transfers.txt GTFS file. This
+     *                   method will not return any records where {@param toStopId} is in the from_stop_id column
+     *                   of the same pre-mentioned GTFS file.
      * @return the Transfer representing a row from transfers.txt related to the composite key provided as parameter
      */
     @Override
