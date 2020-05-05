@@ -117,7 +117,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddFeedInfoShouldAddFeedIntoAndReturnEntity() {
+    void callToAddFeedInfoShouldReturnEntity() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockFeedInfo.getFeedPublisherName()).thenReturn("feed publisher name");
