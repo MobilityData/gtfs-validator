@@ -18,7 +18,7 @@ This command-line tool written in Java that performs the following steps:
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -e input -o output
+java -jar gtfs-validator-v1.1.0.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -i input -o output
 ```
 
 ...which will:
