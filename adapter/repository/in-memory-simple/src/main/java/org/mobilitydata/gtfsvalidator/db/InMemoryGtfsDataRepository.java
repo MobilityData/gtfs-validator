@@ -117,14 +117,17 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                     (transferCollection.get(newTransfer.getFromStopId()).containsKey(newTransfer.getToStopId()))) {
                 return null;
             } else {
-                String fromStopId = newTransfer.getFromStopId();
-                String toStopId = newTransfer.getToStopId();
-                Map<String, Transfer> innerMap = new HashMap<>();
-                innerMap.put(toStopId, newTransfer);
-                transferCollection.put(fromStopId, innerMap);
+                final String fromStopId = newTransfer.getFromStopId();
+                final String toStopId = newTransfer.getToStopId();
+                if (!transferCollection.containsKey(newTransfer.getFromStopId())) {
+                    final Map<String, Transfer> innerMap = new HashMap<>();
+                    innerMap.put(toStopId, newTransfer);
+                    transferCollection.put(fromStopId, innerMap);
+                } else {
+                    transferCollection.get(newTransfer.getFromStopId()).put(newTransfer.getToStopId(), newTransfer);
+                }
                 return newTransfer;
             }
-
         } else {
             throw new IllegalArgumentException("Cannot add null transfer to data repository");
         }

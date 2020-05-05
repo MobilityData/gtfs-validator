@@ -117,12 +117,27 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void callToAddTransferShouldAddTransferToRepoAndReturnSameEntity() {
-        final Transfer mockTransfer = mock(Transfer.class);
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockTransfer.getFromStopId()).thenReturn("stop id 0");
-        when(mockTransfer.getToStopId()).thenReturn("stop id 1");
+        final Transfer mockTransfer00 = mock(Transfer.class);
+        when(mockTransfer00.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer00.getToStopId()).thenReturn("stop id 1");
 
-        assertEquals(mockTransfer, underTest.addTransfer(mockTransfer));
+        final Transfer mockTransfer01 = mock(Transfer.class);
+        when(mockTransfer01.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer01.getToStopId()).thenReturn("stop id 2");
+
+        final Transfer mockTransfer02 = mock(Transfer.class);
+        when(mockTransfer02.getFromStopId()).thenReturn("stop id 4");
+        when(mockTransfer02.getToStopId()).thenReturn("stop id 5");
+
+        final Transfer mockTransfer03 = mock(Transfer.class);
+        when(mockTransfer03.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer03.getToStopId()).thenReturn("stop id 5");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        assertEquals(mockTransfer00, underTest.addTransfer(mockTransfer00));
+        assertEquals(mockTransfer01, underTest.addTransfer(mockTransfer01));
+        assertEquals(mockTransfer02, underTest.addTransfer(mockTransfer02));
+        assertEquals(mockTransfer03, underTest.addTransfer(mockTransfer03));
     }
 
     @Test
@@ -149,6 +164,8 @@ class InMemoryGtfsDataRepositoryTest {
     void getTransferByStopPairShouldReturnRelatedTransfer() {
         final Transfer mockTransfer00 = mock(Transfer.class);
         final Transfer mockTransfer01 = mock(Transfer.class);
+        final Transfer mockTransfer02 = mock(Transfer.class);
+        final Transfer mockTransfer03 = mock(Transfer.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         when(mockTransfer00.getFromStopId()).thenReturn("stop id 0");
@@ -157,10 +174,31 @@ class InMemoryGtfsDataRepositoryTest {
         when(mockTransfer01.getFromStopId()).thenReturn("stop id 1");
         when(mockTransfer01.getToStopId()).thenReturn("stop id 0");
 
+        when(mockTransfer02.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer02.getToStopId()).thenReturn("stop id 2");
+
+        when(mockTransfer03.getFromStopId()).thenReturn("stop id 4");
+        when(mockTransfer03.getToStopId()).thenReturn("stop id 2");
+
         underTest.addTransfer(mockTransfer00);
         underTest.addTransfer(mockTransfer01);
+        underTest.addTransfer(mockTransfer02);
+        underTest.addTransfer(mockTransfer03);
 
         assertEquals(mockTransfer00, underTest.getTransferByStopPair("stop id 0", "stop id 1"));
         assertEquals(mockTransfer01, underTest.getTransferByStopPair("stop id 1", "stop id 0"));
+        assertEquals(mockTransfer02, underTest.getTransferByStopPair("stop id 0", "stop id 2"));
+        assertEquals(mockTransfer03, underTest.getTransferByStopPair("stop id 4", "stop id 2"));
+    }
+
+    @Test
+    void addTransferWithSameFromStopIdAndToStopIdShouldAddEntityToGtfsDataRepository() {
+        final Transfer mockTransfer = mock(Transfer.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        when(mockTransfer.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer.getToStopId()).thenReturn("stop id 0");
+
+        assertEquals(mockTransfer, underTest.addTransfer(mockTransfer));
     }
 }
