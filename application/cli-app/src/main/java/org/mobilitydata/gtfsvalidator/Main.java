@@ -19,10 +19,12 @@ package org.mobilitydata.gtfsvalidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
+import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +42,8 @@ public class Main {
             // use case will inspect parameters and decide if help menu should be displayed or not
             if (!config.printHelp().execute()) {
 
-                // use case will inspect parameters and display relevant information about the validation execution process
+                // use case will inspect parameters and display relevant information about the validation execution
+                // process
                 config.logExecutionInfo().execute();
 
                 // use case will inspect parameters and decide if GTFS dataset should be downloaded or not
@@ -54,14 +57,30 @@ public class Main {
 
                 filenameList.addAll(config.validateAllOptionalFileName().execute());
 
-                // base validation
+                final List<String> toLoadIntoMemory = new ArrayList<>();
+                // at present this list is hard coded for our needs: agency.txt and routes.txt.
+                toLoadIntoMemory.add("agency.txt");
+                toLoadIntoMemory.add("routes.txt");
+
+                // base validation + load gtfs entities into memory
                 filenameList.forEach(filename -> {
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
 
                     ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
                     while (parseSingleRowForFile.hasNext()) {
-                        config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
+                        final ParsedEntity parsedEntity = parseSingleRowForFile.execute();
+                        config.validateGtfsTypes().execute(parsedEntity);
+
+                        // load gtfs entities into memory
+                        // in the future all filename in filenameList will be processed. For now focusing on routes.txt
+                        // and agency.txt.
+                        // filenames in filenameList will be determined using a dependency tree defined by a JSON file,
+                        // and command lines or configuration file will be used to exclude files from the validation
+                        // process.
+                        if (toLoadIntoMemory.contains(filename)) {
+                            config.loadAllEntityIntoMemory().execute(parsedEntity);
+                        }
                     }
                 });
 
