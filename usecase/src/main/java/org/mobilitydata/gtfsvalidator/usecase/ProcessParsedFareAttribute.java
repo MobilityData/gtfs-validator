@@ -17,9 +17,10 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -52,8 +53,7 @@ public class ProcessParsedFareAttribute {
      *
      * @param validatedFareAttribute entity to be processed and added to the GTFS data repository
      */
-    public void execute(final ParsedEntity validatedFareAttribute, final List<Notice> noticeCollection) {
-
+    public void execute(final ParsedEntity validatedFareAttribute) {
         final String fareId = (String) validatedFareAttribute.get("fare_id");
         final Float price = (Float) validatedFareAttribute.get("price");
         final String currencyType = (String) validatedFareAttribute.get("currency_type");
@@ -70,11 +70,11 @@ public class ProcessParsedFareAttribute {
                 .agencyId(agencyId)
                 .transferDuration(transferDuration);
 
-        final var fareAttribute = builder.build(noticeCollection);
+        final EntityBuildResult<?> fareAttribute = builder.build();
 
-        if (fareAttribute.getState()) {
+        if (fareAttribute.isSuccess()) {
             if (gtfsDataRepository.addFareAttribute((FareAttribute) fareAttribute.getData()) == null) {
-                resultRepository.addNotice(new EntityMustBeUniqueNotice("fare_attributes.txt",
+                resultRepository.addNotice(new DuplicatedEntityNotice("fare_attributes.txt",
                         "fare_id", validatedFareAttribute.getEntityId()));
             }
         } else {

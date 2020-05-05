@@ -1,13 +1,28 @@
+/*
+ * Copyright (c) 2020. MobilityData IO.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
@@ -25,51 +40,115 @@ class ProcessParsedFareAttributeTest {
     private static final int VALID_TRANSFERS_INTEGER = 0;
     private static final int VALID_PAYMENT_METHOD_INTEGER = 1;
     private static final int VALID_TRANSFER_DURATION_INTEGER = 20;
+    private static final String FARE_ID = "fare_id";
+    private static final String PRICE = "price";
+    private static final String CURRENCY_TYPE = "currency_type";
+    private static final String PAYMENT_METHOD = "payment_method";
+    private static final String TRANSFERS = "transfers";
+    private static final String AGENCY_ID = "agency_id";
+    private static final String TRANSFER_DURATION = "transfer_duration";
 
     @Test
-    void processFareAttributeWithNullFareIdShouldGenerateNoticeAndShouldNotBeAddedToResultRepo() {
+    void validatedFareAttributeShouldNotGenerateNoticeAndBeAddedToGtfsDataRepo() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
+                RETURNS_SELF);
+        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
+        final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
+
+        final var mockGenericObject = mock(EntityBuildResult.class);
+        when(mockGenericObject.isSuccess()).thenReturn(true);
+        when(mockGenericObject.getData()).thenReturn(mockFareAttribute);
+
+        //noinspection unchecked to avoid lint
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockParsedFareAttribute.get(FARE_ID)).thenReturn(STRING_TEST);
+        when(mockParsedFareAttribute.get(PRICE)).thenReturn(VALID_PRICE_FLOAT);
+        when(mockParsedFareAttribute.get(CURRENCY_TYPE)).thenReturn(STRING_TEST);
+        when(mockParsedFareAttribute.get(PAYMENT_METHOD)).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
+        when(mockParsedFareAttribute.get(TRANSFERS)).thenReturn(VALID_TRANSFERS_INTEGER);
+        when(mockParsedFareAttribute.get(AGENCY_ID)).thenReturn(STRING_TEST);
+        when(mockParsedFareAttribute.get(TRANSFER_DURATION)).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
+
+        when(mockGtfsDataRepo.addFareAttribute(mockFareAttribute)).thenReturn(mockFareAttribute);
+
+        final ProcessParsedFareAttribute underTest =
+                new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+
+        underTest.execute(mockParsedFareAttribute);
+
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(FARE_ID));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(PRICE));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(CURRENCY_TYPE));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(PAYMENT_METHOD));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFERS));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFER_DURATION));
+
+        verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
+        verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
+        verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
+        verify(mockBuilder, times(1))
+                .paymentMethod(ArgumentMatchers.eq(VALID_PAYMENT_METHOD_INTEGER));
+        verify(mockBuilder, times(1)).transfers(ArgumentMatchers.eq(VALID_TRANSFERS_INTEGER));
+        verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
+        verify(mockBuilder, times(1))
+                .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
+        verify(mockBuilder, times(1)).build();
+
+        verify(mockGenericObject, times(1)).isSuccess();
+        //noinspection ResultOfMethodCallIgnored to avoid lint
+        verify(mockGenericObject, times(1)).getData();
+
+
+        verify(mockGtfsDataRepo, times(1))
+                .addFareAttribute(ArgumentMatchers.eq(mockFareAttribute));
+
+        verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
+    }
+
+    @Test
+    void invalidFareAttributeShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
                 RETURNS_SELF);
         final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
+        //noinspection unchecked to avoid lint
+        final List<Notice> mockNoticeCollection = spy(ArrayList.class);
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
+        mockNoticeCollection.add(mockNotice);
 
-        when(mockNotice.getFilename()).thenReturn("fare_attributes.txt");
-        when(mockNotice.getFieldName()).thenReturn("fare_id");
-        when(mockNotice.getEntityId()).thenReturn("no id");
-        noticeCollection.add(mockNotice);
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+        when(mockGenericObject.getData()).thenReturn(mockNoticeCollection);
 
-        final var mockGenericObject = mock(GenericType.class);
+        //noinspection unchecked to avoid lint
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
 
-        when(mockGenericObject.getData()).thenReturn(noticeCollection);
-        when(mockGenericObject.getState()).thenReturn(false);
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericObject);
-
-        when(mockParsedFareAttribute.get("fare_id")).thenReturn(null);
-        when(mockParsedFareAttribute.get("price")).thenReturn(VALID_PRICE_FLOAT);
-        when(mockParsedFareAttribute.get("currency_type")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("payment_method")).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
-        when(mockParsedFareAttribute.get("transfers")).thenReturn(VALID_TRANSFERS_INTEGER);
-        when(mockParsedFareAttribute.get("agency_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("transfer_duration")).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
-
-        ProcessParsedFareAttribute underTest =
+        final ProcessParsedFareAttribute underTest =
                 new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        underTest.execute(mockParsedFareAttribute, noticeCollection);
+        when(mockParsedFareAttribute.get(FARE_ID)).thenReturn(null);
+        when(mockParsedFareAttribute.get(PRICE)).thenReturn(VALID_PRICE_FLOAT);
+        when(mockParsedFareAttribute.get(CURRENCY_TYPE)).thenReturn(STRING_TEST);
+        when(mockParsedFareAttribute.get(PAYMENT_METHOD)).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
+        when(mockParsedFareAttribute.get(TRANSFERS)).thenReturn(VALID_TRANSFERS_INTEGER);
+        when(mockParsedFareAttribute.get(AGENCY_ID)).thenReturn(STRING_TEST);
+        when(mockParsedFareAttribute.get(TRANSFER_DURATION)).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
 
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("fare_id"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("price"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("currency_type"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("payment_method"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("transfers"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("transfer_duration"));
+        underTest.execute(mockParsedFareAttribute);
+
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(FARE_ID));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(PRICE));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(CURRENCY_TYPE));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(PAYMENT_METHOD));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFERS));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFER_DURATION));
 
         verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
@@ -80,555 +159,57 @@ class ProcessParsedFareAttributeTest {
         verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
         verify(mockBuilder, times(1))
                 .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
+        verify(mockBuilder, times(1)).build();
 
-        verify(mockBuilder, times(1)).build(noticeCollection);
+        verify(mockGenericObject, times(1)).isSuccess();
+        //noinspection ResultOfMethodCallIgnored to avoid lint
+        verify(mockGenericObject, times(1)).getData();
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("fare_id", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
+        verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
         verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
 
     @Test
-    void processFareAttributeWithNullPriceShouldGenerateNoticeAndShouldNotBeAddedToResultRepo() {
+    void duplicateFareAttributeShouldAddNoticeToResultRepoAndShouldNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
                 RETURNS_SELF);
         final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-        final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
-
-        when(mockNotice.getFilename()).thenReturn("fare_attributes.txt");
-        when(mockNotice.getFieldName()).thenReturn("price");
-        when(mockNotice.getEntityId()).thenReturn("no id");
-        noticeCollection.add(mockNotice);
-
-        final var mockGenericObject = mock(GenericType.class);
-
-        when(mockGenericObject.getData()).thenReturn(noticeCollection);
-        when(mockGenericObject.getState()).thenReturn(false);
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericObject);
-
-        when(mockParsedFareAttribute.get("fare_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("price")).thenReturn(null);
-        when(mockParsedFareAttribute.get("currency_type")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("payment_method")).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
-        when(mockParsedFareAttribute.get("transfers")).thenReturn(VALID_TRANSFERS_INTEGER);
-        when(mockParsedFareAttribute.get("agency_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("transfer_duration")).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
-
-        ProcessParsedFareAttribute underTest =
-                new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        underTest.execute(mockParsedFareAttribute, noticeCollection);
-
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("fare_id"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("price"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("currency_type"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("payment_method"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("transfers"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("transfer_duration"));
-
-        verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(null));
-        verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .paymentMethod(ArgumentMatchers.eq(VALID_PAYMENT_METHOD_INTEGER));
-        verify(mockBuilder, times(1)).transfers(ArgumentMatchers.eq(VALID_TRANSFERS_INTEGER));
-        verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
-
-        verify(mockBuilder, times(1)).build(noticeCollection);
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("price", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @Test
-    void processFareAttributeWithNullCurrencyTypeShouldGenerateNoticeAndShouldNotBeAddedToResultRepo() {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
-                RETURNS_SELF);
-        final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-        final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
-
-        when(mockNotice.getFilename()).thenReturn("fare_attributes.txt");
-        when(mockNotice.getFieldName()).thenReturn("currency_type");
-        when(mockNotice.getEntityId()).thenReturn("no id");
-        noticeCollection.add(mockNotice);
-
-        final var mockGenericObject = mock(GenericType.class);
-
-        when(mockGenericObject.getData()).thenReturn(noticeCollection);
-        when(mockGenericObject.getState()).thenReturn(false);
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericObject);
-
-        when(mockParsedFareAttribute.get("fare_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("price")).thenReturn(VALID_PRICE_FLOAT);
-        when(mockParsedFareAttribute.get("currency_type")).thenReturn(null);
-        when(mockParsedFareAttribute.get("payment_method")).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
-        when(mockParsedFareAttribute.get("transfers")).thenReturn(VALID_TRANSFERS_INTEGER);
-        when(mockParsedFareAttribute.get("agency_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("transfer_duration")).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
-
-        ProcessParsedFareAttribute underTest =
-                new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        underTest.execute(mockParsedFareAttribute, noticeCollection);
-
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("fare_id"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("price"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("currency_type"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("payment_method"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("transfers"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("transfer_duration"));
-
-        verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
-        verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(null));
-        verify(mockBuilder, times(1))
-                .paymentMethod(ArgumentMatchers.eq(VALID_PAYMENT_METHOD_INTEGER));
-        verify(mockBuilder, times(1)).transfers(ArgumentMatchers.eq(VALID_TRANSFERS_INTEGER));
-        verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
-
-        verify(mockBuilder, times(1)).build(noticeCollection);
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("currency_type", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @Test
-    void processFareAttributeWithNullPaymentMethodShouldGenerateNoticeAndShouldNotBeAddedToResultRepo() {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
-                RETURNS_SELF);
-        final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-        final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
-
-        when(mockNotice.getFilename()).thenReturn("fare_attributes.txt");
-        when(mockNotice.getFieldName()).thenReturn("payment_method");
-        when(mockNotice.getEntityId()).thenReturn("no id");
-        noticeCollection.add(mockNotice);
-
-        final var mockGenericObject = mock(GenericType.class);
-
-        when(mockGenericObject.getData()).thenReturn(noticeCollection);
-        when(mockGenericObject.getState()).thenReturn(false);
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericObject);
-
-        when(mockParsedFareAttribute.get("fare_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("price")).thenReturn(VALID_PRICE_FLOAT);
-        when(mockParsedFareAttribute.get("currency_type")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("payment_method")).thenReturn(null);
-        when(mockParsedFareAttribute.get("transfers")).thenReturn(VALID_TRANSFERS_INTEGER);
-        when(mockParsedFareAttribute.get("agency_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("transfer_duration")).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
-
-        ProcessParsedFareAttribute underTest =
-                new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        underTest.execute(mockParsedFareAttribute, noticeCollection);
-
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("fare_id"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("price"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("currency_type"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("payment_method"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("transfers"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("transfer_duration"));
-
-        verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
-        verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .paymentMethod(ArgumentMatchers.eq(null));
-        verify(mockBuilder, times(1)).transfers(ArgumentMatchers.eq(VALID_TRANSFERS_INTEGER));
-        verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
-
-        verify(mockBuilder, times(1)).build(noticeCollection);
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("payment_method", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @Test
-    void processFareAttributeWithInvalidPaymentMethodShouldGenerateNoticeAndShouldNotBeAddedToResultRepo() {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
-                RETURNS_SELF);
-        final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-        final UnexpectedValueNotice mockNotice = mock(UnexpectedValueNotice.class);
-
-        when(mockNotice.getFilename()).thenReturn("fare_attributes.txt");
-        when(mockNotice.getFieldName()).thenReturn("payment_method");
-        when(mockNotice.getEntityId()).thenReturn("no id");
-        when(mockNotice.getEnumValue()).thenReturn("5");
-        noticeCollection.add(mockNotice);
-
-        final var mockGenericObject = mock(GenericType.class);
-
-        when(mockGenericObject.getData()).thenReturn(noticeCollection);
-        when(mockGenericObject.getState()).thenReturn(false);
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericObject);
-
-        when(mockParsedFareAttribute.get("fare_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("price")).thenReturn(VALID_PRICE_FLOAT);
-        when(mockParsedFareAttribute.get("currency_type")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("payment_method")).thenReturn(5);
-        when(mockParsedFareAttribute.get("transfers")).thenReturn(VALID_TRANSFERS_INTEGER);
-        when(mockParsedFareAttribute.get("agency_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("transfer_duration")).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
-
-        ProcessParsedFareAttribute underTest =
-                new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        underTest.execute(mockParsedFareAttribute, noticeCollection);
-
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("fare_id"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("price"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("currency_type"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("payment_method"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("transfers"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("transfer_duration"));
-
-        verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
-        verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .paymentMethod(ArgumentMatchers.eq(5));
-        verify(mockBuilder, times(1)).transfers(ArgumentMatchers.eq(VALID_TRANSFERS_INTEGER));
-        verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
-
-        verify(mockBuilder, times(1)).build(noticeCollection);
-
-        final ArgumentCaptor<UnexpectedValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedValueNotice.class);
-
-        verify(mockResultRepo, times(1)).
-                addNotice(captor.capture());
-
-        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("payment_method", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-        assertEquals("5", noticeList.get(0).getEnumValue());
-
-        verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @Test
-    void processFareAttributeWithInvalidTransfersShouldGenerateNoticeAndShouldNotBeAddedToResultRepo() {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
-                RETURNS_SELF);
-        final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-        final UnexpectedValueNotice mockNotice = mock(UnexpectedValueNotice.class);
-
-        when(mockNotice.getFilename()).thenReturn("fare_attributes.txt");
-        when(mockNotice.getFieldName()).thenReturn("transfers");
-        when(mockNotice.getEntityId()).thenReturn("no id");
-        when(mockNotice.getEnumValue()).thenReturn("5");
-        noticeCollection.add(mockNotice);
-
-        final var mockGenericObject = mock(GenericType.class);
-
-        when(mockGenericObject.getData()).thenReturn(noticeCollection);
-        when(mockGenericObject.getState()).thenReturn(false);
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericObject);
-
-        when(mockParsedFareAttribute.get("fare_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("price")).thenReturn(VALID_PRICE_FLOAT);
-        when(mockParsedFareAttribute.get("currency_type")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("payment_method")).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
-        when(mockParsedFareAttribute.get("transfers")).thenReturn(5);
-        when(mockParsedFareAttribute.get("agency_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("transfer_duration")).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
-
-        ProcessParsedFareAttribute underTest =
-                new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        underTest.execute(mockParsedFareAttribute, noticeCollection);
-
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("fare_id"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("price"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("currency_type"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("payment_method"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("transfers"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("transfer_duration"));
-
-        verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
-        verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .paymentMethod(ArgumentMatchers.eq(VALID_PAYMENT_METHOD_INTEGER));
-        verify(mockBuilder, times(1)).transfers(ArgumentMatchers.eq(5));
-        verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
-
-        verify(mockBuilder, times(1)).build(noticeCollection);
-
-        final ArgumentCaptor<UnexpectedValueNotice> captor = ArgumentCaptor.forClass(UnexpectedValueNotice.class);
-
-        verify(mockResultRepo, times(1)).addNotice(captor.capture());
-
-        final List<UnexpectedValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("transfers", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-        assertEquals("5", noticeList.get(0).getEnumValue());
-
-        verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @Test
-    void processFareAttributeWithNullTransfersShouldNotGenerateNotice() {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
-                RETURNS_SELF);
-        final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-
-        final var mockGenericObject = mock(GenericType.class);
         final FareAttribute mockFareAttribute = mock(FareAttribute.class);
 
-        when(mockGenericObject.getState()).thenReturn(true);
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericObject);
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        when(mockGenericObject.isSuccess()).thenReturn(true);
         when(mockGenericObject.getData()).thenReturn(mockFareAttribute);
-        when(mockGtfsDataRepo.addFareAttribute(mockFareAttribute)).thenReturn(mockFareAttribute);
 
-        when(mockParsedFareAttribute.get("fare_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("price")).thenReturn(VALID_PRICE_FLOAT);
-        when(mockParsedFareAttribute.get("currency_type")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("payment_method")).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
-        when(mockParsedFareAttribute.get("transfers")).thenReturn(null);
-        when(mockParsedFareAttribute.get("agency_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("transfer_duration")).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
+        when(mockFareAttribute.getFareId()).thenReturn(FARE_ID);
 
-        ProcessParsedFareAttribute underTest =
+        //noinspection unchecked to avoid lint
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
+
+        final ProcessParsedFareAttribute underTest =
                 new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        underTest.execute(mockParsedFareAttribute, noticeCollection);
+        when(mockParsedFareAttribute.get(FARE_ID)).thenReturn(STRING_TEST);
+        when(mockParsedFareAttribute.get(PRICE)).thenReturn(VALID_PRICE_FLOAT);
+        when(mockParsedFareAttribute.get(CURRENCY_TYPE)).thenReturn(STRING_TEST);
+        when(mockParsedFareAttribute.get(PAYMENT_METHOD)).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
+        when(mockParsedFareAttribute.get(TRANSFERS)).thenReturn(VALID_TRANSFERS_INTEGER);
+        when(mockParsedFareAttribute.get(AGENCY_ID)).thenReturn(STRING_TEST);
+        when(mockParsedFareAttribute.get(TRANSFER_DURATION)).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
 
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("fare_id"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("price"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("currency_type"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("payment_method"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("transfers"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("transfer_duration"));
+        underTest.execute(mockParsedFareAttribute);
 
-        verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
-        verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .paymentMethod(ArgumentMatchers.eq(VALID_PAYMENT_METHOD_INTEGER));
-        verify(mockBuilder, times(1)).transfers(ArgumentMatchers.eq(null));
-        verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(FARE_ID));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(PRICE));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(CURRENCY_TYPE));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(PAYMENT_METHOD));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFERS));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
+        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFER_DURATION));
 
-        verify(mockBuilder, times(1)).build(noticeCollection);
-
-        final ArgumentCaptor<FareAttribute> captor = ArgumentCaptor.forClass(FareAttribute.class);
-
-        verify(mockGtfsDataRepo, times(1)).addFareAttribute(captor.capture());
-
-        final List<FareAttribute> fareAttributeCollection = captor.getAllValues();
-
-        assertEquals(mockFareAttribute, fareAttributeCollection.get(0));
-
-        verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @Test
-    void processFareAttributeWithValidValuesShouldNotGenerateNoticeAndBeAddedToGtfsDataRepo() {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
-                RETURNS_SELF);
-        final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-
-        final var mockGenericObject = mock(GenericType.class);
-        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
-
-        when(mockGenericObject.getState()).thenReturn(true);
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericObject);
-        when(mockGenericObject.getData()).thenReturn(mockFareAttribute);
-        when(mockGtfsDataRepo.addFareAttribute(mockFareAttribute)).thenReturn(mockFareAttribute);
-
-        when(mockParsedFareAttribute.get("fare_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("price")).thenReturn(VALID_PRICE_FLOAT);
-        when(mockParsedFareAttribute.get("currency_type")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("payment_method")).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
-        when(mockParsedFareAttribute.get("transfers")).thenReturn(VALID_TRANSFERS_INTEGER);
-        when(mockParsedFareAttribute.get("agency_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("transfer_duration")).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
-
-        ProcessParsedFareAttribute underTest =
-                new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        underTest.execute(mockParsedFareAttribute, noticeCollection);
-
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("fare_id"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("price"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("currency_type"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("payment_method"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("transfers"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("transfer_duration"));
-
-        verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
-        verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .paymentMethod(ArgumentMatchers.eq(VALID_PAYMENT_METHOD_INTEGER));
-        verify(mockBuilder, times(1)).transfers(ArgumentMatchers.eq(VALID_TRANSFERS_INTEGER));
-        verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
-        verify(mockBuilder, times(1))
-                .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
-
-        verify(mockBuilder, times(1)).build(noticeCollection);
-
-        final ArgumentCaptor<FareAttribute> captor = ArgumentCaptor.forClass(FareAttribute.class);
-
-        verify(mockGtfsDataRepo, times(1)).addFareAttribute(captor.capture());
-
-        final List<FareAttribute> fareAttributeCollection = captor.getAllValues();
-
-        assertEquals(mockFareAttribute, fareAttributeCollection.get(0));
-
-        verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
-    }
-
-    @Test
-    void processTwiceSameFareAttributeShouldGenerateNoticeAndNotBeAddedToRepo() {
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
-                RETURNS_SELF);
-        final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        final List<Notice> noticeCollection = new ArrayList<>();
-
-        final var mockGenericObject = mock(GenericType.class);
-        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
-
-        when(mockGenericObject.getState()).thenReturn(true);
-        when(mockBuilder.build(noticeCollection)).thenReturn(mockGenericObject);
-        when(mockGenericObject.getData()).thenReturn(mockFareAttribute);
-        when(mockGtfsDataRepo.addFareAttribute(mockFareAttribute)).thenReturn(null);
-
-        when(mockParsedFareAttribute.get("fare_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("price")).thenReturn(VALID_PRICE_FLOAT);
-        when(mockParsedFareAttribute.get("currency_type")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("payment_method")).thenReturn(VALID_PAYMENT_METHOD_INTEGER);
-        when(mockParsedFareAttribute.get("transfers")).thenReturn(VALID_TRANSFERS_INTEGER);
-        when(mockParsedFareAttribute.get("agency_id")).thenReturn(STRING_TEST);
-        when(mockParsedFareAttribute.get("transfer_duration")).thenReturn(VALID_TRANSFER_DURATION_INTEGER);
-
-        ProcessParsedFareAttribute underTest =
-                new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
-        underTest.execute(mockParsedFareAttribute, noticeCollection);
-
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("fare_id"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("price"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("currency_type"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("payment_method"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("transfers"));
-        verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq("agency_id"));
-        verify(mockParsedFareAttribute, times(1))
-                .get(ArgumentMatchers.eq("transfer_duration"));
-        //noinspection ResultOfMethodCallIgnored
+        //noinspection ResultOfMethodCallIgnored to avoid lint
         verify(mockParsedFareAttribute, times(1)).getEntityId();
 
         verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
@@ -640,18 +221,22 @@ class ProcessParsedFareAttributeTest {
         verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST));
         verify(mockBuilder, times(1))
                 .transferDuration(ArgumentMatchers.eq(VALID_TRANSFER_DURATION_INTEGER));
+        verify(mockBuilder, times(1)).build();
 
-        verify(mockBuilder, times(1)).build(noticeCollection);
+        verify(mockGenericObject, times(1)).isSuccess();
+        //noinspection ResultOfMethodCallIgnored to avoid lint
+        verify(mockGenericObject, times(1)).getData();
 
         verify(mockGtfsDataRepo, times(1)).addFareAttribute(mockFareAttribute);
-        final ArgumentCaptor<EntityMustBeUniqueNotice> captor = ArgumentCaptor.forClass(EntityMustBeUniqueNotice.class);
+
+        final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final List<EntityMustBeUniqueNotice> noticeList = captor.getAllValues();
+        final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("fare_id", noticeList.get(0).getFieldName());
+        assertEquals(FARE_ID, noticeList.get(0).getFieldName());
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);
