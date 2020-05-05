@@ -116,6 +116,34 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void callToAddFareAttributeShouldAdFareAttributeToRepoAndReturnSameEntity() {
+        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareAttribute.getFareId()).thenReturn("fare attribute id");
+
+        assertEquals(underTest.addFareAttribute(mockFareAttribute), mockFareAttribute);
+    }
+
+    @Test
+    void addSameFareAttributeTwiceShouldReturnNull() {
+        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareAttribute.getFareId()).thenReturn("fare attribute id");
+
+        underTest.addFareAttribute(mockFareAttribute);
+
+        assertNull(underTest.addFareAttribute(mockFareAttribute));
+    }
+
+    @Test
+    void addNullFareAttributeShouldThrowException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addFareAttribute(null));
+        assertEquals("Cannot add null fare attribute to data repository", exception.getMessage());
+    }
+
+    @Test
     void getFareAttributeByFareIdShouldReturnRelatedEntity() {
         final FareAttribute mockFareAttribute00 = mock(FareAttribute.class);
         final FareAttribute mockFareAttribute01 = mock(FareAttribute.class);
@@ -131,23 +159,4 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(mockFareAttribute01, underTest.getFareAttributeByFareId("fare attribute id 01"));
     }
 
-    @Test
-    void callToAddFareAttributeShouldAdFareAttributeToRepoAndReturnSameEntity() {
-        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockFareAttribute.getFareId()).thenReturn("fare attribute id");
-
-        assertEquals(underTest.addFareAttribute(mockFareAttribute), mockFareAttribute);
-    }
-
-    @Test
-    void tryToAddTwiceTheSameFareAttributeShouldThrowException() {
-        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockFareAttribute.getFareId()).thenReturn("fare attribute id");
-
-        underTest.addFareAttribute(mockFareAttribute);
-
-        assertNull(underTest.addFareAttribute(mockFareAttribute));
-    }
 }

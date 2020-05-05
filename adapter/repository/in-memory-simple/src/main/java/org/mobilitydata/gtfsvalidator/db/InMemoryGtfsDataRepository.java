@@ -31,6 +31,7 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, FareAttribute> fareAttributeCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -100,7 +101,30 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
-    private final Map<String, FareAttribute> fareAttributeCollection = new HashMap<>();
+    /**
+     * Add an FareAttribute representing a row from fare_attributes.txt to this {@code GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint of agency based on fare_id is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newFareAttribute the internal representation of a row from fare_attributes.txt to be added to the
+     *                         repository.
+     * @return the entity added to the repository if the uniqueness constraint of agency based on fare_id is respected,
+     * if this requirement is not met returns null.
+     * @throws IllegalArgumentException if the argument is null
+     */
+    @Override
+    public FareAttribute addFareAttribute(final FareAttribute newFareAttribute) throws IllegalArgumentException {
+        if (newFareAttribute != null) {
+            if (fareAttributeCollection.containsKey(newFareAttribute.getFareId())) {
+                return null;
+            } else {
+                fareAttributeCollection.put(newFareAttribute.getFareId(), newFareAttribute);
+                return newFareAttribute;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null fare attribute to data repository");
+        }
+    }
 
     /**
      * Return the FareAttribute representing a row from fare_attributes.txt related to the id provided as parameter
@@ -111,25 +135,5 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FareAttribute getFareAttributeByFareId(final String fareId) {
         return fareAttributeCollection.get(fareId);
-    }
-
-    /**
-     * Add an FareAttribute representing a row from fare_attributes.txt to this. Return the entity added to the
-     * repository if the uniqueness constraint of agency based on fare_id is respected, if this requirement is not met,
-     * returns null.
-     *
-     * @param newFareAttribute the internal representation of a row from fare_attributes.txt to be added to the
-     *                         repository.
-     * @return the entity added to the repository if the uniqueness constraint of agency based on fare_id is respected,
-     * if this requirement is not met returns null.
-     */
-    @Override
-    public FareAttribute addFareAttribute(final FareAttribute newFareAttribute) {
-        if (fareAttributeCollection.containsKey(newFareAttribute.getFareId())) {
-            return null;
-        } else {
-            fareAttributeCollection.put(newFareAttribute.getFareId(), newFareAttribute);
-            return newFareAttribute;
-        }
     }
 }
