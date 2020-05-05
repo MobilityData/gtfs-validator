@@ -74,7 +74,7 @@ public class ProcessParsedFeedInfo {
                 .feedContactEmail(feedContactEmail)
                 .feedContactUrl(feedContactUrl);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult agency = builder.build();
+        final EntityBuildResult<?> agency = builder.build();
 
         if (agency.isSuccess()) {
             if (gtfsDataRepository.addFeedInfo((FeedInfo) agency.getData()) == null) {
@@ -82,7 +82,7 @@ public class ProcessParsedFeedInfo {
                         "feed_publisher_name", validatedFeedInfo.getEntityId()));
             }
         } else {
-            //noinspection unchecked
+            //noinspection unchecked to avoid lint
             ((List<Notice>) agency.getData()).forEach(resultRepository::addNotice);
         }
     }
