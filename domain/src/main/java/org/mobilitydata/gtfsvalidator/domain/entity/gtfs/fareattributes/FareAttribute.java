@@ -18,12 +18,13 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
 import java.util.List;
 
@@ -31,25 +32,18 @@ import java.util.List;
  * Class for all entities defined in fare_attributes.txt. Can not be directly instantiated: user must use the
  * {@code FareAttribute.FareAttributeBuilder} to create this.
  */
-public class FareAttribute {
-
+public class FareAttribute extends GtfsEntity {
     @NotNull
     final String fareId;
-
     private final float price;
-
     @NotNull
     final String currencyType;
-
     @NotNull
     final PaymentMethod paymentMethod;
-
     @NotNull
     final Transfers transfers;
-
     @Nullable
     private final String agencyId;
-
     @Nullable
     private final Integer transferDuration;
 
@@ -126,8 +120,13 @@ public class FareAttribute {
         private Transfers transfers;
         private String agencyId;
         private Integer transferDuration;
-        private Integer paymentMethodInteger;
-        private Integer transfersInteger;
+        private Integer originalPaymentMethodInteger;
+        private Integer originalTransferInteger;
+        private final List<Notice> noticeCollection;
+
+        public FareAttributeBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
 
         /**
          * Sets field fareId value and returns this
@@ -170,7 +169,7 @@ public class FareAttribute {
          */
         public FareAttributeBuilder paymentMethod(final Integer paymentMethod) {
             this.paymentMethod = PaymentMethod.fromInt(paymentMethod);
-            this.paymentMethodInteger = paymentMethod;
+            this.originalPaymentMethodInteger = paymentMethod;
             return this;
         }
 
@@ -182,7 +181,7 @@ public class FareAttribute {
          */
         public FareAttributeBuilder transfers(final Integer transfers) {
             this.transfers = Transfers.fromInt(transfers);
-            this.transfersInteger = transfers;
+            this.originalTransferInteger = transfers;
             return this;
         }
 
@@ -213,15 +212,17 @@ public class FareAttribute {
          * This methods returns an entity representing a row from fare_attributes.txt if the requirements from the
          * official GTFS specification are met. Otherwise, method returns list of {@link Notice}.
          *
-         * @param noticeCollection list of notices to complete
          * @return Entity representing a row from fare_attributes.txt if the requirements from the official GTFS
          * specification are met. Otherwise, method returns list of {@link Notice}.
          */
         @SuppressWarnings("rawtypes")
-        public GenericType build(final List<Notice> noticeCollection) {
-            if (price == null || price < 0 || fareId == null || currencyType == null || paymentMethodInteger == null ||
-                    paymentMethodInteger < 0 || paymentMethodInteger > 2 || (transfersInteger != null &&
-                    (transfersInteger < 0 || transfersInteger > 2)) || transferDuration != null && transferDuration < 0) {
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+
+            if (price == null || price < 0 || fareId == null || currencyType == null ||
+                    !PaymentMethod.isEnumValueValid(originalPaymentMethodInteger) ||
+                    !Transfers.isEnumValueValid(originalTransferInteger) ||
+                    (transferDuration != null && transferDuration < 0)) {
 
                 if (price == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
@@ -238,29 +239,32 @@ public class FareAttribute {
                     noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
                             "currency_type", fareId));
                 }
-                if (paymentMethodInteger == null) {
-                    noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
-                            "payment_method", fareId));
-                } else if (paymentMethodInteger < 0 || paymentMethodInteger > 1) {
-                    noticeCollection.add(new UnexpectedValueNotice("fare_attributes.txt",
-                            "payment_method", fareId, paymentMethodInteger));
+                if (paymentMethod == null) {
+                    if (originalPaymentMethodInteger == null) {
+                        noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
+                                "payment_method", fareId));
+                    } else {
+                        noticeCollection.add(new UnexpectedEnumValueNotice("fare_attributes.txt",
+                                "payment_method", fareId, originalPaymentMethodInteger));
+                    }
                 }
-                //noinspection ConstantConditions
-                if (transfersInteger < 0 || transfersInteger > 2) {
-                    noticeCollection.add(new UnexpectedValueNotice("fare_attributes.txt",
-                            "transfers", fareId, transfersInteger));
+                if (transfers == null) {
+                    if (!Transfers.isEnumValueValid(originalTransferInteger)) {
+                        noticeCollection.add(new UnexpectedEnumValueNotice("fare_attributes.txt",
+                                "transfers", fareId, originalTransferInteger));
+                    } else {
+                        noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
+                                "transfers", fareId));
+                    }
                 }
                 if (transferDuration < 0) {
                     noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("fare_attributes.txt",
                             "transfer_duration", fareId, 0, Integer.MAX_VALUE, transferDuration));
                 }
-                //noinspection unchecked
-                return new GenericType(noticeCollection, false);
+                return new EntityBuildResult(noticeCollection);
             }
-            //noinspection unchecked
-            return new GenericType(new FareAttribute(fareId, price, currencyType, paymentMethod, transfers, agencyId,
-                    transferDuration),
-                    true);
+            return new EntityBuildResult(new FareAttribute(fareId, price, currencyType, paymentMethod, transfers,
+                    agencyId, transferDuration));
         }
     }
 }
