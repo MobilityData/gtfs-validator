@@ -166,7 +166,8 @@ public class Transfer extends GtfsEntity {
                             "transfer_type", fromStopId + ";" + toStopId,
                             originalTransferTypeInteger));
                 }
-                if (minTransferTime != null && minTransferTime < 0) {
+                if (minTransferTime != null && minTransferTime < 1) {
+                    // here minTransferTime threshold should be user configurable
                     noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("transfers.txt",
                             "min_transfer_time", fromStopId + ";" + toStopId, 0,
                             Integer.MAX_VALUE, minTransferTime));
