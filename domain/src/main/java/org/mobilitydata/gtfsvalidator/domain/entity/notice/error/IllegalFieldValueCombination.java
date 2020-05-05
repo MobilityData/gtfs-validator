@@ -21,30 +21,30 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class UnexpectedValueNotice extends ErrorNotice {
-    private final Integer enumValue;
+public class IllegalFieldValueCombination extends ErrorNotice {
     private final String fieldName;
+    private final String conflictingFieldName;
 
-    public UnexpectedValueNotice(final String filename, final String fieldName, final String entityId,
-                                 final Integer enumValue) {
-        super(filename, E_018,
-                "Unexpected enum value",
-                "Invalid value :" + enumValue + " - for field:" + fieldName + " in file:" + filename +
-                        " for entity with id:" + entityId, entityId);
+    public IllegalFieldValueCombination(final String filename, final String fieldName,
+                                        final String conflictingFieldName, final String entityId) {
+        super(filename, E_019,
+                "Conflicting field values",
+                "Conflicting field values for fields:" + fieldName + " and field:" + conflictingFieldName, entityId);
         this.fieldName = fieldName;
-        this.enumValue = enumValue;
+        this.conflictingFieldName = conflictingFieldName;
     }
+
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
 
-    public String getEnumValue() {
-        return String.valueOf(enumValue);
-    }
-
     public String getFieldName() {
         return fieldName;
+    }
+
+    public String getConflictingFieldName() {
+        return conflictingFieldName;
     }
 }

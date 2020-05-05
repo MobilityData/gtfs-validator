@@ -21,19 +21,17 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class IncoherentValuesForFieldsNotice extends ErrorNotice {
+public class InvalidCurrencyCodeNotice extends ErrorNotice {
     private final String fieldName;
-    private final String conflictingFieldName;
+    private String currencyCode;
 
-    public IncoherentValuesForFieldsNotice(final String filename, final String fieldName,
-                                           final String conflictingFieldName, final String entityId) {
-        super(filename, E_018,
-                "Conflicting field values",
-                "Conflicting field values for fields:" + fieldName + " and field:" + conflictingFieldName, entityId);
+    public InvalidCurrencyCodeNotice(final String filename, final String fieldName, final String entityId,
+                                     String currencyCode) {
+        super(filename, E_018, "Invalid currency code", "Invalid currency code: " + currencyCode +
+                " in field: " + fieldName + " for entity with id: " + entityId, entityId);
         this.fieldName = fieldName;
-        this.conflictingFieldName = conflictingFieldName;
+        this.currencyCode = currencyCode;
     }
-
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
@@ -44,7 +42,7 @@ public class IncoherentValuesForFieldsNotice extends ErrorNotice {
         return fieldName;
     }
 
-    public String getConflictingFieldName() {
-        return conflictingFieldName;
+    public String getCurrencyCode() {
+        return currencyCode;
     }
 }

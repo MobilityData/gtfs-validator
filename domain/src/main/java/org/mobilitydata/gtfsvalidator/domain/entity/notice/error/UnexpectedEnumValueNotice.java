@@ -21,20 +21,27 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class EntityMustBeUniqueNotice extends ErrorNotice {
+public class UnexpectedEnumValueNotice extends ErrorNotice {
+    private final Integer enumValue;
     private final String fieldName;
 
-    public EntityMustBeUniqueNotice(final String filename, final String fieldName, final String entityId) {
-        super(filename, E_020,
-                "Duplicate entity",
-                "Entity must be unique in file: " + filename + "found other entity with same value for " +
-                        "field: " + fieldName, entityId);
+    public UnexpectedEnumValueNotice(final String filename, final String fieldName, final String entityId,
+                                     final Integer enumValue) {
+        super(filename, E_021,
+                "Unexpected enum value",
+                "Invalid value :" + enumValue + " - for field:" + fieldName + " in file:" + filename +
+                        " for entity with id:" + entityId, entityId);
         this.fieldName = fieldName;
+        this.enumValue = enumValue;
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
+    }
+
+    public String getEnumValue() {
+        return String.valueOf(enumValue);
     }
 
     public String getFieldName() {

@@ -695,7 +695,41 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportUnexpectedValueNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportInvalidCurrencyCodeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new InvalidCurrencyCodeNotice(FILENAME, "field_name", "entity_id",
+                "currency_code"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setAltEntityId(ArgumentMatchers.eq("field_name"));
+        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("entity_id"));
+        verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("currency_code"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportUnexpectedEnumValueNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -710,7 +744,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new UnexpectedValueNotice(FILENAME, "field_name",
+        underTest.export(new UnexpectedEnumValueNotice(FILENAME, "field_name",
                 "entity_id", 2));
 
         verify(mockBuilder, times(1)).clear();
@@ -727,7 +761,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportIncoherentValuesNoticeForFieldsShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportIllegalFieldValueCombinationShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -742,7 +776,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new IncoherentValuesForFieldsNotice(FILENAME, "field_name",
+        underTest.export(new IllegalFieldValueCombination(FILENAME, "field_name",
                 "conflicting_field_name", "entity_id"));
 
         verify(mockBuilder, times(1)).clear();
@@ -759,7 +793,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportUnexpectedDefinedFieldNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportDuplicatedEntityNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -774,41 +808,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new UnexpectedDefinedFieldNotice(FILENAME, "field_name",
-                "field_value", "entity_id"));
-
-        verify(mockBuilder, times(1)).clear();
-        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
-        verify(mockBuilder, times(1)).setType(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR));
-        verify(mockBuilder, times(1)).setSeverity(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("field_name"));
-        verify(mockBuilder, times(1)).setEntityValue(
-                ArgumentMatchers.eq("field_value"));
-        verify(mockBuilder, times(1)).setAltEntityId(
-                ArgumentMatchers.eq("entity_id"));
-        verify(mockBuilder, times(1)).build();
-        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
-    }
-
-    @Test
-    void exportEntityMustBeUniqueNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
-                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
-
-        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
-
-        when(mockBuilder.build()).thenReturn(mockProblem);
-
-        OutputStream mockStream = mock(OutputStream.class);
-
-        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
-                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
-        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
-
-        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new EntityMustBeUniqueNotice(FILENAME, "field_name", "entity_id"));
+        underTest.export(new DuplicatedEntityNotice(FILENAME, "field_name", "entity_id"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));

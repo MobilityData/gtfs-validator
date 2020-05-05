@@ -17,9 +17,10 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -48,12 +49,12 @@ public class ProcessParsedRoute {
      * This use case extracts values from a {@code ParsedEntity} and creates a {@code Route} object if the requirements
      * from the official GTFS specification are met. When these requirements are mot met, related notices generated in
      * {@code Route.RouteBuilder} are added to the result repository provided to the constructor.
-     * This use case also adds a {@code EntityMustBeUniqueNotice} to said repository if the uniqueness constraint on
+     * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
      * route entities is not respected.
      *
      * @param validatedParsedRoute entity to be processed and added to the GTFS data repository
      */
-    public void execute(final ParsedEntity validatedParsedRoute, final List<Notice> noticeCollection) {
+    public void execute(final ParsedEntity validatedParsedRoute) {
 
         final String routeId = (String) validatedParsedRoute.get("route_id");
         final String agencyId = (String) validatedParsedRoute.get("agency_id");
@@ -77,11 +78,11 @@ public class ProcessParsedRoute {
                 .routeTextColor(routeTextColor)
                 .routeSortOrder(routeSortOrder);
 
-        final var route = builder.build(noticeCollection);
+        @SuppressWarnings("rawtypes") final EntityBuildResult route = builder.build();
 
-        if (route.getState()) {
+        if (route.isSuccess()) {
             if (gtfsDataRepository.addRoute((Route) route.getData()) == null) {
-                resultRepository.addNotice(new EntityMustBeUniqueNotice("routes.txt",
+                resultRepository.addNotice(new DuplicatedEntityNotice("routes.txt",
                         "route_id", validatedParsedRoute.getEntityId()));
             }
         } else {

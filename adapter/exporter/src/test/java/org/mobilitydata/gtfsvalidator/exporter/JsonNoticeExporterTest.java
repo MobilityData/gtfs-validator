@@ -354,11 +354,25 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportUnexpectedValueNoticeShouldWriteObject() throws IOException {
+    void exportInvalidCurrencyCodeNoticeShouldWriteObject() throws IOException {
+
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        UnexpectedValueNotice toExport = new UnexpectedValueNotice(FILENAME, "field_name",
+        InvalidCurrencyCodeNotice toExport = new InvalidCurrencyCodeNotice(FILENAME, "field_name", "entity_id",
+                "currency_code");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportUnexpectedEnumValueNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        UnexpectedEnumValueNotice toExport = new UnexpectedEnumValueNotice(FILENAME, "field_name",
                 "entity_id", 2);
         underTest.export(toExport);
 
@@ -367,11 +381,11 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportIncoherentValuesForFieldsNoticeShouldWriteObject() throws IOException {
+    void exportIllegalFieldValueCombinationNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        IncoherentValuesForFieldsNotice toExport = new IncoherentValuesForFieldsNotice(FILENAME, "field_name",
+        IllegalFieldValueCombination toExport = new IllegalFieldValueCombination(FILENAME, "field_name",
                 "conflicting_field_name", "entity_id");
         underTest.export(toExport);
 
@@ -380,24 +394,11 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportUnexpectedDefinedFieldNoticeShouldWriteObject() throws IOException {
+    void exportDuplicatedEntityNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        UnexpectedDefinedFieldNotice toExport = new UnexpectedDefinedFieldNotice(FILENAME, "field_name",
-                "field_value", "entity_id");
-        underTest.export(toExport);
-
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
-        verifyNoMoreInteractions(mockGenerator);
-    }
-
-    @Test
-    void exportEntityMustBeUniqueNoticeShouldWriteObject() throws IOException {
-        JsonGenerator mockGenerator = mock(JsonGenerator.class);
-
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        EntityMustBeUniqueNotice toExport = new EntityMustBeUniqueNotice(FILENAME, "field_name",
+        DuplicatedEntityNotice toExport = new DuplicatedEntityNotice(FILENAME, "field_name",
                 "entity_id");
         underTest.export(toExport);
 

@@ -18,22 +18,36 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 
+import java.util.List;
+
 /**
  * Generic class to handle values generated at building stage of entities.
  * This class contains either a list of {@code Notice} or a GTFS entity.
  *
  * @param <T> list of {@link Notice} or GTFS entity.
  */
-public class GenericType<T> {
+public class EntityBuildResult<T> {
     private final T data;
-    private final boolean state;
+    private final Status status;
 
     /**
-     * Takes a value of "some type" and set it to the field
+     * Takes a value of type list and sets it to the field data. Sets field status to Failure.
+     * of gtfs entity building
      */
-    public GenericType(T data, boolean state) {
-        this.data = data;
-        this.state = state;
+    public EntityBuildResult(final List<Notice> data) {
+        //noinspection unchecked
+        this.data = (T) data;
+        this.status = Status.FAILURE;
+    }
+
+    /**
+     * Takes a value of type GtfsEntity and sets it to the field data. Sets field status to Success.
+     * of gtfs entity building
+     */
+    public EntityBuildResult(final GtfsEntity entity) {
+        //noinspection unchecked
+        this.data = (T) entity;
+        this.status = Status.SUCCESS;
     }
 
     /**
@@ -46,11 +60,19 @@ public class GenericType<T> {
     }
 
     /**
-     * Returns true if success, otherwise false
+     * Returns true if entity building succeeded, otherwise returns false
      *
-     * @return if success, otherwise false
+     * @return true if entity building succeeded, otherwise returns false
      */
-    public boolean getState() {
-        return state;
+    public boolean isSuccess() {
+        return status == Status.SUCCESS;
+    }
+
+    /**
+     * Enum item to clearly define the building status of a gtfs entity.
+     */
+    private enum Status {
+        FAILURE,
+        SUCCESS
     }
 }

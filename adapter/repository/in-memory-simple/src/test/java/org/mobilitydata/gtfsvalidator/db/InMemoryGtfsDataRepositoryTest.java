@@ -20,8 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +36,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddAgencyShouldReturnNull() {
+    void addSameAgencyTwiceShouldReturnNull() {
         final Agency mockAgency = mock(Agency.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockAgency.getAgencyId()).thenReturn("agency id");
@@ -45,6 +44,15 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addAgency(mockAgency);
 
         assertNull(underTest.addAgency(mockAgency));
+    }
+
+    @Test
+    void addNullAgencyShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        //noinspection ConstantConditions
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addAgency(null));
+        assertEquals("Cannot add null agency to data repository", exception.getMessage());
     }
 
     @Test
@@ -72,7 +80,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddRouteShouldReturnNull() {
+    void addSameRouteTwiceShouldReturnNull() {
         final Route mockRoute = mock(Route.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockRoute.getRouteId()).thenReturn("route id");
@@ -80,6 +88,15 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addRoute(mockRoute);
 
         assertNull(underTest.addRoute(mockRoute));
+    }
+
+    @Test
+    void addNullRouteShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        //noinspection ConstantConditions
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addRoute(null));
+        assertEquals("Cannot add null route to data repository", exception.getMessage());
     }
 
     @Test

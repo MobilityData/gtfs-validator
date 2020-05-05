@@ -18,8 +18,9 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.EntityMustBeUniqueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -32,7 +33,6 @@ public class ProcessParsedAgency {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
     private final Agency.AgencyBuilder builder;
-
 
     public ProcessParsedAgency(final ValidationResultRepository resultRepository,
                                final GtfsDataRepository gtfsDataRepository,
@@ -48,13 +48,12 @@ public class ProcessParsedAgency {
      * This use case extracts values from a {@code ParsedEntity} and creates a {@code Agency} object if the requirements
      * from the official GTFS specification are met. When these requirements are not met, related notices generated in
      * {@code Agency.AgencyBuilder} are added to the result repository provided in the constructor.
-     * This use case also adds a {@code EntityMustBeUniqueNotice} to said repository if the uniqueness constraint on
+     * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
      * agency entities is not respected.
      *
      * @param validatedAgencyEntity entity to be processed and added to the GTFS data repository
      */
-    public void execute(final ParsedEntity validatedAgencyEntity, final List<Notice> noticeCollection) {
-
+    public void execute(final ParsedEntity validatedAgencyEntity) {
         final String agencyId = (String) validatedAgencyEntity.get("agency_id");
         final String agencyName = (String) validatedAgencyEntity.get("agency_name");
         final String agencyUrl = (String) validatedAgencyEntity.get("agency_url");
@@ -73,11 +72,11 @@ public class ProcessParsedAgency {
                 .agencyFareUrl(agencyFareUrl)
                 .agencyEmail(agencyEmail);
 
-        final var agency = builder.build(noticeCollection);
+        @SuppressWarnings("rawtypes") final EntityBuildResult agency = builder.build();
 
-        if (agency.getState()) {
+        if (agency.isSuccess()) {
             if (gtfsDataRepository.addAgency((Agency) agency.getData()) == null) {
-                resultRepository.addNotice(new EntityMustBeUniqueNotice("agency.txt", "agency_id",
+                resultRepository.addNotice(new DuplicatedEntityNotice("agency.txt", "agency_id",
                         validatedAgencyEntity.getEntityId()));
             }
         } else {

@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -28,6 +29,7 @@ import java.util.Map;
  */
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
+    private final Map<String, Route> routeCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -38,12 +40,17 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * respected, if this requirement is not met returns null.
      */
     @Override
-    public Agency addAgency(final Agency newAgency) {
-        if (agencyCollection.containsKey(newAgency.getAgencyId())) {
-            return null;
+    public Agency addAgency(@NotNull final Agency newAgency) throws IllegalArgumentException {
+        //noinspection ConstantConditions
+        if (newAgency != null) {
+            if (agencyCollection.containsKey(newAgency.getAgencyId())) {
+                return null;
+            } else {
+                agencyCollection.put(newAgency.getAgencyId(), newAgency);
+                return newAgency;
+            }
         } else {
-            agencyCollection.put(newAgency.getAgencyId(), newAgency);
-            return newAgency;
+            throw new IllegalArgumentException("Cannot add null agency to data repository");
         }
     }
 
@@ -58,34 +65,37 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return agencyCollection.get(agencyId);
     }
 
-    private final Map<String, Route> routeCollection = new HashMap<>();
+    /**
+     * Add a Route representing a row from routes.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of route based on route_id is respected, if this requirement is not met, returns null.
+     *
+     * @param newRoute the internal representation of a row from routes.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on route_id is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public Route addRoute(@NotNull final Route newRoute) throws IllegalArgumentException {
+        //noinspection ConstantConditions
+        if (newRoute != null) {
+            if (routeCollection.containsKey(newRoute.getRouteId())) {
+                return null;
+            } else {
+                routeCollection.put(newRoute.getRouteId(), newRoute);
+                return newRoute;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null route to data repository");
+        }
+    }
 
     /**
-     * Return the Routes representing a row from routes.txt related to the id provided as parameter
+     * Return the Route representing a row from routes.txt related to the id provided as parameter
      *
      * @param routeId the key from routes.txt related to the Route to be returned
-     * @return the Agency representing a row from routes.txt related to the id provided as parameter
+     * @return the Route representing a row from routes.txt related to the id provided as parameter
      */
     @Override
     public Route getRouteById(final String routeId) {
         return routeCollection.get(routeId);
-    }
-
-    /**
-     * Add an Route representing a row from routes.txt to this. Return the entity added to the repository if the
-     * uniqueness constraint of agency based on route_id is respected, if this requirement is not met, returns null.
-     *
-     * @param newRoute the internal representation of a row from routes.txt to be added to the repository.
-     * @return the entity added to the repository if the uniqueness constraint of agency based on route_id is
-     * respected, if this requirement is not met returns null.
-     */
-    @Override
-    public Route addRoute(final Route newRoute) {
-        if (routeCollection.containsKey(newRoute.getRouteId())) {
-            return null;
-        } else {
-            routeCollection.put(newRoute.getRouteId(), newRoute);
-            return newRoute;
-        }
     }
 }

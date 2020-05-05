@@ -18,10 +18,11 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GenericType;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
 import java.util.List;
 
@@ -29,35 +30,25 @@ import java.util.List;
  * Class for all entities defined in routes.txt. Can not be directly instantiated: user must use the
  * {@link RouteBuilder} to create this.
  */
-public class Route {
-
+public class Route extends GtfsEntity {
     @NotNull
     private final String routeId;
-
     @Nullable
     private final String agencyId;
-
     @Nullable
     private final String routeShortName;
-
     @Nullable
     private final String routeLongName;
-
     @Nullable
     private final String routeDesc;
-
     @NotNull
     private final RouteType routeType;
-
     @Nullable
     private final String routeUrl;
-
     @Nullable
     private final String routeColor;
-
     @Nullable
     private final String routeTextColor;
-
     @Nullable
     private final Integer routeSortOrder;
 
@@ -151,7 +142,6 @@ public class Route {
      */
     @SuppressWarnings("rawtypes")
     public static class RouteBuilder {
-
         private String routeId;
         private String agencyId;
         private String routeShortName;
@@ -162,7 +152,12 @@ public class Route {
         private String routeColor;
         private String routeTextColor;
         private Integer routeSortOrder;
-        private Integer fromValue;
+        private Integer originalRouteTypeInteger;
+        private final List<Notice> noticeCollection;
+
+        public RouteBuilder(final List<Notice> noticeCollection) {
+            this.noticeCollection = noticeCollection;
+        }
 
         /**
          * Sets field routeId value and returns this
@@ -220,14 +215,14 @@ public class Route {
         }
 
         /**
-         * Sets field routeType value and returns this. Updates field fromValue.
+         * Sets fields routeType, originalRouteTypeInteger and returns this
          *
          * @param routeType Indicates the type of transportation used on a route
          * @return builder for future object creation
          */
         public RouteBuilder routeType(final Integer routeType) {
             this.routeType = RouteType.fromInt(routeType);
-            this.fromValue = routeType;
+            this.originalRouteTypeInteger = routeType;
             return this;
         }
 
@@ -278,33 +273,31 @@ public class Route {
 
         /**
          * Returns an entity representing a row from route.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns a list of notices.
+         * are met. Otherwise, method returns an entity representing a list of notices.
          *
-         * @param noticeCollection list of notice to complete
-         * @return Entity representing a row from route.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns a list of notices.
+         * @return entity representing a row from route.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of notices.
          */
-        public GenericType build(final List<Notice> noticeCollection) throws IllegalArgumentException {
+        public EntityBuildResult<?> build() throws IllegalArgumentException {
+            noticeCollection.clear();
+
             if (routeId == null || routeType == null) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
                             routeId));
                 }
-                if (fromValue == null) {
+                if (originalRouteTypeInteger == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
                             routeId));
                 }
-                if (!RouteType.isEnumValueLegal(fromValue)) {
-                    noticeCollection.add(new UnexpectedValueNotice("routes.txt", "route_type",
-                            routeId, fromValue));
+                if (!RouteType.isEnumValueValid(originalRouteTypeInteger)) {
+                    noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
+                            routeId, originalRouteTypeInteger));
                 }
-                //noinspection unchecked
-                return new GenericType(noticeCollection, false);
+                return new EntityBuildResult(noticeCollection);
             } else {
-                //noinspection unchecked
-                return new GenericType(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
-                        routeType, routeUrl, routeColor, routeTextColor, routeSortOrder),
-                        true);
+                return new EntityBuildResult(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
+                        routeType, routeUrl, routeColor, routeTextColor, routeSortOrder));
             }
         }
     }

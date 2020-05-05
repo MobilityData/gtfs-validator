@@ -16,8 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum WheelchairAccessibleStatus {
@@ -31,15 +29,23 @@ public enum WheelchairAccessibleStatus {
         this.value = value;
     }
 
-    static protected List<Integer> getValues() {
-        return Stream.of(WheelchairAccessibleStatus.values()).map(enumItem -> enumItem.value).collect(Collectors.toList());
-    }
-
+    /**
+     * Matches enum values to Integer value. Returns the enum item value matching the integer passed as parameter.
+     * Returns default value UNKNOWN_WHEELCHAIR_ACCESSIBILITY if the integer passed as parameter is null. This method
+     * returns null if no enum item matches the integer passed as parameter. Otherwise, returns the enum item associated
+     * to the value passed as parameter.
+     * {@link WheelchairAccessibleStatus} enum item
+     *
+     * @param fromValue value to match to {@link WheelchairAccessibleStatus} enum items
+     * @return the default value UNKNOWN_WHEELCHAIR_ACCESSIBILITY if the integer passed as parameter is null.
+     * This method returns null if no enum item matches the integer passed as parameter. Otherwise, returns the enum
+     * item associated to the value passed as parameter.
+     */
     static public WheelchairAccessibleStatus fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return UNKNOWN_WHEELCHAIR_ACCESSIBILITY;
         }
-        if (getValues().contains(fromValue)) {
+        if (isEnumValueValid(fromValue)) {
             //noinspection OptionalGetWithoutIsPresent
             return Stream.of(WheelchairAccessibleStatus.values())
                     .filter(enumItem -> enumItem.value == fromValue)
@@ -48,5 +54,21 @@ public enum WheelchairAccessibleStatus {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
+     *
+     * @param value the integer to associate with this enum values
+     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
+     */
+    static public boolean isEnumValueValid(final Integer value) {
+        if (value == null) {
+            return true;
+        }
+        return Stream.of(WheelchairAccessibleStatus.values())
+                .filter(enumItem -> enumItem.value == value)
+                .findAny()
+                .orElse(null) != null;
     }
 }
