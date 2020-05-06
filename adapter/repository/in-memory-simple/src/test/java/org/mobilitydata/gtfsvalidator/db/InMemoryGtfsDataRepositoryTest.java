@@ -116,15 +116,6 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddFeedInfoShouldReturnEntity() {
-        final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockFeedInfo.getFeedPublisherName()).thenReturn("feed publisher name");
-
-        assertEquals(mockFeedInfo, underTest.addFeedInfo(mockFeedInfo));
-    }
-
-    @Test
     void addSameFeedInfoTwiceShouldReturnNull() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -144,15 +135,15 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getFeedInfoByFeedPublisherNameShouldReturnRelatedEntity() {
+    void addFeedInfoShouldReturnSameEntityAndGetFeedInfoByPublisherNameShouldReturnRElatedEntity() {
         final FeedInfo mockFeedInfo00 = mock(FeedInfo.class);
         final FeedInfo mockFeedInfo01 = mock(FeedInfo.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockFeedInfo00.getFeedPublisherName()).thenReturn("feed publisher 0");
         when(mockFeedInfo01.getFeedPublisherName()).thenReturn("feed publisher 1");
 
-        underTest.addFeedInfo(mockFeedInfo00);
-        underTest.addFeedInfo(mockFeedInfo01);
+        assertEquals(mockFeedInfo00, underTest.addFeedInfo(mockFeedInfo00));
+        assertEquals(mockFeedInfo01, underTest.addFeedInfo(mockFeedInfo01));
 
         assertEquals(mockFeedInfo00, underTest.getFeedInfoByFeedPublisherName("feed publisher 0"));
         assertEquals(mockFeedInfo01, underTest.getFeedInfoByFeedPublisherName("feed publisher 1"));
