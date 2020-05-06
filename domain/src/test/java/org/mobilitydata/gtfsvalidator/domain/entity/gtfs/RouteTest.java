@@ -18,20 +18,15 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
-import org.mockito.ArgumentCaptor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 class RouteTest {
-
     private static final String STRING_TEST_VALUE = "test_value";
     private static final int INT_TEST_VALUE = 0;
 
@@ -40,10 +35,9 @@ class RouteTest {
     @SuppressWarnings("ConstantConditions")
     @Test
     public void createRouteWithNullRouteIdShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
-        underTest.routeId(null)
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(null)
                 .agencyId(STRING_TEST_VALUE)
                 .routeShortName(STRING_TEST_VALUE)
                 .routeLongName(STRING_TEST_VALUE)
@@ -52,32 +46,27 @@ class RouteTest {
                 .routeUrl(STRING_TEST_VALUE)
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
-                .routeSortOrder(INT_TEST_VALUE);
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("routes.txt", noticeList.get(0).getFilename());
-        assertEquals("route_id", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
         assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
 
-        verifyNoMoreInteractions(mockNoticeCollection);
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals("route_id", notice.getFieldName());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createRouteWithInvalidRouteTypeShouldGenerateUnexpectedEnumValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
-        underTest.routeId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
                 .routeShortName(STRING_TEST_VALUE)
                 .routeLongName(STRING_TEST_VALUE)
@@ -86,33 +75,27 @@ class RouteTest {
                 .routeUrl(STRING_TEST_VALUE)
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
-                .routeSortOrder(INT_TEST_VALUE);
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("routes.txt", noticeList.get(0).getFilename());
-        assertEquals("route_type", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
-        assertEquals("15", noticeList.get(0).getEnumValue());
         assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
 
-        verifyNoMoreInteractions(mockNoticeCollection);
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals("route_type", notice.getFieldName());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals("15", notice.getEnumValue());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createRouteWithValidValuesForFieldShouldNotGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Route.RouteBuilder underTest = new Route.RouteBuilder(mockNoticeCollection);
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
-        underTest.routeId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
                 .routeShortName(STRING_TEST_VALUE)
                 .routeLongName(STRING_TEST_VALUE)
@@ -121,12 +104,9 @@ class RouteTest {
                 .routeUrl(STRING_TEST_VALUE)
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
-                .routeSortOrder(INT_TEST_VALUE);
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-        verify(mockNoticeCollection, times(1)).clear();
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof Route);
-        verifyNoMoreInteractions(mockNoticeCollection);
     }
 }
