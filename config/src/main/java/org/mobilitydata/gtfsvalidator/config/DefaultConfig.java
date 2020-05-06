@@ -142,11 +142,11 @@ public class DefaultConfig {
         return new PrintHelp(execParamRepo, new HelpFormatter());
     }
 
-    public LoadAllEntityIntoMemory loadAllEntityIntoMemory() {
-        return new LoadAllEntityIntoMemory(
-                new ProcessParsedAgency(resultRepo, gtfsDataRepository,
-                        new Agency.AgencyBuilder(new ArrayList<>())),
-                new ProcessParsedRoute(resultRepo, gtfsDataRepository,
-                        new Route.RouteBuilder(new ArrayList<>())));
+    public ProcessParsedAgency processParsedAgency() {
+        return new ProcessParsedAgency(resultRepo, gtfsDataRepository, new Agency.AgencyBuilder(new ArrayList<>()));
+    }
+
+    public ProcessParsedRoute processParsedRoute() {
+        return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder(new ArrayList<>()));
     }
 }

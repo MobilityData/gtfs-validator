@@ -21,6 +21,9 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
+import org.mobilitydata.gtfsvalidator.usecase.ProcessParsedAgency;
+import org.mobilitydata.gtfsvalidator.usecase.ProcessParsedRoute;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateGtfsTypes;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
@@ -62,15 +65,20 @@ public class Main {
                 toLoadIntoMemory.add("agency.txt");
                 toLoadIntoMemory.add("routes.txt");
 
-                // base validation + load gtfs entities into memory
+                // retrieve use case to be used multiple times
+                final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
+                final ProcessParsedAgency processParsedAgency = config.processParsedAgency();
+                final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
+
+                // base validation + build gtfs entities
                 filenameList.forEach(filename -> {
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
 
-                    ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
+                    final ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
                     while (parseSingleRowForFile.hasNext()) {
                         final ParsedEntity parsedEntity = parseSingleRowForFile.execute();
-                        config.validateGtfsTypes().execute(parsedEntity);
+                        validateGtfsTypes.execute(parsedEntity);
 
                         // load gtfs entities into memory
                         // in the future all filename in filenameList will be processed. For now focusing on routes.txt
@@ -79,7 +87,16 @@ public class Main {
                         // and command lines or configuration file will be used to exclude files from the validation
                         // process.
                         if (toLoadIntoMemory.contains(filename)) {
-                            config.loadAllEntityIntoMemory().execute(parsedEntity);
+                            switch (parsedEntity.getRawFileInfo().getFilename()) {
+                                case "agency.txt": {
+                                    processParsedAgency.execute(parsedEntity);
+                                    break;
+                                }
+                                case "routes.txt": {
+                                    processParsedRoute.execute(parsedEntity);
+                                    break;
+                                }
+                            }
                         }
                     }
                 });
