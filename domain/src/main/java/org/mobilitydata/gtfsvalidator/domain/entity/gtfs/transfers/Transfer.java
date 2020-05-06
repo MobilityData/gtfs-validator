@@ -25,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldVal
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,11 +89,7 @@ public class Transfer extends GtfsEntity {
         private TransferType transferType;
         private Integer originalTransferTypeInteger;
         private Integer minTransferTime;
-        private final List<Notice> noticeCollection;
-
-        public TransferBuilder(final List<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
+        private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
          * Sets field fromStopId value and returns this

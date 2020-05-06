@@ -18,17 +18,14 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
-import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 class TransferTest {
     private final static String FROM_STOP_ID = "stop id 0";
@@ -40,138 +37,109 @@ class TransferTest {
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     void createTransferWithNullFromStopIdShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder(mockNoticeCollection);
+        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();
 
-        //noinspection ConstantConditions
-        underTest.fromStopId(null)
+        //noinspection ConstantConditions to avoid lint
+        final EntityBuildResult<?> entityBuildResult = underTest.fromStopId(null)
                 .toStopId(TO_STOP_ID)
                 .transferType(VALID_TRANSFER_TYPE_VALUE)
-                .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE);
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("transfers.txt", noticeList.get(0).getFilename());
-        assertEquals("from_stop_id", noticeList.get(0).getFieldName());
-        assertEquals("null;stop id 1", noticeList.get(0).getEntityId());
+                .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE)
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("transfers.txt", notice.getFilename());
+        assertEquals("from_stop_id", notice.getFieldName());
+        assertEquals("null;stop id 1", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     // Field toStopId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     void createTransferWithNullToStopIdShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder(mockNoticeCollection);
+        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();
 
         //noinspection ConstantConditions
-        underTest.fromStopId(FROM_STOP_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.fromStopId(FROM_STOP_ID)
                 .toStopId(null)
                 .transferType(VALID_TRANSFER_TYPE_VALUE)
-                .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE);
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("transfers.txt", noticeList.get(0).getFilename());
-        assertEquals("to_stop_id", noticeList.get(0).getFieldName());
-        assertEquals("stop id 0;null", noticeList.get(0).getEntityId());
+                .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE)
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("transfers.txt", notice.getFilename());
+        assertEquals("to_stop_id", notice.getFieldName());
+        assertEquals("stop id 0;null", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createTransferWithUnexpectedTransferTypeValueShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder(mockNoticeCollection);
+        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();
 
-        underTest.fromStopId(FROM_STOP_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.fromStopId(FROM_STOP_ID)
                 .toStopId(TO_STOP_ID)
                 .transferType(55)
-                .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE);
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("transfers.txt", noticeList.get(0).getFilename());
-        assertEquals("transfer_type", noticeList.get(0).getFieldName());
-        assertEquals("stop id 0;stop id 1", noticeList.get(0).getEntityId());
-        assertEquals("55", noticeList.get(0).getEnumValue());
+                .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE)
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("transfers.txt", notice.getFilename());
+        assertEquals("transfer_type", notice.getFieldName());
+        assertEquals("stop id 0;stop id 1", notice.getEntityId());
+        assertEquals("55", notice.getEnumValue());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createTransferWithInvalidMinTransferTimeValueShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder(mockNoticeCollection);
+        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();
 
-        underTest.fromStopId(FROM_STOP_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.fromStopId(FROM_STOP_ID)
                 .toStopId(TO_STOP_ID)
                 .transferType(VALID_TRANSFER_TYPE_VALUE)
-                .minTransferTime(-20);
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
-                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
-
-        assertEquals("transfers.txt", noticeList.get(0).getFilename());
-        assertEquals("min_transfer_time", noticeList.get(0).getFieldName());
-        assertEquals("stop id 0;stop id 1", noticeList.get(0).getEntityId());
-        assertEquals(0, noticeList.get(0).getRangeMin());
-        assertEquals(Integer.MAX_VALUE, noticeList.get(0).getRangeMax());
-        assertEquals(-20, noticeList.get(0).getActualValue());
+                .minTransferTime(-20)
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
+                (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
+        final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
+
+        assertEquals("transfers.txt", notice.getFilename());
+        assertEquals("min_transfer_time", notice.getFieldName());
+        assertEquals("stop id 0;stop id 1", notice.getEntityId());
+        assertEquals(0, notice.getRangeMin());
+        assertEquals(Integer.MAX_VALUE, notice.getRangeMax());
+        assertEquals(-20, notice.getActualValue());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createTransferWithNullMinTransferTimeValueShouldNotGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder(mockNoticeCollection);
+        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();
 
         underTest.fromStopId(FROM_STOP_ID)
                 .toStopId(TO_STOP_ID)
                 .transferType(VALID_TRANSFER_TYPE_VALUE)
                 .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE);
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-        verify(mockNoticeCollection, times(1)).clear();
-
-        assertTrue(entityBuildResult.getData() instanceof Transfer);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertTrue(underTest.build().getData() instanceof Transfer);
     }
 }

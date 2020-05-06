@@ -31,6 +31,10 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // Map containing Transfer entities. Entities are mapped on a first key which is the value found in the column
+    // from_stop_id of GTFS file transfers.txt; the second key is the value found in the column to_stop_id of the same
+    // file.
     private final Map<String, Map<String, Transfer>> transferCollection = new HashMap<>();
 
     /**
