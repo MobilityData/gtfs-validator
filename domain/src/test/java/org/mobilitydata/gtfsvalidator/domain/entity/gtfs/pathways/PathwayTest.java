@@ -22,13 +22,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValue
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
-import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 class PathwayTest {
     private static final String PATHWAY_ID = "pathway id";
@@ -40,11 +38,10 @@ class PathwayTest {
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createPathwayWithNullPathwayIdShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        @SuppressWarnings("unchecked") final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
         //noinspection ConstantConditions
-        underTest.pathwayId(null)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(null)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
                 .pathwayMode(2)
@@ -55,37 +52,30 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("pathway_id", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("pathway_id", notice.getFieldName());
+        assertEquals("no id", notice.getEntityId());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     // Field fromStopId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createPathwayWithNullFromStopIdShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
         //noinspection ConstantConditions
-        underTest.pathwayId(PATHWAY_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(null)
                 .toStopId("stop id")
                 .pathwayMode(2)
@@ -96,37 +86,30 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("from_stop_id", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("from_stop_id", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     // Field toStopId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createPathwayWithNullToStopIdShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
         //noinspection ConstantConditions
-        underTest.pathwayId(PATHWAY_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(null)
                 .pathwayMode(2)
@@ -137,37 +120,30 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("to_stop_id", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("to_stop_id", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     // Field pathwayMode is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createPathwayWithNullToPathwayModeShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
         //noinspection ConstantConditions
-        underTest.pathwayId(PATHWAY_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
                 .pathwayMode(null)
@@ -178,34 +154,27 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("pathway_mode", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("pathway_mode", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createPathwayWithInvalidToPathwayModeShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
-        underTest.pathwayId(PATHWAY_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
                 .pathwayMode(13)
@@ -216,35 +185,28 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("pathway_mode", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
-        assertEquals("13", noticeList.get(0).getEnumValue());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("pathway_mode", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+        assertEquals("13", notice.getEnumValue());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createPathwayWithInvalidIsBidirectionalShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
-        underTest.pathwayId(PATHWAY_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
                 .pathwayMode(1)
@@ -255,36 +217,29 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("is_bidirectional", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
-        assertEquals("3", noticeList.get(0).getEnumValue());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("is_bidirectional", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+        assertEquals("3", notice.getEnumValue());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createPathwayWithNullIsBidirectionalShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
-        //noinspection ConstantConditions
-        underTest.pathwayId(PATHWAY_ID)
+        //noinspection ConstantConditions to avoid lint
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
                 .pathwayMode(1)
@@ -295,34 +250,27 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("is_bidirectional", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("is_bidirectional", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createPathwayWithInvalidLengthBidirectionalShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
-        underTest.pathwayId(PATHWAY_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
                 .pathwayMode(1)
@@ -333,37 +281,30 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
-                ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("length", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
-        assertEquals(-10.0, noticeList.get(0).getActualValue());
-        assertEquals(0, noticeList.get(0).getRangeMin());
-        assertEquals(Float.MAX_VALUE, noticeList.get(0).getRangeMax());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<FloatFieldValueOutOfRangeNotice> noticeCollection =
+                (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
+        final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("length", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+        assertEquals(-10.0, notice.getActualValue());
+        assertEquals(0, notice.getRangeMin());
+        assertEquals(Float.MAX_VALUE, notice.getRangeMax());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createPathwayWithInvalidTraversalTimeShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
-        underTest.pathwayId(PATHWAY_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
                 .pathwayMode(1)
@@ -374,37 +315,30 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
-                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("traversal_time", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
-        assertEquals(-2, noticeList.get(0).getActualValue());
-        assertEquals(0, noticeList.get(0).getRangeMin());
-        assertEquals(Integer.MAX_VALUE, noticeList.get(0).getRangeMax());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
+                (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
+        final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("traversal_time", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+        assertEquals(-2, notice.getActualValue());
+        assertEquals(0, notice.getRangeMin());
+        assertEquals(Integer.MAX_VALUE, notice.getRangeMax());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createPathwayWithInvalidStairCountShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
-        underTest.pathwayId(PATHWAY_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
                 .pathwayMode(1)
@@ -415,37 +349,30 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
-                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("stair_count", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
-        assertEquals(-3, noticeList.get(0).getActualValue());
-        assertEquals(0, noticeList.get(0).getRangeMin());
-        assertEquals(Integer.MAX_VALUE, noticeList.get(0).getRangeMax());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
+                (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
+        final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
+
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("stair_count", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+        assertEquals(-3, notice.getActualValue());
+        assertEquals(0, notice.getRangeMin());
+        assertEquals(Integer.MAX_VALUE, notice.getRangeMax());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createPathwayWithInvalidMinWidthShouldGenerateNotice() {
-        @SuppressWarnings("rawtypes") final List mockNoticeCollection = mock(List.class);
-        //noinspection unchecked
-        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder(mockNoticeCollection);
+        final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
-        underTest.pathwayId(PATHWAY_ID)
+        final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
                 .pathwayMode(1)
@@ -456,27 +383,21 @@ class PathwayTest {
                 .maxSlope(30f)
                 .minWidth(-30f)
                 .signpostedAs("test")
-                .reversedSignpostedAs("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
-                ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        //noinspection unchecked
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
-
-        assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals("min_width", noticeList.get(0).getFieldName());
-        assertEquals(PATHWAY_ID, noticeList.get(0).getEntityId());
-        assertEquals(-30.0, noticeList.get(0).getActualValue());
-        assertEquals(0, noticeList.get(0).getRangeMin());
-        assertEquals(Float.MAX_VALUE, noticeList.get(0).getRangeMax());
+                .reversedSignpostedAs("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<FloatFieldValueOutOfRangeNotice> noticeCollection =
+                (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
+        final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
+        assertEquals(FILENAME, notice.getFilename());
+        assertEquals("min_width", notice.getFieldName());
+        assertEquals(PATHWAY_ID, notice.getEntityId());
+        assertEquals(-30.0, notice.getActualValue());
+        assertEquals(0, notice.getRangeMin());
+        assertEquals(Float.MAX_VALUE, notice.getRangeMax());
+
+        assertEquals(1, noticeCollection.size());
     }
 }

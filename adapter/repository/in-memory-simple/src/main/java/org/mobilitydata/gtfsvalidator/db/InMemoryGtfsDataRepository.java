@@ -31,6 +31,9 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
+    // pathways.txt
     private final Map<String, Pathway> pathwayCollection = new HashMap<>();
 
     /**

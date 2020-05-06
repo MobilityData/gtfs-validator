@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldVal
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Pathway extends GtfsEntity {
@@ -162,11 +163,7 @@ public class Pathway extends GtfsEntity {
         private String reversedSignpostedAs;
         private Integer originalPathwayModeInteger;
         private Integer originalIsBiDirectionalInteger;
-        private final List<Notice> noticeCollection;
-
-        public PathwayBuilder(List<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
+        private final List<Notice> noticeCollection = new ArrayList<>();
 
         public PathwayBuilder pathwayId(@NotNull final String pathwayId) {
             this.pathwayId = pathwayId;
