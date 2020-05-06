@@ -297,14 +297,16 @@ public class Trip extends GtfsEntity {
                     !BikesAllowedStatus.isEnumValueValid(originalBikesAllowedStatusInteger)) {
 
                 if (routeId == null) {
-                    noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "route_id", tripId));
+                    noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "route_id",
+                            tripId));
                 }
                 if (serviceId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "service_id",
                             tripId));
                 }
                 if (tripId == null) {
-                    noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "trip_id", tripId));
+                    noticeCollection.add(new MissingRequiredValueNotice("trips.txt", "trip_id",
+                            tripId));
                 }
                 if (!DirectionId.isEnumValueValid(originalDirectionIdInteger)) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("trips.txt",
