@@ -31,6 +31,9 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // Map containing FareAttribute entities. Entities are mapped on the value found in column fare_id of gtfs file
+    // fare_attributes.txt
     private final Map<String, FareAttribute> fareAttributeCollection = new HashMap<>();
 
     /**

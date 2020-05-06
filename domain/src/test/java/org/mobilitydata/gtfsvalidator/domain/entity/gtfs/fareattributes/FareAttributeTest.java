@@ -17,20 +17,16 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 @SuppressWarnings("unchecked")
 class FareAttributeTest {
@@ -42,8 +38,7 @@ class FareAttributeTest {
 
     @Test
     void createFareAttributeWithValidValuesShouldNotGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
         underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
@@ -54,230 +49,177 @@ class FareAttributeTest {
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
         assertTrue(underTest.build().getData() instanceof FareAttribute);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
     void createFareAttributeWithNullFareIdShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        underTest.fareId(null)
+        final EntityBuildResult<?> entityBuildResult = underTest.fareId(null)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
                 .transfers(VALID_TRANSFERS_INTEGER)
                 .agencyId(STRING_TEST)
-                .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
+                .transferDuration(VALID_TRANSFER_DURATION_INTEGER)
+                .build();
 
-        assertTrue(underTest.build().getData() instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        final List<MissingRequiredValueNotice> noticeCollection = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("fare_id", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("fare_attributes.txt", notice.getFilename());
+        assertEquals("fare_id", notice.getFieldName());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createFareAttributeWithNullPriceShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        underTest.fareId(STRING_TEST)
+        final EntityBuildResult<?> entityBuildResult = underTest.fareId(STRING_TEST)
                 .price(null)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
                 .transfers(VALID_TRANSFERS_INTEGER)
                 .agencyId(STRING_TEST)
-                .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
+                .transferDuration(VALID_TRANSFER_DURATION_INTEGER)
+                .build();
 
-        assertTrue(underTest.build().getData() instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        final List<MissingRequiredValueNotice> noticeCollection = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("price", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST, noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("fare_attributes.txt", notice.getFilename());
+        assertEquals("price", notice.getFieldName());
+        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createFareAttributeWithInvalidPriceShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        underTest.fareId(STRING_TEST)
+        final EntityBuildResult<?> entityBuildResult = underTest.fareId(STRING_TEST)
                 .price(-4.0f)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
                 .transfers(VALID_TRANSFERS_INTEGER)
                 .agencyId(STRING_TEST)
-                .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
+                .transferDuration(VALID_TRANSFER_DURATION_INTEGER)
+                .build();
 
-        assertTrue(underTest.build().getData() instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        final List<FloatFieldValueOutOfRangeNotice> noticeCollection = (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
+        final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
-        final ArgumentCaptor<FloatFieldValueOutOfRangeNotice> captor =
-                ArgumentCaptor.forClass(FloatFieldValueOutOfRangeNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<FloatFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("price", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST, noticeList.get(0).getEntityId());
-        assertEquals(0, noticeList.get(0).getRangeMin());
-        assertEquals(Float.MAX_VALUE, noticeList.get(0).getRangeMax());
-        assertEquals(-4.0f, noticeList.get(0).getActualValue());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("fare_attributes.txt", notice.getFilename());
+        assertEquals("price", notice.getFieldName());
+        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals(0, notice.getRangeMin());
+        assertEquals(Float.MAX_VALUE, notice.getRangeMax());
+        assertEquals(-4.0f, notice.getActualValue());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createFareAttributeWithNullCurrencyTypeShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        underTest.fareId(STRING_TEST)
+        final EntityBuildResult<?> entityBuildResult = underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(null)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
                 .transfers(VALID_TRANSFERS_INTEGER)
                 .agencyId(STRING_TEST)
-                .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
+                .transferDuration(VALID_TRANSFER_DURATION_INTEGER)
+                .build();
 
-        assertTrue(underTest.build().getData() instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        final List<MissingRequiredValueNotice> noticeCollection = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("currency_type", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST, noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("fare_attributes.txt", notice.getFilename());
+        assertEquals("currency_type", notice.getFieldName());
+        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createFareAttributeWithNullPaymentMethodShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        underTest.fareId(STRING_TEST)
+        final EntityBuildResult<?> entityBuildResult = underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(null)
                 .transfers(VALID_TRANSFERS_INTEGER)
                 .agencyId(STRING_TEST)
-                .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
+                .transferDuration(VALID_TRANSFER_DURATION_INTEGER)
+                .build();
 
-        assertTrue(underTest.build().getData() instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        final List<MissingRequiredValueNotice> noticeCollection = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("payment_method", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST, noticeList.get(0).getEntityId());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("fare_attributes.txt", notice.getFilename());
+        assertEquals("payment_method", notice.getFieldName());
+        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createFareAttributeWithInvalidPaymentMethodShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        underTest.fareId(STRING_TEST)
+        final EntityBuildResult<?> entityBuildResult = underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(4)
                 .transfers(VALID_TRANSFERS_INTEGER)
                 .agencyId(STRING_TEST)
-                .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
+                .transferDuration(VALID_TRANSFER_DURATION_INTEGER)
+                .build();
 
-        assertTrue(underTest.build().getData() instanceof List);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        final List<UnexpectedEnumValueNotice> noticeCollection = (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
-        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("payment_method", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST, noticeList.get(0).getEntityId());
-        assertEquals("4", noticeList.get(0).getEnumValue());
-
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("fare_attributes.txt", notice.getFilename());
+        assertEquals("payment_method", notice.getFieldName());
+        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals("4", notice.getEnumValue());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createFareAttributeWithInvalidTransfersShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        underTest.fareId(STRING_TEST)
+        final EntityBuildResult<?> entityBuildResult = underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
                 .transfers(4)
                 .agencyId(STRING_TEST)
-                .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
+                .transferDuration(VALID_TRANSFER_DURATION_INTEGER)
+                .build();
 
-        assertTrue(underTest.build().getData() instanceof ArrayList);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        final List<UnexpectedEnumValueNotice> noticeCollection = (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
-        final ArgumentCaptor<UnexpectedEnumValueNotice> captor =
-                ArgumentCaptor.forClass(UnexpectedEnumValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<UnexpectedEnumValueNotice> noticeList = captor.getAllValues();
-
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("transfers", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST, noticeList.get(0).getEntityId());
-        assertEquals("4", noticeList.get(0).getEnumValue());
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("fare_attributes.txt", notice.getFilename());
+        assertEquals("transfers", notice.getFieldName());
+        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals("4", notice.getEnumValue());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void createFareAttributeWithNullTransfersShouldNotGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
         underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
@@ -288,41 +230,30 @@ class FareAttributeTest {
                 .transferDuration(VALID_TRANSFER_DURATION_INTEGER);
 
         assertTrue(underTest.build().getData() instanceof FareAttribute);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verifyNoMoreInteractions(mockNoticeCollection);
     }
 
     @Test
     void createFareAttributeWithNegativeTimeDurationShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder(mockNoticeCollection);
+        final FareAttribute.FareAttributeBuilder underTest = new FareAttribute.FareAttributeBuilder();
 
-        underTest.fareId(STRING_TEST)
+        final EntityBuildResult<?> entityBuildResult = underTest.fareId(STRING_TEST)
                 .price(VALID_PRICE_FLOAT)
                 .currencyType(STRING_TEST)
                 .paymentMethod(VALID_PAYMENT_METHOD_INTEGER)
                 .transfers(VALID_TRANSFERS_INTEGER)
                 .agencyId(STRING_TEST)
-                .transferDuration(-20);
+                .transferDuration(-20)
+                .build();
 
-        assertTrue(underTest.build().getData() instanceof ArrayList);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        final List<IntegerFieldValueOutOfRangeNotice> noticeCollection = (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
+        final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
-        final ArgumentCaptor<IntegerFieldValueOutOfRangeNotice> captor =
-                ArgumentCaptor.forClass(IntegerFieldValueOutOfRangeNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<IntegerFieldValueOutOfRangeNotice> noticeList = captor.getAllValues();
-
-        assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals("transfer_duration", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST, noticeList.get(0).getEntityId());
-        assertEquals(0, noticeList.get(0).getRangeMin());
-        assertEquals(Integer.MAX_VALUE, noticeList.get(0).getRangeMax());
-
-        verify(mockNoticeCollection, times(1)).add(ArgumentMatchers.isA(Notice.class));
-        verifyNoMoreInteractions(mockNoticeCollection);
+        assertEquals("fare_attributes.txt", notice.getFilename());
+        assertEquals("transfer_duration", notice.getFieldName());
+        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals(0, notice.getRangeMin());
+        assertEquals(Integer.MAX_VALUE, notice.getRangeMax());
+        assertEquals(1, noticeCollection.size());
     }
 }

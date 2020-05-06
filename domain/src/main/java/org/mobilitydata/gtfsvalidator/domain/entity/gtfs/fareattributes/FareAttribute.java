@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldVal
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -122,11 +123,7 @@ public class FareAttribute extends GtfsEntity {
         private Integer transferDuration;
         private Integer originalPaymentMethodInteger;
         private Integer originalTransferInteger;
-        private final List<Notice> noticeCollection;
-
-        public FareAttributeBuilder(final List<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
+        private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
          * Sets field fareId value and returns this
