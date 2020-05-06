@@ -31,6 +31,9 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // Map containing Calendar entities. Entities are mapped on the value found in column service_id of GTFS file
+    // calendar.txt.
     private final Map<String, Calendar> calendarCollection = new HashMap<>();
 
     /**
