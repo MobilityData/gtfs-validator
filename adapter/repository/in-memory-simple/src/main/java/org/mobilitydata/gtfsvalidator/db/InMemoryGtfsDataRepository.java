@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Shape;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -30,6 +31,9 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // Map containing Shape Entities. Entities are mapped on the value found in column shape_id of GTFS file shapes.txt
+    private final Map<String, Shape> shapeCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -99,21 +103,38 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
-    private final Map<String, Shape> shapeCollection = new HashMap<>();
+    /**
+     * Add a Shape representing a row from shapes.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of route based on shape_id is respected, if this requirement is not met, returns null.
+     *
+     * @param newShape the internal representation of a row from shapes.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on shape_id is
+     * respected, if this requirement is not met returns null.
+     * @throws IllegalArgumentException if the shape passed as argument is null
+     */
+    @Override
+    public Shape addShape(final Shape newShape) throws IllegalArgumentException {
+        if (newShape != null) {
+            if (shapeCollection.containsKey(newShape.getShapeId())) {
+                return null;
+            } else {
+                String routeId = newShape.getShapeId();
+                shapeCollection.put(routeId, newShape);
+                return newShape;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null shape to data repository");
+        }
+    }
 
+    /**
+     * Return the Shape representing a row from shapes.txt related to the id provided as parameter
+     *
+     * @param shapeId the key from shapes.txt related to the Route to be returned
+     * @return the Route representing a row from shapes.txt related to the id provided as parameter
+     */
     @Override
     public Shape getShapeById(final String shapeId) {
         return shapeCollection.get(shapeId);
-    }
-
-    @Override
-    public Shape addShape(final Shape newShape) throws SQLIntegrityConstraintViolationException {
-        if (shapeCollection.containsKey(newShape.getShapeId())) {
-            throw new SQLIntegrityConstraintViolationException("shape must be unique in dataset");
-        } else {
-            String routeId = newShape.getShapeId();
-            shapeCollection.put(routeId, newShape);
-            return newShape;
-        }
     }
 }

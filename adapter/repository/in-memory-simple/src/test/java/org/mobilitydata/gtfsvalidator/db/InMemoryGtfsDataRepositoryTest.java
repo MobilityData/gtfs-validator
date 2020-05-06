@@ -117,24 +117,38 @@ class InMemoryGtfsDataRepositoryTest {
 
 
     @Test
-    void callToAddShapeShouldAddShapeToRepoAndSameReturnEntity() throws SQLIntegrityConstraintViolationException {
+    void callToAddShapeShouldSameReturnEntity() {
         final Shape mockShape = mock(Shape.class);
         when(mockShape.getShapeId()).thenReturn("test id");
-
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        final Shape toCheck = underTest.addShape(mockShape);
-
-        assertEquals(toCheck, mockShape);
-        assertEquals(mockShape, underTest.getShapeById("test id"));
+        assertEquals(mockShape, underTest.addShape(mockShape));
     }
 
     @Test
-    void getShapeByIdShouldReturnRelatedShape() throws SQLIntegrityConstraintViolationException {
+    void addTwiceSameShapeShouldReturnNull() {
+        final Shape mockShape = mock(Shape.class);
+        when(mockShape.getShapeId()).thenReturn("test id");
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShape(mockShape);
+        assertNull(underTest.addShape(mockShape));
+    }
+
+    @Test
+    void addNullShapeShouldThrowException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addShape(null));
+        assertEquals("Cannot add null shape to data repository", exception.getMessage());
+    }
+
+    @Test
+    void getShapeByIdShouldReturnRelatedShape() {
         final Shape mockShape00 = mock(Shape.class);
         when(mockShape00.getShapeId()).thenReturn("test id00");
 
-        Shape mockShape01 = mock(Shape.class);
+        final Shape mockShape01 = mock(Shape.class);
         when(mockShape01.getShapeId()).thenReturn("test id01");
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -142,25 +156,7 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addShape(mockShape00);
         underTest.addShape(mockShape01);
 
-        Shape toCheck = underTest.getShapeById("test id00");
-        assertEquals(mockShape00, toCheck);
-
-        toCheck = underTest.getShapeById("test id01");
-        assertEquals(mockShape01, toCheck);
-    }
-
-    @Test
-    void tryAddingTwiceTheSameShapeShouldThrowException() throws SQLIntegrityConstraintViolationException {
-        final Shape mockShape00 = mock(Shape.class);
-        when(mockShape00.getShapeId()).thenReturn("test id00");
-
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        underTest.addShape(mockShape00);
-
-        final Exception exception = assertThrows(SQLIntegrityConstraintViolationException.class,
-                () -> underTest.addShape(mockShape00));
-
-        assertEquals("shape must be unique in dataset", exception.getMessage());
+        assertEquals(mockShape00, underTest.getShapeById("test id00"));
+        assertEquals(mockShape01, underTest.getShapeById("test id01"));
     }
 }
