@@ -116,15 +116,6 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void callToAddTripShouldReturnSameEntity() {
-        final Trip mockTrip = mock(Trip.class);
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockTrip.getTripId()).thenReturn("trip id");
-
-        assertEquals(underTest.addTrip(mockTrip), mockTrip);
-    }
-
-    @Test
     public void addSameTripTwiceShouldReturnNull() {
         final Trip mockTrip = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -142,15 +133,15 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void getTripByIdShouldReturnRelatedTrip() {
+    public void addTripShouldReturnSameEntityAndCallToGetTripByIdShouldReturnRelatedTrip() {
         final Trip mockTrip00 = mock(Trip.class);
         final Trip mockTrip01 = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockTrip00.getTripId()).thenReturn("trip id00");
         when(mockTrip01.getTripId()).thenReturn("trip id01");
 
-        underTest.addTrip(mockTrip00);
-        underTest.addTrip(mockTrip01);
+        assertEquals(mockTrip00, underTest.addTrip(mockTrip00));
+        assertEquals(mockTrip01, underTest.addTrip(mockTrip01));
 
         assertEquals(mockTrip00, underTest.getTripById("trip id00"));
         assertEquals(mockTrip01, underTest.getTripById("trip id01"));
