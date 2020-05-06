@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,11 +73,7 @@ public class Level extends GtfsEntity {
         private Float levelIndex;
         @Nullable
         private String levelName;
-        private final List<Notice> noticeCollection;
-
-        public LevelBuilder(final List<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
+        private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
          * Sets field levelId value and returns this

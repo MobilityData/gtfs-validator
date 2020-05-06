@@ -31,6 +31,8 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
     private final Map<String, Level> levelCollection = new HashMap<>();
 
     /**

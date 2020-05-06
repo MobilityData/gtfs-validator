@@ -17,15 +17,12 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 class LevelTest {
 
@@ -33,63 +30,52 @@ class LevelTest {
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createLevelWithNullLevelIdShouldGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        final Level.LevelBuilder underTest = new Level.LevelBuilder(mockNoticeCollection);
+        final Level.LevelBuilder underTest = new Level.LevelBuilder();
 
         //noinspection ConstantConditions
-        underTest.levelId(null)
+        final EntityBuildResult<?> entityBuildResult = underTest.levelId(null)
                 .levelIndex(2.0f)
-                .levelName("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("levels.txt", noticeList.get(0).getFilename());
-        assertEquals("level_id", noticeList.get(0).getFieldName());
-        assertEquals("no id", noticeList.get(0).getEntityId());
+                .levelName("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("levels.txt", notice.getFilename());
+        assertEquals("level_id", notice.getFieldName());
+        assertEquals("no id", notice.getEntityId());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createLevelWithNullLevelIndexShouldGenerateException() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        final Level.LevelBuilder underTest = new Level.LevelBuilder(mockNoticeCollection);
+        final Level.LevelBuilder underTest = new Level.LevelBuilder();
 
-        underTest.levelId("level id")
+        final EntityBuildResult<?> entityBuildResult = underTest.levelId("level id")
                 .levelIndex(null)
-                .levelName("test");
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("levels.txt", noticeList.get(0).getFilename());
-        assertEquals("level_index", noticeList.get(0).getFieldName());
-        assertEquals("level id", noticeList.get(0).getEntityId());
+                .levelName("test")
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("levels.txt", notice.getFilename());
+        assertEquals("level_index", notice.getFieldName());
+        assertEquals("level id", notice.getEntityId());
+
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createLevelWithValidValuesShouldNotGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(List.class);
-        final Level.LevelBuilder underTest = new Level.LevelBuilder(mockNoticeCollection);
+        final Level.LevelBuilder underTest = new Level.LevelBuilder();
 
         underTest.levelId("level id")
                 .levelIndex(2.0f)
