@@ -116,15 +116,6 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddFareAttributeShouldAdFareAttributeToRepoAndReturnSameEntity() {
-        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockFareAttribute.getFareId()).thenReturn("fare attribute id");
-
-        assertEquals(underTest.addFareAttribute(mockFareAttribute), mockFareAttribute);
-    }
-
-    @Test
     void addSameFareAttributeTwiceShouldReturnNull() {
         final FareAttribute mockFareAttribute = mock(FareAttribute.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -144,7 +135,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getFareAttributeByFareIdShouldReturnRelatedEntity() {
+    void addFareAttributeAndGetFareAttributeByFareIdShouldReturnSameEntity() {
         final FareAttribute mockFareAttribute00 = mock(FareAttribute.class);
         final FareAttribute mockFareAttribute01 = mock(FareAttribute.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -152,11 +143,10 @@ class InMemoryGtfsDataRepositoryTest {
         when(mockFareAttribute00.getFareId()).thenReturn("fare attribute id 00");
         when(mockFareAttribute01.getFareId()).thenReturn("fare attribute id 01");
 
-        underTest.addFareAttribute(mockFareAttribute00);
-        underTest.addFareAttribute(mockFareAttribute01);
-
-        assertEquals(mockFareAttribute00, underTest.getFareAttributeByFareId("fare attribute id 00"));
-        assertEquals(mockFareAttribute01, underTest.getFareAttributeByFareId("fare attribute id 01"));
+        assertEquals(underTest.addFareAttribute(mockFareAttribute00),
+                underTest.getFareAttributeByFareId("fare attribute id 00"));
+        assertEquals(underTest.addFareAttribute(mockFareAttribute01),
+                underTest.getFareAttributeByFareId("fare attribute id 01"));
     }
 
 }
