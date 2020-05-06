@@ -30,7 +30,6 @@ import java.util.List;
  * This use case turns a parsed entity representing a row from routes.txt into a concrete class
  */
 public class ProcessParsedRoute {
-
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
     private final Route.RouteBuilder builder;
