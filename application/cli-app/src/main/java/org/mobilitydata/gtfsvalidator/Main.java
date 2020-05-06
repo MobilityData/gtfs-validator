@@ -86,7 +86,7 @@ public class Main {
                         // and command lines or configuration file will be used to exclude files from the validation
                         // process.
                         if (toLoadIntoMemory.contains(filename)) {
-                            switch (parsedEntity.getRawFileInfo().getFilename()) {
+                            switch (filename) {
                                 case "agency.txt": {
                                     processParsedAgency.execute(parsedEntity);
                                     break;
