@@ -31,6 +31,8 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // Map containing Trip entities. Entities are mapped on the value found in column trip_id of GTFS file trips.txt
     private final Map<String, Trip> tripCollection = new HashMap<>();
 
     /**
@@ -102,8 +104,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Add a trip representing a row from trip.txt to this. Return the entity added to the repository if the
-     * uniqueness constraint of trip based on trip_id is respected, if this requirement is not met, returns null.
+     * Add a trip representing a row from trip.txt to this {@link GtfsDataRepository}. Return the entity added to the
+     * repository if the uniqueness constraint of trip based on trip_id is respected, if this requirement is not met,
+     * returns null.
      *
      * @param newTrip the internal representation of a row from trips.txt to be added to the repository.
      * @return the entity added to the repository if the uniqueness constraint of trip based on trip_id is

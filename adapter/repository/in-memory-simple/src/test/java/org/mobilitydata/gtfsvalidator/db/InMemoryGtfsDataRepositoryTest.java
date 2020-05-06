@@ -116,7 +116,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void callToAddTripShouldAddTripToRepoAndReturnSameEntity() {
+    public void callToAddTripShouldReturnSameEntity() {
         final Trip mockTrip = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockTrip.getTripId()).thenReturn("trip id");
