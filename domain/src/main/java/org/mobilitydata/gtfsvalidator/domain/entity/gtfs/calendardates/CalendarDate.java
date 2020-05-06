@@ -25,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequired
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,11 +80,7 @@ public class CalendarDate extends GtfsEntity {
         @Nullable
         private ExceptionType exceptionType;
         private Integer originalExceptionTypeInteger;
-        private final List<Notice> noticeCollection;
-
-        public CalendarDateBuilder(final List<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
+        private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
          * Sets field serviceId value and returns this
