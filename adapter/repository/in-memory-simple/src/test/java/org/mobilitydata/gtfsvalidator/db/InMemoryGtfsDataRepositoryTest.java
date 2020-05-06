@@ -120,18 +120,6 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddCalendarDateShouldReturnSameEntity() {
-        final CalendarDate mockCalendarDate = mock(CalendarDate.class);
-        when(mockCalendarDate.getServiceId()).thenReturn("service id");
-        when(mockCalendarDate.getDate()).thenReturn(LocalDateTime.now());
-        when(mockCalendarDate.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
-
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-
-        assertEquals(mockCalendarDate, underTest.addCalendarDate(mockCalendarDate));
-    }
-
-    @Test
     void addSameCalendarDateShouldReturnNull() {
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
         final LocalDateTime mockDate = mock(LocalDateTime.class);
@@ -156,7 +144,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getCalendarByServiceIdAndDateShouldReturnRelatedCalendarDate() {
+    void addCalendarDateAndGetCalendarDateShouldReturnSameEntity() {
         final CalendarDate calendarDate00 = mock(CalendarDate.class);
         final CalendarDate calendarDate01 = mock(CalendarDate.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -172,5 +160,10 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(calendarDate00, underTest.addCalendarDate(calendarDate00));
         assertEquals(calendarDate01, underTest.addCalendarDate(calendarDate01));
+
+        assertEquals(calendarDate00, underTest.getCalendarDateByServiceIdDateAndExceptionType("service id 00",
+                mockDate, ExceptionType.ADDED_SERVICE));
+        assertEquals(calendarDate01, underTest.getCalendarDateByServiceIdDateAndExceptionType("service id 01",
+                mockDate, ExceptionType.REMOVED_SERVICE));
     }
 }
