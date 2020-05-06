@@ -117,7 +117,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void callToAddCalendarShouldAddCalendarToRepoAndReturnEntity() {
+    public void callToAddCalendarShouldReturnEntity() {
         final Calendar mockCalendar = mock(Calendar.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockCalendar.getServiceId()).thenReturn("service id");
