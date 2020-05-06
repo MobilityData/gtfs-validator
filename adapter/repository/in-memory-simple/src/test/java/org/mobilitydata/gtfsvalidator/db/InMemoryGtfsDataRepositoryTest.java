@@ -116,15 +116,6 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddLevelShouldAddLevelToRepoAndReturnEntity() {
-        final Level mockLevel = mock(Level.class);
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockLevel.getLevelId()).thenReturn("level id");
-
-        assertEquals(mockLevel, underTest.addLevel(mockLevel));
-    }
-
-    @Test
     void addSameLevelTwiceShouldReturnNull() {
         final Level mockLevel = mock(Level.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -143,15 +134,15 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void getLevelByIdShouldReturnRelatedLevel() {
+    public void addLevelAndGetLevelByIdShouldReturnSameEntity() {
         final Level mockLevel00 = mock(Level.class);
         final Level mockLevel01 = mock(Level.class);
         when(mockLevel00.getLevelId()).thenReturn("level id 0");
         when(mockLevel01.getLevelId()).thenReturn("level id 1");
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        underTest.addLevel(mockLevel00);
-        underTest.addLevel(mockLevel01);
+        assertEquals(mockLevel00, underTest.addLevel(mockLevel00));
+        assertEquals(mockLevel01, underTest.addLevel(mockLevel01));
 
         assertEquals(mockLevel00, underTest.getLevelByLevelId("level id 0"));
         assertEquals(mockLevel01, underTest.getLevelByLevelId("level id 1"));
