@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit;
 public class Main {
 
     public static void main(String[] args) {
-
         final long startTime = System.nanoTime();
         final Logger logger = LogManager.getLogger();
         final DefaultConfig config = new DefaultConfig(logger);
@@ -100,12 +99,10 @@ public class Main {
                         }
                     }
                 });
-
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
                 config.exportResultAsFile().execute();
             }
-
         } catch (IOException e) {
             if (e.getMessage().contains("execution-parameters.json")) {
                 config.printHelp().execute();
