@@ -148,5 +148,4 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(underTest.addFareAttribute(mockFareAttribute01),
                 underTest.getFareAttributeByFareId("fare attribute id 01"));
     }
-
 }
