@@ -97,7 +97,6 @@ class InMemoryGtfsDataRepositoryTest {
         //noinspection ConstantConditions
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addRoute(null));
-
         assertEquals("Cannot add null route to data repository", exception.getMessage());
     }
 
