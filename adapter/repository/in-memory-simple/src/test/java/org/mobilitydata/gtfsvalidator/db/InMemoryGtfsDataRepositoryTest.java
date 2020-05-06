@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.time.LocalDateTime;
@@ -52,6 +53,7 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addNullAgencyShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        //noinspection ConstantConditions to avoid lint
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addAgency(null));
         assertEquals("Cannot add null agency to data repository", exception.getMessage());
@@ -95,6 +97,7 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addNullRouteShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        //noinspection ConstantConditions to avoid lint
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addRoute(null));
 
@@ -117,26 +120,35 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddCalendarDateShouldAddEntityToGtfsDataRepoAndReturnSameEntity() {
-        final CalendarDate calendarDate = mock(CalendarDate.class);
+    void callToAddCalendarDateShouldReturnSameEntity() {
+        final CalendarDate mockCalendarDate = mock(CalendarDate.class);
+        when(mockCalendarDate.getServiceId()).thenReturn("service id");
+        when(mockCalendarDate.getDate()).thenReturn(LocalDateTime.now());
+        when(mockCalendarDate.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
+
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        assertEquals(calendarDate, underTest.addCalendarDate(calendarDate));
+        assertEquals(mockCalendarDate, underTest.addCalendarDate(mockCalendarDate));
     }
 
     @Test
     void addSameCalendarDateShouldReturnNull() {
-        final CalendarDate calendarDate = mock(CalendarDate.class);
+        final CalendarDate mockCalendarDate = mock(CalendarDate.class);
+        final LocalDateTime mockDate = mock(LocalDateTime.class);
+        when(mockCalendarDate.getServiceId()).thenReturn("service id");
+        when(mockCalendarDate.getDate()).thenReturn(mockDate);
+        when(mockCalendarDate.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
+
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addCalendarDate(calendarDate);
-        assertNull(underTest.addCalendarDate(calendarDate));
+        underTest.addCalendarDate(mockCalendarDate);
+        assertNull(underTest.addCalendarDate(mockCalendarDate));
     }
-
 
     @Test
     void addNullCalendarDateShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        //noinspection ConstantConditions to avoid lint
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addCalendarDate(null));
 
@@ -152,9 +164,11 @@ class InMemoryGtfsDataRepositoryTest {
 
         when(calendarDate00.getServiceId()).thenReturn("service id 00");
         when(calendarDate00.getDate()).thenReturn(mockDate);
+        when(calendarDate00.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
 
         when(calendarDate01.getServiceId()).thenReturn("service id 01");
         when(calendarDate01.getDate()).thenReturn(mockDate);
+        when(calendarDate01.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
 
         assertEquals(calendarDate00, underTest.addCalendarDate(calendarDate00));
         assertEquals(calendarDate01, underTest.addCalendarDate(calendarDate01));

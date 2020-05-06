@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -32,7 +33,13 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
-    private final Map<String, Map<LocalDateTime, CalendarDate>> calendarDateCollection = new HashMap<>();
+
+    // CalendarDate entities container. Entities are mapped on key resulting from the concatenation of the values
+    // contained in the following columns (found in calendar_dates.txt gtfs file):
+    // - service_id
+    // - date
+    // - exception_type
+    private final Map<String, CalendarDate> calendarDateCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -106,14 +113,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public CalendarDate addCalendarDate(@NotNull final CalendarDate newCalendarDate) throws IllegalArgumentException {
         //noinspection ConstantConditions
         if (newCalendarDate != null) {
-            if ((calendarDateCollection.containsKey(newCalendarDate.getServiceId())) &&
-                    (calendarDateCollection.get(newCalendarDate.getServiceId()).containsKey(newCalendarDate.getDate()))) {
+            final String calendarDateKey = newCalendarDate + newCalendarDate.getDate().toString()
+                    + newCalendarDate.getExceptionType().toString();
+            if (calendarDateCollection.containsKey(calendarDateKey)) {
                 return null;
             } else {
-                final String serviceId = newCalendarDate.getServiceId();
-                final Map<LocalDateTime, CalendarDate> innerMap = new HashMap<>();
-                innerMap.put(newCalendarDate.getDate(), newCalendarDate);
-                calendarDateCollection.put(serviceId, innerMap);
+                calendarDateCollection.put(calendarDateKey, newCalendarDate);
                 return newCalendarDate;
             }
         } else {
@@ -122,7 +127,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public CalendarDate getCalendarDateByServiceIdAndDate(final String serviceId, final LocalDateTime date) {
-        return calendarDateCollection.get(serviceId).get(date);
+    public CalendarDate getCalendarDateByServiceIdAndDate(final String serviceId, final LocalDateTime date,
+                                                          final ExceptionType exceptionType) {
+        return calendarDateCollection.get(serviceId + date.toString() + exceptionType.toString());
     }
 }
