@@ -23,13 +23,13 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency) throws SQLIntegrityConstraintViolationException;
+    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
 
-    Route getRouteById(final String routeId);
+    Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
-    Route addRoute(final Route newRoute) throws SQLIntegrityConstraintViolationException;
+    Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
     Shape getShapeById(final String shapeId);
 

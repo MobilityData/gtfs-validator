@@ -24,11 +24,11 @@ import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseDateNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseFloatNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseDateNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseFloatNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
 import java.time.LocalDateTime;

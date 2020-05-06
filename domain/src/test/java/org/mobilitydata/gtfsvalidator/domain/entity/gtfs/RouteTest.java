@@ -18,13 +18,15 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.RouteType;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RouteTest {
-
     private static final String STRING_TEST_VALUE = "test_value";
     private static final int INT_TEST_VALUE = 0;
 
@@ -32,10 +34,10 @@ class RouteTest {
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @SuppressWarnings("ConstantConditions")
     @Test
-    public void createRouteWithNullRouteIdShouldThrowException() {
+    public void createRouteWithNullRouteIdShouldGenerateMissingRequiredValueNotice() {
         final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
-        underTest.routeId(null)
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(null)
                 .agencyId(STRING_TEST_VALUE)
                 .routeShortName(STRING_TEST_VALUE)
                 .routeLongName(STRING_TEST_VALUE)
@@ -44,18 +46,27 @@ class RouteTest {
                 .routeUrl(STRING_TEST_VALUE)
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
-                .routeSortOrder(INT_TEST_VALUE);
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
 
-        assertEquals("route_id can not be null in routes.txt", exception.getMessage());
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals("route_id", notice.getFieldName());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
-    public void createRouteWithInvalidRouteTypeShouldThrowException() {
+    public void createRouteWithInvalidRouteTypeShouldGenerateUnexpectedEnumValueNotice() {
         final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
-        underTest.routeId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
                 .routeShortName(STRING_TEST_VALUE)
                 .routeLongName(STRING_TEST_VALUE)
@@ -64,19 +75,27 @@ class RouteTest {
                 .routeUrl(STRING_TEST_VALUE)
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
-                .routeSortOrder(INT_TEST_VALUE);
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
 
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
 
-        assertEquals("Unexpected value, or null value for field route_type in routes.txt",
-                exception.getMessage());
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals("route_type", notice.getFieldName());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals("15", notice.getEnumValue());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
-    public void createRouteWithValidValuesForFieldShouldNotThrowException() {
+    public void createRouteWithValidValuesForFieldShouldNotGenerateNotice() {
         final Route.RouteBuilder underTest = new Route.RouteBuilder();
 
-        underTest.routeId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
                 .routeShortName(STRING_TEST_VALUE)
                 .routeLongName(STRING_TEST_VALUE)
@@ -85,19 +104,9 @@ class RouteTest {
                 .routeUrl(STRING_TEST_VALUE)
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
-                .routeSortOrder(INT_TEST_VALUE);
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
 
-        final Route route = underTest.build();
-
-        assertEquals(route.getRouteId(), STRING_TEST_VALUE);
-        assertEquals(route.getAgencyId(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteShortName(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteLongName(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteDesc(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteType(), RouteType.LIGHT_RAIL);
-        assertEquals(route.getRouteUrl(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteColor(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteTextColor(), STRING_TEST_VALUE);
-        assertEquals(route.getRouteSortOrder(), INT_TEST_VALUE);
+        assertTrue(entityBuildResult.getData() instanceof Route);
     }
 }
