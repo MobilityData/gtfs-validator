@@ -65,7 +65,8 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        final List<MissingRequiredValueNotice> noticeCollection = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
@@ -88,7 +89,8 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        final List<MissingRequiredValueNotice> noticeCollection = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
@@ -111,7 +113,8 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        final List<FloatFieldValueOutOfRangeNotice> noticeCollection = (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
+        final List<FloatFieldValueOutOfRangeNotice> noticeCollection =
+                (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
@@ -137,7 +140,8 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        final List<MissingRequiredValueNotice> noticeCollection = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
@@ -160,7 +164,8 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        final List<MissingRequiredValueNotice> noticeCollection = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
@@ -183,7 +188,8 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        final List<UnexpectedEnumValueNotice> noticeCollection = (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
@@ -207,7 +213,8 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        final List<UnexpectedEnumValueNotice> noticeCollection = (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
@@ -246,7 +253,8 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        final List<IntegerFieldValueOutOfRangeNotice> noticeCollection = (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
+        final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
+                (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
