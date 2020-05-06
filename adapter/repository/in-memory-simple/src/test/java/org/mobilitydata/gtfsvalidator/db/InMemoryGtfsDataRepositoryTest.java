@@ -116,15 +116,6 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void callToAddPathwayShouldAddPathwayToGtfsDataRepoAndReturnSameEntity() {
-        final Pathway mockPathway = mock(Pathway.class);
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockPathway.getPathwayId()).thenReturn("pathway id");
-
-        assertEquals(mockPathway, underTest.addPathway(mockPathway));
-    }
-
-    @Test
     void addTwiceTheSamePathwayShouldReturnNull() {
         final Pathway mockPathway = mock(Pathway.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -143,7 +134,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void getPathwayByIdShouldReturnRelatedPathway() {
+    public void addPathwayAndGetPathwayByIdShouldReturnSameEntity() {
         final Pathway mockPathway00 = mock(Pathway.class);
         final Pathway mockPathway01 = mock(Pathway.class);
         when(mockPathway00.getPathwayId()).thenReturn("pathway id 00");
@@ -151,8 +142,8 @@ class InMemoryGtfsDataRepositoryTest {
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addPathway(mockPathway00);
-        underTest.addPathway(mockPathway01);
+        assertEquals(mockPathway00, underTest.addPathway(mockPathway00));
+        assertEquals(mockPathway01, underTest.addPathway(mockPathway01));
 
         assertEquals(mockPathway00, underTest.getPathwayById("pathway id 00"));
         assertEquals(mockPathway01, underTest.getPathwayById("pathway id 01"));
