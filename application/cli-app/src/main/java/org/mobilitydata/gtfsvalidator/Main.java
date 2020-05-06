@@ -27,7 +27,6 @@ import org.mobilitydata.gtfsvalidator.usecase.ValidateGtfsTypes;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -56,13 +55,17 @@ public class Main {
                         .execute();
 
                 final List<String> filenameList = config.validateAllRequiredFilePresence().execute();
-
                 filenameList.addAll(config.validateAllOptionalFileName().execute());
 
-                final List<String> toLoadIntoMemory = new ArrayList<>();
-                // at present this list is hard coded for our needs: agency.txt and routes.txt.
-                toLoadIntoMemory.add("agency.txt");
-                toLoadIntoMemory.add("routes.txt");
+                // to be replaced by the call to a future use case that will create the list of files to exclude from
+                // command line option or configuration file.
+                final List<String> toExcludeFromGtfsSemanticValidation = List.of("stops.txt", "trips.txt",
+                        "stop_times.txt", "calendar.txt", "calendar_dates.txt", "fare_attributes.txt", "fare_rules.txt",
+                        "shapes.txt", "frequencies.txt", "transfers.txt", "pathways.txt", "levels.txt",
+                        "translations.txt", "feed_info.txt", "attributions.txt");
+
+                final List<String> filenameListToProcess = config.createGtfsSemanticValidationFilenameList(filenameList)
+                        .execute(toExcludeFromGtfsSemanticValidation);
 
                 // retrieve use case to be used multiple times
                 final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
@@ -85,7 +88,7 @@ public class Main {
                         // filenames in filenameList will be determined using a dependency tree defined by a JSON file,
                         // and command lines or configuration file will be used to exclude files from the validation
                         // process.
-                        if (toLoadIntoMemory.contains(filename)) {
+                        if (filenameListToProcess.contains(filename)) {
                             switch (filename) {
                                 case "agency.txt": {
                                     processParsedAgency.execute(parsedEntity);

@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -146,5 +147,10 @@ public class DefaultConfig {
 
     public ProcessParsedRoute processParsedRoute() {
         return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder());
+    }
+
+    public CreateGtfsSemanticValidationFilenameList
+    createGtfsSemanticValidationFilenameList(final List<String> toExcludeFromGtfsSemanticValidation) {
+        return new CreateGtfsSemanticValidationFilenameList(toExcludeFromGtfsSemanticValidation);
     }
 }
