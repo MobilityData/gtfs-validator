@@ -19,31 +19,29 @@ package org.mobilitydata.gtfsvalidator.config;
 import com.google.common.io.Resources;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.db.InMemoryExecParamRepository;
-import org.mobilitydata.gtfsvalidator.db.InMemoryGtfsSpecRepository;
-import org.mobilitydata.gtfsvalidator.db.InMemoryRawFileRepository;
-import org.mobilitydata.gtfsvalidator.db.InMemoryValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.*;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
-import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
-import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
  * process. Hence, this is created before calling the different use case of the validation process in the main method.
  */
 public class DefaultConfig {
-    private final GtfsSpecRepository specRepo;
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
+    private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
+    private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
 
@@ -70,7 +68,6 @@ public class DefaultConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString);
     }
 
@@ -142,5 +139,18 @@ public class DefaultConfig {
 
     public PrintHelp printHelp() {
         return new PrintHelp(execParamRepo, new HelpFormatter());
+    }
+
+    public ProcessParsedAgency processParsedAgency() {
+        return new ProcessParsedAgency(resultRepo, gtfsDataRepository, new Agency.AgencyBuilder());
+    }
+
+    public ProcessParsedRoute processParsedRoute() {
+        return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder());
+    }
+
+    public CreateGtfsSemanticValidationFilenameList
+    createGtfsSemanticValidationFilenameList(final List<String> toExcludeFromGtfsSemanticValidation) {
+        return new CreateGtfsSemanticValidationFilenameList(toExcludeFromGtfsSemanticValidation);
     }
 }
