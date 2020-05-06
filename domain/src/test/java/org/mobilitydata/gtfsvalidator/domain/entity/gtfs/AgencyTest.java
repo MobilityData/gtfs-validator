@@ -17,16 +17,12 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mockito.ArgumentCaptor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
 
 class AgencyTest {
     private static final String STRING_TEST_VALUE = "test_value";
@@ -35,111 +31,92 @@ class AgencyTest {
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createAgencyWithNullAgencyNameShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
-        underTest.agencyId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.agencyId(STRING_TEST_VALUE)
                 .agencyName(null)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
                 .agencyPhone(STRING_TEST_VALUE)
                 .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("agency.txt", noticeList.get(0).getFilename());
-        assertEquals("agency_name", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
+                .agencyEmail(STRING_TEST_VALUE)
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("agency.txt", notice.getFilename());
+        assertEquals("agency_name", notice.getFieldName());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     // Field agencyUrl is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createAgencyWithNullAgencyUrlShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
-        underTest.agencyId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.agencyId(STRING_TEST_VALUE)
                 .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(null)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
                 .agencyPhone(STRING_TEST_VALUE)
                 .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("agency.txt", noticeList.get(0).getFilename());
-        assertEquals("agency_url", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
+                .agencyEmail(STRING_TEST_VALUE)
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("agency.txt", notice.getFilename());
+        assertEquals("agency_url", notice.getFieldName());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     // Field agencyTimezone is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createAgencyWithNullTimezoneShouldGenerateMissingRequiredValueNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
-        underTest.agencyId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.agencyId(STRING_TEST_VALUE)
                 .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(null)
                 .agencyLang(STRING_TEST_VALUE)
                 .agencyPhone(STRING_TEST_VALUE)
                 .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final ArgumentCaptor<MissingRequiredValueNotice> captor =
-                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
-
-        verify(mockNoticeCollection, times(1)).clear();
-        verify(mockNoticeCollection, times(1)).add(captor.capture());
-
-        final List<MissingRequiredValueNotice> noticeList = captor.getAllValues();
-
-        assertEquals("agency.txt", noticeList.get(0).getFilename());
-        assertEquals("agency_timezone", noticeList.get(0).getFieldName());
-        assertEquals(STRING_TEST_VALUE, noticeList.get(0).getEntityId());
+                .agencyEmail(STRING_TEST_VALUE)
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        verifyNoMoreInteractions(mockNoticeCollection);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("agency.txt", notice.getFilename());
+        assertEquals("agency_timezone", notice.getFieldName());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
     public void createAgencyWithValidValuesShouldNotGenerateNotice() {
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = mock(ArrayList.class);
-        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder(mockNoticeCollection);
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         underTest.agencyId(STRING_TEST_VALUE);
         underTest.agencyName(STRING_TEST_VALUE);
@@ -152,9 +129,6 @@ class AgencyTest {
 
         final EntityBuildResult<?> entityBuildResult = underTest.build();
 
-        verify(mockNoticeCollection, times(1)).clear();
-
         assertTrue(entityBuildResult.getData() instanceof Agency);
-        verifyNoMoreInteractions(mockNoticeCollection);
     }
 }

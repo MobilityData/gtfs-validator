@@ -97,7 +97,6 @@ class InMemoryGtfsDataRepositoryTest {
         //noinspection ConstantConditions
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addRoute(null));
-
         assertEquals("Cannot add null route to data repository", exception.getMessage());
     }
 
@@ -156,5 +155,4 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(mockTrip00, underTest.getTripById("trip id00"));
         assertEquals(mockTrip01, underTest.getTripById("trip id01"));
     }
-
 }
