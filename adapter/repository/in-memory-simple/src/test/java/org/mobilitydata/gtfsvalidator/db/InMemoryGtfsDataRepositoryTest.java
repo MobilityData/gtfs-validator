@@ -53,7 +53,7 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addNullAgencyShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        //noinspection ConstantConditions to avoid lint
+        //noinspection ConstantConditions
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addAgency(null));
         assertEquals("Cannot add null agency to data repository", exception.getMessage());
@@ -97,10 +97,9 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addNullRouteShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        //noinspection ConstantConditions to avoid lint
+        //noinspection ConstantConditions
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addRoute(null));
-
         assertEquals("Cannot add null route to data repository", exception.getMessage());
     }
 

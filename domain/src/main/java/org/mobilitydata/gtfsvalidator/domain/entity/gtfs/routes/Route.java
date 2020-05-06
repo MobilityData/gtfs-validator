@@ -24,6 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -153,11 +154,7 @@ public class Route extends GtfsEntity {
         private String routeTextColor;
         private Integer routeSortOrder;
         private Integer originalRouteTypeInteger;
-        private final List<Notice> noticeCollection;
-
-        public RouteBuilder(final List<Notice> noticeCollection) {
-            this.noticeCollection = noticeCollection;
-        }
+        private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
          * Sets field routeId value and returns this
