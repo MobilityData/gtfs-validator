@@ -31,7 +31,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -68,7 +67,6 @@ public class DefaultConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString);
     }
 
@@ -143,10 +141,10 @@ public class DefaultConfig {
     }
 
     public ProcessParsedAgency processParsedAgency() {
-        return new ProcessParsedAgency(resultRepo, gtfsDataRepository, new Agency.AgencyBuilder(new ArrayList<>()));
+        return new ProcessParsedAgency(resultRepo, gtfsDataRepository, new Agency.AgencyBuilder());
     }
 
     public ProcessParsedRoute processParsedRoute() {
-        return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder(new ArrayList<>()));
+        return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder());
     }
 }
