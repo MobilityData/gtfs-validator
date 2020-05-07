@@ -1,22 +1,22 @@
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
-public class FareRule {
+import java.util.ArrayList;
+import java.util.List;
 
+public class FareRule extends GtfsEntity {
     @NotNull
     final String fareId;
-
     @Nullable
     private final String routeId;
-
     @Nullable
     private final String originId;
-
     @Nullable
     private final String destinationId;
-
     @Nullable
     private final String containsId;
 
@@ -58,7 +58,7 @@ public class FareRule {
     }
 
     public static class FareRuleBuilder {
-
+        @SuppressWarnings("NotNullFieldNotInitialized") // to avoid lint
         @NotNull
         private String fareId;
         @Nullable
@@ -69,10 +69,7 @@ public class FareRule {
         private String destinationId;
         @Nullable
         private String containsId;
-
-        public FareRuleBuilder(@NotNull final String fareId) {
-            this.fareId = fareId;
-        }
+        private final List<Notice> noticeCollection = new ArrayList<>();
 
         public FareRuleBuilder fareId(@NotNull final String fareId) {
             this.fareId = fareId;
@@ -99,8 +96,16 @@ public class FareRule {
             return this;
         }
 
-        public FareRule build() {
-            return new FareRule(fareId, routeId, originId, destinationId, containsId);
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+
+            //noinspection ConstantConditions to avoid lint
+            if (fareId == null) {
+                noticeCollection.add(new MissingRequiredValueNotice("fare_rules.txt", "fare_id", fareId));
+                return new EntityBuildResult<>(noticeCollection);
+            } else {
+                return new EntityBuildResult<>(new FareRule(fareId, routeId, originId, destinationId, containsId));
+            }
         }
     }
 }
