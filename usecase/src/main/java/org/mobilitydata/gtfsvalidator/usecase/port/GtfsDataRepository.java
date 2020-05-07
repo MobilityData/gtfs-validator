@@ -32,7 +32,7 @@ public interface GtfsDataRepository {
     Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException;
 
     Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
-                               final String tripId, final String organizationName, final Integer isProducer,
-                               final Integer isOperator, final Integer isAuthority, final String attributionUrl,
+                               final String tripId, final String organizationName, final Boolean isProducer,
+                               final Boolean isOperator, final Boolean isAuthority, final String attributionUrl,
                                final String attributionEmail, final String attributionPhone);
 }

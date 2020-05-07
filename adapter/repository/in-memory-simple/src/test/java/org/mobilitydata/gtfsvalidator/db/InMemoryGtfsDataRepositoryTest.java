@@ -146,10 +146,10 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(mockAttribution01, underTest.addAttribution(mockAttribution01));
 
         assertEquals(mockAttribution00, underTest.getAttribution(null, null, null,
-                null, "organization name 0", 0, 0, 0,
+                null, "organization name 0", false, false, false,
                 null, null, null));
         assertEquals(mockAttribution01, underTest.getAttribution(null, null, null,
-                null, "organization name 1", 0, 0, 0,
+                null, "organization name 1", false, false, false,
                 null, null, null));
     }
 }

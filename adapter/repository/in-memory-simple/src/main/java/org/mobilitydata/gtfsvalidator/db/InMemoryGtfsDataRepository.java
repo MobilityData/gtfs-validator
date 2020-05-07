@@ -114,7 +114,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         if (newAttribution != null) {
             final String key = newAttribution.getAttributionId() + newAttribution.getAgencyId() +
                     newAttribution.getRouteId() + newAttribution.getTripId() + newAttribution.getOrganizationName() +
-                    newAttribution.isProducer() + newAttribution.isOperator() + newAttribution.isAuthority();
+                    newAttribution.isProducer() + newAttribution.isOperator() + newAttribution.isAuthority() +
+                    newAttribution.getAttributionUrl() + newAttribution.getAttributionEmail() +
+                    newAttribution.getAttributionPhone();
             if (attributionCollection.containsKey(key)) {
                 return null;
             } else {
@@ -146,10 +148,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
-                                      final String tripId, final String organizationName, final Integer isProducer,
-                                      final Integer isOperator, final Integer isAuthority, final String attributionUrl,
+                                      final String tripId, final String organizationName, final Boolean isProducer,
+                                      final Boolean isOperator, final Boolean isAuthority, final String attributionUrl,
                                       final String attributionEmail, final String attributionPhone) {
-        return attributionCollection.get(attributionId + agencyId + routeId + tripId + organizationName + isProducer + isOperator
-                + isAuthority + attributionUrl + attributionEmail + attributionPhone);
+        return attributionCollection.get(attributionId + agencyId + routeId + tripId + organizationName + isProducer +
+                isOperator + isAuthority + attributionUrl + attributionEmail + attributionPhone);
     }
 }
