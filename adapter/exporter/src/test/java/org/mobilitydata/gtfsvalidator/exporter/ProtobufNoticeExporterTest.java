@@ -18,8 +18,11 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 import org.mockito.ArgumentMatchers;
 
 import java.io.IOException;
@@ -65,7 +68,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportNonStandardHeaderNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -95,7 +97,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportInputZipContainsFolderNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -124,7 +125,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportNonAsciiOrNonPrintableCharNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -156,7 +156,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportCannotConstructDataProviderNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -185,7 +184,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportCannotDownloadArchiveFromNetworkNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -216,7 +214,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportCannotParseFloatNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -249,7 +246,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportCannotParseIntegerNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -282,7 +278,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportCannotUnzipInputArchiveNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -311,7 +306,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportFloatFieldValueOutOfRangeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -351,7 +345,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportIntegerFieldValueOutOfRangeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -392,7 +385,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportInvalidRowLengthNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -423,7 +415,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportInvalidTimezoneNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -457,7 +448,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportInvalidUrlNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -491,7 +481,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportMissingHeaderNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -522,7 +511,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportMissingRequiredFileNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -553,7 +541,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportMissingRequiredValueNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -586,40 +573,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportCouldNotCleanOrCreatePathNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
-        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
-                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
-
-        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
-
-        when(mockBuilder.build()).thenReturn(mockProblem);
-
-        OutputStream mockStream = mock(OutputStream.class);
-
-        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
-                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
-        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
-
-        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new CouldNotCleanOrCreatePathNotice("../output")
-        );
-
-        verify(mockBuilder, times(1)).clear();
-        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(""));
-        verify(mockBuilder, times(1)).setType(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR));
-        verify(mockBuilder, times(1)).setSeverity(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).setAltEntityId(
-                ArgumentMatchers.eq("../output"));
-        verify(mockBuilder, times(1)).build();
-        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
-    }
-
-    @Test
     void exportInvalidColorNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -653,7 +607,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportExtraFileFoundNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -682,7 +635,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportInvalidTimeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -713,7 +665,6 @@ class ProtobufNoticeExporterTest {
 
     @Test
     void exportCannotParseDateNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -743,6 +694,134 @@ class ProtobufNoticeExporterTest {
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
 
+    @Test
+    void exportInvalidCurrencyCodeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new InvalidCurrencyCodeNotice(FILENAME, "field_name", "entity_id",
+                "currency_code"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setAltEntityId(ArgumentMatchers.eq("field_name"));
+        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("entity_id"));
+        verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("currency_code"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportUnexpectedEnumValueNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new UnexpectedEnumValueNotice(FILENAME, "field_name",
+                "entity_id", 2));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("field_name"));
+        verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("2"));
+        verify(mockBuilder, times(1)).setAltEntityId("entity_id");
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportIllegalFieldValueCombinationShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new IllegalFieldValueCombination(FILENAME, "field_name",
+                "conflicting_field_name", "entity_id"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("field_name"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("conflicting_field_name"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportDuplicatedEntityNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new DuplicatedEntityNotice(FILENAME, "field_name", "entity_id"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("field_name"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("entity_id"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
     @Test
     void exportAttributionMustHaveRoleNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
 

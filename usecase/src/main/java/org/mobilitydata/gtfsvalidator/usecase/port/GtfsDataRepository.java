@@ -16,11 +16,15 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+
 public interface GtfsDataRepository {
+    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
-    //public void loadStop
+    Agency getAgencyById(final String agencyId);
 
-    //public List<Stop> getStopList();
-    //public
+    Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
+    Route getRouteById(final String routeId);
 }
