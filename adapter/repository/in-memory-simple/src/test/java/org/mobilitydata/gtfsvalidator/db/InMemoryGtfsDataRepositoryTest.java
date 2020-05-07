@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -112,5 +113,41 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockRoute00, underTest.getRouteById("route id0"));
         assertEquals(mockRoute01, underTest.getRouteById("route id1"));
+    }
+
+    @Test
+    void addNullFareRuleShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addFareRule(null));
+        assertEquals("Cannot add null FareRule to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addSameFareRuleTwiceShouldReturnNull() {
+        final FareRule mockFareRule = mock(FareRule.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareRule.getFareId()).thenReturn("fare id");
+
+        underTest.addFareRule(mockFareRule);
+
+        assertNull(underTest.addFareRule(mockFareRule));
+    }
+
+    @Test
+    void addFareRuleAndGetFareRuleShouldReturnSameEntity() {
+        final FareRule mockFareRule00 = mock(FareRule.class);
+        final FareRule mockFareRule01 = mock(FareRule.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareRule00.getFareId()).thenReturn("fare id0");
+        when(mockFareRule01.getFareId()).thenReturn("fare id1");
+
+        assertEquals(mockFareRule00, underTest.addFareRule(mockFareRule00));
+        assertEquals(mockFareRule01, underTest.addFareRule(mockFareRule01));
+
+        assertEquals(mockFareRule00, underTest.getFareRule("fare id0", null, null,
+                null, null));
+        assertEquals(mockFareRule01, underTest.getFareRule("fare id1", null, null,
+                null, null));
     }
 }

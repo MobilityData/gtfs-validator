@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -30,6 +31,15 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // Map containing FareRule entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file fare_rules.txt:
+    // - fare_id
+    // - route_id
+    // - origin_id
+    // - destination_id
+    // - contains_id
+    private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -97,5 +107,47 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Route getRouteById(final String routeId) {
         return routeCollection.get(routeId);
+    }
+
+    /**
+     * Add a FareRule representing a row from fare_rules.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newFareRule the internal representation of a row from fare_rules.txt to be added to the repository.
+     * @return Return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt
+     * is respected, if this requirement is not met, returns null.
+     */
+    @Override
+    public FareRule addFareRule(final FareRule newFareRule) throws IllegalArgumentException {
+        if (newFareRule != null) {
+            final String key = newFareRule.getFareId() + newFareRule.getRouteId() + newFareRule.getOriginId() +
+                    newFareRule.getDestinationId() + newFareRule.getContainsId();
+            if (fareRuleCollection.containsKey(key)) {
+                return null;
+            } else {
+                fareRuleCollection.put(key, newFareRule);
+                return newFareRule;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null FareRule to data repository");
+        }
+    }
+
+    /**
+     * Return the FareRule representing a row from fare_rules.txt related to the id provided as parameter
+     *
+     * @param fareId        1st part of the composite key: identifies a fare class
+     * @param routeId       2nd part of the composite key: identifies a route associated with the fare class
+     * @param originId      3rd part of the composite key: identifies an origin zone
+     * @param destinationId 4th part of the composite key: identifies a destination zone
+     * @param containsId    5th part ot the composite key: identifies the zones that a rider will enter while using a
+     *                      given fare class
+     * @return the FareRule representing a row from fare_rules.txt related to the id provided as parameter
+     */
+    @Override
+    public FareRule getFareRule(final String fareId, final String routeId, final String originId,
+                                final String destinationId, final String containsId) {
+        return fareRuleCollection.get(fareId + routeId + originId + destinationId + containsId);
     }
 }
