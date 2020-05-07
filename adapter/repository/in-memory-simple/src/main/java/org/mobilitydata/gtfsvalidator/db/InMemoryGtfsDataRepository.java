@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Attribution;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -30,6 +31,7 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<String, Attribution> attributionCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -97,5 +99,57 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Route getRouteById(final String routeId) {
         return routeCollection.get(routeId);
+    }
+
+    /**
+     * Add an Attribution representing a row from attributions.txt to this. Return the entity added to the repository if
+     * the uniqueness constraint of rows f attributions.txt is respected, if this requirement is not met, returns null.
+     *
+     * @param newAttribution the internal representation of a row from attributions.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of rows f attributions.txt is respected,
+     * if this requirement is not met, returns null.
+     */
+    @Override
+    public Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException {
+        if (newAttribution != null) {
+            final String key = newAttribution.getAttributionId() + newAttribution.getAgencyId() +
+                    newAttribution.getRouteId() + newAttribution.getTripId() + newAttribution.getOrganizationName() +
+                    newAttribution.isProducer() + newAttribution.isOperator() + newAttribution.isAuthority();
+            if (attributionCollection.containsKey(key)) {
+                return null;
+            } else {
+                attributionCollection.put(key, newAttribution);
+                return newAttribution;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null attribution to data repository");
+        }
+    }
+
+    /**
+     * Return the Attribution representing a row from attributions.txt related to the composite key provided as
+     * parameter
+     *
+     * @param attributionId    identifies an attribution for the dataset or a subset of it
+     * @param agencyId         agency to which the attribution applies
+     * @param routeId          route to which the attribution applies
+     * @param tripId           trip to which the attribution applies
+     * @param organizationName name of the organization that the dataset is attributed to
+     * @param isProducer       the role of the organization if producer
+     * @param isOperator       the role of the organization if operator
+     * @param isAuthority      the role of the organization if authority
+     * @param attributionUrl   URL of the organization
+     * @param attributionEmail email of the organization
+     * @param attributionPhone phone number of the organization
+     * @return the Attribution representing a row from attributions.txt related to the composite key provided as
+     * parameter
+     */
+    @Override
+    public Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
+                                      final String tripId, final String organizationName, final Integer isProducer,
+                                      final Integer isOperator, final Integer isAuthority, final String attributionUrl,
+                                      final String attributionEmail, final String attributionPhone) {
+        return attributionCollection.get(attributionId + agencyId + routeId + tripId + organizationName + isProducer + isOperator
+                + isAuthority + attributionUrl + attributionEmail + attributionPhone);
     }
 }

@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Attribution;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -112,5 +113,43 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockRoute00, underTest.getRouteById("route id0"));
         assertEquals(mockRoute01, underTest.getRouteById("route id1"));
+    }
+
+    @Test
+    void addNullAttributionShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addAttribution(null));
+        assertEquals("Cannot add null attribution to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addSameAttributionTwiceShouldReturnNull() {
+        final Attribution mockAttribution = mock(Attribution.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockAttribution.getOrganizationName()).thenReturn("organization name");
+
+        underTest.addAttribution(mockAttribution);
+
+        assertNull(underTest.addAttribution(mockAttribution));
+    }
+
+    @Test
+    void addAttributionAndGetAttributionShouldReturnSameEntity() {
+        final Attribution mockAttribution00 = mock(Attribution.class);
+        final Attribution mockAttribution01 = mock(Attribution.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockAttribution00.getOrganizationName()).thenReturn("organization name 0");
+        when(mockAttribution01.getOrganizationName()).thenReturn("organization name 1");
+
+        assertEquals(mockAttribution00, underTest.addAttribution(mockAttribution00));
+        assertEquals(mockAttribution01, underTest.addAttribution(mockAttribution01));
+
+        assertEquals(mockAttribution00, underTest.getAttribution(null, null, null,
+                null, "organization name 0", 0, 0, 0,
+                null, null, null));
+        assertEquals(mockAttribution01, underTest.getAttribution(null, null, null,
+                null, "organization name 1", 0, 0, 0,
+                null, null, null));
     }
 }

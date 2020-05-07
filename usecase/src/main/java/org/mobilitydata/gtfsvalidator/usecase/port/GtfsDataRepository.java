@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Attribution;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 public interface GtfsDataRepository {
@@ -27,4 +28,11 @@ public interface GtfsDataRepository {
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
     Route getRouteById(final String routeId);
+
+    Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException;
+
+    Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
+                               final String tripId, final String organizationName, final Integer isProducer,
+                               final Integer isOperator, final Integer isAuthority, final String attributionUrl,
+                               final String attributionEmail, final String attributionPhone);
 }
