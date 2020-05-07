@@ -64,6 +64,21 @@ public class Attribution extends GtfsEntity {
     @Nullable
     private final String attributionPhone;
 
+    /**
+     * Class for all entities defined in attributions.txt
+     *
+     * @param attributionId    identifies an attribution for the dataset or a subset of it
+     * @param agencyId         agency to which the attribution applies
+     * @param routeId          route to which the attribution applies
+     * @param tripId           trip to which the attribution applies
+     * @param organizationName name of the organization that the dataset is attributed to
+     * @param isProducer       the role of the organization if producer
+     * @param isOperator       the role of the organization if operator
+     * @param isAuthority      the role of the organization if authority
+     * @param attributionUrl   URL of the organization
+     * @param attributionEmail email of the organization
+     * @param attributionPhone phone number of the organization
+     */
     private Attribution(@Nullable final String attributionId,
                         @Nullable final String agencyId,
                         @Nullable final String routeId,
@@ -279,7 +294,7 @@ public class Attribution extends GtfsEntity {
         /**
          * Sets field attributionUrl value and returns this
          *
-         * @param attributionUrl URL of the organization.
+         * @param attributionUrl URL of the organization
          * @return builder for future object creation
          */
         public AttributionBuilder attributionUrl(@Nullable final String attributionUrl) {
@@ -290,7 +305,7 @@ public class Attribution extends GtfsEntity {
         /**
          * Sets field attributionEmail value and returns this
          *
-         * @param attributionEmail Email of the organization.
+         * @param attributionEmail email of the organization
          * @return builder for future object creation
          */
         public AttributionBuilder attributionEmail(@Nullable final String attributionEmail) {
@@ -301,7 +316,7 @@ public class Attribution extends GtfsEntity {
         /**
          * Sets field attributionPhone value and returns this
          *
-         * @param attributionPhone Phone number of the organization.
+         * @param attributionPhone phone number of the organization
          * @return builder for future object creation
          */
         public AttributionBuilder attributionPhone(@Nullable final String attributionPhone) {
