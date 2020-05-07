@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -28,7 +34,7 @@ import java.util.Objects;
  * This class can not be directly instantiated. User must use {@link AttributionBuilder} to create a {@link Attribution}
  * object.
  */
-public class Attribution {
+public class Attribution extends GtfsEntity {
 
     @Nullable
     private final String attributionId;
@@ -46,8 +52,8 @@ public class Attribution {
     private final String organizationName;
 
     private final boolean isProducer;
-    private final boolean isAuthority;
     private final boolean isOperator;
+    private final boolean isAuthority;
 
     @Nullable
     private final String attributionUrl;
@@ -64,8 +70,8 @@ public class Attribution {
                         @Nullable final String tripId,
                         @NotNull final String organizationName,
                         final boolean isProducer,
-                        final boolean isAuthority,
                         final boolean isOperator,
+                        final boolean isAuthority,
                         @Nullable final String attributionUrl,
                         @Nullable final String attributionEmail,
                         @Nullable final String attributionPhone) {
@@ -135,7 +141,8 @@ public class Attribution {
     }
 
     /**
-     * Builder class to create {@link Attribution} objects.
+     * Builder class to create {@link Attribution}. Allows an unordered definition of the different attributes of
+     * {@link Attribution}.
      */
     public static class AttributionBuilder {
         @Nullable
@@ -146,27 +153,22 @@ public class Attribution {
         private String routeId;
         @Nullable
         private String tripId;
+        @SuppressWarnings("NotNullFieldNotInitialized") // to avoid lint
         @NotNull
         private String organizationName;
         private boolean isProducer;
+        private Integer originalIsProducerInteger;
         private boolean isAuthority;
+        private Integer originalIsAuthorityInteger;
         private boolean isOperator;
+        private Integer originalIsOperatorInteger;
         @Nullable
         private String attributionUrl;
         @Nullable
         private String attributionEmail;
         @Nullable
         private String attributionPhone;
-
-        /**
-         * Builder class constructor. Creates a builder from organizationName provided as parameter. Allows an unordered
-         * definition of the different attributes of {@link Attribution}.
-         *
-         * @param organizationName name of the organization that the dataset is attributed to
-         */
-        public AttributionBuilder(@NotNull final String organizationName) {
-            this.organizationName = organizationName;
-        }
+        private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
          * Sets field attributionId value and returns this
@@ -227,27 +229,33 @@ public class Attribution {
          * Sets field isProducer value and returns this
          *
          * @param isProducer The role of the organization if producer. Valid options are:
-         *                   0 or empty - Organization doesn’t have this role
+         *                   0 or empty - Organization does not have this role
          *                   1 - Organization does have this role
          *                   At least one of the fields isProducer, isOperator, or isAuthority should be set at true.
          * @return builder for future object creation
          */
         public AttributionBuilder isProducer(@Nullable final Integer isProducer) {
-            this.isProducer = Objects.equals(isProducer, 1);
+            if (isProducer != null) {
+                this.isProducer = Objects.equals(isProducer, 1);
+            }
+            this.originalIsProducerInteger = isProducer;
             return this;
         }
 
         /**
-         * Sets field isProducer value and returns this
+         * Sets field isAuthority value and returns this
          *
          * @param isAuthority The role of the organization if authority. Valid options are:
-         *                    0 or empty - Organization doesn’t have this role
+         *                    0 or empty - Organization does not have this role
          *                    1 - Organization does have this role
          *                    At least one of the fields isProducer, isOperator, or isAuthority should be set at true.
          * @return builder for future object creation
          */
         public AttributionBuilder isAuthority(@Nullable final Integer isAuthority) {
-            this.isAuthority = Objects.equals(isAuthority, 1);
+            if (isAuthority != null) {
+                this.isAuthority = Objects.equals(isAuthority, 1);
+            }
+            this.originalIsAuthorityInteger = isAuthority;
             return this;
         }
 
@@ -255,13 +263,16 @@ public class Attribution {
          * Sets field isOperator value and returns this
          *
          * @param isOperator The role of the organization if operator. Valid options are:
-         *                   0 or empty - Organization doesn’t have this role
+         *                   0 or empty - Organization does not have this role
          *                   1 - Organization does have this role
          *                   At least one of the fields isProducer, isOperator, or isAuthority should be set at true.
          * @return builder for future object creation
          */
         public AttributionBuilder isOperator(@Nullable final Integer isOperator) {
-            this.isOperator = Objects.equals(isOperator, 1);
+            if (isOperator != null) {
+                this.isOperator = Objects.equals(isOperator, 1);
+            }
+            this.originalIsOperatorInteger = isOperator;
             return this;
         }
 
@@ -298,28 +309,58 @@ public class Attribution {
             return this;
         }
 
-        /**
-         * Creates a {@link Attribution} objects from fields provided via {@link AttributionBuilder} methods. Throws
-         * {@link IllegalArgumentException} if fields isProducer, isAuthority, isOperator are set to false at the same
-         * time. Throws {@link IllegalArgumentException} is fields marked as @NotNull are passed with null value.
-         *
-         * @return Entity representing a row from attributions.txt
-         * @throws IllegalArgumentException if fields isProducer, isAuthority, isOperator are set to false at the
-         *                                  same time. Throws {@link IllegalArgumentException} is fields marked as
-         *                                  not null are passed with null value.
-         */
-        @SuppressWarnings("ConstantConditions")
-        public Attribution build() throws IllegalArgumentException {
 
-            if (organizationName == null) {
-                throw new IllegalArgumentException("organizationName can not be null");
+        /**
+         * Entity representing a row from attributions.txt if the requirements from the official GTFS specification
+         * are met. Otherwise, method returns an entity representing a list of notices.
+         *
+         * @return Entity representing a row from attributions.txt if the requirements from the official GTFS
+         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         */
+        public EntityBuildResult<?> build() {
+            noticeCollection.clear();
+            //noinspection ConstantConditions to avoid lint
+            if (organizationName == null ||
+                    (originalIsOperatorInteger != null && (originalIsOperatorInteger < 0 || originalIsOperatorInteger > 1)) ||
+                    (originalIsAuthorityInteger != null && (originalIsAuthorityInteger < 0 || originalIsAuthorityInteger > 1))
+                    || (originalIsProducerInteger != null && (originalIsProducerInteger < 0 || originalIsProducerInteger > 1))
+                    || ((isAuthority == isProducer) && (isAuthority == isOperator)
+                    && (originalIsProducerInteger == null || originalIsProducerInteger == 0))) {
+                final String entityId = attributionId + ";" + agencyId + ";" + routeId + ";" + tripId + ";" +
+                        organizationName + ";" + isProducer + ";" + isOperator + ";" + isAuthority + ";" +
+                        attributionUrl + ";" + attributionEmail + ";" + attributionPhone;
+
+                //noinspection ConstantConditions to avoid lint
+                if (organizationName == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("attributions.txt",
+                            "organization_name",
+                            entityId));
+                }
+                if (originalIsOperatorInteger != null && (originalIsOperatorInteger < 0 || originalIsOperatorInteger > 1)) {
+                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("attributions.txt",
+                            "is_operator", entityId, 0, 1, originalIsOperatorInteger));
+                }
+                if (originalIsAuthorityInteger != null && (originalIsAuthorityInteger < 0 || originalIsAuthorityInteger > 1)) {
+                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("attributions.txt",
+                            "is_authority", entityId, 0, 1, originalIsAuthorityInteger));
+                }
+                if (originalIsProducerInteger != null && (originalIsProducerInteger < 0 || originalIsProducerInteger > 1)) {
+                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("attributions.txt",
+                            "is_producer", entityId, 0, 1, originalIsProducerInteger));
+                }
+                if ((isAuthority == isProducer) && (isAuthority == isOperator) &&
+                        (originalIsProducerInteger == null || originalIsProducerInteger == 0)) {
+                    noticeCollection.add(
+                            new IllegalFieldValueCombination("attributions.txt", "is_producer",
+                                    "is_authority; is_operator",
+                                    entityId));
+                }
+                return new EntityBuildResult<>(noticeCollection);
+            } else {
+                return new EntityBuildResult<>(new Attribution(attributionId, agencyId, routeId, tripId,
+                        organizationName, isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
+                        attributionPhone));
             }
-            if ((isProducer == isAuthority == isOperator) && (!isProducer)) {
-                throw new IllegalArgumentException("values for isProducer, isAuthority and isOperator can not " +
-                        "all be false");
-            }
-            return new Attribution(attributionId, agencyId, routeId, tripId, organizationName, isProducer, isOperator,
-                    isAuthority, attributionUrl, attributionEmail, attributionPhone);
         }
     }
 }
