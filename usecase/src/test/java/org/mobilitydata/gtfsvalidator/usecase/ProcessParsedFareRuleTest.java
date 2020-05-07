@@ -1,0 +1,193 @@
+package org.mobilitydata.gtfsvalidator.usecase;
+
+import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+class ProcessParsedFareRuleTest {
+
+    private static final String ROUTE_ID = "route_id";
+    private static final String FARE_ID = "fare_id";
+    private static final String ORIGIN_ID = "origin_id";
+    private static final String DESTINATION_ID = "destination_id";
+    private static final String CONTAINS_ID = "contains_id";
+
+    @Test
+    void validFareRuleEntityShouldNotGenerateNoticeAndBeAddedToGtfsDataRepo() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final FareRule.FareRuleBuilder mockBuilder = mock(FareRule.FareRuleBuilder.class, RETURNS_SELF);
+        final FareRule mockFareRule = mock(FareRule.class);
+        final ParsedEntity mockParsedFareRule = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
+
+        //noinspection unchecked
+        when(mockBuilder.build()).thenReturn(mockEntityBuildResult);
+        when(mockEntityBuildResult.isSuccess()).thenReturn(true);
+        when(mockEntityBuildResult.getData()).thenReturn(mockFareRule);
+
+        when(mockParsedFareRule.get(FARE_ID)).thenReturn(FARE_ID);
+        when(mockParsedFareRule.get(ROUTE_ID)).thenReturn(ROUTE_ID);
+        when(mockParsedFareRule.get(ORIGIN_ID)).thenReturn(ORIGIN_ID);
+        when(mockParsedFareRule.get(DESTINATION_ID)).thenReturn(DESTINATION_ID);
+        when(mockParsedFareRule.get(CONTAINS_ID)).thenReturn(CONTAINS_ID);
+
+        when(mockGtfsDataRepo.addFareRule(mockFareRule)).thenReturn(mockFareRule);
+
+        final ProcessParsedFareRule underTest =
+                new ProcessParsedFareRule(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+
+
+        underTest.execute(mockParsedFareRule);
+
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(FARE_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(ROUTE_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(ORIGIN_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(DESTINATION_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(CONTAINS_ID));
+
+        verify(mockBuilder, times(1)).fareId(FARE_ID);
+        verify(mockBuilder, times(1)).routeId(ROUTE_ID);
+        verify(mockBuilder, times(1)).originId(ORIGIN_ID);
+        verify(mockBuilder, times(1)).destinationId(DESTINATION_ID);
+        verify(mockBuilder, times(1)).containsId(CONTAINS_ID);
+        verify(mockBuilder, times(1)).build();
+        verify(mockGtfsDataRepo, times(1)).addFareRule(ArgumentMatchers.eq(mockFareRule));
+
+        verifyNoMoreInteractions(mockBuilder, mockFareRule, mockParsedFareRule, mockGtfsDataRepo);
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored") // to avoid lint
+    @Test
+    void invalidFareRuleEntityShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final FareRule.FareRuleBuilder mockBuilder = mock(FareRule.FareRuleBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParsedFareRule = mock(ParsedEntity.class);
+        final Notice mockNotice = mock(Notice.class);
+        final List<Notice> noticeCollection = new ArrayList<>();
+        noticeCollection.add(mockNotice);
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        //noinspection unchecked to avoid lint
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+        when(mockGenericObject.getData()).thenReturn(noticeCollection);
+
+        final ProcessParsedFareRule underTest =
+                new ProcessParsedFareRule(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+
+        when(mockParsedFareRule.get(FARE_ID)).thenReturn(FARE_ID);
+        when(mockParsedFareRule.get(ROUTE_ID)).thenReturn(ROUTE_ID);
+        when(mockParsedFareRule.get(ORIGIN_ID)).thenReturn(ORIGIN_ID);
+        when(mockParsedFareRule.get(DESTINATION_ID)).thenReturn(DESTINATION_ID);
+        when(mockParsedFareRule.get(CONTAINS_ID)).thenReturn(CONTAINS_ID);
+
+        underTest.execute(mockParsedFareRule);
+
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(FARE_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(ROUTE_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(ORIGIN_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(DESTINATION_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(CONTAINS_ID));
+
+        verify(mockBuilder, times(1)).fareId(FARE_ID);
+        verify(mockBuilder, times(1)).routeId(ROUTE_ID);
+        verify(mockBuilder, times(1)).originId(ORIGIN_ID);
+        verify(mockBuilder, times(1)).destinationId(DESTINATION_ID);
+        verify(mockBuilder, times(1)).containsId(CONTAINS_ID);
+        verify(mockBuilder, times(1)).build();
+
+        verify(mockGenericObject, times(1)).isSuccess();
+        verify(mockGenericObject, times(1)).getData();
+        verify(mockResultRepo, times(1)).addNotice(ArgumentMatchers.eq(mockNotice));
+
+        final ArgumentCaptor<MissingRequiredValueNotice> captor =
+                ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
+
+        verify(mockResultRepo, times(1)).
+                addNotice(captor.capture());
+
+        verifyNoMoreInteractions(mockParsedFareRule, mockGtfsDataRepo, mockBuilder, mockResultRepo, mockGenericObject);
+    }
+
+    @Test
+    void duplicateFareRuleShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final FareRule.FareRuleBuilder mockBuilder = mock(FareRule.FareRuleBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParsedFareRule = mock(ParsedEntity.class);
+        when(mockParsedFareRule.getEntityId()).thenReturn("entity id");
+        //noinspection rawtypes to avoid lint
+        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        final FareRule mockFareRule = mock(FareRule.class);
+        when(mockGenericObject.getData()).thenReturn(mockFareRule);
+        when(mockGenericObject.isSuccess()).thenReturn(true);
+
+        //noinspection unchecked to avoid lint
+        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGtfsDataRepo.addFareRule(mockFareRule)).thenReturn(null);
+
+        final ProcessParsedFareRule underTest =
+                new ProcessParsedFareRule(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+
+        when(mockParsedFareRule.get(FARE_ID)).thenReturn(FARE_ID);
+        when(mockParsedFareRule.get(ROUTE_ID)).thenReturn(ROUTE_ID);
+        when(mockParsedFareRule.get(ORIGIN_ID)).thenReturn(ORIGIN_ID);
+        when(mockParsedFareRule.get(DESTINATION_ID)).thenReturn(DESTINATION_ID);
+        when(mockParsedFareRule.get(CONTAINS_ID)).thenReturn(CONTAINS_ID);
+
+        underTest.execute(mockParsedFareRule);
+
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(FARE_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(ROUTE_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(ORIGIN_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(DESTINATION_ID));
+        verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(CONTAINS_ID));
+
+        verify(mockBuilder, times(1)).fareId(FARE_ID);
+        verify(mockBuilder, times(1)).routeId(ROUTE_ID);
+        verify(mockBuilder, times(1)).originId(ORIGIN_ID);
+        verify(mockBuilder, times(1)).destinationId(DESTINATION_ID);
+        verify(mockBuilder, times(1)).containsId(CONTAINS_ID);
+        verify(mockBuilder, times(1)).build();
+
+        //noinspection ResultOfMethodCallIgnored to avoid lint
+        verify(mockParsedFareRule, times(1)).getEntityId();
+        verify(mockGtfsDataRepo, times(1)).addFareRule(ArgumentMatchers.eq(mockFareRule));
+
+        verify(mockGenericObject, times(1)).isSuccess();
+        //noinspection ResultOfMethodCallIgnored to avoid lint
+        verify(mockGenericObject, times(1)).getData();
+
+        final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
+
+        assertEquals("fare_rules.txt", noticeList.get(0).getFilename());
+        assertEquals("fare_id;route_id;origin_id;destination_id;contains_id",
+                noticeList.get(0).getFieldName());
+        assertEquals("entity id", noticeList.get(0).getEntityId());
+
+        verifyNoMoreInteractions(mockParsedFareRule, mockResultRepo, mockGtfsDataRepo, mockFareRule, mockBuilder,
+                mockGenericObject);
+    }
+}
