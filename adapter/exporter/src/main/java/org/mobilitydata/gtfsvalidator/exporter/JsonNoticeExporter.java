@@ -174,14 +174,4 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(DuplicatedEntityNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
-
-    @Override
-    public void export(AttributionMustHaveRoleNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
-    public void export(OrganizationNameCanNotBeNullNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
 }
