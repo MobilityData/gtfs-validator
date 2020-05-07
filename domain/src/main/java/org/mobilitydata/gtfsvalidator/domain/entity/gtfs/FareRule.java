@@ -157,7 +157,8 @@ public class FareRule extends GtfsEntity {
 
             //noinspection ConstantConditions to avoid lint
             if (fareId == null) {
-                noticeCollection.add(new MissingRequiredValueNotice("fare_rules.txt", "fare_id", fareId));
+                noticeCollection.add(new MissingRequiredValueNotice("fare_rules.txt", "fare_id",
+                        fareId));
                 return new EntityBuildResult<>(noticeCollection);
             } else {
                 return new EntityBuildResult<>(new FareRule(fareId, routeId, originId, destinationId, containsId));
