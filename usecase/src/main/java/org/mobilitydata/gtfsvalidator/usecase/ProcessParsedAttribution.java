@@ -16,78 +16,77 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.Attribution;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.AttributionMustHaveRoleNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.OrganizationNameCanNotBeNullNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Attribution;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
-import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+
+import java.util.List;
 
 /**
  * Use case to process a {@link ParsedEntity} with an internal representation defined by {@link Attribution}
  */
 public class ProcessParsedAttribution {
+    private final ValidationResultRepository resultRepository;
+    private final GtfsDataRepository gtfsDataRepository;
+    private final Attribution.AttributionBuilder builder;
 
-    private final GtfsSpecRepository specRepo;
-    private final ValidationResultRepository resultRepo;
-    private final GtfsDataRepository gtfsRepo;
-
-    public ProcessParsedAttribution(final GtfsSpecRepository specRepo,
-                                    final ValidationResultRepository resultRepo,
-                                    final GtfsDataRepository gtfsRepo) {
-        this.specRepo = specRepo;
-        this.resultRepo = resultRepo;
-        this.gtfsRepo = gtfsRepo;
+    public ProcessParsedAttribution(final ValidationResultRepository resultRepository,
+                                    final GtfsDataRepository gtfsDataRepository,
+                                    final Attribution.AttributionBuilder builder) {
+        this.resultRepository = resultRepository;
+        this.gtfsDataRepository = gtfsDataRepository;
+        this.builder = builder;
     }
 
     /**
-     * Use case execution method to go from a row from attributions.txt to an internal representation of the
-     * {@link Attribution} object. Each {@link Attribution} is added to the {@link GtfsDataRepository}.
+     * Use case execution method to go from a row from attributions.txt to an internal representation.
      * <p>
-     * This use case extracts values from a {@link ParsedEntity} and creates a {@link Attribution} object. If the
-     * required conditions to create such object are not met, either a {@link OrganizationNameCanNotBeNullNotice} is
-     * created or a {@link AttributionMustHaveRoleNotice} is created; then added to the validation result repository
-     * provided in the use case constructor.
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code Attribution} object if the
+     * requirements from the official GTFS specification are met. When these requirements are mot met, related notices
+     * generated in {@code Attribution.AttributionBuilder} are added to the result repository provided to the
+     * constructor. This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness
+     * constraint on attribution entities is not respected.
      *
      * @param validatedAttributionEntity entity to be process and added to the {@link GtfsDataRepository}
      */
-    @SuppressWarnings("ConstantConditions")
     public void execute(final ParsedEntity validatedAttributionEntity) {
+        final String attributionId = (String) validatedAttributionEntity.get("attribution_id");
+        final String agencyId = (String) validatedAttributionEntity.get("agency_id");
+        final String routeId = (String) validatedAttributionEntity.get("route_id");
+        final String tripId = (String) validatedAttributionEntity.get("trip_id");
+        final String organizationName = (String) validatedAttributionEntity.get("organization_name");
+        final Integer isProducer = (Integer) validatedAttributionEntity.get("is_producer");
+        final Integer isAuthority = (Integer) validatedAttributionEntity.get("is_authority");
+        final Integer isOperator = (Integer) validatedAttributionEntity.get("is_operator");
+        final String attributionUrl = (String) validatedAttributionEntity.get("attribution_url");
+        final String attributionEmail = (String) validatedAttributionEntity.get("attribution_email");
+        final String attributionPhone = (String) validatedAttributionEntity.get("attribution_phone");
 
-        String attributionId = (String) validatedAttributionEntity.get("attribution_id");
-        String agencyId = (String) validatedAttributionEntity.get("agency_id");
-        String routeId = (String) validatedAttributionEntity.get("route_id");
-        String tripId = (String) validatedAttributionEntity.get("trip_id");
-        String organizationName = (String) validatedAttributionEntity.get("organization_name");
-        Integer isProducer = (Integer) validatedAttributionEntity.get("is_producer");
-        Integer isAuthority = (Integer) validatedAttributionEntity.get("is_authority");
-        Integer isOperator = (Integer) validatedAttributionEntity.get("is_operator");
-        String attributionUrl = (String) validatedAttributionEntity.get("attribution_url");
-        String attributionEmail = (String) validatedAttributionEntity.get("attribution_email");
-        String attributionPhone = (String) validatedAttributionEntity.get("attribution_phone");
+        final EntityBuildResult<?> attribution = builder.attributionId(attributionId)
+                .agencyId(agencyId)
+                .routeId(routeId)
+                .tripId(tripId)
+                .organizationName(organizationName)
+                .isProducer(isProducer)
+                .isAuthority(isAuthority)
+                .isOperator(isOperator)
+                .attributionUrl(attributionUrl)
+                .attributionEmail(attributionEmail)
+                .attributionPhone(attributionPhone)
+                .build();
 
-        Attribution.AttributionBuilder builder = new Attribution.AttributionBuilder(organizationName);
-
-        try {
-            builder.attributionId(attributionId)
-                    .agencyId(agencyId)
-                    .routeId(routeId)
-                    .tripId(tripId)
-                    .isOperator(isOperator)
-                    .isProducer(isProducer)
-                    .isAuthority(isAuthority)
-                    .attributionEmail(attributionEmail)
-                    .attributionUrl(attributionUrl)
-                    .attributionPhone(attributionPhone)
-                    .build();
-
-        } catch (IllegalArgumentException e) {
-            if (organizationName == null) {
-                resultRepo.addNotice(new OrganizationNameCanNotBeNullNotice());
-            } else {
-                resultRepo.addNotice(new AttributionMustHaveRoleNotice(organizationName));
+        if (attribution.isSuccess()) {
+            if (gtfsDataRepository.addAttribution((Attribution) attribution.getData()) == null) {
+                resultRepository.addNotice(new DuplicatedEntityNotice("attributions.txt",
+                        "organization_name", validatedAttributionEntity.getEntityId()));
             }
+        } else {
+            //noinspection unchecked to avoid lint
+            ((List<Notice>) attribution.getData()).forEach(resultRepository::addNotice);
         }
     }
 }
