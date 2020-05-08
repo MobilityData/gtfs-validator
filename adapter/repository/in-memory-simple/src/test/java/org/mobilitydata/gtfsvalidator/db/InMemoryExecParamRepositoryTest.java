@@ -251,13 +251,11 @@ class InMemoryExecParamRepositoryTest {
     @Test
     void hasExecParamValueShouldReturnTrueIfExecParamIsPresentAndParamValueFieldIsNotNull() {
         final ExecParam mockExecParam0 = spy(ExecParam.class);
-        //noinspection ResultOfMethodCallIgnored
-        doReturn(EXTRACT_KEY).when(mockExecParam0).getKey();
+        mockExecParam0.setKey(EXTRACT_KEY);
         mockExecParam0.setValue(new String[]{"input"});
 
         final ExecParam mockExecParam1 = spy(ExecParam.class);
-        //noinspection ResultOfMethodCallIgnored
-        doReturn(OUTPUT_KEY).when(mockExecParam1).getKey();
+        mockExecParam1.setKey(OUTPUT_KEY);
         mockExecParam1.setValue(new String[]{"output"});
 
         final Logger mockLogger = mock(Logger.class);

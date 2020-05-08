@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ import java.util.List;
 public class ExecParam {
     private String key;
     private String[] value;
+    private final static String EXCLUSION_KEY = "exclude";
 
     public ExecParam() {
     }
@@ -41,7 +43,13 @@ public class ExecParam {
 
     public String getValue() {
         if (value != null) {
-            return List.of(value).get(0);
+            if (key.equals(EXCLUSION_KEY)) {
+                return Arrays.asList(value).toString()
+                        .replace("[[", "[")
+                        .replace("]]", "]");
+            } else {
+                return List.of(value).get(0);
+            }
         } else {
             return null;
         }
