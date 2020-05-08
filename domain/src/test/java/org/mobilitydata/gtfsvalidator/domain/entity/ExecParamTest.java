@@ -6,12 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ExecParamTest {
     private static final String KEY = "key";
-    private static final String VALUE = "value";
+    private static final String[] VALUE = new String[]{"value"};
 
     @Test
     public void getValueShouldReturnValue() {
         final ExecParam underTest = new ExecParam(KEY, VALUE);
-        assertEquals(VALUE, underTest.getValue());
+        assertEquals("value", underTest.getValue());
     }
 
     @Test

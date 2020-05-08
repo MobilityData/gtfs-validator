@@ -22,7 +22,9 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This provides context to go from execution parameters contained in an .json file to an internal representation using
@@ -61,8 +63,13 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
         try {
             objectReader.readTree(parameterJsonString).fields()
                     .forEachRemaining(field -> {
-                        final List<String> fieldValuesAsList = new ArrayList<>(Arrays.asList(field.getValue().asText().split(",")));
-                        final ExecParam execParam = new ExecParam(field.getKey(), (String[]) fieldValuesAsList.toArray());
+                        // field.getValue().asText() contains the value related to a given key for an ExecParam, as
+                        // a string.
+                        // This string needs to be converted to a String[] as the second argument for ExecParam has
+                        // type String[]
+                        final ExecParam execParam =
+                                new ExecParam(field.getKey(),
+                                        List.of(field.getValue().asText()).toArray(new String[0]));
                         toReturn.put(execParam.getKey(), execParam);
                     });
 

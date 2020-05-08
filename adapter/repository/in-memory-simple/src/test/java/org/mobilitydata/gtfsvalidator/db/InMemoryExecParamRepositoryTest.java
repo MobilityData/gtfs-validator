@@ -17,12 +17,14 @@ import static org.mockito.Mockito.*;
 
 class InMemoryExecParamRepositoryTest {
     private static final String HELP_KEY = "help";
-    private static final String INPUT_KEY = "extract";
+    private static final String EXTRACT_KEY = "extract";
     private static final String OUTPUT_KEY = "output";
     private static final String PROTO_KEY = "proto";
     private static final String URL_KEY = "url";
-    private static final String DEFAULT_EXEC_PARAMETERS = "{\"help\": false,\"extract\": \"input\",\"output\": " +
-            "\"output\",\"proto\": false,\"url\": null,\"inputzip\": null}";
+    private static final String EXCLUSION_KEY = "exclude";
+    private static final String DEFAULT_EXEC_PARAMETERS = "{\n" + "  \"help\": false,\n" + "  \"extract\": \"input\"" +
+            ",\n" + "  \"output\": \"output\",\n" + "  \"proto\": false,\n" + "  \"url\": null, \n" +
+            "  \"zipinput\": null,\n" + "  \"exclude\": []\n" + "}";
 
     @Test
     void addExecParamWithNullKeyShouldThrowException() {
@@ -54,7 +56,7 @@ class InMemoryExecParamRepositoryTest {
     @Test
     void addExecParamWithHandledKeyShouldAddExecParamToRepoAndReturnSameEntity() {
         final ExecParam mockExecParam = spy(ExecParam.class);
-        mockExecParam.setKey(INPUT_KEY);
+        mockExecParam.setKey(EXTRACT_KEY);
 
         final Logger mockLogger = mock(Logger.class);
         final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
@@ -112,7 +114,6 @@ class InMemoryExecParamRepositoryTest {
         toCheck.put(OUTPUT_KEY, mockExecParam1);
 
         assertEquals(toCheck, underTest.getExecParamCollection());
-
     }
 
     @Test
@@ -184,13 +185,13 @@ class InMemoryExecParamRepositoryTest {
         when(mockExecParam0.getKey()).thenReturn(HELP_KEY);
         when(mockExecParam0.getValue()).thenReturn("help value");
         mockExecParam0.setKey(HELP_KEY);
-        mockExecParam0.setValue("help value");
+        mockExecParam0.setValue(new String[]{"help value"});
 
         final ExecParam mockExecParam1 = mock(ExecParam.class);
-        when(mockExecParam1.getKey()).thenReturn(INPUT_KEY);
+        when(mockExecParam1.getKey()).thenReturn(EXTRACT_KEY);
         when(mockExecParam1.getValue()).thenReturn("input value");
-        mockExecParam0.setKey(INPUT_KEY);
-        mockExecParam0.setValue("input value");
+        mockExecParam0.setKey(EXTRACT_KEY);
+        mockExecParam0.setValue(new String[]{"input value"});
 
         final Logger mockLogger = mock(Logger.class);
         final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
@@ -199,22 +200,18 @@ class InMemoryExecParamRepositoryTest {
         underTest.addExecParam(mockExecParam1);
 
         assertEquals("true", underTest.getExecParamValue(HELP_KEY));
-        assertEquals("input value", underTest.getExecParamValue(INPUT_KEY));
+        assertEquals("input value", underTest.getExecParamValue(EXTRACT_KEY));
     }
 
     @Test
     void getExecParamShouldReturnDefaultValueForMissingExecParam() {
-        final ExecParam mockExecParam0 = mock(ExecParam.class);
-        when(mockExecParam0.getKey()).thenReturn(HELP_KEY);
-        when(mockExecParam0.getValue()).thenReturn("help value");
+        final ExecParam mockExecParam0 = spy(ExecParam.class);
         mockExecParam0.setKey(HELP_KEY);
-        mockExecParam0.setValue("help value");
+        mockExecParam0.setValue(new String[]{"help value"});
 
-        final ExecParam mockExecParam1 = mock(ExecParam.class);
-        when(mockExecParam1.getKey()).thenReturn(INPUT_KEY);
-        when(mockExecParam1.getValue()).thenReturn("input value");
-        mockExecParam0.setKey(INPUT_KEY);
-        mockExecParam0.setValue("input value");
+        final ExecParam mockExecParam1 = spy(ExecParam.class);
+        mockExecParam1.setKey(EXTRACT_KEY);
+        mockExecParam1.setValue(new String[]{"input value"});
 
         final Logger mockLogger = mock(Logger.class);
         final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
@@ -223,7 +220,7 @@ class InMemoryExecParamRepositoryTest {
         underTest.addExecParam(mockExecParam1);
 
         assertEquals("true", underTest.getExecParamValue(HELP_KEY));
-        assertEquals("input value", underTest.getExecParamValue(INPUT_KEY));
+        assertEquals("input value", underTest.getExecParamValue(EXTRACT_KEY));
         assertEquals(System.getProperty("user.dir") + File.separator + "output",
                 underTest.getExecParamValue(OUTPUT_KEY));
         assertEquals("false", underTest.getExecParamValue(PROTO_KEY));
@@ -237,8 +234,8 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam0.setKey(HELP_KEY);
 
         final ExecParam mockExecParam1 = mock(ExecParam.class);
-        when(mockExecParam1.getKey()).thenReturn(INPUT_KEY);
-        mockExecParam0.setKey(INPUT_KEY);
+        when(mockExecParam1.getKey()).thenReturn(EXTRACT_KEY);
+        mockExecParam1.setKey(EXTRACT_KEY);
 
         final Logger mockLogger = mock(Logger.class);
         final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
@@ -248,20 +245,20 @@ class InMemoryExecParamRepositoryTest {
 
         assertEquals("false", underTest.getExecParamValue(HELP_KEY));
         assertEquals(System.getProperty("user.dir") + File.separator + "input",
-                underTest.getExecParamValue(INPUT_KEY));
+                underTest.getExecParamValue(EXTRACT_KEY));
     }
 
     @Test
     void hasExecParamValueShouldReturnTrueIfExecParamIsPresentAndParamValueFieldIsNotNull() {
         final ExecParam mockExecParam0 = spy(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
-        doReturn(INPUT_KEY).when(mockExecParam0).getKey();
-        mockExecParam0.setValue("input");
+        doReturn(EXTRACT_KEY).when(mockExecParam0).getKey();
+        mockExecParam0.setValue(new String[]{"input"});
 
         final ExecParam mockExecParam1 = spy(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
         doReturn(OUTPUT_KEY).when(mockExecParam1).getKey();
-        mockExecParam1.setValue("output");
+        mockExecParam1.setValue(new String[]{"output"});
 
         final Logger mockLogger = mock(Logger.class);
         final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
@@ -269,7 +266,7 @@ class InMemoryExecParamRepositoryTest {
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
 
-        assertTrue(underTest.hasExecParamValue(INPUT_KEY));
+        assertTrue(underTest.hasExecParamValue(EXTRACT_KEY));
         assertTrue(underTest.hasExecParamValue(OUTPUT_KEY));
     }
 
@@ -277,7 +274,7 @@ class InMemoryExecParamRepositoryTest {
     void hasExecParamValueShouldReturnFalseIfExecParamIsPresentAndParamValueFieldIsNull() {
         final ExecParam mockExecParam0 = spy(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
-        doReturn(INPUT_KEY).when(mockExecParam0).getKey();
+        doReturn(EXTRACT_KEY).when(mockExecParam0).getKey();
 
         final ExecParam mockExecParam1 = spy(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
@@ -289,7 +286,7 @@ class InMemoryExecParamRepositoryTest {
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
 
-        assertFalse(underTest.hasExecParamValue(INPUT_KEY));
+        assertFalse(underTest.hasExecParamValue(EXTRACT_KEY));
         assertFalse(underTest.hasExecParamValue(OUTPUT_KEY));
     }
 
@@ -297,7 +294,7 @@ class InMemoryExecParamRepositoryTest {
     void hasExecParamValueShouldReturnFalseIfExecParamIsNotPresent() {
         final ExecParam mockExecParam0 = spy(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
-        doReturn(INPUT_KEY).when(mockExecParam0).getKey();
+        doReturn(EXTRACT_KEY).when(mockExecParam0).getKey();
 
         final ExecParam mockExecParam1 = spy(ExecParam.class);
         //noinspection ResultOfMethodCallIgnored
@@ -310,5 +307,37 @@ class InMemoryExecParamRepositoryTest {
         underTest.addExecParam(mockExecParam1);
 
         assertFalse(underTest.hasExecParamValue(PROTO_KEY));
+    }
+
+    @Test
+    void getExecParamOnExclusionKeyShouldReturnListOfSeveralStringsAsString() {
+        final ExecParam mockExecParam = spy(ExecParam.class);
+        mockExecParam.setKey(EXCLUSION_KEY);
+        mockExecParam.setValue(new String[]{"[file0, file1, file2]"});
+
+        final Logger mockLogger = mock(Logger.class);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+
+        underTest.addExecParam(mockExecParam);
+
+        assertTrue(underTest.hasExecParam(EXCLUSION_KEY));
+        assertTrue(underTest.hasExecParamValue(EXCLUSION_KEY));
+        assertEquals("[file0, file1, file2]", underTest.getExecParamValue(EXCLUSION_KEY));
+    }
+
+    @Test
+    void getExecParamOnExclusionKeyShouldReturnListOfSingleStringAsString() {
+        final ExecParam mockExecParam = spy(ExecParam.class);
+        mockExecParam.setKey(EXCLUSION_KEY);
+        mockExecParam.setValue(new String[]{"[file0]"});
+
+        final Logger mockLogger = mock(Logger.class);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+
+        underTest.addExecParam(mockExecParam);
+
+        assertTrue(underTest.hasExecParam(EXCLUSION_KEY));
+        assertTrue(underTest.hasExecParamValue(EXCLUSION_KEY));
+        assertEquals("[file0]", underTest.getExecParamValue(EXCLUSION_KEY));
     }
 }

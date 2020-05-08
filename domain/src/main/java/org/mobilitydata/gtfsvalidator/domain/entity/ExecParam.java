@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
+import java.util.List;
+
 /**
  * This represent the information extracted from an Apache command line or a .json file containing execution parameters
  * (and their values) that are passed are parameters of the main execution method.
@@ -37,8 +39,12 @@ public class ExecParam {
         return key;
     }
 
-    public String[] getValue() {
-        return value;
+    public String getValue() {
+        if (value != null) {
+            return List.of(value).get(0);
+        } else {
+            return null;
+        }
     }
 
     public void setKey(final String key) {
