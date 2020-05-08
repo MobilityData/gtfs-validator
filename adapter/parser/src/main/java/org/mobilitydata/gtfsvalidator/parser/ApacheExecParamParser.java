@@ -81,7 +81,7 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
             final CommandLine cmd = commandLineParser.parse(availableOptions, args);
 
             Arrays.stream(cmd.getOptions()).forEach(option ->
-                    toReturn.put(option.getLongOpt(), new ExecParam(option.getLongOpt(), option.getValue())));
+                    toReturn.put(option.getLongOpt(), new ExecParam(option.getLongOpt(), option.getValues())));
             return toReturn;
         } catch (ParseException e) {
             throw new IOException(e.getMessage());

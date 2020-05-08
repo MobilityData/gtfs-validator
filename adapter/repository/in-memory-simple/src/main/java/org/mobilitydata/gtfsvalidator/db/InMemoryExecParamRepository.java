@@ -30,10 +30,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -158,15 +155,15 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * @throws IllegalArgumentException if the key passed as parameter is not handled by the repository.
      */
     @Override
-    public String getExecParamValue(final String key) throws IllegalArgumentException {
-        final String defaultValue = defaultValueCollection.get(key).getValue();
+    public String[] getExecParamValue(final String key) throws IllegalArgumentException {
+        final String[] defaultValue = defaultValueCollection.get(key).getValue();
 
         switch (key) {
 
             case HELP_KEY:
             case PROTO_KEY: {
                 if (hasExecParam(key)) {
-                    return hasExecParamValue(key) ? String.valueOf(true) : defaultValue;
+                    return hasExecParamValue(key) ? (String[]) List.of("true").toArray() : defaultValue;
                 } else {
                     return defaultValue;
                 }
@@ -174,23 +171,23 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
 
             case EXTRACT_KEY: {
                 if (hasExecParam(key)) {
-                    final String paramValue = getExecParamByKey(key).getValue();
+                    final String[] paramValue = getExecParamByKey(key).getValue();
                     return hasExecParamValue(key)
                             ? paramValue
-                            : System.getProperty("user.dir") + File.separator + defaultValue;
+                            : (String[]) List.of(System.getProperty("user.dir") + File.separator + Arrays.toString(defaultValue)).toArray();
                 } else {
-                    return System.getProperty("user.dir") + File.separator + defaultValue;
+                    return (String[]) List.of(System.getProperty("user.dir") + File.separator + Arrays.toString(defaultValue)).toArray();
                 }
             }
 
             case OUTPUT_KEY: {
                 if (hasExecParam(OUTPUT_KEY)) {
                     final String value = System.getProperty("user.dir") + File.separator
-                            + getExecParamByKey(OUTPUT_KEY).getValue();
-                    return hasExecParamValue(OUTPUT_KEY) ? value : System.getProperty("user.dir") + File.separator
-                            + defaultValue;
+                            + Arrays.toString(getExecParamByKey(OUTPUT_KEY).getValue());
+                    return (String[]) List.of(hasExecParamValue(OUTPUT_KEY) ? value : System.getProperty("user.dir") + File.separator
+                            + Arrays.toString(defaultValue)).toArray();
                 } else {
-                    return System.getProperty("user.dir") + File.separator + defaultValue;
+                    return (String[]) List.of(System.getProperty("user.dir") + File.separator + Arrays.toString(defaultValue)).toArray();
                 }
             }
 
@@ -199,16 +196,16 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             }
 
             case ZIP_KEY: {
-                String zipInputPath = hasExecParamValue(ZIP_KEY)
+                String[] zipInputPath = hasExecParamValue(ZIP_KEY)
                         ? getExecParamByKey(ZIP_KEY).getValue()
-                        : System.getProperty("user.dir");
+                        : (String[]) List.of(System.getProperty("user.dir")).toArray();
 
                 if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(ZIP_KEY)) {
                     logger.info("--url and relative path to zip file(--zip option) not provided. Trying to " +
-                            "find zip in: " + zipInputPath);
+                            "find zip in: " + Arrays.toString(zipInputPath));
                     List<String> zipList;
                     try {
-                        zipList = Files.walk(Paths.get(zipInputPath))
+                        zipList = Files.walk(Paths.get(Arrays.toString(zipInputPath)))
                                 .map(Path::toString)
                                 .filter(f -> f.endsWith(".zip"))
                                 .collect(Collectors.toUnmodifiableList());
@@ -224,10 +221,10 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                         System.exit(0);
                     } else {
                         logger.info("zip file found: " + zipList.get(0));
-                        zipInputPath = zipList.get(0);
+                        zipInputPath = (String[]) List.of(zipList.get(0)).toArray();
                     }
                 } else if (!hasExecParamValue(ZIP_KEY)) {
-                    zipInputPath += File.separator + "input.zip";
+                    zipInputPath = (String[]) List.of(Arrays.toString(zipInputPath) + File.separator + "input.zip").toArray();
                 }
                 return zipInputPath;
             }

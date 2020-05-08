@@ -22,13 +22,13 @@ package org.mobilitydata.gtfsvalidator.domain.entity;
  */
 public class ExecParam {
     private String key;
-    private String value;
+    private String[] value;
 
     public ExecParam() {
     }
 
-    public ExecParam(String key,
-                     String value) {
+    public ExecParam(final String key,
+                     final String[] value) {
         this.key = key;
         this.value = value;
     }
@@ -37,15 +37,15 @@ public class ExecParam {
         return key;
     }
 
-    public String getValue() {
+    public String[] getValue() {
         return value;
     }
 
-    public void setKey(String key) {
+    public void setKey(final String key) {
         this.key = key;
     }
 
-    public void setValue(final String value) {
+    public void setValue(final String[] value) {
         this.value = value;
     }
 }
