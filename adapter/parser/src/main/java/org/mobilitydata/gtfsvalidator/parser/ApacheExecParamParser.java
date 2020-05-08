@@ -60,6 +60,8 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         availableOptions.addOption("h", "help", false, "Print this message");
         availableOptions.addOption("p", "proto", false, "Export validation results as" +
                 " proto");
+        availableOptions.addOption("x", "exclude", true, "Exclude files from " +
+                "semantic GTFS validation");
     }
 
     /**

@@ -231,6 +231,10 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 }
                 return zipInputPath;
             }
+
+            case EXCLUSION_KEY: {
+                return hasExecParamValue(EXCLUSION_KEY) ? getExecParamByKey(EXCLUSION_KEY).getValue() : defaultValue;
+            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }
@@ -254,7 +258,8 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
         options.addOption("h", "help", false, "Print this message");
         options.addOption("p", "proto", true, "Export validation results as" +
                 " proto");
-
+        options.addOption("x", "exclude", true, "Exclude files from semantic GTFS " +
+                "validation");
         return options;
     }
 
