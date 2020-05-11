@@ -63,4 +63,19 @@ class FareRuleTest {
         final EntityBuildResult<?> entityBuildResult = underTest.build();
         assertTrue(entityBuildResult.getData() instanceof FareRule);
     }
+
+    @Test
+    void getFareRuleMappingKeyShouldReturnStringOfConcatenatedFieldValues() {
+        final FareRule.FareRuleBuilder underTest = new FareRule.FareRuleBuilder();
+        final FareRule fareRule = (FareRule) underTest.fareId("fare id")
+                .routeId("route id")
+                .originId("origin id")
+                .destinationId("destination id")
+                .containsId("contains id")
+                .build()
+                .getData();
+
+        assertEquals("fare id" + "route id" + "origin id" + "destination id" + "contains id",
+                fareRule.getFareRuleMappingKey());
+    }
 }

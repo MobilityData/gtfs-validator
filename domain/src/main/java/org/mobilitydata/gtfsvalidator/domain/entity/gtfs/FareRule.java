@@ -181,4 +181,8 @@ public class FareRule extends GtfsEntity {
             }
         }
     }
+
+    public String getFareRuleMappingKey() {
+        return getFareId() + getRouteId() + getOriginId() + getDestinationId() + getContainsId();
+    }
 }

@@ -121,8 +121,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FareRule addFareRule(final FareRule newFareRule) throws IllegalArgumentException {
         if (newFareRule != null) {
-            final String key = newFareRule.getFareId() + newFareRule.getRouteId() + newFareRule.getOriginId() +
-                    newFareRule.getDestinationId() + newFareRule.getContainsId();
+            final String key = newFareRule.getFareRuleMappingKey();
             if (fareRuleCollection.containsKey(key)) {
                 return null;
             } else {
