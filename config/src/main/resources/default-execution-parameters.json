@@ -4,5 +4,7 @@
   "output": "output",
   "proto": false,
   "url": null,
-  "zipinput": null
+  "zipinput": null,
+  "mintransfertime": 1,
+  "maxtransfertime": 120
 }

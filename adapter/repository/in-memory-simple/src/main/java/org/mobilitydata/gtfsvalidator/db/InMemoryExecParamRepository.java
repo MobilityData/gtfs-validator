@@ -231,6 +231,11 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 }
                 return zipInputPath;
             }
+            case LOWER_BOUND_MIN_TRANSFER_TIME:
+            case UPPER_BOUND_MIN_TRANSFER_TIME: {
+                return hasExecParamValue(key) ?
+                        getExecParamByKey(key).getValue() : defaultValue;
+            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }
@@ -254,7 +259,10 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
         options.addOption("h", "help", false, "Print this message");
         options.addOption("p", "proto", true, "Export validation results as" +
                 " proto");
-
+        options.addOption("mintransfertime", "mintransfertime", true, "minimum value" +
+                " for field `min_transfer_time` of file `transfers.txt` ");
+        options.addOption("maxtransfertime", "maxtransfertime", true, "maximum value" +
+                " for field `min_transfer_time` of file `transfers.txt` ");
         return options;
     }
 

@@ -60,6 +60,10 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         availableOptions.addOption("h", "help", false, "Print this message");
         availableOptions.addOption("p", "proto", false, "Export validation results as" +
                 " proto");
+        availableOptions.addOption("mintransfertime", "mintransfertime", true,
+                "minimum value for field `min_transfer_time` of file `transfers.txt`");
+        availableOptions.addOption("maxtransfertime", "maxtransfertime", true,
+                "maximum value for field `min_transfer_time` of file `transfers.txt`");
     }
 
     /**

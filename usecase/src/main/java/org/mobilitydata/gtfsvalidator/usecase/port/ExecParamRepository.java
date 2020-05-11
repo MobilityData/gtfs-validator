@@ -34,6 +34,8 @@ public interface ExecParamRepository {
     String PROTO_KEY = "proto";
     String URL_KEY = "url";
     String ZIP_KEY = "zipinput";
+    String LOWER_BOUND_MIN_TRANSFER_TIME = "mintransfertime";
+    String UPPER_BOUND_MIN_TRANSFER_TIME = "maxtransfertime";
 
     ExecParam getExecParamByKey(final String optionName);
 

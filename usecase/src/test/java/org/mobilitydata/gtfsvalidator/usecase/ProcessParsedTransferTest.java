@@ -24,6 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.TransferType;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
@@ -41,13 +42,16 @@ class ProcessParsedTransferTest {
     void validatedParsedTransferShouldCreateTransferEntityAndBeAddedToGtfsDataRepository() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.LOWER_BOUND_MIN_TRANSFER_TIME)).thenReturn("0");
+        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.UPPER_BOUND_MIN_TRANSFER_TIME)).thenReturn("40");
         final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class, RETURNS_SELF);
         final Transfer mockTransfer = mock(Transfer.class);
         final ParsedEntity mockParsedTransfer = mock(ParsedEntity.class);
         @SuppressWarnings("rawtypes") final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
 
         //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockEntityBuildResult);
+        when(mockBuilder.build(0, 40)).thenReturn(mockEntityBuildResult);
         when(mockEntityBuildResult.isSuccess()).thenReturn(true);
         when(mockEntityBuildResult.getData()).thenReturn(mockTransfer);
 
@@ -59,7 +63,7 @@ class ProcessParsedTransferTest {
         when(mockGtfsDataRepo.addTransfer(mockTransfer)).thenReturn(mockTransfer);
 
         final ProcessParsedTransfer underTest = new ProcessParsedTransfer(mockResultRepo, mockGtfsDataRepo,
-                mockBuilder);
+                mockExecParamRepo, mockBuilder);
 
         underTest.execute(mockParsedTransfer);
 
@@ -72,7 +76,7 @@ class ProcessParsedTransferTest {
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq("stop id 1"));
         verify(mockBuilder, times(1)).transferType(ArgumentMatchers.eq(1));
         verify(mockBuilder, times(1)).minTransferTime(ArgumentMatchers.eq(20));
-        verify(mockBuilder, times(1)).build();
+        verify(mockBuilder, times(1)).build(0, 40);
 
         verify(mockGtfsDataRepo, times(1)).addTransfer(ArgumentMatchers.eq(mockTransfer));
 
@@ -83,6 +87,9 @@ class ProcessParsedTransferTest {
     void invalidTransferShouldGenerateNoticeAndShouldNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.LOWER_BOUND_MIN_TRANSFER_TIME)).thenReturn("0");
+        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.UPPER_BOUND_MIN_TRANSFER_TIME)).thenReturn("40");
         final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedTransfer = mock(ParsedEntity.class);
         final List<Notice> noticeCollection = new ArrayList<>();
@@ -94,10 +101,10 @@ class ProcessParsedTransferTest {
         noticeCollection.add(mockNotice);
 
         //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBuilder.build(0, 40)).thenReturn(mockGenericObject);
 
         final ProcessParsedTransfer underTest = new ProcessParsedTransfer(mockResultRepo, mockGtfsDataRepo,
-                mockBuilder);
+                mockExecParamRepo, mockBuilder);
 
         when(mockParsedTransfer.get("from_stop_id")).thenReturn(null);
         when(mockParsedTransfer.get("to_stop_id")).thenReturn("stop id 1");
@@ -116,7 +123,7 @@ class ProcessParsedTransferTest {
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq("stop id 1"));
         verify(mockBuilder, times(1)).transferType(ArgumentMatchers.eq(1));
         verify(mockBuilder, times(1)).minTransferTime(ArgumentMatchers.eq(20));
-        verify(mockBuilder, times(1)).build();
+        verify(mockBuilder, times(1)).build(0, 40);
 
         verify(mockGenericObject, times(1)).isSuccess();
         //noinspection ResultOfMethodCallIgnored
@@ -137,6 +144,9 @@ class ProcessParsedTransferTest {
     void duplicateTransferShouldThrowExceptionAndAddEntityMustBeUniqueNoticeToResultRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.LOWER_BOUND_MIN_TRANSFER_TIME)).thenReturn("0");
+        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.UPPER_BOUND_MIN_TRANSFER_TIME)).thenReturn("40");
         final Transfer.TransferBuilder mockBuilder = mock(Transfer.TransferBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedTransfer = mock(ParsedEntity.class);
         @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
@@ -146,7 +156,7 @@ class ProcessParsedTransferTest {
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
         //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBuilder.build(0, 40)).thenReturn(mockGenericObject);
         when(mockGtfsDataRepo.addTransfer(mockTransfer)).thenReturn(null);
 
         when(mockTransfer.getFromStopId()).thenReturn("stop id 0");
@@ -154,7 +164,7 @@ class ProcessParsedTransferTest {
         when(mockTransfer.getTransferType()).thenReturn(TransferType.fromInt(1));
 
         final ProcessParsedTransfer underTest = new ProcessParsedTransfer(mockResultRepo, mockGtfsDataRepo,
-                mockBuilder);
+                mockExecParamRepo, mockBuilder);
 
         when(mockParsedTransfer.get("from_stop_id")).thenReturn("stop id 0");
         when(mockParsedTransfer.get("to_stop_id")).thenReturn("stop id 1");
@@ -176,7 +186,7 @@ class ProcessParsedTransferTest {
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq("stop id 1"));
         verify(mockBuilder, times(1)).transferType(ArgumentMatchers.eq(1));
         verify(mockBuilder, times(1)).minTransferTime(ArgumentMatchers.eq(20));
-        verify(mockBuilder, times(1)).build();
+        verify(mockBuilder, times(1)).build(0, 40);
 
         verify(mockGenericObject, times(1)).isSuccess();
         //noinspection ResultOfMethodCallIgnored

@@ -144,7 +144,7 @@ public class Transfer extends GtfsEntity {
          * @return entity representing a row from transfers.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
-        public EntityBuildResult<?> build() {
+        public EntityBuildResult<?> build(final int minTransferTimeLowerBound, final int minTransferTimeUpperBound) {
             noticeCollection.clear();
 
             if (fromStopId == null || toStopId == null || transferType == null ||
@@ -163,11 +163,12 @@ public class Transfer extends GtfsEntity {
                             "transfer_type", fromStopId + ";" + toStopId,
                             originalTransferTypeInteger));
                 }
-                if (minTransferTime != null && minTransferTime < 1) {
+                if (minTransferTime != null && ((minTransferTime < minTransferTimeLowerBound) ||
+                        (minTransferTime > minTransferTimeUpperBound))) {
                     // here minTransferTime threshold should be user configurable
                     noticeCollection.add(new SuspiciousIntegerValueNotice("transfers.txt",
-                            "min_transfer_time", fromStopId + ";" + toStopId, 0,
-                            Integer.MAX_VALUE, minTransferTime));
+                            "min_transfer_time", fromStopId + ";" + toStopId,
+                            minTransferTimeLowerBound, minTransferTimeUpperBound, minTransferTime));
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {
