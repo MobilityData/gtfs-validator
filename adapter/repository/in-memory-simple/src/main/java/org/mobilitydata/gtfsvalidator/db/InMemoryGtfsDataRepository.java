@@ -117,6 +117,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException {
         if (newTransfer != null) {
+            // check that that from_stop_id is not already in collection. It if is, check that to_stop_id is not in the
+            // associated map
             if ((transferCollection.containsKey(newTransfer.getFromStopId())) &&
                     (transferCollection.get(newTransfer.getFromStopId()).containsKey(newTransfer.getToStopId()))) {
                 return null;
