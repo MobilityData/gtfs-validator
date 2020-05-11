@@ -36,7 +36,7 @@ public enum RouteType {
 
     private final int value;
 
-    RouteType(int value) {
+    RouteType(final int value) {
         this.value = value;
     }
 
@@ -49,7 +49,7 @@ public enum RouteType {
      * @return the enum item matching the integer passed as parameter. Or null if the integer passed as parameter is
      * null or does not match any {@link RouteType} enum item
      */
-    static public RouteType fromInt(Integer fromValue) {
+    static public RouteType fromInt(final Integer fromValue) {
 
         if (fromValue == null) {
             return null;
@@ -58,5 +58,18 @@ public enum RouteType {
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
                 .orElse(null);
+    }
+
+    /**
+     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
+     *
+     * @param value the integer to associate with this enum values
+     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
+     */
+    static public boolean isEnumValueValid(final int value) {
+        return Stream.of(RouteType.values())
+                .filter(enumItem -> enumItem.value == value)
+                .findAny()
+                .orElse(null) != null;
     }
 }

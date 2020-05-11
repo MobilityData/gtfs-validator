@@ -17,73 +17,106 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AgencyTest {
     private static final String STRING_TEST_VALUE = "test_value";
 
+    // Field agencyName is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    public void createAgencyWithNullAgencyNameShouldThrowException() {
-        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+    public void createAgencyWithNullAgencyNameShouldGenerateMissingRequiredValueNotice() {
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
-        underTest.agencyId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.agencyId(STRING_TEST_VALUE)
                 .agencyName(null)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
                 .agencyPhone(STRING_TEST_VALUE)
                 .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
+                .agencyEmail(STRING_TEST_VALUE)
+                .build();
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        assertEquals("agency_name can not be null", exception.getMessage());
+        assertEquals("agency.txt", notice.getFilename());
+        assertEquals("agency_name", notice.getFieldName());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
+    // Field agencyUrl is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    public void createAgencyWithNullAgencyUrlShouldThrowException() {
-        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+    public void createAgencyWithNullAgencyUrlShouldGenerateMissingRequiredValueNotice() {
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
-        underTest.agencyId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.agencyId(STRING_TEST_VALUE)
                 .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(null)
                 .agencyTimezone(STRING_TEST_VALUE)
                 .agencyLang(STRING_TEST_VALUE)
                 .agencyPhone(STRING_TEST_VALUE)
                 .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
+                .agencyEmail(STRING_TEST_VALUE)
+                .build();
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        assertEquals("agency_url can not be null", exception.getMessage());
+        assertEquals("agency.txt", notice.getFilename());
+        assertEquals("agency_url", notice.getFieldName());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
+    // Field agencyTimezone is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    public void createAgencyWithTimezoneAgencyUrlShouldThrowException() {
-        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+    public void createAgencyWithNullTimezoneShouldGenerateMissingRequiredValueNotice() {
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         //noinspection ConstantConditions
-        underTest.agencyId(STRING_TEST_VALUE)
+        final EntityBuildResult<?> entityBuildResult = underTest.agencyId(STRING_TEST_VALUE)
                 .agencyName(STRING_TEST_VALUE)
                 .agencyUrl(STRING_TEST_VALUE)
                 .agencyTimezone(null)
                 .agencyLang(STRING_TEST_VALUE)
                 .agencyPhone(STRING_TEST_VALUE)
                 .agencyFareUrl(STRING_TEST_VALUE)
-                .agencyEmail(STRING_TEST_VALUE);
+                .agencyEmail(STRING_TEST_VALUE)
+                .build();
 
-        Exception exception = assertThrows(IllegalArgumentException.class, underTest::build);
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
-        assertEquals("agency_timezone can not be null", exception.getMessage());
+        assertEquals("agency.txt", notice.getFilename());
+        assertEquals("agency_timezone", notice.getFieldName());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 
     @Test
-    public void createAgencyWithValidValuesForFieldShouldNotThrowException() {
-        Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+    public void createAgencyWithValidValuesShouldNotGenerateNotice() {
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
 
         underTest.agencyId(STRING_TEST_VALUE);
         underTest.agencyName(STRING_TEST_VALUE);
@@ -94,15 +127,8 @@ class AgencyTest {
         underTest.agencyFareUrl(STRING_TEST_VALUE);
         underTest.agencyEmail(STRING_TEST_VALUE);
 
-        Agency agency = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
 
-        assertEquals(agency.getAgencyId(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyName(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyUrl(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyTimezone(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyLang(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyPhone(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyFareUrl(), STRING_TEST_VALUE);
-        assertEquals(agency.getAgencyEmail(), STRING_TEST_VALUE);
+        assertTrue(entityBuildResult.getData() instanceof Agency);
     }
 }

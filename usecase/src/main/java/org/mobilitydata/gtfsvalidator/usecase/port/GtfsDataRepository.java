@@ -18,32 +18,17 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TableName;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableBase;
-
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Map;
 
 public interface GtfsDataRepository {
-    Agency addEntity(Agency newAgency) throws SQLIntegrityConstraintViolationException;
+    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
-    Agency getAgencyById(String agencyId);
+    Agency getAgencyById(final String agencyId);
 
-    Map<String, Agency> getAgencyCollection();
+    Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
-    boolean isPresent(Agency agency);
-
-    Map<String, Route> getRouteCollection();
-
-    Route getRouteById(String routeId);
-
-    Route addEntity(Route newRoute) throws SQLIntegrityConstraintViolationException;
-
-    Map<TableName, TranslationTableBase> getTranslationTableCollection();
+    Route getRouteById(final String routeId);
 
     TranslationTableBase getTranslationTableByTableName(String tableName);
 
     TranslationTableBase addEntity(TranslationTableBase newTranslationTable);
-
-    boolean isPresent(TranslationTableBase translationTableBase);
 }

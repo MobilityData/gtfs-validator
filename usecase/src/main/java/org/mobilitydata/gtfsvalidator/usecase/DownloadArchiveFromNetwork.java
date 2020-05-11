@@ -16,7 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotDownloadArchiveFromNetworkNotice;
+import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotDownloadArchiveFromNetworkNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
@@ -30,21 +32,20 @@ import java.nio.file.StandardCopyOption;
  */
 public class DownloadArchiveFromNetwork {
 
-    private final URL sourceUrl;
-    private final String targetPath;
     private final ValidationResultRepository resultRepo;
+    private final ExecParamRepository execParamRepo;
+    private final Logger logger;
 
     /**
-     * @param url        a url pointing to a remote archive to download
-     * @param targetPath a path specifying the download target directory
      * @param resultRepo a repository storing information about the validation process
+     * @param logger     logger used to log relevant information about the downloading process
      */
-    public DownloadArchiveFromNetwork(final URL url,
-                                      final String targetPath,
-                                      final ValidationResultRepository resultRepo) {
-        this.sourceUrl = url;
-        this.targetPath = targetPath;
+    public DownloadArchiveFromNetwork(final ValidationResultRepository resultRepo,
+                                      final ExecParamRepository execParamRepo,
+                                      final Logger logger) {
         this.resultRepo = resultRepo;
+        this.execParamRepo = execParamRepo;
+        this.logger = logger;
     }
 
     /**
@@ -52,17 +53,26 @@ public class DownloadArchiveFromNetwork {
      * a {@link CannotDownloadArchiveFromNetworkNotice} is generated and added to the {@link ValidationResultRepository}
      * provided in the constructor.
      */
-    public void execute() {
+    public void execute() throws IOException {
         //TODO: does using File class break clean architecture (make business logic dependant on a framework)?
         //Should the call to File happen in outside layers?
-        try {
-            Files.copy(
-                    sourceUrl.openStream(), // TODO: think about how to remove dependency on Files. FileCopier interface?
-                    Paths.get(targetPath),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
-        } catch (IOException e) {
-            resultRepo.addNotice(new CannotDownloadArchiveFromNetworkNotice(sourceUrl));
+        if (execParamRepo.hasExecParamValue(execParamRepo.URL_KEY)) {
+            logger.info("Downloading archive");
+            final String url = execParamRepo.getExecParamValue(execParamRepo.URL_KEY);
+            final String targetPath = execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY);
+            try {
+                URL sourceUrl = new URL(url);
+                Files.copy(
+                        sourceUrl.openStream(), // TODO: think about how to remove dependency on Files. FileCopier interface?
+                        Paths.get(targetPath),
+                        StandardCopyOption.REPLACE_EXISTING
+                );
+            } catch (IOException e) {
+                resultRepo.addNotice
+                        (new CannotDownloadArchiveFromNetworkNotice(
+                                new URL(url)));
+                throw e;
+            }
         }
     }
 }

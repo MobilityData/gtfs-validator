@@ -16,16 +16,18 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotUnzipInputArchiveNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -33,112 +35,107 @@ import static org.mockito.Mockito.*;
 class ExportResultAsFileTest {
 
     @Test
-    void jsonExportTest() throws IOException {
+    void resultRepoShouldBeExportedAsJsonFile() throws IOException {
+        final NoticeExporter mockExporter =
+                mock(NoticeExporter.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+        final CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
+        final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
 
-        ValidationResultRepository.NoticeExporter mockExporter = mock(ValidationResultRepository.NoticeExporter.class);
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
-        CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
-        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false),
-                ArgumentMatchers.eq("testPath"))).thenReturn(mockExporter);
+        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), anyString())).thenReturn(mockExporter);
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
 
-        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, "testPath", false);
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY)).thenReturn(mockExecParamRepo.OUTPUT_KEY);
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn("false");
+        when(mockExecParamRepo.hasExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(false);
+
+        Logger mockLogger = mock(Logger.class);
+
+        final ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockLogger);
 
         underTest.execute();
+
+        verify(mockExecParamRepo, times(2)).getExecParamValue(mockExecParamRepo.PROTO_KEY);
+
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Results are exported as JSON by default"));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
 
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
         verify(mockNotice1, times(1)).export(ArgumentMatchers.eq(mockExporter));
 
-        InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.OUTPUT_KEY));
+
+        verify(mockExecParamRepo, times(2))
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.PROTO_KEY));
+
+        final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
 
         inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(false),
-                ArgumentMatchers.eq("testPath"));
+                ArgumentMatchers.anyString());
         inOrder.verify(mockExporter, times(1)).exportBegin();
         inOrder.verify(mockResultRepo, times(1)).getAll();
+
+        verify(mockNotice0, times(1)).export(mockExporter);
+        verify(mockNotice1, times(1)).export(mockExporter);
+
+        verify(mockResultRepo, times(3)).getAll();
+
         verify(mockExporter, times(1)).exportEnd();
-        verifyNoMoreInteractions(mockExporter, mockResultRepo);
+        verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo, mockLogger);
     }
 
     @Test
-    void protobufExportTest() throws IOException {
+    void resultRepoShouldBeExportedAsProtoFile() throws IOException {
+        final NoticeExporter mockExporter =
+                mock(NoticeExporter.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
+        final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
+        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
 
-        ValidationResultRepository.NoticeExporter mockExporter = mock(ValidationResultRepository.NoticeExporter.class);
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
-        CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
-        when(mockResultRepo.getExporter(ArgumentMatchers.eq(true),
-                ArgumentMatchers.eq("testPath"))).thenReturn(mockExporter);
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY))
+                .thenReturn(mockExecParamRepo.OUTPUT_KEY);
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(String.valueOf(true));
+        when(mockExecParamRepo.hasExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(true);
+        when(mockResultRepo.getExporter(ArgumentMatchers.eq(true), ArgumentMatchers.anyString()))
+                .thenReturn(mockExporter);
 
-        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, "testPath", true);
+        Logger mockLogger = mock(Logger.class);
+        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockLogger);
 
         underTest.execute();
 
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("-p provided, exporting results as proto"));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
         verify(mockNotice1, times(1)).export(ArgumentMatchers.eq(mockExporter));
 
-        InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.OUTPUT_KEY));
 
-        inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(true),
-                ArgumentMatchers.eq("testPath"));
-        inOrder.verify(mockExporter, times(1)).exportBegin();
-        inOrder.verify(mockResultRepo, times(1)).getAll();
-        verify(mockExporter, times(1)).exportEnd();
-        verifyNoMoreInteractions(mockExporter, mockResultRepo);
-    }
-
-    @Test
-    void emptyRepoJsonExportTest() throws IOException {
-
-        ValidationResultRepository.NoticeExporter mockExporter = mock(ValidationResultRepository.NoticeExporter.class);
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false),
-                ArgumentMatchers.eq("testPath"))).thenReturn(mockExporter);
-        when(mockResultRepo.getAll()).thenReturn(Collections.emptyList());
-
-        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, "testPath", false);
-
-        underTest.execute();
-
-        InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
-
-        inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(false),
-                ArgumentMatchers.eq("testPath"));
-        inOrder.verify(mockExporter, times(1)).exportBegin();
-        inOrder.verify(mockResultRepo, times(1)).getAll();
-        verify(mockExporter, times(1)).exportEnd();
-        verifyNoMoreInteractions(mockExporter, mockResultRepo);
-    }
-
-    @Test
-    void emptyRepoProtobufExportTest() throws IOException {
-
-        ValidationResultRepository.NoticeExporter mockExporter = mock(ValidationResultRepository.NoticeExporter.class);
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        when(mockResultRepo.getExporter(ArgumentMatchers.eq(true),
-                ArgumentMatchers.eq("testPath"))).thenReturn(mockExporter);
-        when(mockResultRepo.getAll()).thenReturn(Collections.emptyList());
-
-        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, "testPath", true);
-
-        underTest.execute();
+        verify(mockExecParamRepo, times(2))
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.PROTO_KEY));
 
         InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
 
         inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(true),
-                ArgumentMatchers.eq("testPath"));
+                ArgumentMatchers.anyString());
         inOrder.verify(mockExporter, times(1)).exportBegin();
         inOrder.verify(mockResultRepo, times(1)).getAll();
+
+        verify(mockNotice0, times(1)).export(mockExporter);
+        verify(mockNotice1, times(1)).export(mockExporter);
+        verify(mockResultRepo, times(3)).getAll();
+        verify(mockExecParamRepo, times(2)).getExecParamValue(mockExecParamRepo.PROTO_KEY);
+
         verify(mockExporter, times(1)).exportEnd();
-        verifyNoMoreInteractions(mockExporter, mockResultRepo);
+        verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo, mockLogger);
     }
-
-
-
-
 }

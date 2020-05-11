@@ -16,72 +16,88 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TableName;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableBase;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
+ */
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
+    private final Map<String, Route> routeCollection = new HashMap<>();
+    private final Map<TableName, TranslationTableBase> translationTableCollection = new HashMap<>();
 
-    public Map<String, Agency> getAgencyCollection() {
-        return agencyCollection;
-    }
-
+    /**
+     * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of agency based on agency_id is respected, if this requirement is not met, returns null.
+     *
+     * @param newAgency the internal representation of a row from agency.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of agency based on agency_id is
+     * respected, if this requirement is not met returns null.
+     */
     @Override
-    public Agency addEntity(final Agency newAgency) throws SQLIntegrityConstraintViolationException {
-        String agencyId = newAgency.getAgencyId();
-        if (isPresent(newAgency)) {
-            throw new SQLIntegrityConstraintViolationException("agency must be unique in dataset");
+    public Agency addAgency(@NotNull final Agency newAgency) throws IllegalArgumentException {
+        //noinspection ConstantConditions
+        if (newAgency != null) {
+            if (agencyCollection.containsKey(newAgency.getAgencyId())) {
+                return null;
+            } else {
+                agencyCollection.put(newAgency.getAgencyId(), newAgency);
+                return newAgency;
+            }
         } else {
-            agencyCollection.put(agencyId, newAgency);
-            return newAgency;
+            throw new IllegalArgumentException("Cannot add null agency to data repository");
         }
     }
 
+    /**
+     * Return the Agency representing a row from agency.txt related to the id provided as parameter
+     *
+     * @param agencyId the key from agency.txt related to the Agency to be returned
+     * @return the Agency representing a row from agency.txt related to the id provided as parameter
+     */
     @Override
     public Agency getAgencyById(final String agencyId) {
         return agencyCollection.get(agencyId);
     }
 
+    /**
+     * Add a Route representing a row from routes.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of route based on route_id is respected, if this requirement is not met, returns null.
+     *
+     * @param newRoute the internal representation of a row from routes.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on route_id is
+     * respected, if this requirement is not met returns null.
+     */
     @Override
-    public boolean isPresent(Agency agency) {
-        return agencyCollection.containsKey(agency.getAgencyId());
-    }
-
-    private final Map<String, Route> routeCollection = new HashMap<>();
-
-    public Map<String, Route> getRouteCollection() {
-        return Collections.unmodifiableMap(routeCollection);
-    }
-
-    @Override
-    public Route getRouteById(String routeId) {
-        return routeCollection.get(routeId);
-    }
-
-    @Override
-    public Route addEntity(final Route newRoute) throws SQLIntegrityConstraintViolationException {
-        if (routeCollection.containsKey(newRoute.getRouteId())) {
-            throw new SQLIntegrityConstraintViolationException("route must be unique in dataset");
+    public Route addRoute(@NotNull final Route newRoute) throws IllegalArgumentException {
+        //noinspection ConstantConditions
+        if (newRoute != null) {
+            if (routeCollection.containsKey(newRoute.getRouteId())) {
+                return null;
+            } else {
+                routeCollection.put(newRoute.getRouteId(), newRoute);
+                return newRoute;
+            }
         } else {
-            String routeId = newRoute.getRouteId();
-            routeCollection.put(routeId, newRoute);
-            return newRoute;
+            throw new IllegalArgumentException("Cannot add null route to data repository");
         }
     }
 
-    private final Map<TableName, TranslationTableBase> translationTableCollection = new HashMap<>();
-
+    /**
+     * Return the Route representing a row from routes.txt related to the id provided as parameter
+     *
+     * @param routeId the key from routes.txt related to the Route to be returned
+     * @return the Route representing a row from routes.txt related to the id provided as parameter
+     */
     @Override
-    public Map<TableName, TranslationTableBase> getTranslationTableCollection() {
-        return Collections.unmodifiableMap(translationTableCollection);
+    public Route getRouteById(final String routeId) {
+        return routeCollection.get(routeId);
     }
 
     @Override
@@ -93,9 +109,5 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public TranslationTableBase addEntity(final TranslationTableBase newTranslationTable) {
         translationTableCollection.put(newTranslationTable.getTableName(), newTranslationTable);
         return newTranslationTable;
-    }
-
-    public boolean isPresent(final TranslationTableBase translationTable) {
-        return translationTableCollection.containsKey(translationTable.getTableName());
     }
 }
