@@ -144,6 +144,6 @@ class CalendarDateTest {
 
         final CalendarDate calendarDate = (CalendarDate) entityBuildResult.getData();
         assertEquals("service_id" + date.toString() + ExceptionType.fromInt(2).toString(),
-                calendarDate.getCalendarDateKey());
+                calendarDate.getCalendarDateMappingKey());
     }
 }
