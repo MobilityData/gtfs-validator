@@ -149,4 +149,8 @@ public class CalendarDate extends GtfsEntity {
             }
         }
     }
+
+    public String getCalendarDateKey() {
+        return getServiceId() + getDate().toString() + getExceptionType().toString();
+    }
 }

@@ -132,4 +132,18 @@ class CalendarDateTest {
         assertEquals("5", notice.getEnumValue());
         assertEquals(1, noticeCollection.size());
     }
+
+    @Test
+    void getCalendarDateKeyShouldReturnConcatenatedStringFieldValues() {
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        final LocalDateTime date = LocalDateTime.now();
+        final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
+                .date(date)
+                .exceptionType(2)
+                .build();
+
+        final CalendarDate calendarDate = (CalendarDate) entityBuildResult.getData();
+        assertEquals("service_id" + date.toString() + ExceptionType.fromInt(2).toString(),
+                calendarDate.getCalendarDateKey());
+    }
 }

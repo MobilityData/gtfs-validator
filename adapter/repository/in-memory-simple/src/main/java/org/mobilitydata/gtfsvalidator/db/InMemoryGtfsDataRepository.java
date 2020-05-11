@@ -113,12 +113,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public CalendarDate addCalendarDate(@NotNull final CalendarDate newCalendarDate) throws IllegalArgumentException {
         //noinspection ConstantConditions
         if (newCalendarDate != null) {
-            final String calendarDateKey = newCalendarDate.getServiceId() + newCalendarDate.getDate().toString()
-                    + newCalendarDate.getExceptionType().toString();
-            if (calendarDateCollection.containsKey(calendarDateKey)) {
+            if (calendarDateCollection.containsKey(newCalendarDate.getCalendarDateKey())) {
                 return null;
             } else {
-                calendarDateCollection.put(calendarDateKey, newCalendarDate);
+                calendarDateCollection.put(newCalendarDate.getCalendarDateKey(), newCalendarDate);
                 return newCalendarDate;
             }
         } else {
