@@ -19,10 +19,7 @@ package org.mobilitydata.gtfsvalidator.exporter;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -338,6 +335,16 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setAltEntityId(toExport.getEntityId())
                 .build()
                 .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final SuspiciousIntegerValueNotice toExport) throws IOException {
+        outOfRangeNoticeToProto(toExport.getFilename(),
+                toExport.getEntityId(),
+                toExport.getFieldName(),
+                String.valueOf(toExport.getRangeMin()),
+                String.valueOf(toExport.getRangeMax()),
+                String.valueOf(toExport.getActualValue()));
     }
 
     public static class ProtobufOutputStreamGenerator {

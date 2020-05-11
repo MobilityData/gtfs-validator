@@ -21,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.SuspiciousIntegerValueNotice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +165,7 @@ public class Transfer extends GtfsEntity {
                 }
                 if (minTransferTime != null && minTransferTime < 1) {
                     // here minTransferTime threshold should be user configurable
-                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("transfers.txt",
+                    noticeCollection.add(new SuspiciousIntegerValueNotice("transfers.txt",
                             "min_transfer_time", fromStopId + ";" + toStopId, 0,
                             Integer.MAX_VALUE, minTransferTime));
                 }
