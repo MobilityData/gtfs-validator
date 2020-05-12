@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,9 +67,14 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
                         // a string.
                         // This string needs to be converted to a String[] as the second argument for ExecParam has
                         // type String[]
+                        final List<String> value = new ArrayList<>();
+                        if (field.getKey().equals(ExecParamRepository.EXCLUSION_KEY)) {
+                            field.getValue().elements().forEachRemaining(elem -> value.add(elem.asText()));
+                        } else {
+                            value.addAll(List.of(field.getValue().asText()));
+                        }
                         final ExecParam execParam =
-                                new ExecParam(field.getKey(),
-                                        List.of(field.getValue().asText()).toArray(new String[0]));
+                                new ExecParam(field.getKey(), value.toArray(new String[0]));
                         toReturn.put(execParam.getKey(), execParam);
                     });
 

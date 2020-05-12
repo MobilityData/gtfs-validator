@@ -46,25 +46,25 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         this.args = args;
         this.availableOptions = availableOptions;
 
-        availableOptions.addOption(ExecParamRepository.URL_KEY, "url", true,
+        availableOptions.addOption("u", "url", true,
                 "URL to GTFS zipped archive");
-        availableOptions.addOption(ExecParamRepository.ZIP_KEY, "zipinput", true,
+        availableOptions.addOption("z", "zipinput", true,
                 "if --url is used, where " +
                         "to place the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on" +
                         " disk");
-        availableOptions.addOption(ExecParamRepository.EXTRACT_KEY, "extract", true,
+        availableOptions.addOption("e", "extract", true,
                 "Relative path where to  extract the zip content");
-        availableOptions.addOption(ExecParamRepository.OUTPUT_KEY, "output", true,
+        availableOptions.addOption("o", "output", true,
                 "Relative path where to place output files");
-        availableOptions.addOption(ExecParamRepository.HELP_KEY, "help", false,
+        availableOptions.addOption("h", "help", false,
                 "Print this message");
-        availableOptions.addOption(ExecParamRepository.PROTO_KEY, "proto", false,
+        availableOptions.addOption("p", "proto", false,
                 "Export validation results as proto");
-        availableOptions.addOption(ExecParamRepository.EXCLUSION_KEY, "exclude", true,
+        availableOptions.addOption("x", "exclude", true,
                 "Exclude files from semantic GTFS validation");
 
         availableOptions.getOptions().forEach(option -> {
-            switch (option.getOpt()) {
+            switch (option.getLongOpt()) {
                 case ExecParamRepository.PROTO_KEY:
                 case ExecParamRepository.HELP_KEY: {
                     option.setArgs(0);
@@ -106,7 +106,7 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
             throws ParseException {
         if (toReturn.containsKey(option.getLongOpt())) {
             throw new ParseException("Option: " + option.getLongOpt() + " already defined");
-        } else if (!option.getOpt().equals(ExecParamRepository.EXCLUSION_KEY)) {
+        } else if (!option.getLongOpt().equals(ExecParamRepository.EXCLUSION_KEY)) {
             if (option.getValues() != null && option.getValues().length > 1) {
                 throw new ParseException("Option: " + option.getLongOpt() + " with too many arguments: "
                         + Arrays.toString(option.getValues()));
