@@ -63,11 +63,11 @@ class ApacheExecParamParserTest {
         assertEquals(mockOption1.getLongOpt(), toCheck.get(mockOption1.getLongOpt()).getKey());
         assertEquals(Arrays.asList(mockOption1.getValues()).toString(), toCheck.get(mockOption1.getLongOpt()).getValue());
 
-        verify(mockOption0, times(5)).getLongOpt();
-        verify(mockOption0, times(1)).getValues();
+        verify(mockOption0, times(7)).getLongOpt();
+        verify(mockOption0, times(3)).getValues();
         verify(mockOption0, times(1)).getValue();
 
-        verify(mockOption1, times(5)).getLongOpt();
+        verify(mockOption1, times(7)).getLongOpt();
         verify(mockOption1, times(2)).getValues();
         verify(mockCommandLineParser, times(1))
                 .parse(ArgumentMatchers.eq(mockAvailableOptions), ArgumentMatchers.eq(arguments));

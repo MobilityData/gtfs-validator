@@ -243,7 +243,7 @@ class InMemoryExecParamRepositoryTest {
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
 
-        assertEquals("false", underTest.getExecParamValue(HELP_KEY));
+        assertEquals("true", underTest.getExecParamValue(HELP_KEY));
         assertEquals(System.getProperty("user.dir") + File.separator + "input",
                 underTest.getExecParamValue(EXTRACT_KEY));
     }
