@@ -16,10 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import org.apache.commons.validator.routines.FloatValidator;
-import org.apache.commons.validator.routines.IntegerValidator;
-import org.apache.commons.validator.routines.RegexValidator;
-import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.*;
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
@@ -42,6 +39,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
     private final FloatValidator floatValidator;
     private final IntegerValidator integerValidator;
     private final UrlValidator urlValidator;
+    private final EmailValidator emailValidator;
     private final RegexValidator colorValidator;
     private final RegexValidator timeValidator;
     private final Set<String> timezoneSet;
@@ -60,6 +58,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                              @NotNull FloatValidator floatValidator,
                              @NotNull IntegerValidator integerValidator,
                              @NotNull UrlValidator urlValidator,
+                             @NotNull EmailValidator emailValidator,
                              @NotNull RegexValidator colorValidator,
                              @NotNull RegexValidator timeValidator,
                              @NotNull Set<String> timezoneSet) {
