@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
@@ -166,7 +167,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             case HELP_KEY:
             case PROTO_KEY: {
                 if (hasExecParam(key)) {
-                    return hasExecParamValue(key) ? String.valueOf(true) : defaultValue;
+                    return hasExecParam(key) ? String.valueOf(true) : defaultValue;
                 } else {
                     return defaultValue;
                 }
@@ -256,10 +257,15 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
         options.addOption("o", "output", true, "Relative path where to place" +
                 " output files");
         options.addOption("h", "help", false, "Print this message");
-        options.addOption("p", "proto", true, "Export validation results as" +
+        options.addOption("p", "proto", false, "Export validation results as" +
                 " proto");
         options.addOption("x", "exclude", true, "Exclude files from semantic GTFS " +
                 "validation");
+        options.getOptions().forEach(option -> {
+            if (!option.getOpt().equals("p") || !option.getOpt().equals("h")) {
+                option.setArgs(Option.UNLIMITED_VALUES);
+            }
+        });
         return options;
     }
 

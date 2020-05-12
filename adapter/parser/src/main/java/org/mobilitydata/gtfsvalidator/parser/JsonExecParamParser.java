@@ -59,7 +59,6 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
     @Override
     public Map<String, ExecParam> parse() {
         final Map<String, ExecParam> toReturn = new HashMap<>();
-
         try {
             objectReader.readTree(parameterJsonString).fields()
                     .forEachRemaining(field -> {

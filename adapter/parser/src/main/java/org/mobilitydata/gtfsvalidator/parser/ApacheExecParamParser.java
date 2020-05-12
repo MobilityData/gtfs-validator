@@ -16,10 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.parser;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
@@ -49,19 +46,35 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         this.args = args;
         this.availableOptions = availableOptions;
 
-        availableOptions.addOption("u", "url", true, "URL to GTFS zipped archive");
-        availableOptions.addOption("z", "zipinput", true, "if --url is used, where " +
-                "to place the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on" +
-                " disk");
-        availableOptions.addOption("e", "extract", true, "Relative path where to " +
-                "extract the zip content");
-        availableOptions.addOption("o", "output", true, "Relative path where to place" +
-                " output files");
-        availableOptions.addOption("h", "help", false, "Print this message");
-        availableOptions.addOption("p", "proto", false, "Export validation results as" +
-                " proto");
-        availableOptions.addOption("x", "exclude", true, "Exclude files from " +
-                "semantic GTFS validation");
+        availableOptions.addOption(ExecParamRepository.URL_KEY, "url", true,
+                "URL to GTFS zipped archive");
+        availableOptions.addOption(ExecParamRepository.ZIP_KEY, "zipinput", true,
+                "if --url is used, where " +
+                        "to place the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on" +
+                        " disk");
+        availableOptions.addOption(ExecParamRepository.EXTRACT_KEY, "extract", true,
+                "Relative path where to  extract the zip content");
+        availableOptions.addOption(ExecParamRepository.OUTPUT_KEY, "output", true,
+                "Relative path where to place output files");
+        availableOptions.addOption(ExecParamRepository.HELP_KEY, "help", false,
+                "Print this message");
+        availableOptions.addOption(ExecParamRepository.PROTO_KEY, "proto", false,
+                "Export validation results as proto");
+        availableOptions.addOption(ExecParamRepository.EXCLUSION_KEY, "exclude", true,
+                "Exclude files from semantic GTFS validation");
+
+        availableOptions.getOptions().forEach(option -> {
+            switch (option.getOpt()) {
+                case ExecParamRepository.PROTO_KEY:
+                case ExecParamRepository.HELP_KEY: {
+                    option.setArgs(0);
+                    break;
+                }
+                default: {
+                    option.setArgs(Option.UNLIMITED_VALUES);
+                }
+            }
+        });
     }
 
     /**
@@ -79,12 +92,25 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         final Map<String, ExecParam> toReturn = new HashMap<>();
         try {
             final CommandLine cmd = commandLineParser.parse(availableOptions, args);
-
-            Arrays.stream(cmd.getOptions()).forEach(option ->
-                    toReturn.put(option.getLongOpt(), new ExecParam(option.getLongOpt(), option.getValues())));
+            for (Option option : cmd.getOptions()) {
+                verifyOptionValidity(toReturn, option);
+                toReturn.put(option.getLongOpt(), new ExecParam(option.getLongOpt(), option.getValues()));
+            }
             return toReturn;
         } catch (ParseException e) {
             throw new IOException(e.getMessage());
+        }
+    }
+
+    private void verifyOptionValidity(final Map<String, ExecParam> toReturn, final Option option)
+            throws ParseException {
+        if (toReturn.containsKey(option.getLongOpt())) {
+            throw new ParseException("Option: " + option.getLongOpt() + " already defined");
+        } else if (!option.getOpt().equals(ExecParamRepository.EXCLUSION_KEY)) {
+            if (option.getValues() != null && option.getValues().length > 1) {
+                throw new ParseException("Option: " + option.getLongOpt() + " with too many arguments: "
+                        + Arrays.toString(option.getValues()));
+            }
         }
     }
 }
