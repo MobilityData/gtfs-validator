@@ -60,7 +60,7 @@ public class ValidateAgencyLanguage {
         feedAgencies.values().stream()
                 .filter(agency -> !agency.getAgencyLang().equals("") &&
                         !(locale.getISO3Language().contains(agency.getAgencyLang())))
-                .forEach(agency -> resultRepo.addNotice(new InvalidLangNotice("agency.txt", agency.getAgencyLang())));
+                .forEach(agency -> resultRepo.addNotice(new InvalidLangNotice("agency.txt", agency.getAgencyLang(), agency.getAgencyId())));
 
     }
 

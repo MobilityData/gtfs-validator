@@ -24,17 +24,23 @@ import java.io.IOException;
 public class InvalidLangNotice extends WarningNotice {
 
     private String invalidLang;
+    private String agencyId;
 
-    public InvalidLangNotice(String filename, String invalidLang) {
+    public InvalidLangNotice(String filename, String invalidLang, String agencyId) {
         super(filename, W_002,
                 "Invalid language",
-                "Invalid:" + invalidLang + " in file:" + filename,
+                "Invalid:" + invalidLang + " in file:" + filename + " for agency:" + agencyId,
                 null);
         this.invalidLang = invalidLang;
+        this.agencyId = agencyId;
     }
 
     public String getInvalidLang() {
         return invalidLang;
+    }
+
+    public String getAgencyId() {
+        return agencyId;
     }
 
     @Override
