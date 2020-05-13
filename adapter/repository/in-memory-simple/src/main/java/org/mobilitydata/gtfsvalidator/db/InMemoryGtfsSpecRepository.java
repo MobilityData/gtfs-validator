@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
+import org.mobilitydata.gtfsvalidator.validator.Bcp47Validator;
 import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
 
 import java.io.IOException;
@@ -175,6 +176,8 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                     FloatValidator.getInstance(),
                     IntegerValidator.getInstance(),
                     new UrlValidator(VALID_URL_SCHEMES),
+                    new Bcp47Validator(),
+                    EmailValidator.getInstance(),
                     new RegexValidator(VALID_COLOR_REGEX_PATTERN),
                     new RegexValidator(VALID_TIME_REGEXP_PATTERN),
                     // Uses IANA timezone database shipped with JDK

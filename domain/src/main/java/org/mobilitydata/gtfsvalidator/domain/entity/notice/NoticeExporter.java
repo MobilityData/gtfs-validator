@@ -1,7 +1,10 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.notice;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 
 import java.io.IOException;
 
@@ -62,4 +65,6 @@ public interface NoticeExporter {
     void export(UnexpectedEnumValueNotice toExport) throws IOException;
 
     void export(InvalidLangNotice toExport) throws IOException;
+
+    void export(InvalidEmailNotice toExport) throws IOException;
 }

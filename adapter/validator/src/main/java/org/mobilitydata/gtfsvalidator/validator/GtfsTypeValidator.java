@@ -39,6 +39,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
     private final FloatValidator floatValidator;
     private final IntegerValidator integerValidator;
     private final UrlValidator urlValidator;
+    private final Bcp47Validator langValidator;
     private final EmailValidator emailValidator;
     private final RegexValidator colorValidator;
     private final RegexValidator timeValidator;
@@ -58,6 +59,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                              @NotNull FloatValidator floatValidator,
                              @NotNull IntegerValidator integerValidator,
                              @NotNull UrlValidator urlValidator,
+                             @NotNull Bcp47Validator langValidator,
                              @NotNull EmailValidator emailValidator,
                              @NotNull RegexValidator colorValidator,
                              @NotNull RegexValidator timeValidator,
@@ -66,6 +68,8 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
         this.floatValidator = floatValidator;
         this.integerValidator = integerValidator;
         this.urlValidator = urlValidator;
+        this.langValidator = langValidator;
+        this.emailValidator = emailValidator;
         this.colorValidator = colorValidator;
         this.timeValidator = timeValidator;
         this.timezoneSet = timezoneSet;
@@ -141,7 +145,6 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                         break;
                     }
                     case TIMEZONE: {
-
                         //noinspection RedundantCast
                         if (!timezoneSet.contains((String) value)) {
                             toReturn.add(new InvalidTimezoneNotice(
@@ -196,6 +199,28 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                             Currency.getInstance((String) value);
                         } catch (IllegalArgumentException e) {
                             toReturn.add(new InvalidCurrencyCodeNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    (String) value
+                            ));
+                        }
+                        break;
+                    }
+                    case EMAIL: {
+                        if (!emailValidator.isValid((String) value)) {
+                            toReturn.add(new InvalidEmailNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    (String) value
+                            ));
+                        }
+                        break;
+                    }
+                    case LANGUAGE_CODE: {
+                        if (!langValidator.isValid((String) value)) {
+                            toReturn.add(new InvalidLangNotice(
                                     toValidate.getRawFileInfo().getFilename(),
                                     columnSpecProto.getName(),
                                     toValidate.getEntityId(),

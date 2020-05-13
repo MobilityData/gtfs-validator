@@ -66,16 +66,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return all the Agencies representing the rows from agency.txt
-     *
-     * @return all the Agencies representing the rows from agency.txt
-     */
-    @Override
-    public Map<String, Agency> getAgencies() {
-        return agencyCollection;
-    }
-
-    /**
      * Add a Route representing a row from routes.txt to this. Return the entity added to the repository if the
      * uniqueness constraint of route based on route_id is respected, if this requirement is not met, returns null.
      *

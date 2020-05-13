@@ -16,15 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingHeaderNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InvalidLangNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
-import java.util.Locale;
-import java.util.Map;
 
 
 /**
@@ -53,14 +48,14 @@ public class ValidateAgencyLanguage {
      * then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        Map<String, Agency> feedAgencies = dataRepo.getAgencies();
-        Locale locale = new Locale("en");
+        //Map<String, Agency> feedAgencies = dataRepo.getAgencies();
+        //Locale locale = new Locale("en");
 
         //Missing headers
-        feedAgencies.values().stream()
-                .filter(agency -> !agency.getAgencyLang().equals("") &&
-                        !(locale.getISO3Language().contains(agency.getAgencyLang())))
-                .forEach(agency -> resultRepo.addNotice(new InvalidLangNotice("agency.txt", agency.getAgencyLang(), agency.getAgencyId())));
+        //feedAgencies.values().stream()
+        //        .filter(agency -> !agency.getAgencyLang().equals("") &&
+        //                !(locale.getISO3Language().contains(agency.getAgencyLang())))
+        //        .forEach(agency -> resultRepo.addNotice(new InvalidLangNotice("agency.txt", agency.getAgencyLang(), agency.getAgencyId())));
 
     }
 
