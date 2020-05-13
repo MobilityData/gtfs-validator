@@ -63,13 +63,13 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
         try {
             objectReader.readTree(parameterJsonString).fields()
                     .forEachRemaining(field -> {
-                        // field.getValue().asText() contains the value related to a given key for an ExecParam, as
+                        // fieldValue.asText() contains the value related to a given key for an ExecParam, as
                         // a string.
                         // This string needs to be converted to a String[] as the second argument for ExecParam has
                         // type String[]
                         final List<String> value = new ArrayList<>();
                         if (field.getKey().equals(ExecParamRepository.EXCLUSION_KEY)) {
-                            field.getValue().elements().forEachRemaining(elem -> value.add(elem.asText()));
+                            field.getValue().elements().forEachRemaining(fieldValue -> value.add(fieldValue.asText()));
                         } else {
                             value.addAll(List.of(field.getValue().asText()));
                         }

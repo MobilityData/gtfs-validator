@@ -29,7 +29,6 @@ public class SchemaTree<T> {
         this.data = data;
     }
 
-
     @SuppressWarnings("unused") // to avoid lint, this method might be deleted
     public T getData() {
         return data;
