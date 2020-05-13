@@ -54,18 +54,14 @@ public class Main {
                         config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
                         .execute();
 
-                final List<String> filenameList = config.validateAllRequiredFilePresence().execute();
-                filenameList.addAll(config.validateAllOptionalFileName().execute());
+                final List<String> filenameListToExclude =
+                        config.generateExclusionFilenameList().execute(config.getExclusionFilenameList());
 
-                // to be replaced by the call to a future use case that will create the list of files to exclude from
-                // command line option or configuration file.
-                final List<String> toExcludeFromGtfsSemanticValidation = List.of("stops.txt", "trips.txt",
-                        "stop_times.txt", "calendar.txt", "calendar_dates.txt", "fare_attributes.txt", "fare_rules.txt",
-                        "shapes.txt", "frequencies.txt", "transfers.txt", "pathways.txt", "levels.txt",
-                        "translations.txt", "feed_info.txt", "attributions.txt");
+                final List<String> datasetFilenameList = config.validateAllRequiredFilePresence().execute();
+                datasetFilenameList.addAll(config.validateAllOptionalFileName().execute());
 
-                final List<String> filenameListToProcess = config.createGtfsSemanticValidationFilenameList(filenameList)
-                        .execute(toExcludeFromGtfsSemanticValidation);
+                final List<String> filenameListToProcess =
+                        config.generateFilenameListToProcess().execute(filenameListToExclude, datasetFilenameList);
 
                 // retrieve use case to be used multiple times
                 final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
@@ -73,7 +69,7 @@ public class Main {
                 final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
 
                 // base validation + build gtfs entities
-                filenameList.forEach(filename -> {
+                filenameListToProcess.forEach(filename -> {
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
 
