@@ -102,9 +102,20 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         }
     }
 
-    private void verifyOptionValidity(final Map<String, ExecParam> toReturn, final Option option)
+    /**
+     * Method verifies for all options (except --exclusion):
+     * - if option have been declared once
+     * - if option only has one argument
+     * Throws a ParseException if these requirement are not met
+     *
+     * @param execParamCollection collection of {@link ExecParam} to analyze
+     * @param option              option to analyze
+     * @throws ParseException if option (except --exclude) has been declared more than once, else if option has
+     *                        more than one argument
+     */
+    private void verifyOptionValidity(final Map<String, ExecParam> execParamCollection, final Option option)
             throws ParseException {
-        if (toReturn.containsKey(option.getLongOpt())) {
+        if (execParamCollection.containsKey(option.getLongOpt())) {
             throw new ParseException("Option: " + option.getLongOpt() + " already defined");
         } else if (!option.getLongOpt().equals(ExecParamRepository.EXCLUSION_KEY)) {
             if (option.getValues() != null && option.getValues().length > 1) {
