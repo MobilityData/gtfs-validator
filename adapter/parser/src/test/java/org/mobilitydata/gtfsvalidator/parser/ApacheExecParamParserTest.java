@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.parser;
 import org.apache.commons.cli.*;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mockito.ArgumentMatchers;
 
 import java.io.IOException;
@@ -39,42 +40,41 @@ class ApacheExecParamParserTest {
 
         when(mockCommandLineParser.parse(mockAvailableOptions, arguments)).thenReturn(mockCommandLine);
 
-        final Option mockOption0 = mock(Option.class);
-        when(mockOption0.getLongOpt()).thenReturn("proto");
-        when(mockOption0.hasArg()).thenReturn(true);
-        when(mockOption0.getValues()).thenReturn(new String[]{"true"});
-        when(mockOption0.getValue()).thenReturn("true");
+        final Option mockProtoOption = mock(Option.class);
+        when(mockProtoOption.getLongOpt()).thenReturn(ExecParamRepository.PROTO_KEY);
+        when(mockProtoOption.hasArg()).thenReturn(true);
+        when(mockProtoOption.getValues()).thenReturn(new String[]{"true"});
+        when(mockProtoOption.getValue()).thenReturn("true");
 
-        final Option mockOption1 = mock(Option.class);
-        when(mockOption1.getLongOpt()).thenReturn("exclude");
-        when(mockOption1.hasArg()).thenReturn(true);
-        when(mockOption1.getValues()).thenReturn(new String[]{"file0.txt", "file1.txt"});
+        final Option mockExcludeOption = mock(Option.class);
+        when(mockExcludeOption.getLongOpt()).thenReturn(ExecParamRepository.EXCLUSION_KEY);
+        when(mockExcludeOption.hasArg()).thenReturn(true);
+        when(mockExcludeOption.getValues()).thenReturn(new String[]{"file0.txt", "file1.txt"});
 
-        when(mockCommandLine.getOptions()).thenReturn(new Option[]{mockOption0, mockOption1});
+        when(mockCommandLine.getOptions()).thenReturn(new Option[]{mockProtoOption, mockExcludeOption});
 
         final ApacheExecParamParser underTest = new ApacheExecParamParser(mockCommandLineParser, mockAvailableOptions,
                 arguments);
         final Map<String, ExecParam> toCheck = underTest.parse();
 
         assertEquals(2, toCheck.size());
-        assertEquals(mockOption0.getLongOpt(), toCheck.get(mockOption0.getLongOpt()).getKey());
-        assertEquals(mockOption0.getValue(), toCheck.get(mockOption0.getLongOpt()).getValue());
+        assertEquals(mockProtoOption.getLongOpt(), toCheck.get(mockProtoOption.getLongOpt()).getKey());
+        assertEquals(mockProtoOption.getValue(), toCheck.get(mockProtoOption.getLongOpt()).getValue());
 
-        assertEquals(mockOption1.getLongOpt(), toCheck.get(mockOption1.getLongOpt()).getKey());
-        assertEquals(Arrays.asList(mockOption1.getValues()).toString(), toCheck.get(mockOption1.getLongOpt()).getValue());
+        assertEquals(mockExcludeOption.getLongOpt(), toCheck.get(mockExcludeOption.getLongOpt()).getKey());
+        assertEquals(Arrays.asList(mockExcludeOption.getValues()).toString(),
+                toCheck.get(mockExcludeOption.getLongOpt()).getValue());
 
-        verify(mockOption0, times(7)).getLongOpt();
-        verify(mockOption0, times(3)).getValues();
-        verify(mockOption0, times(1)).getValue();
+        verify(mockProtoOption, times(7)).getLongOpt();
+        verify(mockProtoOption, times(3)).getValues();
+        verify(mockProtoOption, times(1)).getValue();
 
-        verify(mockOption1, times(7)).getLongOpt();
-        verify(mockOption1, times(2)).getValues();
+        verify(mockExcludeOption, times(7)).getLongOpt();
+        verify(mockExcludeOption, times(2)).getValues();
         verify(mockCommandLineParser, times(1))
                 .parse(ArgumentMatchers.eq(mockAvailableOptions), ArgumentMatchers.eq(arguments));
 
-        verify(mockAvailableOptions, times(7))
-                .addOption(anyString(), anyString(), anyBoolean(), anyString());
         verify(mockCommandLine, times(1)).getOptions();
-        verifyNoMoreInteractions(mockCommandLineParser, mockOption0, mockOption1, mockCommandLine);
+        verifyNoMoreInteractions(mockCommandLineParser, mockProtoOption, mockExcludeOption, mockCommandLine);
     }
 }

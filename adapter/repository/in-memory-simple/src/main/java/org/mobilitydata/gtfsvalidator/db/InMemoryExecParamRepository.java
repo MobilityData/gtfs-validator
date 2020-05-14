@@ -139,7 +139,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                                      final Logger logger) {
         if (args.length != 0) {
             logger.info("Retrieving execution parameters from command-line");
-            return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
+            return new ApacheExecParamParser(new DefaultParser(), getOptions(), args);
         } else {
             logger.info("Retrieving execution parameters from execution-parameters.json file");
             return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
@@ -249,21 +249,35 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     @Override
     public Options getOptions() {
         Options options = new Options();
-        options.addOption("u", "url", true, "URL to GTFS zipped archive");
-        options.addOption("z", "zipinput", true, "if --url is used, where to place " +
-                "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
-        options.addOption("e", "extract", true, "Relative path where to extract" +
-                " the zip content");
-        options.addOption("o", "output", true, "Relative path where to place" +
-                " output files");
-        options.addOption("h", "help", false, "Print this message");
-        options.addOption("p", "proto", false, "Export validation results as" +
-                " proto");
-        options.addOption("x", "exclude", true, "Exclude files from semantic GTFS " +
-                "validation");
+        options.addOption(String.valueOf(URL_KEY.charAt(0)), URL_KEY, true,
+                "URL to GTFS zipped archive");
+        options.addOption(String.valueOf(ZIP_KEY.charAt(0)), ZIP_KEY, true,
+                "if --url is used, where to place " +
+                        "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
+        options.addOption(String.valueOf(EXTRACT_KEY.charAt(0)), EXTRACT_KEY, true,
+                "Relative path where to extract the zip content");
+        options.addOption(String.valueOf(OUTPUT_KEY.charAt(0)), OUTPUT_KEY, true,
+                "Relative path where to place output files");
+        options.addOption(String.valueOf(HELP_KEY.charAt(0)), HELP_KEY, false, "Print this message");
+        options.addOption(String.valueOf(PROTO_KEY.charAt(0)), PROTO_KEY, false,
+                "Export validation results as proto");
+        options.addOption(String.valueOf(EXCLUSION_KEY.charAt(1)), EXCLUSION_KEY, true,
+                "Exclude files from semantic GTFS validation");
+        // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
+        // Other commands only take 1 argument
         options.getOptions().forEach(option -> {
-            if (!option.getOpt().equals("p") || !option.getOpt().equals("h")) {
-                option.setArgs(Option.UNLIMITED_VALUES);
+            switch (option.getLongOpt()) {
+                case ExecParamRepository.PROTO_KEY:
+                case ExecParamRepository.HELP_KEY: {
+                    option.setArgs(0);
+                    break;
+                }
+                case EXCLUSION_KEY: {
+                    option.setArgs(Option.UNLIMITED_VALUES);
+                }
+                default: {
+                    option.setArgs(1);
+                }
             }
         });
         return options;
