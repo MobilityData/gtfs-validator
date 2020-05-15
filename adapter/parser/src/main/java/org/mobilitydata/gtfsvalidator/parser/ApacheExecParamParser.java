@@ -17,13 +17,12 @@
 package org.mobilitydata.gtfsvalidator.parser;
 
 import org.apache.commons.cli.*;
+import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This provides context to go from execution parameters contained in an Apache command line to an internal
@@ -63,8 +62,15 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         try {
             final CommandLine cmd = commandLineParser.parse(availableOptions, args);
             for (Option option : cmd.getOptions()) {
-                verifyOptionValidity(toReturn, option);
-                toReturn.put(option.getLongOpt(), new ExecParam(option.getLongOpt(), option.getValues()));
+                verifyOptionArgumentLength(option);
+                if (!checkExistingOptions(toReturn, option)) {
+                    toReturn.put(option.getLongOpt(), new ExecParam(option.getLongOpt(), option.getValues()));
+                } else {
+                    final ExecParam exclusionExecParam = toReturn.get(option.getLongOpt());
+                    final List<String> newExclusionExecParamValue = new ArrayList<>(exclusionExecParam.getValue());
+                    newExclusionExecParamValue.addAll(Arrays.asList(option.getValues()));
+                    exclusionExecParam.setValue(newExclusionExecParamValue);
+                }
             }
             return toReturn;
         } catch (ParseException e) {
@@ -74,24 +80,38 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
 
     /**
      * Method verifies for all options (except --exclusion):
-     * - if option have been declared once
      * - if option only has one argument
      * Throws a ParseException if these requirement are not met
      *
-     * @param execParamCollection collection of {@link ExecParam} to analyze
-     * @param option              option to analyze
-     * @throws ParseException if option (except --exclude) has been declared more than once, else if option has
-     *                        more than one argument
+     * @param option option to analyze
+     * @throws ParseException if option (except --exclude) has more than one argument
      */
-    private void verifyOptionValidity(final Map<String, ExecParam> execParamCollection, final Option option)
-            throws ParseException {
+    private void verifyOptionArgumentLength(@NotNull final Option option) throws ParseException {
+        if (option.getValues() != null && option.getValues().length > 1) {
+            throw new ParseException("Option: " + option.getLongOpt() + " with too many arguments: "
+                    + Arrays.toString(option.getValues()));
+        }
+    }
+
+    /**
+     * Method verifies for all options (except --exclusion):
+     * - if option have been declared once
+     * Throws a ParseException if these requirement are not met
+     *
+     * @param execParamCollection option collection
+     * @param option              option to analyze
+     * @throws ParseException if option (except --exclude) has been declared more than once
+     */
+    private boolean checkExistingOptions(@NotNull final Map<String, ExecParam> execParamCollection,
+                                         @NotNull final Option option) throws ParseException {
         if (execParamCollection.containsKey(option.getLongOpt())) {
-            throw new ParseException("Option: " + option.getLongOpt() + " already defined");
-        } else if (!option.getLongOpt().equals(ExecParamRepository.EXCLUSION_KEY)) {
-            if (option.getValues() != null && option.getValues().length > 1) {
-                throw new ParseException("Option: " + option.getLongOpt() + " with too many arguments: "
-                        + Arrays.toString(option.getValues()));
+            if (option.getLongOpt().equals(ExecParamRepository.EXCLUSION_KEY)) {
+                return true;
+            } else {
+                throw new ParseException("Option: " + option.getLongOpt() + " already defined");
             }
+        } else {
+            return false;
         }
     }
 }

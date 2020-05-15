@@ -160,48 +160,33 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      */
     @Override
     public String getExecParamValue(final String key) throws IllegalArgumentException {
-        final String defaultValue = defaultValueCollection.get(key).getValue();
+        final List<String> defaultValue = defaultValueCollection.get(key).getValue();
 
         switch (key) {
 
             case HELP_KEY:
             case PROTO_KEY: {
                 if (hasExecParam(key)) {
-                    return hasExecParam(key) ? String.valueOf(true) : defaultValue;
+                    return hasExecParam(key) ? String.valueOf(true) : defaultValue.get(0);
                 } else {
-                    return defaultValue;
+                    return defaultValue.get(0);
                 }
             }
 
-            case EXTRACT_KEY: {
-                if (hasExecParam(key)) {
-                    final String paramValue = getExecParamByKey(key).getValue();
-                    return hasExecParamValue(key)
-                            ? paramValue
-                            : System.getProperty("user.dir") + File.separator + defaultValue;
-                } else {
-                    return System.getProperty("user.dir") + File.separator + defaultValue;
-                }
-            }
-
+            case EXTRACT_KEY:
             case OUTPUT_KEY: {
-                if (hasExecParam(OUTPUT_KEY)) {
-                    final String value = System.getProperty("user.dir") + File.separator
-                            + getExecParamByKey(OUTPUT_KEY).getValue();
-                    return hasExecParamValue(OUTPUT_KEY) ? value : System.getProperty("user.dir") + File.separator
-                            + defaultValue;
-                } else {
-                    return System.getProperty("user.dir") + File.separator + defaultValue;
-                }
+                return hasExecParamValue(key) && hasExecParamValue(key)
+                        ? getExecParamByKey(key).getValue().get(0)
+                        : System.getProperty("user.dir") + File.separator + defaultValue.get(0);
             }
 
             case URL_KEY: {
-                return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getValue() : defaultValue;
+                return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getValue().get(0) : defaultValue.get(0);
             }
 
             case ZIP_KEY: {
                 String zipInputPath = hasExecParamValue(ZIP_KEY)
-                        ? getExecParamByKey(ZIP_KEY).getValue()
+                        ? getExecParamByKey(ZIP_KEY).getValue().get(0)
                         : System.getProperty("user.dir");
 
                 if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(ZIP_KEY)) {
@@ -234,7 +219,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             }
 
             case EXCLUSION_KEY: {
-                return hasExecParamValue(EXCLUSION_KEY) ? getExecParamByKey(EXCLUSION_KEY).getValue() : defaultValue;
+                return hasExecParamValue(EXCLUSION_KEY) ? getExecParamByKey(EXCLUSION_KEY).getValue().toString() : null;
             }
         }
         throw new IllegalArgumentException("Requested key is not handled");
@@ -244,11 +229,12 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * This method returns the collection of available {@code Option} as {@code Options}. This method is used to print
      * help when {@link ExecParam} with key HELP_KEY="help" is present in the repository.
      *
-     * @return the collection of available {@code Option} as {@code Options}.
+     * @return the collection of available {@code Option} as {@code Options} when {@link ExecParam} with key
+     * HELP_KEY="help" is present in the repository.
      */
     @Override
     public Options getOptions() {
-        Options options = new Options();
+        final Options options = new Options();
         options.addOption(String.valueOf(URL_KEY.charAt(0)), URL_KEY, true,
                 "URL to GTFS zipped archive");
         options.addOption(String.valueOf(ZIP_KEY.charAt(0)), ZIP_KEY, true,

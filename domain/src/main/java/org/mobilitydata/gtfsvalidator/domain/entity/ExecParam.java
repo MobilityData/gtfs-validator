@@ -25,41 +25,34 @@ import java.util.List;
  */
 public class ExecParam {
     private String key;
-    private String[] value;
-    private final static String EXCLUSION_KEY = "exclude";
+    private List<String> value;
 
     public ExecParam() {
     }
 
-    public ExecParam(final String key,
-                     final String[] value) {
+    public ExecParam(final String key, final String value) {
         this.key = key;
-        this.value = value;
+        this.value = value == null ? null : List.of(value);
+    }
+
+    public ExecParam(final String key, final String[] value) {
+        this.key = key;
+        this.value = value == null ? null : Arrays.asList(value);
     }
 
     public String getKey() {
         return key;
     }
 
-    public String getValue() {
-        if (value != null) {
-            if (key.equals(EXCLUSION_KEY)) {
-                return Arrays.asList(value).toString()
-                        .replace("[[", "[")
-                        .replace("]]", "]");
-            } else {
-                return List.of(value).get(0);
-            }
-        } else {
-            return null;
-        }
+    public List<String> getValue() {
+        return value;
     }
 
     public void setKey(final String key) {
         this.key = key;
     }
 
-    public void setValue(final String[] value) {
+    public void setValue(final List<String> value) {
         this.value = value;
     }
 }

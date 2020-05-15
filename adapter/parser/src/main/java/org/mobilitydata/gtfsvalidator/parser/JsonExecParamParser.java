@@ -16,12 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.parser;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,26 +64,43 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
         try {
             objectReader.readTree(parameterJsonString).fields()
                     .forEachRemaining(field -> {
-                        // fieldValue.asText() contains the value related to a given key for an ExecParam, as
-                        // a string.
-                        // This string needs to be converted to a String[] as the second argument for ExecParam has
-                        // type String[]
-                        final List<String> value = new ArrayList<>();
-                        if (field.getKey().equals(ExecParamRepository.EXCLUSION_KEY)) {
-                            field.getValue().elements().forEachRemaining(fieldValue -> value.add(fieldValue.asText()));
+                        if (!checkExistingOptions(toReturn, field)) {
+                            toReturn.put(field.getKey(), new ExecParam(field.getKey(), field.getValue().asText()));
                         } else {
-                            value.addAll(List.of(field.getValue().asText()));
+                            final ExecParam exclusionExecParam = toReturn.get(field.getKey());
+                            final List<String> newExclusionExecParamValue =
+                                    new ArrayList<>(exclusionExecParam.getValue());
+                            newExclusionExecParamValue.add(field.getValue().asText());
+                            exclusionExecParam.setValue(newExclusionExecParamValue);
                         }
-                        final ExecParam execParam =
-                                new ExecParam(field.getKey(), value.toArray(new String[0]));
-                        toReturn.put(execParam.getKey(), execParam);
                     });
-
             return toReturn;
-        } catch (IOException e) {
+        } catch (JsonProcessingException e) {
             logger.info("could not find execution-parameters.json file  -- will consider default values for" +
                     " execution parameters");
             return toReturn;
+        }
+    }
+
+    /**
+     * Method verifies for all options (except --exclusion):
+     * - if option have been declared once
+     * Throws a ParseException if these requirement are not met
+     *
+     * @param execParamCollection option collection
+     * @param option              option as {@code JsonNode} to analyze
+     * @throws RuntimeException if option (except --exclude) has been declared more than once
+     */
+    private boolean checkExistingOptions(final Map<String, ExecParam> execParamCollection,
+                                         final Map.Entry<String, JsonNode> option) throws RuntimeException {
+        if (execParamCollection.containsKey(option.getKey())) {
+            if (option.getKey().equals(ExecParamRepository.EXCLUSION_KEY)) {
+                return true;
+            } else {
+                throw new RuntimeException("Option: " + option.getKey() + "already defined");
+            }
+        } else {
+            return false;
         }
     }
 }
