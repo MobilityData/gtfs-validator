@@ -21,18 +21,7 @@
     },
     "fare_attributes.txt": {
       "fare_rules.txt": {
-        "translations.txt": {},
-        "stops.txt": {
-          "stop_times.txt": {
-            "translations.txt": {}
-          },
-          "transfers.txt": {
-            "translations.txt": {}
-          },
-          "pathways.txt": {
-            "translations.txt": {}
-          }
-        }
+        "translations.txt": {}
       },
       "translations.txt": {}
     },
@@ -64,18 +53,7 @@
       }
     },
     "fare_rules.txt": {
-      "translations.txt": {},
-      "stops.txt": {
-        "stop_times.txt": {
-          "translations.txt": {}
-        },
-        "transfers.txt": {
-          "translations.txt": {}
-        },
-        "pathways.txt": {
-          "translations.txt": {}
-        }
-      }
+      "translations.txt": {}
     },
     "translations.txt": {},
     "attributions.txt": {
@@ -106,7 +84,6 @@
       "frequencies.txt": {
         "translations.txt": {}
       },
-      "translations.txt": {},
       "attributions.txt": {
         "translations.txt": {}
       }
@@ -120,7 +97,6 @@
         "frequencies.txt": {
           "translations.txt": {}
         },
-        "translations.txt": {},
         "attributions.txt": {
           "translations.txt": {}
         }
@@ -136,7 +112,6 @@
       "frequencies.txt": {
         "translations.txt": {}
       },
-      "translations.txt": {},
       "attributions.txt": {
         "translations.txt": {}
       }
@@ -144,34 +119,12 @@
   },
   "fare_attributes.txt": {
     "fare_rules.txt": {
-      "translations.txt": {},
-      "stops.txt": {
-        "stop_times.txt": {
-          "translations.txt": {}
-        },
-        "transfers.txt": {
-          "translations.txt": {}
-        },
-        "pathways.txt": {
-          "translations.txt": {}
-        }
-      }
+      "translations.txt": {}
     },
     "translations.txt": {}
   },
   "fare_rules.txt": {
-    "translations.txt": {},
-    "stops.txt": {
-      "stop_times.txt": {
-        "translations.txt": {}
-      },
-      "transfers.txt": {
-        "translations.txt": {}
-      },
-      "pathways.txt": {
-        "translations.txt": {}
-      }
-    }
+    "translations.txt": {}
   },
   "shapes.txt": {
     "translations.txt": {},

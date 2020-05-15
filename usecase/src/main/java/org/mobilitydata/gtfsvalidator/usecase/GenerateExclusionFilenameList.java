@@ -42,7 +42,7 @@ public class GenerateExclusionFilenameList {
      */
     public List<String> execute(final List<String> toExcludeFromGtfsSemanticValidation) throws IOException {
         try {
-            Set<String> toReturn = new HashSet<>();
+            final Set<String> toReturn = new HashSet<>();
             for (String filename : toExcludeFromGtfsSemanticValidation) {
                 toReturn.add(filename);
                 final Iterator<String> stringIterator = objectReader.readTree(parameterJsonString)
