@@ -19,10 +19,7 @@ package org.mobilitydata.gtfsvalidator.exporter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
@@ -400,6 +397,44 @@ class JsonNoticeExporterTest {
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         DuplicatedEntityNotice toExport = new DuplicatedEntityNotice(FILENAME, "field_name",
                 "entity_id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportInvalidLangNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        InvalidLangNotice toExport = new InvalidLangNotice(FILENAME, "field_name",
+                "entity_id", "lang_value");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportInvalidEmailNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        InvalidEmailNotice toExport = new InvalidEmailNotice(FILENAME, "field_name",
+                "entity_id", "email_value");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportRouteDescriptionEqualsNameNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        RouteDescriptionEqualsNameNotice toExport = new RouteDescriptionEqualsNameNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
