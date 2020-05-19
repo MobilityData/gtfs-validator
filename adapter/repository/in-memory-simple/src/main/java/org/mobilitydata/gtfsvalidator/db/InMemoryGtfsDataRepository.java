@@ -95,7 +95,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * @return a collection of Route objects representing all the rows from routes.txt
      */
     @Override
-    public Collection<Route> getRoutes() {
+    public Collection<Route> getRouteAll() {
         return routeCollection.values();
     }
 

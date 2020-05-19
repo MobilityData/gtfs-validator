@@ -49,10 +49,11 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
      * @return a list of notices generated each time a Route description equals the Route long or short name.
      */
     public void execute() {
-        Collection<Route> routes = dataRepo.getRoutes();
+        Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
-                .filter(route -> route.getRouteDesc().equals(route.getRouteShortName()) ||
-                        route.getRouteDesc().equals(route.getRouteLongName()))
+                .filter(route -> route.getRouteDesc() != null &&
+                        (route.getRouteDesc().equals(route.getRouteShortName()) ||
+                                route.getRouteDesc().equals(route.getRouteLongName())))
                 .forEach(route -> resultRepo.addNotice(new RouteDescriptionEqualsNameNotice("route.txt", route.getRouteId())));
     }
 }
