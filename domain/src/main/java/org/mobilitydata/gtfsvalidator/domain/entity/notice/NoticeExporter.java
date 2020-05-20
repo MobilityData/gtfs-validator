@@ -66,4 +66,6 @@ public interface NoticeExporter {
     void export(InvalidEmailNotice toExport) throws IOException;
 
     void export(RouteDescriptionEqualsNameNotice toExport) throws IOException;
+
+    void export(RouteColorAndTextContrastNotice toExport) throws IOException;
 }

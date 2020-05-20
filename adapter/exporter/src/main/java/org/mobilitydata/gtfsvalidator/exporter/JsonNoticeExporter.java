@@ -186,4 +186,9 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(RouteDescriptionEqualsNameNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(RouteColorAndTextContrastNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }
