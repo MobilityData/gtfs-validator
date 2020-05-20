@@ -24,17 +24,15 @@ import java.io.IOException;
 public class InvalidLangNotice extends ErrorNotice {
 
     private String langValue;
-    private String entityId;
     private String fieldName;
 
-    public InvalidLangNotice(final String filename, final String fieldName, final String entityId,
-                             String langValue) {
+    public InvalidLangNotice(final String filename, final String fieldName,
+                             final String entityId, final String langValue) {
         super(filename, E_022,
                 "Invalid language code",
                 "Invalid language code:" + langValue + " in field:" + fieldName + " for entity with id:" + entityId,
                 entityId);
         this.langValue = langValue;
-        this.entityId = entityId;
         this.fieldName = fieldName;
     }
 

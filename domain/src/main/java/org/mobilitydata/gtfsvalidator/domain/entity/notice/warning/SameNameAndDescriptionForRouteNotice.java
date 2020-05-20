@@ -21,16 +21,13 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class RouteDescriptionEqualsNameNotice extends WarningNotice {
+public class SameNameAndDescriptionForRouteNotice extends WarningNotice {
 
-    private String entityId;
-
-    public RouteDescriptionEqualsNameNotice(String filename, String entityId) {
+    public SameNameAndDescriptionForRouteNotice(final String filename, final String entityId) {
         super(filename, W_005,
                 "Route description equals Route name",
                 "Route description equals Route name for Route ID:" + entityId + " in file:" + filename,
                 entityId);
-        this.entityId = entityId;
     }
 
     public String getEntityId() {

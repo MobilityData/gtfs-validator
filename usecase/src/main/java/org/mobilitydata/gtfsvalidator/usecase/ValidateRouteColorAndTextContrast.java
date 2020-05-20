@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteColorAndTextContrastNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteColorAndTextInsufficientContrastNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -41,7 +41,7 @@ public class ValidateRouteColorAndTextContrast {
     }
 
     /**
-     * @param color an hexadecimal string representing a color
+     * @param color an hexadecimal string representing a color. Ex. a5ff00
      * @return the resulting luminance for the color
      */
     private double luminance(String color) {
@@ -53,8 +53,8 @@ public class ValidateRouteColorAndTextContrast {
     }
 
     /**
-     * @param routeColor an hexadecimal string representing a Route color
-     * @param textColor  an hexadecimal string representing a Route text color
+     * @param routeColor an hexadecimal string representing a Route color. Ex. a5ff00
+     * @param textColor  an hexadecimal string representing a Route text color. Ex. a5ff00
      * @return the contrast ratio between the 2 colors
      */
     private double contrast(String routeColor, String textColor) {
@@ -70,32 +70,29 @@ public class ValidateRouteColorAndTextContrast {
      * Verifies if 2 colors are contrasting according to W3C recommendations
      * Ref. https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-procedure
      *
-     * @param routeColor an hexadecimal string representing a Route color
-     * @param textColor  an hexadecimal string representing a Route text color
+     * @param routeColor an hexadecimal string representing a Route color. Ex. a5ff00
+     * @param textColor  an hexadecimal string representing a Route text color. Ex. a5ff00
      * @return true if contrast ratio between the 2 colors is higher than 4.5, false if not.
      */
     private boolean areContrasting(String routeColor, String textColor) {
-        return contrast(routeColor, textColor) >= 4.5;
+        boolean areContrasting = true;
+        if (routeColor != null && textColor != null) {
+            areContrasting = contrast(routeColor, textColor) >= 4.5;
+        }
+        return areContrasting;
     }
 
     /**
-     * Use case execution method: checks if Route description is the same as Route long and short names
+     * Use case execution method: checks if Route color contrast enough with Route text color
      * for every Routes in a {@link GtfsDataRepository}. A new notice is generated each time this condition is true.
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      *
-     * @return a list of notices generated each time a Route description equals the Route long or short name.
+     * @return a list of notices generated each time the contrast between the 2 colors is insufficient.
      */
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
-                .filter(route -> route.getRouteColor() != null &&
-                        route.getRouteTextColor() != null &&
-                        !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
-                .forEach(route -> resultRepo.addNotice(new RouteColorAndTextContrastNotice("route.txt", route.getRouteId())));
+                .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
+                .forEach(route -> resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("route.txt", route.getRouteId())));
     }
 }
-
-
-
-
-

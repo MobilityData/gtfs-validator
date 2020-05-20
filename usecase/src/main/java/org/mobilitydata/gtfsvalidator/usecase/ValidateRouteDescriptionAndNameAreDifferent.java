@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteDescriptionEqualsNameNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -54,9 +54,6 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
                 .filter(route -> route.getRouteDesc() != null &&
                         (route.getRouteDesc().equals(route.getRouteShortName()) ||
                                 route.getRouteDesc().equals(route.getRouteLongName())))
-                .forEach(route -> resultRepo.addNotice(new RouteDescriptionEqualsNameNotice("route.txt", route.getRouteId())));
+                .forEach(route -> resultRepo.addNotice(new SameNameAndDescriptionForRouteNotice("route.txt", route.getRouteId())));
     }
 }
-
-
-

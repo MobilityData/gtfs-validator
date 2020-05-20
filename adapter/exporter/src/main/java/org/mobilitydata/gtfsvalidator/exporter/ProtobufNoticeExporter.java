@@ -362,7 +362,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(RouteDescriptionEqualsNameNotice toExport) throws IOException {
+    public void export(SameNameAndDescriptionForRouteNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_STOP_WITH_SAME_NAME_AND_DESCRIPTION)
@@ -372,7 +372,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(RouteColorAndTextContrastNotice toExport) throws IOException {
+    public void export(RouteColorAndTextInsufficientContrastNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_COLOR_CONTRAST)

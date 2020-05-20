@@ -103,7 +103,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getRoutesShouldReturnAllRoutes() {
+    void getRouteAllShouldReturnAllRoutes() {
         final Route mockRoute00 = mock(Route.class);
         final Route mockRoute01 = mock(Route.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();

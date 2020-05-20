@@ -902,7 +902,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new RouteDescriptionEqualsNameNotice(FILENAME, "entity_id"));
+        underTest.export(new SameNameAndDescriptionForRouteNotice(FILENAME, "entity_id"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
@@ -930,7 +930,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new RouteColorAndTextContrastNotice(FILENAME, "entity_id"));
+        underTest.export(new RouteColorAndTextInsufficientContrastNotice(FILENAME, "entity_id"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));

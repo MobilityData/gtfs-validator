@@ -21,16 +21,13 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class RouteColorAndTextContrastNotice extends WarningNotice {
+public class RouteColorAndTextInsufficientContrastNotice extends WarningNotice {
 
-    private String entityId;
-
-    public RouteColorAndTextContrastNotice(String filename, String entityId) {
+    public RouteColorAndTextInsufficientContrastNotice(final String filename, final String entityId) {
         super(filename, W_006,
                 "Route Color Contrast",
                 "Route color and text color are not contrasting enough for:" + entityId + " in file:" + filename,
                 entityId);
-        this.entityId = entityId;
     }
 
     public String getEntityId() {

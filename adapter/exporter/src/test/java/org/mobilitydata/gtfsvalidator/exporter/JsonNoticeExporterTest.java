@@ -434,7 +434,7 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        RouteDescriptionEqualsNameNotice toExport = new RouteDescriptionEqualsNameNotice(FILENAME, "entity_id");
+        SameNameAndDescriptionForRouteNotice toExport = new SameNameAndDescriptionForRouteNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
@@ -446,7 +446,7 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        RouteColorAndTextContrastNotice toExport = new RouteColorAndTextContrastNotice(FILENAME, "entity_id");
+        RouteColorAndTextInsufficientContrastNotice toExport = new RouteColorAndTextInsufficientContrastNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
