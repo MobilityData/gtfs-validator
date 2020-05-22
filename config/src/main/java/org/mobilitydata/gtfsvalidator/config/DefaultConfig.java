@@ -21,8 +21,8 @@ import com.google.common.io.Resources;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.GtfsSchemaTree;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.SchemaTree;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.*;
@@ -155,7 +155,7 @@ public class DefaultConfig {
     @SuppressWarnings("UnstableApiUsage")
     public GenerateExclusionFilenameList generateExclusionFilenameList() throws IOException {
         return new GenerateExclusionFilenameList(Resources.toString(Resources.getResource("schema.json"),
-                StandardCharsets.UTF_8), new ObjectMapper().readerFor(SchemaTree.class));
+                StandardCharsets.UTF_8), new ObjectMapper().readerFor(GtfsSchemaTree.class));
     }
 
     public List<String> getExclusionFilenameList() {
