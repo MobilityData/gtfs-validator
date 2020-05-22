@@ -162,7 +162,7 @@ public class DefaultConfig {
         return Arrays.asList(execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY)
                 .replace("[", "")
                 .replace("]", "")
-                .split(", ")
+                .split(",")
         );
     }
 

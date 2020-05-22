@@ -17,19 +17,23 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import com.fasterxml.jackson.databind.ObjectReader;
+import org.mobilitydata.gtfsvalidator.domain.entity.GtfsSchemaTree;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Use case to create list of filename on which the GTFS semantic validation process should not be applied to
  */
 public class GenerateExclusionFilenameList {
-    private final String parameterJsonString;
+    private final String gtfsSchemaAsString;
     private final ObjectReader objectReader;
 
-    public GenerateExclusionFilenameList(final String parameterJsonString, final ObjectReader objectReader) {
-        this.parameterJsonString = parameterJsonString;
+    public GenerateExclusionFilenameList(final String gtfsSchemaAsString, final ObjectReader objectReader) {
+        this.gtfsSchemaAsString = gtfsSchemaAsString;
         this.objectReader = objectReader;
     }
 
@@ -42,15 +46,10 @@ public class GenerateExclusionFilenameList {
      */
     public List<String> execute(final List<String> toExcludeFromGtfsSemanticValidation) throws IOException {
         try {
+            final GtfsSchemaTree gtfsSchemaTree = objectReader.readValue(gtfsSchemaAsString);
             final Set<String> toReturn = new HashSet<>();
             for (String filename : toExcludeFromGtfsSemanticValidation) {
-                toReturn.add(filename);
-                final Iterator<String> stringIterator = objectReader.readTree(parameterJsonString)
-                        .findValue(filename)
-                        .fieldNames();
-                while (stringIterator.hasNext()) {
-                    toReturn.addAll(execute(List.of(stringIterator.next())));
-                }
+                toReturn.addAll(gtfsSchemaTree.getChildWithName(filename).DFS(new HashSet<>()));
             }
             return new ArrayList<>(toReturn);
         } catch (NullPointerException e) {
