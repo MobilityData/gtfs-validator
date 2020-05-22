@@ -1,171 +1,118 @@
 {
-  "agency.txt": {
-    "routes.txt": {
-      "trips.txt": {
-        "attributions.txt": {
-          "translations.txt": {}
-        },
-        "frequencies.txt": {
-          "translations.txt": {}
-        },
-        "stop_times.txt": {
-          "translations.txt": {}
-        }
-      },
-      "fare_rules.txt": {
-        "translations.txt": {}
-      },
-      "attributions.txt": {
-        "translations.txt": {}
-      }
+  "root": [
+    {
+      "name": "translations.txt",
+      "children": []
     },
-    "fare_attributes.txt": {
-      "fare_rules.txt": {
-        "translations.txt": {}
-      },
-      "translations.txt": {}
+    {
+      "name": "attributions.txt",
+      "children": [
+        "translations.txt"
+      ]
     },
-    "attributions.txt": {
-      "translations.txt": {}
+    {
+      "name": "frequencies.txt",
+      "children": [
+        "translations.txt"
+      ]
+    },
+    {
+      "name": "stop_times.txt",
+      "children": [
+        "translations.txt"
+      ]
+    },
+    {
+      "name": "fare_rules.txt",
+      "children": [
+        "translations.txt"
+      ]
+    },
+    {
+      "name": "transfers.txt",
+      "children": [
+        "translations.txt"
+      ]
+    },
+    {
+      "name": "feed_info.txt",
+      "children": [
+        "translations.txt"
+      ]
+    },
+    {
+      "name": "pathways.txt",
+      "children": [
+        "translations.txt"
+      ]
+    },
+    {
+      "name": "trips.txt",
+      "children": [
+        "attributions.txt",
+        "frequencies.txt",
+        "stop_times.txt"
+      ]
+    },
+    {
+      "name": "routes.txt",
+      "children": [
+        "trips.txt",
+        "fare_rules.txt"
+      ]
+    },
+    {
+      "name": "shapes.txt",
+      "children": [
+        "translations.txt",
+        "trips.txt"
+      ]
+    },
+    {
+      "name": "fare_attributes.txt",
+      "children": [
+        "translations.txt",
+        "fare_rules.txt"
+      ]
+    },
+    {
+      "name": "stops.txt",
+      "children": [
+        "stop_times.txt",
+        "transfers.txt",
+        "pathways.txt"
+      ]
+    },
+    {
+      "name": "levels.txt",
+      "children": [
+        "stops.txt",
+        "translations.txt"
+      ]
+    },
+    {
+      "name": "calendar_dates.txt",
+      "children": [
+        "translations.txt",
+        "trips.txt",
+        "pathways.txt"
+      ]
+    },
+    {
+      "name": "calendar.txt",
+      "children": [
+        "translations.txt",
+        "trips.txt",
+        "calendar_dates.txt"
+      ]
+    },
+    {
+      "name": "agency.txt",
+      "children": [
+        "routes.txt",
+        "fare_attributes.txt",
+        "attributions.txt"
+      ]
     }
-  },
-  "stops.txt": {
-    "stop_times.txt": {
-      "translations.txt": {}
-    },
-    "transfers.txt": {
-      "translations.txt": {}
-    },
-    "pathways.txt": {
-      "translations.txt": {}
-    }
-  },
-  "routes.txt": {
-    "trips.txt": {
-      "attributions.txt": {
-        "translations.txt": {}
-      },
-      "frequencies.txt": {
-        "translations.txt": {}
-      },
-      "stop_times.txt": {
-        "translations.txt": {}
-      }
-    },
-    "fare_rules.txt": {
-      "translations.txt": {}
-    },
-    "translations.txt": {},
-    "attributions.txt": {
-      "translations.txt": {}
-    }
-  },
-  "trips.txt": {
-    "stop_times.txt": {
-      "translations.txt": {}
-    },
-    "frequencies.txt": {
-      "translations.txt": {}
-    },
-    "translations.txt": {},
-    "attributions.txt": {
-      "translations.txt": {}
-    }
-  },
-  "stop_times.txt": {
-    "translations.txt": {}
-  },
-  "calendar.txt": {
-    "translations.txt": {},
-    "trips.txt": {
-      "stop_times.txt": {
-        "translations.txt": {}
-      },
-      "frequencies.txt": {
-        "translations.txt": {}
-      },
-      "attributions.txt": {
-        "translations.txt": {}
-      }
-    },
-    "calendar_dates.txt": {
-      "translations.txt": {},
-      "trips.txt": {
-        "stop_times.txt": {
-          "translations.txt": {}
-        },
-        "frequencies.txt": {
-          "translations.txt": {}
-        },
-        "attributions.txt": {
-          "translations.txt": {}
-        }
-      }
-    }
-  },
-  "calendar_dates.txt": {
-    "translations.txt": {},
-    "trips.txt": {
-      "stop_times.txt": {
-        "translations.txt": {}
-      },
-      "frequencies.txt": {
-        "translations.txt": {}
-      },
-      "attributions.txt": {
-        "translations.txt": {}
-      }
-    }
-  },
-  "fare_attributes.txt": {
-    "fare_rules.txt": {
-      "translations.txt": {}
-    },
-    "translations.txt": {}
-  },
-  "fare_rules.txt": {
-    "translations.txt": {}
-  },
-  "shapes.txt": {
-    "translations.txt": {},
-    "trips.txt": {
-      "stop_times.txt": {
-        "translations.txt": {}
-      },
-      "frequencies.txt": {
-        "translations.txt": {}
-      },
-      "attributions.txt": {
-        "translations.txt": {}
-      }
-    }
-  },
-  "frequencies.txt": {
-    "translations.txt": {}
-  },
-  "transfers.txt": {
-    "translations.txt": {}
-  },
-  "pathways.txt": {
-    "translations.txt": {}
-  },
-  "levels.txt": {
-    "stops.txt": {
-      "stop_times.txt": {
-        "translations.txt": {}
-      },
-      "transfers.txt": {},
-      "pathways.txt": {
-        "translations.txt": {}
-      }
-    },
-    "translations.txt": {}
-  },
-  "translations.txt": {},
-  "feed_info.txt": {
-    "translations.txt": {}
-  },
-  "attributions.txt": {
-    "translations.txt": {}
-  }
+  ]
 }
