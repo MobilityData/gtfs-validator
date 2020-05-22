@@ -23,9 +23,7 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,12 +64,6 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
                     .forEachRemaining(field -> {
                         if (!checkExistingOptions(toReturn, field)) {
                             toReturn.put(field.getKey(), new ExecParam(field.getKey(), field.getValue().asText()));
-                        } else {
-                            final ExecParam exclusionExecParam = toReturn.get(field.getKey());
-                            final List<String> newExclusionExecParamValue =
-                                    new ArrayList<>(exclusionExecParam.getValue());
-                            newExclusionExecParamValue.add(field.getValue().asText());
-                            exclusionExecParam.setValue(newExclusionExecParamValue);
                         }
                     });
             return toReturn;

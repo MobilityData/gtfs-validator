@@ -35,7 +35,7 @@ class ApacheExecParamParserTest {
     public void apacheCommandLineOptionShouldMapToExecutionParameterCollection() throws IOException, ParseException {
         final CommandLineParser mockCommandLineParser = mock(CommandLineParser.class);
         final Options mockAvailableOptions = spy(Options.class);
-        final String[] arguments = new String[]{"-p -x file0.txt -x file1.txt"};
+        final String[] arguments = new String[]{"-p -x file0.txt,file1.txt"};
         final CommandLine mockCommandLine = mock(CommandLine.class);
 
         when(mockCommandLineParser.parse(mockAvailableOptions, arguments)).thenReturn(mockCommandLine);
@@ -45,18 +45,12 @@ class ApacheExecParamParserTest {
         when(mockProtoOption.hasArg()).thenReturn(true);
         when(mockProtoOption.getValues()).thenReturn(new String[]{"true"});
 
-        final Option mockExcludeFile0Option = mock(Option.class);
-        when(mockExcludeFile0Option.getLongOpt()).thenReturn(ExecParamRepository.EXCLUSION_KEY);
-        when(mockExcludeFile0Option.hasArg()).thenReturn(true);
-        when(mockExcludeFile0Option.getValues()).thenReturn(new String[]{"file0.txt"});
+        final Option mockExcludeFileOption = mock(Option.class);
+        when(mockExcludeFileOption.getLongOpt()).thenReturn(ExecParamRepository.EXCLUSION_KEY);
+        when(mockExcludeFileOption.hasArg()).thenReturn(true);
+        when(mockExcludeFileOption.getValues()).thenReturn(new String[]{"file0.txt,file1.txt"});
 
-        final Option mockExcludeFile1Option = mock(Option.class);
-        when(mockExcludeFile1Option.getLongOpt()).thenReturn(ExecParamRepository.EXCLUSION_KEY);
-        when(mockExcludeFile1Option.hasArg()).thenReturn(true);
-        when(mockExcludeFile1Option.getValues()).thenReturn(new String[]{"file1.txt"});
-
-        when(mockCommandLine.getOptions()).thenReturn(new Option[]{mockProtoOption, mockExcludeFile0Option,
-                mockExcludeFile1Option});
+        when(mockCommandLine.getOptions()).thenReturn(new Option[]{mockProtoOption, mockExcludeFileOption});
 
         final ApacheExecParamParser underTest = new ApacheExecParamParser(mockCommandLineParser, mockAvailableOptions,
                 arguments);
@@ -66,26 +60,25 @@ class ApacheExecParamParserTest {
         assertEquals(mockProtoOption.getLongOpt(), toCheck.get(mockProtoOption.getLongOpt()).getKey());
         assertEquals(List.of(mockProtoOption.getValues()), toCheck.get(mockProtoOption.getLongOpt()).getValue());
 
-        assertEquals(mockExcludeFile0Option.getLongOpt(), toCheck.get(mockExcludeFile0Option.getLongOpt()).getKey());
-        assertEquals(List.of("file0.txt", "file1.txt"), toCheck.get(mockExcludeFile0Option.getLongOpt()).getValue());
+        assertEquals(mockExcludeFileOption.getLongOpt(), toCheck.get(mockExcludeFileOption.getLongOpt()).getKey());
+        assertEquals("file0.txt,file1.txt", toCheck.get(mockExcludeFileOption.getLongOpt()).getValue().get(0));
 
         verify(mockCommandLineParser, times(1)).parse(mockAvailableOptions, arguments);
         verify(mockCommandLine, times(1)).getOptions();
 
         verify(mockProtoOption, times(4)).getValues();
-        verify(mockExcludeFile0Option, times(3)).getValues();
-        verify(mockExcludeFile1Option, times(3)).getValues();
+        verify(mockExcludeFileOption, times(3)).getValues();
+        verify(mockExcludeFileOption, times(3)).getValues();
 
         verify(mockProtoOption, times(6)).getLongOpt();
-        verify(mockExcludeFile0Option, times(6)).getLongOpt();
-        verify(mockExcludeFile1Option, times(3)).getLongOpt();
+        verify(mockExcludeFileOption, times(6)).getLongOpt();
 
-        verifyNoMoreInteractions(mockCommandLineParser, mockProtoOption, mockExcludeFile0Option, mockExcludeFile1Option,
+        verifyNoMoreInteractions(mockCommandLineParser, mockProtoOption, mockExcludeFileOption, mockExcludeFileOption,
                 mockCommandLine);
     }
 
     @Test
-    void duplicateOptionShouldThrowExceptionIfNotExcludeOption() throws ParseException {
+    void duplicateOptionShouldThrowException() throws ParseException {
         final CommandLineParser mockCommandLineParser = mock(CommandLineParser.class);
         final Options mockAvailableOptions = spy(Options.class);
         final String[] arguments = new String[]{"-e output -e duplicate"};
@@ -110,49 +103,6 @@ class ApacheExecParamParserTest {
 
         final Exception exception = assertThrows(IOException.class, underTest::parse);
         assertEquals("Option: extract already defined", exception.getMessage());
-    }
-
-    @Test
-    void duplicateExclusionOptionShouldNotThrowException() throws ParseException, IOException {
-        final CommandLineParser mockCommandLineParser = mock(CommandLineParser.class);
-        final Options mockAvailableOptions = spy(Options.class);
-        final String[] arguments = new String[]{"-x file0.txt -x file1.txt"};
-        final CommandLine mockCommandLine = mock(CommandLine.class);
-
-        when(mockCommandLineParser.parse(mockAvailableOptions, arguments)).thenReturn(mockCommandLine);
-
-        final Option mockExcludeFile0Option = mock(Option.class);
-        when(mockExcludeFile0Option.getLongOpt()).thenReturn(ExecParamRepository.EXCLUSION_KEY);
-        when(mockExcludeFile0Option.hasArg()).thenReturn(true);
-        when(mockExcludeFile0Option.getValues()).thenReturn(new String[]{"file0.txt"});
-
-        final Option mockExcludeFile1Option = mock(Option.class);
-        when(mockExcludeFile1Option.getLongOpt()).thenReturn(ExecParamRepository.EXCLUSION_KEY);
-        when(mockExcludeFile1Option.hasArg()).thenReturn(true);
-        when(mockExcludeFile1Option.getValues()).thenReturn(new String[]{"file1.txt"});
-
-        when(mockCommandLine.getOptions()).thenReturn(new Option[]{mockExcludeFile0Option, mockExcludeFile1Option});
-
-        final ApacheExecParamParser underTest = new ApacheExecParamParser(mockCommandLineParser, mockAvailableOptions,
-                arguments);
-
-        final Map<String, ExecParam> toCheck = underTest.parse();
-
-        assertEquals(1, toCheck.size());
-        assertEquals(mockExcludeFile0Option.getLongOpt(), toCheck.get(mockExcludeFile0Option.getLongOpt()).getKey());
-        assertEquals(List.of("file0.txt", "file1.txt"), toCheck.get(mockExcludeFile0Option.getLongOpt()).getValue());
-
-        verify(mockCommandLineParser, times(1)).parse(mockAvailableOptions, arguments);
-        verify(mockCommandLine, times(1)).getOptions();
-
-        verify(mockExcludeFile0Option, times(3)).getValues();
-        verify(mockExcludeFile1Option, times(3)).getValues();
-
-        verify(mockExcludeFile0Option, times(6)).getLongOpt();
-        verify(mockExcludeFile1Option, times(3)).getLongOpt();
-
-        verifyNoMoreInteractions(mockCommandLineParser, mockExcludeFile0Option, mockExcludeFile1Option,
-                mockCommandLine);
     }
 
     @Test
