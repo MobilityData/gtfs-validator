@@ -25,7 +25,9 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E021](#E021) | | 
 | [E022](#E022) | Invalid language code | 
 | [E023](#E023) | Invalid email | 
-| [E024](#E024) | Route short name too long | 
+| [E024](#E024) | Route short name too long |
+| [E025](#E025) | Same name and description for route | 
+| [E026](#E026) | Insufficient route color contrast | 
 
 ### Table of Warnings
 
@@ -35,8 +37,6 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W002](#W002) | | 
 | [W003](#W003) | | 
 | [W004](#W004) | | 
-| [W005](#W005) | Same name and description for route | 
-| [W006](#W006) | Insufficient route color contrast | 
 
 # Errors
 
@@ -59,11 +59,9 @@ An email should be a valid email address (e.g., contact@agency.org)
 #### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
-# Warnings
+<a name="E025"/>
 
-<a name="W005"/>
-
-### W005 - Same name and description for route
+### E025 - Same name and description for route
 
 The GTFS spec defines `routes.txt` [route_description](https://gtfs.org/reference/static/#routestxt) as:
 
@@ -79,12 +77,15 @@ References:
 #### References:
 * [Route.txt Specification](http://gtfs.org/reference/static/#routestxt)
 
-<a name="W006"/>
+<a name="E026"/>
 
-### W005 - Insufficient route color contrast
+### E026 - Insufficient route color contrast
 
 A Route color and a Route text color should be contrasting. Minimum Contrast Ratio allowed is 4.5. Contrast Ratio is computed according to the W3 Color Contrast Procedure. Please visit links below for more information about color contrast.
 
 #### References:
 * [Route.txt Specification](http://gtfs.org/reference/static/#routestxt)
 * [W3 Color Contrast Verification Procedure](https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-procedure)
+
+
+# Warnings

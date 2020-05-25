@@ -14,30 +14,24 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class RouteColorAndTextInsufficientContrastNotice extends WarningNotice {
-    private String contrastRatio;
+public class SameNameAndDescriptionForRouteNotice extends ErrorNotice {
 
-    public RouteColorAndTextInsufficientContrastNotice(final String filename, final String entityId, final String contrastRatio) {
-        super(filename, W_006,
-                "Route color and text have insufficient contrast",
-                "Contrast ratio should be >= 4.5 but was " + contrastRatio + " for Route:" + entityId + " in file:" + filename,
+    public SameNameAndDescriptionForRouteNotice(final String filename, final String entityId) {
+        super(filename, E_025,
+                "Same name and description for Route",
+                "Same name and description for Route ID:" + entityId + " in file:" + filename,
                 entityId);
-        this.contrastRatio = contrastRatio;
     }
 
     public String getEntityId() {
         return entityId;
-    }
-
-    public String getContrastRatio() {
-        return contrastRatio;
     }
 
     @Override

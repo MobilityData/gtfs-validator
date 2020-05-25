@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.SameNameAndDescriptionForRouteNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -51,7 +51,7 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
-                .filter(route -> isInvalidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName()))
+                .filter(route -> !(isValidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName())))
                 .forEach(route -> resultRepo.addNotice(new SameNameAndDescriptionForRouteNotice("route.txt", route.getRouteId())));
     }
 
@@ -61,7 +61,7 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
      * @param routeLongName  the long name of a Route
      * @return true if Route description is the same as Route short or long name, false if not or null.
      */
-    private boolean isInvalidRouteDesc(final String routeDesc, final String routeShortName, final String routeLongName) {
-        return routeDesc != null && (routeDesc.equals(routeShortName) || routeDesc.equals(routeLongName));
+    private boolean isValidRouteDesc(final String routeDesc, final String routeShortName, final String routeLongName) {
+        return routeDesc == null || (!routeDesc.equals(routeShortName) && !routeDesc.equals(routeLongName));
     }
 }

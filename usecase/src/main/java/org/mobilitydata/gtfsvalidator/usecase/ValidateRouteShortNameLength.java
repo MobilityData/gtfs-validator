@@ -51,16 +51,16 @@ public class ValidateRouteShortNameLength {
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
-                .filter(route -> isInvalidRouteShortName(route.getRouteShortName()))
+                .filter(route -> !(isValidRouteShortName(route.getRouteShortName())))
                 .forEach(route -> resultRepo.addNotice(new RouteShortNameTooLongNotice("route.txt",
                         route.getRouteId(), String.valueOf(route.getRouteShortName().length()))));
     }
 
     /**
      * @param routeShortName the short name of a Route
-     * @return true if Route short name is not null and longer than 12 characters, false if not.
+     * @return true if Route short name is null and less or equal than 12 characters, false if not.
      */
-    private boolean isInvalidRouteShortName(final String routeShortName) {
-        return routeShortName != null && routeShortName.length() > 12;
+    private boolean isValidRouteShortName(final String routeShortName) {
+        return routeShortName == null || routeShortName.length() <= 12;
     }
 }
