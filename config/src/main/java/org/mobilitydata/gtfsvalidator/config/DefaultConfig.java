@@ -132,6 +132,10 @@ public class DefaultConfig {
         return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo);
     }
 
+    public ValidateRouteShortNameLength validateRouteShortNameLength() {
+        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }

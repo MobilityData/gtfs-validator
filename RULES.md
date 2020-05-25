@@ -25,6 +25,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E021](#E021) | | 
 | [E022](#E022) | Invalid language code | 
 | [E023](#E023) | Invalid email | 
+| [E024](#E024) | Route short name too long | 
 
 ### Table of Warnings
 

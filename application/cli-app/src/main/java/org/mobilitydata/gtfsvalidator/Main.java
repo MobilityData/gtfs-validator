@@ -103,6 +103,7 @@ public class Main {
                     }
                 });
 
+                config.validateRouteShortNameLength().execute();
                 config.validateRouteColorAndTextContrast().execute();
                 config.validateRouteDescriptionAndNameAreDifferent().execute();
 
