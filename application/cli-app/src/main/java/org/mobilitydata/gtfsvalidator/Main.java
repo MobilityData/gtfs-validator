@@ -54,8 +54,7 @@ public class Main {
                         config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
                         .execute();
 
-                final List<String> filenameListToExclude =
-                        config.generateExclusionFilenameList().execute(config.getExclusionFilenameList());
+                final List<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
 
                 final List<String> datasetFilenameList = config.validateAllRequiredFilePresence().execute();
                 datasetFilenameList.addAll(config.validateAllOptionalFileName().execute());

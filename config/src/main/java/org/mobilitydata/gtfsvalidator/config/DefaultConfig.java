@@ -16,12 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.GtfsSchemaTree;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
@@ -33,8 +31,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -71,7 +67,16 @@ public class DefaultConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString);
+
+        String gtfsSchemaAsString = null;
+
+        try {
+            gtfsSchemaAsString = Resources.toString(Resources.getResource("schema.json"),
+                    StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
@@ -152,18 +157,8 @@ public class DefaultConfig {
         return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder());
     }
 
-    @SuppressWarnings("UnstableApiUsage")
-    public GenerateExclusionFilenameList generateExclusionFilenameList() throws IOException {
-        return new GenerateExclusionFilenameList(Resources.toString(Resources.getResource("schema.json"),
-                StandardCharsets.UTF_8), new ObjectMapper().readerFor(GtfsSchemaTree.class));
-    }
-
-    public List<String> getExclusionFilenameList() {
-        return Arrays.asList(execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY)
-                .replace("[", "")
-                .replace("]", "")
-                .split(",")
-        );
+    public GenerateExclusionFilenameList generateExclusionFilenameList() {
+        return new GenerateExclusionFilenameList(specRepo, execParamRepo);
     }
 
     public GenerateFilenameListToProcess generateFilenameListToProcess() {

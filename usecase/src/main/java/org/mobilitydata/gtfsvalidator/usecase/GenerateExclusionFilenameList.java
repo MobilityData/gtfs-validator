@@ -16,45 +16,52 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import com.fasterxml.jackson.databind.ObjectReader;
-import org.mobilitydata.gtfsvalidator.domain.entity.GtfsSchemaTree;
+import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Use case to create list of filename on which the GTFS semantic validation process should not be applied to
+ * Use case to create list of filename on which the GTFS validation process should not be applied to
  */
 public class GenerateExclusionFilenameList {
-    private final String gtfsSchemaAsString;
-    private final ObjectReader objectReader;
+    private final GtfsSpecRepository gtfsSpecRepo;
+    private final ExecParamRepository execParamRepo;
 
-    public GenerateExclusionFilenameList(final String gtfsSchemaAsString, final ObjectReader objectReader) {
-        this.gtfsSchemaAsString = gtfsSchemaAsString;
-        this.objectReader = objectReader;
+    public GenerateExclusionFilenameList(final GtfsSpecRepository gtfsSpecRepo,
+                                         final ExecParamRepository execParamRepo) {
+        this.gtfsSpecRepo = gtfsSpecRepo;
+        this.execParamRepo = execParamRepo;
     }
 
     /**
-     * Use case execution method: returns the list of filename on which the GTFS semantic validation should not be
+     * Use case execution method: returns the list of filename on which the GTFS validation should not be
      * applied to.
-     *
-     * @param toExcludeFromGtfsSemanticValidation the list of files to exclude from GTFS semantic validation. This list
-     *                                            is provided by user via command line options or configuration file.
      */
-    public List<String> execute(final List<String> toExcludeFromGtfsSemanticValidation) throws IOException {
-        try {
-            final GtfsSchemaTree gtfsSchemaTree = objectReader.readValue(gtfsSchemaAsString);
-            final Set<String> toReturn = new HashSet<>();
-            for (String filename : toExcludeFromGtfsSemanticValidation) {
-                toReturn.addAll(gtfsSchemaTree.getChildWithName(filename).DFS(new HashSet<>()));
-            }
-            return new ArrayList<>(toReturn);
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("Wrong list of file to exclude from validation process, please check " +
-                    "spelling. You might have forgotten the extension .txt at the end of some filename");
+    public List<String> execute() {
+        final String[] toExcludeFromValidation =
+                execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY)
+                        .replace("[", "")
+                        .replace("]", "")
+                        .split(",");
+
+//        final List<String> gtfsFilenameList = new ArrayList<>();
+//        gtfsFilenameList.addAll(gtfsSpecRepo.getRequiredFilenameList());
+//        gtfsFilenameList.addAll(gtfsSpecRepo.getOptionalFilenameList());
+
+        // TODO: check validity of user input
+
+        final GtfsNode root = gtfsSpecRepo.getGtfsDependencySchema();
+
+        final Set<String> toReturn = new HashSet<>();
+        // search for all all reachable GtfsNode from each GtfsNode to exclude from validation
+        for (String filename : toExcludeFromValidation) {
+            toReturn.addAll(root.getChildWithName(filename).DFS(new HashSet<>()));
         }
+        return new ArrayList<>(toReturn);
     }
 }
