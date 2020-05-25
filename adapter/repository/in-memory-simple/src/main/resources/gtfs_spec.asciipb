@@ -126,6 +126,7 @@ csvspec: {
     name: "agency_url"
     required: true
     value_required: true
+    type: { type: URL }
     # The URL to be displayed for an agency.
   }
 
@@ -133,6 +134,7 @@ csvspec: {
     field_number: 4
     name: "agency_fare_url"
     required: false
+    type: { type: URL }
     # The URL of a web page that allows a rider to learn more about
     # the agency's fare structure, and/or to purchase tickets or other
     # fare instruments online.
@@ -143,6 +145,7 @@ csvspec: {
     name: "agency_timezone"
     required: true
     value_required: true
+    type: { type: TIMEZONE }
     # The timezone used in an agency's schedules, in zoneinfo format.
     # Example: America/New_York, see http://en.wikipedia.org/wiki/Zoneinfo
     #
@@ -158,6 +161,7 @@ csvspec: {
     name: "agency_id"
     required: false
     uniquevalues: true
+    type: { type: ID }
     # A unique key into this table.
     # For feeds with a single agency, this field is optional.
   }
@@ -166,6 +170,7 @@ csvspec: {
     field_number: 7
     name: "agency_lang"
     required: false
+    type: { type: LANGUAGE_CODE }
     # The language code for an agency's primary language (e.g., "en"), or empty.
     #
     # The GTFS spec (revised 2010-01-11) wants a two-letter ISO 639-1 code here;
@@ -188,6 +193,7 @@ csvspec: {
     field_number: 8
     name: "agency_phone"
     required: false
+    type: { type: PHONE_NUMBER }
     # The phone number to be shown for an agency, formatted as customary
     # in the agency's service area and potentially including dialable text
     # in vanity numbers like "503-238-RIDE".
@@ -197,6 +203,7 @@ csvspec: {
     field_number: 10
     name: "agency_email"
     required: false
+    type: { type: EMAIL }
     # This field contains a single valid email address actively monitored by
     # the agency’s customer service department.  This email address will be
     # considered a direct contact point where transit riders can reach a
