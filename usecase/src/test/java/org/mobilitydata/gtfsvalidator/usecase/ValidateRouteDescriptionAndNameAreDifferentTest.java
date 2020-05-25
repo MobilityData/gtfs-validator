@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -109,7 +109,7 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(WarningNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 
@@ -138,7 +138,7 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(WarningNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 }

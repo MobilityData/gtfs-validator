@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -130,7 +130,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(2)).getRouteColor();
         verify(mockRoute, times(2)).getRouteTextColor();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(WarningNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 
@@ -157,7 +157,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(2)).getRouteColor();
         verify(mockRoute, times(2)).getRouteTextColor();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(WarningNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 }
