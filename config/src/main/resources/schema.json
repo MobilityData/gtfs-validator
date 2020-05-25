@@ -1,5 +1,6 @@
 {
-  "root": [
+  "name": "root",
+  "children": [
     {
       "name": "translations.txt",
       "children": []
@@ -51,7 +52,7 @@
       "children": [
         "attributions.txt",
         "frequencies.txt",
-        "stop_times.txt"
+        "stop_times"
       ]
     },
     {
@@ -111,7 +112,7 @@
       "children": [
         "routes.txt",
         "fare_attributes.txt",
-        "attributions.txt"
+        "attribution.txt"
       ]
     }
   ]
