@@ -51,9 +51,17 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
-                .filter(route -> route.getRouteDesc() != null &&
-                        (route.getRouteDesc().equals(route.getRouteShortName()) ||
-                                route.getRouteDesc().equals(route.getRouteLongName())))
+                .filter(route -> isInvalidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName()))
                 .forEach(route -> resultRepo.addNotice(new SameNameAndDescriptionForRouteNotice("route.txt", route.getRouteId())));
+    }
+
+    /**
+     * @param routeDesc      the description of a Route
+     * @param routeShortName the short name of a Route
+     * @param routeLongName  the long name of a Route
+     * @return true if Route description is the same as Route short or long name, false if not or null.
+     */
+    private boolean isInvalidRouteDesc(final String routeDesc, final String routeShortName, final String routeLongName) {
+        return routeDesc != null && (routeDesc.equals(routeShortName) || routeDesc.equals(routeLongName));
     }
 }

@@ -33,6 +33,8 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteDesc()).thenReturn(null);
+        when(mockRoute.getRouteShortName()).thenReturn("route_short_name");
+        when(mockRoute.getRouteLongName()).thenReturn("route_long_name");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
@@ -48,6 +50,8 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteDesc();
+        verify(mockRoute, times(1)).getRouteShortName();
+        verify(mockRoute, times(1)).getRouteLongName();
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
@@ -73,7 +77,7 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockRoute, times(3)).getRouteDesc();
+        verify(mockRoute, times(1)).getRouteDesc();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
         verifyNoInteractions(mockResultRepo);
@@ -101,9 +105,9 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockRoute, times(2)).getRouteDesc();
+        verify(mockRoute, times(1)).getRouteDesc();
         verify(mockRoute, times(1)).getRouteShortName();
-        verify(mockRoute, times(0)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(WarningNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
@@ -130,7 +134,7 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockRoute, times(3)).getRouteDesc();
+        verify(mockRoute, times(1)).getRouteDesc();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();

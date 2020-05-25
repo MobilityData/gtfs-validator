@@ -1,6 +1,6 @@
-# Implemented notices
+# Implemented rules
 
-Notices are declared in the [`Notice` module](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/domain/entity/notice).  Below are details of currently implemented notices.
+Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/domain/entity/notice).  Below are details of currently implemented rules.
 
 ### Table of Errors
 
@@ -23,8 +23,8 @@ Notices are declared in the [`Notice` module](https://github.com/MobilityData/gt
 | [E019](#E019) | | 
 | [E020](#E020) | | 
 | [E021](#E021) | | 
-| [E022](#E022) | Invalid Language Code | 
-| [E023](#E023) | Invalid Email | 
+| [E022](#E022) | Invalid language code | 
+| [E023](#E023) | Invalid email | 
 
 ### Table of Warnings
 
@@ -34,14 +34,14 @@ Notices are declared in the [`Notice` module](https://github.com/MobilityData/gt
 | [W002](#W002) | | 
 | [W003](#W003) | | 
 | [W004](#W004) | | 
-| [W005](#W005) | Route description equals Route name | 
-| [W006](#W006) | Route Color Contrast | 
+| [W005](#W005) | Same name and description for route | 
+| [W006](#W006) | Insufficient route color contrast | 
 
 # Errors
 
 <a name="E022"/>
 
-### E022 - Invalid Language Code
+### E022 - Invalid language code
 
 Language codes used in a GTFS feed should be under the IETF BCP 47 format. Please visit links below for an introduction to IETF BCP 47.
 
@@ -51,9 +51,9 @@ Language codes used in a GTFS feed should be under the IETF BCP 47 format. Pleas
 
 <a name="E023"/>
 
-### E023 - Invalid Email
+### E023 - Invalid email
 
-An email should be a valid email address.
+An email should be a valid email address (e.g., contact@agency.org)
 
 #### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
@@ -62,16 +62,25 @@ An email should be a valid email address.
 
 <a name="W005"/>
 
-### W005 - Route description equals Route name
+### W005 - Same name and description for route
 
-A Route description should provide useful information about the Route, and should not duplicate from the Route long or short name. Although, the Route description may reuse the Route names to give explanations.
+The GTFS spec defines `routes.txt` [route_description](https://gtfs.org/reference/static/#routestxt) as:
+
+> Description of a route that provides useful, quality information. Do not simply duplicate the name of the route.
+
+See the GTFS and GTFS Best Practices links below for more examples of how to populate the `route_short_name`, `route_long_name`, and `route_description` fields.
+
+References:
+
+[GTFS routes.txt](http://gtfs.org/reference/static/#routestxt)
+[GTFS routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
 
 #### References:
 * [Route.txt Specification](http://gtfs.org/reference/static/#routestxt)
 
 <a name="W006"/>
 
-### W005 - Route Color Contrast
+### W005 - Insufficient route color contrast
 
 A Route color and a Route text color should be contrasting. Minimum Contrast Ratio allowed is 4.5. Contrast Ratio is computed according to the W3 Color Contrast Procedure. Please visit links below for more information about color contrast.
 

@@ -909,7 +909,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_STOP_WITH_SAME_NAME_AND_DESCRIPTION));
         verify(mockBuilder, times(1)).setSeverity(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -930,14 +930,16 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new RouteColorAndTextInsufficientContrastNotice(FILENAME, "entity_id"));
+        underTest.export(new RouteColorAndTextInsufficientContrastNotice(FILENAME, "entity_id", "0"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
         verify(mockBuilder, times(1)).setType(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_COLOR_CONTRAST));
         verify(mockBuilder, times(1)).setSeverity(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
+        verify(mockBuilder, times(1)).setAltEntityValue(
+                ArgumentMatchers.eq("0"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

@@ -22,16 +22,22 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 import java.io.IOException;
 
 public class RouteColorAndTextInsufficientContrastNotice extends WarningNotice {
+    private String contrastRatio;
 
-    public RouteColorAndTextInsufficientContrastNotice(final String filename, final String entityId) {
+    public RouteColorAndTextInsufficientContrastNotice(final String filename, final String entityId, final String contrastRatio) {
         super(filename, W_006,
-                "Route Color Contrast",
-                "Route color and text color are not contrasting enough for:" + entityId + " in file:" + filename,
+                "Route color and text have insufficient contrast",
+                "Contrast ratio should be >= 4.5 but was " + contrastRatio + " for Route:" + entityId + " in file:" + filename,
                 entityId);
+        this.contrastRatio = contrastRatio;
     }
 
     public String getEntityId() {
         return entityId;
+    }
+
+    public String getContrastRatio() {
+        return contrastRatio;
     }
 
     @Override

@@ -25,8 +25,8 @@ public class SameNameAndDescriptionForRouteNotice extends WarningNotice {
 
     public SameNameAndDescriptionForRouteNotice(final String filename, final String entityId) {
         super(filename, W_005,
-                "Route description equals Route name",
-                "Route description equals Route name for Route ID:" + entityId + " in file:" + filename,
+                "Same name and description for Route",
+                "Same name and description for Route ID:" + entityId + " in file:" + filename,
                 entityId);
     }
 

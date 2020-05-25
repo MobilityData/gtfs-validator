@@ -446,7 +446,7 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        RouteColorAndTextInsufficientContrastNotice toExport = new RouteColorAndTextInsufficientContrastNotice(FILENAME, "entity_id");
+        RouteColorAndTextInsufficientContrastNotice toExport = new RouteColorAndTextInsufficientContrastNotice(FILENAME, "entity_id", "0");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

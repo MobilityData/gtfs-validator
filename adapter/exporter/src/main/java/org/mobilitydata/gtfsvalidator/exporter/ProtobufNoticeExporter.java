@@ -366,7 +366,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_STOP_WITH_SAME_NAME_AND_DESCRIPTION)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -376,7 +376,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_COLOR_CONTRAST)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setAltEntityValue(toExport.getContrastRatio())
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

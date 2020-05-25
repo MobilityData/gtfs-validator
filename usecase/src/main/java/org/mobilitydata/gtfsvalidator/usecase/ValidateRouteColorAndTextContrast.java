@@ -41,6 +41,21 @@ public class ValidateRouteColorAndTextContrast {
     }
 
     /**
+     * Use case execution method: checks if Route color contrast enough with Route text color
+     * for every Routes in a {@link GtfsDataRepository}. A new notice is generated each time this condition is true.
+     * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
+     *
+     * @return a list of notices generated each time the contrast between the 2 colors is insufficient.
+     */
+    public void execute() {
+        Collection<Route> routes = dataRepo.getRouteAll();
+        routes.stream()
+                .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
+                .forEach(route -> resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("route.txt",
+                        route.getRouteId(), String.valueOf(contrast(route.getRouteColor(), route.getRouteTextColor())))));
+    }
+
+    /**
      * @param color an hexadecimal string representing a color. Ex. a5ff00
      * @return the resulting luminance for the color
      */
@@ -49,6 +64,8 @@ public class ValidateRouteColorAndTextContrast {
         int g = Integer.parseInt(color.substring(2, 4), 16);
         int b = Integer.parseInt(color.substring(4, 6), 16);
 
+        //W3 G17 formula is used to compute the luminance
+        //Ref. https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-procedure
         return (0.2126 * r + 0.7152 * g + 0.0722 * b);
     }
 
@@ -80,19 +97,5 @@ public class ValidateRouteColorAndTextContrast {
             areContrasting = contrast(routeColor, textColor) >= 4.5;
         }
         return areContrasting;
-    }
-
-    /**
-     * Use case execution method: checks if Route color contrast enough with Route text color
-     * for every Routes in a {@link GtfsDataRepository}. A new notice is generated each time this condition is true.
-     * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
-     *
-     * @return a list of notices generated each time the contrast between the 2 colors is insufficient.
-     */
-    public void execute() {
-        Collection<Route> routes = dataRepo.getRouteAll();
-        routes.stream()
-                .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
-                .forEach(route -> resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("route.txt", route.getRouteId())));
     }
 }
