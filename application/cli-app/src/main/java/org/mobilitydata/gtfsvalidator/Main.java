@@ -102,6 +102,10 @@ public class Main {
                         }
                     }
                 });
+
+                config.validateRouteColorAndTextContrast().execute();
+                config.validateRouteDescriptionAndNameAreDifferent().execute();
+
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
                 config.exportResultAsFile().execute();
