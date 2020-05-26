@@ -22,13 +22,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Class used to contain information about dependencies among files of a GTFS dataset
+ */
 public class GtfsNode {
     private String name;
     private List<GtfsNode> children;
-
-    // Default constructor present to enable deserialization by jackson of schema.json file
-    public GtfsNode() {
-    }
 
     public GtfsNode(final String name,
                     final List<GtfsNode> children) {
@@ -44,30 +43,21 @@ public class GtfsNode {
         return children != null ? children : new ArrayList<>();
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setChildren(List<GtfsNode> children) {
-        this.children = children;
-    }
-
     /**
      * Method returns the {@link GtfsNode} with name given as parameter
      *
      * @param nodeName name of the node to search in the tree
      * @return the {@link GtfsNode} with name nodeName
      */
-    public GtfsNode getChildWithName(final String nodeName) {
+    public GtfsNode getChildByName(final String nodeName) {
         return getChildren().stream().filter(child -> child.getName().equals(nodeName))
                 .findAny()
                 .orElseThrow(NullPointerException::new);
     }
 
     /**
-     * Method perform Depth First Search algorithm to find all nodes accessible from this node
-     *
-     * @param visited list of visited {@link GtfsNode}
+     * Method perform Depth First Search algorithm to find all reachable nodes from this node
+     * @param visited  list of visited {@link GtfsNode}
      * @return list of reachable nodes from this node
      */
     public HashSet<String> DFS(final HashSet<String> visited) {
