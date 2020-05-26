@@ -76,12 +76,10 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
     }
 
     /**
-     * Method verifies for all options (except --exclusion):
-     * - if option only has one argument
-     * Throws a ParseException if these requirement are not met
+     * Method verifies if all options only have one argument. Throws a ParseException if this requirement is not met.
      *
      * @param option option to analyze
-     * @throws ParseException if option (except --exclude) has more than one argument
+     * @throws ParseException if an option has more than one argument
      */
     private void verifyOptionArgumentLength(@NotNull final Option option) throws ParseException {
         if (option.getValues() != null && option.getValues().length > 1) {
@@ -91,14 +89,13 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
     }
 
     /**
-     * Method verifies for all options (except --exclusion):
-     * - if option have been declared once
-     * Throws a ParseException if these requirement are not met
+     * Method verifies if all options have been declared once. Throws a ParseException if this requirement is not met
      *
      * @param execParamCollection option collection
      * @param option              option to analyze
-     * @throws ParseException if option (except --exclude) has been declared more than once
+     * @throws ParseException if an option has been declared more than once
      */
+    @SuppressWarnings("SameReturnValue") // to avoid lint
     private boolean isOptionAlreadyDefined(@NotNull final Map<String, ExecParam> execParamCollection,
                                            @NotNull final Option option) throws ParseException {
         if (execParamCollection.containsKey(option.getLongOpt())) {
