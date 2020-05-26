@@ -159,7 +159,7 @@ public class DefaultConfig {
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {
-        return new GenerateExclusionFilenameList(specRepo, execParamRepo);
+        return new GenerateExclusionFilenameList(specRepo, execParamRepo, logger);
     }
 
     public GenerateFilenameListToProcess generateFilenameListToProcess() {

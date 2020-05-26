@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
@@ -26,30 +27,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class GenerateExclusionFilenameListTest {
 
     @Test
-    void malformedFilenameListShouldThrowException() {
+    void malformedFilenameListShouldLeadToValidationProcessWithoutFileExclusion() {
         final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
 
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
         when(mockExecParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY))
                 .thenReturn("[wrong_file_name.txt]");
 
-        final GenerateExclusionFilenameList underTest =
-                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo);
-        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::execute);
+        final Logger mockLogger = mock(Logger.class);
 
-        assertEquals("Some file requested to be excluded is not defined by the official " +
-                "GTFS specification: [wrong_file_name.txt]", exception.getMessage());
+        final GenerateExclusionFilenameList underTest =
+                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo, mockLogger);
+        final ArrayList<String> toCheck = underTest.execute();
+
+        verify(mockLogger, times(1)).info("Some file requested to be excluded is not" +
+                " defined by the official GTFS specification: [wrong_file_name.txt] -- will execute validation" +
+                " process without file exclusion");
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
         verify(mockGtfsSpecRepo, times(1)).getOptionalFilenameList();
         verify(mockGtfsSpecRepo, times(1)).getRequiredFilenameList();
-        verifyNoMoreInteractions(mockExecParamRepo, mockGtfsSpecRepo);
+        verify(mockGtfsSpecRepo, times(1)).getGtfsRelationshipDescriptor();
+        verifyNoMoreInteractions(mockExecParamRepo, mockGtfsSpecRepo, mockLogger);
+        assertEquals(0, toCheck.size());
     }
 
     @Test
@@ -75,8 +82,10 @@ class GenerateExclusionFilenameListTest {
                 .thenReturn("[level0_file]");
         when(mockGtfsSpecRepo.getGtfsRelationshipDescriptor()).thenReturn(mockRoot);
 
+        final Logger mockLogger = mock(Logger.class);
+
         final GenerateExclusionFilenameList underTest =
-                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo);
+                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo, mockLogger);
 
         final ArrayList<String> toCheck = underTest.execute();
 
@@ -123,8 +132,10 @@ class GenerateExclusionFilenameListTest {
                 .thenReturn("[level1_second_child,level1_first_child]");
         when(mockGtfsSpecRepo.getGtfsRelationshipDescriptor()).thenReturn(mockRoot);
 
+        final Logger mockLogger = mock(Logger.class);
+
         final GenerateExclusionFilenameList underTest =
-                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo);
+                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo, mockLogger);
 
         final ArrayList<String> toCheck = underTest.execute();
 
@@ -170,8 +181,10 @@ class GenerateExclusionFilenameListTest {
                 .thenReturn("[level2_only_child]");
         when(mockGtfsSpecRepo.getGtfsRelationshipDescriptor()).thenReturn(mockRoot);
 
+        final Logger mockLogger = mock(Logger.class);
+
         final GenerateExclusionFilenameList underTest =
-                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo);
+                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo, mockLogger);
 
         final ArrayList<String> toCheck = underTest.execute();
 

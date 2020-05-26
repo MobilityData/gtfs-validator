@@ -16,11 +16,15 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Use case to create list of filename on which the GTFS validation process should not be applied to
@@ -28,11 +32,14 @@ import java.util.*;
 public class GenerateExclusionFilenameList {
     private final GtfsSpecRepository gtfsSpecRepo;
     private final ExecParamRepository execParamRepo;
+    private final Logger logger;
 
     public GenerateExclusionFilenameList(final GtfsSpecRepository gtfsSpecRepo,
-                                         final ExecParamRepository execParamRepo) {
+                                         final ExecParamRepository execParamRepo,
+                                         final Logger logger) {
         this.gtfsSpecRepo = gtfsSpecRepo;
         this.execParamRepo = execParamRepo;
+        this.logger = logger;
     }
 
     /**
@@ -40,19 +47,20 @@ public class GenerateExclusionFilenameList {
      * applied to.
      */
     public ArrayList<String> execute() {
-        final List<String> toExcludeFromValidation =
-                Arrays.asList(execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY)
+        final ArrayList<String> toExcludeFromValidation =
+                new ArrayList<>(List.of(execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY)
                         .replace("[", "")
                         .replace("]", "")
-                        .split(","));
+                        .split(",")));
 
         final List<String> gtfsFilenameList = new ArrayList<>();
         gtfsFilenameList.addAll(gtfsSpecRepo.getRequiredFilenameList());
         gtfsFilenameList.addAll(gtfsSpecRepo.getOptionalFilenameList());
 
         if (!gtfsFilenameList.containsAll(toExcludeFromValidation)) {
-            throw new IllegalArgumentException("Some file requested to be excluded is not defined by the official " +
-                    "GTFS specification: " + toExcludeFromValidation);
+            logger.info("Some file requested to be excluded is not defined by the official GTFS specification: "
+                    + toExcludeFromValidation + " -- will execute validation process without file exclusion");
+            toExcludeFromValidation.clear();
         }
         final GtfsNode root = gtfsSpecRepo.getGtfsRelationshipDescriptor();
 
