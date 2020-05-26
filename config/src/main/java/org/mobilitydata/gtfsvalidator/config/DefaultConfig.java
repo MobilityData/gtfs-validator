@@ -163,6 +163,6 @@ public class DefaultConfig {
     }
 
     public GenerateFilenameListToProcess generateFilenameListToProcess() {
-        return new GenerateFilenameListToProcess();
+        return new GenerateFilenameListToProcess(logger);
     }
 }
