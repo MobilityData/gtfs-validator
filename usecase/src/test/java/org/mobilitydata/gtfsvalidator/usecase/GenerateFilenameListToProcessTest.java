@@ -26,37 +26,37 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class GenerateFilenameListToProcessTest {
 
     @Test
-    void executionMethodShouldReturnEmptyList() {
-        final List<String> toExclude = List.of("file0", "file1", "file2");
-        final List<String> toProcess = List.of("file0", "file1", "file2");
+    void excludeAllShouldReturnEmptyList() {
+        final ArrayList<String> toExclude = new ArrayList<>(List.of("file0", "file1", "file2"));
+        final ArrayList<String> toProcess = new ArrayList<>(List.of("file0", "file1", "file2"));
 
         final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess();
 
-        assertEquals(new ArrayList<>(), underTest.execute(toExclude, toProcess));
+        assertEquals(0, underTest.execute(toExclude, toProcess).size());
     }
 
     @Test
-    void executionMethodShouldReturnListOfSize1() {
-        final List<String> toExclude = List.of("file0", "file1");
-        final List<String> toProcess = List.of("file0", "file1", "file2");
+    void exclude2outOf3ShouldReturnListOfSize1() {
+        final ArrayList<String> toExclude = new ArrayList<>(List.of("file0", "file1"));
+        final ArrayList<String> toProcess = new ArrayList<>(List.of("file0", "file1", "file2"));
 
         final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess();
         assertEquals(List.of("file2"), underTest.execute(toExclude, toProcess));
     }
 
     @Test
-    void executionMethodShouldReturnListOfSize2() {
-        final List<String> toExclude = List.of("file0");
-        final List<String> toProcess = List.of("file0", "file1", "file2");
+    void exclude1outOf3ShouldReturnListOfSize2() {
+        final ArrayList<String> toExclude = new ArrayList<>(List.of("file0"));
+        final ArrayList<String> toProcess = new ArrayList<>(List.of("file0", "file1", "file2"));
 
         final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess();
         assertEquals(List.of("file1", "file2"), underTest.execute(toExclude, toProcess));
     }
 
     @Test
-    void executionMethodShouldReturnListOfSize3() {
-        final List<String> toProcess = List.of("file0", "file1", "file2");
-        final List<String> toExclude = List.of();
+    void exclude3outOf3ShouldReturnListOfSize0() {
+        final ArrayList<String> toProcess = new ArrayList<>(List.of("file0", "file1", "file2"));
+        final ArrayList<String> toExclude = new ArrayList<>();
 
         final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess();
         assertEquals(List.of("file0", "file1", "file2"), underTest.execute(toExclude, toProcess));

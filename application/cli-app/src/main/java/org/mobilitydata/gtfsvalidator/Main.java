@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.usecase.ValidateGtfsTypes;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -54,9 +55,9 @@ public class Main {
                         config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
                         .execute();
 
-                final List<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
+                final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
 
-                final List<String> datasetFilenameList = config.validateAllRequiredFilePresence().execute();
+                final ArrayList<String> datasetFilenameList = config.validateAllRequiredFilePresence().execute();
                 datasetFilenameList.addAll(config.validateAllOptionalFileName().execute());
 
                 final List<String> filenameListToProcess =

@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Use case to generate the list of filename to validate
@@ -32,13 +31,8 @@ public class GenerateFilenameListToProcess {
      * @param toProcess the list of files (required and optional) contained in the GTFS archive
      * @return the list of filename to validate
      */
-    public List<String> execute(final List<String> toExclude, final List<String> toProcess) {
-        final List<String> toReturn = new ArrayList<>();
-        for (String filename : toProcess) {
-            if (!toExclude.contains(filename)) {
-                toReturn.add(filename);
-            }
-        }
-        return toReturn;
+    public ArrayList<String> execute(final ArrayList<String> toExclude, final ArrayList<String> toProcess) {
+        toProcess.removeAll(toExclude);
+        return toProcess;
     }
 }

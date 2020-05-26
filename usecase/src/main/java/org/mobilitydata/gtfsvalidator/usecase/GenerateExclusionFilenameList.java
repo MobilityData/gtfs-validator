@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -42,7 +41,7 @@ public class GenerateExclusionFilenameList {
      * Use case execution method: returns the list of filename on which the GTFS validation should not be
      * applied to.
      */
-    public List<String> execute() {
+    public ArrayList<String> execute() {
         final String[] toExcludeFromValidation =
                 execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY)
                         .replace("[", "")
@@ -55,12 +54,12 @@ public class GenerateExclusionFilenameList {
 
         // TODO: check validity of user input
 
-        final GtfsNode root = gtfsSpecRepo.getGtfsDependencySchema();
+        final GtfsNode root = gtfsSpecRepo.getGtfsRelationshipDescriptor();
 
         final Set<String> toReturn = new HashSet<>();
         // search for all all reachable GtfsNode from each GtfsNode to exclude from validation
         for (String filename : toExcludeFromValidation) {
-            toReturn.addAll(root.getChildWithName(filename).DFS(new HashSet<>()));
+            toReturn.addAll(root.getChildByName(filename).DFS(new HashSet<>()));
         }
         return new ArrayList<>(toReturn);
     }
