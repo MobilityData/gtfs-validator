@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
@@ -61,38 +60,12 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
         final Map<String, ExecParam> toReturn = new HashMap<>();
         try {
             objectReader.readTree(parameterJsonString).fields()
-                    .forEachRemaining(field -> {
-                        if (!checkExistingOptions(toReturn, field)) {
-                            toReturn.put(field.getKey(), new ExecParam(field.getKey(), field.getValue().asText()));
-                        }
-                    });
+                    .forEachRemaining(field -> toReturn.put(field.getKey(), new ExecParam(field.getKey(), field.getValue().asText())));
             return toReturn;
         } catch (JsonProcessingException e) {
             logger.info("could not find execution-parameters.json file  -- will consider default values for" +
                     " execution parameters");
             return toReturn;
-        }
-    }
-
-    /**
-     * Method verifies for all options (except --exclusion):
-     * - if option have been declared once
-     * Throws a ParseException if these requirement are not met
-     *
-     * @param execParamCollection option collection
-     * @param option              option as {@code JsonNode} to analyze
-     * @throws RuntimeException if option (except --exclude) has been declared more than once
-     */
-    private boolean checkExistingOptions(final Map<String, ExecParam> execParamCollection,
-                                         final Map.Entry<String, JsonNode> option) throws RuntimeException {
-        if (execParamCollection.containsKey(option.getKey())) {
-            if (option.getKey().equals(ExecParamRepository.EXCLUSION_KEY)) {
-                return true;
-            } else {
-                throw new RuntimeException("Option: " + option.getKey() + "already defined");
-            }
-        } else {
-            return false;
         }
     }
 }
