@@ -1,15 +1,30 @@
-//package org.mobilitydata.gtfsvalidator.usecase;
-//
-//import com.fasterxml.jackson.databind.ObjectReader;
-//import org.junit.jupiter.api.Test;
-//
-//import java.io.IOException;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.Mockito.mock;
-//
-//class GenerateExclusionFilenameListTest {
+/*
+ * Copyright (c) 2020. MobilityData IO.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.mobilitydata.gtfsvalidator.usecase;
+
+import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+class GenerateExclusionFilenameListTest {
 //    private final static List<String> translationExclusionList = List.of("translations.txt");
 //    private final static List<String> attributionExclusionList = List.of("attributions.txt", "translations.txt");
 //    private final static List<String> feedIntoExclusionList = List.of("feed_info.txt", "translations.txt");
@@ -37,189 +52,39 @@
 //    private final static List<String> agencyExclusionList = List.of("agency.txt", "routes.txt",
 //            "fare_attributes.txt", "attributions.txt", "fare_rules.txt", "trips.txt", "frequencies.txt",
 //            "stop_times.txt", "translations.txt");
-//
-//
-//    private final static String schemaTreeAsString = "{\n" +
-//            "  \"agency.txt\": {\n" +
-//            "    \"routes.txt\": {\n" +
-//            "      \"trips.txt\": {\n" +
-//            "        \"attributions.txt\": {\n" +
-//            "          \"translations.txt\": {}\n" +
-//            "        },\n" +
-//            "        \"frequencies.txt\": {\n" +
-//            "          \"translations.txt\": {}\n" +
-//            "        },\n" +
-//            "        \"stop_times.txt\": {\n" +
-//            "          \"translations.txt\": {}\n" +
-//            "        }\n" +
-//            "      },\n" +
-//            "      \"fare_rules.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"attributions.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      }\n" +
-//            "    },\n" +
-//            "    \"fare_attributes.txt\": {\n" +
-//            "      \"fare_rules.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    },\n" +
-//            "    \"attributions.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    }\n" +
-//            "  },\n" +
-//            "  \"stops.txt\": {\n" +
-//            "    \"stop_times.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    },\n" +
-//            "    \"transfers.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    },\n" +
-//            "    \"pathways.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    }\n" +
-//            "  },\n" +
-//            "  \"routes.txt\": {\n" +
-//            "    \"trips.txt\": {\n" +
-//            "      \"attributions.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"frequencies.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"stop_times.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      }\n" +
-//            "    },\n" +
-//            "    \"fare_rules.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    },\n" +
-//            "    \"translations.txt\": {},\n" +
-//            "    \"attributions.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    }\n" +
-//            "  },\n" +
-//            "  \"trips.txt\": {\n" +
-//            "    \"stop_times.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    },\n" +
-//            "    \"frequencies.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    },\n" +
-//            "    \"translations.txt\": {},\n" +
-//            "    \"attributions.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    }\n" +
-//            "  },\n" +
-//            "  \"stop_times.txt\": {\n" +
-//            "    \"translations.txt\": {}\n" +
-//            "  },\n" +
-//            "  \"calendar.txt\": {\n" +
-//            "    \"translations.txt\": {},\n" +
-//            "    \"trips.txt\": {\n" +
-//            "      \"stop_times.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"frequencies.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"translations.txt\": {},\n" +
-//            "      \"attributions.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      }\n" +
-//            "    },\n" +
-//            "    \"calendar_dates.txt\": {\n" +
-//            "      \"translations.txt\": {},\n" +
-//            "      \"trips.txt\": {\n" +
-//            "        \"stop_times.txt\": {\n" +
-//            "          \"translations.txt\": {}\n" +
-//            "        },\n" +
-//            "        \"frequencies.txt\": {\n" +
-//            "          \"translations.txt\": {}\n" +
-//            "        },\n" +
-//            "        \"translations.txt\": {},\n" +
-//            "        \"attributions.txt\": {\n" +
-//            "          \"translations.txt\": {}\n" +
-//            "        }\n" +
-//            "      }\n" +
-//            "    }\n" +
-//            "  },\n" +
-//            "  \"calendar_dates.txt\": {\n" +
-//            "    \"translations.txt\": {},\n" +
-//            "    \"trips.txt\": {\n" +
-//            "      \"stop_times.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"frequencies.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"translations.txt\": {},\n" +
-//            "      \"attributions.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      }\n" +
-//            "    }\n" +
-//            "  },\n" +
-//            "  \"fare_attributes.txt\": {\n" +
-//            "    \"fare_rules.txt\": {\n" +
-//            "      \"translations.txt\": {}\n" +
-//            "    },\n" +
-//            "    \"translations.txt\": {}\n" +
-//            "  },\n" +
-//            "  \"fare_rules.txt\": {\n" +
-//            "    \"translations.txt\": {}\n" +
-//            "  },\n" +
-//            "  \"shapes.txt\": {\n" +
-//            "    \"translations.txt\": {},\n" +
-//            "    \"trips.txt\": {\n" +
-//            "      \"stop_times.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"frequencies.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"attributions.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      }\n" +
-//            "    }\n" +
-//            "  },\n" +
-//            "  \"frequencies.txt\": {\n" +
-//            "    \"translations.txt\": {}\n" +
-//            "  },\n" +
-//            "  \"transfers.txt\": {\n" +
-//            "    \"translations.txt\": {}\n" +
-//            "  },\n" +
-//            "  \"pathways.txt\": {\n" +
-//            "    \"translations.txt\": {}\n" +
-//            "  },\n" +
-//            "  \"levels.txt\": {\n" +
-//            "    \"stops.txt\": {\n" +
-//            "      \"stop_times.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      },\n" +
-//            "      \"transfers.txt\": {},\n" +
-//            "      \"pathways.txt\": {\n" +
-//            "        \"translations.txt\": {}\n" +
-//            "      }\n" +
-//            "    },\n" +
-//            "    \"translations.txt\": {}\n" +
-//            "  },\n" +
-//            "  \"translations.txt\": {},\n" +
-//            "  \"feed_info.txt\": {\n" +
-//            "    \"translations.txt\": {}\n" +
-//            "  },\n" +
-//            "  \"attributions.txt\": {\n" +
-//            "    \"translations.txt\": {}\n" +
-//            "  }\n" +
-//            "}";
-//
+
+    @Test
+    void malformedFilenameListShouldThrowException() {
+        final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
+
+        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY))
+                .thenReturn("[wrong_file_name.txt]");
+
+        final GenerateExclusionFilenameList underTest =
+                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo);
+        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::execute);
+
+        assertEquals("Filename list to exclude is malformed: [wrong_file_name.txt]", exception.getMessage());
+        verify(mockExecParamRepo, times(1)).getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
+        verify(mockGtfsSpecRepo, times(1)).getOptionalFilenameList();
+        verify(mockGtfsSpecRepo, times(1)).getRequiredFilenameList();
+        verifyNoMoreInteractions(mockExecParamRepo, mockGtfsSpecRepo);
+    }
+
 //    @Test
-//    void excludeAttributionShouldReturnAttributionExclusionList() throws IOException {
-//        final ObjectReader mockObjectReader = mock(ObjectReader.class);
+//    void malformedFilenameListShouldThrowException() {
+//        final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
+//
+//        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+//        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY))
+//                .thenReturn("[wrong_file_name.txt]");
+//
 //        final GenerateExclusionFilenameList underTest =
-//                new GenerateExclusionFilenameList(schemaTreeAsString, mockObjectReader);
-//        assertEquals(attributionExclusionList, underTest.execute(List.of("attributions.txt")));
+//                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo);
+//        final Exception exception = assertThrows(IllegalArgumentException.class, underTest::execute);
+//
+//        assertEquals("Filename list to exclude is malformed: [wrong_file_name.txt]", exception.getMessage());
 //    }
 //
 //    @Test
@@ -408,4 +273,4 @@
 //            assertTrue(agencyExclusionList.contains(filename));
 //        }
 //    }
-//}
+}

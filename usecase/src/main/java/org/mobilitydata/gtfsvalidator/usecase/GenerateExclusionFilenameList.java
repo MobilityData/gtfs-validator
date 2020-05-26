@@ -20,9 +20,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Use case to create list of filename on which the GTFS validation process should not be applied to
@@ -42,18 +40,19 @@ public class GenerateExclusionFilenameList {
      * applied to.
      */
     public ArrayList<String> execute() {
-        final String[] toExcludeFromValidation =
-                execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY)
+        final List<String> toExcludeFromValidation =
+                Arrays.asList(execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY)
                         .replace("[", "")
                         .replace("]", "")
-                        .split(",");
+                        .split(","));
 
-//        final List<String> gtfsFilenameList = new ArrayList<>();
-//        gtfsFilenameList.addAll(gtfsSpecRepo.getRequiredFilenameList());
-//        gtfsFilenameList.addAll(gtfsSpecRepo.getOptionalFilenameList());
+        final List<String> gtfsFilenameList = new ArrayList<>();
+        gtfsFilenameList.addAll(gtfsSpecRepo.getRequiredFilenameList());
+        gtfsFilenameList.addAll(gtfsSpecRepo.getOptionalFilenameList());
 
-        // TODO: check validity of user input
-
+        if (!gtfsFilenameList.containsAll(toExcludeFromValidation)) {
+            throw new IllegalArgumentException("Filename list to exclude is malformed: " + toExcludeFromValidation);
+        }
         final GtfsNode root = gtfsSpecRepo.getGtfsRelationshipDescriptor();
 
         final Set<String> toReturn = new HashSet<>();
