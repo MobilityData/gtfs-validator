@@ -30,27 +30,27 @@ import static org.mockito.Mockito.*;
 public class GtfsNodeMakerTest {
 
     @Test
-    public void gtfsNodeMakerShouldExtractAsGtfsNode() {
+    public void gtfsNodeMakerShouldExtractAsGtfsTreeRootNode() {
         final GtfsNode mockGtfsNode = mock(GtfsNode.class);
 
         final GtfsNodeMaker mockChild0 = mock(GtfsNodeMaker.class);
         when(mockChild0.getChildren()).thenReturn(null);
-        when(mockChild0.toGtfsNode()).thenReturn(mockGtfsNode);
+        when(mockChild0.toGtfsTreeRootNode()).thenReturn(mockGtfsNode);
 
         final GtfsNodeMaker mockChild1 = mock(GtfsNodeMaker.class);
         when(mockChild1.getChildren()).thenReturn(null);
-        when(mockChild1.toGtfsNode()).thenReturn(mockGtfsNode);
+        when(mockChild1.toGtfsTreeRootNode()).thenReturn(mockGtfsNode);
 
         final List<GtfsNodeMaker> childrenCollection = new ArrayList<>(List.of(mockChild0, mockChild1));
         final GtfsNodeMaker underTest = new GtfsNodeMaker("root", childrenCollection);
 
-        final GtfsNode toCheck = underTest.toGtfsNode();
+        final GtfsNode toCheck = underTest.toGtfsTreeRootNode();
         assertEquals(2, toCheck.getChildren().size());
         assertEquals(mockGtfsNode, toCheck.getChildren().get(0));
         assertEquals(mockGtfsNode, toCheck.getChildren().get(1));
 
-        verify(mockChild0, times(1)).toGtfsNode();
-        verify(mockChild1, times(1)).toGtfsNode();
+        verify(mockChild0, times(1)).toGtfsTreeRootNode();
+        verify(mockChild1, times(1)).toGtfsTreeRootNode();
 
         verifyNoMoreInteractions(mockChild0, mockChild1, mockGtfsNode);
     }

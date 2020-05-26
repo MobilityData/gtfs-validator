@@ -37,8 +37,8 @@ public class GtfsNodeMaker {
     private String name;
     private List<GtfsNodeMaker> children;
 
-    @SuppressWarnings("unused") // to avoid lint, default constructor is actually used during deserialization of JSON
-    // file by Jackson
+    // to avoid lint, default constructor is actually used during deserialization of JSON file by Jackson
+    @SuppressWarnings("unused")
     public GtfsNodeMaker() {
     }
 
@@ -60,9 +60,9 @@ public class GtfsNodeMaker {
      *
      * @return the {@link GtfsNode} extracted from this {@link GtfsNodeMaker}
      */
-    public GtfsNode toGtfsNode() {
+    public GtfsNode toGtfsTreeRootNode() {
         final ArrayList<GtfsNode> childGtfsNodeCollection = new ArrayList<>();
-        getChildren().forEach(child -> childGtfsNodeCollection.add(child.toGtfsNode()));
+        getChildren().forEach(child -> childGtfsNodeCollection.add(child.toGtfsTreeRootNode()));
         return new GtfsNode(getName(), childGtfsNodeCollection);
     }
 }

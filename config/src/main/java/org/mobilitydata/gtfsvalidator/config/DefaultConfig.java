@@ -71,7 +71,8 @@ public class DefaultConfig {
         String gtfsSchemaAsString = null;
 
         try {
-            gtfsSchemaAsString = Resources.toString(Resources.getResource("schema.json"),
+            gtfsSchemaAsString = Resources.toString(
+                    Resources.getResource("gtfs-relationship-description.json"),
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();

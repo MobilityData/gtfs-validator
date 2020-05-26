@@ -16,14 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.TextFormat;
 import org.apache.commons.validator.routines.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
-import org.mobilitydata.gtfsvalidator.parser.GtfsSchemaParser;
+import org.mobilitydata.gtfsvalidator.parser.GtfsRelationshipParser;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
@@ -43,7 +42,7 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     private final GtfsSpecificationProto.CsvSpecProtos inMemoryGTFSSpec;
     private final Map<String, ParsedEntityTypeValidator> validatorByFilenameCache = new HashMap<>();
-    private final GtfsNode inMemoryGtfsSchema;
+    private final GtfsNode inMemoryGtfsRelationshipDescriptor;
 
     private static final String[] VALID_URL_SCHEMES = {"http", "https"};
     private static final String VALID_COLOR_REGEX_PATTERN = "[0-9a-fA-F]{6}";
@@ -61,16 +60,16 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
             GtfsSpec = null;
             e.printStackTrace();
         }
-        GtfsNode gtfsSchema;
+        GtfsNode relationshipDescriptor;
         try {
-            gtfsSchema = new GtfsSchemaParser(new ObjectMapper().readerFor(GtfsNodeMaker.class))
+            relationshipDescriptor = new GtfsRelationshipParser(new ObjectMapper().readerFor(GtfsNodeMaker.class))
                     .parse(gtfsSchemaAsString);
-        } catch (JsonProcessingException e) {
-            gtfsSchema = null;
+        } catch (IOException e) {
+            relationshipDescriptor = null;
             e.printStackTrace();
         }
         inMemoryGTFSSpec = GtfsSpec;
-        inMemoryGtfsSchema = gtfsSchema;
+        inMemoryGtfsRelationshipDescriptor = relationshipDescriptor;
     }
 
     /**
@@ -202,18 +201,8 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
         return toReturn;
     }
 
-    /**
-     * Returns the parser to read the GTFS data structure from a JSON file
-     *
-     * @return the parser to read the GTFS data structure from a JSON file
-     */
     @Override
-    public SchemaParser getParserForGtfsSchema() {
-        return new GtfsSchemaParser(new ObjectMapper().readerFor(GtfsNodeMaker.class));
-    }
-
-    @Override
-    public GtfsNode getGtfsDependencySchema() {
-        return inMemoryGtfsSchema;
+    public GtfsNode getGtfsRelationshipDescriptor() {
+        return inMemoryGtfsRelationshipDescriptor;
     }
 }

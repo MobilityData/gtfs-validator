@@ -24,14 +24,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.moblitydata.gtfsvalidator.tree.GtfsNodeMaker;
 
+import java.io.IOException;
+
 /**
  * This provides context to go from execution parameters contained in an .json file to an internal representation using
  * {@code ExecParam}.
  */
-public class GtfsSchemaParser implements GtfsSpecRepository.SchemaParser {
+public class GtfsRelationshipParser implements GtfsSpecRepository.RelationshipDescriptorParser {
     private final ObjectReader objectReader;
 
-    public GtfsSchemaParser(final ObjectReader objectReader) {
+    public GtfsRelationshipParser(final ObjectReader objectReader) {
         this.objectReader = objectReader;
     }
 
@@ -42,8 +44,13 @@ public class GtfsSchemaParser implements GtfsSpecRepository.SchemaParser {
      * @return a GtfsNode representing the dependencies among GTFS files from a Json file containing this information
      * @throws JsonProcessingException if Json file is malformed
      */
-    public GtfsNode parse(final String gtfsSchemaAsString) throws JsonProcessingException {
-        final GtfsNodeMaker nodeMaker = objectReader.readValue(gtfsSchemaAsString);
-        return nodeMaker.toGtfsNode();
+    public GtfsNode parse(final String gtfsSchemaAsString) throws IOException {
+        try {
+            final GtfsNodeMaker nodeMaker = objectReader.readValue(gtfsSchemaAsString);
+            return nodeMaker.toGtfsTreeRootNode();
+        } catch (JsonProcessingException e) {
+            throw new IOException("GTFS Relationships are malformed in file gtfs-relationship-description.json. " +
+                    "Please refer to documentation.");
+        }
     }
 }

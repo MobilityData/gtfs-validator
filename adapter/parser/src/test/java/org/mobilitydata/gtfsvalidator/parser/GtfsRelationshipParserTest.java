@@ -18,7 +18,6 @@
 
 package org.mobilitydata.gtfsvalidator.parser;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.junit.jupiter.api.Test;
@@ -31,7 +30,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class GtfsSchemaParserTest {
+public class GtfsRelationshipParserTest {
 
     @Test
     void schemaShouldBeParsedAsGtfsNode() throws IOException {
@@ -43,18 +42,18 @@ public class GtfsSchemaParserTest {
                 "                    ]\n" +
                 "        }";
         final ObjectReader mockObjectReader = new ObjectMapper().readerFor(GtfsNodeMaker.class);
-        final GtfsSchemaParser underTest = new GtfsSchemaParser(mockObjectReader);
+        final GtfsRelationshipParser underTest = new GtfsRelationshipParser(mockObjectReader);
 
         final GtfsNode toCheck = underTest.parse(schemaAsString);
 
         assertEquals("root", toCheck.getName());
         assertEquals(2, toCheck.getChildren().size());
 
-        assertEquals("left child", toCheck.getChildWithName("left child").getName());
-        assertEquals(List.of(), toCheck.getChildWithName("left child").getChildren());
+        assertEquals("left child", toCheck.getChildByName("left child").getName());
+        assertEquals(List.of(), toCheck.getChildByName("left child").getChildren());
 
-        assertEquals("right child", toCheck.getChildWithName("right child").getName());
-        assertEquals(List.of(), toCheck.getChildWithName("right child").getChildren());
+        assertEquals("right child", toCheck.getChildByName("right child").getName());
+        assertEquals(List.of(), toCheck.getChildByName("right child").getChildren());
     }
 
     @Test
@@ -67,8 +66,10 @@ public class GtfsSchemaParserTest {
                 "                    ]\n" +
                 "        }";
         final ObjectReader mockObjectReader = new ObjectMapper().readerFor(GtfsNodeMaker.class);
-        final GtfsSchemaParser underTest = new GtfsSchemaParser(mockObjectReader);
+        final GtfsRelationshipParser underTest = new GtfsRelationshipParser(mockObjectReader);
 
-        assertThrows(JsonProcessingException.class, () -> underTest.parse(schemaAsString));
+        final Exception exception = assertThrows(IOException.class, () -> underTest.parse(schemaAsString));
+        assertEquals("GTFS Relationships are malformed in file gtfs-relationship-description.json." +
+                " Please refer to documentation.", exception.getMessage());
     }
 }

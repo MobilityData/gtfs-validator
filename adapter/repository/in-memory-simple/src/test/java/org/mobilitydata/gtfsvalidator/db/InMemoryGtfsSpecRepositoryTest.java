@@ -47,7 +47,7 @@ class InMemoryGtfsSpecRepositoryTest {
 
     private static String testSchemaAsString() throws IOException {
         //noinspection UnstableApiUsage
-        return Resources.toString(Resources.getResource("test-schema.json"),
+        return Resources.toString(Resources.getResource("test-relationship-file.json"),
                 StandardCharsets.UTF_8);
     }
 
