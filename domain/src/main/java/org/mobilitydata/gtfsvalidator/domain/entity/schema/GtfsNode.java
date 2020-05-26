@@ -29,6 +29,10 @@ public class GtfsNode {
     private String name;
     private List<GtfsNode> children;
 
+    // Default constructor is required for tests
+    public GtfsNode() {
+    }
+
     public GtfsNode(final String name,
                     final List<GtfsNode> children) {
         this.name = name;

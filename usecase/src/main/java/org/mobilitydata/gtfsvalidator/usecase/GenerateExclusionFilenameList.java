@@ -51,12 +51,13 @@ public class GenerateExclusionFilenameList {
         gtfsFilenameList.addAll(gtfsSpecRepo.getOptionalFilenameList());
 
         if (!gtfsFilenameList.containsAll(toExcludeFromValidation)) {
-            throw new IllegalArgumentException("Filename list to exclude is malformed: " + toExcludeFromValidation);
+            throw new IllegalArgumentException("Some file requested to be excluded is not defined by the official " +
+                    "GTFS specification: " + toExcludeFromValidation);
         }
         final GtfsNode root = gtfsSpecRepo.getGtfsRelationshipDescriptor();
 
         final Set<String> toReturn = new HashSet<>();
-        // search for all all reachable GtfsNode from each GtfsNode to exclude from validation
+        // search for all reachable GtfsNode from each GtfsNode to exclude from validation
         for (String filename : toExcludeFromValidation) {
             toReturn.addAll(root.getChildByName(filename).DFS(new HashSet<>()));
         }
