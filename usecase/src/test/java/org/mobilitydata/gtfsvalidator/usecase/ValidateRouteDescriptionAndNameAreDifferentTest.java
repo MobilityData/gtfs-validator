@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
@@ -41,9 +42,12 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -69,9 +73,12 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -97,9 +104,12 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -126,9 +136,12 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();

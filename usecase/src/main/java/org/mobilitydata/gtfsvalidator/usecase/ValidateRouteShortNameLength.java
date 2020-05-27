@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -27,18 +28,21 @@ import java.util.Collection;
  * Use case to validate that a Route short name is not longer than 12 characters.
  */
 public class ValidateRouteShortNameLength implements ValidationUsecase {
-
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
+    private final Logger logger;
 
     /**
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
+     * @param logger
      */
     public ValidateRouteShortNameLength(final GtfsDataRepository dataRepo,
-                                        final ValidationResultRepository resultRepo) {
+                                        final ValidationResultRepository resultRepo,
+                                        final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
+        this.logger = logger;
     }
 
     /**
@@ -50,6 +54,7 @@ public class ValidateRouteShortNameLength implements ValidationUsecase {
      */
     @Override
     public void execute() {
+        logger.info("Validating route short name length");
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteShortName(route.getRouteShortName())))

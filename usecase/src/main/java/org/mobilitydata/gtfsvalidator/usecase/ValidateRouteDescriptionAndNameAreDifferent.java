@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -27,18 +28,20 @@ import java.util.Collection;
  * Use case to validate that a Route description is different than the Route name.
  */
 public class ValidateRouteDescriptionAndNameAreDifferent implements ValidationUsecase {
-
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
+    private final Logger logger;
 
     /**
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
      */
     public ValidateRouteDescriptionAndNameAreDifferent(final GtfsDataRepository dataRepo,
-                                                       final ValidationResultRepository resultRepo) {
+                                                       final ValidationResultRepository resultRepo,
+                                                       final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
+        this.logger = logger;
     }
 
     /**
@@ -50,7 +53,8 @@ public class ValidateRouteDescriptionAndNameAreDifferent implements ValidationUs
      */
     @Override
     public void execute() {
-        Collection<Route> routes = dataRepo.getRouteAll();
+        logger.info("Validating route description and name are different");
+        final Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName())))
                 .forEach(route -> resultRepo.addNotice(new SameNameAndDescriptionForRouteNotice("route.txt", route.getRouteId())));
