@@ -26,7 +26,7 @@ import java.util.Collection;
 /**
  * Use case to validate that a Route color contrast with a Route text color.
  */
-public class ValidateRouteColorAndTextContrast {
+public class ValidateRouteColorAndTextContrast implements ValidationUsecase {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
 
@@ -47,6 +47,7 @@ public class ValidateRouteColorAndTextContrast {
      *
      * @return a list of notices generated each time the contrast between the 2 colors is insufficient.
      */
+    @Override
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()

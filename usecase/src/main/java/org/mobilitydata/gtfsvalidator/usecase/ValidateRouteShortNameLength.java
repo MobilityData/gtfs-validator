@@ -26,7 +26,7 @@ import java.util.Collection;
 /**
  * Use case to validate that a Route short name is not longer than 12 characters.
  */
-public class ValidateRouteShortNameLength {
+public class ValidateRouteShortNameLength implements ValidationUsecase {
 
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
@@ -48,6 +48,7 @@ public class ValidateRouteShortNameLength {
      *
      * @return a list of notices generated each time a Route short name is longer than 12 characters.
      */
+    @Override
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()

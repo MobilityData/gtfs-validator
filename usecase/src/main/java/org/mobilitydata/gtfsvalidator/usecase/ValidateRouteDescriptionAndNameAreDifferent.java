@@ -26,7 +26,7 @@ import java.util.Collection;
 /**
  * Use case to validate that a Route description is different than the Route name.
  */
-public class ValidateRouteDescriptionAndNameAreDifferent {
+public class ValidateRouteDescriptionAndNameAreDifferent implements ValidationUsecase {
 
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
@@ -48,6 +48,7 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
      *
      * @return a list of notices generated each time a Route description equals the Route long or short name.
      */
+    @Override
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
