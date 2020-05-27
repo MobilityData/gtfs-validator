@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Use case to retrieve the list of use cases to execute in order to process to validation of GTFS dataset
+ */
 public class GetValidationUsecaseAll {
     private final Map<String, List<ValidationUsecase>> usecaseByFilename;
 
@@ -29,6 +32,13 @@ public class GetValidationUsecaseAll {
         this.usecaseByFilename = usecaseByFilename;
     }
 
+    /**
+     * Use case execution method: returns the list of use cases to execute in order to process to validation of GTFS
+     * dataset
+     *
+     * @param filenameListToProcess the list of files to validate
+     * @return the list of use cases to execute
+     */
     public List<ValidationUsecase> execute(final List<String> filenameListToProcess) {
         final List<ValidationUsecase> toReturn = new ArrayList<>();
         filenameListToProcess.forEach(filename ->

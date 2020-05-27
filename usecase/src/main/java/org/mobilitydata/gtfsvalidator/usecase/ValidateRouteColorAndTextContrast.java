@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteColorAndTextInsufficientContrastNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -29,15 +30,18 @@ import java.util.Collection;
 public class ValidateRouteColorAndTextContrast implements ValidationUsecase {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
+    private final Logger logger;
 
     /**
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
      */
     public ValidateRouteColorAndTextContrast(final GtfsDataRepository dataRepo,
-                                             final ValidationResultRepository resultRepo) {
+                                             final ValidationResultRepository resultRepo,
+                                             final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
+        this.logger = logger;
     }
 
     /**
@@ -49,6 +53,7 @@ public class ValidateRouteColorAndTextContrast implements ValidationUsecase {
      */
     @Override
     public void execute() {
+        logger.info("Validating route color and text contrast");
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))

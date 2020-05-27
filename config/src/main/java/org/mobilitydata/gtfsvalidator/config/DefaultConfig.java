@@ -31,10 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -91,6 +88,7 @@ public class DefaultConfig {
         routeRelatedUsecaseCollection.add(validateRouteDescriptionAndNameAreDifferent());
 
         usecaseByFilename.put("routes.txt", routeRelatedUsecaseCollection);
+        usecaseByFilename.put("agency.txt", Collections.emptyList());
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
@@ -147,15 +145,15 @@ public class DefaultConfig {
     }
 
     public ValidateRouteColorAndTextContrast validateRouteColorAndTextContrast() {
-        return new ValidateRouteColorAndTextContrast(gtfsDataRepository, resultRepo);
+        return new ValidateRouteColorAndTextContrast(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteDescriptionAndNameAreDifferent validateRouteDescriptionAndNameAreDifferent() {
-        return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo);
+        return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteShortNameLength validateRouteShortNameLength() {
-        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo);
+        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo, logger);
     }
 
     public ExportResultAsFile exportResultAsFile() {

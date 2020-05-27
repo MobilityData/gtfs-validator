@@ -19,6 +19,5 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 public interface ValidationUsecase {
-
     void execute();
 }
