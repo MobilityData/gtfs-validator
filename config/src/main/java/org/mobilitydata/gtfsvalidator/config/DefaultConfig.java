@@ -31,6 +31,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -43,6 +47,7 @@ public class DefaultConfig {
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
+    private final Map<String, List<ValidationUsecase>> usecaseByFilename;
 
     @SuppressWarnings("UnstableApiUsage")
     public DefaultConfig(final Logger logger) {
@@ -78,6 +83,14 @@ public class DefaultConfig {
             e.printStackTrace();
         }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
+
+        this.usecaseByFilename = new HashMap<>();
+        final List<ValidationUsecase> routeRelatedUsecaseCollection = new ArrayList<>();
+        routeRelatedUsecaseCollection.add(validateRouteShortNameLength());
+        routeRelatedUsecaseCollection.add(validateRouteColorAndTextContrast());
+        routeRelatedUsecaseCollection.add(validateRouteDescriptionAndNameAreDifferent());
+
+        usecaseByFilename.put("routes.txt", routeRelatedUsecaseCollection);
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
@@ -176,5 +189,9 @@ public class DefaultConfig {
 
     public GenerateFilenameListToProcess generateFilenameListToProcess() {
         return new GenerateFilenameListToProcess(logger);
+    }
+
+    public GetValidationUsecaseAll getValidationUsecaseAll() {
+        return new GetValidationUsecaseAll(usecaseByFilename);
     }
 }
