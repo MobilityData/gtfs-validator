@@ -20,10 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
-import org.mobilitydata.gtfsvalidator.usecase.ProcessParsedAgency;
-import org.mobilitydata.gtfsvalidator.usecase.ProcessParsedRoute;
-import org.mobilitydata.gtfsvalidator.usecase.ValidateGtfsTypes;
+import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
@@ -99,9 +96,7 @@ public class Main {
                     }
                 });
 
-                config.validateRouteShortNameLength().execute();
-                config.validateRouteColorAndTextContrast().execute();
-                config.validateRouteDescriptionAndNameAreDifferent().execute();
+                config.getValidationUsecaseAll().execute(filenameListToProcess).forEach(ValidationUsecase::execute);
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
