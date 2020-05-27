@@ -196,4 +196,34 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(RouteShortNameTooLongNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(InvalidRouteTypeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(MissingBothRouteNamesNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(MissingRouteShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(MissingRouteLongNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(RouteLongNameEqualsShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(RouteLongNameContainsShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

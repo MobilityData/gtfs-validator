@@ -21,22 +21,22 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class SameNameAndDescriptionForRouteNotice extends ErrorNotice {
+public class InvalidRouteTypeNotice extends ErrorNotice {
 
-    public SameNameAndDescriptionForRouteNotice(final String filename, final String entityId) {
-        super(filename, E_024,
-                "Same name and description for Route",
-                "Same name and description for Route ID:" + entityId + " in file:" + filename,
+    public InvalidRouteTypeNotice(final String filename, final String entityId) {
+        super(filename, E_026,
+                "Invalid Route type",
+                "Invalid Route type for Route with id:" + entityId + " in file:" + filename +
+                        ". A Route type should be an integer between 0 and 12.",
                 entityId);
+    }
+
+    @Override
+    public void export(final NoticeExporter exporter) throws IOException {
+        exporter.export(this);
     }
 
     public String getEntityId() {
         return entityId;
-    }
-
-    @Override
-    public void export(final NoticeExporter exporter)
-            throws IOException {
-        exporter.export(this);
     }
 }

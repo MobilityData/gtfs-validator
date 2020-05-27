@@ -44,6 +44,8 @@ public abstract class ErrorNotice extends Notice {
     protected static final String E_024 = "E024";
     protected static final String E_025 = "E025";
     protected static final String E_026 = "E026";
+    protected static final String E_027 = "E027";
+    protected static final String E_028 = "E028";
 
     public ErrorNotice(final String filename,
                        final String noticeId,

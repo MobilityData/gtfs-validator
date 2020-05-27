@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class SameNameAndDescriptionForRouteNotice extends ErrorNotice {
+public class RouteLongNameContainsShortNameNotice extends WarningNotice {
 
-    public SameNameAndDescriptionForRouteNotice(final String filename, final String entityId) {
-        super(filename, E_024,
-                "Same name and description for Route",
-                "Same name and description for Route ID:" + entityId + " in file:" + filename,
+    public RouteLongNameContainsShortNameNotice(final String filename, final String entityId) {
+        super(filename, W_008,
+                "Route long name contains Route short name",
+                "Route long name contains Route short name:" + entityId + " in file:" + filename +
+                        ". Route long name and should not contain the Route short name .",
                 entityId);
+    }
+
+    @Override
+    public void export(final NoticeExporter exporter) throws IOException {
+        exporter.export(this);
     }
 
     public String getEntityId() {
         return entityId;
-    }
-
-    @Override
-    public void export(final NoticeExporter exporter)
-            throws IOException {
-        exporter.export(this);
     }
 }

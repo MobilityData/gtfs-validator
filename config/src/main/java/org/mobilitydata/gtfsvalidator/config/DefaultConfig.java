@@ -136,6 +136,18 @@ public class DefaultConfig {
         return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo);
     }
 
+    public ValidateRouteTypeIsInOptions validateRouteTypeIsInOptions() {
+        return new ValidateRouteTypeIsInOptions(gtfsDataRepository, resultRepo);
+    }
+
+    public ValidateBothRouteNamesPresence validateBothRouteNamesPresence() {
+        return new ValidateBothRouteNamesPresence(gtfsDataRepository, resultRepo);
+    }
+
+    public ValidateRouteLongNameDoesNotContainShortName validateRouteLongNameDoesNotContainShortName() {
+        return new ValidateRouteLongNameDoesNotContainShortName(gtfsDataRepository, resultRepo);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }

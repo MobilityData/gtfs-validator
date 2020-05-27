@@ -25,7 +25,7 @@ public class RouteColorAndTextInsufficientContrastNotice extends ErrorNotice {
     private String contrastRatio;
 
     public RouteColorAndTextInsufficientContrastNotice(final String filename, final String entityId, final String contrastRatio) {
-        super(filename, E_026,
+        super(filename, E_025,
                 "Route color and text have insufficient contrast",
                 "Contrast ratio should be >= 4.5 but was " + contrastRatio + " for Route:" + entityId + " in file:" + filename +
                         ". The route_text_color and route_color should be set to contrasting colors, as they are used " +

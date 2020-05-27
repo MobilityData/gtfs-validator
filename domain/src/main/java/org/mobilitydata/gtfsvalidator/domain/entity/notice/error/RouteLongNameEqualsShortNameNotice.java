@@ -21,22 +21,22 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class SameNameAndDescriptionForRouteNotice extends ErrorNotice {
+public class RouteLongNameEqualsShortNameNotice extends ErrorNotice {
 
-    public SameNameAndDescriptionForRouteNotice(final String filename, final String entityId) {
-        super(filename, E_024,
-                "Same name and description for Route",
-                "Same name and description for Route ID:" + entityId + " in file:" + filename,
+    public RouteLongNameEqualsShortNameNotice(final String filename, final String entityId) {
+        super(filename, E_028,
+                "Route long name equals Route short name",
+                "Route long name equals Route short name:" + entityId + " in file:" + filename +
+                        ". Route long name and Route short name should not be the exact same.",
                 entityId);
+    }
+
+    @Override
+    public void export(final NoticeExporter exporter) throws IOException {
+        exporter.export(this);
     }
 
     public String getEntityId() {
         return entityId;
-    }
-
-    @Override
-    public void export(final NoticeExporter exporter)
-            throws IOException {
-        exporter.export(this);
     }
 }

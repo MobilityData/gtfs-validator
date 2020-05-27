@@ -42,11 +42,9 @@ public class ValidateRouteShortNameLength {
     }
 
     /**
-     * Use case execution method: checks if Route short name is not longer than 12 characters
+     * Use case execution method: checks if Route short name is longer than 12 characters
      * for every Routes in a {@link GtfsDataRepository}. A new notice is generated each time this condition is true.
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
-     *
-     * @return a list of notices generated each time a Route short name is longer than 12 characters.
      */
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();

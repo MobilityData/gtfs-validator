@@ -41,11 +41,9 @@ public class ValidateRouteColorAndTextContrast {
     }
 
     /**
-     * Use case execution method: checks if Route color contrast enough with Route text color
+     * Use case execution method: checks if Route color does not contrast enough with Route text color
      * for every Routes in a {@link GtfsDataRepository}. A new notice is generated each time this condition is true.
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
-     *
-     * @return a list of notices generated each time the contrast between the 2 colors is insufficient.
      */
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
