@@ -16,36 +16,43 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * This represent the information extracted from an Apache command line or a .json file containing execution parameters
  * (and their values) that are passed are parameters of the main execution method.
  */
 public class ExecParam {
     private String key;
-    private String value;
+    private List<String> value;
 
     public ExecParam() {
     }
 
-    public ExecParam(String key,
-                     String value) {
+    public ExecParam(final String key, final String value) {
         this.key = key;
-        this.value = value;
+        this.value = value == null ? null : List.of(value);
+    }
+
+    public ExecParam(final String key, final String[] value) {
+        this.key = key;
+        this.value = value == null ? null : Arrays.asList(value);
     }
 
     public String getKey() {
         return key;
     }
 
-    public String getValue() {
+    public List<String> getValue() {
         return value;
     }
 
-    public void setKey(String key) {
+    public void setKey(final String key) {
         this.key = key;
     }
 
-    public void setValue(final String value) {
+    public void setValue(final List<String> value) {
         this.value = value;
     }
 }
