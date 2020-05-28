@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.domain.entity.FileSpecificUsecase;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -27,7 +28,7 @@ import java.util.Collection;
 /**
  * Use case to validate that a Route description is different than the Route name.
  */
-public class ValidateRouteDescriptionAndNameAreDifferent implements ValidationUsecase {
+public class ValidateRouteDescriptionAndNameAreDifferent implements FileSpecificUsecase {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;

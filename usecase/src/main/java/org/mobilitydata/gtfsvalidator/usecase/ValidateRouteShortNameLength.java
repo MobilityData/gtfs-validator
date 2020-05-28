@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.domain.entity.FileSpecificUsecase;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -27,7 +28,7 @@ import java.util.Collection;
 /**
  * Use case to validate that a Route short name is not longer than 12 characters.
  */
-public class ValidateRouteShortNameLength implements ValidationUsecase {
+public class ValidateRouteShortNameLength implements FileSpecificUsecase {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;

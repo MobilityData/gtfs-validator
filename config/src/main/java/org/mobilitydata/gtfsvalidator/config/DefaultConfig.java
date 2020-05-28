@@ -20,6 +20,7 @@ import com.google.common.io.Resources;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.FileSpecificUsecase;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
@@ -44,7 +45,7 @@ public class DefaultConfig {
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
-    private final Map<String, List<ValidationUsecase>> usecaseByFilename;
+    private final Map<String, List<FileSpecificUsecase>> usecaseByFilename;
 
     @SuppressWarnings("UnstableApiUsage")
     public DefaultConfig(final Logger logger) {
@@ -82,7 +83,7 @@ public class DefaultConfig {
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
 
         this.usecaseByFilename = new HashMap<>();
-        final List<ValidationUsecase> routeRelatedUsecaseCollection = new ArrayList<>();
+        final List<FileSpecificUsecase> routeRelatedUsecaseCollection = new ArrayList<>();
         routeRelatedUsecaseCollection.add(validateRouteShortNameLength());
         routeRelatedUsecaseCollection.add(validateRouteColorAndTextContrast());
         routeRelatedUsecaseCollection.add(validateRouteDescriptionAndNameAreDifferent());
@@ -189,7 +190,7 @@ public class DefaultConfig {
         return new GenerateFilenameListToProcess(logger);
     }
 
-    public GetValidationUsecaseAll getValidationUsecaseAll() {
-        return new GetValidationUsecaseAll(usecaseByFilename);
+    public GetUsecaseCollectionForFile getValidationUsecaseAll() {
+        return new GetUsecaseCollectionForFile(usecaseByFilename);
     }
 }
