@@ -27,31 +27,31 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class RelationshipDescriptorMakerTest {
+public class GtfsNodeMakerTest {
 
     @Test
     public void gtfsNodeMakerShouldExtractAsGtfsTreeRootNode() {
-        final RelationshipDescriptor mockRelationshipDescriptor = mock(RelationshipDescriptor.class);
+        final RelationshipDescriptor mockGtfsNode = mock(RelationshipDescriptor.class);
 
         final GtfsNodeMaker mockChild0 = mock(GtfsNodeMaker.class);
         when(mockChild0.getChildren()).thenReturn(null);
-        when(mockChild0.toGtfsTreeRootNode()).thenReturn(mockRelationshipDescriptor);
+        when(mockChild0.toGtfsTreeRootNode()).thenReturn(mockGtfsNode);
 
         final GtfsNodeMaker mockChild1 = mock(GtfsNodeMaker.class);
         when(mockChild1.getChildren()).thenReturn(null);
-        when(mockChild1.toGtfsTreeRootNode()).thenReturn(mockRelationshipDescriptor);
+        when(mockChild1.toGtfsTreeRootNode()).thenReturn(mockGtfsNode);
 
         final List<GtfsNodeMaker> childrenCollection = new ArrayList<>(List.of(mockChild0, mockChild1));
         final GtfsNodeMaker underTest = new GtfsNodeMaker("root", childrenCollection);
 
         final RelationshipDescriptor toCheck = underTest.toGtfsTreeRootNode();
         assertEquals(2, toCheck.getChildren().size());
-        assertEquals(mockRelationshipDescriptor, toCheck.getChildren().get(0));
-        assertEquals(mockRelationshipDescriptor, toCheck.getChildren().get(1));
+        assertEquals(mockGtfsNode, toCheck.getChildren().get(0));
+        assertEquals(mockGtfsNode, toCheck.getChildren().get(1));
 
         verify(mockChild0, times(1)).toGtfsTreeRootNode();
         verify(mockChild1, times(1)).toGtfsTreeRootNode();
 
-        verifyNoMoreInteractions(mockChild0, mockChild1, mockRelationshipDescriptor);
+        verifyNoMoreInteractions(mockChild0, mockChild1, mockGtfsNode);
     }
 }
