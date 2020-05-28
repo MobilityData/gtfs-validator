@@ -20,7 +20,7 @@ package org.moblitydata.gtfsvalidator.tree;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +56,13 @@ public class GtfsNodeMaker {
     }
 
     /**
-     * Method used to extract a {@code GtfsNode} from a {@code GtfsNodeMaker}
+     * Method used to extract a {@code RelationshipDescriptor} from a {@code GtfsNodeMaker}
      *
-     * @return the {@link GtfsNode} extracted from this {@link GtfsNodeMaker}
+     * @return the {@link RelationshipDescriptor} extracted from this {@link GtfsNodeMaker}
      */
-    public GtfsNode toGtfsTreeRootNode() {
-        final ArrayList<GtfsNode> childGtfsNodeCollection = new ArrayList<>();
-        getChildren().forEach(child -> childGtfsNodeCollection.add(child.toGtfsTreeRootNode()));
-        return new GtfsNode(getName(), childGtfsNodeCollection);
+    public RelationshipDescriptor toGtfsTreeRootNode() {
+        final ArrayList<RelationshipDescriptor> childRelationshipDescriptorCollection = new ArrayList<>();
+        getChildren().forEach(child -> childRelationshipDescriptorCollection.add(child.toGtfsTreeRootNode()));
+        return new RelationshipDescriptor(getName(), childRelationshipDescriptorCollection);
     }
 }

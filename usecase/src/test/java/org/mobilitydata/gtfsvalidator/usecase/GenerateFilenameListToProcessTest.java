@@ -18,12 +18,13 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 class GenerateFilenameListToProcessTest {
 
@@ -36,6 +37,12 @@ class GenerateFilenameListToProcessTest {
         final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess(mockLogger);
 
         assertEquals(0, underTest.execute(toExclude, toProcess).size());
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
+                        + toProcess));
+        verifyNoMoreInteractions(mockLogger);
     }
 
     @Test
@@ -46,6 +53,13 @@ class GenerateFilenameListToProcessTest {
 
         final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess(mockLogger);
         assertEquals(List.of("file2"), underTest.execute(toExclude, toProcess));
+
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
+                        + toProcess));
+        verifyNoMoreInteractions(mockLogger);
     }
 
     @Test
@@ -56,6 +70,13 @@ class GenerateFilenameListToProcessTest {
 
         final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess(mockLogger);
         assertEquals(List.of("file1", "file2"), underTest.execute(toExclude, toProcess));
+
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
+                        + toProcess));
+        verifyNoMoreInteractions(mockLogger);
     }
 
     @Test
@@ -66,5 +87,12 @@ class GenerateFilenameListToProcessTest {
 
         final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess(mockLogger);
         assertEquals(List.of("file0", "file1", "file2"), underTest.execute(toExclude, toProcess));
+
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
+                        + toProcess));
+        verifyNoMoreInteractions(mockLogger);
     }
 }

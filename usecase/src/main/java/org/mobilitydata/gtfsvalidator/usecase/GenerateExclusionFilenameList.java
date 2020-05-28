@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
@@ -59,10 +59,10 @@ public class GenerateExclusionFilenameList {
 
         if (!gtfsFilenameList.containsAll(toExcludeFromValidation)) {
             logger.info("Some file requested to be excluded is not defined by the official GTFS specification: "
-                    + toExcludeFromValidation + " -- will execute validation process without file exclusion");
+                    + toExcludeFromValidation + " -- will execute validation process on all files");
             toExcludeFromValidation.clear();
         }
-        final GtfsNode root = gtfsSpecRepo.getGtfsRelationshipDescriptor();
+        final RelationshipDescriptor root = gtfsSpecRepo.getGtfsRelationshipDescriptor();
 
         final Set<String> toReturn = new HashSet<>();
         // search for all reachable GtfsNode from each GtfsNode to exclude from validation

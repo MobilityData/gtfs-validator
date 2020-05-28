@@ -20,9 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.TextFormat;
 import org.apache.commons.validator.routines.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
-import org.mobilitydata.gtfsvalidator.parser.GtfsRelationshipParser;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.validator.Bcp47Validator;
@@ -43,7 +42,7 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     private final GtfsSpecificationProto.CsvSpecProtos inMemoryGTFSSpec;
     private final Map<String, ParsedEntityTypeValidator> validatorByFilenameCache = new HashMap<>();
-    private final GtfsNode inMemoryGtfsRelationshipDescriptor;
+    private final RelationshipDescriptor inMemoryGtfsRelationshipDescriptor;
 
     private static final String[] VALID_URL_SCHEMES = {"http", "https"};
     private static final String VALID_COLOR_REGEX_PATTERN = "[0-9a-fA-F]{6}";
@@ -61,7 +60,7 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
             GtfsSpec = null;
             e.printStackTrace();
         }
-        GtfsNode relationshipDescriptor;
+        RelationshipDescriptor relationshipDescriptor;
         try {
             relationshipDescriptor = new GtfsRelationshipParser(new ObjectMapper().readerFor(GtfsNodeMaker.class))
                     .parse(gtfsSchemaAsString);
@@ -205,7 +204,7 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
     }
 
     @Override
-    public GtfsNode getGtfsRelationshipDescriptor() {
+    public RelationshipDescriptor getGtfsRelationshipDescriptor() {
         return inMemoryGtfsRelationshipDescriptor;
     }
 }

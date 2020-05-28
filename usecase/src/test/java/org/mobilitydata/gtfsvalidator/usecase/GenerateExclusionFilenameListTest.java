@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mockito.ArgumentMatchers;
@@ -31,10 +31,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
+/**
+ * This class is aimed at testing the filename list to exclude resulting from the algorithm. To do so, a simplified .
+ * graph is used as proof of concept. It is represented as follows:
+ *
+ *                                         level0_file                         Root
+ *                                        /           \
+ *                                       /             \
+ *                                      /               \
+ *                        level1_first_child     level1_second_child          Depth: 1
+ *                                  |
+ *                                  |
+ *                        level2_only_child                                   Depth: 2
+ *
+ */
 class GenerateExclusionFilenameListTest {
 
     @Test
-    void malformedFilenameListShouldLeadToValidationProcessWithoutFileExclusion() {
+    void malformedFilenameListShouldLeadToValidationProcessOnAllFiles() {
         final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
 
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
@@ -49,7 +63,7 @@ class GenerateExclusionFilenameListTest {
 
         verify(mockLogger, times(1)).info("Some file requested to be excluded is not" +
                 " defined by the official GTFS specification: [wrong_file_name.txt] -- will execute validation" +
-                " process without file exclusion");
+                " process on all files");
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
         verify(mockGtfsSpecRepo, times(1)).getOptionalFilenameList();
@@ -60,17 +74,17 @@ class GenerateExclusionFilenameListTest {
     }
 
     @Test
-    void excludeFileWithDepth0ShouldExcludeAllFile() {
-        final GtfsNode level2OnlyChild = spy(new GtfsNode("level2_only_child", null));
-        final GtfsNode level1SecondChild = spy(new GtfsNode("level1_second_child", null));
-        final GtfsNode level1FirstChild = spy(
-                new GtfsNode("level1_first_child", new ArrayList<>(List.of(level2OnlyChild))));
-        final GtfsNode level0Node = spy(
-                new GtfsNode("level0_file", new ArrayList<>(List.of(level1FirstChild, level1SecondChild))));
+    void excludeRootShouldExcludeAllFile() {
+        final RelationshipDescriptor level2OnlyChild = spy(new RelationshipDescriptor("level2_only_child", null));
+        final RelationshipDescriptor level1SecondChild = spy(new RelationshipDescriptor("level1_second_child", null));
+        final RelationshipDescriptor level1FirstChild = spy(
+                new RelationshipDescriptor("level1_first_child", new ArrayList<>(List.of(level2OnlyChild))));
+        final RelationshipDescriptor level0Node = spy(
+                new RelationshipDescriptor("level0_file", new ArrayList<>(List.of(level1FirstChild, level1SecondChild))));
 
-        final List<GtfsNode> childrenCollection =
+        final List<RelationshipDescriptor> childrenCollection =
                 new ArrayList<>(List.of(level0Node, level1FirstChild, level1SecondChild, level2OnlyChild));
-        final GtfsNode mockRoot = spy(new GtfsNode("level0_file", childrenCollection));
+        final RelationshipDescriptor mockRoot = spy(new RelationshipDescriptor("level0_file", childrenCollection));
 
         final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
         when(mockGtfsSpecRepo.getOptionalFilenameList()).thenReturn(Collections.emptyList());
@@ -110,16 +124,18 @@ class GenerateExclusionFilenameListTest {
 
     @Test
     void excludeAllFileWithDepth1ShouldExclude3File() {
-        final GtfsNode level2OnlyChild = spy(new GtfsNode("level2_only_child", null));
-        final GtfsNode level1SecondChild = spy(new GtfsNode("level1_second_child", null));
-        final GtfsNode level1FirstChild = spy(
-                new GtfsNode("level1_first_child", new ArrayList<>(List.of(level2OnlyChild))));
-        final GtfsNode level0Node = spy(
-                new GtfsNode("level0_file", new ArrayList<>(List.of(level1FirstChild, level1SecondChild))));
+        final RelationshipDescriptor level2OnlyChild = spy(new RelationshipDescriptor("level2_only_child", null));
+        final RelationshipDescriptor level1SecondChild = spy(new RelationshipDescriptor("level1_second_child", null));
+        final RelationshipDescriptor level1FirstChild = spy(
+                new RelationshipDescriptor("level1_first_child", new ArrayList<>(List.of(level2OnlyChild))));
+        final RelationshipDescriptor level0Node = spy(
+                new RelationshipDescriptor("level0_file", new ArrayList<>(List.of(level1FirstChild, level1SecondChild))
+                )
+        );
 
-        final List<GtfsNode> childrenCollection =
+        final List<RelationshipDescriptor> childrenCollection =
                 new ArrayList<>(List.of(level0Node, level1FirstChild, level1SecondChild, level2OnlyChild));
-        final GtfsNode mockRoot = spy(new GtfsNode("level0_file", childrenCollection));
+        final RelationshipDescriptor mockRoot = spy(new RelationshipDescriptor("level0_file", childrenCollection));
 
         final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
         when(mockGtfsSpecRepo.getOptionalFilenameList()).thenReturn(Collections.emptyList());
@@ -139,7 +155,8 @@ class GenerateExclusionFilenameListTest {
 
         final ArrayList<String> toCheck = underTest.execute();
 
-        verify(mockExecParamRepo, times(1)).getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
         verify(mockGtfsSpecRepo, times(1)).getOptionalFilenameList();
         verify(mockGtfsSpecRepo, times(1)).getRequiredFilenameList();
         verify(mockGtfsSpecRepo, times(1)).getGtfsRelationshipDescriptor();
@@ -159,16 +176,17 @@ class GenerateExclusionFilenameListTest {
 
     @Test
     void excludeAllFileWithDepth2ShouldExclude1File() {
-        final GtfsNode level2OnlyChild = spy(new GtfsNode("level2_only_child", null));
-        final GtfsNode level1SecondChild = spy(new GtfsNode("level1_second_child", null));
-        final GtfsNode level1FirstChild = spy(
-                new GtfsNode("level1_first_child", new ArrayList<>(List.of(level2OnlyChild))));
-        final GtfsNode level0Node = spy(
-                new GtfsNode("level0_file", new ArrayList<>(List.of(level1FirstChild, level1SecondChild))));
+        final RelationshipDescriptor level2OnlyChild = spy(new RelationshipDescriptor("level2_only_child", null));
+        final RelationshipDescriptor level1SecondChild = spy(new RelationshipDescriptor("level1_second_child", null));
+        final RelationshipDescriptor level1FirstChild = spy(
+                new RelationshipDescriptor("level1_first_child", new ArrayList<>(List.of(level2OnlyChild))));
+        final RelationshipDescriptor level0Node = spy(
+                new RelationshipDescriptor("level0_file",
+                        new ArrayList<>(List.of(level1FirstChild, level1SecondChild))));
 
-        final List<GtfsNode> childrenCollection =
+        final List<RelationshipDescriptor> childrenCollection =
                 new ArrayList<>(List.of(level0Node, level1FirstChild, level1SecondChild, level2OnlyChild));
-        final GtfsNode mockRoot = spy(new GtfsNode("level0_file", childrenCollection));
+        final RelationshipDescriptor mockRoot = spy(new RelationshipDescriptor("level0_file", childrenCollection));
 
         final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
         when(mockGtfsSpecRepo.getOptionalFilenameList()).thenReturn(Collections.emptyList());

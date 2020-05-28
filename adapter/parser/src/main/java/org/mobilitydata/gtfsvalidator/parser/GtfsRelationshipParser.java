@@ -20,7 +20,7 @@ package org.mobilitydata.gtfsvalidator.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectReader;
-import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.moblitydata.gtfsvalidator.tree.GtfsNodeMaker;
 
@@ -38,13 +38,14 @@ public class GtfsRelationshipParser implements GtfsSpecRepository.RelationshipDe
     }
 
     /**
-     * Method creates a GtfsNode representing the dependencies among GTFS files from a Json file containing this
-     * information
+     * Method creates a RelationshipDescriptor representing the dependencies among GTFS files from a Json file
+     * containing this information
      *
-     * @return a GtfsNode representing the dependencies among GTFS files from a Json file containing this information
+     * @return the {@link RelationshipDescriptor} representing the dependencies among GTFS files from a Json file
+     * containing this information
      * @throws JsonProcessingException if Json file is malformed
      */
-    public GtfsNode parse(final String gtfsSchemaAsString) throws IOException {
+    public RelationshipDescriptor parse(final String gtfsSchemaAsString) throws IOException {
         try {
             final GtfsNodeMaker nodeMaker = objectReader.readValue(gtfsSchemaAsString);
             return nodeMaker.toGtfsTreeRootNode();
