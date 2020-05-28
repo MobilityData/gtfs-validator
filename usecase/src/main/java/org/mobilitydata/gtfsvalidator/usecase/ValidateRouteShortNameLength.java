@@ -55,7 +55,7 @@ public class ValidateRouteShortNameLength implements FileSpecificUsecase {
      */
     @Override
     public void execute() {
-        logger.info("Validating route short name length");
+        logger.info("Validating rule E024 - Route short name too long");
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteShortName(route.getRouteShortName())))
