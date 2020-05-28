@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mockito.ArgumentMatchers;
 
 import java.util.List;
 
@@ -56,7 +57,9 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Validating rule E026 - Insufficient route color contrast"));
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -85,7 +88,9 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Validating rule E026 - Insufficient route color contrast"));
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -114,7 +119,9 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Validating rule E026 - Insufficient route color contrast"));
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -144,7 +151,9 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(2)).getRouteTextColor();
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Validating rule E026 - Insufficient route color contrast"));
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -174,6 +183,8 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(2)).getRouteTextColor();
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Validating rule E026 - Insufficient route color contrast"));
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }
