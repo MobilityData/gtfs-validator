@@ -21,7 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -43,7 +43,7 @@ public interface GtfsSpecRepository {
 
     ParsedEntityTypeValidator getValidatorForFile(final RawFileInfo file);
 
-    GtfsNode getGtfsRelationshipDescriptor();
+    RelationshipDescriptor getGtfsRelationshipDescriptor();
 
     interface RawEntityParser {
         Collection<ErrorNotice> validateNonStringTypes(final RawEntity toValidate);
@@ -60,6 +60,6 @@ public interface GtfsSpecRepository {
     }
 
     interface RelationshipDescriptorParser {
-        GtfsNode parse(final String gtfsSchemaAsString) throws IOException;
+        RelationshipDescriptor parse(final String gtfsSchemaAsString) throws IOException;
     }
 }
