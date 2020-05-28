@@ -20,12 +20,13 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.FileSpecificUsecase;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Use case to retrieve the list of use cases to execute in order to process to validation of GTFS dataset
+ * Use case to retrieve the list of use cases to execute in order to process to validation of GTFS dataset. This use
+ * case is triggered after validation of the GTFS archive content. Therefore, its execution method is only applied on
+ * filenames that are defined by the official GTFS specification.
  */
 public class GetUsecaseCollectionForFile {
     private final Map<String, List<FileSpecificUsecase>> usecaseByFilename;
@@ -35,16 +36,12 @@ public class GetUsecaseCollectionForFile {
     }
 
     /**
-     * Use case execution method: returns the list of use cases to execute in order to process to validation of GTFS
-     * dataset
+     * Use case execution method: returns the list of use cases related to a specific GTFS file to validate
      *
-     * @param filenameListToProcess the list of files to validate
-     * @return the list of use cases to execute
+     * @param filename the name of the file to validate
+     * @return the list of use cases related to a specific GTFS file to validate
      */
-    public List<FileSpecificUsecase> execute(final List<String> filenameListToProcess) {
-        final List<FileSpecificUsecase> toReturn = new ArrayList<>();
-        filenameListToProcess.forEach(filename ->
-                toReturn.addAll(usecaseByFilename.get(filename)));
-        return toReturn;
+    public List<FileSpecificUsecase> execute(final String filename) {
+        return usecaseByFilename.get(filename);
     }
 }
