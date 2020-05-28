@@ -16,8 +16,8 @@
  *
  */
 
-package org.mobilitydata.gtfsvalidator.usecase;
+package org.mobilitydata.gtfsvalidator.domain.entity;
 
-public interface ValidationUsecase {
+public interface FileSpecificUsecase {
     void execute();
 }
