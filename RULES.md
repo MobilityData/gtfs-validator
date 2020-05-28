@@ -59,6 +59,14 @@ An email should be a valid email address (e.g., contact@agency.org)
 #### References:
 * [Field Types Description](http://gtfs.org/reference/static/#field-types)
 
+### E024 - Route short name too long
+
+Field `route_short_name` of file `routes.txt` should not be longer than 12 characters.
+
+#### References:
+* [GTFS routes.txt](http://gtfs.org/reference/static/#routestxt)
+* [GTFS routes.txt Best Practices](https://gtfs.org/best-practices/#routestxt)
+
 <a name="E025"/>
 
 ### E025 - Same name and description for route

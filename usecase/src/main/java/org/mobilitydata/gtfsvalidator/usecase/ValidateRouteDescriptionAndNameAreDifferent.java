@@ -54,7 +54,7 @@ public class ValidateRouteDescriptionAndNameAreDifferent implements FileSpecific
      */
     @Override
     public void execute() {
-        logger.info("Validating route description and name are different");
+        logger.info("Validating rule E025 - Same name and description for route");
         final Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName())))

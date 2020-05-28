@@ -54,7 +54,7 @@ public class ValidateRouteColorAndTextContrast implements FileSpecificUsecase {
      */
     @Override
     public void execute() {
-        logger.info("Validating route color and text contrast");
+        logger.info("Validating rule E026 - Insufficient route color contrast");
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
