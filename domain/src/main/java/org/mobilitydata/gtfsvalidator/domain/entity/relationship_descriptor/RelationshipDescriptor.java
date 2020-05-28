@@ -16,25 +16,26 @@
  *
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.schema;
+package org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 /**
- * Class used to contain information about dependencies among files of a GTFS dataset
+ * Class used to contain information about dependencies among files of a GTFS dataset. Data is represented using the
+ * concept of tree. This represents a tree made of nodes of the same class.
  */
-public class GtfsNode {
+public class RelationshipDescriptor {
     private String name;
-    private List<GtfsNode> children;
+    private List<RelationshipDescriptor> children;
 
     // Default constructor is required for tests
-    public GtfsNode() {
+    public RelationshipDescriptor() {
     }
 
-    public GtfsNode(final String name,
-                    final List<GtfsNode> children) {
+    public RelationshipDescriptor(final String name,
+                                  final List<RelationshipDescriptor> children) {
         this.name = name;
         this.children = children;
     }
@@ -43,30 +44,30 @@ public class GtfsNode {
         return name;
     }
 
-    public List<GtfsNode> getChildren() {
+    public List<RelationshipDescriptor> getChildren() {
         return children != null ? children : new ArrayList<>();
     }
 
     /**
-     * Method returns the {@link GtfsNode} with name given as parameter
+     * Method returns the {@link RelationshipDescriptor} with name given as parameter
      *
-     * @param nodeName name of the node to search in the tree
-     * @return the {@link GtfsNode} with name nodeName
+     * @param name name of the {@link RelationshipDescriptor} (node) to search in the tree
+     * @return the {@link RelationshipDescriptor} with the name given as parameter
      */
-    public GtfsNode getChildByName(final String nodeName) {
-        return getChildren().stream().filter(child -> child.getName().equals(nodeName))
+    public RelationshipDescriptor getChildByName(final String name) throws NullPointerException {
+        return getChildren().stream().filter(child -> child.getName().equals(name))
                 .findAny()
                 .orElseThrow(NullPointerException::new);
     }
 
     /**
      * Method perform Depth First Search algorithm to find all reachable nodes from this node
-     * @param visited  list of visited {@link GtfsNode}
+     * @param visited  list of visited {@link RelationshipDescriptor}
      * @return list of reachable nodes from this node
      */
     public HashSet<String> DFS(final HashSet<String> visited) {
         visited.add(getName());
-        for (GtfsNode child : getChildren()) {
+        for (RelationshipDescriptor child : getChildren()) {
             if (!visited.contains(child.getName())) {
                 visited.addAll(child.DFS(visited));
             }

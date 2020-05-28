@@ -19,7 +19,7 @@
 package org.moblitydata.gtfsvalidator.tree;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,31 +27,31 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class GtfsNodeMakerTest {
+public class RelationshipDescriptorMakerTest {
 
     @Test
     public void gtfsNodeMakerShouldExtractAsGtfsTreeRootNode() {
-        final GtfsNode mockGtfsNode = mock(GtfsNode.class);
+        final RelationshipDescriptor mockRelationshipDescriptor = mock(RelationshipDescriptor.class);
 
         final GtfsNodeMaker mockChild0 = mock(GtfsNodeMaker.class);
         when(mockChild0.getChildren()).thenReturn(null);
-        when(mockChild0.toGtfsTreeRootNode()).thenReturn(mockGtfsNode);
+        when(mockChild0.toGtfsTreeRootNode()).thenReturn(mockRelationshipDescriptor);
 
         final GtfsNodeMaker mockChild1 = mock(GtfsNodeMaker.class);
         when(mockChild1.getChildren()).thenReturn(null);
-        when(mockChild1.toGtfsTreeRootNode()).thenReturn(mockGtfsNode);
+        when(mockChild1.toGtfsTreeRootNode()).thenReturn(mockRelationshipDescriptor);
 
         final List<GtfsNodeMaker> childrenCollection = new ArrayList<>(List.of(mockChild0, mockChild1));
         final GtfsNodeMaker underTest = new GtfsNodeMaker("root", childrenCollection);
 
-        final GtfsNode toCheck = underTest.toGtfsTreeRootNode();
+        final RelationshipDescriptor toCheck = underTest.toGtfsTreeRootNode();
         assertEquals(2, toCheck.getChildren().size());
-        assertEquals(mockGtfsNode, toCheck.getChildren().get(0));
-        assertEquals(mockGtfsNode, toCheck.getChildren().get(1));
+        assertEquals(mockRelationshipDescriptor, toCheck.getChildren().get(0));
+        assertEquals(mockRelationshipDescriptor, toCheck.getChildren().get(1));
 
         verify(mockChild0, times(1)).toGtfsTreeRootNode();
         verify(mockChild1, times(1)).toGtfsTreeRootNode();
 
-        verifyNoMoreInteractions(mockChild0, mockChild1, mockGtfsNode);
+        verifyNoMoreInteractions(mockChild0, mockChild1, mockRelationshipDescriptor);
     }
 }

@@ -21,7 +21,7 @@ package org.mobilitydata.gtfsvalidator.parser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.schema.GtfsNode;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 import org.moblitydata.gtfsvalidator.tree.GtfsNodeMaker;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class GtfsRelationshipParserTest {
         final ObjectReader mockObjectReader = new ObjectMapper().readerFor(GtfsNodeMaker.class);
         final GtfsRelationshipParser underTest = new GtfsRelationshipParser(mockObjectReader);
 
-        final GtfsNode toCheck = underTest.parse(schemaAsString);
+        final RelationshipDescriptor toCheck = underTest.parse(schemaAsString);
 
         assertEquals("root", toCheck.getName());
         assertEquals(2, toCheck.getChildren().size());
