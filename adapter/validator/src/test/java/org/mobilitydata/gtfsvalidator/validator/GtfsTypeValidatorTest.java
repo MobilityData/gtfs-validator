@@ -16,10 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import org.apache.commons.validator.routines.FloatValidator;
-import org.apache.commons.validator.routines.IntegerValidator;
-import org.apache.commons.validator.routines.RegexValidator;
-import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.*;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
@@ -63,6 +60,8 @@ class GtfsTypeValidatorTest {
                 mockFloatValidator,
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -103,6 +102,8 @@ class GtfsTypeValidatorTest {
                 mockFloatValidator,
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -155,6 +156,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mockIntegerValidator,
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -195,6 +198,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mockIntegerValidator,
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -243,6 +248,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mockColorValidator,
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -277,6 +284,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mockColorValidator,
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -319,6 +328,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mockTimeValidator,
                 Collections.emptySet()
@@ -353,6 +364,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mockTimeValidator,
                 Collections.emptySet()
@@ -395,6 +408,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mockUrlValidator,
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -413,7 +428,7 @@ class GtfsTypeValidatorTest {
     }
 
     @Test
-    void urlInInCorrectFormatGenerateNotice() {
+    void urlInIncorrectFormatGenerateNotice() {
         UrlValidator mockUrlValidator = mock(UrlValidator.class);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
@@ -430,6 +445,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mockUrlValidator,
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -455,6 +472,170 @@ class GtfsTypeValidatorTest {
     }
 
     @Test
+    void emailInCorrectFormatDoNotGenerateNotice() {
+        EmailValidator mockEmailValidator = mock(EmailValidator.class);
+        when(mockEmailValidator.isValid(ArgumentMatchers.any())).thenReturn(true);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("type_email");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.EMAIL);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mockEmailValidator,
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("type_email", "info@mobilitydata.org"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(0, result.size());
+
+        verify(mockEmailValidator, times(1)).isValid(
+                ArgumentMatchers.eq("info@mobilitydata.org"));
+    }
+
+    @Test
+    void emailInIncorrectFormatGenerateNotice() {
+        EmailValidator mockEmailValidator = mock(EmailValidator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("type_email");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.EMAIL);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mockEmailValidator,
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("type_email", "info@mobilitydata"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(1, result.size());
+        Notice notice = new ArrayList<>(result).get(0);
+        assertThat(notice, instanceOf(InvalidEmailNotice.class));
+        assertEquals("E023", notice.getId());
+        assertEquals("Invalid email", notice.getTitle());
+        assertEquals(TEST_FILE_TST, notice.getFilename());
+        assertEquals("Invalid email:info@mobilitydata in field:type_email for entity with id:test_id",
+                notice.getDescription());
+
+        verify(mockEmailValidator, times(1)).isValid(
+                ArgumentMatchers.eq("info@mobilitydata"));
+    }
+
+    @Test
+    void langInCorrectFormatDoNotGenerateNotice() {
+        Bcp47Validator mocklangValidator = mock(Bcp47Validator.class);
+        when(mocklangValidator.isValid(ArgumentMatchers.any())).thenReturn(true);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("type_lang");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.LANGUAGE_CODE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mocklangValidator,
+                mock(EmailValidator.class),
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("type_lang", "en_US"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(0, result.size());
+
+        verify(mocklangValidator, times(1)).isValid(
+                ArgumentMatchers.eq("en_US"));
+    }
+
+    @Test
+    void langInIncorrectFormatGenerateNotice() {
+        Bcp47Validator mocklangValidator = mock(Bcp47Validator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("type_lang");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.LANGUAGE_CODE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mocklangValidator,
+                mock(EmailValidator.class),
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("type_lang", "en_FR"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(1, result.size());
+        Notice notice = new ArrayList<>(result).get(0);
+        assertThat(notice, instanceOf(InvalidLangNotice.class));
+        assertEquals("E022", notice.getId());
+        assertEquals("Invalid language code", notice.getTitle());
+        assertEquals(TEST_FILE_TST, notice.getFilename());
+        assertEquals("Invalid language code:en_FR in field:type_lang for entity with id:test_id",
+                notice.getDescription());
+
+        verify(mocklangValidator, times(1)).isValid(
+                ArgumentMatchers.eq("en_FR"));
+    }
+
+    @Test
     void timezoneValidDoNotGenerateNotice() {
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
@@ -470,6 +651,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Set.of("America/Montreal")
@@ -500,6 +683,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -538,6 +723,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -568,6 +755,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -607,6 +796,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -707,6 +898,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -829,6 +1022,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -1019,6 +1214,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -1136,6 +1333,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -1174,6 +1373,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
