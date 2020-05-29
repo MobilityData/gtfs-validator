@@ -32,7 +32,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -69,7 +68,17 @@ public class DefaultConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString);
+
+        String gtfsSchemaAsString = null;
+
+        try {
+            gtfsSchemaAsString = Resources.toString(
+                    Resources.getResource("gtfs-relationship-description.json"),
+                    StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
@@ -125,6 +134,18 @@ public class DefaultConfig {
         return new ValidateAllOptionalFilename(specRepo, rawFileRepo, resultRepo);
     }
 
+    public ValidateRouteColorAndTextContrast validateRouteColorAndTextContrast() {
+        return new ValidateRouteColorAndTextContrast(gtfsDataRepository, resultRepo);
+    }
+
+    public ValidateRouteDescriptionAndNameAreDifferent validateRouteDescriptionAndNameAreDifferent() {
+        return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo);
+    }
+
+    public ValidateRouteShortNameLength validateRouteShortNameLength() {
+        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
@@ -154,8 +175,11 @@ public class DefaultConfig {
         return new ProcessParsedTransfer(resultRepo, gtfsDataRepository, execParamRepo, new Transfer.TransferBuilder());
     }
 
-    public CreateGtfsSemanticValidationFilenameList
-    createGtfsSemanticValidationFilenameList(final List<String> toExcludeFromGtfsSemanticValidation) {
-        return new CreateGtfsSemanticValidationFilenameList(toExcludeFromGtfsSemanticValidation);
+    public GenerateExclusionFilenameList generateExclusionFilenameList() {
+        return new GenerateExclusionFilenameList(specRepo, execParamRepo, logger);
+    }
+
+    public GenerateFilenameListToProcess generateFilenameListToProcess() {
+        return new GenerateFilenameListToProcess(logger);
     }
 }

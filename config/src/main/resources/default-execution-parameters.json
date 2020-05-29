@@ -5,6 +5,7 @@
   "proto": false,
   "url": null,
   "zipinput": null,
+  "exclude": null,
   "mintransfertime": 1,
   "maxtransfertime": 120
 }

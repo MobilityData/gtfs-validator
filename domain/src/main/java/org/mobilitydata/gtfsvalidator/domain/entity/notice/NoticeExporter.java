@@ -61,5 +61,15 @@ public interface NoticeExporter {
 
     void export(UnexpectedEnumValueNotice toExport) throws IOException;
 
+    void export(InvalidLangNotice toExport) throws IOException;
+
+    void export(InvalidEmailNotice toExport) throws IOException;
+
+    void export(SameNameAndDescriptionForRouteNotice toExport) throws IOException;
+
+    void export(RouteColorAndTextInsufficientContrastNotice toExport) throws IOException;
+
+    void export(RouteShortNameTooLongNotice toExport) throws IOException;
+
     void export(SuspiciousIntegerValueNotice toExport) throws IOException;
 }

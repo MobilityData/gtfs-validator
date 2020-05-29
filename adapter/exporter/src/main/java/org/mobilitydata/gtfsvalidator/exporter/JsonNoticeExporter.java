@@ -173,6 +173,31 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(InvalidEmailNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(InvalidLangNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(SameNameAndDescriptionForRouteNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(RouteColorAndTextInsufficientContrastNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(RouteShortNameTooLongNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(SuspiciousIntegerValueNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
