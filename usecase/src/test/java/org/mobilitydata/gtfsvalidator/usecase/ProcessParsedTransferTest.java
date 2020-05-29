@@ -39,7 +39,7 @@ import static org.mockito.Mockito.*;
 class ProcessParsedTransferTest {
 
     @Test
-    void validatedParsedTransferShouldCreateTransferEntityAndBeAddedToGtfsDataRepository() {
+    void validatedParsedTransferShouldCreateTransferEntityAndBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
@@ -51,7 +51,8 @@ class ProcessParsedTransferTest {
         @SuppressWarnings("rawtypes") final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
 
         //noinspection unchecked
-        when(mockBuilder.build(0, 40)).thenReturn(mockEntityBuildResult);
+        when(mockBuilder.build(0, 40))
+                .thenReturn(mockEntityBuildResult);
         when(mockEntityBuildResult.isSuccess()).thenReturn(true);
         when(mockEntityBuildResult.getData()).thenReturn(mockTransfer);
 
@@ -70,17 +71,24 @@ class ProcessParsedTransferTest {
         verify(mockParsedTransfer, times(1)).get(ArgumentMatchers.eq("from_stop_id"));
         verify(mockParsedTransfer, times(1)).get(ArgumentMatchers.eq("to_stop_id"));
         verify(mockParsedTransfer, times(1)).get(ArgumentMatchers.eq("transfer_type"));
-        verify(mockParsedTransfer, times(1)).get(ArgumentMatchers.eq("min_transfer_time"));
+        verify(mockParsedTransfer, times(1))
+                .get(ArgumentMatchers.eq("min_transfer_time"));
 
         verify(mockBuilder, times(1)).fromStopId(ArgumentMatchers.eq("stop id 0"));
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq("stop id 1"));
         verify(mockBuilder, times(1)).transferType(ArgumentMatchers.eq(1));
         verify(mockBuilder, times(1)).minTransferTime(ArgumentMatchers.eq(20));
-        verify(mockBuilder, times(1)).build(0, 40);
+        verify(mockBuilder, times(1))
+                .build(0, 40);
+
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ExecParamRepository.UPPER_BOUND_MIN_TRANSFER_TIME);
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ExecParamRepository.LOWER_BOUND_MIN_TRANSFER_TIME);
 
         verify(mockGtfsDataRepo, times(1)).addTransfer(ArgumentMatchers.eq(mockTransfer));
 
-        verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockParsedTransfer);
+        verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockParsedTransfer, mockExecParamRepo);
     }
 
     @Test
@@ -116,14 +124,16 @@ class ProcessParsedTransferTest {
         verify(mockParsedTransfer, times(1)).get(ArgumentMatchers.eq("from_stop_id"));
         verify(mockParsedTransfer, times(1)).get(ArgumentMatchers.eq("to_stop_id"));
         verify(mockParsedTransfer, times(1)).get(ArgumentMatchers.eq("transfer_type"));
-        verify(mockParsedTransfer, times(1)).get(ArgumentMatchers.eq("min_transfer_time"));
+        verify(mockParsedTransfer, times(1))
+                .get(ArgumentMatchers.eq("min_transfer_time"));
 
         //noinspection ConstantConditions
         verify(mockBuilder, times(1)).fromStopId(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq("stop id 1"));
         verify(mockBuilder, times(1)).transferType(ArgumentMatchers.eq(1));
         verify(mockBuilder, times(1)).minTransferTime(ArgumentMatchers.eq(20));
-        verify(mockBuilder, times(1)).build(0, 40);
+        verify(mockBuilder, times(1))
+                .build(0, 40);
 
         verify(mockGenericObject, times(1)).isSuccess();
         //noinspection ResultOfMethodCallIgnored
@@ -137,7 +147,13 @@ class ProcessParsedTransferTest {
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
-        verifyNoMoreInteractions(mockParsedTransfer, mockGtfsDataRepo, mockBuilder, mockResultRepo, mockGenericObject);
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ExecParamRepository.UPPER_BOUND_MIN_TRANSFER_TIME);
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ExecParamRepository.LOWER_BOUND_MIN_TRANSFER_TIME);
+
+        verifyNoMoreInteractions(mockParsedTransfer, mockGtfsDataRepo, mockBuilder, mockResultRepo, mockGenericObject,
+                mockExecParamRepo);
     }
 
     @Test
@@ -202,7 +218,12 @@ class ProcessParsedTransferTest {
         assertEquals("from_stop_id;to_stop_id", noticeList.get(0).getFieldName());
         assertEquals("no id", noticeList.get(0).getEntityId());
 
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ExecParamRepository.UPPER_BOUND_MIN_TRANSFER_TIME);
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ExecParamRepository.LOWER_BOUND_MIN_TRANSFER_TIME);
+
         verifyNoMoreInteractions(mockParsedTransfer, mockResultRepo, mockGtfsDataRepo, mockTransfer, mockBuilder,
-                mockGenericObject);
+                mockGenericObject, mockExecParamRepo);
     }
 }
