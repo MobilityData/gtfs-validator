@@ -58,11 +58,10 @@ public class ProcessParsedTransfer {
      * @param validatedParsedTransfer entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedParsedTransfer) {
-
-        String fromStopId = (String) validatedParsedTransfer.get("from_stop_id");
-        String toStopId = (String) validatedParsedTransfer.get("to_stop_id");
-        Integer transferType = (Integer) validatedParsedTransfer.get("transfer_type");
-        Integer minTransferTime = (Integer) validatedParsedTransfer.get("min_transfer_time");
+        final String fromStopId = (String) validatedParsedTransfer.get("from_stop_id");
+        final String toStopId = (String) validatedParsedTransfer.get("to_stop_id");
+        final Integer transferType = (Integer) validatedParsedTransfer.get("transfer_type");
+        final Integer minTransferTime = (Integer) validatedParsedTransfer.get("min_transfer_time");
 
         builder.fromStopId(fromStopId)
                 .toStopId(toStopId)
