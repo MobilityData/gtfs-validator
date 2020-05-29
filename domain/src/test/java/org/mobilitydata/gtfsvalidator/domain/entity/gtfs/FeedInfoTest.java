@@ -112,7 +112,7 @@ class FeedInfoTest {
     }
 
     @Test
-    void createFeedInfoWithValidValuesShouldNotGenerateNotice() {
+    void createValidFeedInfoShouldNotGenerateNotice() {
         final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.feedPublisherName(STRING_TEST_VALUE)

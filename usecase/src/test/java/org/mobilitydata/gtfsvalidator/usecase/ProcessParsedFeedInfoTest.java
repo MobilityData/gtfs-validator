@@ -49,7 +49,7 @@ class ProcessParsedFeedInfoTest {
     private static final LocalDateTime END_DATE = LocalDateTime.now();
 
     @Test
-    void validatedParsedFeedInfoShouldCreateEntityAndToBeAddedToGtfsDataRepository() {
+    void validatedParsedFeedInfoShouldCreateEntityAndToBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final FeedInfo.FeedInfoBuilder mockBuilder = mock(FeedInfo.FeedInfoBuilder.class, RETURNS_SELF);

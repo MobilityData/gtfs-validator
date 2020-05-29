@@ -154,7 +154,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void addFeedInfoShouldReturnSameEntityAndGetFeedInfoByPublisherNameShouldReturnRElatedEntity() {
+    void getFeedInfoByPublisherNameShouldReturnRelatedEntity() {
         final FeedInfo mockFeedInfo00 = mock(FeedInfo.class);
         final FeedInfo mockFeedInfo01 = mock(FeedInfo.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
