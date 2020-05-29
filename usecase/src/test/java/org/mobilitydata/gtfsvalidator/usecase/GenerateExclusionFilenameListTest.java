@@ -233,4 +233,29 @@ class GenerateExclusionFilenameListTest {
         assertTrue(toCheck.contains("level2_only_child"));
         verifyNoMoreInteractions(mockExecParamRepo, mockGtfsSpecRepo, mockRoot);
     }
+
+    @Test
+    void excludeZeroFileShouldLeadToValidationProcessOnAllFiles() {
+        final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
+
+        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY))
+                .thenReturn("");
+
+        final Logger mockLogger = mock(Logger.class);
+
+        final GenerateExclusionFilenameList underTest =
+                new GenerateExclusionFilenameList(mockGtfsSpecRepo, mockExecParamRepo, mockLogger);
+        final ArrayList<String> toCheck = underTest.execute();
+
+        verify(mockLogger, times(1)).info("No file to exclude -- will execute validation " +
+                "process on all files");
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
+        verify(mockGtfsSpecRepo, times(1)).getOptionalFilenameList();
+        verify(mockGtfsSpecRepo, times(1)).getRequiredFilenameList();
+        verify(mockGtfsSpecRepo, times(1)).getGtfsRelationshipDescriptor();
+        verifyNoMoreInteractions(mockExecParamRepo, mockGtfsSpecRepo, mockLogger);
+        assertEquals(0, toCheck.size());
+    }
 }

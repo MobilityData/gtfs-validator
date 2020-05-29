@@ -21,10 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.Rela
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Use case to create list of filename on which the GTFS validation process should not be applied to
@@ -57,7 +54,11 @@ public class GenerateExclusionFilenameList {
         gtfsFilenameList.addAll(gtfsSpecRepo.getRequiredFilenameList());
         gtfsFilenameList.addAll(gtfsSpecRepo.getOptionalFilenameList());
 
-        if (!gtfsFilenameList.containsAll(toExcludeFromValidation)) {
+        if(toExcludeFromValidation.size()==1 && Objects.equals(toExcludeFromValidation.get(0), "")){
+            logger.info("No file to exclude -- will execute validation process on all files");
+            toExcludeFromValidation.clear();
+        }
+        else if (!gtfsFilenameList.containsAll(toExcludeFromValidation)) {
             logger.info("Some file requested to be excluded is not defined by the official GTFS specification: "
                     + toExcludeFromValidation + " -- will execute validation process on all files");
             toExcludeFromValidation.clear();
