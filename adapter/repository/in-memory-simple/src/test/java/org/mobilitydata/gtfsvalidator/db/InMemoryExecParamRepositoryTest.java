@@ -273,7 +273,7 @@ class InMemoryExecParamRepositoryTest {
         assertEquals(System.getProperty("user.dir") + File.separator + "output",
                 underTest.getExecParamValue(ExecParamRepository.OUTPUT_KEY));
         assertEquals("null", underTest.getExecParamValue(ExecParamRepository.URL_KEY));
-        assertEquals("", underTest.getExecParamValue(ExecParamRepository.EXCLUSION_KEY));
+        assertNull(underTest.getExecParamValue(ExecParamRepository.EXCLUSION_KEY));
     }
 
     @Test

@@ -220,7 +220,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             case EXCLUSION_KEY: {
                 return hasExecParamValue(EXCLUSION_KEY) ?
                         getExecParamByKey(EXCLUSION_KEY).getValue().toString()
-                        : defaultValue.get(0);
+                        : null;
             }
         }
         throw new IllegalArgumentException("Requested key is not handled");

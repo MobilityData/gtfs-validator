@@ -240,7 +240,7 @@ class GenerateExclusionFilenameListTest {
 
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
         when(mockExecParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY))
-                .thenReturn("");
+                .thenReturn(null);
 
         final Logger mockLogger = mock(Logger.class);
 
@@ -254,7 +254,6 @@ class GenerateExclusionFilenameListTest {
                 .getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
         verify(mockGtfsSpecRepo, times(1)).getOptionalFilenameList();
         verify(mockGtfsSpecRepo, times(1)).getRequiredFilenameList();
-        verify(mockGtfsSpecRepo, times(1)).getGtfsRelationshipDescriptor();
         verifyNoMoreInteractions(mockExecParamRepo, mockGtfsSpecRepo, mockLogger);
         assertEquals(0, toCheck.size());
     }
