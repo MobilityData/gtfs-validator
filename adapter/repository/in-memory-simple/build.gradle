@@ -34,7 +34,8 @@ dependencies {
             project(':adapter:protos'),
             project(':adapter:parser'),
             project(':adapter:exporter'),
-            project(':adapter:validator')
+            project(':adapter:validator'),
+            project(':adapter:tree')
     )
     implementation 'commons-cli:commons-cli:1.4'
 

@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,6 +95,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         } else {
             throw new IllegalArgumentException("Cannot add null route to data repository");
         }
+    }
+
+    /**
+     * Return a collection of Route objects representing all the rows from routes.txt
+     *
+     * @return a collection of Route objects representing all the rows from routes.txt
+     */
+    @Override
+    public Collection<Route> getRouteAll() {
+        return routeCollection.values();
     }
 
     /**
