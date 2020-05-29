@@ -171,15 +171,15 @@ public class DefaultConfig {
         return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder());
     }
 
+    public ProcessParsedLevel processParsedLevel() {
+        return new ProcessParsedLevel(resultRepo, gtfsDataRepository, new Level.LevelBuilder());
+    }
+
     public GenerateExclusionFilenameList generateExclusionFilenameList() {
         return new GenerateExclusionFilenameList(specRepo, execParamRepo, logger);
     }
 
     public GenerateFilenameListToProcess generateFilenameListToProcess() {
         return new GenerateFilenameListToProcess(logger);
-    }
-
-    public ProcessParsedLevel processParsedLevel() {
-        return new ProcessParsedLevel(resultRepo, gtfsDataRepository, new Level.LevelBuilder());
     }
 }
