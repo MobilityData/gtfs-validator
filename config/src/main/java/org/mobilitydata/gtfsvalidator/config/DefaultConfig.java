@@ -88,8 +88,23 @@ public class DefaultConfig {
         routeRelatedUsecaseCollection.add(validateRouteColorAndTextContrast());
         routeRelatedUsecaseCollection.add(validateRouteDescriptionAndNameAreDifferent());
 
-        usecaseByFilename.put("routes.txt", routeRelatedUsecaseCollection);
         usecaseByFilename.put("agency.txt", Collections.emptyList());
+        usecaseByFilename.put("stops.txt", Collections.emptyList());
+        usecaseByFilename.put("routes.txt", routeRelatedUsecaseCollection);
+        usecaseByFilename.put("trips.txt", Collections.emptyList());
+        usecaseByFilename.put("stop_times.txt", Collections.emptyList());
+        usecaseByFilename.put("calendar.txt", Collections.emptyList());
+        usecaseByFilename.put("calendar_dates.txt", Collections.emptyList());
+        usecaseByFilename.put("fare_attributes.txt", Collections.emptyList());
+        usecaseByFilename.put("fare_rules.txt", Collections.emptyList());
+        usecaseByFilename.put("shapes.txt", Collections.emptyList());
+        usecaseByFilename.put("frequencies.txt", Collections.emptyList());
+        usecaseByFilename.put("transfers.txt", Collections.emptyList());
+        usecaseByFilename.put("pathways.txt", Collections.emptyList());
+        usecaseByFilename.put("levels.txt", Collections.emptyList());
+        usecaseByFilename.put("translations.txt", Collections.emptyList());
+        usecaseByFilename.put("feed_info.txt", Collections.emptyList());
+        usecaseByFilename.put("attributions.txt", Collections.emptyList());
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
