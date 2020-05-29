@@ -253,7 +253,7 @@ public class Calendar extends GtfsEntity {
         /**
          * Sets field friday and originalFridayInteger value and returns this
          *
-         * @param friday indicates whether the service operates on friday thursday in the date range specified
+         * @param friday indicates whether the service operates on all friday in the date range specified
          *               by {@param startDate} and {@param endDate} fields
          * @return builder for future object creation
          */

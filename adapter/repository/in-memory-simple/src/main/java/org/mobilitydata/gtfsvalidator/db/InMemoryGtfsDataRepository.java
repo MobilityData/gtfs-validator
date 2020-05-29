@@ -139,5 +139,4 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public Calendar getCalendarByServiceId(final String serviceId) {
         return calendarCollection.get(serviceId);
     }
-
 }
