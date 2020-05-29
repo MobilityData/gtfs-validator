@@ -69,7 +69,7 @@ public class ProcessParsedCalendarDate {
         if (calendarDate.isSuccess()) {
             if (gtfsDataRepository.addCalendarDate((CalendarDate) calendarDate.getData()) == null) {
                 resultRepository.addNotice(new DuplicatedEntityNotice("calendar_dates.txt",
-                        "service_id", validatedParsedRoute.getEntityId()));
+                        "service_id, date", validatedParsedRoute.getEntityId()));
             }
         } else {
             //noinspection unchecked

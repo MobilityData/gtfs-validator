@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -38,7 +37,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // contained in the following columns (found in calendar_dates.txt gtfs file):
     // - service_id
     // - date
-    // - exception_type
     private final Map<String, CalendarDate> calendarDateCollection = new HashMap<>();
 
     /**
@@ -125,8 +123,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public CalendarDate getCalendarDateByServiceIdDateAndExceptionType(final String serviceId, final LocalDateTime date,
-                                                                       final ExceptionType exceptionType) {
-        return calendarDateCollection.get(serviceId + date.toString() + exceptionType.toString());
+    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date) {
+        return calendarDateCollection.get(serviceId + date.toString());
     }
 }

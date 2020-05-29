@@ -175,7 +175,7 @@ class ProcessParsedCalendarDateTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar_dates.txt", noticeList.get(0).getFilename());
-        assertEquals("service_id", noticeList.get(0).getFieldName());
+        assertEquals("service_id, date", noticeList.get(0).getFieldName());
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedCalendarDate,

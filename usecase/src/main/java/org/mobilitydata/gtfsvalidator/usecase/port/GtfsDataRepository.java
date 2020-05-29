@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.time.LocalDateTime;
@@ -34,6 +33,5 @@ public interface GtfsDataRepository {
 
     CalendarDate addCalendarDate(final CalendarDate newCalendarDate) throws IllegalArgumentException;
 
-    CalendarDate getCalendarDateByServiceIdDateAndExceptionType(final String serviceId, final LocalDateTime date,
-                                                                final ExceptionType exceptionType);
+    CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date);
 }
