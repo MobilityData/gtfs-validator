@@ -20,10 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
-import org.mobilitydata.gtfsvalidator.usecase.ProcessParsedAgency;
-import org.mobilitydata.gtfsvalidator.usecase.ProcessParsedRoute;
-import org.mobilitydata.gtfsvalidator.usecase.ValidateGtfsTypes;
+import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
@@ -71,6 +68,7 @@ public class Main {
                 final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
                 final ProcessParsedAgency processParsedAgency = config.processParsedAgency();
                 final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
+                final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
 
                 // base validation + build gtfs entities
                 filenameList.forEach(filename -> {
@@ -96,6 +94,10 @@ public class Main {
                                 }
                                 case "routes.txt": {
                                     processParsedRoute.execute(parsedEntity);
+                                    break;
+                                }
+                                case "transfers.txt": {
+                                    processParsedTransfer.execute(parsedEntity);
                                     break;
                                 }
                             }

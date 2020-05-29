@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 
@@ -147,6 +148,10 @@ public class DefaultConfig {
 
     public ProcessParsedRoute processParsedRoute() {
         return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder());
+    }
+
+    public ProcessParsedTransfer processParsedTransfer() {
+        return new ProcessParsedTransfer(resultRepo, gtfsDataRepository, execParamRepo, new Transfer.TransferBuilder());
     }
 
     public CreateGtfsSemanticValidationFilenameList
