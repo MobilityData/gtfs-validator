@@ -116,15 +116,6 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void callToAddCalendarShouldReturnEntity() {
-        final Calendar mockCalendar = mock(Calendar.class);
-        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockCalendar.getServiceId()).thenReturn("service id");
-
-        assertEquals(underTest.addCalendar(mockCalendar), mockCalendar);
-    }
-
-    @Test
     void addSameCalendarTwiceShouldReturnNull() {
         final Calendar mockCalendar = mock(Calendar.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
