@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
@@ -176,5 +177,9 @@ public class DefaultConfig {
 
     public GenerateFilenameListToProcess generateFilenameListToProcess() {
         return new GenerateFilenameListToProcess(logger);
+    }
+
+    public ProcessParsedLevel processParsedLevel() {
+        return new ProcessParsedLevel(resultRepo, gtfsDataRepository, new Level.LevelBuilder());
     }
 }
