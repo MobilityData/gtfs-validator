@@ -224,7 +224,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             case LOWER_BOUND_MIN_TRANSFER_TIME:
             case UPPER_BOUND_MIN_TRANSFER_TIME: {
                 return hasExecParamValue(key) ?
-                        getExecParamByKey(key).getValue() : defaultValue;
+                        getExecParamByKey(key).getValue().get(0) : defaultValue.get(0);
             }
         }
         throw new IllegalArgumentException("Requested key is not handled");
@@ -239,24 +239,24 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      */
     @Override
     public Options getOptions() {
-        final Options options = new Options();
-        options.addOption(String.valueOf(URL_KEY.charAt(0)), URL_KEY, true,
-                "URL to GTFS zipped archive");
-        options.addOption(String.valueOf(ZIP_KEY.charAt(0)), ZIP_KEY, true,
+        final Options options = new Options()
+        .addOption(String.valueOf(URL_KEY.charAt(0)), URL_KEY, true,
+                "URL to GTFS zipped archive")
+        .addOption(String.valueOf(ZIP_KEY.charAt(0)), ZIP_KEY, true,
                 "if --url is used, where to place " +
-                        "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
-        options.addOption(String.valueOf(EXTRACT_KEY.charAt(0)), EXTRACT_KEY, true,
-                "Relative path where to extract the zip content");
-        options.addOption(String.valueOf(OUTPUT_KEY.charAt(0)), OUTPUT_KEY, true,
-                "Relative path where to place output files");
-        options.addOption(String.valueOf(HELP_KEY.charAt(0)), HELP_KEY, false, "Print this message");
-        options.addOption(String.valueOf(PROTO_KEY.charAt(0)), PROTO_KEY, false,
-                "Export validation results as proto");
-        options.addOption(String.valueOf(EXCLUSION_KEY.charAt(1)), EXCLUSION_KEY, true,
-                "Exclude files from semantic GTFS validation");
-        options.addOption("mintransfertime", "mintransfertime", true, "minimum value" +
-                " for field `min_transfer_time` of file `transfers.txt` ");
-        options.addOption("maxtransfertime", "maxtransfertime", true, "maximum value" +
+                        "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk")
+        .addOption(String.valueOf(EXTRACT_KEY.charAt(0)), EXTRACT_KEY, true,
+                "Relative path where to extract the zip content")
+        .addOption(String.valueOf(OUTPUT_KEY.charAt(0)), OUTPUT_KEY, true,
+                "Relative path where to place output files")
+        .addOption(String.valueOf(HELP_KEY.charAt(0)), HELP_KEY, false, "Print this message")
+        .addOption(String.valueOf(PROTO_KEY.charAt(0)), PROTO_KEY, false,
+                "Export validation results as proto")
+        .addOption(String.valueOf(EXCLUSION_KEY.charAt(1)), EXCLUSION_KEY, true,
+                "Exclude files from semantic GTFS validation")
+        .addOption("mintransfertime", "mintransfertime", true, "minimum value" +
+                " for field `min_transfer_time` of file `transfers.txt` ")
+        .addOption("maxtransfertime", "maxtransfertime", true, "maximum value" +
                 " for field `min_transfer_time` of file `transfers.txt` ");
         // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
         // Other commands only take 1 argument
