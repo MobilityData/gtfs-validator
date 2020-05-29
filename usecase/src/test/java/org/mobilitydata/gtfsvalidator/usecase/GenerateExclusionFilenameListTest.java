@@ -75,16 +75,20 @@ class GenerateExclusionFilenameListTest {
 
     @Test
     void excludeRootShouldExcludeAllFile() {
-        final RelationshipDescriptor level2OnlyChild = spy(new RelationshipDescriptor("level2_only_child", null));
-        final RelationshipDescriptor level1SecondChild = spy(new RelationshipDescriptor("level1_second_child", null));
+        final RelationshipDescriptor level2OnlyChild =
+                spy(new RelationshipDescriptor("level2_only_child", null));
+        final RelationshipDescriptor level1SecondChild =
+                spy(new RelationshipDescriptor("level1_second_child", null));
         final RelationshipDescriptor level1FirstChild = spy(
                 new RelationshipDescriptor("level1_first_child", new ArrayList<>(List.of(level2OnlyChild))));
         final RelationshipDescriptor level0Node = spy(
-                new RelationshipDescriptor("level0_file", new ArrayList<>(List.of(level1FirstChild, level1SecondChild))));
+                new RelationshipDescriptor("level0_file",
+                        new ArrayList<>(List.of(level1FirstChild, level1SecondChild))));
 
         final List<RelationshipDescriptor> childrenCollection =
                 new ArrayList<>(List.of(level0Node, level1FirstChild, level1SecondChild, level2OnlyChild));
-        final RelationshipDescriptor mockRoot = spy(new RelationshipDescriptor("level0_file", childrenCollection));
+        final RelationshipDescriptor mockRoot =
+                spy(new RelationshipDescriptor("level0_file", childrenCollection));
 
         final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
         when(mockGtfsSpecRepo.getOptionalFilenameList()).thenReturn(Collections.emptyList());
@@ -124,18 +128,22 @@ class GenerateExclusionFilenameListTest {
 
     @Test
     void excludeAllFileWithDepth1ShouldExclude3File() {
-        final RelationshipDescriptor level2OnlyChild = spy(new RelationshipDescriptor("level2_only_child", null));
-        final RelationshipDescriptor level1SecondChild = spy(new RelationshipDescriptor("level1_second_child", null));
+        final RelationshipDescriptor level2OnlyChild =
+                spy(new RelationshipDescriptor("level2_only_child", null));
+        final RelationshipDescriptor level1SecondChild =
+                spy(new RelationshipDescriptor("level1_second_child", null));
         final RelationshipDescriptor level1FirstChild = spy(
                 new RelationshipDescriptor("level1_first_child", new ArrayList<>(List.of(level2OnlyChild))));
         final RelationshipDescriptor level0Node = spy(
-                new RelationshipDescriptor("level0_file", new ArrayList<>(List.of(level1FirstChild, level1SecondChild))
+                new RelationshipDescriptor("level0_file",
+                        new ArrayList<>(List.of(level1FirstChild, level1SecondChild))
                 )
         );
 
         final List<RelationshipDescriptor> childrenCollection =
                 new ArrayList<>(List.of(level0Node, level1FirstChild, level1SecondChild, level2OnlyChild));
-        final RelationshipDescriptor mockRoot = spy(new RelationshipDescriptor("level0_file", childrenCollection));
+        final RelationshipDescriptor mockRoot =
+                spy(new RelationshipDescriptor("level0_file", childrenCollection));
 
         final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
         when(mockGtfsSpecRepo.getOptionalFilenameList()).thenReturn(Collections.emptyList());
@@ -176,8 +184,10 @@ class GenerateExclusionFilenameListTest {
 
     @Test
     void excludeAllFileWithDepth2ShouldExclude1File() {
-        final RelationshipDescriptor level2OnlyChild = spy(new RelationshipDescriptor("level2_only_child", null));
-        final RelationshipDescriptor level1SecondChild = spy(new RelationshipDescriptor("level1_second_child", null));
+        final RelationshipDescriptor level2OnlyChild =
+                spy(new RelationshipDescriptor("level2_only_child", null));
+        final RelationshipDescriptor level1SecondChild =
+                spy(new RelationshipDescriptor("level1_second_child", null));
         final RelationshipDescriptor level1FirstChild = spy(
                 new RelationshipDescriptor("level1_first_child", new ArrayList<>(List.of(level2OnlyChild))));
         final RelationshipDescriptor level0Node = spy(
@@ -186,7 +196,8 @@ class GenerateExclusionFilenameListTest {
 
         final List<RelationshipDescriptor> childrenCollection =
                 new ArrayList<>(List.of(level0Node, level1FirstChild, level1SecondChild, level2OnlyChild));
-        final RelationshipDescriptor mockRoot = spy(new RelationshipDescriptor("level0_file", childrenCollection));
+        final RelationshipDescriptor mockRoot =
+                spy(new RelationshipDescriptor("level0_file", childrenCollection));
 
         final GtfsSpecRepository mockGtfsSpecRepo = spy(GtfsSpecRepository.class);
         when(mockGtfsSpecRepo.getOptionalFilenameList()).thenReturn(Collections.emptyList());
@@ -206,7 +217,8 @@ class GenerateExclusionFilenameListTest {
 
         final ArrayList<String> toCheck = underTest.execute();
 
-        verify(mockExecParamRepo, times(1)).getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
         verify(mockGtfsSpecRepo, times(1)).getOptionalFilenameList();
         verify(mockGtfsSpecRepo, times(1)).getRequiredFilenameList();
         verify(mockGtfsSpecRepo, times(1)).getGtfsRelationshipDescriptor();
