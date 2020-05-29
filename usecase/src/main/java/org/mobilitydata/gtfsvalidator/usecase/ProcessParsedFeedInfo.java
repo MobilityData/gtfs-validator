@@ -74,16 +74,16 @@ public class ProcessParsedFeedInfo {
                 .feedContactEmail(feedContactEmail)
                 .feedContactUrl(feedContactUrl);
 
-        final EntityBuildResult<?> agency = builder.build();
+        final EntityBuildResult<?> feedInfo = builder.build();
 
-        if (agency.isSuccess()) {
-            if (gtfsDataRepository.addFeedInfo((FeedInfo) agency.getData()) == null) {
+        if (feedInfo.isSuccess()) {
+            if (gtfsDataRepository.addFeedInfo((FeedInfo) feedInfo.getData()) == null) {
                 resultRepository.addNotice(new DuplicatedEntityNotice("feed_info.txt",
                         "feed_publisher_name", validatedFeedInfo.getEntityId()));
             }
         } else {
             //noinspection unchecked to avoid lint
-            ((List<Notice>) agency.getData()).forEach(resultRepository::addNotice);
+            ((List<Notice>) feedInfo.getData()).forEach(resultRepository::addNotice);
         }
     }
 }
