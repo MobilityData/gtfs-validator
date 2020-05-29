@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 class ProcessParsedTripTest {
 
     @Test
-    public void validatedTripShouldCreateTripAndBeAddedToGtfsDataRepository() {
+    public void validatedTripShouldCreateTripAndBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
@@ -64,7 +64,8 @@ class ProcessParsedTripTest {
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("direction_id"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("block_id"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("shape_id"));
-        verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("wheelchair_accessible"));
+        verify(mockParsedTrip, times(1))
+                .get(ArgumentMatchers.eq("wheelchair_accessible"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("bikes_allowed"));
 
         verify(mockBuilder, times(1)).routeId("route_id");
@@ -126,7 +127,8 @@ class ProcessParsedTripTest {
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("direction_id"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("block_id"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("shape_id"));
-        verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("wheelchair_accessible"));
+        verify(mockParsedTrip, times(1))
+                .get(ArgumentMatchers.eq("wheelchair_accessible"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("bikes_allowed"));
 
         //noinspection ConstantConditions
@@ -184,7 +186,8 @@ class ProcessParsedTripTest {
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("direction_id"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("block_id"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("shape_id"));
-        verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("wheelchair_accessible"));
+        verify(mockParsedTrip, times(1))
+                .get(ArgumentMatchers.eq("wheelchair_accessible"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("bikes_allowed"));
 
         verify(mockGtfsDataRepo, times(1)).addTrip(ArgumentMatchers.isA(Trip.class));
