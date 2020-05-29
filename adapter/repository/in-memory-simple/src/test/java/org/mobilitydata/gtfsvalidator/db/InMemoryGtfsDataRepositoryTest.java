@@ -21,6 +21,9 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
+import java.util.Collection;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -98,6 +101,22 @@ class InMemoryGtfsDataRepositoryTest {
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addRoute(null));
         assertEquals("Cannot add null route to data repository", exception.getMessage());
+    }
+
+    @Test
+    void getRouteAllShouldReturnAllRoutes() {
+        final Route mockRoute00 = mock(Route.class);
+        final Route mockRoute01 = mock(Route.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockRoute00.getRouteId()).thenReturn("route id0");
+        when(mockRoute01.getRouteId()).thenReturn("route id1");
+
+        underTest.addRoute(mockRoute00);
+        underTest.addRoute(mockRoute01);
+
+        Collection<Route> mockRoutes = List.of(mockRoute00, mockRoute01);
+
+        assertTrue(underTest.getRouteAll().containsAll(mockRoutes));
     }
 
     @Test
