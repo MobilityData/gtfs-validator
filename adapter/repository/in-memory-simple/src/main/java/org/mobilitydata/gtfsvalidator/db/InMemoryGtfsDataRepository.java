@@ -118,6 +118,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return routeCollection.get(routeId);
     }
 
+
+    /**
+     * Add a CalendarDate representing a row from calendar_dates.txt to this. Return the entity added to the repository
+     * if the uniqueness constraint of route based on service_id and date is respected, if this requirement is not met,
+     * returns null.
+     *
+     * @param newCalendarDate the internal representation of a row from calendar_dates.txt to be added to the repository
+     * @return the entity added to the repository if the uniqueness constraint of route based on service_id is
+     * respected, if this requirement is not met returns null.
+     */
     @Override
     public CalendarDate addCalendarDate(@NotNull final CalendarDate newCalendarDate) throws IllegalArgumentException {
         //noinspection ConstantConditions
@@ -133,6 +143,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         }
     }
 
+    /**
+     * Return the Agency representing a row from agency.txt related to the id provided as parameter
+     *
+     * @param serviceId  first part of the composite key used to map rows from calendar_dates.txt
+     * @param date       second part of the composite key used to map rows from calendar_dates.txt
+     * @return the CalendarDate representing a row from calendar_dates.txt related to the composite key provided as
+     * parameter
+     */
     @Override
     public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date) {
         return calendarDateCollection.get(serviceId + date.toString());
