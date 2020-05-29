@@ -47,11 +47,14 @@ public class GenerateExclusionFilenameList {
      * applied to.
      */
     public ArrayList<String> execute() {
-        final ArrayList<String> toExcludeFromValidation =
-                new ArrayList<>(List.of(execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY)
+        final String rawListOfFileToExcludeAsString =
+                execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
+        final ArrayList<String> toExcludeFromValidation = rawListOfFileToExcludeAsString != null ?
+                new ArrayList<>(List.of(rawListOfFileToExcludeAsString
                         .replace("[", "")
                         .replace("]", "")
-                        .split(",")));
+                        .split(",")))
+                : new ArrayList<>();
 
         final List<String> gtfsFilenameList = new ArrayList<>();
         gtfsFilenameList.addAll(gtfsSpecRepo.getRequiredFilenameList());
