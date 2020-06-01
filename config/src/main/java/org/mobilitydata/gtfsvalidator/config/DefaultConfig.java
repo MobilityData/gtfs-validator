@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 
@@ -168,6 +169,10 @@ public class DefaultConfig {
 
     public ProcessParsedRoute processParsedRoute() {
         return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder());
+    }
+
+    public ProcessParsedTrip processParsedTrip() {
+        return new ProcessParsedTrip(resultRepo, gtfsDataRepository, new Trip.TripBuilder());
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {
