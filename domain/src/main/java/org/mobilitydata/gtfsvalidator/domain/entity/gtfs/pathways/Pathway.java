@@ -31,6 +31,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.SuspiciousInt
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for all entities defined in pathways.txt. Can not be directly instantiated: user must use the
+ * {@link PathwayBuilder} to create this.
+ */
 public class Pathway extends GtfsEntity {
     @NotNull
     private final String pathwayId;
@@ -57,6 +61,24 @@ public class Pathway extends GtfsEntity {
     @Nullable
     private final String reversedSignpostedAs;
 
+    /**
+     * @param pathwayId             the pathway_id field contains an ID that uniquely identifies the pathway
+     * @param fromStopId            location at which the pathway begins
+     * @param toStopId              location at which the pathway ends
+     * @param pathwayMode           type of pathway between the specified (@param fromStopId, @param toStopId) pair
+     * @param isBidirectional       indicates in which direction the pathway can be used
+     * @param length                horizontal length in meters of the pathway from the origin location (defined in
+     *                              fromStopId) to the destination location (defined in toStopId)
+     * @param traversalTime         average time in seconds needed to walk through the pathway from the origin location
+     *                              (defined in @param fromStopId) to the destination location (defined
+     *                              toStopId)
+     * @param stairCount            number of stairs of the pathway
+     * @param maxSlope              maximum slope ratio of the pathway
+     * @param minWidth              minimum width of the pathway in meters
+     * @param signpostedAs          string of text from physical signage visible to transit riders
+     * @param reversedSignpostedAs  same than the @param signPostedAs field, but when the pathways is used backward,
+     *                              i.e. from the @param toStopId to the @param fromStopId
+     */
     private Pathway(@NotNull final String pathwayId,
                     @NotNull final String fromStopId,
                     @NotNull final String toStopId,
@@ -143,6 +165,10 @@ public class Pathway extends GtfsEntity {
         return reversedSignpostedAs;
     }
 
+    /**
+     * Builder class to create {@link Pathway} objects. Allows an unordered definition of the different attributes of
+     * {@link Pathway}.
+     */
     public static class PathwayBuilder {
         private String pathwayId;
         private String fromStopId;
@@ -167,68 +193,148 @@ public class Pathway extends GtfsEntity {
         private Integer originalIsBiDirectionalInteger;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
+        /**
+         * Sets field pathwayId value and returns this
+         *
+         * @param pathwayId the pathway_id field contains an ID that uniquely identifies the pathway
+         * @return builder for future object creation
+         */
         public PathwayBuilder pathwayId(@NotNull final String pathwayId) {
             this.pathwayId = pathwayId;
             return this;
         }
 
+        /**
+         * Sets field fromStopId value and returns this
+         *
+         * @param fromStopId location at which the pathway begins
+         * @return builder for future object creation
+         */
         public PathwayBuilder fromStopId(@NotNull final String fromStopId) {
             this.fromStopId = fromStopId;
             return this;
         }
 
+        /**
+         * Sets field toStopId value and returns this
+         *
+         * @param toStopId location at which the pathway ends
+         * @return builder for future object creation
+         */
         public PathwayBuilder toStopId(@NotNull final String toStopId) {
             this.toStopId = toStopId;
             return this;
         }
 
+        /**
+         * Sets field pathwayMode value and returns this
+         *
+         * @param pathwayMode type of pathway between the specified (@param fromStopId, @param toStopId) pair
+         * @return builder for future object creation
+         */
         public PathwayBuilder pathwayMode(@NotNull final Integer pathwayMode) {
             this.pathwayMode = PathwayMode.fromInt(pathwayMode);
             this.originalPathwayModeInteger = pathwayMode;
             return this;
         }
 
+        /**
+         * Sets field isBidirectional value and returns this
+         *
+         * @param isBidirectional indicates in which direction the pathway can be used
+         * @return builder for future object creation
+         */
         public PathwayBuilder isBidirectional(@NotNull Integer isBidirectional) {
             this.isBidirectional = IsBidirectional.fromInt(isBidirectional);
             this.originalIsBiDirectionalInteger = isBidirectional;
             return this;
         }
 
+        /**
+         * Sets field length value and returns this
+         *
+         * @param length horizontal length in meters of the pathway from the origin location to the destination location
+         * @return builder for future object creation
+         */
         public PathwayBuilder length(@Nullable final Float length) {
             this.length = length;
             return this;
         }
 
+        /**
+         * Sets field traversalTime value and returns this
+         *
+         * @param traversalTime average time in seconds needed to walk through the pathway from the origin to the
+         *                      destination
+         * @return builder for future object creation
+         */
         public PathwayBuilder traversalTime(@Nullable final Integer traversalTime) {
             this.traversalTime = traversalTime;
             return this;
         }
 
+        /**
+         * Sets field stairCount value and returns this
+         *
+         * @param stairCount number of stairs of the pathway
+         * @return builder for future object creation
+         */
         public PathwayBuilder stairCount(@Nullable final Integer stairCount) {
             this.stairCount = stairCount;
             return this;
         }
 
+        /**
+         * Sets field maxSlope value and returns this
+         *
+         * @param maxSlope maximum slope ratio of the pathway
+         * @return builder for future object creation
+         */
         public PathwayBuilder maxSlope(@Nullable final Float maxSlope) {
             this.maxSlope = maxSlope;
             return this;
         }
 
+        /**
+         * Sets field minWidth value and returns this
+         *
+         * @param minWidth  minimum width of the pathway in meters
+         * @return builder for future object creation
+         */
         public PathwayBuilder minWidth(@Nullable final Float minWidth) {
             this.minWidth = minWidth;
             return this;
         }
 
+        /**
+         * Sets field signpostedAs value and returns this
+         *
+         * @param signpostedAs string of text from physical signage visible to transit riders
+         * @return builder for future object creation
+         */
         public PathwayBuilder signpostedAs(@Nullable final String signpostedAs) {
             this.signpostedAs = signpostedAs;
             return this;
         }
 
+        /**
+         * Sets field reversedSignpostedAs value and returns this
+         *
+         * @param reversedSignpostedAs same than the @param signPostedAs field, but when the pathways is used backward
+         * @return builder for future object creation
+         */
         public PathwayBuilder reversedSignpostedAs(@Nullable final String reversedSignpostedAs) {
             this.reversedSignpostedAs = reversedSignpostedAs;
             return this;
         }
 
+        /**
+         * Return an entity representing a row from pathways.txt if the requirements from the official GTFS
+         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         *
+         * @return an entity representing a row from pathways.txt if the requirements from the official GTFS
+         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         */
         public EntityBuildResult<?> build(final float minLength, final float maxLength,
                                           final int minTraversalTime, final int maxTraversalTime,
                                           final int minStairCount, final int maxStairCount,
