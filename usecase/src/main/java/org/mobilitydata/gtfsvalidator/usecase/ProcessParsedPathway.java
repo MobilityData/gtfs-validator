@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -32,13 +33,16 @@ import java.util.List;
 public class ProcessParsedPathway {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
+    private final ExecParamRepository execParamRepository;
     private final Pathway.PathwayBuilder builder;
 
     public ProcessParsedPathway(final ValidationResultRepository resultRepository,
                                 final GtfsDataRepository gtfsDataRepository,
+                                final ExecParamRepository execParamRepository,
                                 final Pathway.PathwayBuilder builder) {
         this.resultRepository = resultRepository;
         this.gtfsDataRepository = gtfsDataRepository;
+        this.execParamRepository = execParamRepository;
         this.builder = builder;
     }
 
@@ -80,7 +84,23 @@ public class ProcessParsedPathway {
                 .signpostedAs(signpostedAs)
                 .reversedSignpostedAs(reversedSignpostedAs);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult pathway = builder.build();
+        final EntityBuildResult<?> pathway = builder.build(
+                Float.parseFloat(execParamRepository.getExecParamValue(ExecParamRepository.PATHWAY_MIN_LENGTH_KEY)),
+                Float.parseFloat(execParamRepository.getExecParamValue(ExecParamRepository.PATHWAY_MAX_LENGTH_KEY)),
+                Integer.parseInt(
+                        execParamRepository.getExecParamValue(ExecParamRepository.PATHWAY_MIN_TRAVERSAL_TIME_KEY)),
+                Integer.parseInt(
+                        execParamRepository.getExecParamValue(ExecParamRepository.PATHWAY_MAX_TRAVERSAL_TIME_KEY)),
+                Integer.parseInt(
+                        execParamRepository.getExecParamValue(ExecParamRepository.PATHWAY_MIN_STAIR_COUNT_KEY)),
+                Integer.parseInt(
+                        execParamRepository.getExecParamValue(ExecParamRepository.PATHWAY_MAX_STAIR_COUNT_KEY)),
+                Float.parseFloat(execParamRepository.getExecParamValue(ExecParamRepository.PATHWAY_MAX_SLOPE_KEY)),
+                Float.parseFloat(
+                        execParamRepository.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY)),
+                Float.parseFloat(
+                        execParamRepository.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY))
+        );
 
         if (pathway.isSuccess()) {
             if (gtfsDataRepository.addPathway((Pathway) pathway.getData()) == null) {
