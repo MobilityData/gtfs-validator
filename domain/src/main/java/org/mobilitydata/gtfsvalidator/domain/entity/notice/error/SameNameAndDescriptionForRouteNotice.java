@@ -30,10 +30,6 @@ public class SameNameAndDescriptionForRouteNotice extends ErrorNotice {
                 entityId);
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
-
     @Override
     public void export(final NoticeExporter exporter)
             throws IOException {

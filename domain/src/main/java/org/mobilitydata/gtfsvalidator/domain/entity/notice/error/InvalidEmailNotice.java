@@ -44,10 +44,6 @@ public class InvalidEmailNotice extends ErrorNotice {
         return emailValue;
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
-
     public String getFieldName() {
         return fieldName;
     }

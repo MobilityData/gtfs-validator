@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 public class ValidateShortAndLongNameForRoutePresenceTest {
 
     @Test
-    void presentRouteShortAndLongNameColorShouldNotGenerateNotice() {
+    void presentRouteShortAndLongNameShouldNotGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn("short name");
@@ -58,7 +58,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
     }
 
     @Test
-    void nullShortNameAndNullLongNameColorShouldGenerateNotice() {
+    void nullShortNameAndNullLongNameShouldGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn(null);
@@ -85,7 +85,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
     }
 
     @Test
-    void blankShortNameAndNullLongNameColorShouldGenerateNotice() {
+    void blankShortNameAndNullLongNameShouldGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn("");
@@ -112,7 +112,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
     }
 
     @Test
-    void nullShortNameAndBlankLongNameColorShouldGenerateNotice() {
+    void nullShortNameAndBlankLongNameShouldGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn(null);
@@ -139,7 +139,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
     }
 
     @Test
-    void presentShortNameAndNullLongNameColorShouldGenerateNotice() {
+    void presentShortNameAndNullLongNameShouldGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn("short name");
@@ -166,7 +166,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
     }
 
     @Test
-    void presentShortNameAndBlankLongNameColorShouldGenerateNotice() {
+    void presentShortNameAndBlankLongNameShouldGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn("short name");
@@ -193,7 +193,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
     }
 
     @Test
-    void nullShortNameAndPresentLongNameColorShouldGenerateNotice() {
+    void nullShortNameAndPresentLongNameShouldGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn(null);
@@ -220,7 +220,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
     }
 
     @Test
-    void blankShortNameAndPresentLongNameColorShouldGenerateNotice() {
+    void blankShortNameAndPresentLongNameShouldGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn("");

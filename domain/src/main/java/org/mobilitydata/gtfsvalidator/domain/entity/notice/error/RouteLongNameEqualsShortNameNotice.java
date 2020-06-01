@@ -35,8 +35,4 @@ public class RouteLongNameEqualsShortNameNotice extends ErrorNotice {
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
-
-    public String getEntityId() {
-        return entityId;
-    }
 }

@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteShortNameTooLongNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -50,7 +50,7 @@ public class ValidateRouteShortNameLength {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteShortName(route.getRouteShortName())))
-                .forEach(route -> resultRepo.addNotice(new RouteShortNameTooLongNotice("route.txt",
+                .forEach(route -> resultRepo.addNotice(new RouteShortNameTooLongNotice("routes.txt",
                         route.getRouteId(), String.valueOf(route.getRouteShortName().length()))));
     }
 

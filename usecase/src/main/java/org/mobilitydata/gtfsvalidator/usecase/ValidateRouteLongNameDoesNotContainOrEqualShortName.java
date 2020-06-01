@@ -55,9 +55,9 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortName {
                         route.getRouteLongName().contains(route.getRouteShortName()))
                 .forEach(route -> {
                     if (route.getRouteLongName().equals(route.getRouteShortName())) {
-                        resultRepo.addNotice(new RouteLongNameEqualsShortNameNotice("route.txt", route.getRouteId()));
+                        resultRepo.addNotice(new RouteLongNameEqualsShortNameNotice("routes.txt", route.getRouteId()));
                     } else {
-                        resultRepo.addNotice(new RouteLongNameContainsShortNameNotice("route.txt", route.getRouteId()));
+                        resultRepo.addNotice(new RouteLongNameContainsShortNameNotice("routes.txt", route.getRouteId()));
                     }
                 });
     }

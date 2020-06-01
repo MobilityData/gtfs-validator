@@ -51,6 +51,6 @@ public class ValidateRouteTypeIsInTypeOptions {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> route.getRouteType() == null)
-                .forEach(route -> resultRepo.addNotice(new InvalidRouteTypeNotice("route.txt", route.getRouteId())));
+                .forEach(route -> resultRepo.addNotice(new InvalidRouteTypeNotice("routes.txt", route.getRouteId())));
     }
 }

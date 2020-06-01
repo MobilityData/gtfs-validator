@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
@@ -32,17 +32,13 @@ public class RouteShortNameTooLongNotice extends WarningNotice {
         this.shortNameLength = shortNameLength;
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
-
-    public String getshortNameLength() {
-        return shortNameLength;
-    }
-
     @Override
     public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
+    }
+
+    public String getshortNameLength() {
+        return shortNameLength;
     }
 }

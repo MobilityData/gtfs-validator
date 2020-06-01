@@ -49,7 +49,7 @@ public class ValidateRouteColorAndTextContrast {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
-                .forEach(route -> resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("route.txt",
+                .forEach(route -> resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("routes.txt",
                         route.getRouteId(), String.valueOf(contrast(route.getRouteColor(), route.getRouteTextColor())))));
     }
 

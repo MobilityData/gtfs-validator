@@ -55,11 +55,11 @@ public class ValidateShortAndLongNameForRoutePresence {
                 .filter(route -> !(isPresentName(route.getRouteLongName()) && isPresentName(route.getRouteShortName())))
                 .forEach(route -> {
                     if (!isPresentName(route.getRouteLongName()) && !isPresentName(route.getRouteShortName())) {
-                        resultRepo.addNotice(new MissingShortAndLongNameForRouteNotice("route.txt", route.getRouteId()));
+                        resultRepo.addNotice(new MissingShortAndLongNameForRouteNotice("routes.txt", route.getRouteId()));
                     } else if (!isPresentName(route.getRouteLongName())) {
-                        resultRepo.addNotice(new MissingRouteLongNameNotice("route.txt", route.getRouteId()));
+                        resultRepo.addNotice(new MissingRouteLongNameNotice("routes.txt", route.getRouteId()));
                     } else {
-                        resultRepo.addNotice(new MissingRouteShortNameNotice("route.txt", route.getRouteId()));
+                        resultRepo.addNotice(new MissingRouteShortNameNotice("routes.txt", route.getRouteId()));
                     }
                 });
     }

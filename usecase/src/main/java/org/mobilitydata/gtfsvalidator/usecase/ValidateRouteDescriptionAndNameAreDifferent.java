@@ -50,7 +50,7 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName())))
-                .forEach(route -> resultRepo.addNotice(new SameNameAndDescriptionForRouteNotice("route.txt", route.getRouteId())));
+                .forEach(route -> resultRepo.addNotice(new SameNameAndDescriptionForRouteNotice("routes.txt", route.getRouteId())));
     }
 
     /**

@@ -39,17 +39,13 @@ public class RouteColorAndTextInsufficientContrastNotice extends ErrorNotice {
         this.contrastRatio = contrastRatio;
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
-
-    public String getContrastRatio() {
-        return contrastRatio;
-    }
-
     @Override
     public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
+    }
+
+    public String getContrastRatio() {
+        return contrastRatio;
     }
 }

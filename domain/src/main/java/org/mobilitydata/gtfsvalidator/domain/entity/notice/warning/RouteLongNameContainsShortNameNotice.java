@@ -35,8 +35,4 @@ public class RouteLongNameContainsShortNameNotice extends WarningNotice {
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
-
-    public String getEntityId() {
-        return entityId;
-    }
 }
