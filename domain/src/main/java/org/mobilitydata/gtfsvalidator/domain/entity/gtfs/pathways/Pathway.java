@@ -39,7 +39,7 @@ public class Pathway extends GtfsEntity {
     @NotNull
     private final PathwayMode pathwayMode;
     @NotNull
-    private final Boolean isBidirectional;
+    private final IsBidirectional isBidirectional;
     @Nullable
     private final Float length;
     @Nullable
@@ -59,7 +59,7 @@ public class Pathway extends GtfsEntity {
                     @NotNull final String fromStopId,
                     @NotNull final String toStopId,
                     @NotNull final PathwayMode pathwayMode,
-                    @NotNull final Boolean isBidirectional,
+                    @NotNull final IsBidirectional isBidirectional,
                     @Nullable final Float length,
                     @Nullable final Integer traversalTime,
                     @Nullable final Integer stairCount,
@@ -102,7 +102,7 @@ public class Pathway extends GtfsEntity {
     }
 
     @NotNull
-    public Boolean getIsBidirectional() {
+    public IsBidirectional getIsBidirectional() {
         return isBidirectional;
     }
 
@@ -146,7 +146,7 @@ public class Pathway extends GtfsEntity {
         private String fromStopId;
         private String toStopId;
         private PathwayMode pathwayMode;
-        private Boolean isBidirectional;
+        private IsBidirectional isBidirectional;
         @Nullable
         private Float length;
         @Nullable
@@ -187,14 +187,7 @@ public class Pathway extends GtfsEntity {
         }
 
         public PathwayBuilder isBidirectional(@NotNull Integer isBidirectional) {
-            //noinspection ConstantConditions
-            if (isBidirectional == null) {
-                this.isBidirectional = null;
-            } else if (isBidirectional == 0) {
-                this.isBidirectional = false;
-            } else if (isBidirectional == 1) {
-                this.isBidirectional = true;
-            }
+            this.isBidirectional = IsBidirectional.fromInt(isBidirectional);
             this.originalIsBiDirectionalInteger = isBidirectional;
             return this;
         }
@@ -237,9 +230,16 @@ public class Pathway extends GtfsEntity {
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
-            if (pathwayId == null || fromStopId == null || toStopId == null || isBidirectional == null ||
-                    (length != null && length < 0) || (traversalTime != null && traversalTime < 0) ||
-                    (stairCount != null && stairCount < 0) || (minWidth != null && minWidth < 0) || pathwayMode == null) {
+            if (pathwayId == null ||
+                    fromStopId == null ||
+                    toStopId == null ||
+                    !IsBidirectional.isEnumValueValid(originalIsBiDirectionalInteger) ||
+                    isBidirectional == null ||
+                    (length != null && length < 0) ||
+                    (traversalTime != null && traversalTime < 0) ||
+                    (stairCount != null && stairCount < 0) ||
+                    (minWidth != null && minWidth < 0) ||
+                    pathwayMode == null) {
 
                 if (pathwayId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("pathways.txt",
@@ -292,8 +292,9 @@ public class Pathway extends GtfsEntity {
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {
-                return new EntityBuildResult<>(new Pathway(pathwayId, fromStopId, toStopId, pathwayMode, isBidirectional,
-                        length, traversalTime, stairCount, maxSlope, minWidth, signpostedAs, reversedSignpostedAs));
+                return new EntityBuildResult<>(new Pathway(pathwayId, fromStopId, toStopId, pathwayMode,
+                        isBidirectional, length, traversalTime, stairCount, maxSlope, minWidth, signpostedAs,
+                        reversedSignpostedAs));
             }
         }
     }
