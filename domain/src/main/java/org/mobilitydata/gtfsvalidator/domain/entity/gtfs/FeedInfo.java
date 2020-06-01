@@ -145,7 +145,7 @@ public class FeedInfo extends GtfsEntity {
          * @param feedPublisherName full name of the organization that publishes the dataset
          * @return builder for future object creation
          */
-        public FeedInfoBuilder feedPublisherName(final String feedPublisherName) {
+        public FeedInfoBuilder feedPublisherName(@NotNull final String feedPublisherName) {
             this.feedPublisherName = feedPublisherName;
             return this;
         }
@@ -156,7 +156,7 @@ public class FeedInfo extends GtfsEntity {
          * @param feedPublisherUrl URL of the dataset publishing organization's website
          * @return builder for future object creation
          */
-        public FeedInfoBuilder feedPublisherUrl(final String feedPublisherUrl) {
+        public FeedInfoBuilder feedPublisherUrl(@NotNull final String feedPublisherUrl) {
             this.feedPublisherUrl = feedPublisherUrl;
             return this;
         }
@@ -167,7 +167,7 @@ public class FeedInfo extends GtfsEntity {
          * @param feedLang default language used for the text in this dataset
          * @return builder for future object creation
          */
-        public FeedInfoBuilder feedLang(final String feedLang) {
+        public FeedInfoBuilder feedLang(@NotNull final String feedLang) {
             this.feedLang = feedLang;
             return this;
         }
