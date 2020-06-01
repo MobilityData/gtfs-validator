@@ -115,7 +115,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     @Override
-    public FeedInfo addFeedInfo(FeedInfo newFeedInfo) throws IllegalArgumentException {
+    public FeedInfo addFeedInfo(final FeedInfo newFeedInfo) throws IllegalArgumentException {
         if (newFeedInfo != null) {
             if (feedInfoPerFeedPublisherName.containsKey(newFeedInfo.getFeedPublisherName())) {
                 return null;
