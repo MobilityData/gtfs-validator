@@ -482,7 +482,7 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        MissingBothRouteNamesNotice toExport = new MissingBothRouteNamesNotice(FILENAME, "entity_id");
+        MissingShortAndLongNameForRouteNotice toExport = new MissingShortAndLongNameForRouteNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

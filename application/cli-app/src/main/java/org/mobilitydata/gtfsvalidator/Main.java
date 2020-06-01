@@ -108,7 +108,6 @@ public class Main {
                 config.validateRouteDescriptionAndNameAreDifferent().execute();
                 config.validateRouteTypeIsInOptions().execute();
                 config.validateBothRouteNamesPresence().execute();
-                config.validateRouteDescriptionAndNameAreDifferent().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);

@@ -39,3 +39,4 @@ public class MissingRouteLongNameNotice extends WarningNotice {
         return entityId;
     }
 }
+

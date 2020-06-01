@@ -73,7 +73,7 @@ public interface NoticeExporter {
 
     void export(InvalidRouteTypeNotice toExport) throws IOException;
 
-    void export(MissingBothRouteNamesNotice toExport) throws IOException;
+    void export(MissingShortAndLongNameForRouteNotice toExport) throws IOException;
 
     void export(MissingRouteShortNameNotice toExport) throws IOException;
 

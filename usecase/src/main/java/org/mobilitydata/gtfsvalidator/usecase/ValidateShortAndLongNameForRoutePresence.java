@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingBothRouteNamesNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingShortAndLongNameForRouteNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MissingRouteLongNameNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MissingRouteShortNameNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * Use case to validate that Route short name and long name are present.
  */
-public class ValidateBothRouteNamesPresence {
+public class ValidateShortAndLongNameForRoutePresence {
 
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
@@ -37,8 +37,8 @@ public class ValidateBothRouteNamesPresence {
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
      */
-    public ValidateBothRouteNamesPresence(final GtfsDataRepository dataRepo,
-                                          final ValidationResultRepository resultRepo) {
+    public ValidateShortAndLongNameForRoutePresence(final GtfsDataRepository dataRepo,
+                                                    final ValidationResultRepository resultRepo) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
     }
@@ -52,11 +52,11 @@ public class ValidateBothRouteNamesPresence {
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
-                .filter(route -> !(isPresentLongName(route.getRouteLongName()) && isPresentShortName(route.getRouteShortName())))
+                .filter(route -> !(isPresentName(route.getRouteLongName()) && isPresentName(route.getRouteShortName())))
                 .forEach(route -> {
-                    if (!isPresentLongName(route.getRouteLongName()) && !isPresentShortName(route.getRouteShortName())) {
-                        resultRepo.addNotice(new MissingBothRouteNamesNotice("route.txt", route.getRouteId()));
-                    } else if (!isPresentLongName(route.getRouteLongName())) {
+                    if (!isPresentName(route.getRouteLongName()) && !isPresentName(route.getRouteShortName())) {
+                        resultRepo.addNotice(new MissingShortAndLongNameForRouteNotice("route.txt", route.getRouteId()));
+                    } else if (!isPresentName(route.getRouteLongName())) {
                         resultRepo.addNotice(new MissingRouteLongNameNotice("route.txt", route.getRouteId()));
                     } else {
                         resultRepo.addNotice(new MissingRouteShortNameNotice("route.txt", route.getRouteId()));
@@ -65,18 +65,10 @@ public class ValidateBothRouteNamesPresence {
     }
 
     /**
-     * @param routeShortName the short name of a Route
-     * @return true if Route short name is not missing or empty, false if not.
+     * @param routeName a name of a Route
+     * @return true if this Route name is not missing or empty, false if not.
      */
-    private boolean isPresentShortName(final String routeShortName) {
-        return routeShortName != null && !routeShortName.replaceAll("\\s+", "").isEmpty();
-    }
-
-    /**
-     * @param routeLongName the long name of a Route
-     * @return true if Route long name is not missing or empty, false if not.
-     */
-    private boolean isPresentLongName(final String routeLongName) {
-        return routeLongName != null && !routeLongName.replaceAll("\\s+", "").isEmpty();
+    private boolean isPresentName(final String routeName) {
+        return routeName != null && !routeName.isBlank();
     }
 }

@@ -21,11 +21,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class MissingBothRouteNamesNotice extends ErrorNotice {
+public class MissingShortAndLongNameForRouteNotice extends ErrorNotice {
 
-    public MissingBothRouteNamesNotice(final String filename, final String entityId) {
+    public MissingShortAndLongNameForRouteNotice(final String filename, final String entityId) {
         super(filename, E_027,
-                "Missing Route names",
+                "Missing Route short name and long name",
                 "Missing Route short name and long name for Route with id:" + entityId + " in file:" + filename +
                         ". Either short name or the long name must be specified, or potentially both if appropriate.",
                 entityId);

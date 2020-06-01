@@ -1018,7 +1018,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new MissingBothRouteNamesNotice(FILENAME, "entity_id"));
+        underTest.export(new MissingShortAndLongNameForRouteNotice(FILENAME, "entity_id"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));

@@ -203,7 +203,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(MissingBothRouteNamesNotice toExport) throws IOException {
+    public void export(MissingShortAndLongNameForRouteNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
