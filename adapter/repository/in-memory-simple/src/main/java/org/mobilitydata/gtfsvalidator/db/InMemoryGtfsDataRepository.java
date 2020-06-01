@@ -30,11 +30,16 @@ import java.util.Map;
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
  */
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
-    private final Map<String, Agency> agencyCollection = new HashMap<>();
-    private final Map<String, Route> routeCollection = new HashMap<>();
+    // Map containing Agency entities. Entities are mapped on the value found in the column agency_id of GTFS file
+    // agency.txt
+    private final Map<String, Agency> agencyPerId = new HashMap<>();
+
+    // Map containing Route entities. Entities are mapped on the value found in the column route_id of GTFS file
+    // routes.txt
+    private final Map<String, Route> routePerId = new HashMap<>();
 
     // Map containing Trip entities. Entities are mapped on the value found in column trip_id of GTFS file trips.txt
-    private final Map<String, Trip> tripCollection = new HashMap<>();
+    private final Map<String, Trip> tripPerId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -48,10 +53,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public Agency addAgency(@NotNull final Agency newAgency) throws IllegalArgumentException {
         //noinspection ConstantConditions
         if (newAgency != null) {
-            if (agencyCollection.containsKey(newAgency.getAgencyId())) {
+            if (agencyPerId.containsKey(newAgency.getAgencyId())) {
                 return null;
             } else {
-                agencyCollection.put(newAgency.getAgencyId(), newAgency);
+                agencyPerId.put(newAgency.getAgencyId(), newAgency);
                 return newAgency;
             }
         } else {
@@ -67,7 +72,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Agency getAgencyById(final String agencyId) {
-        return agencyCollection.get(agencyId);
+        return agencyPerId.get(agencyId);
     }
 
     /**
@@ -82,10 +87,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public Route addRoute(@NotNull final Route newRoute) throws IllegalArgumentException {
         //noinspection ConstantConditions
         if (newRoute != null) {
-            if (routeCollection.containsKey(newRoute.getRouteId())) {
+            if (routePerId.containsKey(newRoute.getRouteId())) {
                 return null;
             } else {
-                routeCollection.put(newRoute.getRouteId(), newRoute);
+                routePerId.put(newRoute.getRouteId(), newRoute);
                 return newRoute;
             }
         } else {
@@ -100,7 +105,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Collection<Route> getRouteAll() {
-        return routeCollection.values();
+        return routePerId.values();
     }
 
     /**
@@ -111,7 +116,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Route getRouteById(final String routeId) {
-        return routeCollection.get(routeId);
+        return routePerId.get(routeId);
     }
 
     /**
@@ -126,11 +131,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Trip addTrip(final Trip newTrip) throws IllegalArgumentException {
         if (newTrip != null) {
-            if (tripCollection.containsKey(newTrip.getTripId())) {
+            if (tripPerId.containsKey(newTrip.getTripId())) {
                 return null;
             } else {
                 final String tripId = newTrip.getTripId();
-                tripCollection.put(tripId, newTrip);
+                tripPerId.put(tripId, newTrip);
                 return newTrip;
             }
         } else {
@@ -146,6 +151,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Trip getTripById(final String tripId) {
-        return tripCollection.get(tripId);
+        return tripPerId.get(tripId);
     }
 }
