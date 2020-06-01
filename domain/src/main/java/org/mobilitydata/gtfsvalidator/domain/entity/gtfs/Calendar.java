@@ -32,21 +32,13 @@ import java.util.List;
 public class Calendar extends GtfsEntity {
     @NotNull
     private final String serviceId;
-    @NotNull
-    private final Boolean monday;
-    @NotNull
-    private final Boolean tuesday;
-    @NotNull
-    private final Boolean wednesday;
-    @NotNull
-    private final Boolean thursday;
-    @NotNull
-    private final Boolean friday;
-    @NotNull
-    private final Boolean saturday;
-    @NotNull
-    private final Boolean sunday;
-    @NotNull
+    private final boolean monday;
+    private final boolean tuesday;
+    private final boolean wednesday;
+    private final boolean thursday;
+    private final boolean friday;
+    private final boolean saturday;
+    private final boolean sunday;
     private final LocalDateTime startDate;
     @NotNull
     private final LocalDateTime endDate;
@@ -135,6 +127,7 @@ public class Calendar extends GtfsEntity {
      * Builder class to create {@link Calendar} objects. Allows an unordered definition of the different attributes of
      * {@link Calendar}.
      */
+    @SuppressWarnings("ConstantConditions") // to avoid lint regarding nullability conditions
     public static class CalendarBuilder {
         private String serviceId;
         private Boolean monday;
@@ -173,7 +166,7 @@ public class Calendar extends GtfsEntity {
          *               by {@param startDate} and {@param endDate} fields
          * @return builder for future object creation
          */
-        public CalendarBuilder monday(final Integer monday) {
+        public CalendarBuilder monday(@NotNull final Integer monday) {
             if (monday == null) {
                 this.monday = null;
             } else if (monday.equals(1)) {
@@ -194,7 +187,7 @@ public class Calendar extends GtfsEntity {
          *                by {@param startDate} and {@param endDate} fields
          * @return builder for future object creation
          */
-        public CalendarBuilder tuesday(final Integer tuesday) {
+        public CalendarBuilder tuesday(@NotNull final Integer tuesday) {
             if (tuesday == null) {
                 this.tuesday = null;
             } else if (tuesday.equals(1)) {
@@ -215,7 +208,7 @@ public class Calendar extends GtfsEntity {
          *                  by {@param startDate} and {@param endDate} fields
          * @return builder for future object creation
          */
-        public CalendarBuilder wednesday(final Integer wednesday) {
+        public CalendarBuilder wednesday(@NotNull final Integer wednesday) {
             if (wednesday == null) {
                 this.wednesday = null;
             } else if (wednesday.equals(1)) {
@@ -236,7 +229,7 @@ public class Calendar extends GtfsEntity {
          *                 by {@param startDate} and {@param endDate} fields
          * @return builder for future object creation
          */
-        public CalendarBuilder thursday(final Integer thursday) {
+        public CalendarBuilder thursday(@NotNull final Integer thursday) {
             if (thursday == null) {
                 this.thursday = null;
             } else if (thursday.equals(1)) {
@@ -257,7 +250,7 @@ public class Calendar extends GtfsEntity {
          *               by {@param startDate} and {@param endDate} fields
          * @return builder for future object creation
          */
-        public CalendarBuilder friday(final Integer friday) {
+        public CalendarBuilder friday(@NotNull final Integer friday) {
             if (friday == null) {
                 this.friday = null;
             } else if (friday.equals(1)) {
@@ -278,7 +271,7 @@ public class Calendar extends GtfsEntity {
          *                 by {@param startDate} and {@param endDate} fields
          * @return builder for future object creation
          */
-        public CalendarBuilder saturday(final Integer saturday) {
+        public CalendarBuilder saturday(@NotNull final Integer saturday) {
             if (saturday == null) {
                 this.saturday = null;
             } else if (saturday.equals(1)) {
@@ -299,7 +292,7 @@ public class Calendar extends GtfsEntity {
          *               by {@param startDate} and {@param endDate} fields
          * @return builder for future object creation
          */
-        public CalendarBuilder sunday(final Integer sunday) {
+        public CalendarBuilder sunday(@NotNull final Integer sunday) {
             if (sunday == null) {
                 this.sunday = null;
             } else if (sunday.equals(1)) {
@@ -330,7 +323,7 @@ public class Calendar extends GtfsEntity {
          * @param endDate start service day for the service interval
          * @return builder for future object creation
          */
-        @SuppressWarnings("UnusedReturnValue")
+        @SuppressWarnings("UnusedReturnValue") // supressed to avoid lint
         public CalendarBuilder endDate(@NotNull final LocalDateTime endDate) {
             this.endDate = endDate;
             return this;
