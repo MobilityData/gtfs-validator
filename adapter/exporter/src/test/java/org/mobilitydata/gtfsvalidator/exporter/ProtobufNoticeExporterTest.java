@@ -1029,8 +1029,7 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new SuspiciousFloatValueNotice(FILENAME, "field_name", "entity_id",
-                0f, 66f, 666f
-        ));
+                0f, 66f, 666f));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
@@ -1042,11 +1041,11 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).addCsvColumnName(
                 ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setValue(
-                ArgumentMatchers.eq("0"));
+                ArgumentMatchers.eq("0.0"));
         verify(mockBuilder, times(1)).setAltValue(
-                ArgumentMatchers.eq("66"));
+                ArgumentMatchers.eq("66.0"));
         verify(mockBuilder, times(1)).setAltEntityValue(
-                ArgumentMatchers.eq("666"));
+                ArgumentMatchers.eq("666.0"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
