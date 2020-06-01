@@ -36,7 +36,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Map containing Transfer entities. Entities are mapped on a first key which is the value found in the column
     // from_stop_id of GTFS file transfers.txt; the second key is the value found in the column to_stop_id of the same
     // file.
-    private final Map<String, Map<String, Transfer>> transferCollection = new HashMap<>();
+    private final Map<String, Map<String, Transfer>> transferPerFromStopIdAndToStopId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -130,18 +130,20 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         if (newTransfer != null) {
             // check that that from_stop_id is not already in collection. It if is, check that to_stop_id is not in the
             // associated map
-            if ((transferCollection.containsKey(newTransfer.getFromStopId())) &&
-                    (transferCollection.get(newTransfer.getFromStopId()).containsKey(newTransfer.getToStopId()))) {
+            if ((transferPerFromStopIdAndToStopId.containsKey(newTransfer.getFromStopId())) &&
+                    (transferPerFromStopIdAndToStopId.get(newTransfer.getFromStopId())
+                            .containsKey(newTransfer.getToStopId()))) {
                 return null;
             } else {
                 final String fromStopId = newTransfer.getFromStopId();
                 final String toStopId = newTransfer.getToStopId();
-                if (!transferCollection.containsKey(newTransfer.getFromStopId())) {
+                if (!transferPerFromStopIdAndToStopId.containsKey(newTransfer.getFromStopId())) {
                     final Map<String, Transfer> innerMap = new HashMap<>();
                     innerMap.put(toStopId, newTransfer);
-                    transferCollection.put(fromStopId, innerMap);
+                    transferPerFromStopIdAndToStopId.put(fromStopId, innerMap);
                 } else {
-                    transferCollection.get(newTransfer.getFromStopId()).put(newTransfer.getToStopId(), newTransfer);
+                    transferPerFromStopIdAndToStopId.get(newTransfer.getFromStopId())
+                            .put(newTransfer.getToStopId(), newTransfer);
                 }
                 return newTransfer;
             }
@@ -168,6 +170,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Transfer getTransferByStopPair(final String fromStopId, final String toStopId) {
-        return transferCollection.get(fromStopId).get(toStopId);
+        return transferPerFromStopIdAndToStopId.get(fromStopId).get(toStopId);
     }
 }
