@@ -49,7 +49,9 @@ public class Trip extends GtfsEntity {
     private final String blockId;
     @Nullable
     private final String shapeId;
+    @NotNull
     private final WheelchairAccessibleStatus wheelchairAccessibleStatus;
+    @NotNull
     private final BikesAllowedStatus bikesAllowedStatus;
 
     /**
@@ -74,8 +76,8 @@ public class Trip extends GtfsEntity {
                  @Nullable final DirectionId directionId,
                  @Nullable final String blockId,
                  @Nullable final String shapeId,
-                 final WheelchairAccessibleStatus wheelchairAccessibleStatus,
-                 final BikesAllowedStatus bikesAllowedStatus) {
+                 @NotNull final WheelchairAccessibleStatus wheelchairAccessibleStatus,
+                 @NotNull final BikesAllowedStatus bikesAllowedStatus) {
         this.routeId = routeId;
         this.serviceId = serviceId;
         this.tripId = tripId;
@@ -263,7 +265,7 @@ public class Trip extends GtfsEntity {
          * @param wheelchairAccessibleStatus indicates wheelchair accessibility
          * @return builder for future object creation
          */
-        public TripBuilder wheelchairAccessible(@NotNull final Integer wheelchairAccessibleStatus) {
+        public TripBuilder wheelchairAccessible(@Nullable final Integer wheelchairAccessibleStatus) {
             this.wheelchairAccessibleStatus = WheelchairAccessibleStatus.fromInt(wheelchairAccessibleStatus);
             this.originalWheelchairAccessibleStatusInteger = wheelchairAccessibleStatus;
             return this;
@@ -275,7 +277,7 @@ public class Trip extends GtfsEntity {
          * @param bikesAllowedStatus indicates whether bikes are allowed
          * @return builder for future object creation
          */
-        public TripBuilder bikesAllowed(@NotNull final Integer bikesAllowedStatus) {
+        public TripBuilder bikesAllowed(@Nullable final Integer bikesAllowedStatus) {
             this.bikesAllowedStatus = BikesAllowedStatus.fromInt(bikesAllowedStatus);
             this.originalBikesAllowedStatusInteger = bikesAllowedStatus;
             return this;
@@ -322,6 +324,7 @@ public class Trip extends GtfsEntity {
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {
+                //noinspection ConstantConditions to avoid lint
                 return new EntityBuildResult<>(new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName,
                         directionId, blockId, shapeId, wheelchairAccessibleStatus, bikesAllowedStatus));
             }
