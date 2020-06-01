@@ -34,7 +34,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Route> routeCollection = new HashMap<>();
 
     // map storing feedInfo entities on key feed_publisher_name found in file feed_info.txt
-    private final Map<String, FeedInfo> feedInfoCollection = new HashMap<>();
+    private final Map<String, FeedInfo> feedInfoPerFeedPublisherName = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -117,10 +117,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FeedInfo addFeedInfo(FeedInfo newFeedInfo) throws IllegalArgumentException {
         if (newFeedInfo != null) {
-            if (feedInfoCollection.containsKey(newFeedInfo.getFeedPublisherName())) {
+            if (feedInfoPerFeedPublisherName.containsKey(newFeedInfo.getFeedPublisherName())) {
                 return null;
             } else {
-                feedInfoCollection.put(newFeedInfo.getFeedPublisherName(), newFeedInfo);
+                feedInfoPerFeedPublisherName.put(newFeedInfo.getFeedPublisherName(), newFeedInfo);
                 return newFeedInfo;
             }
         } else {
@@ -130,6 +130,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
-        return feedInfoCollection.get(feedPublisherName);
+        return feedInfoPerFeedPublisherName.get(feedPublisherName);
     }
 }
