@@ -35,7 +35,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
     // pathways.txt
-    private final Map<String, Pathway> pathwayCollection = new HashMap<>();
+    private final Map<String, Pathway> pathwayPerId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -127,11 +127,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException {
         if (newPathway != null) {
-            if (pathwayCollection.containsKey(newPathway.getPathwayId())) {
+            if (pathwayPerId.containsKey(newPathway.getPathwayId())) {
                 return null;
             } else {
                 String pathwayId = newPathway.getPathwayId();
-                pathwayCollection.put(pathwayId, newPathway);
+                pathwayPerId.put(pathwayId, newPathway);
                 return newPathway;
             }
         } else {
@@ -147,6 +147,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Pathway getPathwayById(final String pathwayId) {
-        return pathwayCollection.get(pathwayId);
+        return pathwayPerId.get(pathwayId);
     }
 }
