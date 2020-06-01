@@ -13,73 +13,77 @@ public interface NoticeExporter {
 
     void exportEnd() throws IOException;
 
-    void export(NonStandardHeaderNotice toExport) throws IOException;
+    void export(final NonStandardHeaderNotice toExport) throws IOException;
 
-    void export(InputZipContainsFolderNotice toExport) throws IOException;
+    void export(final InputZipContainsFolderNotice toExport) throws IOException;
 
-    void export(NonAsciiOrNonPrintableCharNotice toExport) throws IOException;
+    void export(final NonAsciiOrNonPrintableCharNotice toExport) throws IOException;
 
-    void export(CannotConstructDataProviderNotice toExport) throws IOException;
+    void export(final CannotConstructDataProviderNotice toExport) throws IOException;
 
-    void export(CannotDownloadArchiveFromNetworkNotice toExport) throws IOException;
+    void export(final CannotDownloadArchiveFromNetworkNotice toExport) throws IOException;
 
-    void export(CannotParseFloatNotice toExport) throws IOException;
+    void export(final CannotParseFloatNotice toExport) throws IOException;
 
-    void export(CannotParseIntegerNotice toExport) throws IOException;
+    void export(final CannotParseIntegerNotice toExport) throws IOException;
 
-    void export(CannotUnzipInputArchiveNotice toExport) throws IOException;
+    void export(final CannotUnzipInputArchiveNotice toExport) throws IOException;
 
-    void export(FloatFieldValueOutOfRangeNotice toExport) throws IOException;
+    void export(final FloatFieldValueOutOfRangeNotice toExport) throws IOException;
 
-    void export(IntegerFieldValueOutOfRangeNotice toExport) throws IOException;
+    void export(final IntegerFieldValueOutOfRangeNotice toExport) throws IOException;
 
-    void export(InvalidRowLengthNotice toExport) throws IOException;
+    void export(final InvalidRowLengthNotice toExport) throws IOException;
 
-    void export(InvalidTimezoneNotice toExport) throws IOException;
+    void export(final InvalidTimezoneNotice toExport) throws IOException;
 
-    void export(InvalidUrlNotice toExport) throws IOException;
+    void export(final InvalidUrlNotice toExport) throws IOException;
 
-    void export(MissingHeaderNotice toExport) throws IOException;
+    void export(final MissingHeaderNotice toExport) throws IOException;
 
-    void export(MissingRequiredFileNotice toExport) throws IOException;
+    void export(final MissingRequiredFileNotice toExport) throws IOException;
 
-    void export(MissingRequiredValueNotice toExport) throws IOException;
+    void export(final MissingRequiredValueNotice toExport) throws IOException;
 
-    void export(InvalidColorNotice toExport) throws IOException;
+    void export(final InvalidColorNotice toExport) throws IOException;
 
-    void export(ExtraFileFoundNotice toExport) throws IOException;
+    void export(final ExtraFileFoundNotice toExport) throws IOException;
 
-    void export(InvalidTimeNotice toExport) throws IOException;
+    void export(final InvalidTimeNotice toExport) throws IOException;
 
-    void export(CannotParseDateNotice toExport) throws IOException;
+    void export(final CannotParseDateNotice toExport) throws IOException;
 
-    void export(InvalidCurrencyCodeNotice invalidCurrencyCodeNotice) throws IOException;
+    void export(final InvalidCurrencyCodeNotice invalidCurrencyCodeNotice) throws IOException;
 
-    void export(DuplicatedEntityNotice toExport) throws IOException;
+    void export(final DuplicatedEntityNotice toExport) throws IOException;
 
-    void export(IllegalFieldValueCombination toExport) throws IOException;
+    void export(final IllegalFieldValueCombination toExport) throws IOException;
 
-    void export(UnexpectedEnumValueNotice toExport) throws IOException;
+    void export(final UnexpectedEnumValueNotice toExport) throws IOException;
 
-    void export(InvalidLangNotice toExport) throws IOException;
+    void export(final InvalidLangNotice toExport) throws IOException;
 
-    void export(InvalidEmailNotice toExport) throws IOException;
+    void export(final InvalidEmailNotice toExport) throws IOException;
 
-    void export(SameNameAndDescriptionForRouteNotice toExport) throws IOException;
+    void export(final SameNameAndDescriptionForRouteNotice toExport) throws IOException;
 
-    void export(RouteColorAndTextInsufficientContrastNotice toExport) throws IOException;
+    void export(final RouteColorAndTextInsufficientContrastNotice toExport) throws IOException;
 
-    void export(RouteShortNameTooLongNotice toExport) throws IOException;
+    void export(final RouteShortNameTooLongNotice toExport) throws IOException;
 
-    void export(InvalidRouteTypeNotice toExport) throws IOException;
+    void export(final InvalidRouteTypeNotice toExport) throws IOException;
 
-    void export(MissingShortAndLongNameForRouteNotice toExport) throws IOException;
+    void export(final MissingShortAndLongNameForRouteNotice toExport) throws IOException;
 
-    void export(MissingRouteShortNameNotice toExport) throws IOException;
+    void export(final MissingRouteShortNameNotice toExport) throws IOException;
 
-    void export(MissingRouteLongNameNotice toExport) throws IOException;
+    void export(final MissingRouteLongNameNotice toExport) throws IOException;
 
-    void export(RouteLongNameEqualsShortNameNotice toExport) throws IOException;
+    void export(final RouteLongNameEqualsShortNameNotice toExport) throws IOException;
 
-    void export(RouteLongNameContainsShortNameNotice toExport) throws IOException;
+    void export(final RouteLongNameContainsShortNameNotice toExport) throws IOException;
+
+    void export(final SuspiciousIntegerValueNotice toExport) throws IOException;
+
+    void export(final SuspiciousFloatValueNotice toExport) throws IOException;
 }
