@@ -196,4 +196,14 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(RouteShortNameTooLongNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(SuspiciousIntegerValueNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(SuspiciousFloatValueNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

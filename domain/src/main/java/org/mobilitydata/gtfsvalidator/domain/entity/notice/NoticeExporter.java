@@ -70,4 +70,8 @@ public interface NoticeExporter {
     void export(RouteColorAndTextInsufficientContrastNotice toExport) throws IOException;
 
     void export(RouteShortNameTooLongNotice toExport) throws IOException;
+
+    void export(SuspiciousIntegerValueNotice toExport) throws IOException;
+
+    void export(SuspiciousFloatValueNotice toExport) throws IOException;
 }
