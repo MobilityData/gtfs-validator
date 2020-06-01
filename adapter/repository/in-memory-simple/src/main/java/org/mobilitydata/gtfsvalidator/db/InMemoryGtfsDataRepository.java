@@ -35,7 +35,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing Calendar entities. Entities are mapped on the value found in column service_id of GTFS file
     // calendar.txt.
-    private final Map<String, Calendar> calendarCollection = new HashMap<>();
+    private final Map<String, Calendar> calendarPerServiceId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -128,11 +128,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Calendar addCalendar(final Calendar newCalendar) throws IllegalArgumentException {
         if (newCalendar != null) {
-            if (calendarCollection.containsKey(newCalendar.getServiceId())) {
+            if (calendarPerServiceId.containsKey(newCalendar.getServiceId())) {
                 return null;
             } else {
                 final String serviceId = newCalendar.getServiceId();
-                calendarCollection.put(serviceId, newCalendar);
+                calendarPerServiceId.put(serviceId, newCalendar);
                 return newCalendar;
             }
         } else {
@@ -148,6 +148,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Calendar getCalendarByServiceId(final String serviceId) {
-        return calendarCollection.get(serviceId);
+        return calendarPerServiceId.get(serviceId);
     }
 }
