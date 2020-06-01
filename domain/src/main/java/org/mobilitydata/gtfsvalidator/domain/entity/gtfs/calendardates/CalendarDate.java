@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
@@ -73,11 +72,8 @@ public class CalendarDate extends GtfsEntity {
      * of {@link CalendarDate}.
      */
     public static class CalendarDateBuilder {
-        @Nullable
         private String serviceId;
-        @Nullable
         private LocalDateTime date;
-        @Nullable
         private ExceptionType exceptionType;
         private Integer originalExceptionTypeInteger;
         private final List<Notice> noticeCollection = new ArrayList<>();
