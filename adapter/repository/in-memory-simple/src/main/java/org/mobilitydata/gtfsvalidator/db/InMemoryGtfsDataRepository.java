@@ -38,7 +38,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // contained in the following columns (found in calendar_dates.txt gtfs file):
     // - service_id
     // - date
-    private final Map<String, CalendarDate> calendarDateCollection = new HashMap<>();
+    private final Map<String, CalendarDate> calendarDatePerServiceIdAndDate = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -132,10 +132,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public CalendarDate addCalendarDate(@NotNull final CalendarDate newCalendarDate) throws IllegalArgumentException {
         //noinspection ConstantConditions
         if (newCalendarDate != null) {
-            if (calendarDateCollection.containsKey(newCalendarDate.getCalendarDateMappingKey())) {
+            if (calendarDatePerServiceIdAndDate.containsKey(newCalendarDate.getCalendarDateMappingKey())) {
                 return null;
             } else {
-                calendarDateCollection.put(newCalendarDate.getCalendarDateMappingKey(), newCalendarDate);
+                calendarDatePerServiceIdAndDate.put(newCalendarDate.getCalendarDateMappingKey(), newCalendarDate);
                 return newCalendarDate;
             }
         } else {
@@ -153,6 +153,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date) {
-        return calendarDateCollection.get(serviceId + date.toString());
+        return calendarDatePerServiceIdAndDate.get(serviceId + date.toString());
     }
 }
