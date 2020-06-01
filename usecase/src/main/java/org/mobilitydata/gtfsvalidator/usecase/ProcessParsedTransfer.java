@@ -68,7 +68,7 @@ public class ProcessParsedTransfer {
                 .transferType(transferType)
                 .minTransferTime(minTransferTime);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult transfer = builder.build(
+        final EntityBuildResult<?> transfer = builder.build(
                 Integer.parseInt(execParamRepo.getExecParamValue(ExecParamRepository.LOWER_BOUND_MIN_TRANSFER_TIME)),
                 Integer.parseInt(execParamRepo.getExecParamValue(ExecParamRepository.UPPER_BOUND_MIN_TRANSFER_TIME))
         );
@@ -79,7 +79,7 @@ public class ProcessParsedTransfer {
                         "from_stop_id;to_stop_id", validatedParsedTransfer.getEntityId()));
             }
         } else {
-            //noinspection unchecked
+            //noinspection unchecked to avoid lint
             ((List<Notice>) transfer.getData()).forEach(resultRepository::addNotice);
         }
     }

@@ -73,7 +73,7 @@ public class Transfer extends GtfsEntity {
         return transferType;
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // to avoid lint
     @Nullable
     public Integer getMinTransferTime() {
         return minTransferTime;
@@ -88,7 +88,7 @@ public class Transfer extends GtfsEntity {
         private String toStopId;
         private TransferType transferType;
         private Integer originalTransferTypeInteger;
-        private Integer minTransferTime;
+        @Nullable private Integer minTransferTime;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
@@ -165,7 +165,6 @@ public class Transfer extends GtfsEntity {
                 }
                 if (minTransferTime != null && ((minTransferTime < minTransferTimeLowerBound) ||
                         (minTransferTime > minTransferTimeUpperBound))) {
-                    // here minTransferTime threshold should be user configurable
                     noticeCollection.add(new SuspiciousIntegerValueNotice("transfers.txt",
                             "min_transfer_time", fromStopId + ";" + toStopId,
                             minTransferTimeLowerBound, minTransferTimeUpperBound, minTransferTime));
