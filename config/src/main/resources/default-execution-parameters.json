@@ -5,5 +5,14 @@
   "proto": false,
   "url": null,
   "zipinput": null,
-  "exclude": null
+  "exclude": null,
+  "pathway_min_length": 0,
+  "pathway_max_length": 300,
+  "pathway_min_traversal_time": 1,
+  "pathway_max_traversal_time": 400,
+  "pathway_min_stair_count": 0,
+  "pathway_max_stair_count": 75,
+  "pathway_max_slope": 0.20,
+  "pathway_min_width_lower_bound": 3,
+  "pathway_min_width_upper_bound": 40
 }
