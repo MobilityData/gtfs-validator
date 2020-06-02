@@ -198,7 +198,7 @@ class ProcessParsedFareRuleTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("fare_rules.txt", noticeList.get(0).getFilename());
-        assertEquals("fare_id;route_id;origin_id;destination_id;contains_id",
+        assertEquals("fare_id; route_id; origin_id; destination_id; contains_id",
                 noticeList.get(0).getFieldName());
         assertEquals("entity id", noticeList.get(0).getEntityId());
 

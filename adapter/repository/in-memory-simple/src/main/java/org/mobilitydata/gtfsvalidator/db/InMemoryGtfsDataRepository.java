@@ -158,6 +158,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FareRule getFareRule(final String fareId, final String routeId, final String originId,
                                 final String destinationId, final String containsId) {
-        return fareRuleCollection.get(fareId + routeId + originId + destinationId + containsId);
+        return fareRuleCollection.get(fareId + "; " + routeId + "; " + originId + "; " + destinationId + "; " +
+                containsId);
     }
 }

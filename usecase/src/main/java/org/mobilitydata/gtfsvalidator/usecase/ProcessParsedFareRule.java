@@ -71,8 +71,8 @@ public class ProcessParsedFareRule {
 
         if (fareRule.isSuccess()) {
             if (gtfsDataRepository.addFareRule((FareRule) fareRule.getData()) == null) {
-                resultRepository.addNotice(new DuplicatedEntityNotice("fare_rules.txt", "fare_id;" +
-                        "route_id;origin_id;destination_id;contains_id",
+                resultRepository.addNotice(new DuplicatedEntityNotice("fare_rules.txt", "fare_id; " +
+                        "route_id; origin_id; destination_id; contains_id",
                         validatedParsedFareRuleEntity.getEntityId()));
             }
         } else {
