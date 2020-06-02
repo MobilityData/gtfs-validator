@@ -16,10 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.parser;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
+import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
@@ -48,18 +46,6 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         this.commandLineParser = commandLineParser;
         this.args = args;
         this.availableOptions = availableOptions;
-
-        availableOptions.addOption("u", "url", true, "URL to GTFS zipped archive");
-        availableOptions.addOption("z", "zipinput", true, "if --url is used, where " +
-                "to place the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on" +
-                " disk");
-        availableOptions.addOption("e", "extract", true, "Relative path where to " +
-                "extract the zip content");
-        availableOptions.addOption("o", "output", true, "Relative path where to place" +
-                " output files");
-        availableOptions.addOption("h", "help", false, "Print this message");
-        availableOptions.addOption("p", "proto", false, "Export validation results as" +
-                " proto");
     }
 
     /**
@@ -77,12 +63,45 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
         final Map<String, ExecParam> toReturn = new HashMap<>();
         try {
             final CommandLine cmd = commandLineParser.parse(availableOptions, args);
-
-            Arrays.stream(cmd.getOptions()).forEach(option ->
-                    toReturn.put(option.getLongOpt(), new ExecParam(option.getLongOpt(), option.getValue())));
+            for (Option option : cmd.getOptions()) {
+                verifyOptionArgumentLength(option);
+                if (!isOptionAlreadyDefined(toReturn, option)) {
+                    toReturn.put(option.getLongOpt(), new ExecParam(option.getLongOpt(), option.getValues()));
+                }
+            }
             return toReturn;
         } catch (ParseException e) {
             throw new IOException(e.getMessage());
+        }
+    }
+
+    /**
+     * Method verifies if all options only have one argument. Throws a ParseException if this requirement is not met.
+     *
+     * @param option option to analyze
+     * @throws ParseException if an option has more than one argument
+     */
+    private void verifyOptionArgumentLength(@NotNull final Option option) throws ParseException {
+        if (option.getValues() != null && option.getValues().length > 1) {
+            throw new ParseException("Option: " + option.getLongOpt() + " with too many arguments: "
+                    + Arrays.toString(option.getValues()));
+        }
+    }
+
+    /**
+     * Method verifies if all options have been declared once. Throws a ParseException if this requirement is not met
+     *
+     * @param execParamCollection option collection
+     * @param option              option to analyze
+     * @throws ParseException if an option has been declared more than once
+     */
+    @SuppressWarnings("SameReturnValue") // to avoid lint
+    private boolean isOptionAlreadyDefined(@NotNull final Map<String, ExecParam> execParamCollection,
+                                           @NotNull final Option option) throws ParseException {
+        if (execParamCollection.containsKey(option.getLongOpt())) {
+            throw new ParseException("Option: " + option.getLongOpt() + " already defined");
+        } else {
+            return false;
         }
     }
 }

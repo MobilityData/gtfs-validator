@@ -34,6 +34,7 @@ public interface ExecParamRepository {
     String PROTO_KEY = "proto";
     String URL_KEY = "url";
     String ZIP_KEY = "zipinput";
+    String EXCLUSION_KEY = "exclude";
 
     ExecParam getExecParamByKey(final String optionName);
 
