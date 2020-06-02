@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteShortNameTooLongNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -42,17 +42,15 @@ public class ValidateRouteShortNameLength {
     }
 
     /**
-     * Use case execution method: checks if Route short name is not longer than 12 characters
+     * Use case execution method: checks if Route short name is longer than 12 characters
      * for every Routes in a {@link GtfsDataRepository}. A new notice is generated each time this condition is true.
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
-     *
-     * @return a list of notices generated each time a Route short name is longer than 12 characters.
      */
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteShortName(route.getRouteShortName())))
-                .forEach(route -> resultRepo.addNotice(new RouteShortNameTooLongNotice("route.txt",
+                .forEach(route -> resultRepo.addNotice(new RouteShortNameTooLongNotice("routes.txt",
                         route.getRouteId(), String.valueOf(route.getRouteShortName().length()))));
     }
 
