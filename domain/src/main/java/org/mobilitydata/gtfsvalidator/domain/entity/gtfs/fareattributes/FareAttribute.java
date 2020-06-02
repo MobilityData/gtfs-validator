@@ -59,7 +59,7 @@ public class FareAttribute extends GtfsEntity {
      * @param agencyId         identifies the relevant agency for a fare
      * @param transferDuration length of time in seconds before a transfer expires
      */
-    public FareAttribute(@NotNull final String fareId,
+    private FareAttribute(@NotNull final String fareId,
                          final float price,
                          @NotNull final String currencyType,
                          @NotNull final PaymentMethod paymentMethod,
