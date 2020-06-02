@@ -31,7 +31,8 @@ dependencies {
     implementation(
             project(':domain'),
             project(':usecase'),
-            project(':adapter:protos')
+            project(':adapter:protos'),
+            project(':adapter:tree')
     )
 
     implementation 'commons-cli:commons-cli:1.4'

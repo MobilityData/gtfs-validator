@@ -16,14 +16,18 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.TextFormat;
 import org.apache.commons.validator.routines.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
+import org.mobilitydata.gtfsvalidator.parser.GtfsRelationshipParser;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.validator.Bcp47Validator;
 import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
+import org.moblitydata.gtfsvalidator.tree.GtfsNodeMaker;
 
 import java.io.IOException;
 import java.time.ZoneId;
@@ -39,6 +43,7 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     private final GtfsSpecificationProto.CsvSpecProtos inMemoryGTFSSpec;
     private final Map<String, ParsedEntityTypeValidator> validatorByFilenameCache = new HashMap<>();
+    private final RelationshipDescriptor inMemoryGtfsRelationshipDescriptor;
 
     private static final String[] VALID_URL_SCHEMES = {"http", "https"};
     private static final String VALID_COLOR_REGEX_PATTERN = "[0-9a-fA-F]{6}";
@@ -46,17 +51,26 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     /**
      * @param specProtobufString the string representation of the GTFS protobuf
+     * @param gtfsSchemaAsString the string representation of the GTFS file dependency
      */
-    public InMemoryGtfsSpecRepository(final String specProtobufString) {
+    public InMemoryGtfsSpecRepository(final String specProtobufString, final String gtfsSchemaAsString) {
         GtfsSpecificationProto.CsvSpecProtos GtfsSpec;
         try {
-            //noinspection UnstableApiUsage
             GtfsSpec = TextFormat.parse(specProtobufString, GtfsSpecificationProto.CsvSpecProtos.class);
         } catch (IOException e) {
             GtfsSpec = null;
             e.printStackTrace();
         }
+        RelationshipDescriptor relationshipDescriptor;
+        try {
+            relationshipDescriptor = new GtfsRelationshipParser(new ObjectMapper().readerFor(GtfsNodeMaker.class))
+                    .parse(gtfsSchemaAsString);
+        } catch (IOException e) {
+            relationshipDescriptor = null;
+            e.printStackTrace();
+        }
         inMemoryGTFSSpec = GtfsSpec;
+        inMemoryGtfsRelationshipDescriptor = relationshipDescriptor;
     }
 
     /**
@@ -188,5 +202,10 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
         }
 
         return toReturn;
+    }
+
+    @Override
+    public RelationshipDescriptor getGtfsRelationshipDescriptor() {
+        return inMemoryGtfsRelationshipDescriptor;
     }
 }
