@@ -130,7 +130,8 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(2)).getRouteColor();
         verify(mockRoute, times(2)).getRouteTextColor();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
+        verify(mockResultRepo, times(1))
+                .addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 
@@ -157,7 +158,8 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(2)).getRouteColor();
         verify(mockRoute, times(2)).getRouteTextColor();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
+        verify(mockResultRepo, times(1))
+                .addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 }

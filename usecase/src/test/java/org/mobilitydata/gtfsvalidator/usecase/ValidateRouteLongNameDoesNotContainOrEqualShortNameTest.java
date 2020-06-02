@@ -133,5 +133,4 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         verify(mockResultRepo, times(1)).addNotice(any(RouteLongNameEqualsShortNameNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
-
 }

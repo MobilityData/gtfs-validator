@@ -109,7 +109,8 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(SameNameAndDescriptionForRouteNotice.class));
+        verify(mockResultRepo, times(1))
+                .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 
@@ -138,7 +139,8 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(SameNameAndDescriptionForRouteNotice.class));
+        verify(mockResultRepo, times(1))
+                .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 }

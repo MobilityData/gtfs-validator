@@ -63,5 +63,4 @@ class ValidateAllOptionalFilenameTest {
         verify(mockResultRepo, times(3)).addNotice(any(ExtraFileFoundNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
-
 }
