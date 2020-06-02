@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.usecase.ValidateGtfsTypes;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -54,18 +55,13 @@ public class Main {
                         config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
                         .execute();
 
-                final List<String> filenameList = config.validateAllRequiredFilePresence().execute();
-                filenameList.addAll(config.validateAllOptionalFileName().execute());
+                final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
 
-                // to be replaced by the call to a future use case that will create the list of files to exclude from
-                // command line option or configuration file.
-                final List<String> toExcludeFromGtfsSemanticValidation = List.of("stops.txt", "trips.txt",
-                        "stop_times.txt", "calendar.txt", "calendar_dates.txt", "fare_attributes.txt", "fare_rules.txt",
-                        "shapes.txt", "frequencies.txt", "transfers.txt", "pathways.txt", "levels.txt",
-                        "translations.txt", "feed_info.txt", "attributions.txt");
+                final ArrayList<String> datasetFilenameList = config.validateAllRequiredFilePresence().execute();
+                datasetFilenameList.addAll(config.validateAllOptionalFileName().execute());
 
-                final List<String> filenameListToProcess = config.createGtfsSemanticValidationFilenameList(filenameList)
-                        .execute(toExcludeFromGtfsSemanticValidation);
+                final List<String> filenameListToProcess =
+                        config.generateFilenameListToProcess().execute(filenameListToExclude, datasetFilenameList);
 
                 // retrieve use case to be used multiple times
                 final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
@@ -73,7 +69,7 @@ public class Main {
                 final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
 
                 // base validation + build gtfs entities
-                filenameList.forEach(filename -> {
+                filenameListToProcess.forEach(filename -> {
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
 
@@ -102,6 +98,14 @@ public class Main {
                         }
                     }
                 });
+
+                config.validateRouteShortNameLength().execute();
+                config.validateRouteColorAndTextContrast().execute();
+                config.validateRouteDescriptionAndNameAreDifferent().execute();
+                config.validateRouteTypeIsInOptions().execute();
+                config.validateBothRouteNamesPresence().execute();
+                config.validateRouteLongNameDoesNotContainShortName().execute();
+
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
                 config.exportResultAsFile().execute();

@@ -20,12 +20,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Attribution;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
+import java.util.Collection;
+
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
 
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
+
+    Collection<Route> getRouteAll();
 
     Route getRouteById(final String routeId);
 
