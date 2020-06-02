@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingShortAndLongNameForRouteNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MissingRouteLongNameNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MissingRouteShortNameNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -80,7 +80,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 
@@ -107,7 +107,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 
@@ -134,7 +134,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 

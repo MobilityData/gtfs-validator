@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -101,8 +101,7 @@ class ValidateAllRequiredFilePresenceTest {
         inOrder.verify(mockSpecRepo, times(2)).getRequiredFilenameList();
         inOrder.verify(mockFileRepo, times(15)).getFilenameAll();
         inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
-        verify(mockResultRepo, times(5)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(5)).addNotice(any(MissingRequiredFileNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
-
 }
