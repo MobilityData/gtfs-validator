@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
@@ -180,6 +181,10 @@ public class DefaultConfig {
 
     public ProcessParsedRoute processParsedRoute() {
         return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder());
+    }
+
+    public ProcessParsedFareAttribute processParsedFareAttribute() {
+        return new ProcessParsedFareAttribute(resultRepo, gtfsDataRepository, new FareAttribute.FareAttributeBuilder());
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {
