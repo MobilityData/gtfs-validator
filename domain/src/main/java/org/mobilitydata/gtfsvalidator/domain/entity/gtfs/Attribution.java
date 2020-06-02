@@ -341,9 +341,9 @@ public class Attribution extends GtfsEntity {
                     || (originalIsProducerInteger != null && (originalIsProducerInteger < 0 || originalIsProducerInteger > 1))
                     || ((isAuthority == isProducer) && (isAuthority == isOperator)
                     && (originalIsProducerInteger == null || originalIsProducerInteger == 0))) {
-                final String entityId = attributionId + ";" + agencyId + ";" + routeId + ";" + tripId + ";" +
-                        organizationName + ";" + isProducer + ";" + isOperator + ";" + isAuthority + ";" +
-                        attributionUrl + ";" + attributionEmail + ";" + attributionPhone;
+                final String entityId = attributionId + "; " + agencyId + "; " + routeId + "; " + tripId + "; " +
+                        organizationName + "; " + isProducer + "; " + isOperator + "; " + isAuthority + "; " +
+                        attributionUrl + "; " + attributionEmail + "; " + attributionPhone;
 
                 //noinspection ConstantConditions to avoid lint
                 if (organizationName == null) {
@@ -377,5 +377,11 @@ public class Attribution extends GtfsEntity {
                         attributionPhone));
             }
         }
+    }
+    public String getAttributionKey() {
+        return getAttributionId() + "; " + getAgencyId() + "; " + getRouteId() + "; " + getTripId() + "; "
+                + getOrganizationName() + "; " + isProducer() + "; " + isOperator() + "; " +
+                isAuthority() + "; " + getAttributionUrl() + "; " + getAttributionEmail() + "; "
+                + getAttributionPhone();
     }
 }

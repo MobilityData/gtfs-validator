@@ -123,11 +123,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException {
         if (newAttribution != null) {
-            final String key = newAttribution.getAttributionId() + newAttribution.getAgencyId() +
-                    newAttribution.getRouteId() + newAttribution.getTripId() + newAttribution.getOrganizationName() +
-                    newAttribution.isProducer() + newAttribution.isOperator() + newAttribution.isAuthority() +
-                    newAttribution.getAttributionUrl() + newAttribution.getAttributionEmail() +
-                    newAttribution.getAttributionPhone();
+            final String key = newAttribution.getAttributionKey();
             if (attributionCollection.containsKey(key)) {
                 return null;
             } else {
@@ -162,7 +158,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                       final String tripId, final String organizationName, final Boolean isProducer,
                                       final Boolean isOperator, final Boolean isAuthority, final String attributionUrl,
                                       final String attributionEmail, final String attributionPhone) {
-        return attributionCollection.get(attributionId + agencyId + routeId + tripId + organizationName + isProducer +
-                isOperator + isAuthority + attributionUrl + attributionEmail + attributionPhone);
+        return attributionCollection.get(attributionId + "; " + agencyId + "; "+ routeId + "; "+ tripId + "; " +
+                organizationName + "; "+ isProducer + "; " + isOperator + "; " + isAuthority + "; " + attributionUrl
+                + "; " + attributionEmail + "; " + attributionPhone);
     }
 }

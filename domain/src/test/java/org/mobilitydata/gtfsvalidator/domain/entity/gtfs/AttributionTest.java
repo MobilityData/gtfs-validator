@@ -35,7 +35,7 @@ class AttributionTest {
         final EntityBuildResult<?> entityBuildResult = underTest.organizationName(null)
                 .isProducer(1)
                 .build();
-        final String entityId = "null;null;null;null;null;true;false;false;null;null;null";
+        final String entityId = "null; null; null; null; null; true; false; false; null; null; null";
         assertTrue(entityBuildResult.getData() instanceof List);
         //noinspection unchecked to avoid lint
         final List<MissingRequiredValueNotice> noticeCollection =
@@ -56,7 +56,7 @@ class AttributionTest {
                 .isProducer(4)
                 .isAuthority(1)
                 .build();
-        final String entityId = "null;null;null;null;organization name;false;false;true;null;null;null";
+        final String entityId = "null; null; null; null; organization name; false; false; true; null; null; null";
         assertTrue(entityBuildResult.getData() instanceof List);
         //noinspection unchecked to avoid lint
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
@@ -80,7 +80,7 @@ class AttributionTest {
                 .isProducer(1)
                 .isOperator(4)
                 .build();
-        final String entityId = "null;null;null;null;organization name;true;false;false;null;null;null";
+        final String entityId = "null; null; null; null; organization name; true; false; false; null; null; null";
         assertTrue(entityBuildResult.getData() instanceof List);
         //noinspection unchecked to avoid lint
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
@@ -104,7 +104,7 @@ class AttributionTest {
                 .isProducer(1)
                 .isAuthority(4)
                 .build();
-        final String entityId = "null;null;null;null;organization name;true;false;false;null;null;null";
+        final String entityId = "null; null; null; null; organization name; true; false; false; null; null; null";
         assertTrue(entityBuildResult.getData() instanceof List);
         //noinspection unchecked to avoid lint
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
@@ -129,7 +129,7 @@ class AttributionTest {
                 .isAuthority(0)
                 .isOperator(0)
                 .build();
-        final String entityId = "null;null;null;null;organization name;false;false;false;null;null;null";
+        final String entityId = "null; null; null; null; organization name; false; false; false; null; null; null";
         assertTrue(entityBuildResult.getData() instanceof List);
         //noinspection unchecked to avoid lint
         final List<IllegalFieldValueCombination> noticeCollection =
@@ -166,5 +166,28 @@ class AttributionTest {
         assertNull(attribution.getAttributionUrl());
         assertNull(attribution.getAttributionEmail());
         assertNull(attribution.getAttributionPhone());
+    }
+
+    @Test
+    void getAttributionKeyShouldReturnKeyOfAttributionEntity() {
+        final Attribution.AttributionBuilder underTest = new Attribution.AttributionBuilder();
+        final EntityBuildResult<?> entityBuildResult = underTest.attributionId("attribution id")
+                .agencyId("agency id")
+                .routeId("route id")
+                .tripId("trip id")
+                .organizationName("organization name")
+                .isProducer(0)
+                .isOperator(1)
+                .isAuthority(0)
+                .attributionUrl("url")
+                .attributionEmail("email")
+                .attributionPhone("phone")
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof Attribution);
+        final Attribution attribution = (Attribution) entityBuildResult.getData();
+
+        assertEquals("attribution id; agency id; route id; trip id; organization name; false; true; false;" +
+                " url; email; phone", attribution.getAttributionKey());
     }
 }
