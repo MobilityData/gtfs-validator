@@ -24,14 +24,10 @@ import java.io.IOException;
 public class SameNameAndDescriptionForRouteNotice extends ErrorNotice {
 
     public SameNameAndDescriptionForRouteNotice(final String filename, final String entityId) {
-        super(filename, E_025,
+        super(filename, E_024,
                 "Same name and description for Route",
                 "Same name and description for Route ID:" + entityId + " in file:" + filename,
                 entityId);
-    }
-
-    public String getEntityId() {
-        return entityId;
     }
 
     @Override

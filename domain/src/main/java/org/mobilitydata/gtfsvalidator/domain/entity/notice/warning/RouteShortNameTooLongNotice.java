@@ -14,35 +14,31 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class RouteShortNameTooLongNotice extends ErrorNotice {
+public class RouteShortNameTooLongNotice extends WarningNotice {
     private String shortNameLength;
 
     public RouteShortNameTooLongNotice(final String filename, final String entityId, final String shortNameLength) {
-        super(filename, E_024,
+        super(filename, W_005,
                 "Route short name too long",
                 "Route short name length should be <= 12 characters but was " + shortNameLength + " for Route:" + entityId + " in file:" + filename,
                 entityId);
         this.shortNameLength = shortNameLength;
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
-
-    public String getshortNameLength() {
-        return shortNameLength;
-    }
-
     @Override
     public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
+    }
+
+    public String getshortNameLength() {
+        return shortNameLength;
     }
 }
