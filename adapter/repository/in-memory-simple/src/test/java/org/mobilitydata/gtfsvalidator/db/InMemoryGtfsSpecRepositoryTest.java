@@ -1,4 +1,5 @@
 /*
+/*
  * Copyright (c) 2020. MobilityData IO.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,15 +40,22 @@ class InMemoryGtfsSpecRepositoryTest {
     private static final String OPTIONAL_HEADER_1 = "optionalHeader1";
 
     private static String testSpecFileToString() throws IOException {
+        //noinspection UnstableApiUsage
         return Resources.toString(Resources.getResource("test_gtfs_spec.asciipb"),
+                StandardCharsets.UTF_8);
+    }
+
+    private static String testSchemaAsString() throws IOException {
+        //noinspection UnstableApiUsage
+        return Resources.toString(Resources.getResource("test-relationship-file.json"),
                 StandardCharsets.UTF_8);
     }
 
     @Test
     void fileMarkedRequiredInSpecShouldBeListed() throws IOException {
-
-        String testSpecString = testSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
+        final String testSpecString = testSpecFileToString();
+        final String gtfsSchemaAsString = testSchemaAsString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString, gtfsSchemaAsString);
 
         final Collection<String> requiredFilenameList = underTest.getRequiredFilenameList();
 
@@ -58,9 +66,9 @@ class InMemoryGtfsSpecRepositoryTest {
 
     @Test
     void fileMarkedOptionalInSpecShouldBeListed() throws IOException {
-
-        String testSpecString = testSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
+        final String testSpecString = testSpecFileToString();
+        final String gtfsSchemaAsString = testSchemaAsString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString, gtfsSchemaAsString);
 
         final Collection<String> optionalFilenameList = underTest.getOptionalFilenameList();
 
@@ -71,9 +79,9 @@ class InMemoryGtfsSpecRepositoryTest {
 
     @Test
     void headerMarkedRequiredInRequiredFileShouldBeListed() throws IOException {
-
-        String testSpecString = testSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
+        final String testSpecString = testSpecFileToString();
+        final String gtfsSchemaAsString = testSchemaAsString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString, gtfsSchemaAsString);
 
         final Collection<String> requiredHeaderListForRequiredFile0 = underTest.getRequiredHeadersForFile(
                 RawFileInfo.builder().filename(REQUIRED_FILE_0).build());
@@ -91,9 +99,9 @@ class InMemoryGtfsSpecRepositoryTest {
 
     @Test
     void headerMarkedRequiredInOptionalFileShouldBeListed() throws IOException {
-
-        String testSpecString = testSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
+        final String testSpecString = testSpecFileToString();
+        final String gtfsSchemaAsString = testSchemaAsString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString, gtfsSchemaAsString);
 
         final Collection<String> requiredHeaderListForOptionalFile0 = underTest.getRequiredHeadersForFile(
                 RawFileInfo.builder().filename(OPTIONAL_FILE_0).build());
@@ -111,9 +119,9 @@ class InMemoryGtfsSpecRepositoryTest {
 
     @Test
     void headerMarkedOptionalInRequiredFileShouldBeListed() throws IOException {
-
-        String testSpecString = testSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
+        final String testSpecString = testSpecFileToString();
+        final String gtfsSchemaAsString = testSchemaAsString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString, gtfsSchemaAsString);
 
         final Collection<String> optionalHeaderListForRequiredFile0 = underTest.getOptionalHeadersForFile(
                 RawFileInfo.builder().filename(REQUIRED_FILE_0).build());
@@ -130,9 +138,9 @@ class InMemoryGtfsSpecRepositoryTest {
 
     @Test
     void headerMarkedOptionalInOptionalFileShouldBeListed() throws IOException {
-
-        String testSpecString = testSpecFileToString();
-        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString);
+        final String testSpecString = testSpecFileToString();
+        final String gtfsSchemaAsString = testSchemaAsString();
+        InMemoryGtfsSpecRepository underTest = new InMemoryGtfsSpecRepository(testSpecString, gtfsSchemaAsString);
 
         final Collection<String> optionalHeaderListForOptionalFile0 = underTest.getOptionalHeadersForFile(
                 RawFileInfo.builder().filename(OPTIONAL_FILE_0).build());
