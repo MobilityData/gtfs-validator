@@ -274,11 +274,11 @@ public class Trip extends GtfsEntity {
         }
 
         /**
-         * Entity representing a row from trips.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns list of {@link Notice}.
+         * Returns {@code EntityBuildResult} representing a row from trips.txt if the requirements from the official
+         * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          *
-         * @return an entity representing a row from trips.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns list of {@link Notice}.
+         * @return {@code EntityBuildResult} representing a row from trips.txt if the requirements from the official
+         * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
