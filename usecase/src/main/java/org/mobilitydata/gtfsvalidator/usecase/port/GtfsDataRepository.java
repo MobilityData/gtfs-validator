@@ -35,5 +35,5 @@ public interface GtfsDataRepository {
 
     Level addLevel(final Level newLevel) throws IllegalArgumentException;
 
-    Level getLevelByLevelId(final String levelId);
+    Level getLevelById(final String levelId);
 }

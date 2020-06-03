@@ -34,7 +34,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Route> routeCollection = new HashMap<>();
 
     // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
-    private final Map<String, Level> levelCollection = new HashMap<>();
+    private final Map<String, Level> levelPerId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -126,11 +126,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Level addLevel(final Level newLevel) throws IllegalArgumentException {
         if (newLevel != null) {
-            if (levelCollection.containsKey(newLevel.getLevelId())) {
+            if (levelPerId.containsKey(newLevel.getLevelId())) {
                 return null;
             } else {
                 final String levelId = newLevel.getLevelId();
-                levelCollection.put(levelId, newLevel);
+                levelPerId.put(levelId, newLevel);
                 return newLevel;
             }
         } else {
@@ -145,7 +145,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * @return the Level representing a row from levels.txt related to the id provided as parameter
      */
     @Override
-    public Level getLevelByLevelId(final String levelId) {
-        return levelCollection.get(levelId);
+    public Level getLevelById(final String levelId) {
+        return levelPerId.get(levelId);
     }
 }

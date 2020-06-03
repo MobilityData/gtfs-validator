@@ -163,7 +163,7 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(mockLevel00, underTest.addLevel(mockLevel00));
         assertEquals(mockLevel01, underTest.addLevel(mockLevel01));
 
-        assertEquals(mockLevel00, underTest.getLevelByLevelId("level id 0"));
-        assertEquals(mockLevel01, underTest.getLevelByLevelId("level id 1"));
+        assertEquals(mockLevel00, underTest.getLevelById("level id 0"));
+        assertEquals(mockLevel01, underTest.getLevelById("level id 1"));
     }
 }
