@@ -311,11 +311,11 @@ public class Attribution extends GtfsEntity {
 
 
         /**
-         * Entity representing a row from attributions.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns an entity representing a list of notices.
+         * Returns {@code EntityBuildResult} representing a row from attributions.txt if the requirements from the
+         * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          *
-         * @return Entity representing a row from attributions.txt if the requirements from the official GTFS
-         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         * @return {@link EntityBuildResult} representing a row from attributions.txt if the requirements from the
+         * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
