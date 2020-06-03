@@ -25,8 +25,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValue
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.SuspiciousFloatValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.SuspiciousIntegerValueNotice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -328,11 +326,7 @@ public class Pathway extends GtfsEntity {
          * @return an {@code EntityBuildResult} representing a row from pathways.txt if the requirements from the
          * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
-        public EntityBuildResult<?> build(final float minLength, final float maxLength,
-                                          final int minTraversalTime, final int maxTraversalTime,
-                                          final int minStairCount, final int maxStairCount,
-                                          final float maxAdmissibleSlope,
-                                          final float minWidthLowerBound, final float minWidthUpperBound) {
+        public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
             if (pathwayId == null ||
@@ -340,16 +334,10 @@ public class Pathway extends GtfsEntity {
                     toStopId == null ||
                     !IsBidirectional.isEnumValueValid(originalIsBiDirectionalInteger) ||
                     isBidirectional == null ||
-                    (length != null &&
-                            (length < 0 || length < minLength || length > maxLength)) ||
-                    (traversalTime != null &&
-                            (traversalTime < 0 || traversalTime < minTraversalTime || traversalTime > maxTraversalTime))
-                    ||
-                    (stairCount != null &&
-                            (stairCount < 0 || stairCount < minStairCount ||stairCount > maxStairCount)) ||
-                    (maxSlope != null && maxSlope > Math.abs(maxAdmissibleSlope)) ||
-                    (minWidth != null &&
-                            (minWidth < 0 || minWidth < minWidthLowerBound || minWidth > minWidthUpperBound)) ||
+                    (length != null && length < 0) ||
+                    (traversalTime != null && traversalTime < 0) ||
+                    (stairCount != null && stairCount < 0) ||
+                    (minWidth != null && minWidth < 0) ||
                     pathwayMode == null) {
 
                 if (pathwayId == null) {
@@ -382,50 +370,24 @@ public class Pathway extends GtfsEntity {
                                 "is_bidirectional", pathwayId, originalIsBiDirectionalInteger));
                     }
                 }
-                if (length != null) {
-                    if (length < 0) {
-                        noticeCollection.add(new FloatFieldValueOutOfRangeNotice("pathways.txt",
-                                "length", pathwayId, 0, Float.MAX_VALUE, length));
-                    } else if (length < minLength || length > maxLength) {
-                        noticeCollection.add(new SuspiciousFloatValueNotice("pathways.txt",
-                                "length", pathwayId, minLength, maxLength, length));
-                    }
+                if (length != null && length < 0) {
+                    noticeCollection.add(new FloatFieldValueOutOfRangeNotice("pathways.txt",
+                            "length", pathwayId, 0, Float.MAX_VALUE, length));
                 }
-                if (traversalTime != null) {
-                    if (traversalTime < 0) {
-                        noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("pathways.txt",
-                                "traversal_time", pathwayId, 0, Integer.MAX_VALUE,
-                                traversalTime));
-                    } else if (traversalTime < minTraversalTime || traversalTime > maxTraversalTime) {
-                        noticeCollection.add(new SuspiciousIntegerValueNotice("pathways.txt",
-                                "traversal_time", pathwayId, minTraversalTime, maxTraversalTime,
-                                traversalTime));
-                    }
+                if (traversalTime != null && traversalTime < 0) {
+                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("pathways.txt",
+                            "traversal_time", pathwayId, 0, Integer.MAX_VALUE,
+                            traversalTime));
                 }
-                if (stairCount != null) {
-                    if (stairCount < 0) {
-                        noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("pathways.txt",
-                                "stair_count", pathwayId, 0, Integer.MAX_VALUE, stairCount));
-                    } else if (stairCount < minStairCount || stairCount > maxStairCount) {
-                        noticeCollection.add(new SuspiciousIntegerValueNotice("pathways.txt",
-                                "stair_count", pathwayId, minStairCount, maxStairCount, stairCount));
-                    }
+                if (stairCount != null && stairCount < 0) {
+                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("pathways.txt",
+                            "stair_count", pathwayId, 0, Integer.MAX_VALUE,
+                            stairCount));
                 }
-                if (maxSlope!= null && maxSlope > Math.abs(maxAdmissibleSlope)) {
-                    noticeCollection.add(new SuspiciousFloatValueNotice("pathways.txt",
-                            "max_slope", pathwayId,
-                            -1*Math.abs(maxAdmissibleSlope), Math.abs(maxAdmissibleSlope),
-                            maxSlope));
-                }
-                if (minWidth != null) {
-                    if (minWidth < 0) {
-                        noticeCollection.add(new FloatFieldValueOutOfRangeNotice("pathways.txt",
-                                "min_width", pathwayId, 0, Float.MAX_VALUE, minWidth));
-                    } else if (minWidth < minWidthLowerBound || minWidth > minWidthUpperBound) {
-                        noticeCollection.add(new SuspiciousFloatValueNotice("pathways.txt",
-                                "min_width", pathwayId, minWidthLowerBound, minWidthUpperBound,
-                                minWidth));
-                    }
+                if (minWidth != null && minWidth < 0) {
+                    noticeCollection.add(new FloatFieldValueOutOfRangeNotice("pathways.txt",
+                            "min_width", pathwayId, 0, Float.MAX_VALUE,
+                            minWidth));
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {

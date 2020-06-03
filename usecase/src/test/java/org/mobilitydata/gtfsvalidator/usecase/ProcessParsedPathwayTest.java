@@ -7,7 +7,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
@@ -41,45 +40,18 @@ class ProcessParsedPathwayTest {
     void validatedParsedPathwayShouldCreatePathwayEntityAndBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_LENGTH_KEY)).thenReturn("0");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_LENGTH_KEY)).thenReturn("200");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_TRAVERSAL_TIME_KEY)).thenReturn("0");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_TRAVERSAL_TIME_KEY)).thenReturn("400");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_STAIR_COUNT_KEY)).thenReturn("0");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_STAIR_COUNT_KEY)).thenReturn("45");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_SLOPE_KEY)).thenReturn("0.20");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY))
-                .thenReturn("2");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY))
-                .thenReturn("30");
 
         final Pathway.PathwayBuilder mockBuilder = mock(Pathway.PathwayBuilder.class, RETURNS_SELF);
         final Pathway mockPathway = mock(Pathway.class);
         final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
 
-        //noinspection unchecked
-        when(mockBuilder.build(
-                Float.parseFloat(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_LENGTH_KEY)),
-                Float.parseFloat(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_LENGTH_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_TRAVERSAL_TIME_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_TRAVERSAL_TIME_KEY)),
-                Integer.parseInt(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_STAIR_COUNT_KEY)),
-                Integer.parseInt(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_STAIR_COUNT_KEY)),
-                Float.parseFloat(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_SLOPE_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY)))
-        ).thenReturn(mockEntityBuildResult);
+        doReturn(mockEntityBuildResult).when(mockBuilder).build();
 
-        when(mockEntityBuildResult.getData()).thenReturn(mockPathway);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockPathway).when(mockEntityBuildResult).getData();
         when(mockEntityBuildResult.isSuccess()).thenReturn(true);
-
 
         when(mockParsedPathway.get(PATHWAY_ID)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get(FROM_STOP_ID)).thenReturn(STRING_TEST_VALUE);
@@ -97,7 +69,7 @@ class ProcessParsedPathwayTest {
         when(mockGtfsDataRepo.addPathway(mockPathway)).thenReturn(mockPathway);
 
         final ProcessParsedPathway underTest =
-                new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockExecParamRepo, mockBuilder);
+                new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         underTest.execute(mockParsedPathway);
         final InOrder inOrder = inOrder(mockParsedPathway, mockBuilder, mockResultRepo, mockGtfsDataRepo);
@@ -131,13 +103,7 @@ class ProcessParsedPathwayTest {
                 .signpostedAs(ArgumentMatchers.eq(STRING_TEST_VALUE));
         inOrder.verify(mockBuilder, times(1))
                 .reversedSignpostedAs(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        inOrder.verify(mockBuilder, times(1))
-                .build(0, 200,
-                0, 400,
-                0, 45,
-                0.20f,
-                2,
-                30);
+        inOrder.verify(mockBuilder, times(1)).build();
 
         inOrder.verify(mockGtfsDataRepo, times(1)).addPathway(ArgumentMatchers.eq(mockPathway));
 
@@ -148,50 +114,25 @@ class ProcessParsedPathwayTest {
     void invalidPathwayShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_LENGTH_KEY)).thenReturn("0");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_LENGTH_KEY)).thenReturn("200");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_TRAVERSAL_TIME_KEY)).thenReturn("0");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_TRAVERSAL_TIME_KEY)).thenReturn("400");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_STAIR_COUNT_KEY)).thenReturn("0");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_STAIR_COUNT_KEY)).thenReturn("45");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_SLOPE_KEY)).thenReturn("0.20");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY))
-                .thenReturn("2");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY))
-                .thenReturn("30");
 
         final Pathway.PathwayBuilder mockBuilder = mock(Pathway.PathwayBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
 
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        final List<Notice> mockNoticeCollection = spy(new ArrayList<>());
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         mockNoticeCollection.add(mockNotice);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
 
         when(mockEntityBuildResult.isSuccess()).thenReturn(false);
-        when(mockEntityBuildResult.getData()).thenReturn(mockNoticeCollection);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockNoticeCollection).when(mockEntityBuildResult).getData();
 
-        //noinspection unchecked
-        when(mockBuilder.build(
-                Float.parseFloat(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_LENGTH_KEY)),
-                Float.parseFloat(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_LENGTH_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_TRAVERSAL_TIME_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_TRAVERSAL_TIME_KEY)),
-                Integer.parseInt(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_STAIR_COUNT_KEY)),
-                Integer.parseInt(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_STAIR_COUNT_KEY)),
-                Float.parseFloat(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_SLOPE_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY)))
-        ).thenReturn(mockEntityBuildResult);
+        doReturn(mockEntityBuildResult).when(mockBuilder).build();
 
         final ProcessParsedPathway underTest =
-                new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockExecParamRepo, mockBuilder);
+                new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         when(mockParsedPathway.get("pathway_id")).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get("from_stop_id")).thenReturn(STRING_TEST_VALUE);
@@ -234,18 +175,13 @@ class ProcessParsedPathwayTest {
         verify(mockBuilder, times(1)).signpostedAs(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).reversedSignpostedAs(ArgumentMatchers
                 .eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1))
-                .build(0, 200,
-                        0, 400,
-                        0, 45,
-                        0.20f,
-                        2,
-                        30);
+        verify(mockBuilder, times(1)).build();
         verify(mockEntityBuildResult, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockEntityBuildResult, times(1)).getData();
 
-        verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
+        verify(mockResultRepo, times(1)).addNotice(isA(MissingRequiredValueNotice.class));
         verifyNoMoreInteractions(mockParsedPathway, mockGtfsDataRepo, mockBuilder, mockResultRepo,
                 mockEntityBuildResult);
     }
@@ -254,47 +190,23 @@ class ProcessParsedPathwayTest {
     void duplicatePathwayShouldThrowExceptionAndEntityMustBeUniqueNoticeShouldBeAddedToResultRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_LENGTH_KEY)).thenReturn("0");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_LENGTH_KEY)).thenReturn("200");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_TRAVERSAL_TIME_KEY)).thenReturn("0");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_TRAVERSAL_TIME_KEY)).thenReturn("400");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_STAIR_COUNT_KEY)).thenReturn("0");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_STAIR_COUNT_KEY)).thenReturn("45");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_SLOPE_KEY)).thenReturn("0.20");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY))
-                .thenReturn("2");
-        when(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY))
-                .thenReturn("30");
 
         final Pathway.PathwayBuilder mockBuilder = mock(Pathway.PathwayBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedPathway = mock(ParsedEntity.class);
         final Pathway mockPathway = mock(Pathway.class);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
         when(mockEntityBuildResult.isSuccess()).thenReturn(true);
-        when(mockEntityBuildResult.getData()).thenReturn(mockPathway);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockPathway).when(mockEntityBuildResult).getData();
 
         when(mockPathway.getPathwayId()).thenReturn(STRING_TEST_VALUE);
-        when(mockBuilder.build(
-                Float.parseFloat(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_LENGTH_KEY)),
-                Float.parseFloat(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_LENGTH_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_TRAVERSAL_TIME_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_TRAVERSAL_TIME_KEY)),
-                Integer.parseInt(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_STAIR_COUNT_KEY)),
-                Integer.parseInt(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_STAIR_COUNT_KEY)),
-                Float.parseFloat(mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MAX_SLOPE_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY)),
-                Integer.parseInt(
-                        mockExecParamRepo.getExecParamValue(ExecParamRepository.PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY)))
-        ).thenReturn(mockEntityBuildResult);
+        doReturn(mockEntityBuildResult).when(mockBuilder).build();
         when(mockGtfsDataRepo.addPathway(mockPathway)).thenReturn(null);
 
         final ProcessParsedPathway underTest =
-                new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockExecParamRepo, mockBuilder);
+                new ProcessParsedPathway(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         when(mockParsedPathway.get(PATHWAY_ID)).thenReturn(STRING_TEST_VALUE);
         when(mockParsedPathway.get(FROM_STOP_ID)).thenReturn(STRING_TEST_VALUE);
@@ -323,6 +235,7 @@ class ProcessParsedPathwayTest {
         verify(mockParsedPathway, times(1)).get(ArgumentMatchers.eq(MIN_WIDTH));
         verify(mockParsedPathway, times(1)).get(ArgumentMatchers.eq(SIGNPOSTED_AS));
         verify(mockParsedPathway, times(1)).get(ArgumentMatchers.eq(RESERVED_SIGNPOSTED_AS));
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedPathway, times(1)).getEntityId();
 
@@ -341,14 +254,9 @@ class ProcessParsedPathwayTest {
         verify(mockBuilder, times(1)).signpostedAs(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).reversedSignpostedAs(ArgumentMatchers
                 .eq(STRING_TEST_VALUE));
-        verify(mockBuilder, times(1))
-                .build(0, 200,
-                        0, 400,
-                        0, 45,
-                        0.20f,
-                        2,
-                        30);
+        verify(mockBuilder, times(1)).build();
         verify(mockEntityBuildResult, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockEntityBuildResult, times(1)).getData();
 

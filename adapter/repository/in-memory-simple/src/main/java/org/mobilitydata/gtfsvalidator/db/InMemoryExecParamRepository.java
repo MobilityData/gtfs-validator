@@ -221,17 +221,6 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             case EXCLUSION_KEY: {
                 return hasExecParamValue(EXCLUSION_KEY) ? getExecParamByKey(EXCLUSION_KEY).getValue().toString() : null;
             }
-            case PATHWAY_MIN_LENGTH_KEY:
-            case PATHWAY_MAX_LENGTH_KEY:
-            case PATHWAY_MIN_TRAVERSAL_TIME_KEY:
-            case PATHWAY_MAX_TRAVERSAL_TIME_KEY:
-            case PATHWAY_MIN_STAIR_COUNT_KEY:
-            case PATHWAY_MAX_STAIR_COUNT_KEY:
-            case PATHWAY_MAX_SLOPE_KEY:
-            case PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY:
-            case PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY: {
-                return hasExecParamValue(key) ? getExecParamByKey(key).getValue().get(0) : defaultValue.get(0);
-            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }

@@ -19,7 +19,10 @@ package org.mobilitydata.gtfsvalidator.exporter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 
 import java.io.IOException;
 
@@ -194,16 +197,6 @@ public class JsonNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(RouteShortNameTooLongNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
-    public void export(SuspiciousIntegerValueNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
-    public void export(SuspiciousFloatValueNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }
