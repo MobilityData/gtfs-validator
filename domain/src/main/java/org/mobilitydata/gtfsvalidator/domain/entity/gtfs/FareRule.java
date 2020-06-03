@@ -159,7 +159,7 @@ public class FareRule extends GtfsEntity {
          * Returns {@code EntityBuildResult} representing a row from fare_rules.txt if the requirements from the
          * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          *
-         * @return {@code EntityBuildResult} representing a row from fare_rules.txt if the requirements from the
+         * @return {@link EntityBuildResult} representing a row from fare_rules.txt if the requirements from the
          * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
