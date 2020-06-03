@@ -104,6 +104,9 @@ public class Main {
                 config.validateRouteShortNameLength().execute();
                 config.validateRouteColorAndTextContrast().execute();
                 config.validateRouteDescriptionAndNameAreDifferent().execute();
+                config.validateRouteTypeIsInOptions().execute();
+                config.validateBothRouteNamesPresence().execute();
+                config.validateRouteLongNameDoesNotContainShortName().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
