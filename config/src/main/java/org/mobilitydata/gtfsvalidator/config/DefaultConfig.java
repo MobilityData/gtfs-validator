@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.*;
@@ -146,6 +147,18 @@ public class DefaultConfig {
         return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo);
     }
 
+    public ValidateRouteTypeIsInTypeOptions validateRouteTypeIsInOptions() {
+        return new ValidateRouteTypeIsInTypeOptions(gtfsDataRepository, resultRepo);
+    }
+
+    public ValidateShortAndLongNameForRoutePresence validateBothRouteNamesPresence() {
+        return new ValidateShortAndLongNameForRoutePresence(gtfsDataRepository, resultRepo);
+    }
+
+    public ValidateRouteLongNameDoesNotContainOrEqualShortName validateRouteLongNameDoesNotContainShortName() {
+        return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
@@ -169,6 +182,10 @@ public class DefaultConfig {
 
     public ProcessParsedRoute processParsedRoute() {
         return new ProcessParsedRoute(resultRepo, gtfsDataRepository, new Route.RouteBuilder());
+    }
+
+    public ProcessParsedCalendarDate processCalendarDate() {
+        return new ProcessParsedCalendarDate(resultRepo, gtfsDataRepository, new CalendarDate.CalendarDateBuilder());
     }
 
     public ProcessParsedPathway processParsedPathway() {

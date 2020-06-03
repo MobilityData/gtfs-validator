@@ -119,7 +119,7 @@ class ParseSingleRowForFileTest {
         verify(mockParser, times(3)).parse(any(RawEntity.class));
         verify(mockProvider, times(3)).hasNext();
         verify(mockProvider, times(3)).getNext();
-        verify(mockResultRepo, times(9)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(9)).addNotice(any(CannotConstructDataProviderNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo, mockParser, mockProvider);
     }
 
@@ -145,7 +145,7 @@ class ParseSingleRowForFileTest {
         InOrder inOrder = Mockito.inOrder(mockFileRepo, mockResultRepo);
 
         inOrder.verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
-        inOrder.verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
+        inOrder.verify(mockResultRepo, times(1)).addNotice(any(CannotConstructDataProviderNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 

@@ -18,30 +18,30 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.SameNameAndDescriptionForRouteNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteLongNameEqualsShortNameNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteLongNameContainsShortNameNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class ValidateRouteDescriptionAndNameAreDifferentTest {
+public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
 
     @Test
-    void nullRouteDescriptionShouldNotGenerateNotice() {
+    void nullLongRouteNameShouldNotGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
-        when(mockRoute.getRouteDesc()).thenReturn(null);
-        when(mockRoute.getRouteShortName()).thenReturn("route_short_name");
-        when(mockRoute.getRouteLongName()).thenReturn("route_long_name");
+        when(mockRoute.getRouteLongName()).thenReturn(null);
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
+        ValidateRouteLongNameDoesNotContainOrEqualShortName underTest = new ValidateRouteLongNameDoesNotContainOrEqualShortName(
                 mockDataRepo,
                 mockResultRepo
         );
@@ -49,27 +49,24 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockRoute, times(1)).getRouteDesc();
-        verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 
     @Test
-    void differentRouteDescriptionAndNamesShouldNotGenerateNotice() {
+    void longRouteNameNotContainingShortNameShouldNotGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
-        when(mockRoute.getRouteDesc()).thenReturn("route_description");
-        when(mockRoute.getRouteShortName()).thenReturn("route_short_name");
-        when(mockRoute.getRouteLongName()).thenReturn("route_long_name");
+        when(mockRoute.getRouteLongName()).thenReturn("This is a long name for route abc");
+        when(mockRoute.getRouteShortName()).thenReturn("xyz");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
+        ValidateRouteLongNameDoesNotContainOrEqualShortName underTest = new ValidateRouteLongNameDoesNotContainOrEqualShortName(
                 mockDataRepo,
                 mockResultRepo
         );
@@ -77,27 +74,25 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockRoute, times(1)).getRouteDesc();
+        verify(mockRoute, times(2)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteShortName();
-        verify(mockRoute, times(1)).getRouteLongName();
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 
     @Test
-    void sameRouteDescriptionAndShortNameShouldGenerateNotice() {
+    void longRouteNameContainingShortNameShouldGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
-        when(mockRoute.getRouteDesc()).thenReturn("route_short_name");
-        when(mockRoute.getRouteShortName()).thenReturn("route_short_name");
-        when(mockRoute.getRouteLongName()).thenReturn("route_long_name");
+        when(mockRoute.getRouteLongName()).thenReturn("This is a long name for route xyz");
+        when(mockRoute.getRouteShortName()).thenReturn("xyz");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
+        ValidateRouteLongNameDoesNotContainOrEqualShortName underTest = new ValidateRouteLongNameDoesNotContainOrEqualShortName(
                 mockDataRepo,
                 mockResultRepo
         );
@@ -105,29 +100,26 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockRoute, times(1)).getRouteDesc();
-        verify(mockRoute, times(1)).getRouteShortName();
-        verify(mockRoute, times(1)).getRouteLongName();
+        verify(mockRoute, times(3)).getRouteLongName();
+        verify(mockRoute, times(2)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1))
-                .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(RouteLongNameContainsShortNameNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 
     @Test
-    void sameRouteDescriptionAndLongNameShouldGenerateNotice() {
+    void longRouteNameEqualingShortNameShouldGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
-        when(mockRoute.getRouteDesc()).thenReturn("route_long_name");
-        when(mockRoute.getRouteShortName()).thenReturn("route_short_name");
-        when(mockRoute.getRouteLongName()).thenReturn("route_long_name");
+        when(mockRoute.getRouteLongName()).thenReturn("xyz");
+        when(mockRoute.getRouteShortName()).thenReturn("xyz");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
-        ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
+        ValidateRouteLongNameDoesNotContainOrEqualShortName underTest = new ValidateRouteLongNameDoesNotContainOrEqualShortName(
                 mockDataRepo,
                 mockResultRepo
         );
@@ -135,12 +127,10 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockRoute, times(1)).getRouteDesc();
-        verify(mockRoute, times(1)).getRouteShortName();
-        verify(mockRoute, times(1)).getRouteLongName();
+        verify(mockRoute, times(3)).getRouteLongName();
+        verify(mockRoute, times(2)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1))
-                .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(RouteLongNameEqualsShortNameNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 }
