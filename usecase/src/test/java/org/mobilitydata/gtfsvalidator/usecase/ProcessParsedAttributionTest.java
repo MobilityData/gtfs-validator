@@ -53,14 +53,14 @@ class ProcessParsedAttributionTest {
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Attribution.AttributionBuilder mockBuilder = mock(Attribution.AttributionBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedAttribution = mock(ParsedEntity.class);
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
         final Attribution mockAttribution = mock(Attribution.class);
 
-        //noinspection unchecked to avoid lint
-        when(mockBuilder.build()).thenReturn(mockEntityBuildResult);
+        doReturn(mockEntityBuildResult).when(mockBuilder).build();
         when(mockEntityBuildResult.isSuccess()).thenReturn(true);
-        when(mockEntityBuildResult.getData()).thenReturn(mockAttribution);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockAttribution).when(mockEntityBuildResult).getData();
 
         when(mockParsedAttribution.get(ATTRIBUTION_ID)).thenReturn(ATTRIBUTION_ID);
         when(mockParsedAttribution.get(AGENCY_ID)).thenReturn(AGENCY_ID);
@@ -118,17 +118,17 @@ class ProcessParsedAttributionTest {
         final Attribution.AttributionBuilder mockBuilder = mock(Attribution.AttributionBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedAttribution = mock(ParsedEntity.class);
         final List<Notice> noticeCollection = new ArrayList<>();
-        final Notice mockNotice = mock(Notice.class);
+        final Notice mockNotice = mock(MissingRequiredValueNotice.class);
 
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
 
-        when(mockGenericObject.getData()).thenReturn(noticeCollection);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(noticeCollection).when(mockGenericObject).getData();
         when(mockGenericObject.isSuccess()).thenReturn(false);
         noticeCollection.add(mockNotice);
 
-        //noinspection unchecked to avoid lint
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         final ProcessParsedAttribution underTest =
                 new ProcessParsedAttribution(mockResultRepo, mockGtfsDataRepo, mockBuilder);
@@ -173,10 +173,11 @@ class ProcessParsedAttributionTest {
         verify(mockBuilder, times(1)).build();
 
         verify(mockGenericObject, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
-        verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
+        verify(mockResultRepo, times(1)).addNotice(isA(MissingRequiredValueNotice.class));
 
         final ArgumentCaptor<MissingRequiredValueNotice> captor =
                 ArgumentCaptor.forClass(MissingRequiredValueNotice.class);
@@ -194,15 +195,15 @@ class ProcessParsedAttributionTest {
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Attribution.AttributionBuilder mockBuilder = mock(Attribution.AttributionBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedAttribution = mock(ParsedEntity.class);
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
 
         final Attribution mockAttribution = mock(Attribution.class);
-        when(mockGenericObject.getData()).thenReturn(mockAttribution);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockAttribution).when(mockGenericObject).getData();
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
         when(mockGtfsDataRepo.addAttribution(mockAttribution)).thenReturn(null);
 
         final ProcessParsedAttribution underTest =
@@ -233,7 +234,8 @@ class ProcessParsedAttributionTest {
         verify(mockParsedAttribution, times(1)).get(ArgumentMatchers.eq(ATTRIBUTION_URL));
         verify(mockParsedAttribution, times(1)).get(ArgumentMatchers.eq(ATTRIBUTION_EMAIL));
         verify(mockParsedAttribution, times(1)).get(ArgumentMatchers.eq(ATTRIBUTION_PHONE));
-        //noinspection ResultOfMethodCallIgnored to avoid lint
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
         verify(mockParsedAttribution, times(1)).getEntityId();
 
         verify(mockBuilder, times(1)).attributionId(ArgumentMatchers.eq(ATTRIBUTION_ID));
@@ -252,6 +254,7 @@ class ProcessParsedAttributionTest {
         verify(mockGtfsDataRepo, times(1)).addAttribution(mockAttribution);
 
         verify(mockGenericObject, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 

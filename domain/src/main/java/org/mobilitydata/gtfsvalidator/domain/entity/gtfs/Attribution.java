@@ -38,29 +38,24 @@ public class Attribution extends GtfsEntity {
 
     @Nullable
     private final String attributionId;
-
     @Nullable
     private final String agencyId;
-
     @Nullable
     private final String routeId;
-
     @Nullable
     private final String tripId;
-
     @NotNull
     private final String organizationName;
-
-    private final boolean isProducer;
-    private final boolean isOperator;
-    private final boolean isAuthority;
-
+    @NotNull
+    private final Boolean isProducer;
+    @NotNull
+    private final Boolean isOperator;
+    @NotNull
+    private final Boolean isAuthority;
     @Nullable
     private final String attributionUrl;
-
     @Nullable
     private final String attributionEmail;
-
     @Nullable
     private final String attributionPhone;
 
@@ -84,9 +79,9 @@ public class Attribution extends GtfsEntity {
                         @Nullable final String routeId,
                         @Nullable final String tripId,
                         @NotNull final String organizationName,
-                        final boolean isProducer,
-                        final boolean isOperator,
-                        final boolean isAuthority,
+                        @NotNull final Boolean isProducer,
+                        @NotNull final Boolean isOperator,
+                        @NotNull final Boolean isAuthority,
                         @Nullable final String attributionUrl,
                         @Nullable final String attributionEmail,
                         @Nullable final String attributionPhone) {
@@ -160,16 +155,10 @@ public class Attribution extends GtfsEntity {
      * {@link Attribution}.
      */
     public static class AttributionBuilder {
-        @Nullable
         private String attributionId;
-        @Nullable
         private String agencyId;
-        @Nullable
         private String routeId;
-        @Nullable
         private String tripId;
-        @SuppressWarnings("NotNullFieldNotInitialized") // to avoid lint
-        @NotNull
         private String organizationName;
         private boolean isProducer;
         private Integer originalIsProducerInteger;
@@ -177,11 +166,8 @@ public class Attribution extends GtfsEntity {
         private Integer originalIsAuthorityInteger;
         private boolean isOperator;
         private Integer originalIsOperatorInteger;
-        @Nullable
         private String attributionUrl;
-        @Nullable
         private String attributionEmail;
-        @Nullable
         private String attributionPhone;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
@@ -334,32 +320,37 @@ public class Attribution extends GtfsEntity {
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
-            //noinspection ConstantConditions to avoid lint
             if (organizationName == null ||
-                    (originalIsOperatorInteger != null && (originalIsOperatorInteger < 0 || originalIsOperatorInteger > 1)) ||
-                    (originalIsAuthorityInteger != null && (originalIsAuthorityInteger < 0 || originalIsAuthorityInteger > 1))
-                    || (originalIsProducerInteger != null && (originalIsProducerInteger < 0 || originalIsProducerInteger > 1))
-                    || ((isAuthority == isProducer) && (isAuthority == isOperator)
-                    && (originalIsProducerInteger == null || originalIsProducerInteger == 0))) {
+                    (originalIsOperatorInteger != null &&
+                            (originalIsOperatorInteger < 0 || originalIsOperatorInteger > 1)) ||
+                    (originalIsAuthorityInteger != null &&
+                            (originalIsAuthorityInteger < 0 || originalIsAuthorityInteger > 1)) ||
+                    (originalIsProducerInteger != null &&
+                            (originalIsProducerInteger < 0 || originalIsProducerInteger > 1)) ||
+                    ((isAuthority == isProducer) && (isAuthority == isOperator) &&
+                            (originalIsProducerInteger == null || originalIsProducerInteger == 0))
+            ) {
                 final String entityId = attributionId + "; " + agencyId + "; " + routeId + "; " + tripId + "; " +
                         organizationName + "; " + isProducer + "; " + isOperator + "; " + isAuthority + "; " +
                         attributionUrl + "; " + attributionEmail + "; " + attributionPhone;
 
-                //noinspection ConstantConditions to avoid lint
                 if (organizationName == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("attributions.txt",
                             "organization_name",
                             entityId));
                 }
-                if (originalIsOperatorInteger != null && (originalIsOperatorInteger < 0 || originalIsOperatorInteger > 1)) {
+                if (originalIsOperatorInteger != null
+                        && (originalIsOperatorInteger < 0 || originalIsOperatorInteger > 1)) {
                     noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("attributions.txt",
                             "is_operator", entityId, 0, 1, originalIsOperatorInteger));
                 }
-                if (originalIsAuthorityInteger != null && (originalIsAuthorityInteger < 0 || originalIsAuthorityInteger > 1)) {
+                if (originalIsAuthorityInteger != null
+                        && (originalIsAuthorityInteger < 0 || originalIsAuthorityInteger > 1)) {
                     noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("attributions.txt",
                             "is_authority", entityId, 0, 1, originalIsAuthorityInteger));
                 }
-                if (originalIsProducerInteger != null && (originalIsProducerInteger < 0 || originalIsProducerInteger > 1)) {
+                if (originalIsProducerInteger != null
+                        && (originalIsProducerInteger < 0 || originalIsProducerInteger > 1)) {
                     noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("attributions.txt",
                             "is_producer", entityId, 0, 1, originalIsProducerInteger));
                 }
@@ -378,6 +369,11 @@ public class Attribution extends GtfsEntity {
             }
         }
     }
+
+    /**
+     * Returns the key used to map {@code Attribution}
+     * @return  the key used to map {@link Attribution}
+     */
     public String getAttributionKey() {
         return getAttributionId() + "; " + getAgencyId() + "; " + getRouteId() + "; " + getTripId() + "; "
                 + getOrganizationName() + "; " + isProducer() + "; " + isOperator() + "; " +

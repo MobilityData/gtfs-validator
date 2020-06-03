@@ -31,7 +31,8 @@ class AttributionTest {
     void createAttributionWithNullOrganizationNameShouldGenerateNotice() {
         final Attribution.AttributionBuilder underTest = new Attribution.AttributionBuilder();
 
-        //noinspection ConstantConditions to avoid lint
+        // warning suppressed for the purpose of the test: parameter of method organizationName is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.organizationName(null)
                 .isProducer(1)
                 .build();
@@ -58,7 +59,9 @@ class AttributionTest {
                 .build();
         final String entityId = "null; null; null; null; organization name; false; false; true; null; null; null";
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
+        // there is no need for cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -82,7 +85,9 @@ class AttributionTest {
                 .build();
         final String entityId = "null; null; null; null; organization name; true; false; false; null; null; null";
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
+        // there is no need for cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -106,7 +111,9 @@ class AttributionTest {
                 .build();
         final String entityId = "null; null; null; null; organization name; true; false; false; null; null; null";
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
+        // there is no need for cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -131,7 +138,9 @@ class AttributionTest {
                 .build();
         final String entityId = "null; null; null; null; organization name; false; false; false; null; null; null";
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
+        // there is no need for cast check
+        //noinspection unchecked
         final List<IllegalFieldValueCombination> noticeCollection =
                 (List<IllegalFieldValueCombination>) entityBuildResult.getData();
         final IllegalFieldValueCombination notice = noticeCollection.get(0);
