@@ -34,7 +34,9 @@ class CalendarTest {
     public void createCalendarWithNullServiceIdShouldGenerateNotice() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
-        //noinspection ConstantConditions to avoid lint
+        // suppressed warning regarding nullability of parameter used in method .serviceId for the purpose of this test,
+        // since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(null)
                 .monday(0)
                 .tuesday(0)
@@ -48,7 +50,10 @@ class CalendarTest {
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection
                 = (List<MissingRequiredValueNotice>) buildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -62,8 +67,9 @@ class CalendarTest {
     @Test
     public void createCalendarWithNullStartDateShouldGenerateNotice() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
-
-        //noinspection ConstantConditions to avoid lint
+        // suppressed warning regarding nullability of parameter used in method .startDate for the purpose of this test,
+        // since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
@@ -77,7 +83,9 @@ class CalendarTest {
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) buildResult.getData();
 
@@ -93,6 +101,8 @@ class CalendarTest {
     public void createCalendarWithNullEndDateShouldGenerateNotice() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
+        // suppressed warning regarding nullability of parameter used in method .endDate for the purpose of this test,
+        // since this parameter is annotated as non null
         //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(SERVICE_ID)
                 .monday(0)
@@ -107,7 +117,9 @@ class CalendarTest {
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) buildResult.getData();
 
@@ -137,7 +149,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) buildResult.getData();
 
@@ -156,7 +170,9 @@ class CalendarTest {
     @Test
     void createCalendarWithNullMondayValueShouldGenerateNotice() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
-
+        // suppressed warning regarding nullability of parameter used in method .monday for the purpose of this test,
+        // since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(SERVICE_ID)
                 .monday(null)
                 .tuesday(0)
@@ -171,7 +187,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) buildResult.getData();
 
@@ -200,7 +218,9 @@ class CalendarTest {
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) buildResult.getData();
 
@@ -219,6 +239,9 @@ class CalendarTest {
     void createCalendarWithNullTuesdayValueShouldGenerateNotice() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
+        // suppressed warning regarding nullability of parameter used in method .tuesday for the purpose of this test,
+        // since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(null)
@@ -233,7 +256,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) buildResult.getData();
 
@@ -263,7 +288,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) buildResult.getData();
 
@@ -281,7 +308,9 @@ class CalendarTest {
     @Test
     public void createCalendarWithNullWednesdayValueShouldGenerateNotice() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
-
+        // suppressed warning regarding nullability of parameter used in method .wednesday for the purpose of this test,
+        // since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
@@ -295,7 +324,9 @@ class CalendarTest {
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection
                 = (List<MissingRequiredValueNotice>) buildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -324,7 +355,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection
                 = (List<IntegerFieldValueOutOfRangeNotice>) buildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -342,7 +375,9 @@ class CalendarTest {
     @Test
     public void createCalendarWithNullThursdayValueShouldGenerateNotice() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
-
+        // suppressed warning regarding nullability of parameter used in method .thursday for the purpose of this test,
+        // since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
@@ -357,7 +392,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection
                 = (List<MissingRequiredValueNotice>) buildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -386,7 +423,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection
                 = (List<IntegerFieldValueOutOfRangeNotice>) buildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -403,7 +442,9 @@ class CalendarTest {
     @Test
     public void createCalendarWithNullFridayValueShouldGenerateNotice() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
-
+        // suppressed warning regarding nullability of parameter used in method .friday for the purpose of this test,
+        // since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
@@ -418,7 +459,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection
                 = (List<MissingRequiredValueNotice>) buildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -447,7 +490,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection
                 = (List<IntegerFieldValueOutOfRangeNotice>) buildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -464,7 +509,9 @@ class CalendarTest {
     @Test
     public void createCalendarWithNullSaturdayValueShouldGenerateNotice() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
-
+        // suppressed warning regarding nullability of parameter used in method .saturday for the purpose of this test,
+        // since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
@@ -479,7 +526,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection
                 = (List<MissingRequiredValueNotice>) buildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -508,7 +557,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection
                 = (List<IntegerFieldValueOutOfRangeNotice>) buildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -526,7 +577,9 @@ class CalendarTest {
     @Test
     public void createCalendarWithNullSundayValueShouldThrowException() {
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
-
+        // suppressed warning regarding nullability of parameter used in method .sunday for the purpose of this test,
+        // since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> buildResult = underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
@@ -541,7 +594,9 @@ class CalendarTest {
 
         assertTrue(buildResult.getData() instanceof List);
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection
                 = (List<MissingRequiredValueNotice>) buildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);

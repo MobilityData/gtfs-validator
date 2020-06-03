@@ -30,18 +30,16 @@ import java.util.List;
  * {@link CalendarBuilder} to create this.
  */
 public class Calendar extends GtfsEntity {
-    @NotNull
-    private final String serviceId;
-    private final boolean monday;
-    private final boolean tuesday;
-    private final boolean wednesday;
-    private final boolean thursday;
-    private final boolean friday;
-    private final boolean saturday;
-    private final boolean sunday;
-    private final LocalDateTime startDate;
-    @NotNull
-    private final LocalDateTime endDate;
+    @NotNull private final String serviceId;
+    @NotNull private final Boolean monday;
+    @NotNull private final Boolean tuesday;
+    @NotNull private final Boolean wednesday;
+    @NotNull private final Boolean thursday;
+    @NotNull private final Boolean friday;
+    @NotNull private final Boolean saturday;
+    @NotNull private final Boolean sunday;
+    @NotNull private final LocalDateTime startDate;
+    @NotNull private final LocalDateTime endDate;
 
     /**
      * Class for all entities defined in calendar.txt
@@ -59,13 +57,13 @@ public class Calendar extends GtfsEntity {
      * @param endDate   end service day for the service interval
      */
     private Calendar(@NotNull final String serviceId,
-                     final boolean monday,
-                     final boolean tuesday,
-                     final boolean wednesday,
-                     final boolean thursday,
-                     final boolean friday,
-                     final boolean saturday,
-                     final boolean sunday,
+                     @NotNull final Boolean monday,
+                     @NotNull final Boolean tuesday,
+                     @NotNull final Boolean wednesday,
+                     @NotNull final Boolean thursday,
+                     @NotNull final Boolean friday,
+                     @NotNull final Boolean saturday,
+                     @NotNull final Boolean sunday,
                      @NotNull final LocalDateTime startDate,
                      @NotNull final LocalDateTime endDate) {
         this.serviceId = serviceId;
@@ -80,46 +78,43 @@ public class Calendar extends GtfsEntity {
         this.endDate = endDate;
     }
 
-    @NotNull
-    public String getServiceId() {
+    @NotNull public String getServiceId() {
         return serviceId;
     }
 
-    public boolean isMonday() {
+    @NotNull public Boolean isMonday() {
         return monday;
     }
 
-    public boolean isTuesday() {
+    @NotNull public Boolean isTuesday() {
         return tuesday;
     }
 
-    public boolean isWednesday() {
+    @NotNull public Boolean isWednesday() {
         return wednesday;
     }
 
-    public boolean isThursday() {
+    @NotNull public Boolean isThursday() {
         return thursday;
     }
 
-    public boolean isFriday() {
+    @NotNull public Boolean isFriday() {
         return friday;
     }
 
-    public boolean isSaturday() {
+    @NotNull public Boolean isSaturday() {
         return saturday;
     }
 
-    public boolean isSunday() {
+    @NotNull public Boolean isSunday() {
         return sunday;
     }
 
-    @NotNull
-    public LocalDateTime getStartDate() {
+    @NotNull public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    @NotNull
-    public LocalDateTime getEndDate() {
+    @NotNull public LocalDateTime getEndDate() {
         return endDate;
     }
 
@@ -127,7 +122,6 @@ public class Calendar extends GtfsEntity {
      * Builder class to create {@link Calendar} objects. Allows an unordered definition of the different attributes of
      * {@link Calendar}.
      */
-    @SuppressWarnings("ConstantConditions") // to avoid lint regarding nullability conditions
     public static class CalendarBuilder {
         private String serviceId;
         private Boolean monday;
@@ -167,6 +161,9 @@ public class Calendar extends GtfsEntity {
          * @return builder for future object creation
          */
         public CalendarBuilder monday(@NotNull final Integer monday) {
+            // to avoid lint regarding nullability of parameter monday. It is safe to remove this warning since
+            // parameter monday can be null even though it should not be.
+            //noinspection ConstantConditions
             if (monday == null) {
                 this.monday = null;
             } else if (monday.equals(1)) {
@@ -188,6 +185,9 @@ public class Calendar extends GtfsEntity {
          * @return builder for future object creation
          */
         public CalendarBuilder tuesday(@NotNull final Integer tuesday) {
+            // to avoid lint regarding nullability of parameter tuesday. It is safe to remove this warning since
+            // parameter tuesday can be null even though it should not be.
+            //noinspection ConstantConditions
             if (tuesday == null) {
                 this.tuesday = null;
             } else if (tuesday.equals(1)) {
@@ -209,6 +209,9 @@ public class Calendar extends GtfsEntity {
          * @return builder for future object creation
          */
         public CalendarBuilder wednesday(@NotNull final Integer wednesday) {
+            // to avoid lint regarding nullability of parameter wednesday. It is safe to remove this warning since
+            // parameter wednesday can be null even though it should not be.
+            //noinspection ConstantConditions
             if (wednesday == null) {
                 this.wednesday = null;
             } else if (wednesday.equals(1)) {
@@ -230,6 +233,9 @@ public class Calendar extends GtfsEntity {
          * @return builder for future object creation
          */
         public CalendarBuilder thursday(@NotNull final Integer thursday) {
+            // to avoid lint regarding nullability of parameter thursday. It is safe to remove this warning since
+            // parameter thursday can be null even though it should not be.
+            //noinspection ConstantConditions
             if (thursday == null) {
                 this.thursday = null;
             } else if (thursday.equals(1)) {
@@ -251,6 +257,9 @@ public class Calendar extends GtfsEntity {
          * @return builder for future object creation
          */
         public CalendarBuilder friday(@NotNull final Integer friday) {
+            // to avoid lint regarding nullability of parameter friday. It is safe to remove this warning since
+            // parameter friday can be null even though it should not be.
+            //noinspection ConstantConditions
             if (friday == null) {
                 this.friday = null;
             } else if (friday.equals(1)) {
@@ -272,6 +281,9 @@ public class Calendar extends GtfsEntity {
          * @return builder for future object creation
          */
         public CalendarBuilder saturday(@NotNull final Integer saturday) {
+            // to avoid lint regarding nullability of parameter saturday. It is safe to remove this warning since
+            // parameter saturday can be null even though it should not be.
+            //noinspection ConstantConditions
             if (saturday == null) {
                 this.saturday = null;
             } else if (saturday.equals(1)) {
@@ -293,6 +305,9 @@ public class Calendar extends GtfsEntity {
          * @return builder for future object creation
          */
         public CalendarBuilder sunday(@NotNull final Integer sunday) {
+            // to avoid lint regarding nullability of parameter sunday. It is safe to remove this warning since
+            // parameter sunday can be null even though it should not be.
+            //noinspection ConstantConditions
             if (sunday == null) {
                 this.sunday = null;
             } else if (sunday.equals(1)) {
@@ -323,7 +338,9 @@ public class Calendar extends GtfsEntity {
          * @param endDate start service day for the service interval
          * @return builder for future object creation
          */
-        @SuppressWarnings("UnusedReturnValue") // supressed to avoid lint
+        // suppressed warning regarding unused return value of method to avoid lint. This method is usually called last
+        // in the process of creating an entity. Thereby its return value is not used.
+        @SuppressWarnings("UnusedReturnValue")
         public CalendarBuilder endDate(@NotNull final LocalDateTime endDate) {
             this.endDate = endDate;
             return this;

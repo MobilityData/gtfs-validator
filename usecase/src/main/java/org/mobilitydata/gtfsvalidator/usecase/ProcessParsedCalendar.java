@@ -55,7 +55,6 @@ public class ProcessParsedCalendar {
      * @param validatedParsedCalendar entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedParsedCalendar) {
-
         final String serviceId = (String) validatedParsedCalendar.get("service_id");
         final Integer monday = (Integer) validatedParsedCalendar.get("monday");
         final Integer tuesday = (Integer) validatedParsedCalendar.get("tuesday");
@@ -78,7 +77,7 @@ public class ProcessParsedCalendar {
                 .startDate(startDate)
                 .endDate(endDate);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult calendar = builder.build();
+        final EntityBuildResult<?> calendar = builder.build();
 
         if (calendar.isSuccess()) {
             if (gtfsDataRepository.addCalendar((Calendar) calendar.getData()) == null) {
@@ -86,6 +85,8 @@ public class ProcessParsedCalendar {
                         validatedParsedCalendar.getEntityId()));
             }
         } else {
+            // at thi step it is certain that calling getData method will return a list of notices, therefore there is
+            // no need for cast check
             //noinspection unchecked
             ((List<Notice>) calendar.getData()).forEach(resultRepository::addNotice);
         }
