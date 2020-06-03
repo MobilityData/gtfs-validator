@@ -147,7 +147,7 @@ class ProcessParsedTripTest {
         verify(mockBuilder, times(1)).bikesAllowed(1);
         verify(mockBuilder, times(1)).build();
 
-        verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
+        verify(mockResultRepo, times(1)).addNotice(isA(MissingRequiredValueNotice.class));
         verifyNoMoreInteractions(mockParsedTrip, mockGtfsDataRepo, mockBuilder, mockResultRepo);
     }
 
