@@ -140,11 +140,11 @@ public class Transfer extends GtfsEntity {
         }
 
         /**
-         * Returns an entity representing a row from transfers.txt if the requirements from the official GTFS
-         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         * Returns {@code EntityBuildResult} representing a row from transfers.txt if the requirements from the official
+         * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          *
-         * @return entity representing a row from transfers.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns an entity representing a list of notices.
+         * @return {@code EntityBuildResult} representing a row from transfers.txt if the requirements from the official
+         * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues,
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
