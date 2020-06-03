@@ -148,25 +148,15 @@ public class Trip extends GtfsEntity {
         private String routeId;
         private String serviceId;
         private String tripId;
-        @Nullable
         private String tripHeadsign;
-        @Nullable
         private String tripShortName;
-        @Nullable
         private DirectionId directionId;
-        @Nullable
         private String blockId;
-        @Nullable
         private String shapeId;
-        @Nullable
         private WheelchairAccessibleStatus wheelchairAccessibleStatus;
-        @Nullable
         private BikesAllowedStatus bikesAllowedStatus;
-        @Nullable
         private Integer originalWheelchairAccessibleStatusInteger;
-        @Nullable
         private Integer originalBikesAllowedStatusInteger;
-        @Nullable
         private Integer originalDirectionIdInteger;
         private final ArrayList<Notice> noticeCollection = new ArrayList<>();
 
@@ -324,9 +314,6 @@ public class Trip extends GtfsEntity {
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {
-                // to avoid lint regarding possible nullability of fields
-                // wheelchairAccessibleStatus and bikesAllowedStatus: at this step, these fields can not be null.
-                // noinspection ConstantConditions
                 return new EntityBuildResult<>(new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName,
                         directionId, blockId, shapeId, wheelchairAccessibleStatus, bikesAllowedStatus));
             }
