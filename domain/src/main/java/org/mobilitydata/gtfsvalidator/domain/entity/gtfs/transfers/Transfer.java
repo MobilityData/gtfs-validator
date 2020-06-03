@@ -73,7 +73,9 @@ public class Transfer extends GtfsEntity {
         return transferType;
     }
 
-    @SuppressWarnings("unused") // to avoid lint
+    // suppressed warning regarding unused method result. This method is usually used last when creating entity,
+    // therefore, its results is not used.
+    @SuppressWarnings("unused")
     @Nullable
     public Integer getMinTransferTime() {
         return minTransferTime;
@@ -88,7 +90,7 @@ public class Transfer extends GtfsEntity {
         private String toStopId;
         private TransferType transferType;
         private Integer originalTransferTypeInteger;
-        @Nullable private Integer minTransferTime;
+        private Integer minTransferTime;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**

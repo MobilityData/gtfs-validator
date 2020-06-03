@@ -41,7 +41,7 @@ class TransferTest {
     void createTransferWithNullFromStopIdShouldGenerateNotice() {
         final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();
 
-        //noinspection ConstantConditions to avoid lint
+        //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.fromStopId(null)
                 .toStopId(TO_STOP_ID)
                 .transferType(VALID_TRANSFER_TYPE_VALUE)
@@ -49,7 +49,9 @@ class TransferTest {
                 .build(LOWER_BOUND_MIN_TRANSFER_TIME, UPPER_BOUND_MIN_TRANSFER_TIME);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -74,7 +76,9 @@ class TransferTest {
                 .build(LOWER_BOUND_MIN_TRANSFER_TIME, UPPER_BOUND_MIN_TRANSFER_TIME);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -96,7 +100,9 @@ class TransferTest {
                 .build(LOWER_BOUND_MIN_TRANSFER_TIME, UPPER_BOUND_MIN_TRANSFER_TIME);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
@@ -119,7 +125,9 @@ class TransferTest {
                 .build(LOWER_BOUND_MIN_TRANSFER_TIME, UPPER_BOUND_MIN_TRANSFER_TIME);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<SuspiciousIntegerValueNotice> noticeCollection =
                 (List<SuspiciousIntegerValueNotice>) entityBuildResult.getData();
         final SuspiciousIntegerValueNotice notice = noticeCollection.get(0);
