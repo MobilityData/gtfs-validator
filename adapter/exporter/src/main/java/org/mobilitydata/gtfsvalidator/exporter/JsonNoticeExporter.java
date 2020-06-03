@@ -226,9 +226,4 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(RouteLongNameContainsShortNameNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
-
-    @Override
-    public void export(SuspiciousIntegerValueNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
 }

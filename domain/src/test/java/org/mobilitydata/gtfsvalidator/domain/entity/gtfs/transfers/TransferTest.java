@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.SuspiciousIntegerValueNotice;
 
 import java.util.List;
 
@@ -32,8 +31,6 @@ class TransferTest {
     private final static String TO_STOP_ID = "stop id 1";
     private final static int VALID_TRANSFER_TYPE_VALUE = 1;
     private final static int VALID_MIN_TRANSFER_TIME_VALUE = 20;
-    private final int UPPER_BOUND_MIN_TRANSFER_TIME = 40;
-    private final int LOWER_BOUND_MIN_TRANSFER_TIME = 0;
 
     // Field fromStopId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
@@ -46,7 +43,7 @@ class TransferTest {
                 .toStopId(TO_STOP_ID)
                 .transferType(VALID_TRANSFER_TYPE_VALUE)
                 .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE)
-                .build(LOWER_BOUND_MIN_TRANSFER_TIME, UPPER_BOUND_MIN_TRANSFER_TIME);
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
@@ -73,7 +70,7 @@ class TransferTest {
                 .toStopId(null)
                 .transferType(VALID_TRANSFER_TYPE_VALUE)
                 .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE)
-                .build(LOWER_BOUND_MIN_TRANSFER_TIME, UPPER_BOUND_MIN_TRANSFER_TIME);
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
@@ -97,7 +94,7 @@ class TransferTest {
                 .toStopId(TO_STOP_ID)
                 .transferType(55)
                 .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE)
-                .build(LOWER_BOUND_MIN_TRANSFER_TIME, UPPER_BOUND_MIN_TRANSFER_TIME);
+                .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
@@ -115,33 +112,6 @@ class TransferTest {
     }
 
     @Test
-    void createTransferWithSuspiciousMinTransferTimeValueShouldGenerateNotice() {
-        final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();
-
-        final EntityBuildResult<?> entityBuildResult = underTest.fromStopId(FROM_STOP_ID)
-                .toStopId(TO_STOP_ID)
-                .transferType(VALID_TRANSFER_TYPE_VALUE)
-                .minTransferTime(-20)
-                .build(LOWER_BOUND_MIN_TRANSFER_TIME, UPPER_BOUND_MIN_TRANSFER_TIME);
-
-        assertTrue(entityBuildResult.getData() instanceof List);
-        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
-        // we do not need to cast check
-        //noinspection unchecked
-        final List<SuspiciousIntegerValueNotice> noticeCollection =
-                (List<SuspiciousIntegerValueNotice>) entityBuildResult.getData();
-        final SuspiciousIntegerValueNotice notice = noticeCollection.get(0);
-
-        assertEquals("transfers.txt", notice.getFilename());
-        assertEquals("min_transfer_time", notice.getFieldName());
-        assertEquals("stop id 0;stop id 1", notice.getEntityId());
-        assertEquals(LOWER_BOUND_MIN_TRANSFER_TIME, notice.getRangeMin());
-        assertEquals(UPPER_BOUND_MIN_TRANSFER_TIME, notice.getRangeMax());
-        assertEquals(-20, notice.getActualValue());
-        assertEquals(1, noticeCollection.size());
-    }
-
-    @Test
     void createTransferWithNullMinTransferTimeValueShouldNotGenerateNotice() {
         final Transfer.TransferBuilder underTest = new Transfer.TransferBuilder();
 
@@ -150,7 +120,7 @@ class TransferTest {
                 .transferType(VALID_TRANSFER_TYPE_VALUE)
                 .minTransferTime(VALID_MIN_TRANSFER_TIME_VALUE);
 
-        assertTrue(underTest.build(LOWER_BOUND_MIN_TRANSFER_TIME, UPPER_BOUND_MIN_TRANSFER_TIME)
+        assertTrue(underTest.build()
                 .getData() instanceof Transfer);
     }
 }

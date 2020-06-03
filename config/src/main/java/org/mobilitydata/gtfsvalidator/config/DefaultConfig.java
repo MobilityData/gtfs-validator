@@ -189,7 +189,7 @@ public class DefaultConfig {
     }
 
     public ProcessParsedTransfer processParsedTransfer() {
-        return new ProcessParsedTransfer(resultRepo, gtfsDataRepository, execParamRepo, new Transfer.TransferBuilder());
+        return new ProcessParsedTransfer(resultRepo, gtfsDataRepository, new Transfer.TransferBuilder());
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {

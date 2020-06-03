@@ -21,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.SuspiciousIntegerValueNotice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -146,7 +146,7 @@ public class Transfer extends GtfsEntity {
          * @return entity representing a row from transfers.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
-        public EntityBuildResult<?> build(final int minTransferTimeLowerBound, final int minTransferTimeUpperBound) {
+        public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
             if (fromStopId == null || toStopId == null || transferType == null ||
@@ -165,11 +165,11 @@ public class Transfer extends GtfsEntity {
                             "transfer_type", fromStopId + ";" + toStopId,
                             originalTransferTypeInteger));
                 }
-                if (minTransferTime != null && ((minTransferTime < minTransferTimeLowerBound) ||
-                        (minTransferTime > minTransferTimeUpperBound))) {
-                    noticeCollection.add(new SuspiciousIntegerValueNotice("transfers.txt",
-                            "min_transfer_time", fromStopId + ";" + toStopId,
-                            minTransferTimeLowerBound, minTransferTimeUpperBound, minTransferTime));
+                if (minTransferTime != null && minTransferTime < 0) {
+                    // here minTransferTime threshold should be user configurable
+                    noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("transfers.txt",
+                            "min_transfer_time", fromStopId + ";" + toStopId, 0,
+                            Integer.MAX_VALUE, minTransferTime));
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {

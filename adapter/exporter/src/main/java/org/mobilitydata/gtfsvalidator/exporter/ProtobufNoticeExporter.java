@@ -453,16 +453,6 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
-    @Override
-    public void export(final SuspiciousIntegerValueNotice toExport) throws IOException {
-        outOfRangeNoticeToProto(toExport.getFilename(),
-                toExport.getEntityId(),
-                toExport.getFieldName(),
-                String.valueOf(toExport.getRangeMin()),
-                String.valueOf(toExport.getRangeMax()),
-                String.valueOf(toExport.getActualValue()));
-    }
-
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();

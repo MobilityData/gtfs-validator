@@ -21,7 +21,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -33,16 +32,13 @@ import java.util.List;
 public class ProcessParsedTransfer {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
-    private final ExecParamRepository execParamRepo;
     private final Transfer.TransferBuilder builder;
 
     public ProcessParsedTransfer(final ValidationResultRepository resultRepository,
                                  final GtfsDataRepository gtfsDataRepository,
-                                 final ExecParamRepository execParamRepo,
                                  final Transfer.TransferBuilder builder) {
         this.resultRepository = resultRepository;
         this.gtfsDataRepository = gtfsDataRepository;
-        this.execParamRepo = execParamRepo;
         this.builder = builder;
     }
 
@@ -68,10 +64,7 @@ public class ProcessParsedTransfer {
                 .transferType(transferType)
                 .minTransferTime(minTransferTime);
 
-        final EntityBuildResult<?> transfer = builder.build(
-                Integer.parseInt(execParamRepo.getExecParamValue(ExecParamRepository.LOWER_BOUND_MIN_TRANSFER_TIME)),
-                Integer.parseInt(execParamRepo.getExecParamValue(ExecParamRepository.UPPER_BOUND_MIN_TRANSFER_TIME))
-        );
+        final EntityBuildResult<?> transfer = builder.build();
 
         if (transfer.isSuccess()) {
             if (gtfsDataRepository.addTransfer((Transfer) transfer.getData()) == null) {
@@ -79,7 +72,9 @@ public class ProcessParsedTransfer {
                         "from_stop_id;to_stop_id", validatedParsedTransfer.getEntityId()));
             }
         } else {
-            //noinspection unchecked to avoid lint
+            // at this step it is certain that calling getData method will return a list of notices, therefore there is
+            // no need for cast check
+            //noinspection unchecked
             ((List<Notice>) transfer.getData()).forEach(resultRepository::addNotice);
         }
     }
