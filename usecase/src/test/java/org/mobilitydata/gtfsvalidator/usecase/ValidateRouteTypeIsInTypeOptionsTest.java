@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.RouteType;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidRouteTypeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -74,7 +74,7 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteType();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
+        verify(mockResultRepo, times(1)).addNotice(any(InvalidRouteTypeNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
 }
