@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.usecase.*;
@@ -186,6 +187,10 @@ public class DefaultConfig {
 
     public ProcessParsedCalendarDate processCalendarDate() {
         return new ProcessParsedCalendarDate(resultRepo, gtfsDataRepository, new CalendarDate.CalendarDateBuilder());
+    }
+
+    public ProcessParsedLevel processParsedLevel() {
+        return new ProcessParsedLevel(resultRepo, gtfsDataRepository, new Level.LevelBuilder());
     }
 
     public ProcessParsedTransfer processParsedTransfer() {
