@@ -394,6 +394,66 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(InvalidRouteTypeNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_INVALID_ROUTE_TYPE)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(MissingShortAndLongNameForRouteNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_SHORT_NAME_OR_LONG_NAME_REQUIRED)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(MissingRouteShortNameNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_SHORT_NAME_OR_LONG_NAME_REQUIRED)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(MissingRouteLongNameNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_SHORT_NAME_OR_LONG_NAME_REQUIRED)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(RouteLongNameEqualsShortNameNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_SHORT_NAME_EQUALS_LONG_NAME)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(RouteLongNameContainsShortNameNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_SHORT_NAME_IS_CONTAINED_IN_LONG_NAME)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
     public void export(final SuspiciousIntegerValueNotice toExport) throws IOException {
         outOfRangeNoticeToProto(toExport.getFilename(),
                 toExport.getEntityId(),

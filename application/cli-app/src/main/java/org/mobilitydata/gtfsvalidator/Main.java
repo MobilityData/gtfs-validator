@@ -64,6 +64,7 @@ public class Main {
                 final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
                 final ProcessParsedAgency processParsedAgency = config.processParsedAgency();
                 final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
+                final ProcessParsedCalendarDate processCalendarDate = config.processCalendarDate();
                 final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
 
                 // base validation + build gtfs entities
@@ -92,6 +93,10 @@ public class Main {
                                     processParsedRoute.execute(parsedEntity);
                                     break;
                                 }
+                                case "calendar_dates.txt": {
+                                    processCalendarDate.execute(parsedEntity);
+                                    break;
+                                }
                                 case "transfers.txt": {
                                     processParsedTransfer.execute(parsedEntity);
                                     break;
@@ -104,6 +109,9 @@ public class Main {
                 config.validateRouteShortNameLength().execute();
                 config.validateRouteColorAndTextContrast().execute();
                 config.validateRouteDescriptionAndNameAreDifferent().execute();
+                config.validateRouteTypeIsInOptions().execute();
+                config.validateBothRouteNamesPresence().execute();
+                config.validateRouteLongNameDoesNotContainShortName().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

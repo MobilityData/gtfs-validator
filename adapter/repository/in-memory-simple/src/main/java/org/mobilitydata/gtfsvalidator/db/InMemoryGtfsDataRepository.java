@@ -18,10 +18,12 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,12 @@ import java.util.Map;
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
+
+    // CalendarDate entities container. Entities are mapped on key resulting from the concatenation of the values
+    // contained in the following columns (found in calendar_dates.txt gtfs file):
+    // - service_id
+    // - date
+    private final Map<String, CalendarDate> calendarDatePerServiceIdAndDate = new HashMap<>();
 
     // Map containing Transfer entities. Entities are mapped on a first key which is the value found in the column
     // from_stop_id of GTFS file transfers.txt; the second key is the value found in the column to_stop_id of the same
@@ -114,6 +122,46 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Route getRouteById(final String routeId) {
         return routeCollection.get(routeId);
+    }
+
+
+    /**
+     * Add a CalendarDate representing a row from calendar_dates.txt to this. Return the entity added to the repository
+     * if the uniqueness constraint of route based on service_id and date is respected, if this requirement is not met,
+     * returns null.
+     *
+     * @param newCalendarDate the internal representation of a row from calendar_dates.txt to be added to the repository
+     * @return the entity added to the repository if the uniqueness constraint of route based on service_id is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public CalendarDate addCalendarDate(@NotNull final CalendarDate newCalendarDate) throws IllegalArgumentException {
+        // suppressed warning regarding nullability of parameter newCalendarDate, since it can be null even if it should
+        // not be
+        //noinspection ConstantConditions
+        if (newCalendarDate != null) {
+            if (calendarDatePerServiceIdAndDate.containsKey(newCalendarDate.getCalendarDateMappingKey())) {
+                return null;
+            } else {
+                calendarDatePerServiceIdAndDate.put(newCalendarDate.getCalendarDateMappingKey(), newCalendarDate);
+                return newCalendarDate;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null calendar date to data repository");
+        }
+    }
+
+    /**
+     * Return the CalendarDate representing a row from calendar_dates.txt related to the id provided as parameter
+     *
+     * @param serviceId  first part of the composite key used to map rows from calendar_dates.txt
+     * @param date       second part of the composite key used to map rows from calendar_dates.txt
+     * @return the CalendarDate representing a row from calendar_dates.txt related to the composite key provided as
+     * parameter
+     */
+    @Override
+    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date) {
+        return calendarDatePerServiceIdAndDate.get(serviceId + date.toString());
     }
 
     /**

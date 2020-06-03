@@ -17,10 +17,13 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 
 import java.util.Collection;
+
+import java.time.LocalDateTime;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
@@ -32,6 +35,10 @@ public interface GtfsDataRepository {
     Collection<Route> getRouteAll();
 
     Route getRouteById(final String routeId);
+
+    CalendarDate addCalendarDate(final CalendarDate newCalendarDate) throws IllegalArgumentException;
+
+    CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date);
 
     Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 
