@@ -35,7 +35,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing FareAttribute entities. Entities are mapped on the value found in column fare_id of gtfs file
     // fare_attributes.txt
-    private final Map<String, FareAttribute> fareAttributeCollection = new HashMap<>();
+    private final Map<String, FareAttribute> fareAttributePerFareId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -129,10 +129,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FareAttribute addFareAttribute(final FareAttribute newFareAttribute) throws IllegalArgumentException {
         if (newFareAttribute != null) {
-            if (fareAttributeCollection.containsKey(newFareAttribute.getFareId())) {
+            if (fareAttributePerFareId.containsKey(newFareAttribute.getFareId())) {
                 return null;
             } else {
-                fareAttributeCollection.put(newFareAttribute.getFareId(), newFareAttribute);
+                fareAttributePerFareId.put(newFareAttribute.getFareId(), newFareAttribute);
                 return newFareAttribute;
             }
         } else {
@@ -147,7 +147,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * @return the FareAttribute representing a row from fare_attributes.txt related to the id provided as parameter
      */
     @Override
-    public FareAttribute getFareAttributeByFareId(final String fareId) {
-        return fareAttributeCollection.get(fareId);
+    public FareAttribute getFareAttributeById(final String fareId) {
+        return fareAttributePerFareId.get(fareId);
     }
 }

@@ -154,7 +154,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void addFareAttributeAndGetFareAttributeByFareIdShouldReturnSameEntity() {
+    void addFareAttributeAndGetFareAttributeByIdShouldReturnSameEntity() {
         final FareAttribute mockFareAttribute00 = mock(FareAttribute.class);
         final FareAttribute mockFareAttribute01 = mock(FareAttribute.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -163,8 +163,8 @@ class InMemoryGtfsDataRepositoryTest {
         when(mockFareAttribute01.getFareId()).thenReturn("fare attribute id 01");
 
         assertEquals(underTest.addFareAttribute(mockFareAttribute00),
-                underTest.getFareAttributeByFareId("fare attribute id 00"));
+                underTest.getFareAttributeById("fare attribute id 00"));
         assertEquals(underTest.addFareAttribute(mockFareAttribute01),
-                underTest.getFareAttributeByFareId("fare attribute id 01"));
+                underTest.getFareAttributeById("fare attribute id 01"));
     }
 }

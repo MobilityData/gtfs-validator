@@ -35,5 +35,5 @@ public interface GtfsDataRepository {
 
     FareAttribute addFareAttribute(final FareAttribute newFareAttribute);
 
-    FareAttribute getFareAttributeByFareId(final String fareId);
+    FareAttribute getFareAttributeById(final String fareId);
 }
