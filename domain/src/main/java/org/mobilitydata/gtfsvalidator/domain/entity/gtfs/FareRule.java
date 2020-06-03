@@ -92,16 +92,10 @@ public class FareRule extends GtfsEntity {
      * {@link FareRule}.
      */
     public static class FareRuleBuilder {
-        @SuppressWarnings("NotNullFieldNotInitialized") // to avoid lint
-        @NotNull
         private String fareId;
-        @Nullable
         private String routeId;
-        @Nullable
         private String originId;
-        @Nullable
         private String destinationId;
-        @Nullable
         private String containsId;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
@@ -162,16 +156,15 @@ public class FareRule extends GtfsEntity {
         }
 
         /**
-         * Entity representing a row from fare_rules.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns an entity representing a list of notices.
+         * Returns {@code EntityBuildResult} representing a row from fare_rules.txt if the requirements from the
+         * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          *
-         * @return Entity representing a row from fare_rules.txt if the requirements from the official GTFS
-         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         * @return {@code EntityBuildResult} representing a row from fare_rules.txt if the requirements from the
+         * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
-            //noinspection ConstantConditions to avoid lint
             if (fareId == null) {
                 noticeCollection.add(new MissingRequiredValueNotice("fare_rules.txt", "fare_id",
                         fareId));
@@ -182,6 +175,11 @@ public class FareRule extends GtfsEntity {
         }
     }
 
+    /**
+     * Returns the key corresponding to this {@link FareRule}
+     *
+     * @return the key corresponding to this {@link FareRule}
+     */
     public String getFareRuleMappingKey() {
         return getFareId() + "; " + getRouteId() + "; " + getOriginId() + "; " + getDestinationId() + "; "
                 + getContainsId();

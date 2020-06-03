@@ -48,12 +48,13 @@ class ProcessParsedFareRuleTest {
         final FareRule.FareRuleBuilder mockBuilder = mock(FareRule.FareRuleBuilder.class, RETURNS_SELF);
         final FareRule mockFareRule = mock(FareRule.class);
         final ParsedEntity mockParsedFareRule = mock(ParsedEntity.class);
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockEntityBuildResult = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockEntityBuildResult);
+        doReturn(mockEntityBuildResult).when(mockBuilder).build();
         when(mockEntityBuildResult.isSuccess()).thenReturn(true);
-        when(mockEntityBuildResult.getData()).thenReturn(mockFareRule);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockFareRule).when(mockEntityBuildResult).getData();
 
         when(mockParsedFareRule.get(FARE_ID)).thenReturn(FARE_ID);
         when(mockParsedFareRule.get(ROUTE_ID)).thenReturn(ROUTE_ID);
@@ -65,7 +66,6 @@ class ProcessParsedFareRuleTest {
 
         final ProcessParsedFareRule underTest =
                 new ProcessParsedFareRule(mockResultRepo, mockGtfsDataRepo, mockBuilder);
-
 
         underTest.execute(mockParsedFareRule);
 
@@ -86,7 +86,6 @@ class ProcessParsedFareRuleTest {
         verifyNoMoreInteractions(mockBuilder, mockFareRule, mockParsedFareRule, mockGtfsDataRepo);
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored") // to avoid lint
     @Test
     void invalidFareRuleEntityShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -96,13 +95,13 @@ class ProcessParsedFareRuleTest {
         final Notice mockNotice = mock(Notice.class);
         final List<Notice> noticeCollection = new ArrayList<>();
         noticeCollection.add(mockNotice);
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
 
-        //noinspection unchecked to avoid lint
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
         when(mockGenericObject.isSuccess()).thenReturn(false);
-        when(mockGenericObject.getData()).thenReturn(noticeCollection);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(noticeCollection).when(mockGenericObject).getData();
 
         final ProcessParsedFareRule underTest =
                 new ProcessParsedFareRule(mockResultRepo, mockGtfsDataRepo, mockBuilder);
@@ -129,6 +128,8 @@ class ProcessParsedFareRuleTest {
         verify(mockBuilder, times(1)).build();
 
         verify(mockGenericObject, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
         verify(mockResultRepo, times(1)).addNotice(ArgumentMatchers.eq(mockNotice));
 
@@ -148,15 +149,15 @@ class ProcessParsedFareRuleTest {
         final FareRule.FareRuleBuilder mockBuilder = mock(FareRule.FareRuleBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedFareRule = mock(ParsedEntity.class);
         when(mockParsedFareRule.getEntityId()).thenReturn("entity id");
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
 
         final FareRule mockFareRule = mock(FareRule.class);
-        when(mockGenericObject.getData()).thenReturn(mockFareRule);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockFareRule).when(mockGenericObject).getData();
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
-        //noinspection unchecked to avoid lint
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
         when(mockGtfsDataRepo.addFareRule(mockFareRule)).thenReturn(null);
 
         final ProcessParsedFareRule underTest =
@@ -183,12 +184,14 @@ class ProcessParsedFareRuleTest {
         verify(mockBuilder, times(1)).containsId(CONTAINS_ID);
         verify(mockBuilder, times(1)).build();
 
-        //noinspection ResultOfMethodCallIgnored to avoid lint
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
         verify(mockParsedFareRule, times(1)).getEntityId();
         verify(mockGtfsDataRepo, times(1)).addFareRule(ArgumentMatchers.eq(mockFareRule));
 
         verify(mockGenericObject, times(1)).isSuccess();
-        //noinspection ResultOfMethodCallIgnored to avoid lint
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
         final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);

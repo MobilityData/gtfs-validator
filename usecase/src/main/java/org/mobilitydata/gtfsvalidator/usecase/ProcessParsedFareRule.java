@@ -66,8 +66,7 @@ public class ProcessParsedFareRule {
                 .destinationId(destinationId)
                 .containsId(containsId);
 
-        @SuppressWarnings("rawtypes") // to avoid lint
-        final EntityBuildResult fareRule = builder.build();
+        final EntityBuildResult<?> fareRule = builder.build();
 
         if (fareRule.isSuccess()) {
             if (gtfsDataRepository.addFareRule((FareRule) fareRule.getData()) == null) {
@@ -76,7 +75,9 @@ public class ProcessParsedFareRule {
                         validatedParsedFareRuleEntity.getEntityId()));
             }
         } else {
-            //noinspection unchecked to avoid lint
+            // at this step it is certain that calling getData method will return a list of notices, therefore there is
+            // no need for cast check
+            //noinspection unchecked
             ((List<Notice>) fareRule.getData()).forEach(resultRepository::addNotice);
         }
     }

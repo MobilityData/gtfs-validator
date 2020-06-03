@@ -29,10 +29,12 @@ class FareRuleTest {
     @Test
     void createFareRuleWithNullFareIdShouldGenerateNotice() {
         final FareRule.FareRuleBuilder underTest = new FareRule.FareRuleBuilder();
-        //noinspection ConstantConditions to avoid lint
+        // parameter of method .fareId() is annotated as not null. Warning is disabled here for the purpose of this test
+        //noinspection ConstantConditions
         underTest.fareId(null);
         final EntityBuildResult<?> entityBuildResult = underTest.build();
         assertTrue(entityBuildResult.getData() instanceof List);
+        // Cast check disabled since this test is designed so that method getData returns a list of notices.
         //noinspection unchecked to avoid lint
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
