@@ -49,11 +49,11 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult entityBuildResult = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        //noinspection unchecked to avoid lint
+        // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -82,11 +82,11 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult entityBuildResult = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        //noinspection unchecked to avoid lint
+        // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -115,11 +115,11 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult entityBuildResult = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        //noinspection unchecked to avoid lint
+        // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -145,11 +145,11 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(0);
 
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult entityBuildResult = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        //noinspection unchecked to avoid lint
+        // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
+        //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
@@ -208,11 +208,11 @@ class TripTest {
                 .wheelchairAccessible(4)
                 .bikesAllowed(0);
 
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult entityBuildResult = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        //noinspection unchecked to avoid lint
+        // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
+        //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
@@ -238,11 +238,11 @@ class TripTest {
                 .wheelchairAccessible(1)
                 .bikesAllowed(4);
 
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult entityBuildResult = underTest.build();
+        final EntityBuildResult<?> entityBuildResult = underTest.build();
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
-        //noinspection unchecked to avoid lint
+        // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
+        //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);

@@ -287,7 +287,7 @@ public class Trip extends GtfsEntity {
          * Entity representing a row from trips.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns list of {@link Notice}.
          *
-         * @return Entity representing a row from trips.txt if the requirements from the official GTFS specification
+         * @return an entity representing a row from trips.txt if the requirements from the official GTFS specification
          * are met. Otherwise, method returns list of {@link Notice}.
          */
         public EntityBuildResult<?> build() {
@@ -324,7 +324,9 @@ public class Trip extends GtfsEntity {
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {
-                //noinspection ConstantConditions to avoid lint
+                // to avoid lint regarding possible nullability of fields
+                // wheelchairAccessibleStatus and bikesAllowedStatus: at this step, these fields can not be null.
+                // noinspection ConstantConditions
                 return new EntityBuildResult<>(new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName,
                         directionId, blockId, shapeId, wheelchairAccessibleStatus, bikesAllowedStatus));
             }

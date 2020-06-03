@@ -45,7 +45,9 @@ public enum DirectionId {
         if (fromValue == null) {
             return null;
         } else if (isEnumValueValid(fromValue)) {
-            //noinspection OptionalGetWithoutIsPresent
+            // to avoid lint regarding use of method .get() without .isPresent() check. At this step, it is implicit
+            // that if the enum value is valid, there will be a enum matching the value of parameter fromValue.
+            // noinspection OptionalGetWithoutIsPresent
             return Stream.of(DirectionId.values())
                     .filter(enumItem -> enumItem.value == fromValue)
                     .findAny()

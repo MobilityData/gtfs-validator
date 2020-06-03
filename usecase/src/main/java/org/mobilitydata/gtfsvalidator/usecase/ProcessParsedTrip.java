@@ -84,6 +84,8 @@ public class ProcessParsedTrip {
                         validatedTripEntity.getEntityId()));
             }
         } else {
+            // At this step of the process, we are certain that calling .getData() on trip will return a list of notices
+            // Therefore, the warning produced by casting can be safely ignored.
             //noinspection unchecked
             ((ArrayList<Notice>) trip.getData()).forEach(resultRepository::addNotice);
         }

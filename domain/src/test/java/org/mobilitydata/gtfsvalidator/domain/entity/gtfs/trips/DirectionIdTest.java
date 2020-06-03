@@ -33,9 +33,7 @@ class DirectionIdTest {
 
     @Test
     void createEnumDirectionIdWithNullValueShouldReturnNull() {
-        final Integer nullValue = null;
-        @SuppressWarnings("ConstantConditions") final DirectionId underTest = DirectionId.fromInt(nullValue);
-        assertNull(underTest);
+        assertNull(DirectionId.fromInt(null));
     }
 
     @Test

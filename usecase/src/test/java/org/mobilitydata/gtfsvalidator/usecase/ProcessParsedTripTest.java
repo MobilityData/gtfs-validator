@@ -29,13 +29,14 @@ class ProcessParsedTripTest {
         final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
         final Trip mockTrip = mock(Trip.class);
         final ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
 
-        when(mockGenericObject.getData()).thenReturn(mockTrip);
+        //result of method .getData() is not used here, therefore removing this warning to avoid lint
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockTrip).when(mockGenericObject).getData();
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         when(mockParsedTrip.get("route_id")).thenReturn("route_id");
         when(mockParsedTrip.get("service_id")).thenReturn("service_id");
@@ -93,16 +94,17 @@ class ProcessParsedTripTest {
         final Trip.TripBuilder mockBuilder = mock(Trip.TripBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
 
-        @SuppressWarnings("unchecked") final ArrayList<Notice> mockNoticeCollection = spy(ArrayList.class);
+        final ArrayList<Notice> mockNoticeCollection = spy(new ArrayList<>());
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         mockNoticeCollection.add(mockNotice);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
         when(mockGenericObject.isSuccess()).thenReturn(false);
-        when(mockGenericObject.getData()).thenReturn(mockNoticeCollection);
+        // result of method .getData() is not used here, therefore removing this warning to avoid lint
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockNoticeCollection).when(mockGenericObject).getData();
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         final ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -131,6 +133,7 @@ class ProcessParsedTripTest {
                 .get(ArgumentMatchers.eq("wheelchair_accessible"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("bikes_allowed"));
 
+        // parameter of method .routeId() is annotated as non null, removing this warning for the purpose of the test
         //noinspection ConstantConditions
         verify(mockBuilder, times(1)).routeId(null);
         verify(mockBuilder, times(1)).serviceId("service_id");
@@ -156,12 +159,14 @@ class ProcessParsedTripTest {
         final ParsedEntity mockParsedTrip = mock(ParsedEntity.class);
         final Trip mockTrip = mock(Trip.class);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
-        when(mockGenericObject.getData()).thenReturn(mockTrip);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
+        //result of method .getData() is not used here, therefore removing this warning to avoid lint
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockTrip).when(mockGenericObject).getData();
+
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         final ProcessParsedTrip underTest = new ProcessParsedTrip(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -204,6 +209,7 @@ class ProcessParsedTripTest {
         verify(mockBuilder, times(1)).bikesAllowed(4);
         verify(mockBuilder, times(1)).build();
 
+        //result of method .getEntityId() is not used here, therefore removing this warning to avoid lint
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedTrip, times(1)).getEntityId();
 
