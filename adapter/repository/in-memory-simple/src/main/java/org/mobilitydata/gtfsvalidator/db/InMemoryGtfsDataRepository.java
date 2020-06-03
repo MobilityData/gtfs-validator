@@ -18,9 +18,9 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -201,6 +201,15 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return levelPerId.get(levelId);
     }
 
+    /**
+     * Add a FeedInfo representing a row from feed_info.txt to this {@link GtfsDataRepository}. Return the entity added
+     * to the repository if the uniqueness constraint of feed_info based on feed_publisher_name is respected,
+     * if this requirement is not met,returns null.
+     *
+     * @param newFeedInfo the internal representation of a row from feed_info.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on feed_publisher_name is
+     * respected, if this requirement is not met returns null.
+     */
     @Override
     public FeedInfo addFeedInfo(final FeedInfo newFeedInfo) throws IllegalArgumentException {
         if (newFeedInfo != null) {
@@ -215,6 +224,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         }
     }
 
+    /**
+     * Return the FeedInfo representing a row from feed_info.txt related to the name provided as parameter
+     *
+     * @param feedPublisherName the key from feed_info.txt related to the FeedInfo to be returned
+     * @return the eedInfo representing a row from feed_info.txt related to the name provided as parameter
+     */
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
         return feedInfoPerFeedPublisherName.get(feedPublisherName);

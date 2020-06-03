@@ -225,11 +225,11 @@ public class FeedInfo extends GtfsEntity {
         }
 
         /**
-         * Entity representing a row from feed_info.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns an entity representing a list of {@link Notice}.
+         * Returns {@code EntityBuildResult} representing a row from feed_info.txt if the requirements from the official
+         * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues
          *
-         * @return entity representing a row from feed_info.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns an entity representing a list of {@link Notice}.
+         * @return {@link EntityBuildResult} representing a row from feed_info.txt if the requirements from the official
+         * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
