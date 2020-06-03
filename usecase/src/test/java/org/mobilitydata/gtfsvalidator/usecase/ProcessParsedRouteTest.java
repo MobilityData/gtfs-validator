@@ -177,7 +177,7 @@ class ProcessParsedRouteTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
-        verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
+        verify(mockResultRepo, times(1)).addNotice(isA(MissingRequiredValueNotice.class));
         verifyNoMoreInteractions(mockParsedRoute, mockGtfsDataRepo, mockBuilder, mockResultRepo, mockGenericObject);
     }
 

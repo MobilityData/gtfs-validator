@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -60,8 +60,7 @@ class ValidateAllOptionalFilenameTest {
         inOrder.verify(mockSpecRepo, times(1)).getOptionalFilenameList();
         inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
         inOrder.verify(mockFileRepo, times(2)).getFilenameAll();
-        verify(mockResultRepo, times(3)).addNotice(any(WarningNotice.class));
+        verify(mockResultRepo, times(3)).addNotice(any(ExtraFileFoundNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
-
 }
