@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
@@ -185,6 +186,39 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(calendarDate00, underTest.getCalendarDateByServiceIdDate("service id 00", date));
         assertEquals(calendarDate01, underTest.getCalendarDateByServiceIdDate("service id 01", date));
+    }
+
+    @Test
+    void addSameLevelTwiceShouldReturnNull() {
+        final Level mockLevel = mock(Level.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockLevel.getLevelId()).thenReturn("level id");
+
+        underTest.addLevel(mockLevel);
+        assertNull(underTest.addLevel(mockLevel));
+    }
+
+    @Test
+    void addNullLevelShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addLevel(null));
+        assertEquals("Cannot add null level to data repository", exception.getMessage());
+    }
+
+    @Test
+    public void addLevelAndGetLevelByIdShouldReturnSameEntity() {
+        final Level mockLevel00 = mock(Level.class);
+        final Level mockLevel01 = mock(Level.class);
+        when(mockLevel00.getLevelId()).thenReturn("level id 0");
+        when(mockLevel01.getLevelId()).thenReturn("level id 1");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        assertEquals(mockLevel00, underTest.addLevel(mockLevel00));
+        assertEquals(mockLevel01, underTest.addLevel(mockLevel01));
+
+        assertEquals(mockLevel00, underTest.getLevelById("level id 0"));
+        assertEquals(mockLevel01, underTest.getLevelById("level id 1"));
     }
 
     @Test
