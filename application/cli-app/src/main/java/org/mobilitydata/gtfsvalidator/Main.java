@@ -64,6 +64,7 @@ public class Main {
                 final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
                 final ProcessParsedAgency processParsedAgency = config.processParsedAgency();
                 final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
+                final ProcessParsedCalendarDate processCalendarDate = config.processCalendarDate();
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
 
                 // base validation + build gtfs entities
@@ -90,6 +91,10 @@ public class Main {
                                 }
                                 case "routes.txt": {
                                     processParsedRoute.execute(parsedEntity);
+                                    break;
+                                }
+                                case "calendar_dates.txt": {
+                                    processCalendarDate.execute(parsedEntity);
                                     break;
                                 }
                                 case "feed_info.txt": {
