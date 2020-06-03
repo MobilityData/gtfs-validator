@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -39,6 +40,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - service_id
     // - date
     private final Map<String, CalendarDate> calendarDatePerServiceIdAndDate = new HashMap<>();
+
+    // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
+    private final Map<String, Level> levelPerId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -156,5 +160,40 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date) {
         return calendarDatePerServiceIdAndDate.get(serviceId + date.toString());
+    }
+
+    /**
+     * Add a Level representing a row from levels.txt to this {@link GtfsDataRepository}. Return the entity added to the
+     * repository if the uniqueness constraint of route based on level_id is respected, if this requirement is not met,
+     * returns null.
+     *
+     * @param newLevel the internal representation of a row from levels.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on level_id is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public Level addLevel(final Level newLevel) throws IllegalArgumentException {
+        if (newLevel != null) {
+            if (levelPerId.containsKey(newLevel.getLevelId())) {
+                return null;
+            } else {
+                final String levelId = newLevel.getLevelId();
+                levelPerId.put(levelId, newLevel);
+                return newLevel;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null level to data repository");
+        }
+    }
+
+    /**
+     * Return the Route representing a row from levels.txt related to the id provided as parameter
+     *
+     * @param levelId the key from levels.txt related to the Level to be returned
+     * @return the Level representing a row from levels.txt related to the id provided as parameter
+     */
+    @Override
+    public Level getLevelById(final String levelId) {
+        return levelPerId.get(levelId);
     }
 }

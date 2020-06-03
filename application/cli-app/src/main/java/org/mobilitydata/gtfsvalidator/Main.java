@@ -65,6 +65,7 @@ public class Main {
                 final ProcessParsedAgency processParsedAgency = config.processParsedAgency();
                 final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
                 final ProcessParsedCalendarDate processCalendarDate = config.processCalendarDate();
+                final ProcessParsedLevel processParsedLevel = config.processParsedLevel();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -94,6 +95,10 @@ public class Main {
                                 }
                                 case "calendar_dates.txt": {
                                     processCalendarDate.execute(parsedEntity);
+                                    break;
+                                }
+                                case "levels.txt": {
+                                    processParsedLevel.execute(parsedEntity);
                                     break;
                                 }
                             }
