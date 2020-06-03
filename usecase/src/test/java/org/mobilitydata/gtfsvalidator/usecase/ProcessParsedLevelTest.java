@@ -37,19 +37,20 @@ import static org.mockito.Mockito.*;
 class ProcessParsedLevelTest {
 
     @Test
-    public void validatedParsedLevelShouldCreateLevelEntityAndBeAddedToGtfsDataRepository() {
+    public void validatedParsedLevelShouldCreateLevelEntityAndBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Level.LevelBuilder mockBuilder = mock(Level.LevelBuilder.class, RETURNS_SELF);
         final Level mockLevel = mock(Level.class);
         final ParsedEntity mockParsedLevel = mock(ParsedEntity.class);
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
 
-        when(mockGenericObject.getData()).thenReturn(mockLevel);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockLevel).when(mockGenericObject).getData();
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         when(mockParsedLevel.get("level_id")).thenReturn("level id");
         when(mockParsedLevel.get("level_index")).thenReturn(2.0f);
@@ -71,6 +72,7 @@ class ProcessParsedLevelTest {
         verify(mockBuilder, times(1)).levelName("level name");
         verify(mockBuilder, times(1)).build();
 
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
         verify(mockGenericObject, times(1)).isSuccess();
@@ -87,17 +89,18 @@ class ProcessParsedLevelTest {
         final Level.LevelBuilder mockBuilder = mock(Level.LevelBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedLevel = mock(ParsedEntity.class);
 
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        final List<Notice> mockNoticeCollection = spy(new ArrayList<>());
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         mockNoticeCollection.add(mockNotice);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
 
         when(mockGenericObject.isSuccess()).thenReturn(false);
-        when(mockGenericObject.getData()).thenReturn(mockNoticeCollection);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockNoticeCollection).when(mockGenericObject).getData();
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         final ProcessParsedLevel underTest = new ProcessParsedLevel(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -118,10 +121,11 @@ class ProcessParsedLevelTest {
         verify(mockBuilder, times(1)).build();
 
         verify(mockGenericObject, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
-        verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
+        verify(mockResultRepo, times(1)).addNotice(isA(MissingRequiredValueNotice.class));
         verifyNoMoreInteractions(mockParsedLevel, mockGtfsDataRepo, mockBuilder, mockResultRepo, mockGenericObject);
     }
 
@@ -133,15 +137,16 @@ class ProcessParsedLevelTest {
         final ParsedEntity mockParsedLevel = mock(ParsedEntity.class);
         final Level mockLevel = mock(Level.class);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
         when(mockGenericObject.isSuccess()).thenReturn(true);
-        when(mockGenericObject.getData()).thenReturn(mockLevel);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockLevel).when(mockGenericObject).getData();
 
 
         when(mockLevel.getLevelId()).thenReturn("level id");
         when(mockLevel.getLevelIndex()).thenReturn(2.0f);
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         final ProcessParsedLevel underTest = new ProcessParsedLevel(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -161,10 +166,12 @@ class ProcessParsedLevelTest {
         verify(mockBuilder, times(1)).levelName(ArgumentMatchers.eq("level name"));
         verify(mockBuilder, times(1)).build();
 
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedLevel, times(1)).getEntityId();
 
         verify(mockGenericObject, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 

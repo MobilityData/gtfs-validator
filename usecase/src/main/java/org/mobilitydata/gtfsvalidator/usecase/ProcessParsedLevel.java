@@ -69,6 +69,8 @@ public class ProcessParsedLevel {
                         "level_id", validatedParsedLevel.getEntityId()));
             }
         } else {
+            // at this step it is certain that calling getData method will return a list of notices, therefore there is
+            // no need for cast check
             //noinspection unchecked
             ((List<Notice>) level.getData()).forEach(resultRepository::addNotice);
         }

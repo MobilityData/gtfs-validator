@@ -31,7 +31,8 @@ import java.util.List;
 public class Level extends GtfsEntity {
     @NotNull
     private final String levelId;
-    private final float levelIndex;
+    @NotNull
+    private final Float levelIndex;
     @Nullable
     private final String levelName;
 
@@ -42,7 +43,7 @@ public class Level extends GtfsEntity {
      * @param levelName  optional name of the level
      */
     private Level(@NotNull final String levelId,
-                  final float levelIndex,
+                  @NotNull Float levelIndex,
                   @Nullable final String levelName) {
         this.levelId = levelId;
         this.levelIndex = levelIndex;
@@ -71,7 +72,6 @@ public class Level extends GtfsEntity {
     public static class LevelBuilder {
         private String levelId;
         private Float levelIndex;
-        @Nullable
         private String levelName;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
@@ -93,7 +93,7 @@ public class Level extends GtfsEntity {
          *                   levels
          * @return builder for future object creation
          */
-        public LevelBuilder levelIndex(final Float levelIndex) {
+        public LevelBuilder levelIndex(@NotNull final Float levelIndex) {
             this.levelIndex = levelIndex;
             return this;
         }
@@ -110,11 +110,12 @@ public class Level extends GtfsEntity {
         }
 
         /**
-         * Entity representing a row from levels.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns an entity representing a list of notices.
+         * Return {@code EntityBuildResult} representing a row from levels.txt if the requirements from the official
+         * GTFS specification are met. Otherwise, method returns an entity representing a collection of notices
+         * specifying the issues.
          *
-         * @return Entity representing a row from levels.txt if the requirements from the official GTFS specification
-         * are met. Otherwise, method returns an entity representing a list of notices.
+         * @return {@code EntityBuildResult} representing a row from levels.txt if the requirements from the official
+         * GTFS specification are met. Otherwise, method returns an entity representing a collection of notices.
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();

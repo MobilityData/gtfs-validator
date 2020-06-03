@@ -26,12 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LevelTest {
 
-    // Field levelId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
-    // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
     public void createLevelWithNullLevelIdShouldGenerateNotice() {
         final Level.LevelBuilder underTest = new Level.LevelBuilder();
-
+        // Field levelId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
         //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.levelId(null)
                 .levelIndex(2.0f)
@@ -39,7 +38,9 @@ class LevelTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -54,14 +55,18 @@ class LevelTest {
     @Test
     public void createLevelWithNullLevelIndexShouldGenerateException() {
         final Level.LevelBuilder underTest = new Level.LevelBuilder();
-
+        // Field levelIndex is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.levelId("level id")
                 .levelIndex(null)
                 .levelName("test")
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
