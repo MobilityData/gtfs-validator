@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
@@ -219,7 +218,9 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             }
 
             case EXCLUSION_KEY: {
-                return hasExecParamValue(EXCLUSION_KEY) ? getExecParamByKey(EXCLUSION_KEY).getValue().toString() : null;
+                return hasExecParamValue(EXCLUSION_KEY) ?
+                        getExecParamByKey(EXCLUSION_KEY).getValue().toString()
+                        : null;
             }
         }
         throw new IllegalArgumentException("Requested key is not handled");
@@ -257,9 +258,6 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 case ExecParamRepository.HELP_KEY: {
                     option.setArgs(0);
                     break;
-                }
-                case EXCLUSION_KEY: {
-                    option.setArgs(Option.UNLIMITED_VALUES);
                 }
                 default: {
                     option.setArgs(1);

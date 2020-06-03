@@ -45,10 +45,6 @@ public class InvalidLangNotice extends ErrorNotice {
         return langValue;
     }
 
-    public String getEntityId() {
-        return entityId;
-    }
-
     public String getFieldName() {
         return fieldName;
     }
