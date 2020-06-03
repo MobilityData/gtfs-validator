@@ -52,17 +52,18 @@ class ProcessParsedFareAttributeTest {
     void validatedFareAttributeShouldNotGenerateNoticeAndBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
-                RETURNS_SELF);
+        final FareAttribute.FareAttributeBuilder mockBuilder =
+                mock(FareAttribute.FareAttributeBuilder.class, RETURNS_SELF);
         final FareAttribute mockFareAttribute = mock(FareAttribute.class);
         final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
 
-        final var mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
         when(mockGenericObject.isSuccess()).thenReturn(true);
-        when(mockGenericObject.getData()).thenReturn(mockFareAttribute);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockFareAttribute).when(mockGenericObject).getData();
 
-        //noinspection unchecked to avoid lint
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         when(mockParsedFareAttribute.get(FARE_ID)).thenReturn(STRING_TEST);
         when(mockParsedFareAttribute.get(PRICE)).thenReturn(VALID_PRICE_FLOAT);
@@ -99,7 +100,8 @@ class ProcessParsedFareAttributeTest {
         verify(mockBuilder, times(1)).build();
 
         verify(mockGenericObject, times(1)).isSuccess();
-        //noinspection ResultOfMethodCallIgnored to avoid lint
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
 
@@ -116,18 +118,17 @@ class ProcessParsedFareAttributeTest {
         final FareAttribute.FareAttributeBuilder mockBuilder = mock(FareAttribute.FareAttributeBuilder.class,
                 RETURNS_SELF);
         final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
-        //noinspection unchecked to avoid lint
-        final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        final List<Notice> mockNoticeCollection = spy(new ArrayList<>());
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         mockNoticeCollection.add(mockNotice);
 
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
         when(mockGenericObject.isSuccess()).thenReturn(false);
-        when(mockGenericObject.getData()).thenReturn(mockNoticeCollection);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockNoticeCollection).when(mockGenericObject).getData();
 
-        //noinspection unchecked to avoid lint
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         final ProcessParsedFareAttribute underTest =
                 new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
@@ -162,7 +163,8 @@ class ProcessParsedFareAttributeTest {
         verify(mockBuilder, times(1)).build();
 
         verify(mockGenericObject, times(1)).isSuccess();
-        //noinspection ResultOfMethodCallIgnored to avoid lint
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
         verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
@@ -178,15 +180,15 @@ class ProcessParsedFareAttributeTest {
         final ParsedEntity mockParsedFareAttribute = mock(ParsedEntity.class);
         final FareAttribute mockFareAttribute = mock(FareAttribute.class);
 
-        //noinspection rawtypes to avoid lint
-        final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
         when(mockGenericObject.isSuccess()).thenReturn(true);
-        when(mockGenericObject.getData()).thenReturn(mockFareAttribute);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockFareAttribute).when(mockGenericObject).getData();
 
         when(mockFareAttribute.getFareId()).thenReturn(FARE_ID);
 
-        //noinspection unchecked to avoid lint
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         final ProcessParsedFareAttribute underTest =
                 new ProcessParsedFareAttribute(mockResultRepo, mockGtfsDataRepo, mockBuilder);
@@ -209,7 +211,8 @@ class ProcessParsedFareAttributeTest {
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFER_DURATION));
 
-        //noinspection ResultOfMethodCallIgnored to avoid lint
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
         verify(mockParsedFareAttribute, times(1)).getEntityId();
 
         verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
@@ -224,7 +227,8 @@ class ProcessParsedFareAttributeTest {
         verify(mockBuilder, times(1)).build();
 
         verify(mockGenericObject, times(1)).isSuccess();
-        //noinspection ResultOfMethodCallIgnored to avoid lint
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
         verify(mockGtfsDataRepo, times(1)).addFareAttribute(mockFareAttribute);

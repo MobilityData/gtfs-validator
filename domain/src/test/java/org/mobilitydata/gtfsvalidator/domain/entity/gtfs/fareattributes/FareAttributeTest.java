@@ -28,7 +28,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SuppressWarnings("unchecked")
 class FareAttributeTest {
     private static final String STRING_TEST = "string test";
     private static final float VALID_PRICE_FLOAT = 2.0f;
@@ -65,6 +64,9 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
+        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -89,6 +91,9 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
+        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -113,6 +118,9 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
+        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        //noinspection unchecked
         final List<FloatFieldValueOutOfRangeNotice> noticeCollection =
                 (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -140,6 +148,9 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
+        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -164,6 +175,9 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
+        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -188,6 +202,9 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
+        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
@@ -213,6 +230,9 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
+        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
@@ -253,6 +273,9 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
+        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
+        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);

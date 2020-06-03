@@ -60,7 +60,7 @@ public class FareAttribute extends GtfsEntity {
      * @param transferDuration length of time in seconds before a transfer expires
      */
     private FareAttribute(@NotNull final String fareId,
-                         final float price,
+                         @NotNull final Float price,
                          @NotNull final String currencyType,
                          @NotNull final PaymentMethod paymentMethod,
                          @NotNull final Transfers transfers,
@@ -199,20 +199,19 @@ public class FareAttribute extends GtfsEntity {
          * @param transferDuration length of time in seconds before a transfer expires
          * @return builder for future object creation
          */
-        @SuppressWarnings("UnusedReturnValue")
         public FareAttributeBuilder transferDuration(final int transferDuration) {
             this.transferDuration = transferDuration;
             return this;
         }
 
         /**
-         * This methods returns an entity representing a row from fare_attributes.txt if the requirements from the
-         * official GTFS specification are met. Otherwise, method returns list of {@link Notice}.
+         * This methods returns an {@code EntityBuildResult} representing a row from fare_attributes.txt if the
+         * requirements from the official GTFS specification are met. Otherwise, method returns a collection of notices
+         * specifying the issues.
          *
-         * @return Entity representing a row from fare_attributes.txt if the requirements from the official GTFS
-         * specification are met. Otherwise, method returns list of {@link Notice}.
+         * @return {@link EntityBuildResult} representing a row from fare_attributes.txt if the requirements from the
+         * official GTFS specification are met. Otherwise, method returns a collection pf notices specifying the issues.
          */
-        @SuppressWarnings("rawtypes")
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
@@ -258,9 +257,9 @@ public class FareAttribute extends GtfsEntity {
                     noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("fare_attributes.txt",
                             "transfer_duration", fareId, 0, Integer.MAX_VALUE, transferDuration));
                 }
-                return new EntityBuildResult(noticeCollection);
+                return new EntityBuildResult<>(noticeCollection);
             }
-            return new EntityBuildResult(new FareAttribute(fareId, price, currencyType, paymentMethod, transfers,
+            return new EntityBuildResult<>(new FareAttribute(fareId, price, currencyType, paymentMethod, transfers,
                     agencyId, transferDuration));
         }
     }
