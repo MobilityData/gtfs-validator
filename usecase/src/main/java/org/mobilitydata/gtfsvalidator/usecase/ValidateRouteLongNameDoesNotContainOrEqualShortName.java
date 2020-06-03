@@ -17,16 +17,17 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.SameNameAndDescriptionForRouteNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteLongNameEqualsShortNameNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteLongNameContainsShortNameNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.Collection;
 
 /**
- * Use case to validate that a Route description is different than the Route name.
+ * Use case to validate that a Route long name does not equal or contain the short name.
  */
-public class ValidateRouteDescriptionAndNameAreDifferent {
+public class ValidateRouteLongNameDoesNotContainOrEqualShortName {
 
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
@@ -35,31 +36,29 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
      */
-    public ValidateRouteDescriptionAndNameAreDifferent(final GtfsDataRepository dataRepo,
-                                                       final ValidationResultRepository resultRepo) {
+    public ValidateRouteLongNameDoesNotContainOrEqualShortName(final GtfsDataRepository dataRepo,
+                                                               final ValidationResultRepository resultRepo) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
     }
 
     /**
-     * Use case execution method: checks if Route description is the same as Route long and short names
-     * for every Routes in a {@link GtfsDataRepository}. A new notice is generated each time this condition is true.
+     * Use case execution method: checks if a Route long name does equal or contain the short name
+     * for every Routes in a {@link GtfsDataRepository}. If both are equals, a new error notice is generated.
+     * If long name contains short name, a warning error notice is generated.
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
-                .filter(route -> !(isValidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName())))
-                .forEach(route -> resultRepo.addNotice(new SameNameAndDescriptionForRouteNotice("routes.txt", route.getRouteId())));
-    }
-
-    /**
-     * @param routeDesc      the description of a Route
-     * @param routeShortName the short name of a Route
-     * @param routeLongName  the long name of a Route
-     * @return true if Route description is the same as Route short or long name, false if not or null.
-     */
-    private boolean isValidRouteDesc(final String routeDesc, final String routeShortName, final String routeLongName) {
-        return routeDesc == null || (!routeDesc.equals(routeShortName) && !routeDesc.equals(routeLongName));
+                .filter(route -> route.getRouteLongName() != null &&
+                        route.getRouteLongName().contains(route.getRouteShortName()))
+                .forEach(route -> {
+                    if (route.getRouteLongName().equals(route.getRouteShortName())) {
+                        resultRepo.addNotice(new RouteLongNameEqualsShortNameNotice("routes.txt", route.getRouteId()));
+                    } else {
+                        resultRepo.addNotice(new RouteLongNameContainsShortNameNotice("routes.txt", route.getRouteId()));
+                    }
+                });
     }
 }

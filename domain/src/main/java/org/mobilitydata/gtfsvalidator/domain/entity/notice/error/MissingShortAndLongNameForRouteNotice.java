@@ -21,30 +21,18 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class InvalidEmailNotice extends ErrorNotice {
-    private String emailValue;
-    private String fieldName;
+public class MissingShortAndLongNameForRouteNotice extends ErrorNotice {
 
-    public InvalidEmailNotice(final String filename, final String fieldName,
-                              final String entityId, final String emailValue) {
-        super(filename, E_023,
-                "Invalid email",
-                "Invalid email:" + emailValue + " in field:" + fieldName + " for entity with id:" + entityId,
+    public MissingShortAndLongNameForRouteNotice(final String filename, final String entityId) {
+        super(filename, E_027,
+                "Missing Route short name and long name",
+                "Missing Route short name and long name for Route with id:" + entityId + " in file:" + filename +
+                        ". Either short name or the long name must be specified, or potentially both if appropriate.",
                 entityId);
-        this.fieldName = fieldName;
-        this.emailValue = emailValue;
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getEmailValue() {
-        return emailValue;
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 }

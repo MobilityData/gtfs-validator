@@ -19,8 +19,11 @@ package org.mobilitydata.gtfsvalidator.db;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -132,6 +135,56 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockRoute00, underTest.getRouteById("route id0"));
         assertEquals(mockRoute01, underTest.getRouteById("route id1"));
+    }
+
+    @Test
+    void addSameCalendarDateShouldReturnNull() {
+        final CalendarDate mockCalendarDate = mock(CalendarDate.class);
+        final LocalDateTime mockDate = mock(LocalDateTime.class);
+        when(mockCalendarDate.getServiceId()).thenReturn("service id");
+        when(mockCalendarDate.getDate()).thenReturn(mockDate);
+        when(mockCalendarDate.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addCalendarDate(mockCalendarDate);
+        assertNull(underTest.addCalendarDate(mockCalendarDate));
+    }
+
+    @Test
+    void addNullCalendarDateShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        //for the purpose of the test addCalendarDate is called with null parameter. A warning is emitted since this
+        // parameter is annotated as non null
+        // noinspection ConstantConditions
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addCalendarDate(null));
+
+        assertEquals("Cannot add null calendar date to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addCalendarDateAndGetCalendarDateShouldReturnSameEntity() {
+        final CalendarDate calendarDate00 = mock(CalendarDate.class);
+        final CalendarDate calendarDate01 = mock(CalendarDate.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final LocalDateTime date = LocalDateTime.now();
+
+        when(calendarDate00.getServiceId()).thenReturn("service id 00");
+        when(calendarDate00.getDate()).thenReturn(date);
+        when(calendarDate00.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
+        when(calendarDate00.getCalendarDateMappingKey()).thenReturn("service id 00" + date.toString());
+
+        when(calendarDate01.getServiceId()).thenReturn("service id 01");
+        when(calendarDate01.getDate()).thenReturn(date);
+        when(calendarDate01.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
+        when(calendarDate01.getCalendarDateMappingKey()).thenReturn("service id 01" + date.toString());
+
+        assertEquals(calendarDate00, underTest.addCalendarDate(calendarDate00));
+        assertEquals(calendarDate01, underTest.addCalendarDate(calendarDate01));
+
+        assertEquals(calendarDate00, underTest.getCalendarDateByServiceIdDate("service id 00", date));
+        assertEquals(calendarDate01, underTest.getCalendarDateByServiceIdDate("service id 01", date));
     }
 
     @Test
