@@ -130,7 +130,7 @@ class ProcessParsedFeedInfoTest {
         //noinspection ResultOfMethodCallIgnored
         doReturn(mockNoticeCollection).when(mockGenericObject).getData();
 
-        doReturn(mockGenericObject).when(mockBuilder.build());
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         final ProcessParsedFeedInfo underTest = new ProcessParsedFeedInfo(mockResultRepo, mockGtfsDataRepo,
                 mockBuilder);
