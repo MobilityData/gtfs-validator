@@ -49,7 +49,7 @@ class ProcessParsedCalendarTest {
     private static final String END_DATE = "end_date";
 
     @Test
-    public void validatedParsedCalendarShouldCreateEntityAndBeAddedToGtfsDataRepository() {
+    public void validatedParsedCalendarShouldCreateEntityAndBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Calendar.CalendarBuilder mockBuilder = mock(Calendar.CalendarBuilder.class, RETURNS_SELF);
