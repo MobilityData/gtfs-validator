@@ -82,7 +82,9 @@ public class ProcessParsedFeedInfo {
                         "feed_publisher_name", validatedFeedInfo.getEntityId()));
             }
         } else {
-            //noinspection unchecked to avoid lint
+            // at this step it is certain that calling getData method will return a list of notices, therefore there is
+            // no need for cast check
+            //noinspection unchecked
             ((List<Notice>) feedInfo.getData()).forEach(resultRepository::addNotice);
         }
     }

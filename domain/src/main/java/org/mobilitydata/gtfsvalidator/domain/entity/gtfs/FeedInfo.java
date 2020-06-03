@@ -127,15 +127,10 @@ public class FeedInfo extends GtfsEntity {
         private String feedPublisherName;
         private String feedPublisherUrl;
         private String feedLang;
-        @Nullable
         private LocalDateTime feedStartDate;
-        @Nullable
         private LocalDateTime feedEndDate;
-        @Nullable
         private String feedVersion;
-        @Nullable
         private String feedContactEmail;
-        @Nullable
         private String feedContactUrl;
         private final List<Notice> noticeCollection = new ArrayList<>();
 

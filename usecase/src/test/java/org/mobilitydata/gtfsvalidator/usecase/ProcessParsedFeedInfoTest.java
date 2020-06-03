@@ -55,13 +55,13 @@ class ProcessParsedFeedInfoTest {
         final FeedInfo.FeedInfoBuilder mockBuilder = mock(FeedInfo.FeedInfoBuilder.class, RETURNS_SELF);
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final ParsedEntity mockParsedFeedInfo = mock(ParsedEntity.class);
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
-
-        when(mockGenericObject.getData()).thenReturn(mockFeedInfo);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockFeedInfo).when(mockGenericObject).getData();
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         when(mockParsedFeedInfo.get(FEED_PUBLISHER_NAME)).thenReturn(FEED_PUBLISHER_NAME);
         when(mockParsedFeedInfo.get(FEED_PUBLISHER_URL)).thenReturn(FEED_PUBLISHER_URL);
@@ -101,6 +101,7 @@ class ProcessParsedFeedInfoTest {
         verify(mockBuilder, times(1)).feedContactUrl(ArgumentMatchers.eq(FEED_CONTACT_URL));
 
         verify(mockGenericObject, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
@@ -118,17 +119,18 @@ class ProcessParsedFeedInfoTest {
         final FeedInfo.FeedInfoBuilder mockBuilder = mock(FeedInfo.FeedInfoBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedFeedInfo = mock(ParsedEntity.class);
 
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        final List<Notice> mockNoticeCollection = spy(new ArrayList<>());
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         mockNoticeCollection.add(mockNotice);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
 
         when(mockGenericObject.isSuccess()).thenReturn(false);
-        when(mockGenericObject.getData()).thenReturn(mockNoticeCollection);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockNoticeCollection).when(mockGenericObject).getData();
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder.build());
 
         final ProcessParsedFeedInfo underTest = new ProcessParsedFeedInfo(mockResultRepo, mockGtfsDataRepo,
                 mockBuilder);
@@ -165,6 +167,7 @@ class ProcessParsedFeedInfoTest {
         verify(mockBuilder, times(1)).build();
 
         verify(mockGenericObject, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
@@ -180,13 +183,14 @@ class ProcessParsedFeedInfoTest {
         final ParsedEntity mockParsedFeedInfo = mock(ParsedEntity.class);
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
         when(mockGenericObject.isSuccess()).thenReturn(true);
-        when(mockGenericObject.getData()).thenReturn(mockFeedInfo);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockFeedInfo).when(mockGenericObject).getData();
 
         when(mockFeedInfo.getFeedPublisherName()).thenReturn(FEED_PUBLISHER_NAME);
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
         when(mockGtfsDataRepo.addFeedInfo(mockFeedInfo)).thenReturn(null);
 
         final ProcessParsedFeedInfo underTest = new ProcessParsedFeedInfo(mockResultRepo, mockGtfsDataRepo,
@@ -225,10 +229,12 @@ class ProcessParsedFeedInfoTest {
         verify(mockBuilder, times(1)).feedContactUrl(ArgumentMatchers.eq(FEED_CONTACT_URL));
         verify(mockBuilder, times(1)).build();
 
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedFeedInfo, times(1)).getEntityId();
 
         verify(mockGenericObject, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 

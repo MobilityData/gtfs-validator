@@ -31,7 +31,9 @@ class FeedInfoTest {
     @Test
     void createFeedInfoWithNullFeedPublisherNameShouldGenerateNotice() {
         final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder();
-
+        // suppressed warning regarding nullability of parameter used in method .feedPublisherName for the purpose of
+        // this test, since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.feedPublisherName(null)
                 .feedPublisherUrl(STRING_TEST_VALUE)
                 .feedLang(STRING_TEST_VALUE)
@@ -42,7 +44,9 @@ class FeedInfoTest {
                 .feedContactUrl(STRING_TEST_VALUE)
                 .build();
 
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection
                 = (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         assertEquals(1, noticeCollection.size());
@@ -58,7 +62,9 @@ class FeedInfoTest {
     @Test
     void createFeedInfoWithNullFeedPublisherUrlShouldGenerateNotice() {
         final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder();
-
+        // suppressed warning regarding nullability of parameter used in method .feedPublisherUrl for the purpose of
+        // this test, since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult =
                 underTest.feedPublisherName(STRING_TEST_VALUE)
                         .feedPublisherUrl(null)
@@ -71,7 +77,10 @@ class FeedInfoTest {
                         .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -85,7 +94,9 @@ class FeedInfoTest {
     @Test
     void createFeedInfoWithNullFeedLangShouldGenerateNotice() {
         final FeedInfo.FeedInfoBuilder underTest = new FeedInfo.FeedInfoBuilder();
-
+        // suppressed warning regarding nullability of parameter used in method .feedLang for the purpose of
+        // this test, since this parameter is annotated as non null
+        //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult =
                 underTest.feedPublisherName(STRING_TEST_VALUE)
                         .feedPublisherUrl(STRING_TEST_VALUE)
@@ -98,7 +109,9 @@ class FeedInfoTest {
                         .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
 
