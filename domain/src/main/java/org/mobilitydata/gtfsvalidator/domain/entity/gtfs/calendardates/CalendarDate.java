@@ -113,11 +113,11 @@ public class CalendarDate extends GtfsEntity {
         }
 
         /**
-         * Returns an entity representing a row from calendar_dates.txt if the requirements from the official GTFS
-         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         * Returns an {@code EntityBuildResult} representing a row from calendar_dates.txt if the requirements from the
+         * official GTFS specification are met. Otherwise, method returns an entity representing a list of notices.
          *
-         * @return entity representing a row from calendar_dates.txt if the requirements from the official GTFS
-         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         * @return an {@link EntityBuildResult} representing a row from calendar_dates.txt if the requirements from the
+         * official GTFS specification are met. Otherwise, method returns a collection of notices describing the issues.
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
@@ -148,6 +148,7 @@ public class CalendarDate extends GtfsEntity {
 
     /**
      * Returns a composite key for this {@link CalendarDate}
+     *
      * @return a composite key for this {@link CalendarDate}
      */
     public String getCalendarDateMappingKey() {

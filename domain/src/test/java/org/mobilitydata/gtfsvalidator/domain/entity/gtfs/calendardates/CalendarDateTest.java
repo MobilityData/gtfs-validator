@@ -52,7 +52,9 @@ class CalendarDateTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // This test is designed so that call to .getData () method returns a list of notices. Therefore , there is no
+        // need for cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -76,7 +78,10 @@ class CalendarDateTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+
+        // This test is designed so that call to .getData () method returns a list of notices. Therefore , there is no
+        // need for cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -100,7 +105,10 @@ class CalendarDateTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+
+        // This test is designed so that call to .getData () method returns a list of notices. Therefore , there is no
+        // need for cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -121,7 +129,10 @@ class CalendarDateTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+
+        // This test is designed so that call to .getData () method returns a list of notices. Therefore , there is no
+        // need for cast check
+        //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);

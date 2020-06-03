@@ -29,13 +29,14 @@ class ProcessParsedCalendarDateTest {
         final CalendarDate.CalendarDateBuilder mockBuilder = mock(CalendarDate.CalendarDateBuilder.class, RETURNS_SELF);
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
         final ParsedEntity mockParsedCalendarDate = mock(ParsedEntity.class);
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
 
-        when(mockGenericObject.getData()).thenReturn(mockCalendarDate);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockCalendarDate).when(mockGenericObject).getData();
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
         when(mockGtfsDataRepo.addCalendarDate(mockCalendarDate)).thenReturn(mockCalendarDate);
 
         final ProcessParsedCalendarDate underTest = new ProcessParsedCalendarDate(mockResultRepo, mockGtfsDataRepo,
@@ -53,12 +54,14 @@ class ProcessParsedCalendarDateTest {
 
         verify(mockParsedCalendarDate, times(1)).get(ArgumentMatchers.eq("service_id"));
         verify(mockParsedCalendarDate, times(1)).get(ArgumentMatchers.eq("date"));
-        verify(mockParsedCalendarDate, times(1)).get(ArgumentMatchers.eq("exception_type"));
+        verify(mockParsedCalendarDate, times(1))
+                .get(ArgumentMatchers.eq("exception_type"));
 
         verify(mockBuilder, times(1)).serviceId(ArgumentMatchers.eq("service_id"));
         verify(mockBuilder, times(1)).date(ArgumentMatchers.eq(date));
         verify(mockBuilder, times(1)).exceptionType(ArgumentMatchers.eq(1));
 
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
         verify(mockGenericObject, times(1)).isSuccess();
@@ -78,16 +81,17 @@ class ProcessParsedCalendarDateTest {
         final CalendarDate.CalendarDateBuilder mockBuilder = mock(CalendarDate.CalendarDateBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedCalendarDate = mock(ParsedEntity.class);
 
-        @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
+        final List<Notice> mockNoticeCollection = spy(new ArrayList<>());
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         mockNoticeCollection.add(mockNotice);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
         when(mockGenericObject.isSuccess()).thenReturn(false);
-        when(mockGenericObject.getData()).thenReturn(mockNoticeCollection);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockNoticeCollection).when(mockGenericObject).getData();
 
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
 
         final ProcessParsedCalendarDate underTest = new ProcessParsedCalendarDate(mockResultRepo, mockGtfsDataRepo,
                 mockBuilder);
@@ -110,6 +114,7 @@ class ProcessParsedCalendarDateTest {
         verify(mockBuilder, times(1)).exceptionType(ArgumentMatchers.eq(1));
         verify(mockBuilder, times(1)).build();
 
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
         verify(mockGenericObject, times(1)).isSuccess();
@@ -128,13 +133,14 @@ class ProcessParsedCalendarDateTest {
         final ParsedEntity mockParsedCalendarDate = mock(ParsedEntity.class);
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+        final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
         when(mockGenericObject.isSuccess()).thenReturn(true);
-        when(mockGenericObject.getData()).thenReturn(mockCalendarDate);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockCalendarDate).when(mockGenericObject).getData();
 
         when(mockCalendarDate.getServiceId()).thenReturn("service_id");
-        //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        doReturn(mockGenericObject).when(mockBuilder).build();
         when(mockGtfsDataRepo.addCalendarDate(mockCalendarDate)).thenReturn(null);
 
         final ProcessParsedCalendarDate underTest = new ProcessParsedCalendarDate(mockResultRepo, mockGtfsDataRepo,
@@ -160,11 +166,12 @@ class ProcessParsedCalendarDateTest {
         verify(mockBuilder, times(1)).exceptionType(ArgumentMatchers.eq(1));
         verify(mockBuilder, times(1)).build();
 
-
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedCalendarDate, times(1)).getEntityId();
 
         verify(mockGenericObject, times(1)).isSuccess();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 

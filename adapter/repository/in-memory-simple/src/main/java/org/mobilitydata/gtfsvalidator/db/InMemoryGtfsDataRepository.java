@@ -130,6 +130,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public CalendarDate addCalendarDate(@NotNull final CalendarDate newCalendarDate) throws IllegalArgumentException {
+        // suppressed warning regarding nullability of parameter newCalendarDate, since it can be null even if it should
+        // not be
         //noinspection ConstantConditions
         if (newCalendarDate != null) {
             if (calendarDatePerServiceIdAndDate.containsKey(newCalendarDate.getCalendarDateMappingKey())) {
@@ -144,7 +146,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the Agency representing a row from agency.txt related to the id provided as parameter
+     * Return the CalendarDate representing a row from calendar_dates.txt related to the id provided as parameter
      *
      * @param serviceId  first part of the composite key used to map rows from calendar_dates.txt
      * @param date       second part of the composite key used to map rows from calendar_dates.txt

@@ -55,7 +55,6 @@ public class ProcessParsedCalendarDate {
      * @param validatedParsedRoute entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedParsedRoute) {
-
         final String serviceId = (String) validatedParsedRoute.get("service_id");
         final LocalDateTime date = (LocalDateTime) validatedParsedRoute.get("date");
         final Integer exceptionType = (Integer) validatedParsedRoute.get("exception_type");
@@ -64,7 +63,7 @@ public class ProcessParsedCalendarDate {
                 .date(date)
                 .exceptionType(exceptionType);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult calendarDate = builder.build();
+        final EntityBuildResult<?> calendarDate = builder.build();
 
         if (calendarDate.isSuccess()) {
             if (gtfsDataRepository.addCalendarDate((CalendarDate) calendarDate.getData()) == null) {
@@ -72,6 +71,8 @@ public class ProcessParsedCalendarDate {
                         "service_id, date", validatedParsedRoute.getEntityId()));
             }
         } else {
+            // at this step it is certain that calling getData method will return a list of notices, therefore there is
+            // no need for cast check
             //noinspection unchecked
             ((List<Notice>) calendarDate.getData()).forEach(resultRepository::addNotice);
         }

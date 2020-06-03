@@ -23,7 +23,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.Exception
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 
 import java.time.LocalDateTime;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -154,7 +153,9 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addNullCalendarDateShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        //noinspection ConstantConditions to avoid lint
+        //for the purpose of the test addCalendarDate is called with null parameter. A warning is emitted since this
+        // parameter is annotated as non null
+        // noinspection ConstantConditions
         final Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> underTest.addCalendarDate(null));
 
