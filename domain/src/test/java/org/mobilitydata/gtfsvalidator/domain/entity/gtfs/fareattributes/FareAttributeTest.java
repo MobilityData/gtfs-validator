@@ -64,8 +64,7 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
-        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        // This is designed so that method getData returns a list of notices. Thereby there is no need for cast check.
         //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
@@ -91,8 +90,7 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
-        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        // This is designed so that method getData returns a list of notices. Thereby there is no need for cast check.
         //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
@@ -118,8 +116,7 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
-        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        // This is designed so that method getData returns a list of notices. Thereby there is no need for cast check.
         //noinspection unchecked
         final List<FloatFieldValueOutOfRangeNotice> noticeCollection =
                 (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
@@ -148,8 +145,7 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
-        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        // This is designed so that method getData returns a list of notices. Thereby there is no need for cast check.
         //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
@@ -175,8 +171,7 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
-        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        // This is designed so that method getData returns a list of notices. Thereby there is no need for cast check.
         //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
@@ -202,8 +197,7 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
-        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        // This is designed so that method getData returns a list of notices. Thereby there is no need for cast check.
         //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
@@ -230,8 +224,7 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
-        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        // This is designed so that method getData returns a list of notices. Thereby there is no need for cast check.
         //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
@@ -273,8 +266,7 @@ class FareAttributeTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        // Field pathwayId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
-        // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
+        // This is designed so that method getData returns a list of notices. Thereby there is no need for cast check.
         //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
