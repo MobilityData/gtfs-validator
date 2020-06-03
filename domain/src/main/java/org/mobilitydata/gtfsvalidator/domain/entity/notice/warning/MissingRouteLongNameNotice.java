@@ -14,37 +14,25 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.warning;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class InvalidEmailNotice extends ErrorNotice {
-    private String emailValue;
-    private String fieldName;
+public class MissingRouteLongNameNotice extends WarningNotice {
 
-    public InvalidEmailNotice(final String filename, final String fieldName,
-                              final String entityId, final String emailValue) {
-        super(filename, E_023,
-                "Invalid email",
-                "Invalid email:" + emailValue + " in field:" + fieldName + " for entity with id:" + entityId,
+    public MissingRouteLongNameNotice(final String filename, final String entityId) {
+        super(filename, W_007,
+                "Missing Route long name",
+                "Missing Route long name for Route with id:" + entityId + " in file:" + filename,
                 entityId);
-        this.fieldName = fieldName;
-        this.emailValue = emailValue;
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
-
-    public String getEmailValue() {
-        return emailValue;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
 }
+
