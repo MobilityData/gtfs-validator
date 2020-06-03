@@ -76,7 +76,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -160,7 +162,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -202,7 +206,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -241,7 +247,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
@@ -281,7 +289,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
@@ -322,7 +332,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
@@ -361,7 +373,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<FloatFieldValueOutOfRangeNotice> noticeCollection =
                 (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -403,7 +417,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -445,7 +461,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<IntegerFieldValueOutOfRangeNotice> noticeCollection =
                 (List<IntegerFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -487,7 +505,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<FloatFieldValueOutOfRangeNotice> noticeCollection =
                 (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
@@ -528,7 +548,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<SuspiciousFloatValueNotice> noticeCollection =
                 (List<SuspiciousFloatValueNotice>) entityBuildResult.getData();
         final SuspiciousFloatValueNotice notice = noticeCollection.get(0);
@@ -570,7 +592,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<SuspiciousIntegerValueNotice> noticeCollection =
                 (List<SuspiciousIntegerValueNotice>) entityBuildResult.getData();
         final SuspiciousIntegerValueNotice notice = noticeCollection.get(0);
@@ -654,7 +678,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<SuspiciousFloatValueNotice> noticeCollection =
                 (List<SuspiciousFloatValueNotice>) entityBuildResult.getData();
         final SuspiciousFloatValueNotice notice = noticeCollection.get(0);
@@ -696,7 +722,9 @@ class PathwayTest {
                         PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY);
 
         assertTrue(entityBuildResult.getData() instanceof List);
-        //noinspection unchecked to avoid lint
+        // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
+        // we do not need to cast check
+        //noinspection unchecked
         final List<SuspiciousFloatValueNotice> noticeCollection =
                 (List<SuspiciousFloatValueNotice>) entityBuildResult.getData();
         final SuspiciousFloatValueNotice notice = noticeCollection.get(0);

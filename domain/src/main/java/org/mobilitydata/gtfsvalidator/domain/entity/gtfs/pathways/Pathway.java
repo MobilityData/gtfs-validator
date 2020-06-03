@@ -175,19 +175,12 @@ public class Pathway extends GtfsEntity {
         private String toStopId;
         private PathwayMode pathwayMode;
         private IsBidirectional isBidirectional;
-        @Nullable
         private Float length;
-        @Nullable
         private Integer traversalTime;
-        @Nullable
         private Integer stairCount;
-        @Nullable
         private Float maxSlope;
-        @Nullable
         private Float minWidth;
-        @Nullable
         private String signpostedAs;
-        @Nullable
         private String reversedSignpostedAs;
         private Integer originalPathwayModeInteger;
         private Integer originalIsBiDirectionalInteger;
@@ -329,11 +322,11 @@ public class Pathway extends GtfsEntity {
         }
 
         /**
-         * Return an entity representing a row from pathways.txt if the requirements from the official GTFS
-         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         * Return a {@code EntityBuildResult} representing a row from pathways.txt if the requirements from the official
+         * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          *
-         * @return an entity representing a row from pathways.txt if the requirements from the official GTFS
-         * specification are met. Otherwise, method returns an entity representing a list of notices.
+         * @return an {@code EntityBuildResult} representing a row from pathways.txt if the requirements from the
+         * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build(final float minLength, final float maxLength,
                                           final int minTraversalTime, final int maxTraversalTime,

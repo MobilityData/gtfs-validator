@@ -108,6 +108,8 @@ public class ProcessParsedPathway {
                         validatedParsedPathway.getEntityId()));
             }
         } else {
+            // at this step it is certain that calling getData method will return a list of notices, therefore there is
+            // no need for cast check
             //noinspection unchecked
             ((List<Notice>) pathway.getData()).forEach(resultRepository::addNotice);
         }

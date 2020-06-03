@@ -20,7 +20,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@SuppressWarnings("unchecked")
 class ProcessParsedPathwayTest {
     private final static String STRING_TEST_VALUE = "test";
     private final static Float FLOAT_TEST_VALUE = 2.0f;
@@ -39,7 +38,7 @@ class ProcessParsedPathwayTest {
     private static final String RESERVED_SIGNPOSTED_AS = "reserved_signposted_as";
 
     @Test
-    void validatedParsedPathwayShouldCreatePathwayEntityAndBeAddedToGtfsDataRepository() {
+    void validatedParsedPathwayShouldCreatePathwayEntityAndBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
@@ -146,7 +145,7 @@ class ProcessParsedPathwayTest {
     }
 
     @Test
-    void invalidPathwayShouldGenerateNoticeAndNotBeAddedToGtfsDataRepository() {
+    void invalidPathwayShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
