@@ -35,7 +35,6 @@ import java.util.Objects;
  * object.
  */
 public class Attribution extends GtfsEntity {
-
     @Nullable
     private final String attributionId;
     @Nullable
@@ -372,6 +371,7 @@ public class Attribution extends GtfsEntity {
 
     /**
      * Returns the key used to map {@code Attribution}
+     *
      * @return  the key used to map {@link Attribution}
      */
     public String getAttributionKey() {
