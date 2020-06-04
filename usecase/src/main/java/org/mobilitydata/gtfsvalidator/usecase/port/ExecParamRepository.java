@@ -35,6 +35,8 @@ public interface ExecParamRepository {
     String URL_KEY = "url";
     String ZIP_KEY = "zipinput";
     String EXCLUSION_KEY = "exclude";
+    String ROUTE__ROUTE_SORT_ORDER_LOWER_BOUND_KEY = "route__route_sort_order_lower_bound";
+    String ROUTE__ROUTE_SORT_ORDER_UPPER_BOUND_KEY = "route__route_sort_order_upper_bound";
 
     ExecParam getExecParamByKey(final String optionName);
 

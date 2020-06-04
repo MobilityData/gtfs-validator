@@ -5,5 +5,7 @@
   "proto": false,
   "url": null,
   "zipinput": null,
-  "exclude": null
+  "exclude": null,
+  "route__route_sort_order_lower_bound": 0,
+  "route__route_sort_order_upper_bound": 3000
 }

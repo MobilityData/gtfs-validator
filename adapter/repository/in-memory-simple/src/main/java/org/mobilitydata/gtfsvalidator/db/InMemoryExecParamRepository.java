@@ -222,6 +222,12 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                         getExecParamByKey(EXCLUSION_KEY).getValue().toString()
                         : null;
             }
+            case ROUTE__ROUTE_SORT_ORDER_LOWER_BOUND_KEY:
+            case ROUTE__ROUTE_SORT_ORDER_UPPER_BOUND_KEY: {
+                return hasExecParamValue(key) ?
+                        getExecParamByKey(key).getValue().get(0)
+                        : defaultValue.get(0);
+            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }
@@ -250,6 +256,10 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 "Export validation results as proto");
         options.addOption(String.valueOf(EXCLUSION_KEY.charAt(1)), EXCLUSION_KEY, true,
                 "Exclude files from semantic GTFS validation");
+        options.addOption(ROUTE__ROUTE_SORT_ORDER_LOWER_BOUND_KEY, ROUTE__ROUTE_SORT_ORDER_LOWER_BOUND_KEY, true,
+                "Minimum admissible value for field route_sort_order of file routes.txt");
+        options.addOption(ROUTE__ROUTE_SORT_ORDER_UPPER_BOUND_KEY, ROUTE__ROUTE_SORT_ORDER_UPPER_BOUND_KEY, true,
+                "Maximum admissible value for field route_sort_order of file routes.txt");
         // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
         // Other commands only take 1 argument
         options.getOptions().forEach(option -> {
