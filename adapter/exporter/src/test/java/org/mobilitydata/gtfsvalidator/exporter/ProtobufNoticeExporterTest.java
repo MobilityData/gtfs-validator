@@ -1171,11 +1171,11 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).addCsvColumnName(
                 ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setValue(
-                ArgumentMatchers.eq("0.0"));
+                ArgumentMatchers.eq("0"));
         verify(mockBuilder, times(1)).setAltValue(
-                ArgumentMatchers.eq("66.0"));
+                ArgumentMatchers.eq("66"));
         verify(mockBuilder, times(1)).setAltEntityValue(
-                ArgumentMatchers.eq("666.0"));
+                ArgumentMatchers.eq("666"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
