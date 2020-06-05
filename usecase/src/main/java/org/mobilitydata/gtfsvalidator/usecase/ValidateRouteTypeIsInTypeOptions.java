@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidRouteTypeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -27,18 +28,20 @@ import java.util.Collection;
  * Use case to validate that a Route type is in the valid options.
  */
 public class ValidateRouteTypeIsInTypeOptions {
-
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
+    private final Logger logger;
 
     /**
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
      */
     public ValidateRouteTypeIsInTypeOptions(final GtfsDataRepository dataRepo,
-                                            final ValidationResultRepository resultRepo) {
+                                            final ValidationResultRepository resultRepo,
+                                            final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
+        this.logger = logger;
     }
 
     /**
@@ -48,6 +51,7 @@ public class ValidateRouteTypeIsInTypeOptions {
      * The RouteType Enum gives the value "null" to a Route type if it is not in the valid options.
      */
     public void execute() {
+        logger.info("Validating: E026 - Invalid route type\n");
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> route.getRouteType() == null)

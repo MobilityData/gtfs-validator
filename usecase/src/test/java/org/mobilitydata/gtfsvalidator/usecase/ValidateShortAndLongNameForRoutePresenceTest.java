@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingShortAndLongNameForRouteNotice;
@@ -43,9 +44,12 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateShortAndLongNameForRoutePresence underTest = new ValidateShortAndLongNameForRoutePresence(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -53,8 +57,10 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
+        verify(mockLogger, times(1)).info("Validating: E027 - Missing route short name and " +
+                "long name\n");
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -69,9 +75,12 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateShortAndLongNameForRoutePresence underTest = new ValidateShortAndLongNameForRoutePresence(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -80,8 +89,10 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
+        verify(mockLogger, times(1)).info("Validating: E027 - Missing route short name and " +
+                "long name\n");
         verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -96,9 +107,12 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateShortAndLongNameForRoutePresence underTest = new ValidateShortAndLongNameForRoutePresence(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -107,8 +121,10 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
+        verify(mockLogger, times(1)).info("Validating: E027 - Missing route short name and " +
+                "long name\n");
         verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -123,9 +139,12 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateShortAndLongNameForRoutePresence underTest = new ValidateShortAndLongNameForRoutePresence(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -134,8 +153,10 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
+        verify(mockLogger, times(1)).info("Validating: E027 - Missing route short name and " +
+                "long name\n");
         verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -150,9 +171,12 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateShortAndLongNameForRoutePresence underTest = new ValidateShortAndLongNameForRoutePresence(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -161,8 +185,10 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
+        verify(mockLogger, times(1)).info("Validating: E027 - Missing route short name and " +
+                "long name\n");
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteLongNameNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -177,9 +203,12 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateShortAndLongNameForRoutePresence underTest = new ValidateShortAndLongNameForRoutePresence(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -188,8 +217,10 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
+        verify(mockLogger, times(1)).info("Validating: E027 - Missing route short name and " +
+                "long name\n");
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteLongNameNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -204,9 +235,12 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateShortAndLongNameForRoutePresence underTest = new ValidateShortAndLongNameForRoutePresence(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -215,8 +249,10 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
+        verify(mockLogger, times(1)).info("Validating: E027 - Missing route short name and " +
+                "long name\n");
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteShortNameNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -231,9 +267,12 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateShortAndLongNameForRoutePresence underTest = new ValidateShortAndLongNameForRoutePresence(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -242,7 +281,9 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
+        verify(mockLogger, times(1)).info("Validating: E027 - Missing route short name and " +
+                "long name\n");
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteShortNameNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }

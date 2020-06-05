@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.RouteType;
@@ -40,17 +41,20 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteTypeIsInTypeOptions underTest = new ValidateRouteTypeIsInTypeOptions(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteType();
+        verify(mockLogger, times(1)).info("Validating: E026 - Invalid route type\n");
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -64,9 +68,11 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteTypeIsInTypeOptions underTest = new ValidateRouteTypeIsInTypeOptions(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -75,6 +81,8 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
         verify(mockRoute, times(1)).getRouteType();
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(InvalidRouteTypeNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verify(mockLogger, times(1)).info("Validating: E026 - Invalid route type\n");
+
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }

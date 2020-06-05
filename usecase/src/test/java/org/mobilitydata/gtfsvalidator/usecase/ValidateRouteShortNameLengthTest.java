@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteShortNameTooLongNotice;
@@ -30,7 +31,6 @@ public class ValidateRouteShortNameLengthTest {
 
     @Test
     void nullRouteColorShouldNotGenerateNotice() {
-
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn(null);
 
@@ -39,17 +39,20 @@ public class ValidateRouteShortNameLengthTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteShortNameLength underTest = new ValidateRouteShortNameLength(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
+        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long\n");
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -63,17 +66,20 @@ public class ValidateRouteShortNameLengthTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteShortNameLength underTest = new ValidateRouteShortNameLength(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
+        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long\n");
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -87,17 +93,20 @@ public class ValidateRouteShortNameLengthTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteShortNameLength underTest = new ValidateRouteShortNameLength(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
+        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long\n");
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -111,9 +120,11 @@ public class ValidateRouteShortNameLengthTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteShortNameLength underTest = new ValidateRouteShortNameLength(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -121,7 +132,8 @@ public class ValidateRouteShortNameLengthTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(2)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteId();
+        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long\n");
         verify(mockResultRepo, times(1)).addNotice(any(RouteShortNameTooLongNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }
