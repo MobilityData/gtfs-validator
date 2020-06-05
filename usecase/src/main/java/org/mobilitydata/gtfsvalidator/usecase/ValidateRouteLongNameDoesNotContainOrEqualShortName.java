@@ -51,7 +51,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortName {
     public void execute() {
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
-                .filter(route -> route.getRouteLongName() != null &&
+                .filter(route -> route.getRouteLongName() != null && route.getRouteShortName() != null &&
                         route.getRouteLongName().contains(route.getRouteShortName()))
                 .forEach(route -> {
                     if (route.getRouteLongName().equals(route.getRouteShortName())) {
