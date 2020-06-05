@@ -55,6 +55,30 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
     }
 
     @Test
+    void nullShortRouteNameShouldNotGenerateNotice() {
+
+        Route mockRoute = mock(Route.class);
+        when(mockRoute.getRouteShortName()).thenReturn(null);
+        when(mockRoute.getRouteLongName()).thenReturn("This is a long name for route abc");
+
+        GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        ValidateRouteLongNameDoesNotContainOrEqualShortName underTest =
+                new ValidateRouteLongNameDoesNotContainOrEqualShortName(mockDataRepo, mockResultRepo);
+
+        underTest.execute();
+
+        verify(mockDataRepo, times(1)).getRouteAll();
+        verify(mockRoute, times(1)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteShortName();
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+    }
+
+    @Test
     void longRouteNameNotContainingShortNameShouldNotGenerateNotice() {
 
         Route mockRoute = mock(Route.class);
@@ -75,7 +99,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(2)).getRouteLongName();
-        verify(mockRoute, times(1)).getRouteShortName();
+        verify(mockRoute, times(2)).getRouteShortName();
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
     }
@@ -101,7 +125,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(3)).getRouteLongName();
-        verify(mockRoute, times(2)).getRouteShortName();
+        verify(mockRoute, times(3)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(RouteLongNameContainsShortNameNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
@@ -128,7 +152,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(3)).getRouteLongName();
-        verify(mockRoute, times(2)).getRouteShortName();
+        verify(mockRoute, times(3)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(RouteLongNameEqualsShortNameNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
