@@ -63,7 +63,7 @@ class GenerateExclusionFilenameListTest {
 
         verify(mockLogger, times(1)).info("Some file requested to be excluded is not" +
                 " defined by the official GTFS specification: [wrong_file_name.txt] -- will execute validation" +
-                " process on all files");
+                " process on all files\n");
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
         verify(mockGtfsSpecRepo, times(1)).getOptionalFilenameList();
@@ -249,7 +249,7 @@ class GenerateExclusionFilenameListTest {
         final ArrayList<String> toCheck = underTest.execute();
 
         verify(mockLogger, times(1)).info("No file to exclude -- will execute validation " +
-                "process on all files");
+                "process on all files\n");
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
         verify(mockGtfsSpecRepo, times(1)).getOptionalFilenameList();

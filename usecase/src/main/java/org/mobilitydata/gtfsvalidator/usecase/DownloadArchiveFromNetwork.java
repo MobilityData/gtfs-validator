@@ -57,7 +57,7 @@ public class DownloadArchiveFromNetwork {
         //TODO: does using File class break clean architecture (make business logic dependant on a framework)?
         //Should the call to File happen in outside layers?
         if (execParamRepo.hasExecParamValue(execParamRepo.URL_KEY)) {
-            logger.info("Downloading archive");
+            logger.info("Downloading archive\n");
             final String url = execParamRepo.getExecParamValue(execParamRepo.URL_KEY);
             final String targetPath = execParamRepo.getExecParamValue(execParamRepo.ZIP_KEY);
             try {

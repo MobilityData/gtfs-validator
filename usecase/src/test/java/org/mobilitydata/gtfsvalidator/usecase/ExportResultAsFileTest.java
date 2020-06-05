@@ -59,9 +59,9 @@ class ExportResultAsFileTest {
         verify(mockExecParamRepo, times(2)).getExecParamValue(mockExecParamRepo.PROTO_KEY);
 
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("Results are exported as JSON by default"));
+                .info(ArgumentMatchers.eq("Results are exported as JSON by default\n"));
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
+                .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()+ "\n"));
 
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
         verify(mockNotice1, times(1)).export(ArgumentMatchers.eq(mockExporter));
@@ -111,9 +111,9 @@ class ExportResultAsFileTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("-p provided, exporting results as proto"));
+                .info(ArgumentMatchers.eq("-p provided, exporting results as proto\n"));
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
+                .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()+ "\n"));
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
         verify(mockNotice1, times(1)).export(ArgumentMatchers.eq(mockExporter));
 
