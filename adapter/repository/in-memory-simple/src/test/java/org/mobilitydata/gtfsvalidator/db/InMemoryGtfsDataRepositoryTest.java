@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
@@ -218,5 +219,38 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockLevel00, underTest.getLevelById("level id 0"));
         assertEquals(mockLevel01, underTest.getLevelById("level id 1"));
+    }
+
+    @Test
+    void addSameCalendarTwiceShouldReturnNull() {
+        final Calendar mockCalendar = mock(Calendar.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockCalendar.getServiceId()).thenReturn("service id");
+
+        underTest.addCalendar(mockCalendar);
+
+        assertNull(underTest.addCalendar(mockCalendar));
+    }
+
+    @Test
+    void addNullCalendarShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        assertThrows(IllegalArgumentException.class, () -> underTest.addCalendar(null));
+    }
+
+    @Test
+    void getCalendarByServiceIdShouldReturnRelatedCalendar() {
+        final Calendar mockCalendar00 = mock(Calendar.class);
+        final Calendar mockCalendar01 = mock(Calendar.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        when(mockCalendar00.getServiceId()).thenReturn("service id00");
+        when(mockCalendar01.getServiceId()).thenReturn("service id01");
+
+        underTest.addCalendar(mockCalendar00);
+        underTest.addCalendar(mockCalendar01);
+
+        assertEquals(mockCalendar00, underTest.getCalendarByServiceId("service id00"));
+        assertEquals(mockCalendar01, underTest.getCalendarByServiceId("service id01"));
     }
 }
