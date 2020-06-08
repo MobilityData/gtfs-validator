@@ -18,8 +18,8 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -32,6 +32,8 @@ import java.util.Map;
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
  */
 public class InMemoryGtfsDataRepository implements GtfsDataRepository {
+    // Agency entities container. Entities ares mapped on the value found in the column agency_id of GTFS file
+    // agency.txt
     private final Map<String, Agency> agencyCollection = new HashMap<>();
     private final Map<String, Route> routeCollection = new HashMap<>();
 
@@ -76,6 +78,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Agency getAgencyById(final String agencyId) {
         return agencyCollection.get(agencyId);
+    }
+
+    /**
+     * Return a collection of Agency objects representing all the rows from agency.txt
+     *
+     * @return a collection of Agency objects representing all the rows from agency.txt
+     */
+    @Override
+    public Collection<Agency> getAgencyAll() {
+        return agencyCollection.values();
     }
 
     /**

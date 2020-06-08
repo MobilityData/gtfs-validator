@@ -112,6 +112,7 @@ public class Main {
                 config.validateRouteTypeIsInOptions().execute();
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
+                config.validateAgencyIdRequirement().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

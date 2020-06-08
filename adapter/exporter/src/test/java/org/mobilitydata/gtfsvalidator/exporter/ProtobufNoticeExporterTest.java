@@ -1141,4 +1141,31 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
+
+    @Test
+    void exportMissingAgencyIdNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new MissingAgencyIdNotice("agency name"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("agency.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("agency_id"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
 }

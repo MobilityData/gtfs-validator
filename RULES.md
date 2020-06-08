@@ -30,6 +30,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E026](#E026) | Invalid route type | 
 | [E027](#E027) | Missing route short name and long name | 
 | [E028](#E028) | Route long name equals short name | 
+| [E029](#E029) | Missing field `agency_id` for file agency.txt with more than 1 record | 
 
 ### Table of Warnings
 
@@ -104,6 +105,12 @@ A Route color and a Route text color should be contrasting. Minimum Contrast Rat
 <a name="E028"/>
 
 ### E028 - Route long name equals short name
+
+<a name="E029"/>
+
+### E029 - Missing field `agency_id` for file agency.txt with more than 1 record 
+
+All records of file `agency.txt` should have a non-null value for field [agency_id](https://gtfs.org/reference/static/#agencytxt) when this file counts more than one record.
 
 # Warnings
 

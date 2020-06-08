@@ -199,4 +199,8 @@ public class DefaultConfig {
     public GenerateFilenameListToProcess generateFilenameListToProcess() {
         return new GenerateFilenameListToProcess(logger);
     }
+
+    public ValidateAgencyIdRequirement validateAgencyIdRequirement() {
+        return new ValidateAgencyIdRequirement(gtfsDataRepository, resultRepo, logger);
+    }
 }
