@@ -468,6 +468,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_AGENCIES_WITH_DIFFERENT_TIMEZONES)
                 .setValue(toExport.getFieldName())
                 .setEntityId(toExport.getConflictingTimezoneCollection())
                 .setEntityValue(String.valueOf(toExport.getDistinctTimezoneCount()))

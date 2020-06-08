@@ -1190,6 +1190,9 @@ class ProtobufNoticeExporterTest {
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("agency.txt"));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem
+                        .Type.TYPE_AGENCIES_WITH_DIFFERENT_TIMEZONES));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("agency_timezone"));
