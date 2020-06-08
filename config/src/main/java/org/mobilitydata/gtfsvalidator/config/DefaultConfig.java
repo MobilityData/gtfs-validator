@@ -137,27 +137,27 @@ public class DefaultConfig {
     }
 
     public ValidateRouteColorAndTextContrast validateRouteColorAndTextContrast() {
-        return new ValidateRouteColorAndTextContrast(gtfsDataRepository, resultRepo);
+        return new ValidateRouteColorAndTextContrast(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteDescriptionAndNameAreDifferent validateRouteDescriptionAndNameAreDifferent() {
-        return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo);
+        return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteShortNameLength validateRouteShortNameLength() {
-        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo);
+        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteTypeIsInTypeOptions validateRouteTypeIsInOptions() {
-        return new ValidateRouteTypeIsInTypeOptions(gtfsDataRepository, resultRepo);
+        return new ValidateRouteTypeIsInTypeOptions(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateShortAndLongNameForRoutePresence validateBothRouteNamesPresence() {
-        return new ValidateShortAndLongNameForRoutePresence(gtfsDataRepository, resultRepo);
+        return new ValidateShortAndLongNameForRoutePresence(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteLongNameDoesNotContainOrEqualShortName validateRouteLongNameDoesNotContainShortName() {
-        return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo);
+        return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo, logger);
     }
 
     public ExportResultAsFile exportResultAsFile() {
