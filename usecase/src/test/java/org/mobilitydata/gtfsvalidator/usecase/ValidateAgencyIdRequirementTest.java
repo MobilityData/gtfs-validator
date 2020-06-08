@@ -113,6 +113,9 @@ class ValidateAgencyIdRequirementTest {
         // suppress warning regarding ignored result of method since it is not necessary here.
         //noinspection ResultOfMethodCallIgnored
         inOrder.verify(mockAgency00, times(1)).getAgencyId();
+        // suppress warning regarding ignored result of method since it is not necessary here.
+        //noinspection ResultOfMethodCallIgnored
+        inOrder.verify(mockAgency00, times(1)).getAgencyName();
         inOrder.verify(mockResultRepo, times(1)).addNotice(any(MissingAgencyIdNotice.class));
         // suppress warning regarding ignored result of method since it is not necessary here.
         //noinspection ResultOfMethodCallIgnored
