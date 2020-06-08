@@ -50,7 +50,8 @@ public class ValidateRouteShortNameLengthTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
-        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long\n");
+        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long"+
+                System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -77,7 +78,8 @@ public class ValidateRouteShortNameLengthTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
-        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long\n");
+        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long"+
+                System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -104,7 +106,8 @@ public class ValidateRouteShortNameLengthTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
-        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long\n");
+        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long"+
+                System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -132,7 +135,8 @@ public class ValidateRouteShortNameLengthTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(2)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long\n");
+        verify(mockLogger, times(1)).info("Validating: W005 - Route short name too long"+
+                System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(RouteShortNameTooLongNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }

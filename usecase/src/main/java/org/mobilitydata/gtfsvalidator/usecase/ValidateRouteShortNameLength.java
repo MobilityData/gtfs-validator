@@ -50,7 +50,7 @@ public class ValidateRouteShortNameLength {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating: W005 - Route short name too long\n");
+        logger.info("Validating: W005 - Route short name too long"+System.lineSeparator());
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteShortName(route.getRouteShortName())))

@@ -55,7 +55,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verify(mockLogger, times(1)).info("Validating E025 - Insufficient route color " +
-                "contrast\n");
+                "contrast"+System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -85,7 +85,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verify(mockLogger, times(1)).info("Validating E025 - Insufficient route color " +
-                "contrast\n");
+                "contrast"+System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -115,7 +115,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verify(mockLogger, times(1)).info("Validating E025 - Insufficient route color " +
-                "contrast\n");
+                "contrast"+System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -148,7 +148,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockResultRepo, times(1))
                 .addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
         verify(mockLogger, times(1)).info("Validating E025 - Insufficient route color " +
-                "contrast\n");
+                "contrast"+System.lineSeparator());
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
@@ -180,7 +180,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockResultRepo, times(1))
                 .addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
         verify(mockLogger, times(1)).info("Validating E025 - Insufficient route color " +
-                "contrast\n");
+                "contrast"+System.lineSeparator());
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }

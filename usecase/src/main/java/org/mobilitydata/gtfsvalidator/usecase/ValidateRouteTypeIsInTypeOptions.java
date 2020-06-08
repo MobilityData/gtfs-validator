@@ -51,7 +51,7 @@ public class ValidateRouteTypeIsInTypeOptions {
      * The RouteType Enum gives the value "null" to a Route type if it is not in the valid options.
      */
     public void execute() {
-        logger.info("Validating: E026 - Invalid route type\n");
+        logger.info("Validating: E026 - Invalid route type"+System.lineSeparator());
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> route.getRouteType() == null)
