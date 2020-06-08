@@ -69,6 +69,7 @@ public class Main {
                 final ProcessParsedCalendar processParsedCalendar = config.processParsedCalendar();
                 final ProcessParsedTrip processParsedTrip = config.processParsedTrip();
                 final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
+                final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -114,6 +115,10 @@ public class Main {
                                 }
                                 case "transfers.txt": {
                                     processParsedTransfer.execute(parsedEntity);
+                                    break;
+                                }
+                                case "feed_info.txt": {
+                                    processParsedFeedInfo.execute(parsedEntity);
                                     break;
                                 }
                             }

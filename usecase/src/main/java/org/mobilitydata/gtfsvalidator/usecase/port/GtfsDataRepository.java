@@ -20,6 +20,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
@@ -58,4 +59,8 @@ public interface GtfsDataRepository {
     Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 
     Transfer getTransferByStopPair(final String fromStopId, final String toStopId);
+
+    FeedInfo addFeedInfo(final FeedInfo newFeedInfo) throws IllegalArgumentException;
+
+    FeedInfo getFeedInfoByFeedPublisherName(final String feedInfoPublisherName);
 }

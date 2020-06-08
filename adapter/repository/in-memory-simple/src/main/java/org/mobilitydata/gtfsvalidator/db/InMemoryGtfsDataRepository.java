@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
@@ -58,6 +59,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
     private final Map<String, Level> levelPerId = new HashMap<>();
+
+    // map storing feedInfo entities on key feed_publisher_name found in file feed_info.txt
+    private final Map<String, FeedInfo> feedInfoPerFeedPublisherName = new HashMap<>();
 
     // Map containing Transfer entities. Entities are mapped on a first key which is the value found in the column
     // from_stop_id of GTFS file transfers.txt; the second key is the value found in the column to_stop_id of the same
@@ -343,5 +347,39 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Transfer getTransferByStopPair(final String fromStopId, final String toStopId) {
         return transferPerStopPair.get(fromStopId).get(toStopId);
+    }
+
+    /**
+     * Add a FeedInfo representing a row from feed_info.txt to this {@link GtfsDataRepository}. Return the entity added
+     * to the repository if the uniqueness constraint of feed_info based on feed_publisher_name is respected,
+     * if this requirement is not met,returns null.
+     *
+     * @param newFeedInfo the internal representation of a row from feed_info.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on feed_publisher_name is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public FeedInfo addFeedInfo(final FeedInfo newFeedInfo) throws IllegalArgumentException {
+        if (newFeedInfo != null) {
+            if (feedInfoPerFeedPublisherName.containsKey(newFeedInfo.getFeedPublisherName())) {
+                return null;
+            } else {
+                feedInfoPerFeedPublisherName.put(newFeedInfo.getFeedPublisherName(), newFeedInfo);
+                return newFeedInfo;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null feedInfo to data repository");
+        }
+    }
+
+    /**
+     * Return the FeedInfo representing a row from feed_info.txt related to the name provided as parameter
+     *
+     * @param feedPublisherName the key from feed_info.txt related to the FeedInfo to be returned
+     * @return the eedInfo representing a row from feed_info.txt related to the name provided as parameter
+     */
+    @Override
+    public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
+        return feedInfoPerFeedPublisherName.get(feedPublisherName);
     }
 }
