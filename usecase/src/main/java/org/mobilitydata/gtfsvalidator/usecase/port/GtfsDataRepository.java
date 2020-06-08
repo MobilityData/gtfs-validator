@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.util.Collection;
 
@@ -48,4 +49,8 @@ public interface GtfsDataRepository {
     Calendar addCalendar(final Calendar newCalendar) throws IllegalArgumentException;
 
     Calendar getCalendarByServiceId(final String serviceId);
+
+    Trip addTrip(final Trip newTrip) throws IllegalArgumentException;
+
+    Trip getTripById(final String tripId);
 }

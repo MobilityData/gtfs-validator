@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -252,5 +253,37 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockCalendar00, underTest.getCalendarByServiceId("service id00"));
         assertEquals(mockCalendar01, underTest.getCalendarByServiceId("service id01"));
+    }
+
+    @Test
+    public void addSameTripTwiceShouldReturnNull() {
+        final Trip mockTrip = mock(Trip.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTrip.getTripId()).thenReturn("trip id");
+
+        underTest.addTrip(mockTrip);
+
+        assertNull(underTest.addTrip(mockTrip));
+    }
+
+    @Test
+    void addNullTripShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        assertThrows(IllegalArgumentException.class, () -> underTest.addTrip(null));
+    }
+
+    @Test
+    public void addTripShouldReturnSameEntityAndCallToGetTripByIdShouldReturnRelatedTrip() {
+        final Trip mockTrip00 = mock(Trip.class);
+        final Trip mockTrip01 = mock(Trip.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTrip00.getTripId()).thenReturn("trip id00");
+        when(mockTrip01.getTripId()).thenReturn("trip id01");
+
+        assertEquals(mockTrip00, underTest.addTrip(mockTrip00));
+        assertEquals(mockTrip01, underTest.addTrip(mockTrip01));
+
+        assertEquals(mockTrip00, underTest.getTripById("trip id00"));
+        assertEquals(mockTrip01, underTest.getTripById("trip id01"));
     }
 }
