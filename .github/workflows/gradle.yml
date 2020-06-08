@@ -16,4 +16,4 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew shadowJar
       - name: Run validator on MBTA data
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.1.0-SNAPSHOT.jar -u "https://transitfeeds.com/p/mbta/64/20200531/download" -z "input.zip" -e "input" -o "output"
+        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.1.0-SNAPSHOT.jar
