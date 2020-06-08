@@ -52,7 +52,7 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteType();
-        verify(mockLogger, times(1)).info("Validating: E026 - Invalid route type"+
+        verify(mockLogger, times(1)).info("Validating rule 'E026 - Invalid route type'"+
                 System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
@@ -82,7 +82,7 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
         verify(mockRoute, times(1)).getRouteType();
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(InvalidRouteTypeNotice.class));
-        verify(mockLogger, times(1)).info("Validating: E026 - Invalid route type"+
+        verify(mockLogger, times(1)).info("Validating rule 'E026 - Invalid route type'"+
                 System.lineSeparator());
 
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);

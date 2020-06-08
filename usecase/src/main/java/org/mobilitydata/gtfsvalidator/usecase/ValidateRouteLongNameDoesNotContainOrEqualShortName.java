@@ -52,7 +52,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortName {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating: E028 - Route long name equals short name"+System.lineSeparator());
+        logger.info("Validating rule 'E028 - Route long name equals short name'"+System.lineSeparator());
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> route.getRouteLongName() != null && route.getRouteShortName() != null &&

@@ -56,8 +56,8 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteDesc();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
-        verify(mockLogger, times(1)).info("Validating E024 - Same name and description" +
-                " for route"+System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +
+                " description for route'"+System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -89,8 +89,8 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteDesc();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
-        verify(mockLogger, times(1)).info("Validating E024 - Same name and description" +
-                " for route"+System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +
+                " description for route'"+System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -125,8 +125,8 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1))
                 .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
-        verify(mockLogger, times(1)).info("Validating E024 - Same name and description" +
-                " for route"+System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +
+                " description for route'"+System.lineSeparator());
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
@@ -160,8 +160,8 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1))
                 .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
-        verify(mockLogger, times(1)).info("Validating E024 - Same name and description" +
-                " for route"+System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +
+                " description for route'"+System.lineSeparator());
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }
