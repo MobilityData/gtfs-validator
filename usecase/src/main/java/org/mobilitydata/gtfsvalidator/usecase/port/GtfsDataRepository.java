@@ -19,7 +19,9 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 
 import java.util.Collection;
@@ -44,6 +46,14 @@ public interface GtfsDataRepository {
     Level addLevel(final Level newLevel) throws IllegalArgumentException;
 
     Level getLevelById(final String levelId);
+
+    Calendar addCalendar(final Calendar newCalendar) throws IllegalArgumentException;
+
+    Calendar getCalendarByServiceId(final String serviceId);
+
+    Trip addTrip(final Trip newTrip) throws IllegalArgumentException;
+
+    Trip getTripById(final String tripId);
 
     Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 

@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingShortAndLongNameForRouteNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MissingRouteLongNameNotice;
@@ -29,18 +30,20 @@ import java.util.Collection;
  * Use case to validate that Route short name and long name are present.
  */
 public class ValidateShortAndLongNameForRoutePresence {
-
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
+    private final Logger logger;
 
     /**
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
      */
     public ValidateShortAndLongNameForRoutePresence(final GtfsDataRepository dataRepo,
-                                                    final ValidationResultRepository resultRepo) {
+                                                    final ValidationResultRepository resultRepo,
+                                                    final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
+        this.logger = logger;
     }
 
     /**
@@ -50,6 +53,7 @@ public class ValidateShortAndLongNameForRoutePresence {
      * to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
+        logger.info("Validating rule 'E027 - Missing route short name and long name'" + System.lineSeparator());
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isPresentName(route.getRouteLongName()) && isPresentName(route.getRouteShortName())))

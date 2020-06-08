@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteLongNameEqualsShortNameNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteLongNameContainsShortNameNotice;
@@ -28,18 +29,20 @@ import java.util.Collection;
  * Use case to validate that a Route long name does not equal or contain the short name.
  */
 public class ValidateRouteLongNameDoesNotContainOrEqualShortName {
-
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
+    private final Logger logger;
 
     /**
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
      */
     public ValidateRouteLongNameDoesNotContainOrEqualShortName(final GtfsDataRepository dataRepo,
-                                                               final ValidationResultRepository resultRepo) {
+                                                               final ValidationResultRepository resultRepo,
+                                                               final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
+        this.logger = logger;
     }
 
     /**
@@ -49,9 +52,10 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortName {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
+        logger.info("Validating rule 'E028 - Route long name equals short name'"+System.lineSeparator());
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
-                .filter(route -> route.getRouteLongName() != null &&
+                .filter(route -> route.getRouteLongName() != null && route.getRouteShortName() != null &&
                         route.getRouteLongName().contains(route.getRouteShortName()))
                 .forEach(route -> {
                     if (route.getRouteLongName().equals(route.getRouteShortName())) {
