@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -43,6 +44,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing Trip entities. Entities are mapped on the value found in column trip_id of GTFS file trips.txt
     private final Map<String, Trip> tripPerId = new HashMap<>();
+
+    // Map containing Calendar entities. Entities are mapped on the value found in column service_id of GTFS file
+    // calendar.txt.
+    private final Map<String, Calendar> calendarPerServiceId = new HashMap<>();
 
     // CalendarDate entities container. Entities are mapped on key resulting from the concatenation of the values
     // contained in the following columns (found in calendar_dates.txt gtfs file):
@@ -239,5 +244,41 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Level getLevelById(final String levelId) {
         return levelPerId.get(levelId);
+    }
+
+    /**
+     * Add an Calendar representing a row from calendar.txt to this. Return the entity added to the repository if the
+     * uniqueness constraint of agency based on service_id is respected, if this requirement is not met, returns null.
+     * This method throws {@code IllegalArgumentException} if the entity is already present in the data repository.
+     *
+     * @param newCalendar the internal representation of a row from calendar.txt to be added to the repository.
+     * @return the entity added to the repository if the
+     * uniqueness constraint of agency based on service_id is respected, if this requirement is not met, returns null.
+     * @throws IllegalArgumentException if the entity is already present in the data repository.
+     */
+    @Override
+    public Calendar addCalendar(final Calendar newCalendar) throws IllegalArgumentException {
+        if (newCalendar != null) {
+            if (calendarPerServiceId.containsKey(newCalendar.getServiceId())) {
+                return null;
+            } else {
+                final String serviceId = newCalendar.getServiceId();
+                calendarPerServiceId.put(serviceId, newCalendar);
+                return newCalendar;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null route to data repository");
+        }
+    }
+
+    /**
+     * Return the entity representing a row from calendar.txt related to the id provided as parameter
+     *
+     * @param serviceId the key from calendar.txt related to the Calendar to be returned
+     * @return the {@link Calendar} representing a row from calendar.txt related to the id provided as parameter
+     */
+    @Override
+    public Calendar getCalendarByServiceId(final String serviceId) {
+        return calendarPerServiceId.get(serviceId);
     }
 }

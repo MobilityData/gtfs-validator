@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
@@ -137,27 +138,27 @@ public class DefaultConfig {
     }
 
     public ValidateRouteColorAndTextContrast validateRouteColorAndTextContrast() {
-        return new ValidateRouteColorAndTextContrast(gtfsDataRepository, resultRepo);
+        return new ValidateRouteColorAndTextContrast(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteDescriptionAndNameAreDifferent validateRouteDescriptionAndNameAreDifferent() {
-        return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo);
+        return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteShortNameLength validateRouteShortNameLength() {
-        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo);
+        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteTypeIsInTypeOptions validateRouteTypeIsInOptions() {
-        return new ValidateRouteTypeIsInTypeOptions(gtfsDataRepository, resultRepo);
+        return new ValidateRouteTypeIsInTypeOptions(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateShortAndLongNameForRoutePresence validateBothRouteNamesPresence() {
-        return new ValidateShortAndLongNameForRoutePresence(gtfsDataRepository, resultRepo);
+        return new ValidateShortAndLongNameForRoutePresence(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteLongNameDoesNotContainOrEqualShortName validateRouteLongNameDoesNotContainShortName() {
-        return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo);
+        return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo, logger);
     }
 
     public ExportResultAsFile exportResultAsFile() {
@@ -191,6 +192,10 @@ public class DefaultConfig {
 
     public ProcessParsedLevel processParsedLevel() {
         return new ProcessParsedLevel(resultRepo, gtfsDataRepository, new Level.LevelBuilder());
+    }
+
+    public ProcessParsedCalendar processParsedCalendar() {
+        return new ProcessParsedCalendar(resultRepo, gtfsDataRepository, new Calendar.CalendarBuilder());
     }
 
     public ProcessParsedTrip processParsedTrip() {
