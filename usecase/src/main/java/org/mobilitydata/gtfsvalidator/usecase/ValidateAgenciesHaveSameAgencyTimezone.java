@@ -28,7 +28,7 @@ import java.util.Set;
  * Use case to validate that all rows of file agency.txt have an identical value for field agency_timezone
  * This use case is triggered after defining the content of the {@code GtfsDataRepository} provided in the constructor.
  */
-public class ValidateAgencyTimezoneAreInAccord {
+public class ValidateAgenciesHaveSameAgencyTimezone {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
@@ -38,9 +38,9 @@ public class ValidateAgencyTimezoneAreInAccord {
      * @param resultRepo a repository storing information about the validation process
      * @param logger     a logger displaying information about the validation process
      */
-    public ValidateAgencyTimezoneAreInAccord(final GtfsDataRepository dataRepo,
-                                             final ValidationResultRepository resultRepo,
-                                             final Logger logger) {
+    public ValidateAgenciesHaveSameAgencyTimezone(final GtfsDataRepository dataRepo,
+                                                  final ValidationResultRepository resultRepo,
+                                                  final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
         this.logger = logger;

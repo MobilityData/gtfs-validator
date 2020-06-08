@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-class ValidateAgencyTimezoneAreInAccordTest {
+class ValidateAgenciesHaveSameAgencyTimezoneTest {
 
     @Test
     void agenciesWithSameAgencyTimezoneShouldNotGenerateNotice() {
@@ -48,8 +48,8 @@ class ValidateAgencyTimezoneAreInAccordTest {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
-        final ValidateAgencyTimezoneAreInAccord underTest =
-                new ValidateAgencyTimezoneAreInAccord(mockDataRepo, mockResultRepo, mockLogger);
+        final ValidateAgenciesHaveSameAgencyTimezone underTest =
+                new ValidateAgenciesHaveSameAgencyTimezone(mockDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
         final InOrder inOrder = inOrder(mockDataRepo, mockResultRepo, mockLogger, mockAgency00, mockAgency01);
@@ -81,8 +81,8 @@ class ValidateAgencyTimezoneAreInAccordTest {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
-        final ValidateAgencyTimezoneAreInAccord underTest =
-                new ValidateAgencyTimezoneAreInAccord(mockDataRepo, mockResultRepo, mockLogger);
+        final ValidateAgenciesHaveSameAgencyTimezone underTest =
+                new ValidateAgenciesHaveSameAgencyTimezone(mockDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
         final InOrder inOrder = inOrder(mockDataRepo, mockResultRepo, mockLogger, mockAgency00, mockAgency01);
@@ -126,8 +126,8 @@ class ValidateAgencyTimezoneAreInAccordTest {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
-        final ValidateAgencyTimezoneAreInAccord underTest =
-                new ValidateAgencyTimezoneAreInAccord(mockDataRepo, mockResultRepo, mockLogger);
+        final ValidateAgenciesHaveSameAgencyTimezone underTest =
+                new ValidateAgenciesHaveSameAgencyTimezone(mockDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
         final InOrder inOrder = inOrder(mockDataRepo, mockResultRepo, mockLogger, mockAgency00);

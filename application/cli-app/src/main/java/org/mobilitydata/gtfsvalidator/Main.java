@@ -113,7 +113,7 @@ public class Main {
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
                 config.validateAgencyIdRequirement().execute();
-                config.validateAgencyTimezoneAreInAccord();
+                config.validateAgenciesHaveSameAgencyTimezone();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
