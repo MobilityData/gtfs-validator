@@ -18,11 +18,12 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDateTime;
@@ -57,6 +58,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
     private final Map<String, Level> levelPerId = new HashMap<>();
+
+    // Map containing Transfer entities. Entities are mapped on a first key which is the value found in the column
+    // from_stop_id of GTFS file transfers.txt; the second key is the value found in the column to_stop_id of the same
+    // file.
+    private final Map<String, Map<String, Transfer>> transferPerStopPair = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -280,5 +286,62 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Calendar getCalendarByServiceId(final String serviceId) {
         return calendarPerServiceId.get(serviceId);
+    }
+
+    /**
+     * Add a Transfer representing a row from transfers.txt to this {@link GtfsDataRepository}. Return the entity added
+     * to the repository if the uniqueness constraint of route based on composite key from_stop_id and to_stop_id is
+     * respected, if this requirement is not met, returns null.
+     *
+     * @param newTransfer the internal representation of a row from transfers.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on composite key
+     * from_stop_id and to_stop_id is respected, if this requirement is not met, returns null.
+     */
+    @Override
+    public Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException {
+        if (newTransfer != null) {
+            // check that that from_stop_id is not already in collection. It if is, check that to_stop_id is not in the
+            // associated map
+            if ((transferPerStopPair.containsKey(newTransfer.getFromStopId())) &&
+                    (transferPerStopPair.get(newTransfer.getFromStopId())
+                            .containsKey(newTransfer.getToStopId()))) {
+                return null;
+            } else {
+                final String fromStopId = newTransfer.getFromStopId();
+                final String toStopId = newTransfer.getToStopId();
+                if (!transferPerStopPair.containsKey(newTransfer.getFromStopId())) {
+                    final Map<String, Transfer> innerMap = new HashMap<>();
+                    innerMap.put(toStopId, newTransfer);
+                    transferPerStopPair.put(fromStopId, innerMap);
+                } else {
+                    transferPerStopPair.get(newTransfer.getFromStopId())
+                            .put(newTransfer.getToStopId(), newTransfer);
+                }
+                return newTransfer;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null transfer to data repository");
+        }
+    }
+
+    /**
+     * Return the Transfer representing a row from transfers.txt related to the composite key provided as parameter.
+     *
+     * @param fromStopId first part of the composite key: identifies a stop or station where a connection between
+     *                   routes begins. Querying on {@param fromStopId}, the method will will only return records
+     *                   containing {@param fromStopId} in the from_stop_id column of transfers.txt GTFS file. This
+     *                   method will not return any records where {@param fromStopId} is in the to_stop_id column of the
+     *                   same pre-mentioned GTFS file.
+     *
+     * @param toStopId   second part of the composite key: identifies a stop or station where a connection between
+     *                   routes ends. Querying on {@param toStopId}, the method will will only return records
+     *                   containing {@param toStopId} in the to_stop_id column of transfers.txt GTFS file. This
+     *                   method will not return any records where {@param toStopId} is in the from_stop_id column
+     *                   of the same pre-mentioned GTFS file.
+     * @return the Transfer representing a row from transfers.txt related to the composite key provided as parameter
+     */
+    @Override
+    public Transfer getTransferByStopPair(final String fromStopId, final String toStopId) {
+        return transferPerStopPair.get(fromStopId).get(toStopId);
     }
 }

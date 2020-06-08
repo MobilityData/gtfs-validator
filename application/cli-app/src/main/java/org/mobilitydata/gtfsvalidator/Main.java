@@ -68,6 +68,7 @@ public class Main {
                 final ProcessParsedLevel processParsedLevel = config.processParsedLevel();
                 final ProcessParsedCalendar processParsedCalendar = config.processParsedCalendar();
                 final ProcessParsedTrip processParsedTrip = config.processParsedTrip();
+                final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -109,6 +110,10 @@ public class Main {
                                 }
                                 case "trips.txt": {
                                     processParsedTrip.execute(parsedEntity);
+                                    break;
+                                }
+                                case "transfers.txt": {
+                                    processParsedTransfer.execute(parsedEntity);
                                     break;
                                 }
                             }
