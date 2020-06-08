@@ -231,4 +231,9 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final MissingAgencyIdNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final InconsistentAgencyTimezoneNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

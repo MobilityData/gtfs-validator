@@ -203,4 +203,8 @@ public class DefaultConfig {
     public ValidateAgencyIdRequirement validateAgencyIdRequirement() {
         return new ValidateAgencyIdRequirement(gtfsDataRepository, resultRepo, logger);
     }
+
+    public ValidateAgencyTimezoneAreInAccord validateAgencyTimezoneAreInAccord() {
+        return new ValidateAgencyTimezoneAreInAccord(gtfsDataRepository, resultRepo, logger);
+    }
 }

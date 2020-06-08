@@ -84,4 +84,6 @@ public interface NoticeExporter {
     void export(RouteLongNameContainsShortNameNotice toExport) throws IOException;
 
     void export(MissingAgencyIdNotice toExport) throws IOException;
+
+    void export(InconsistentAgencyTimezoneNotice inconsistentAgencyTimezoneNotice) throws IOException;
 }

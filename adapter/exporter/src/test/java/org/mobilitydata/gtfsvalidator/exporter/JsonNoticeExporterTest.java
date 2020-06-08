@@ -541,8 +541,21 @@ class JsonNoticeExporterTest {
     void exportMissingAgencyIdNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        MissingAgencyIdNotice toExport = new MissingAgencyIdNotice("agency_name");
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final MissingAgencyIdNotice toExport = new MissingAgencyIdNotice("agency_name");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportInconsistentAgencyTimezoneNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final InconsistentAgencyTimezoneNotice toExport = new InconsistentAgencyTimezoneNotice(2,
+                "set of inconsistent timezone");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
