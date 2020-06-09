@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
 import java.util.ArrayList;
@@ -232,8 +233,11 @@ public class Agency extends GtfsEntity {
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
-            if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
-
+            if (agencyName == null || agencyUrl == null || agencyTimezone == null ||
+                    (agencyId!=null && agencyId.isBlank())) {
+                if (agencyId!=null && agencyId.isBlank()) {
+                    noticeCollection.add(new InvalidAgencyIdNotice(agencyId));
+                }
                 if (agencyName == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("agency.txt", "agency_name",
                             agencyId));

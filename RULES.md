@@ -32,6 +32,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E028](#E028) | Route long name equals short name | 
 | [E029](#E029) | Missing field `agency_id` | 
 | [E030](#E030) | Inconsistent field `agency_timezone` | 
+| [E031](#E031) | Invalid `agency_id` | 
 
 ### Table of Warnings
 
@@ -118,6 +119,13 @@ All records of file `agency.txt` should have a non-null value for field [agency_
 ### E030 - Inconsistent field `agency_timezone` 
 
 All records of file `agency.txt` should have the same value for field `agency_timezone` [agency_id](https://gtfs.org/reference/static/#agencytxt) when this file counts more than one record.
+
+
+<a name="E031"/>
+
+### E031 - Invalid `agency_id` 
+
+When provided field `agency_id` should not be blank.
 
 # Warnings
 
