@@ -373,4 +373,21 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(mockFeedInfo00, underTest.getFeedInfoByFeedPublisherName("feed publisher 0"));
         assertEquals(mockFeedInfo01, underTest.getFeedInfoByFeedPublisherName("feed publisher 1"));
     }
+
+    @Test
+    void callToGetFeedInfoAllShouldReturnFeedInfoCollection() {
+        final FeedInfo mockFeedInfo00 = mock(FeedInfo.class);
+        final FeedInfo mockFeedInfo01 = mock(FeedInfo.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFeedInfo00.getFeedPublisherName()).thenReturn("feed publisher 0");
+        when(mockFeedInfo01.getFeedPublisherName()).thenReturn("feed publisher 1");
+
+        assertEquals(mockFeedInfo00, underTest.addFeedInfo(mockFeedInfo00));
+        assertEquals(mockFeedInfo01, underTest.addFeedInfo(mockFeedInfo01));
+
+        final Collection<FeedInfo> toCheck = underTest.getFeedInfoAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.contains(mockFeedInfo00));
+        assertTrue(toCheck.contains(mockFeedInfo01));
+    }
 }

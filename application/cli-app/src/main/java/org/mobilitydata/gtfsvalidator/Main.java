@@ -132,6 +132,7 @@ public class Main {
                 config.validateRouteTypeIsInOptions().execute();
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
+                config.validateFeedInfoEndDateAfterStartDate().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

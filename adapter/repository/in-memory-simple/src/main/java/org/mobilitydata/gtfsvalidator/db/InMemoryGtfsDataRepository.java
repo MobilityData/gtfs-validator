@@ -18,13 +18,13 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDateTime;
@@ -381,5 +381,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
         return feedInfoPerFeedPublisherName.get(feedPublisherName);
+    }
+
+    @Override
+    public Collection<FeedInfo> getFeedInfoAll() {
+        return feedInfoPerFeedPublisherName.values();
     }
 }

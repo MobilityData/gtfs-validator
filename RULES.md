@@ -30,6 +30,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E026](#E026) | Invalid route type | 
 | [E027](#E027) | Missing route short name and long name | 
 | [E028](#E028) | Route long name equals short name | 
+| [E028](#E032) | `feed_start_date` after `feed_end_date` | 
 
 ### Table of Warnings
 
@@ -104,6 +105,15 @@ A Route color and a Route text color should be contrasting. Minimum Contrast Rat
 <a name="E028"/>
 
 ### E028 - Route long name equals short name
+
+<a name="E032"/>
+
+### E028 - `feed_start_date` after `feed_end_date`
+
+The `feed_end_date` date must not precede the `feed_start_date` date if both are given. 
+
+#### References:
+* [feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
 
 # Warnings
 
