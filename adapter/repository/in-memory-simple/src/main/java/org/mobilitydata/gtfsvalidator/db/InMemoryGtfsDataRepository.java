@@ -18,13 +18,14 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDateTime;
@@ -59,6 +60,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
     private final Map<String, Level> levelPerId = new HashMap<>();
+
+    // Map containing FareAttribute entities. Entities are mapped on the value found in column fare_id of gtfs file
+    // fare_attributes.txt
+    private final Map<String, FareAttribute> fareAttributePerFareId = new HashMap<>();
 
     // map storing feedInfo entities on key feed_publisher_name found in file feed_info.txt
     private final Map<String, FeedInfo> feedInfoPerFeedPublisherName = new HashMap<>();
@@ -381,5 +386,41 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
         return feedInfoPerFeedPublisherName.get(feedPublisherName);
+    }
+
+    /**
+     * Add an FareAttribute representing a row from fare_attributes.txt to this {@code GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint of agency based on fare_id is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newFareAttribute the internal representation of a row from fare_attributes.txt to be added to the
+     *                         repository.
+     * @return the entity added to the repository if the uniqueness constraint of fare_attribute based on fare_id is
+     * respected, if this requirement is not met returns null.
+     * @throws IllegalArgumentException if the argument is null
+     */
+    @Override
+    public FareAttribute addFareAttribute(final FareAttribute newFareAttribute) throws IllegalArgumentException {
+        if (newFareAttribute != null) {
+            if (fareAttributePerFareId.containsKey(newFareAttribute.getFareId())) {
+                return null;
+            } else {
+                fareAttributePerFareId.put(newFareAttribute.getFareId(), newFareAttribute);
+                return newFareAttribute;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null fare attribute to data repository");
+        }
+    }
+
+    /**
+     * Return the FareAttribute representing a row from fare_attributes.txt related to the id provided as parameter
+     *
+     * @param fareId the key from fare_attributes.txt related to the FareAttribute to be returned
+     * @return the FareAttribute representing a row from fare_attributes.txt related to the id provided as parameter
+     */
+    @Override
+    public FareAttribute getFareAttributeById(final String fareId) {
+        return fareAttributePerFareId.get(fareId);
     }
 }

@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
@@ -372,5 +373,39 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockFeedInfo00, underTest.getFeedInfoByFeedPublisherName("feed publisher 0"));
         assertEquals(mockFeedInfo01, underTest.getFeedInfoByFeedPublisherName("feed publisher 1"));
+    }
+
+    @Test
+    void addSameFareAttributeTwiceShouldReturnNull() {
+        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareAttribute.getFareId()).thenReturn("fare attribute id");
+
+        underTest.addFareAttribute(mockFareAttribute);
+
+        assertNull(underTest.addFareAttribute(mockFareAttribute));
+    }
+
+    @Test
+    void addNullFareAttributeShouldThrowException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addFareAttribute(null));
+        assertEquals("Cannot add null fare attribute to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addFareAttributeAndGetFareAttributeByIdShouldReturnSameEntity() {
+        final FareAttribute mockFareAttribute00 = mock(FareAttribute.class);
+        final FareAttribute mockFareAttribute01 = mock(FareAttribute.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        when(mockFareAttribute00.getFareId()).thenReturn("fare attribute id 00");
+        when(mockFareAttribute01.getFareId()).thenReturn("fare attribute id 01");
+
+        assertEquals(underTest.addFareAttribute(mockFareAttribute00),
+                underTest.getFareAttributeById("fare attribute id 00"));
+        assertEquals(underTest.addFareAttribute(mockFareAttribute01),
+                underTest.getFareAttributeById("fare attribute id 01"));
     }
 }
