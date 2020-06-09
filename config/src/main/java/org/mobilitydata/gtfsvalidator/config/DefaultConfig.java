@@ -22,9 +22,13 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 
@@ -190,6 +194,22 @@ public class DefaultConfig {
 
     public ProcessParsedLevel processParsedLevel() {
         return new ProcessParsedLevel(resultRepo, gtfsDataRepository, new Level.LevelBuilder());
+    }
+
+    public ProcessParsedCalendar processParsedCalendar() {
+        return new ProcessParsedCalendar(resultRepo, gtfsDataRepository, new Calendar.CalendarBuilder());
+    }
+
+    public ProcessParsedTrip processParsedTrip() {
+        return new ProcessParsedTrip(resultRepo, gtfsDataRepository, new Trip.TripBuilder());
+    }
+
+    public ProcessParsedTransfer processParsedTransfer() {
+        return new ProcessParsedTransfer(resultRepo, gtfsDataRepository, new Transfer.TransferBuilder());
+    }
+
+    public ProcessParsedFeedInfo processParsedFeedInfo() {
+        return new ProcessParsedFeedInfo(resultRepo, gtfsDataRepository, new FeedInfo.FeedInfoBuilder());
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {

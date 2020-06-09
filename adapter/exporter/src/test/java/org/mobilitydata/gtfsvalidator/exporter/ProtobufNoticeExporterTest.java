@@ -377,7 +377,6 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("666"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
-
     }
 
     @Test
