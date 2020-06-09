@@ -17,15 +17,26 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FeedInfoStartDateAfterEndDateNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+/**
+ * Use case to validate that `feed_end_date` date does not precede the `feed_start_date` date if both are fields are
+ * provided. This use case is triggered after completing the {@code GtfsDataRepository} provided in the constructor with
+ * {@code FeedInfo} entities.
+ */
 public class ValidateFeedInfoEndDateAfterStartDate {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
 
+    /**
+     * @param dataRepo   a repository storing the data of a GTFS dataset
+     * @param resultRepo a repository storing information about the validation process
+     * @param logger     a logger used to log information about the validation process
+     */
     public ValidateFeedInfoEndDateAfterStartDate(final GtfsDataRepository dataRepo,
                                                  final ValidationResultRepository resultRepo,
                                                  final Logger logger) {
@@ -34,6 +45,14 @@ public class ValidateFeedInfoEndDateAfterStartDate {
         this.logger = logger;
     }
 
+    /**
+     * Use case execution method: checks if for each {@code FeedInfo} contained in {@link GtfsDataRepository} that
+     * `feed_end_date` date does not precede the `feed_start_date`. If this requirement is not met, a
+     * {@code FeedInfoStartDateAfterEndDateNotice} is added to the {@code ValidationResultRepo} provided in the
+     * constructor.
+     * This verification is executed if {@link FeedInfo} has non-null value for both fields `feed_end_date` and
+     * `feed_start_date`.
+     */
     public void execute() {
         logger.info("Validating rule 'E032 - `feed_start_date` and `feed_end_date` out of order" +
                 System.lineSeparator());

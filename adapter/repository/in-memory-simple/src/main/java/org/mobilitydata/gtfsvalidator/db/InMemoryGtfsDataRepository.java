@@ -424,6 +424,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return fareAttributePerFareId.get(fareId);
     }
 
+    /**
+     * Returns the collection of {@link FeedInfo} entities
+     *
+     * @return the collection of {@link FeedInfo} entities
+     */
     @Override
     public Collection<FeedInfo> getFeedInfoAll() {
         return feedInfoPerFeedPublisherName.values();
