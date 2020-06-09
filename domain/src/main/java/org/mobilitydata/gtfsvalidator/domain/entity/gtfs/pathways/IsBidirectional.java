@@ -42,7 +42,6 @@ public enum IsBidirectional {
      * null or does not match any {@link IsBidirectional} enum item
      */
     static public IsBidirectional fromInt(final Integer fromValue) {
-
         if (fromValue == null) {
             return null;
         }
