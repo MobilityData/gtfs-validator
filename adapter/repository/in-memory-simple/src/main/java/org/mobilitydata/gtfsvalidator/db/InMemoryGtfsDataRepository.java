@@ -18,13 +18,13 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDateTime;
@@ -109,7 +109,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Collection<Agency> getAgencyAll() {
-        return agencyCollection.values();
+        return agencyPerId.values();
     }
 
     /**
@@ -386,7 +386,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the FeedInfo representing a row from feed_info.txt related to the name provided as parameter
      *
      * @param feedPublisherName the key from feed_info.txt related to the FeedInfo to be returned
-     * @return the eedInfo representing a row from feed_info.txt related to the name provided as parameter
+     * @return the feedInfo representing a row from feed_info.txt related to the name provided as parameter
      */
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
