@@ -237,6 +237,8 @@ public class FareAttribute extends GtfsEntity {
                     noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
                             "currency_type", fareId));
                 }
+                // the following statement is true when PaymentMethod.isEnumValueValid(originalPaymentMethodInteger)
+                // returns false
                 if (paymentMethod == null) {
                     if (originalPaymentMethodInteger == null) {
                         noticeCollection.add(new MissingRequiredValueNotice("fare_attributes.txt",
@@ -246,6 +248,8 @@ public class FareAttribute extends GtfsEntity {
                                 "payment_method", fareId, originalPaymentMethodInteger));
                     }
                 }
+                // the following statement is true when Transfers.isEnumValueValid(originalTransferInteger)
+                // returns false
                 if (transfers == null) {
                     if (!Transfers.isEnumValueValid(originalTransferInteger)) {
                         noticeCollection.add(new UnexpectedEnumValueNotice("fare_attributes.txt",
