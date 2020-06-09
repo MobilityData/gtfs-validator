@@ -222,7 +222,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void addTwiceTheSamePathwayShouldReturnNull() {
+    void addSamePathwayTwiceShouldReturnNull() {
         final Pathway mockPathway = mock(Pathway.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockPathway.getPathwayId()).thenReturn("pathway id");
