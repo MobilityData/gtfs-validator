@@ -41,7 +41,7 @@ public enum PaymentMethod {
      * @return the enum item matching the integer passed as parameter. Or null if the integer passed as parameter is
      * null or does not match any {@link PaymentMethod} enum item
      */
-    static public PaymentMethod fromInt(Integer fromValue) {
+    static public PaymentMethod fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return null;
         }
