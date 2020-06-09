@@ -17,6 +17,9 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
@@ -62,6 +65,10 @@ public interface GtfsDataRepository {
     FeedInfo addFeedInfo(final FeedInfo newFeedInfo) throws IllegalArgumentException;
 
     FeedInfo getFeedInfoByFeedPublisherName(final String feedInfoPublisherName);
+
+    FareAttribute addFareAttribute(final FareAttribute newFareAttribute);
+
+    FareAttribute getFareAttributeById(final String fareId);
 
     Collection<FeedInfo> getFeedInfoAll();
 }

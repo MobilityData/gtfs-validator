@@ -70,6 +70,7 @@ public class Main {
                 final ProcessParsedTrip processParsedTrip = config.processParsedTrip();
                 final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
+                final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -119,6 +120,10 @@ public class Main {
                                 }
                                 case "feed_info.txt": {
                                     processParsedFeedInfo.execute(parsedEntity);
+                                    break;
+                                }
+                                case "fare_attributes.txt": {
+                                    processParsedFareAttribute.execute(parsedEntity);
                                     break;
                                 }
                             }
