@@ -18,9 +18,9 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -214,10 +214,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException {
         if (newPathway != null) {
-            if (pathwayPerId.containsKey(newPathway.getPathwayId())) {
+            final String pathwayId = newPathway.getPathwayId();
+            if (pathwayPerId.containsKey(pathwayId)) {
                 return null;
             } else {
-                String pathwayId = newPathway.getPathwayId();
                 pathwayPerId.put(pathwayId, newPathway);
                 return newPathway;
             }
