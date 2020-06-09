@@ -27,7 +27,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import java.util.List;
 
 /**
- * This use case turns a parsed entity representing a row from agency.txt into a concrete class
+ * This use case turns a parsed entity representing a row from pathways.txt into a concrete class
  */
 public class ProcessParsedPathway {
     private final ValidationResultRepository resultRepository;
