@@ -36,7 +36,8 @@ import java.util.List;
 public class FareAttribute extends GtfsEntity {
     @NotNull
     final String fareId;
-    private final float price;
+    @NotNull
+    private final Float price;
     @NotNull
     final String currencyType;
     @NotNull
@@ -80,7 +81,8 @@ public class FareAttribute extends GtfsEntity {
         return fareId;
     }
 
-    public float getPrice() {
+    @NotNull
+    public Float getPrice() {
         return price;
     }
 
