@@ -57,11 +57,11 @@ public class ValidateFeedInfoEndDateAfterStartDate {
         logger.info("Validating rule 'E032 - `feed_start_date` and `feed_end_date` out of order" +
                 System.lineSeparator());
         dataRepo.getFeedInfoAll().stream()
-                .filter(feedInfo -> feedInfo.getStartDate() != null && feedInfo.getEndDate() != null)
-                .filter(feedInfo -> feedInfo.getStartDate().isBefore(feedInfo.getEndDate()))
+                .filter(feedInfo -> feedInfo.getStartDate() != null && feedInfo.getFeedEndDate() != null)
+                .filter(feedInfo -> feedInfo.getStartDate().isBefore(feedInfo.getFeedEndDate()))
                 .forEach(invalidFeedInfo ->
                         resultRepo.addNotice(
                                 new FeedInfoStartDateAfterEndDateNotice(invalidFeedInfo.getStartDate().toString(),
-                                invalidFeedInfo.getEndDate().toString(), invalidFeedInfo.getFeedPublisherName())));
+                                invalidFeedInfo.getFeedEndDate().toString(), invalidFeedInfo.getFeedPublisherName())));
     }
 }

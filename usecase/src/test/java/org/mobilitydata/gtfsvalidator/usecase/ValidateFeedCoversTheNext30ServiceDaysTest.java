@@ -39,7 +39,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
     void feedInfoExpiringBetweenTheNext7And30DaysShouldGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final LocalDateTime mockDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getEndDate()).thenReturn(mockDate);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockDate);
         when(mockDate.isAfter(any())).thenReturn(true);
         when(mockDate.isBefore(any())).thenReturn(true);
         when(mockDate.toString()).thenReturn("feed end date");
@@ -66,7 +66,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
 
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(4)).getEndDate();
+        verify(mockFeedInfo, times(4)).getFeedEndDate();
 
         verify(mockDate, times(1)).isBefore(currentDateAsYYYYMMDDHHMM.plusDays(30));
         verify(mockDate, times(1)).isAfter(currentDateAsYYYYMMDDHHMM.plusDays(7));
@@ -95,7 +95,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
     void feedInfoExpiringInMoreThan30DaysShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final LocalDateTime mockDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getEndDate()).thenReturn(mockDate);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockDate);
         when(mockDate.isAfter(any())).thenReturn(true);
         when(mockDate.isBefore(any())).thenReturn(false);
         when(mockDate.toString()).thenReturn("feed end date");
@@ -122,7 +122,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
 
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(3)).getEndDate();
+        verify(mockFeedInfo, times(3)).getFeedEndDate();
 
         verify(mockDate, times(1)).isBefore(currentDateAsYYYYMMDDHHMM.plusDays(30));
         verify(mockDate, times(1)).isAfter(currentDateAsYYYYMMDDHHMM.plusDays(7));
@@ -134,7 +134,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
     void feedInfoExpiringInLessThan7DaysShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final LocalDateTime mockDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getEndDate()).thenReturn(mockDate);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockDate);
         when(mockDate.isAfter(any())).thenReturn(false);
         when(mockDate.isBefore(any())).thenReturn(true);
         when(mockDate.toString()).thenReturn("feed end date");
@@ -161,7 +161,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
 
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(2)).getEndDate();
+        verify(mockFeedInfo, times(2)).getFeedEndDate();
 
         verify(mockDate, times(1)).isAfter(currentDateAsYYYYMMDDHHMM.plusDays(7));
 
@@ -171,7 +171,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
     @Test
     void feedInfoWithoutFeedEndDateShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        when(mockFeedInfo.getEndDate()).thenReturn(null);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(null);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
         mockFeedInfoCollection.add(mockFeedInfo);
@@ -192,7 +192,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
 
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getEndDate();
+        verify(mockFeedInfo, times(1)).getFeedEndDate();
 
         verifyNoMoreInteractions(mockFeedInfo, mockResultRepo, mockGtfsDataRepo, mockLogger);
     }

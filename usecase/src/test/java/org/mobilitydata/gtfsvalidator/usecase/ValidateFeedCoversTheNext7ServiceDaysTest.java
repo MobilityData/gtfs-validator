@@ -38,7 +38,7 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
     void feedInfoExpiringInLessThan7DaysShouldGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final LocalDateTime mockDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getEndDate()).thenReturn(mockDate);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockDate);
         when(mockDate.isBefore(any())).thenReturn(true);
         when(mockDate.toString()).thenReturn("feed end date");
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -64,7 +64,7 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
 
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(3)).getEndDate();
+        verify(mockFeedInfo, times(3)).getFeedEndDate();
 
         verify(mockDate, times(1)).isBefore(currentDateAsYYYYMMDDHHMM.plusDays(7));
         final ArgumentCaptor<FeedInfoExpiresInLessThan7DaysNotice> captor =
@@ -90,7 +90,7 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
     void feedInfoWithExpirationDateInMoreThan60DaysShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final LocalDateTime mockDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getEndDate()).thenReturn(mockDate);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockDate);
         when(mockDate.isBefore(any())).thenReturn(false);
         when(mockDate.toString()).thenReturn("feed end date");
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
@@ -116,7 +116,7 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
 
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(2)).getEndDate();
+        verify(mockFeedInfo, times(2)).getFeedEndDate();
         verify(mockDate, times(1)).isBefore(currentDateAsYYYYMMDDHHMM.plusDays(7));
 
         verifyNoMoreInteractions(mockDate, mockFeedInfo, mockResultRepo, mockGtfsDataRepo, mockLogger);
@@ -125,7 +125,7 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
     @Test
     void feedInfoWithoutFeedEndDateShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        when(mockFeedInfo.getEndDate()).thenReturn(null);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(null);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
         mockFeedInfoCollection.add(mockFeedInfo);
@@ -146,7 +146,7 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
 
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getEndDate();
+        verify(mockFeedInfo, times(1)).getFeedEndDate();
 
         verifyNoMoreInteractions(mockFeedInfo, mockResultRepo, mockGtfsDataRepo, mockLogger);
     }

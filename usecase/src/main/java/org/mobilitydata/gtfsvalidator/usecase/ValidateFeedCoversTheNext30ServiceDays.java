@@ -62,11 +62,11 @@ public class ValidateFeedCoversTheNext30ServiceDays {
                 currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), 0, 0);
 
         dataRepo.getFeedInfoAll().stream()
-                .filter(feedInfo -> feedInfo.getEndDate() != null)
-                .filter(feedInfo -> feedInfo.getEndDate().isAfter(currentDateAsYYYYMMDDHHMM.plusDays(7)) &&
-                        feedInfo.getEndDate().isBefore(currentDateAsYYYYMMDDHHMM.plusDays(30)))
+                .filter(feedInfo -> feedInfo.getFeedEndDate() != null)
+                .filter(feedInfo -> feedInfo.getFeedEndDate().isAfter(currentDateAsYYYYMMDDHHMM.plusDays(7)) &&
+                        feedInfo.getFeedEndDate().isBefore(currentDateAsYYYYMMDDHHMM.plusDays(30)))
                 .forEach(invalidFeedInfo -> resultRepo.addNotice(
                         new FeedInfoExpiresInLessThan30DaysNotice(currentDateAsYYYYMMDDHHMM.toString(),
-                                invalidFeedInfo.getEndDate().toString(), invalidFeedInfo.getFeedPublisherName())));
+                                invalidFeedInfo.getFeedEndDate().toString(), invalidFeedInfo.getFeedPublisherName())));
     }
 }

@@ -100,7 +100,7 @@ public class FeedInfo extends GtfsEntity {
     }
 
     @Nullable
-    public LocalDateTime getEndDate() {
+    public LocalDateTime getFeedEndDate() {
         return feedEndDate;
     }
 

@@ -40,7 +40,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         final LocalDateTime mockStartDate = mock(LocalDateTime.class);
         final LocalDateTime mockEndDate = mock(LocalDateTime.class);
         when(mockFeedInfo.getStartDate()).thenReturn(mockStartDate);
-        when(mockFeedInfo.getEndDate()).thenReturn(mockEndDate);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
         when(mockStartDate.isBefore(mockEndDate)).thenReturn(false);
 
         final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
@@ -62,7 +62,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
 
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(2)).getEndDate();
+        verify(mockFeedInfo, times(2)).getFeedEndDate();
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
         verify(mockFeedInfo, times(2)).getStartDate();
@@ -80,7 +80,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         final LocalDateTime mockEndDate = mock(LocalDateTime.class);
         when(mockEndDate.toString()).thenReturn("end date");
         when(mockFeedInfo.getStartDate()).thenReturn(mockStartDate);
-        when(mockFeedInfo.getEndDate()).thenReturn(mockEndDate);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
         when(mockStartDate.isBefore(mockEndDate)).thenReturn(true);
 
         final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
@@ -102,7 +102,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
 
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(3)).getEndDate();
+        verify(mockFeedInfo, times(3)).getFeedEndDate();
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
         verify(mockFeedInfo, times(3)).getStartDate();
@@ -131,7 +131,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final LocalDateTime mockEndDate = mock(LocalDateTime.class);
         when(mockFeedInfo.getStartDate()).thenReturn(null);
-        when(mockFeedInfo.getEndDate()).thenReturn(mockEndDate);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
 
         final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
         mockFeedInfoCollection.add(mockFeedInfo);
@@ -162,7 +162,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final LocalDateTime mockStartDate = mock(LocalDateTime.class);
         when(mockFeedInfo.getStartDate()).thenReturn(mockStartDate);
-        when(mockFeedInfo.getEndDate()).thenReturn(null);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(null);
 
         final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
         mockFeedInfoCollection.add(mockFeedInfo);
@@ -186,7 +186,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         verify(mockFeedInfo, times(1)).getStartDate();
         // suppressed warning regarding ignored result of method since it is not necessary here
         //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getEndDate();
+        verify(mockFeedInfo, times(1)).getFeedEndDate();
 
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockFeedInfo, mockStartDate);
     }
