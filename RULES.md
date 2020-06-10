@@ -147,7 +147,7 @@ At any time, the published GTFS dataset should be valid for at least the next 7 
 
 <a name="W009"/>
 
-### W008 - Route long name contains short name
+### W009 - Dataset should cover at least the next 30 days of service
 
 If possible, the GTFS dataset should cover at least the next 30 days of service
 
