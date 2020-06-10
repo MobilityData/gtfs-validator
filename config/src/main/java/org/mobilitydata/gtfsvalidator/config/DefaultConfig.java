@@ -168,8 +168,8 @@ public class DefaultConfig {
         return new ValidateFeedInfoEndDateAfterStartDate(gtfsDataRepository, resultRepo, logger);
     }
 
-    public ValidateFeedDoesNotExpireUntil7Days validateFeedDoesNotExpireUntil7Days() {
-        return new ValidateFeedDoesNotExpireUntil7Days(gtfsDataRepository, resultRepo, logger);
+    public ValidateFeedCoversTheNext7ServiceDays validateFeedCoversTheNext7ServiceDays() {
+        return new ValidateFeedCoversTheNext7ServiceDays(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateFeedCoversTheNext30ServiceDays validateFeedIsValidForTheNext30Days() {

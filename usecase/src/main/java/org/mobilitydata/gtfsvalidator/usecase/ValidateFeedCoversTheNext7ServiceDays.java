@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
  * This use case is triggered after completing the {@code GtfsDataRepository} provided in the constructor with
  * {@code FeedInfo} entities.
  */
-public class ValidateFeedDoesNotExpireUntil7Days {
+public class ValidateFeedCoversTheNext7ServiceDays {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
@@ -39,9 +39,9 @@ public class ValidateFeedDoesNotExpireUntil7Days {
      * @param resultRepo a repository storing information about the validation process
      * @param logger     a logger used to log information about the validation process
      */
-    public ValidateFeedDoesNotExpireUntil7Days(final GtfsDataRepository dataRepo,
-                                               final ValidationResultRepository resultRepo,
-                                               final Logger logger) {
+    public ValidateFeedCoversTheNext7ServiceDays(final GtfsDataRepository dataRepo,
+                                                 final ValidationResultRepository resultRepo,
+                                                 final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
         this.logger = logger;

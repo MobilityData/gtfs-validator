@@ -32,7 +32,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class ValidateFeedDoesNotExpireUntil7DaysTest {
+class ValidateFeedCoversTheNext7ServiceDaysTest {
 
     @Test
     void feedInfoExpiringInLessThan7DaysShouldGenerateNotice() {
@@ -51,8 +51,8 @@ class ValidateFeedDoesNotExpireUntil7DaysTest {
         final LocalDateTime currentDateAsYYYYMMDDHHMM = LocalDateTime.of(
                 currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), 0, 0);
 
-        final ValidateFeedDoesNotExpireUntil7Days underTest =
-                new ValidateFeedDoesNotExpireUntil7Days(mockGtfsDataRepo, mockResultRepo, mockLogger);
+        final ValidateFeedCoversTheNext7ServiceDays underTest =
+                new ValidateFeedCoversTheNext7ServiceDays(mockGtfsDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
 
@@ -103,8 +103,8 @@ class ValidateFeedDoesNotExpireUntil7DaysTest {
         final LocalDateTime currentDateAsYYYYMMDDHHMM = LocalDateTime.of(
                 currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), 0, 0);
 
-        final ValidateFeedDoesNotExpireUntil7Days underTest =
-                new ValidateFeedDoesNotExpireUntil7Days(mockGtfsDataRepo, mockResultRepo, mockLogger);
+        final ValidateFeedCoversTheNext7ServiceDays underTest =
+                new ValidateFeedCoversTheNext7ServiceDays(mockGtfsDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
 
