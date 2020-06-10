@@ -121,4 +121,33 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
 
         verifyNoMoreInteractions(mockDate, mockFeedInfo, mockResultRepo, mockGtfsDataRepo, mockLogger);
     }
+
+    @Test
+    void feedInfoWithoutFeedEndDateShouldNotGenerateNotice() {
+        final FeedInfo mockFeedInfo = mock(FeedInfo.class);
+        when(mockFeedInfo.getEndDate()).thenReturn(null);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
+        mockFeedInfoCollection.add(mockFeedInfo);
+        when(mockGtfsDataRepo.getFeedInfoAll()).thenReturn(mockFeedInfoCollection);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Logger mockLogger = mock(Logger.class);
+
+        final ValidateFeedCoversTheNext7ServiceDays underTest =
+                new ValidateFeedCoversTheNext7ServiceDays(mockGtfsDataRepo, mockResultRepo, mockLogger);
+
+        underTest.execute();
+
+        verify(mockLogger, times(1))
+                .info("Validating rule 'E033 - Dataset should be valid for at least the next 7 days'"
+                        + System.lineSeparator());
+
+        verify(mockGtfsDataRepo, times(1)).getFeedInfoAll();
+
+        // suppressed warning regarding ignored result of method since it is not necessary here
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockFeedInfo, times(1)).getEndDate();
+
+        verifyNoMoreInteractions(mockFeedInfo, mockResultRepo, mockGtfsDataRepo, mockLogger);
+    }
 }
