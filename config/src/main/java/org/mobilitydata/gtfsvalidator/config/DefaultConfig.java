@@ -172,6 +172,10 @@ public class DefaultConfig {
         return new ValidateFeedDoesNotExpireUntil7Days(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateFeedCoversTheNext30ServiceDays validateFeedIsValidForTheNext30Days() {
+        return new ValidateFeedCoversTheNext30ServiceDays(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }

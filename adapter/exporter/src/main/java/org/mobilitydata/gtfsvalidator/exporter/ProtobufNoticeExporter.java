@@ -480,6 +480,20 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final FeedInfoExpiresInLessThan30DaysNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FEED_EXPIRATION_DATE)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityId(toExport.getFieldName())
+                .setAltEntityName(toExport.getEntityId())
+                .setEntityValue(toExport.getFeedEndDate())
+                .setAltEntityValue(toExport.getCurrentDate())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();

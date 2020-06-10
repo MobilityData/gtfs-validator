@@ -139,6 +139,7 @@ public class Main {
                 config.validateRouteLongNameDoesNotContainShortName().execute();
                 config.validateFeedInfoEndDateAfterStartDate().execute();
                 config.validateFeedDoesNotExpireUntil7Days().execute();
+                config.validateFeedIsValidForTheNext30Days().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

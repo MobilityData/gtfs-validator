@@ -564,4 +564,18 @@ class JsonNoticeExporterTest {
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
+
+    @Test
+    void exportFeedInfoExpiresInLessThan30DaysNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final FeedInfoExpiresInLessThan30DaysNotice toExport =
+                new FeedInfoExpiresInLessThan30DaysNotice("current date", "end_date",
+                        "entity id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
 }

@@ -45,6 +45,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W006](#W006) | Missing route short name |
 | [W007](#W007) | Missing route long name |
 | [W008](#W008) | Route long name contains short name | 
+| [W009](#W009) | Dataset should cover at least the next 30 days of service | 
 
 # Errors
 
@@ -142,3 +143,12 @@ At any time, the published GTFS dataset should be valid for at least the next 7 
 <a name="W008"/>
 
 ### W008 - Route long name contains short name
+
+<a name="W009"/>
+
+### W008 - Route long name contains short name
+
+If possible, the GTFS dataset should cover at least the next 30 days of service
+
+#### References:
+* [Dataset Publishing & General Practices](http://gtfs.org/best-practices/#dataset-publishing--general-practices)
