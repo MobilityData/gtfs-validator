@@ -25,6 +25,7 @@ import org.mockito.InOrder;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 
 import static org.mockito.Mockito.*;
 
@@ -531,6 +532,23 @@ class JsonNoticeExporterTest {
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         RouteLongNameContainsShortNameNotice toExport = new RouteLongNameContainsShortNameNotice(FILENAME, "entity_id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportCalendarEndDateBeforeStartDateShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        CalendarEndDateBeforeStartDate toExport = new CalendarEndDateBeforeStartDate(
+                FILENAME,
+                "wkend",
+                LocalDateTime.of(2020, 2, 1, 12, 35, 59),
+                LocalDateTime.of(2020, 1, 1, 12, 35, 59)
+        );
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

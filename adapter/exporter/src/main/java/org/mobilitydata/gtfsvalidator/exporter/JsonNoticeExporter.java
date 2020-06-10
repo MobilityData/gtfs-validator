@@ -226,4 +226,9 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(RouteLongNameContainsShortNameNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(CalendarEndDateBeforeStartDate toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }
