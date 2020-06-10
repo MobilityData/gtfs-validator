@@ -137,10 +137,10 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                                      final String[] args,
                                      final Logger logger) {
         if (args.length != 0) {
-            logger.info("Retrieving execution parameters from command-line");
+            logger.info("Retrieving execution parameters from command-line\n");
             return new ApacheExecParamParser(new DefaultParser(), getOptions(), args);
         } else {
-            logger.info("Retrieving execution parameters from execution-parameters.json file");
+            logger.info("Retrieving execution parameters from execution-parameters.json file\n");
             return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
         }
     }
