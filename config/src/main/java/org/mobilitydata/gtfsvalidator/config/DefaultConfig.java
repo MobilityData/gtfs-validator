@@ -172,7 +172,7 @@ public class DefaultConfig {
         return new ValidateFeedCoversTheNext7ServiceDays(gtfsDataRepository, resultRepo, logger);
     }
 
-    public ValidateFeedCoversTheNext30ServiceDays validateFeedIsValidForTheNext30Days() {
+    public ValidateFeedCoversTheNext30ServiceDays validateFeedCoversTheNext30ServiceDays() {
         return new ValidateFeedCoversTheNext30ServiceDays(gtfsDataRepository, resultRepo, logger);
     }
 
