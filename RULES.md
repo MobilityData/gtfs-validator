@@ -31,6 +31,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E027](#E027) | Missing route short name and long name | 
 | [E028](#E028) | Route long name equals short name | 
 | [E028](#E032) | `feed_start_date` after `feed_end_date` | 
+| [E028](#E033) | Dataset should be valid for at least the next 7 days | 
 
 ### Table of Warnings
 
@@ -114,6 +115,15 @@ The `feed_end_date` date must not precede the `feed_start_date` date if both are
 
 #### References:
 * [feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
+
+<a name="E033"/>
+
+### E033 - Dataset should be valid for at least the next 7 days
+
+At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
+
+#### References:
+* [Dataset Publishing & General Practices](http://gtfs.org/best-practices/#dataset-publishing--general-practices)
 
 # Warnings
 

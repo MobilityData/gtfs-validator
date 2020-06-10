@@ -168,6 +168,10 @@ public class DefaultConfig {
         return new ValidateFeedInfoEndDateAfterStartDate(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateFeedDoesNotExpireUntil7Days validateFeedDoesNotExpireUntil7Days() {
+        return new ValidateFeedDoesNotExpireUntil7Days(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }

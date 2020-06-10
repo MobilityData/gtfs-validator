@@ -1178,4 +1178,44 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
+
+    @Test
+    void exportFeedInfoExpiresInLessThan7DaysNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(
+                new FeedInfoExpiresInLessThan7DaysNotice("current date", "end date",
+                        "entity id"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(
+                ArgumentMatchers.eq("feed_info.txt"));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(
+                        GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FEED_EXPIRATION_DATE));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setEntityId(
+                ArgumentMatchers.eq("feed_end_date"));
+        verify(mockBuilder, times(1)).setAltEntityName(
+                ArgumentMatchers.eq("entity id"));
+        verify(mockBuilder, times(1)).setEntityValue(
+                ArgumentMatchers.eq("end date"));
+        verify(mockBuilder, times(1)).setAltEntityValue(
+                ArgumentMatchers.eq("current date"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
 }
