@@ -140,6 +140,7 @@ public class Main {
                 config.validateFeedInfoEndDateAfterStartDate().execute();
                 config.validateFeedCoversTheNext7ServiceDays().execute();
                 config.validateFeedCoversTheNext30ServiceDays().execute();
+                config.validateFeedInfoFeedEndDateIsPresent().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

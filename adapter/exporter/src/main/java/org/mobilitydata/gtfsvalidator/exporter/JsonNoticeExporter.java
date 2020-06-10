@@ -238,7 +238,12 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(FeedInfoExpiresInLessThan30DaysNotice toExport) throws IOException {
+    public void export(final FeedInfoExpiresInLessThan30DaysNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingFeedEndDateNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

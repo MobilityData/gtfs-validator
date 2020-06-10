@@ -176,6 +176,10 @@ public class DefaultConfig {
         return new ValidateFeedCoversTheNext30ServiceDays(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateFeedInfoFeedEndDateIsPresent validateFeedInfoFeedEndDateIsPresent() {
+        return new ValidateFeedInfoFeedEndDateIsPresent(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
