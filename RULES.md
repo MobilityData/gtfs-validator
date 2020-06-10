@@ -47,6 +47,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W008](#W008) | Route long name contains short name | 
 | [W009](#W009) | Dataset should cover at least the next 30 days of service | 
 | [W009](#W010) | `feed_end_date` should be provided if `feed_start_date` is provided | 
+| [W009](#W011) | `feed_start_date` should be provided if `feed_end_date` is provided | 
 
 # Errors
 
@@ -157,6 +158,14 @@ If possible, the GTFS dataset should cover at least the next 30 days of service
 <a name="W010"/>
 
 ### W010 - `feed_end_date` should be provided if `feed_start_date` is provided
+
+`feed_end_date` should be provided in conjunction with field `feed_start_date`.
+ 
+* [feed_info.txt Best Practices](http://gtfs.org/best-practices/#feed_infotxt)
+
+<a name="W011"/>
+
+### W010 - `feed_start_date` should be provided if `feed_end_date` is provided
 
 `feed_end_date` should be provided in conjunction with field `feed_start_date`.
  

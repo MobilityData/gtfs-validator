@@ -90,4 +90,6 @@ public interface NoticeExporter {
     void export(FeedInfoExpiresInLessThan30DaysNotice feedInfoExpiresInLessThan30DaysNotice) throws IOException;
 
     void export(MissingFeedEndDateNotice missingFeedEndDateNotice) throws IOException;
+
+    void export(MissingFeedStartDateNotice missingFeedStartDateNotice) throws IOException;
 }

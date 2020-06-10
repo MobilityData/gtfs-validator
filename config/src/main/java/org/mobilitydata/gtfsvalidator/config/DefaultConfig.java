@@ -180,6 +180,10 @@ public class DefaultConfig {
         return new ValidateFeedInfoFeedEndDateIsPresent(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateFeedInfoFeedStartDateIsPresent validateFeedInfoFeedStartDateIsPresent() {
+        return new ValidateFeedInfoFeedStartDateIsPresent(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }

@@ -28,6 +28,7 @@ public abstract class WarningNotice extends Notice {
     protected static final String W_008 = "W008";
     protected static final String W_009 = "W009";
     protected static final String W_010 = "W010";
+    protected static final String W_011 = "W011";
 
     public WarningNotice(final String filename,
                          final String noticeId,
