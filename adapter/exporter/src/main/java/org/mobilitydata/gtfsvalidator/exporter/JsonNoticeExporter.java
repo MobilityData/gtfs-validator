@@ -228,7 +228,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(CalendarEndDateBeforeStartDate toExport) throws IOException {
+    public void export(CalendarEndDateBeforeStartDateNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

@@ -454,7 +454,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(CalendarEndDateBeforeStartDate toExport) throws IOException {
+    public void export(CalendarEndDateBeforeStartDateNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CALENDAR_START_AND_END_DATE_OUT_OF_ORDER)

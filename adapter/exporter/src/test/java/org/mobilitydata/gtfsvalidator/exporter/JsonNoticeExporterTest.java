@@ -543,7 +543,7 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        CalendarEndDateBeforeStartDate toExport = new CalendarEndDateBeforeStartDate(
+        CalendarEndDateBeforeStartDateNotice toExport = new CalendarEndDateBeforeStartDateNotice(
                 FILENAME,
                 "wkend",
                 LocalDateTime.of(2020, 2, 1, 12, 35, 59),

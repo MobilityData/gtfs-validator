@@ -1158,7 +1158,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new CalendarEndDateBeforeStartDate(
+        underTest.export(new CalendarEndDateBeforeStartDateNotice(
                 FILENAME,
                 "wkend",
                 LocalDateTime.of(2020, 2, 1, 12, 35, 59),
