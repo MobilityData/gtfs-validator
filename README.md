@@ -18,13 +18,13 @@ This command-line tool written in Java that performs the following steps:
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -e input -o output
+java -jar gtfs-validator-v1.1.0.jar -i relative_path_to_zipped_dataset -o relative_output_path -e relative_extraction_path.zip -x agency.txt,routes.txt
 ```
 
 ...which will:
- 1. Download the GTFS feed at the URL `https://transitfeeds.com/p/mbta/64/latest/download` and name it `input.zip`
- 1. Extract the `input.zip` contents to the directory `input`
- 1. Validate the GTFS data and output the results to the directory `output`. Validation results are exported to JSON by default.
+ 1. Search for a zipped GTFS dataset located at `relativr_path_to_zipped_dataset` and name it `relative_extraction_path.zip`
+ 1. Extract the `relative_extraction_path.zip` contents to the directory located at `relative_extraction_path`
+ 1. Validate the GTFS data and output the results to the directory located at `relative_output_path`. Validation results are exported to JSON by default. The validation process will not be executed on the enumeration of files provided via option `-x` and the files that rely on them.
 
 For a list of all available commands, use `--help`:
 
@@ -46,10 +46,10 @@ With `execution-parameters.json` file located in the working directory:
  
 ```
 {
-  "extract": "input",
-  "output": "output",
-  "url": "https://transitfeeds.com/p/mbta/64/latest/download",
-  "zipinput": "input.zip"
+  "extract": "relative_extraction_path",
+  "output": "relative_output_path",
+  "input": "relative_path_to_zipped_dataset"
+  "exclude": "agency.txt,routes.txt"
 }
 ```
 
