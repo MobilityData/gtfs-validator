@@ -66,6 +66,11 @@ public class Main {
                 final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
                 final ProcessParsedCalendarDate processCalendarDate = config.processCalendarDate();
                 final ProcessParsedLevel processParsedLevel = config.processParsedLevel();
+                final ProcessParsedCalendar processParsedCalendar = config.processParsedCalendar();
+                final ProcessParsedTrip processParsedTrip = config.processParsedTrip();
+                final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
+                final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
+                final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
 
                 // base validation + build gtfs entities
@@ -100,6 +105,26 @@ public class Main {
                                 }
                                 case "levels.txt": {
                                     processParsedLevel.execute(parsedEntity);
+                                    break;
+                                }
+                                case "calendar.txt": {
+                                    processParsedCalendar.execute(parsedEntity);
+                                    break;
+                                }
+                                case "trips.txt": {
+                                    processParsedTrip.execute(parsedEntity);
+                                    break;
+                                }
+                                case "transfers.txt": {
+                                    processParsedTransfer.execute(parsedEntity);
+                                    break;
+                                }
+                                case "feed_info.txt": {
+                                    processParsedFeedInfo.execute(parsedEntity);
+                                    break;
+                                }
+                                case "fare_attributes.txt": {
+                                    processParsedFareAttribute.execute(parsedEntity);
                                     break;
                                 }
                                 case "fare_rules.txt": {
