@@ -77,7 +77,7 @@ class FareRuleTest {
                 .build()
                 .getData();
 
-        assertEquals("fare id; " + "route id; " + "origin id; " + "destination id; " + "contains id",
+        assertEquals("fare id" + "route id" + "origin id" + "destination id" + "contains id",
                 fareRule.getFareRuleMappingKey());
     }
 }

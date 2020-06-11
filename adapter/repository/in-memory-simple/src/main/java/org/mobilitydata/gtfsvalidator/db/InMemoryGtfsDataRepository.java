@@ -18,9 +18,9 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -52,6 +52,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - origin_id
     // - destination_id
     // - contains_id
+    // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
     /**
@@ -245,7 +246,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FareRule getFareRule(final String fareId, final String routeId, final String originId,
                                 final String destinationId, final String containsId) {
-        return fareRuleCollection.get(fareId + "; " + routeId + "; " + originId + "; " + destinationId + "; " +
-                containsId);
+        return fareRuleCollection.get(FareRule.getFareRuleMappingKey(fareId, routeId, originId, destinationId,
+                containsId));
     }
 }

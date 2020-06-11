@@ -49,7 +49,7 @@ public class ProcessParsedFareRule {
      * requirements from the official GTFS specification are met. When these requirements are not met, related notices
      * generated in {@code FareRule.FareRuleBuilder} are added to the result repository provided in the constructor.
      * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
-     * agency entities is not respected.
+     * fare rule entities is not respected.
      *
      * @param validatedParsedFareRuleEntity entity to be processed and added to the GTFS data repository
      */

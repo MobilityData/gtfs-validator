@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class FareRule extends GtfsEntity {
     @NotNull
-    final String fareId;
+    private final String fareId;
     @Nullable
     private final String routeId;
     @Nullable
@@ -180,8 +180,12 @@ public class FareRule extends GtfsEntity {
      *
      * @return the key corresponding to this {@link FareRule}
      */
-    public String getFareRuleMappingKey() {
-        return getFareId() + "; " + getRouteId() + "; " + getOriginId() + "; " + getDestinationId() + "; "
-                + getContainsId();
+    public static String getFareRuleMappingKey(final String fareId, final String routeId, final String originId,
+                                               final String destinationId, final String containsId) {
+        return fareId+routeId+originId+destinationId+containsId;
+    }
+
+    public String getFareRuleMappingKey(){
+        return getFareRuleMappingKey(getFareId(), getRouteId(), getOriginId(), getDestinationId(), getContainsId());
     }
 }

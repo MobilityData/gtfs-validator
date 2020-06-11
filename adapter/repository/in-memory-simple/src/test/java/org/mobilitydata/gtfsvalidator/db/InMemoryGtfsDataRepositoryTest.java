@@ -247,8 +247,8 @@ class InMemoryGtfsDataRepositoryTest {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockFareRule00.getFareId()).thenReturn("fare id0");
         when(mockFareRule01.getFareId()).thenReturn("fare id1");
-        when(mockFareRule00.getFareRuleMappingKey()).thenReturn("fare id0; " + "null; " + "null; " + "null; " + "null");
-        when(mockFareRule01.getFareRuleMappingKey()).thenReturn("fare id1; " + "null; " + "null; " + "null; " + "null");
+        when(mockFareRule00.getFareRuleMappingKey()).thenReturn("fare id0" + "null" + "null" + "null" + "null");
+        when(mockFareRule01.getFareRuleMappingKey()).thenReturn("fare id1" + "null" + "null" + "null" + "null");
 
         assertEquals(mockFareRule00, underTest.addFareRule(mockFareRule00));
         assertEquals(mockFareRule01, underTest.addFareRule(mockFareRule01));
