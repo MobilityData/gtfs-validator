@@ -26,8 +26,8 @@ public class MissingRequiredValueNotice extends ErrorNotice {
     public MissingRequiredValueNotice(String filename, String fieldName, String entityId) {
         super(filename, E_015,
                 "Missing required value",
-                "Missing value for field:" + fieldName
-                        + " marked as required in entity with id:" + entityId,
+                "Missing value for field:`" + fieldName
+                        + "` marked as required in entity with id:`" + entityId + "`",
                 entityId);
         putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
     }

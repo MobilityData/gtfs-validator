@@ -27,7 +27,8 @@ public class InvalidEmailNotice extends ErrorNotice {
                               final String entityId, final String emailValue) {
         super(filename, E_023,
                 "Invalid email",
-                "Invalid email:" + emailValue + " in field:" + fieldName + " for entity with id:" + entityId,
+                "Invalid email:" + emailValue + " in field:`" + fieldName + "` for entity with id:`"
+                        + entityId + "`",
                 entityId);
         putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
         putExtra(NOTICE_SPECIFIC_KEY__EMAIL_VALUE, emailValue);

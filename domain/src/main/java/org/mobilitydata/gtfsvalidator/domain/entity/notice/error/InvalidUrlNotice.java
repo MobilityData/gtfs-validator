@@ -26,8 +26,8 @@ public class InvalidUrlNotice extends ErrorNotice {
     public InvalidUrlNotice(String filename, String fieldName, String entityId, String urlValue) {
         super(filename, E_012,
                 "Invalid url",
-                "Invalid url:" + urlValue + " in field:" + fieldName + " for entity with id:" + entityId,
-                entityId);
+                "Invalid url:`" + urlValue + "` in field:`" + fieldName + "` for entity with id:`" + entityId
+                + "`", entityId);
         putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
         putExtra(NOTICE_SPECIFIC_KEY__URL_VALUE, urlValue);
     }

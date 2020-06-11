@@ -26,8 +26,8 @@ public class DuplicatedEntityNotice extends ErrorNotice {
     public DuplicatedEntityNotice(final String filename, final String fieldName, final String entityId) {
         super(filename, E_020,
                 "Duplicate entity",
-                "Entity must be unique in file: " + filename + "found other entity with same value for " +
-                        "field: " + fieldName, entityId);
+                "Entity must be unique in file: `" + filename + "` found other entity with same value for " +
+                        "field: " + fieldName + "`", entityId);
         putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
     }
 

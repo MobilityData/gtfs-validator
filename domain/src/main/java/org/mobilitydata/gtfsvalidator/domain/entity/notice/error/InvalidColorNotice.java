@@ -26,8 +26,8 @@ public class InvalidColorNotice extends ErrorNotice {
     public InvalidColorNotice(String filename, String fieldName, String entityId, String colorValue) {
         super(filename, E_014,
                 "Invalid color",
-                "Invalid color:" + colorValue + " in field:" + fieldName
-                        + " for entity with id:" + entityId,
+                "Invalid color:`" + colorValue + "` in field:`" + fieldName
+                        + "` for entity with id:`" + entityId + "`",
                 entityId);
         putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
         putExtra(NOTICE_SPECIFIC_KEY__COLOR_VALUE, colorValue);

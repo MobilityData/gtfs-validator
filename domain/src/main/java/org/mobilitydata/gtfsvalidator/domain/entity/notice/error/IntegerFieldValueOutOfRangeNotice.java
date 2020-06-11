@@ -31,8 +31,8 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
             int actualValue) {
         super(filename, E_010,
                 "Out of range integer value",
-                "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
-                        " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
+                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
                 entityId);
         putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
         putExtra(NOTICE_SPECIFIC_KEY__RANGE_MAX, rangeMax);

@@ -25,8 +25,9 @@ public class RouteShortNameTooLongNotice extends WarningNotice {
 
     public RouteShortNameTooLongNotice(final String filename, final String entityId, final String shortNameLength) {
         super(filename, W_005,
-                "Route short name too long",
-                "Route short name length should be <= 12 characters but was " + shortNameLength + " for Route:" + entityId + " in file:" + filename,
+                "`route_short_name` too long",
+                "`route_short_name` length should be <= 12 characters but was " + shortNameLength +
+                        " for route with `route_id`:`" + entityId + "` in file:`" + filename + "`",
                 entityId);
         putExtra(NOTICE_SPECIFIC_KEY__SHORT_NAME_LENGTH, shortNameLength);
     }

@@ -27,7 +27,8 @@ public class IllegalFieldValueCombination extends ErrorNotice {
                                         final String conflictingFieldName, final String entityId) {
         super(filename, E_019,
                 "Conflicting field values",
-                "Conflicting field values for fields:" + fieldName + " and field:" + conflictingFieldName, entityId);
+                "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
+                  + "`" + entityId, entityId);
         putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
         putExtra(NOTICE_SPECIFIC_KEY__CONFLICTING_FIELD_NAME, conflictingFieldName);
     }

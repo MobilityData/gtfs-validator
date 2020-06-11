@@ -32,8 +32,8 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
             float actualValue) {
         super(filename, E_011,
                 "Out of range float value",
-                "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
-                        " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
+                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
                 entityId);
         putExtra(NOTICE_SPECIFIC_KEY__RANGE_MIN, rangeMin);
         putExtra(NOTICE_SPECIFIC_KEY__RANGE_MAX, rangeMax);

@@ -27,7 +27,8 @@ public class InvalidLangNotice extends ErrorNotice {
                              final String entityId, final String langValue) {
         super(filename, E_022,
                 "Invalid language code",
-                "Invalid language code:" + langValue + " in field:" + fieldName + " for entity with id:" + entityId,
+                "Invalid language code:`" + langValue + "` in field:`" + fieldName + "` for entity with id:`"
+                        + entityId + "`",
                 entityId);
         putExtra(NOTICE_SPECIFIC_KEY__LANG_VALUE, langValue);
         putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
