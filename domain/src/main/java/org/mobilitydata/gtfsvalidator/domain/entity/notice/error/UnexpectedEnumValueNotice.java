@@ -22,8 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class UnexpectedEnumValueNotice extends ErrorNotice {
-    private final Integer enumValue;
-    private final String fieldName;
 
     public UnexpectedEnumValueNotice(final String filename, final String fieldName, final String entityId,
                                      final Integer enumValue) {
@@ -31,20 +29,12 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
                 "Unexpected enum value",
                 "Invalid value :" + enumValue + " - for field:" + fieldName + " in file:" + filename +
                         " for entity with id:" + entityId, entityId);
-        this.fieldName = fieldName;
-        this.enumValue = enumValue;
+        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putExtra(NOTICE_SPECIFIC_KEY__ENUM_VALUE, enumValue);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getEnumValue() {
-        return String.valueOf(enumValue);
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 }

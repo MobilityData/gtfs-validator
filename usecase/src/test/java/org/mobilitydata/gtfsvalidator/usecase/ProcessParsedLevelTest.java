@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.NOTICE_SPECIFIC_KEY__FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedLevelTest {
@@ -184,7 +185,7 @@ class ProcessParsedLevelTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("levels.txt", noticeList.get(0).getFilename());
-        assertEquals("level_id", noticeList.get(0).getFieldName());
+        assertEquals("level_id", noticeList.get(0).getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("entity id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedLevel, mockLevel,

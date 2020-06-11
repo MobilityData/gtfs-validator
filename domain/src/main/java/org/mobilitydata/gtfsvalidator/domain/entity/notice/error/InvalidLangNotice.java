@@ -23,29 +23,18 @@ import java.io.IOException;
 
 public class InvalidLangNotice extends ErrorNotice {
 
-    private String langValue;
-    private String fieldName;
-
     public InvalidLangNotice(final String filename, final String fieldName,
                              final String entityId, final String langValue) {
         super(filename, E_022,
                 "Invalid language code",
                 "Invalid language code:" + langValue + " in field:" + fieldName + " for entity with id:" + entityId,
                 entityId);
-        this.langValue = langValue;
-        this.fieldName = fieldName;
+        putExtra(NOTICE_SPECIFIC_KEY__LANG_VALUE, langValue);
+        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getLangValue() {
-        return langValue;
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 }

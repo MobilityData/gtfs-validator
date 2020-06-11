@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.NOTICE_SPECIFIC_KEY__FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedRouteTest {
@@ -254,7 +255,7 @@ class ProcessParsedRouteTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("routes.txt", noticeList.get(0).getFilename());
-        assertEquals(ROUTE_ID, noticeList.get(0).getFieldName());
+        assertEquals(ROUTE_ID, noticeList.get(0).getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedRoute, mockRoute,

@@ -22,32 +22,18 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class InvalidUrlNotice extends ErrorNotice {
-    private String urlValue;
-    private String fieldName;
 
     public InvalidUrlNotice(String filename, String fieldName, String entityId, String urlValue) {
         super(filename, E_012,
                 "Invalid url",
                 "Invalid url:" + urlValue + " in field:" + fieldName + " for entity with id:" + entityId,
                 entityId);
-        this.fieldName = fieldName;
-        this.urlValue = urlValue;
+        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putExtra(NOTICE_SPECIFIC_KEY__URL_VALUE, urlValue);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getUrlValue() {
-        return urlValue;
-    }
-
-    public String getEntityId() {
-        return entityId;
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 }

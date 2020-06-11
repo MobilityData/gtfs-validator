@@ -22,23 +22,18 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 import java.io.IOException;
 
 public class RouteShortNameTooLongNotice extends WarningNotice {
-    private String shortNameLength;
 
     public RouteShortNameTooLongNotice(final String filename, final String entityId, final String shortNameLength) {
         super(filename, W_005,
                 "Route short name too long",
                 "Route short name length should be <= 12 characters but was " + shortNameLength + " for Route:" + entityId + " in file:" + filename,
                 entityId);
-        this.shortNameLength = shortNameLength;
+        putExtra(NOTICE_SPECIFIC_KEY__SHORT_NAME_LENGTH, shortNameLength);
     }
 
     @Override
     public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
-    }
-
-    public String getshortNameLength() {
-        return shortNameLength;
     }
 }

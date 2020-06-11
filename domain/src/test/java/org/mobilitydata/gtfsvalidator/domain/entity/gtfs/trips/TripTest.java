@@ -28,6 +28,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.NOTICE_SPECIFIC_KEY__ENUM_VALUE;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.NOTICE_SPECIFIC_KEY__FIELD_NAME;
 
 class TripTest {
 
@@ -59,7 +61,7 @@ class TripTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("trips.txt", notice.getFilename());
-        assertEquals("route_id", notice.getFieldName());
+        assertEquals("route_id", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("trip id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -92,7 +94,7 @@ class TripTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("trips.txt", notice.getFilename());
-        assertEquals("service_id", notice.getFieldName());
+        assertEquals("service_id", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("trip id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -125,7 +127,7 @@ class TripTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("trips.txt", notice.getFilename());
-        assertEquals("trip_id", notice.getFieldName());
+        assertEquals("trip_id", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -155,9 +157,9 @@ class TripTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("trips.txt", notice.getFilename());
-        assertEquals("direction_id", notice.getFieldName());
+        assertEquals("direction_id", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("trip id", notice.getEntityId());
-        assertEquals("3", notice.getEnumValue());
+        assertEquals(3, notice.getExtra(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
     }
 
     @Test
@@ -218,9 +220,9 @@ class TripTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("trips.txt", notice.getFilename());
-        assertEquals("wheelchair_accessible", notice.getFieldName());
+        assertEquals("wheelchair_accessible", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("trip id", notice.getEntityId());
-        assertEquals("4", notice.getEnumValue());
+        assertEquals(4, notice.getExtra(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
     }
 
     @Test
@@ -248,8 +250,8 @@ class TripTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("trips.txt", notice.getFilename());
-        assertEquals("bikes_allowed", notice.getFieldName());
+        assertEquals("bikes_allowed", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("trip id", notice.getEntityId());
-        assertEquals("4", notice.getEnumValue());
+        assertEquals(4, notice.getExtra(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
     }
 }

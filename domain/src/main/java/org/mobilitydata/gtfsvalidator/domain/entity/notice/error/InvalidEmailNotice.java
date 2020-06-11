@@ -22,8 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class InvalidEmailNotice extends ErrorNotice {
-    private String emailValue;
-    private String fieldName;
 
     public InvalidEmailNotice(final String filename, final String fieldName,
                               final String entityId, final String emailValue) {
@@ -31,20 +29,12 @@ public class InvalidEmailNotice extends ErrorNotice {
                 "Invalid email",
                 "Invalid email:" + emailValue + " in field:" + fieldName + " for entity with id:" + entityId,
                 entityId);
-        this.fieldName = fieldName;
-        this.emailValue = emailValue;
+        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putExtra(NOTICE_SPECIFIC_KEY__EMAIL_VALUE, emailValue);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getEmailValue() {
-        return emailValue;
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 }

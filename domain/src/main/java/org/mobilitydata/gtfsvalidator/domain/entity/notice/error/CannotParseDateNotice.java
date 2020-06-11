@@ -22,9 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class CannotParseDateNotice extends ErrorNotice {
-    private final int lineNumber;
-    private final String rawValue;
-    private final String fieldName;
 
     public CannotParseDateNotice(String filename, String fieldName, int lineNumber, String rawValue) {
         super(filename, E_017,
@@ -32,21 +29,9 @@ public class CannotParseDateNotice extends ErrorNotice {
                 "Value: '" + rawValue + "' of field: " + fieldName +
                         " with type date can't be parsed in file: " + filename + " at row: " + lineNumber,
                 null);
-        this.rawValue = rawValue;
-        this.fieldName = fieldName;
-        this.lineNumber = lineNumber;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    public String getRawValue() {
-        return rawValue;
+        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putExtra(NOTICE_SPECIFIC_KEY__LINE_NUMBER, lineNumber);
+        putExtra(NOTICE_SPECIFIC_KEY__RAW_VALUE, rawValue);
     }
 
     @Override

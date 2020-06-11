@@ -23,20 +23,13 @@ import java.io.IOException;
 
 public class InputZipContainsFolderNotice extends WarningNotice {
 
-    private String folderName;
-
     public InputZipContainsFolderNotice(final String filename, final String folderName) {
         super(filename,
                 W_001,
                 "Non empty folder",
                 "File: " + filename + "contains folder named: " + folderName,
                 null);
-
-        this.folderName = folderName;
-    }
-
-    public String getFolderName() {
-        return folderName;
+        putExtra(NOTICE_SPECIFIC_KEY__FOLDER_NAME, folderName);
     }
 
     @Override

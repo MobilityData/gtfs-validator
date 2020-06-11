@@ -22,22 +22,17 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class DuplicatedEntityNotice extends ErrorNotice {
-    private final String fieldName;
 
     public DuplicatedEntityNotice(final String filename, final String fieldName, final String entityId) {
         super(filename, E_020,
                 "Duplicate entity",
                 "Entity must be unique in file: " + filename + "found other entity with same value for " +
                         "field: " + fieldName, entityId);
-        this.fieldName = fieldName;
+        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 }

@@ -22,9 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class CannotParseFloatNotice extends ErrorNotice {
-    private int lineNumber;
-    private String rawValue;
-    private String fieldName;
 
     public CannotParseFloatNotice(String filename, String fieldName, int lineNumber, String rawValue) {
         super(filename, E_006,
@@ -32,21 +29,9 @@ public class CannotParseFloatNotice extends ErrorNotice {
                 "Value: '" + rawValue + "' of field: " + fieldName
                         + " with type float can't be parsed in file: " + filename + " at row: " + lineNumber,
                 null);
-        this.rawValue = rawValue;
-        this.fieldName = fieldName;
-        this.lineNumber = lineNumber;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    public String getRawValue() {
-        return rawValue;
+        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putExtra(NOTICE_SPECIFIC_KEY__LINE_NUMBER, lineNumber);
+        putExtra(NOTICE_SPECIFIC_KEY__RAW_VALUE, rawValue);
     }
 
     @Override

@@ -22,8 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class InvalidColorNotice extends ErrorNotice {
-    private String fieldName;
-    private String colorValue;
 
     public InvalidColorNotice(String filename, String fieldName, String entityId, String colorValue) {
         super(filename, E_014,
@@ -31,20 +29,12 @@ public class InvalidColorNotice extends ErrorNotice {
                 "Invalid color:" + colorValue + " in field:" + fieldName
                         + " for entity with id:" + entityId,
                 entityId);
-        this.fieldName = fieldName;
-        this.colorValue = colorValue;
+        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putExtra(NOTICE_SPECIFIC_KEY__COLOR_VALUE, colorValue);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public String getColorValue() {
-        return colorValue;
     }
 }

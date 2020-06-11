@@ -19,20 +19,49 @@ package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Notice {
+    public static final String NOTICE_SPECIFIC_KEY__FIELD_NAME = "fieldName";
+    public static final String NOTICE_SPECIFIC_KEY__FOLDER_NAME = "folderName";
+    public static final String NOTICE_SPECIFIC_KEY__LINE_NUMBER = "lineNumber";
+    public static final String NOTICE_SPECIFIC_KEY__RAW_VALUE = "rawValue";
+    public static final String NOTICE_SPECIFIC_KEY__RANGE_MIN = "rangeMin";
+    public static final String NOTICE_SPECIFIC_KEY__RANGE_MAX = "rangeMax";
+    public static final String NOTICE_SPECIFIC_KEY__ACTUAL_VALUE = "actualValue";
+    public static final String NOTICE_SPECIFIC_KEY__COLOR_VALUE = "colorValue";
+    public static final String NOTICE_SPECIFIC_KEY__EMAIL_VALUE = "emailValue";
+    public static final String NOTICE_SPECIFIC_KEY__LANG_VALUE = "langValue";
+    public static final String NOTICE_SPECIFIC_KEY__TIME_VALUE = "timeValue";
+    public static final String NOTICE_SPECIFIC_KEY__URL_VALUE = "urlValue";
+    public static final String NOTICE_SPECIFIC_KEY__ENUM_VALUE = "enumValue";
+    public static final String NOTICE_SPECIFIC_KEY__TIMEZONE_VALUE = "timezoneValue";
+    public static final String NOTICE_SPECIFIC_KEY__CONFLICTING_FIELD_NAME = "conflictingFieldName";
+    public static final String NOTICE_SPECIFIC_KEY__CURRENCY_CODE = "currencyCode";
+    public static final String NOTICE_SPECIFIC_KEY__ROW_INDEX = "rowIndex";
+    public static final String NOTICE_SPECIFIC_KEY__EXPECTED_LENGTH = "expectedLength";
+    public static final String NOTICE_SPECIFIC_KEY__ACTUAL_LENGTH = "actualLength";
+    public static final String NOTICE_SPECIFIC_KEY__MISSING_HEADER_NAME = "missingHeaderName";
+    public static final String NOTICE_SPECIFIC_KEY__EXTRA_HEADER_NAME = "extraHeaderName";
+    public static final String NOTICE_SPECIFIC_KEY__CONTRAST_RATIO = "contrastRatio";
+    public static final String NOTICE_SPECIFIC_KEY__SHORT_NAME_LENGTH = "shortNameLength";
+
+
     private final String filename;
-    private final String noticeId;
+    private final int code;
     private final String title;
     private final String description;
     protected final String entityId;
+    private Map<String, Object> noticeSpecific = null;
 
     protected Notice(final String filename,
-                     final String noticeId,
+                     final int code,
                      final String title,
-                     final String description, String entityId) {
+                     final String description,
+                     final String entityId) {
         this.filename = filename;
-        this.noticeId = noticeId;
+        this.code = code;
         this.title = title;
         this.description = description;
         this.entityId = entityId != null ? entityId : "no id";
@@ -41,12 +70,25 @@ public abstract class Notice {
     public abstract void export(NoticeExporter exporter)
             throws IOException;
 
+    protected void putExtra(String key, Object extra) {
+        if (noticeSpecific == null) {
+            noticeSpecific = new HashMap<>();
+        }
+
+        noticeSpecific.put(key, extra);
+    }
+
+    public Object getExtra(String key) {
+        return noticeSpecific.get(key);
+    }
+
+
     public String getFilename() {
         return filename;
     }
 
-    public String getId() {
-        return noticeId;
+    public int getCode() {
+        return code;
     }
 
     public String getTitle() {
@@ -61,13 +103,7 @@ public abstract class Notice {
         return entityId;
     }
 
-    @Override
-    public String toString() {
-        return "\nNotice{" +
-                "filename='" + filename + '\'' +
-                ", noticeId='" + noticeId + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+    public Map<String, Object> getNoticeSpecific() {
+        return noticeSpecific != null ? noticeSpecific : new HashMap<>();
     }
 }

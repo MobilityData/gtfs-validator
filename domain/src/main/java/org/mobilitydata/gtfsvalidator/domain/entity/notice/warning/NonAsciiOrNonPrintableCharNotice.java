@@ -23,24 +23,18 @@ import java.io.IOException;
 
 public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
 
-    private String fieldName;
-
     public NonAsciiOrNonPrintableCharNotice(String filename, String fieldName, String entityId, String idValue) {
         super(filename, W_003,
                 "Suspicious id",
                 "Non ascii or non printable character(s) in:" + idValue + " in field:"
                         + fieldName + " for entity with id:" + entityId,
                 entityId);
-        this.fieldName = fieldName;
+        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
     }
 
     @Override
     public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 }
