@@ -41,7 +41,7 @@ public abstract class InfoNotice extends Notice {
                 ", code='" + getCode() + '\'' +
                 ", title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
-                ", extra='" + getNoticeSpecific() + '\'' +
+                ", extra='" + getNoticeSpecificAll() + '\'' +
                 '}';
     }
 }

@@ -48,7 +48,7 @@ public abstract class WarningNotice extends Notice {
                 ", code='" + getCode() + '\'' +
                 ", title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
-                ", noticeSpecific='" + getNoticeSpecific() + '\'' +
+                ", noticeSpecific='" + getNoticeSpecificAll() + '\'' +
                 '}';
     }
 }

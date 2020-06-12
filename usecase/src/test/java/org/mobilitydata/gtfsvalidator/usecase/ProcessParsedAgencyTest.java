@@ -109,7 +109,7 @@ class ProcessParsedAgencyTest {
         final List<Notice> noticeCollection = new ArrayList<>();
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         when(mockNotice.getFilename()).thenReturn(FILENAME);
-        when(mockNotice.getExtra(ArgumentMatchers.eq(NOTICE_SPECIFIC_KEY__FIELD_NAME))).thenReturn(AGENCY_NAME);
+        when(mockNotice.getNoticeSpecific(ArgumentMatchers.eq(NOTICE_SPECIFIC_KEY__FIELD_NAME))).thenReturn(AGENCY_NAME);
         when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
 
         @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
@@ -231,7 +231,7 @@ class ProcessParsedAgencyTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals(AGENCY_ID, noticeList.get(0).getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals(AGENCY_ID, noticeList.get(0).getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockResultRepo, mockGtfsDataRepo, mockAgency, mockBuilder,

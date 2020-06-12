@@ -47,7 +47,7 @@ class LevelTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("levels.txt", notice.getFilename());
-        assertEquals("level_id", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("level_id", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());
@@ -73,7 +73,7 @@ class LevelTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("levels.txt", notice.getFilename());
-        assertEquals("level_index", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("level_index", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("level id", notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());

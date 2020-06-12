@@ -35,10 +35,10 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
                 "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
                         "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
                 entityId);
-        putExtra(NOTICE_SPECIFIC_KEY__RANGE_MIN, rangeMin);
-        putExtra(NOTICE_SPECIFIC_KEY__RANGE_MAX, rangeMax);
-        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putExtra(NOTICE_SPECIFIC_KEY__ACTUAL_VALUE, actualValue);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__RANGE_MIN, rangeMin);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__RANGE_MAX, rangeMax);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__ACTUAL_VALUE, actualValue);
     }
 
     @Override

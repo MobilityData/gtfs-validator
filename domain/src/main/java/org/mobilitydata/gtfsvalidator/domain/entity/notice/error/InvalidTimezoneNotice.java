@@ -29,8 +29,8 @@ public class InvalidTimezoneNotice extends ErrorNotice {
                 "Invalid timezone:`" + timezoneValue + "` in field:`" + fieldName
                         + "` for entity with id:`" + entityId + "`",
                 entityId);
-        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putExtra(NOTICE_SPECIFIC_KEY__TIMEZONE_VALUE, timezoneValue);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__TIMEZONE_VALUE, timezoneValue);
     }
 
     @Override

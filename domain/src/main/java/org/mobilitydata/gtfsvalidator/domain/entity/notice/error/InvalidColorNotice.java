@@ -29,8 +29,8 @@ public class InvalidColorNotice extends ErrorNotice {
                 "Invalid color:`" + colorValue + "` in field:`" + fieldName
                         + "` for entity with id:`" + entityId + "`",
                 entityId);
-        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putExtra(NOTICE_SPECIFIC_KEY__COLOR_VALUE, colorValue);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__COLOR_VALUE, colorValue);
     }
 
     @Override

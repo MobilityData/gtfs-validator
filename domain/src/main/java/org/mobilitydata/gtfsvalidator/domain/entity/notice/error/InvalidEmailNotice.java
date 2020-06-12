@@ -30,8 +30,8 @@ public class InvalidEmailNotice extends ErrorNotice {
                 "Invalid email:" + emailValue + " in field:`" + fieldName + "` for entity with id:`"
                         + entityId + "`",
                 entityId);
-        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putExtra(NOTICE_SPECIFIC_KEY__EMAIL_VALUE, emailValue);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__EMAIL_VALUE, emailValue);
     }
 
     @Override

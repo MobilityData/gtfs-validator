@@ -29,7 +29,7 @@ public class InputZipContainsFolderNotice extends WarningNotice {
                 "Non empty folder",
                 "File: `" + filename + "`contains folder named: `" + folderName + "`",
                 null);
-        putExtra(NOTICE_SPECIFIC_KEY__FOLDER_NAME, folderName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FOLDER_NAME, folderName);
     }
 
     @Override

@@ -29,9 +29,9 @@ public class CannotParseFloatNotice extends ErrorNotice {
                 "Value: '" + rawValue + "' of field: " + fieldName
                         + " with type float can't be parsed in file: " + filename + " at row: " + lineNumber,
                 null);
-        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putExtra(NOTICE_SPECIFIC_KEY__LINE_NUMBER, lineNumber);
-        putExtra(NOTICE_SPECIFIC_KEY__RAW_VALUE, rawValue);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__LINE_NUMBER, lineNumber);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__RAW_VALUE, rawValue);
     }
 
     @Override

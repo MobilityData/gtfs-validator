@@ -29,7 +29,7 @@ public class MissingRequiredValueNotice extends ErrorNotice {
                 "Missing value for field:`" + fieldName
                         + "` marked as required in entity with id:`" + entityId + "`",
                 entityId);
-        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class MissingHeaderNotice extends ErrorNotice {
                 "Field name not defined in the GTFS specification",
                 "File `" + filename + " is missing required field name: `" + missingHeaderName + "`",
                 null);
-        putExtra(NOTICE_SPECIFIC_KEY__MISSING_HEADER_NAME, missingHeaderName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__MISSING_HEADER_NAME, missingHeaderName);
     }
 
     @Override

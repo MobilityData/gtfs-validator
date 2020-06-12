@@ -27,9 +27,9 @@ public class InvalidUrlNotice extends ErrorNotice {
         super(filename, E_012,
                 "Invalid url",
                 "Invalid url:`" + urlValue + "` in field:`" + fieldName + "` for entity with id:`" + entityId
-                + "`", entityId);
-        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putExtra(NOTICE_SPECIFIC_KEY__URL_VALUE, urlValue);
+                        + "`", entityId);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__URL_VALUE, urlValue);
     }
 
     @Override

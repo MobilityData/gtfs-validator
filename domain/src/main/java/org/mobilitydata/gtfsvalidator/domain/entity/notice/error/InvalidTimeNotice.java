@@ -27,10 +27,10 @@ public class InvalidTimeNotice extends ErrorNotice {
         super(filename, E_016,
                 "Invalid time",
                 "Invalid time:`" + timeValue + "` in field:`" + fieldName + "` for entity with id:`" + entityId
-                 + "`",
+                        + "`",
                 entityId);
-        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putExtra(NOTICE_SPECIFIC_KEY__TIME_VALUE, timeValue);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__TIME_VALUE, timeValue);
     }
 
     @Override

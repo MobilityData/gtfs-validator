@@ -29,7 +29,7 @@ public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
                 "Non ascii or non printable character(s) in:`" + idValue + "` in field:`"
                         + fieldName + "` for entity with id:`" + entityId + "`",
                 entityId);
-        putExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
     }
 
     @Override

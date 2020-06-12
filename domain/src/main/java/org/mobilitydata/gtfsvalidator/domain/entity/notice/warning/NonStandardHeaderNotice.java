@@ -28,7 +28,7 @@ public class NonStandardHeaderNotice extends WarningNotice {
                 "Non standard field name",
                 "Unexpected field name:`" + extra + "` in file:`" + filename + "`",
                 null);
-        putExtra(NOTICE_SPECIFIC_KEY__EXTRA_HEADER_NAME, extra);
+        putNoticeSpecific(NOTICE_SPECIFIC_KEY__EXTRA_HEADER_NAME, extra);
     }
 
     @Override

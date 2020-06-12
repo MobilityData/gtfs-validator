@@ -62,7 +62,7 @@ class CalendarDateTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("calendar_dates.txt", notice.getFilename());
-        assertEquals("service_id", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("service_id", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -89,7 +89,7 @@ class CalendarDateTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("calendar_dates.txt", notice.getFilename());
-        assertEquals("date", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("date", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("service_id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -116,7 +116,7 @@ class CalendarDateTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("calendar_dates.txt", notice.getFilename());
-        assertEquals("exception_type", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("exception_type", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("service_id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -140,9 +140,9 @@ class CalendarDateTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("calendar_dates.txt", notice.getFilename());
-        assertEquals("exception_type", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("exception_type", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("service_id", notice.getEntityId());
-        assertEquals(5, notice.getExtra(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
+        assertEquals(5, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 

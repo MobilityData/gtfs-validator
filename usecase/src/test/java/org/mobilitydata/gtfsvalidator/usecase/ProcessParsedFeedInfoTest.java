@@ -246,7 +246,7 @@ class ProcessParsedFeedInfoTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("feed_info.txt", noticeList.get(0).getFilename());
-        assertEquals(FEED_PUBLISHER_NAME, noticeList.get(0).getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals(FEED_PUBLISHER_NAME, noticeList.get(0).getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedFeedInfo, mockFeedInfo,

@@ -68,7 +68,7 @@ public abstract class ErrorNotice extends Notice {
                 ", code='" + getCode() + '\'' +
                 ", title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
-                ", extra='" + getNoticeSpecific() + '\'' +
+                ", extra='" + getNoticeSpecificAll() + '\'' +
                 '}';
     }
 }

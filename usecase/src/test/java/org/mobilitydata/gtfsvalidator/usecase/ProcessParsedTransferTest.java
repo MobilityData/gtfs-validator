@@ -199,7 +199,7 @@ class ProcessParsedTransferTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("transfers.txt", noticeList.get(0).getFilename());
-        assertEquals("from_stop_id;to_stop_id", noticeList.get(0).getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("from_stop_id;to_stop_id", noticeList.get(0).getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedTransfer, mockResultRepo, mockGtfsDataRepo, mockTransfer, mockBuilder,

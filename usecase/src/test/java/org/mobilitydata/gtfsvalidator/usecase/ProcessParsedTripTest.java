@@ -221,7 +221,7 @@ class ProcessParsedTripTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("trips.txt", noticeList.get(0).getFilename());
-        assertEquals("trip_id", noticeList.get(0).getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("trip_id", noticeList.get(0).getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedTrip, mockTrip);

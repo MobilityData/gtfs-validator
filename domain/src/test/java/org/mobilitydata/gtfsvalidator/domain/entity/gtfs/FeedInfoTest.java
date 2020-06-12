@@ -55,7 +55,7 @@ class FeedInfoTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("feed_info.txt", notice.getFilename());
-        assertEquals("feed_publisher_name", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("feed_publisher_name", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -87,7 +87,7 @@ class FeedInfoTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("feed_info.txt", notice.getFilename());
-        assertEquals("feed_contact_url", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("feed_contact_url", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -119,7 +119,7 @@ class FeedInfoTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("feed_info.txt", notice.getFilename());
-        assertEquals("feed_lang", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("feed_lang", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
         assertTrue(entityBuildResult.getData() instanceof List);

@@ -52,7 +52,7 @@ class AgencyTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_name", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("agency_name", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -81,7 +81,7 @@ class AgencyTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_url", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("agency_url", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -110,7 +110,7 @@ class AgencyTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_timezone", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("agency_timezone", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }

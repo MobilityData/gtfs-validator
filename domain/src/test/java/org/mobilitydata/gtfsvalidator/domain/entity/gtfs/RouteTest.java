@@ -59,7 +59,7 @@ class RouteTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("routes.txt", notice.getFilename());
-        assertEquals("route_id", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("route_id", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -87,9 +87,9 @@ class RouteTest {
 
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
-        assertEquals("route_type", notice.getExtra(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("route_type", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
-        assertEquals(15, notice.getExtra(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
+        assertEquals(15, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 

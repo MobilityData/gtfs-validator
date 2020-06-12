@@ -70,7 +70,7 @@ public abstract class Notice {
     public abstract void export(NoticeExporter exporter)
             throws IOException;
 
-    protected void putExtra(String key, Object extra) {
+    protected void putNoticeSpecific(String key, Object extra) {
         if (noticeSpecific == null) {
             noticeSpecific = new HashMap<>();
         }
@@ -78,7 +78,7 @@ public abstract class Notice {
         noticeSpecific.put(key, extra);
     }
 
-    public Object getExtra(String key) {
+    public Object getNoticeSpecific(String key) {
         return noticeSpecific.get(key);
     }
 
@@ -103,7 +103,7 @@ public abstract class Notice {
         return entityId;
     }
 
-    public Map<String, Object> getNoticeSpecific() {
+    public Map<String, Object> getNoticeSpecificAll() {
         return noticeSpecific != null ? noticeSpecific : new HashMap<>();
     }
 }
