@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
@@ -122,26 +123,42 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     }
 
     /**
-     * This method returns a parser for execution parameters based on a boolean passed as parameter. This methods
-     * either returns {@code ApacheExecParamParser} if the boolean value is set to false, or returns
-     * {@code JsonExecParamParser} if the boolean value is set to true.
+     * This method returns a parser for execution parameters.
+     * This method returns {@code JsonExecParamParser} if:
+     *  - no configuration file nor arguments are provided,
+     *  - a configuration file is present and no arguments are provided
+     *  - both configuration file and arguments are provided
+     *
+     *  This method returns {@code ApacheExecParamParser} if:
+     *  - no configuration file is present and arguments are provided
      *
      * @param parameterJsonString the configuration .json file content to extract the execution parameters from.
      *                            If this parameter is null then, execution parameters are extracted from {@param args}.
      * @param args                the argument line to parse {@link ExecParam} when {@param parameterJsonString} is null
-     * @return {@code ApacheExecParamParser} if the boolean passed as parameter is set to false,
-     * or {@code JsonExecParamParser} if this boolean value is set to true.
+     * @return                    {@code JsonExecParamParser} if:
+     *                             - no configuration file nor arguments are provided,
+     *                             - a configuration file is present and no arguments are provided
+     *                             - both configuration file and arguments are provided
+     *
+     *                             {@code ApacheExecParamParser} if:
+     *                             - no configuration file is present and arguments are provided
      */
     @Override
     public ExecParamParser getParser(final String parameterJsonString,
                                      final String[] args,
                                      final Logger logger) {
-        if (args.length != 0) {
-            logger.info("Retrieving execution parameters from command-line\n");
-            return new ApacheExecParamParser(new DefaultParser(), getOptions(), args);
-        } else {
-            logger.info("Retrieving execution parameters from execution-parameters.json file\n");
+        if (Strings.isNullOrEmpty(parameterJsonString) && args.length == 0) {
+            // true when json configuration file is not present  and no arguments are not provided
+            logger.info("No configuration file nor arguments provided"+System.lineSeparator());
             return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
+        } else if (!Strings.isNullOrEmpty(parameterJsonString) || args.length == 0) {
+            // true when no arguments are provided or when json configuration is provided
+            logger.info("Retrieving execution parameters from execution-parameters.json file"+System.lineSeparator());
+            return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
+        } else {
+            // true when only arguments are provided
+            logger.info("Retrieving execution parameters from command-line" + System.lineSeparator());
+            return new ApacheExecParamParser(new DefaultParser(), getOptions(), args);
         }
     }
 
@@ -190,7 +207,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
 
                 if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(ZIP_KEY)) {
                     logger.info("--url and relative path to zip file(--zip option) not provided. Trying to " +
-                            "find zip in: " + zipInputPath);
+                            "find zip in: " + zipInputPath + System.lineSeparator());
                     List<String> zipList;
                     try {
                         zipList = Files.walk(Paths.get(zipInputPath))
@@ -202,13 +219,13 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                     }
 
                     if (zipList.isEmpty()) {
-                        logger.error("no zip file found - exiting");
+                        logger.error("no zip file found - exiting" + System.lineSeparator());
                         System.exit(0);
                     } else if (zipList.size() > 1) {
-                        logger.error("multiple zip files found - exiting");
+                        logger.error("multiple zip files found - exiting" + System.lineSeparator());
                         System.exit(0);
                     } else {
-                        logger.info("zip file found: " + zipList.get(0));
+                        logger.info("zip file found: " + zipList.get(0) + System.lineSeparator());
                         zipInputPath = zipList.get(0);
                     }
                 } else if (!hasExecParamValue(ZIP_KEY)) {
