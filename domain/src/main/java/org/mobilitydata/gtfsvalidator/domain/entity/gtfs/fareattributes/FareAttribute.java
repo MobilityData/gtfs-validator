@@ -201,7 +201,7 @@ public class FareAttribute extends GtfsEntity {
          * @param transferDuration length of time in seconds before a transfer expires
          * @return builder for future object creation
          */
-        public FareAttributeBuilder transferDuration(final int transferDuration) {
+        public FareAttributeBuilder transferDuration(final Integer transferDuration) {
             this.transferDuration = transferDuration;
             return this;
         }
