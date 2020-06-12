@@ -47,7 +47,6 @@ public abstract class Notice {
     public static final String NOTICE_SPECIFIC_KEY__CONTRAST_RATIO = "contrastRatio";
     public static final String NOTICE_SPECIFIC_KEY__SHORT_NAME_LENGTH = "shortNameLength";
 
-
     private final String filename;
     private final int code;
     private final String title;
@@ -67,10 +66,10 @@ public abstract class Notice {
         this.entityId = entityId != null ? entityId : "no id";
     }
 
-    public abstract void export(NoticeExporter exporter)
+    public abstract void export(final NoticeExporter exporter)
             throws IOException;
 
-    protected void putNoticeSpecific(String key, Object extra) {
+    protected void putNoticeSpecific(final String key, final Object extra) {
         if (noticeSpecific == null) {
             noticeSpecific = new HashMap<>();
         }
@@ -78,10 +77,9 @@ public abstract class Notice {
         noticeSpecific.put(key, extra);
     }
 
-    public Object getNoticeSpecific(String key) {
+    public Object getNoticeSpecific(final String key) {
         return noticeSpecific.get(key);
     }
-
 
     public String getFilename() {
         return filename;
