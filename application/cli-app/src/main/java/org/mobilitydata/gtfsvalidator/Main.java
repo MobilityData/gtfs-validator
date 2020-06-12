@@ -143,11 +143,7 @@ public class Main {
                 config.exportResultAsFile().execute();
             }
         } catch (IOException e) {
-            if (e.getMessage().contains("execution-parameters.json")) {
-                config.printHelp().execute();
-            } else {
-                logger.error("An exception occurred: " + e);
-            }
+            logger.error("An exception occurred: " + e);
         }
         logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
     }

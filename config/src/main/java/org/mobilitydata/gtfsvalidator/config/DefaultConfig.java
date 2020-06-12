@@ -23,9 +23,9 @@ import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
@@ -50,6 +50,7 @@ public class DefaultConfig {
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
+    private String executionParametersAsString;
 
     @SuppressWarnings("UnstableApiUsage")
     public DefaultConfig(final Logger logger) {
@@ -83,6 +84,16 @@ public class DefaultConfig {
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        this.executionParametersAsString = null;
+        try {
+            this.executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
+            logger.info("Configuration file with name execution-parameters.json found in working directory" +
+                    System.lineSeparator());
+        } catch (IOException e) {
+            logger.warn("Configuration file with name execution-parameters.json not found in working directory" +
+                    System.lineSeparator());
         }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
     }
@@ -168,8 +179,8 @@ public class DefaultConfig {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
 
-    public ParseAllExecParam parseAllExecutionParameter() throws IOException {
-        return new ParseAllExecParam(Files.readString(Paths.get("execution-parameters.json")), execParamRepo,
+    public ParseAllExecParam parseAllExecutionParameter() {
+        return new ParseAllExecParam(executionParametersAsString, execParamRepo,
                 logger);
     }
 
