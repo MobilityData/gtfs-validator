@@ -69,7 +69,7 @@ public class UnzipInputArchive {
 
         logger.info("Unzipping archive"+System.lineSeparator());
 
-        final String zipInputPath = execParamRepo.getExecParamValue(execParamRepo.ZIP_INPUT_KEY);
+        final String zipInputPath = execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY);
         final ZipFile inputZip = new ZipFile(zipInputPath);
 
         Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();

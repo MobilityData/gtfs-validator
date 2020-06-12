@@ -183,12 +183,12 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getValue().get(0) : defaultValue.get(0);
             }
 
-            case ZIP_INPUT_KEY: {
-                String zipInputPath = hasExecParamValue(ZIP_INPUT_KEY)
-                        ? getExecParamByKey(ZIP_INPUT_KEY).getValue().get(0)
+            case INPUT_KEY: {
+                String zipInputPath = hasExecParamValue(INPUT_KEY)
+                        ? getExecParamByKey(INPUT_KEY).getValue().get(0)
                         : System.getProperty("user.dir");
 
-                if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(ZIP_INPUT_KEY)) {
+                if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(INPUT_KEY)) {
                     logger.info("--url and relative path to zip file(--zip option) not provided. Trying to " +
                             "find zip in: " + zipInputPath);
                     List<String> zipList;
@@ -211,7 +211,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                         logger.info("zip file found: " + zipList.get(0));
                         zipInputPath = zipList.get(0);
                     }
-                } else if (!hasExecParamValue(ZIP_INPUT_KEY)) {
+                } else if (!hasExecParamValue(INPUT_KEY)) {
                     zipInputPath += File.separator + "input.zip";
                 }
                 return zipInputPath;
@@ -238,7 +238,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
         final Options options = new Options();
         options.addOption(String.valueOf(URL_KEY.charAt(0)), URL_KEY, true,
                 "URL to GTFS zipped archive");
-        options.addOption(String.valueOf(ZIP_INPUT_KEY.charAt(0)), ZIP_INPUT_KEY, true,
+        options.addOption(String.valueOf(INPUT_KEY.charAt(0)), INPUT_KEY, true,
                 "if --url is used, where to place " +
                         "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
         options.addOption(String.valueOf(EXTRACT_KEY.charAt(0)), EXTRACT_KEY, true,

@@ -59,7 +59,7 @@ public class DownloadArchiveFromNetwork {
         if (execParamRepo.hasExecParamValue(execParamRepo.URL_KEY)) {
             logger.info("Downloading archive"+System.lineSeparator());
             final String url = execParamRepo.getExecParamValue(execParamRepo.URL_KEY);
-            final String targetPath = execParamRepo.getExecParamValue(execParamRepo.ZIP_INPUT_KEY);
+            final String targetPath = execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY);
             try {
                 URL sourceUrl = new URL(url);
                 Files.copy(
