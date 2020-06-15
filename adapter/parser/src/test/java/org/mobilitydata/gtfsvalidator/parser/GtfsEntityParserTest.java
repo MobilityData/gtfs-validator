@@ -227,7 +227,8 @@ class GtfsEntityParserTest {
 
         ErrorNotice notice = result.get(0);
         assertThat(notice, instanceOf(CannotParseFloatNotice.class));
-        assertEquals("E006", notice.getId());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(6, notice.getCode());
         assertEquals("Invalid float value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
         assertEquals("Value: 'NaN' of field: float_type with type float can't be parsed in file: " +
@@ -270,7 +271,8 @@ class GtfsEntityParserTest {
 
         ErrorNotice notice = result.get(0);
         assertThat(notice, instanceOf(CannotParseFloatNotice.class));
-        assertEquals("E006", notice.getId());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(6, notice.getCode());
         assertEquals("Invalid float value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
         assertEquals("Value: 'abc' of field: float_type with type float can't be parsed in file: " +
@@ -381,7 +383,8 @@ class GtfsEntityParserTest {
 
         ErrorNotice notice = result.get(0);
         assertThat(notice, instanceOf(CannotParseIntegerNotice.class));
-        assertEquals("E005", notice.getId());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(5, notice.getCode());
         assertEquals("Invalid integer value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
         assertEquals("Value: 'abc' of field: integer_type with type integer can't be parsed in file: " +
@@ -490,7 +493,8 @@ class GtfsEntityParserTest {
 
         ErrorNotice notice = result.get(0);
         assertThat(notice, instanceOf(CannotParseDateNotice.class));
-        assertEquals("E017", notice.getId());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(17, notice.getCode());
         assertEquals("Invalid date value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
         assertEquals("Value: 'not_a_date' of field: date_type with type date can't be parsed in file: " +

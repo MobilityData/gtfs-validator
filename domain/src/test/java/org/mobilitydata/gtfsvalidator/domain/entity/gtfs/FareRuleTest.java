@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
 class FareRuleTest {
 
@@ -41,7 +42,7 @@ class FareRuleTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_rules.txt", notice.getFilename());
-        assertEquals("fare_id", notice.getFieldName());
+        assertEquals("fare_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
