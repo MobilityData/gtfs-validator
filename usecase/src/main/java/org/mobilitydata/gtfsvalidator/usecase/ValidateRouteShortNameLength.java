@@ -16,8 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteShortNameTooLongNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -27,32 +28,33 @@ import java.util.Collection;
  * Use case to validate that a Route short name is not longer than 12 characters.
  */
 public class ValidateRouteShortNameLength {
-
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
+    private final Logger logger;
 
     /**
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
      */
     public ValidateRouteShortNameLength(final GtfsDataRepository dataRepo,
-                                        final ValidationResultRepository resultRepo) {
+                                        final ValidationResultRepository resultRepo,
+                                        final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
+        this.logger = logger;
     }
 
     /**
-     * Use case execution method: checks if Route short name is not longer than 12 characters
+     * Use case execution method: checks if Route short name is longer than 12 characters
      * for every Routes in a {@link GtfsDataRepository}. A new notice is generated each time this condition is true.
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
-     *
-     * @return a list of notices generated each time a Route short name is longer than 12 characters.
      */
     public void execute() {
+        logger.info("Validating rule 'W005 - Route short name too long'" + System.lineSeparator());
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteShortName(route.getRouteShortName())))
-                .forEach(route -> resultRepo.addNotice(new RouteShortNameTooLongNotice("route.txt",
+                .forEach(route -> resultRepo.addNotice(new RouteShortNameTooLongNotice("routes.txt",
                         route.getRouteId(), String.valueOf(route.getRouteShortName().length()))));
     }
 

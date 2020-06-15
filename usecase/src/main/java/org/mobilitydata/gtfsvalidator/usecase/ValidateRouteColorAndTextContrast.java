@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteColorAndTextInsufficientContrastNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -29,29 +30,31 @@ import java.util.Collection;
 public class ValidateRouteColorAndTextContrast {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
+    private final Logger logger;
 
     /**
      * @param dataRepo   a repository storing the data of a GTFS dataset
      * @param resultRepo a repository storing information about the validation process
      */
     public ValidateRouteColorAndTextContrast(final GtfsDataRepository dataRepo,
-                                             final ValidationResultRepository resultRepo) {
+                                             final ValidationResultRepository resultRepo,
+                                             final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
+        this.logger = logger;
     }
 
     /**
-     * Use case execution method: checks if Route color contrast enough with Route text color
+     * Use case execution method: checks if Route color does not contrast enough with Route text color
      * for every Routes in a {@link GtfsDataRepository}. A new notice is generated each time this condition is true.
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
-     *
-     * @return a list of notices generated each time the contrast between the 2 colors is insufficient.
      */
     public void execute() {
+        logger.info("Validating rule 'E025 - Insufficient route color contrast'"+ System.lineSeparator());
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
-                .forEach(route -> resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("route.txt",
+                .forEach(route -> resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("routes.txt",
                         route.getRouteId(), String.valueOf(contrast(route.getRouteColor(), route.getRouteTextColor())))));
     }
 

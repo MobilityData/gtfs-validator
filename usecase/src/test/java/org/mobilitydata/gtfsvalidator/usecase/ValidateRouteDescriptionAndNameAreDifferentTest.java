@@ -16,9 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -41,9 +42,12 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -52,8 +56,10 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteDesc();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
+        verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +
+                " description for route'"+System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -69,9 +75,12 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -80,8 +89,10 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteDesc();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
+        verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +
+                " description for route'"+System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -97,9 +108,12 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -109,8 +123,11 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verify(mockResultRepo, times(1))
+                .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
+        verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +
+                " description for route'"+System.lineSeparator());
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -126,9 +143,12 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
+
         ValidateRouteDescriptionAndNameAreDifferent underTest = new ValidateRouteDescriptionAndNameAreDifferent(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -138,7 +158,10 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verify(mockResultRepo, times(1))
+                .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
+        verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +
+                " description for route'"+System.lineSeparator());
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }

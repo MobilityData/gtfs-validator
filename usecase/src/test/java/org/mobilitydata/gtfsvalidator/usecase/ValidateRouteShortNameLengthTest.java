@@ -16,9 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -30,7 +31,6 @@ public class ValidateRouteShortNameLengthTest {
 
     @Test
     void nullRouteColorShouldNotGenerateNotice() {
-
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn(null);
 
@@ -39,17 +39,21 @@ public class ValidateRouteShortNameLengthTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteShortNameLength underTest = new ValidateRouteShortNameLength(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
+        verify(mockLogger, times(1)).info("Validating rule 'W005 - Route short name " +
+                "too long'" + System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -63,17 +67,21 @@ public class ValidateRouteShortNameLengthTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteShortNameLength underTest = new ValidateRouteShortNameLength(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
+        verify(mockLogger, times(1)).info("Validating rule 'W005 - Route short name " +
+                "too long'" + System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -87,17 +95,21 @@ public class ValidateRouteShortNameLengthTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteShortNameLength underTest = new ValidateRouteShortNameLength(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
+        verify(mockLogger, times(1)).info("Validating rule 'W005 - Route short name " +
+                "too long'" + System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -111,9 +123,11 @@ public class ValidateRouteShortNameLengthTest {
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
+        Logger mockLogger = mock(Logger.class);
         ValidateRouteShortNameLength underTest = new ValidateRouteShortNameLength(
                 mockDataRepo,
-                mockResultRepo
+                mockResultRepo,
+                mockLogger
         );
 
         underTest.execute();
@@ -121,7 +135,9 @@ public class ValidateRouteShortNameLengthTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(2)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteId();
-        verify(mockResultRepo, times(1)).addNotice(any(ErrorNotice.class));
-        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo);
+        verify(mockLogger, times(1)).info("Validating rule 'W005 - Route short name " +
+                "too long'" + System.lineSeparator());
+        verify(mockResultRepo, times(1)).addNotice(any(RouteShortNameTooLongNotice.class));
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }
