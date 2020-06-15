@@ -29,7 +29,7 @@ public class RouteShortNameTooLongNotice extends WarningNotice {
                 "`route_short_name` length should be <= 12 characters but was " + shortNameLength +
                         " for route with `route_id`:`" + entityId + "` in file:`" + filename + "`",
                 entityId);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__SHORT_NAME_LENGTH, shortNameLength);
+        putNoticeSpecific(KEY_SHORT_NAME_LENGTH, shortNameLength);
     }
 
     @Override

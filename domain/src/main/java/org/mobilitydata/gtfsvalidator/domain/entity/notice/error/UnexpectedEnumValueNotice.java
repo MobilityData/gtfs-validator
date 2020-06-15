@@ -29,8 +29,8 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
                 "Unexpected enum value",
                 "Invalid value :`" + enumValue + "` - for field:`" + fieldName + "` in file:`" + filename +
                         "` for entity with id:`" + entityId + "`", entityId);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__ENUM_VALUE, enumValue);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_ENUM_VALUE, enumValue);
     }
 
     @Override

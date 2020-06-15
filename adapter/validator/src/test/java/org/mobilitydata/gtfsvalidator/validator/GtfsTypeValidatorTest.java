@@ -119,6 +119,7 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(FloatFieldValueOutOfRangeNotice.class));
+        assertEquals("ERROR", ((FloatFieldValueOutOfRangeNotice) notice).getLevel());
         assertEquals(11, notice.getCode());
         assertEquals("Out of range float value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -215,6 +216,7 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(IntegerFieldValueOutOfRangeNotice.class));
+        assertEquals("ERROR", ((IntegerFieldValueOutOfRangeNotice) notice).getLevel());
         assertEquals(10, notice.getCode());
         assertEquals("Out of range integer value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -300,6 +302,7 @@ class GtfsTypeValidatorTest {
         assertEquals(1, result.size());
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidColorNotice.class));
+        assertEquals("ERROR", ((InvalidColorNotice) notice).getLevel());
         assertEquals(14, notice.getCode());
         assertEquals("Invalid color", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -380,6 +383,7 @@ class GtfsTypeValidatorTest {
         assertEquals(1, result.size());
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidTimeNotice.class));
+        assertEquals("ERROR", ((InvalidTimeNotice) notice).getLevel());
         assertEquals(16, notice.getCode());
         assertEquals("Invalid time", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -461,6 +465,7 @@ class GtfsTypeValidatorTest {
         assertEquals(1, result.size());
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidUrlNotice.class));
+        assertEquals("ERROR", ((InvalidUrlNotice) notice).getLevel());
         assertEquals(12, notice.getCode());
         assertEquals("Invalid url", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -543,6 +548,7 @@ class GtfsTypeValidatorTest {
         assertEquals(1, result.size());
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidEmailNotice.class));
+        assertEquals("ERROR", ((InvalidEmailNotice) notice).getLevel());
         assertEquals(23, notice.getCode());
         assertEquals("Invalid email", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -625,6 +631,7 @@ class GtfsTypeValidatorTest {
         assertEquals(1, result.size());
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidLangNotice.class));
+        assertEquals("ERROR", ((InvalidLangNotice) notice).getLevel());
         assertEquals(22, notice.getCode());
         assertEquals("Invalid language code", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -700,6 +707,7 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidTimezoneNotice.class));
+        assertEquals("ERROR", ((InvalidTimezoneNotice) notice).getLevel());
         assertEquals(13, notice.getCode());
         assertEquals("Invalid timezone", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -773,6 +781,7 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(NonAsciiOrNonPrintableCharNotice.class));
+        assertEquals("WARNING", ((NonAsciiOrNonPrintableCharNotice) notice).getLevel());
         assertEquals(3, notice.getCode());
         assertEquals("Suspicious id", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -814,6 +823,7 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(NonAsciiOrNonPrintableCharNotice.class));
+        assertEquals("WARNING", ((NonAsciiOrNonPrintableCharNotice) notice).getLevel());
         assertEquals(3, notice.getCode());
         assertEquals("Suspicious id", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1040,6 +1050,7 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1048,6 +1059,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(1);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1056,6 +1068,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(2);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1064,6 +1077,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(3);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1072,6 +1086,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(4);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1080,6 +1095,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(5);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1088,6 +1104,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(6);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1096,6 +1113,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(7);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1104,6 +1122,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(8);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1112,6 +1131,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(9);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1239,6 +1259,7 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1247,6 +1268,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(1);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1255,6 +1277,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(2);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1263,6 +1286,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(3);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1271,6 +1295,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(4);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1279,6 +1304,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(5);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1287,6 +1313,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(6);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1295,6 +1322,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(7);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1303,6 +1331,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(8);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1311,6 +1340,7 @@ class GtfsTypeValidatorTest {
 
         notice = new ArrayList<>(result).get(9);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
@@ -1351,6 +1381,7 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidCurrencyCodeNotice.class));
+        assertEquals("ERROR", ((InvalidCurrencyCodeNotice) notice).getLevel());
         assertEquals(18, notice.getCode());
         assertEquals("Invalid currency code", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());

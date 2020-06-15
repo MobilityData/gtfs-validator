@@ -28,7 +28,7 @@ public class DuplicatedEntityNotice extends ErrorNotice {
                 "Duplicate entity",
                 "Entity must be unique in file: `" + filename + "` found other entity with same value for " +
                         "field: " + fieldName + "`", entityId);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
 
     @Override

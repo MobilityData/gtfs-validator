@@ -34,10 +34,10 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
                 "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
                         "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
                 entityId);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__RANGE_MAX, rangeMax);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__RANGE_MIN, rangeMin);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__ACTUAL_VALUE, actualValue);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_RANGE_MAX, rangeMax);
+        putNoticeSpecific(KEY_RANGE_MIN, rangeMin);
+        putNoticeSpecific(KEY_ACTUAL_VALUE, actualValue);
     }
 
     @Override

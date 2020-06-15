@@ -29,9 +29,9 @@ public class InvalidRowLengthNotice extends ErrorNotice {
                 "Invalid length for row:" + rowIndex +
                         " -- expected:" + expectedLength + " actual:" + actualLength,
                 null);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__ROW_INDEX, rowIndex);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__EXPECTED_LENGTH, expectedLength);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__ACTUAL_LENGTH, actualLength);
+        putNoticeSpecific(KEY_ROW_INDEX, rowIndex);
+        putNoticeSpecific(KEY_EXPECTED_LENGTH, expectedLength);
+        putNoticeSpecific(KEY_ACTUAL_LENGTH, actualLength);
     }
 
     @Override

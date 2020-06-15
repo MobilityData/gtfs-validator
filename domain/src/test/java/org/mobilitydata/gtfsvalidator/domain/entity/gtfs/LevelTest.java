@@ -23,7 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.NOTICE_SPECIFIC_KEY__FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
 class LevelTest {
 
@@ -47,7 +47,7 @@ class LevelTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("levels.txt", notice.getFilename());
-        assertEquals("level_id", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("level_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());
@@ -73,7 +73,7 @@ class LevelTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("levels.txt", notice.getFilename());
-        assertEquals("level_index", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("level_index", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("level id", notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());

@@ -72,7 +72,7 @@ class FareAttributeTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
-        assertEquals("fare_id", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("fare_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -98,7 +98,7 @@ class FareAttributeTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
-        assertEquals("price", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("price", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -124,11 +124,11 @@ class FareAttributeTest {
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
-        assertEquals("price", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("price", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST, notice.getEntityId());
-        assertEquals(0.0f, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__RANGE_MIN));
-        assertEquals(Float.MAX_VALUE, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__RANGE_MAX));
-        assertEquals(-4.0f, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__ACTUAL_VALUE));
+        assertEquals(0.0f, notice.getNoticeSpecific(KEY_RANGE_MIN));
+        assertEquals(Float.MAX_VALUE, notice.getNoticeSpecific(KEY_RANGE_MAX));
+        assertEquals(-4.0f, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -153,7 +153,7 @@ class FareAttributeTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
-        assertEquals("currency_type", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("currency_type", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -179,7 +179,7 @@ class FareAttributeTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
-        assertEquals("payment_method", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("payment_method", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -205,9 +205,9 @@ class FareAttributeTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
-        assertEquals("payment_method", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("payment_method", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST, notice.getEntityId());
-        assertEquals(4, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
+        assertEquals(4, notice.getNoticeSpecific(KEY_ENUM_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -232,9 +232,9 @@ class FareAttributeTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
-        assertEquals("transfers", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("transfers", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST, notice.getEntityId());
-        assertEquals(4, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
+        assertEquals(4, notice.getNoticeSpecific(KEY_ENUM_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -274,10 +274,10 @@ class FareAttributeTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("fare_attributes.txt", notice.getFilename());
-        assertEquals("transfer_duration", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("transfer_duration", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST, notice.getEntityId());
-        assertEquals(0, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__RANGE_MIN));
-        assertEquals(Integer.MAX_VALUE, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__RANGE_MAX));
+        assertEquals(0, notice.getNoticeSpecific(KEY_RANGE_MIN));
+        assertEquals(Integer.MAX_VALUE, notice.getNoticeSpecific(KEY_RANGE_MAX));
         assertEquals(1, noticeCollection.size());
     }
 }

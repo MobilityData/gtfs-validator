@@ -29,8 +29,8 @@ public class IllegalFieldValueCombination extends ErrorNotice {
                 "Conflicting field values",
                 "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
                         + "`" + entityId, entityId);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__CONFLICTING_FIELD_NAME, conflictingFieldName);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
     }
 
 

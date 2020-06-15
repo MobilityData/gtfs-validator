@@ -30,8 +30,8 @@ public class InvalidLangNotice extends ErrorNotice {
                 "Invalid language code:`" + langValue + "` in field:`" + fieldName + "` for entity with id:`"
                         + entityId + "`",
                 entityId);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__LANG_VALUE, langValue);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_LANG_VALUE, langValue);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
 
     @Override

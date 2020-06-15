@@ -30,7 +30,7 @@ public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
                 "Downloading error",
                 "An error occurred while trying to download archive from network: " + url,
                 null);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__URL_VALUE, url);
+        putNoticeSpecific(KEY_URL_VALUE, url);
     }
 
     @Override

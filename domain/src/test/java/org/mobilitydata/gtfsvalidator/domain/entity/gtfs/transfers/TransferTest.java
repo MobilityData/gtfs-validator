@@ -25,8 +25,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.NOTICE_SPECIFIC_KEY__ENUM_VALUE;
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.NOTICE_SPECIFIC_KEY__FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_ENUM_VALUE;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
 class TransferTest {
     private final static String FROM_STOP_ID = "stop id 0";
@@ -56,7 +56,7 @@ class TransferTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("transfers.txt", notice.getFilename());
-        assertEquals("from_stop_id", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("from_stop_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("null;stop id 1", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -83,7 +83,7 @@ class TransferTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("transfers.txt", notice.getFilename());
-        assertEquals("to_stop_id", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("to_stop_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("stop id 0;null", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -107,9 +107,9 @@ class TransferTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("transfers.txt", notice.getFilename());
-        assertEquals("transfer_type", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("transfer_type", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("stop id 0;stop id 1", notice.getEntityId());
-        assertEquals(55, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
+        assertEquals(55, notice.getNoticeSpecific(KEY_ENUM_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 

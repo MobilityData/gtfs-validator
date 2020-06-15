@@ -29,9 +29,9 @@ public class CannotParseDateNotice extends ErrorNotice {
                 "Value: '" + rawValue + "' of field: " + fieldName +
                         " with type date can't be parsed in file: " + filename + " at row: " + lineNumber,
                 null);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__LINE_NUMBER, lineNumber);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__RAW_VALUE, rawValue);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_LINE_NUMBER, lineNumber);
+        putNoticeSpecific(KEY_RAW_VALUE, rawValue);
     }
 
     @Override

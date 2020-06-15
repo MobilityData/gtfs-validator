@@ -27,8 +27,8 @@ public class InvalidCurrencyCodeNotice extends ErrorNotice {
                                      String currencyCode) {
         super(filename, E_018, "Invalid currency code", "Invalid currency code: `" + currencyCode +
                 "` in field: `" + fieldName + "` for entity with id: `" + entityId + "`", entityId);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__CURRENCY_CODE, currencyCode);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_CURRENCY_CODE, currencyCode);
     }
 
     @Override

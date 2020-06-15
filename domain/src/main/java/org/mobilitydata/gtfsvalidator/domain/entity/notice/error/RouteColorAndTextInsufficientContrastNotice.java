@@ -39,7 +39,7 @@ public class RouteColorAndTextInsufficientContrastNotice extends ErrorNotice {
                         "a legible contrast between the two. The contrast ratio formula used can be found here : " +
                         "https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-procedure",
                 entityId);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__CONTRAST_RATIO, contrastRatio);
+        putNoticeSpecific(KEY_CONTRAST_RATIO, contrastRatio);
     }
 
     @Override

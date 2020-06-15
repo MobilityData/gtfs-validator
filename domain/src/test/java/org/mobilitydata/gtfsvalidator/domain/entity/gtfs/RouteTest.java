@@ -25,8 +25,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.NOTICE_SPECIFIC_KEY__ENUM_VALUE;
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.NOTICE_SPECIFIC_KEY__FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_ENUM_VALUE;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
 class RouteTest {
     private static final String STRING_TEST_VALUE = "test_value";
@@ -59,7 +59,7 @@ class RouteTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("routes.txt", notice.getFilename());
-        assertEquals("route_id", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("route_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -87,9 +87,9 @@ class RouteTest {
 
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
-        assertEquals("route_type", notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME));
+        assertEquals("route_type", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
-        assertEquals(15, notice.getNoticeSpecific(NOTICE_SPECIFIC_KEY__ENUM_VALUE));
+        assertEquals(15, notice.getNoticeSpecific(KEY_ENUM_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 

@@ -227,6 +227,7 @@ class GtfsEntityParserTest {
 
         ErrorNotice notice = result.get(0);
         assertThat(notice, instanceOf(CannotParseFloatNotice.class));
+        assertEquals("ERROR", notice.getLevel());
         assertEquals(6, notice.getCode());
         assertEquals("Invalid float value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
@@ -270,6 +271,7 @@ class GtfsEntityParserTest {
 
         ErrorNotice notice = result.get(0);
         assertThat(notice, instanceOf(CannotParseFloatNotice.class));
+        assertEquals("ERROR", notice.getLevel());
         assertEquals(6, notice.getCode());
         assertEquals("Invalid float value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
@@ -381,6 +383,7 @@ class GtfsEntityParserTest {
 
         ErrorNotice notice = result.get(0);
         assertThat(notice, instanceOf(CannotParseIntegerNotice.class));
+        assertEquals("ERROR", notice.getLevel());
         assertEquals(5, notice.getCode());
         assertEquals("Invalid integer value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
@@ -490,6 +493,7 @@ class GtfsEntityParserTest {
 
         ErrorNotice notice = result.get(0);
         assertThat(notice, instanceOf(CannotParseDateNotice.class));
+        assertEquals("ERROR", notice.getLevel());
         assertEquals(17, notice.getCode());
         assertEquals("Invalid date value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());

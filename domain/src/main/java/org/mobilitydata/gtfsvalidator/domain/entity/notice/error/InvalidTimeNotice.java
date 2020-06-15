@@ -29,8 +29,8 @@ public class InvalidTimeNotice extends ErrorNotice {
                 "Invalid time:`" + timeValue + "` in field:`" + fieldName + "` for entity with id:`" + entityId
                         + "`",
                 entityId);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__FIELD_NAME, fieldName);
-        putNoticeSpecific(NOTICE_SPECIFIC_KEY__TIME_VALUE, timeValue);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_TIME_VALUE, timeValue);
     }
 
     @Override
