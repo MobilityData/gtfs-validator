@@ -17,11 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Shape;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
@@ -75,7 +71,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Map<String, Transfer>> transferPerStopPair = new HashMap<>();
 
     // Map containing Shape Entities. Entities are mapped on the value found in column shape_id of GTFS file shapes.txt
-    private final Map<String, Shape> shapeCollection = new HashMap<>();
+    private final Map<String, Shape> shapePerShapeId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -440,11 +436,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Shape addShape(final Shape newShape) throws IllegalArgumentException {
         if (newShape != null) {
-            if (shapeCollection.containsKey(newShape.getShapeId())) {
+            if (shapePerShapeId.containsKey(newShape.getShapeId())) {
                 return null;
             } else {
-                String routeId = newShape.getShapeId();
-                shapeCollection.put(routeId, newShape);
+                final String routeId = newShape.getShapeId();
+                shapePerShapeId.put(routeId, newShape);
                 return newShape;
             }
         } else {
@@ -460,6 +456,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Shape getShapeById(final String shapeId) {
-        return shapeCollection.get(shapeId);
+        return shapePerShapeId.get(shapeId);
     }
 }
