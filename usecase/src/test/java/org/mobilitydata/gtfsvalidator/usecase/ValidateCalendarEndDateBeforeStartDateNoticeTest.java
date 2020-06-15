@@ -34,39 +34,6 @@ import static org.mockito.Mockito.*;
  */
 class ValidateCalendarEndDateBeforeStartDateNoticeTest {
 
-    // TODO - below test throws an NPE, but calendar.txt start_date and end_date are required and marked @NonNull,
-    // so checking for them within the use case is flagged as "these fields are always non-null".
-    // Do we include a null test for required GTFS fields?
-
-//    @Test
-//    void nullCalendarStartAndEndDateShouldNotGenerateNotice() {
-//        Calendar mockCalendar = mock(Calendar.class);
-//        when(mockCalendar.getStartDate()).thenReturn(null);
-//        when(mockCalendar.getEndDate()).thenReturn(null);
-//
-//        GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-//        when(mockDataRepo.getCalendarAll()).thenReturn(List.of(mockCalendar));
-//
-//        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-//
-//        Logger mockLogger = mock(Logger.class);
-//
-//        ValidateCalendarEndDateBeforeStartDate underTest = new ValidateCalendarEndDateBeforeStartDate(
-//                mockDataRepo,
-//                mockResultRepo,
-//                mockLogger);
-//
-//        underTest.execute();
-//
-//        verify(mockDataRepo, times(1)).getCalendarAll();
-//        verify(mockCalendar, times(1)).getStartDate();
-//        verify(mockCalendar, times(1)).getEndDate();
-//        verify(mockLogger, times(1)).info("Validating rule 'E032 - calendar.txt end_date is " +
-//                "before start_date'" + System.lineSeparator());
-//        verifyNoInteractions(mockResultRepo);
-//        verifyNoMoreInteractions(mockCalendar, mockDataRepo, mockResultRepo, mockLogger);
-//    }
-
     @Test
     void startDateBeforeEndDateShouldNotGenerateNotice() {
         Calendar mockCalendar = mock(Calendar.class);
