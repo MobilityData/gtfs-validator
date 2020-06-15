@@ -148,7 +148,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                                      final String[] args,
                                      final Logger logger) {
         if (Strings.isNullOrEmpty(parameterJsonString) && args.length == 0) {
-            // true when json configuration file is not present  and no arguments are not provided
+            // true when json configuration file is not present and no arguments are provided
             logger.info("No configuration file nor arguments provided"+System.lineSeparator());
             return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
         } else if (!Strings.isNullOrEmpty(parameterJsonString) || args.length == 0) {
