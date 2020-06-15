@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarD
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
@@ -69,6 +70,11 @@ public interface GtfsDataRepository {
     FareAttribute addFareAttribute(final FareAttribute newFareAttribute);
 
     FareAttribute getFareAttributeById(final String fareId);
+
+    FareRule addFareRule(final FareRule newFareRule) throws IllegalArgumentException;
+
+    FareRule getFareRule(final String fareId, final String routeId, final String originId, final String destinationId,
+                         final String containsId);
 
     Shape addShape(final Shape newShape) throws IllegalArgumentException;
 
