@@ -51,6 +51,7 @@ public class DefaultConfig {
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
+    private String executionParametersAsString;
 
     @SuppressWarnings("UnstableApiUsage")
     public DefaultConfig(final Logger logger) {
@@ -84,6 +85,16 @@ public class DefaultConfig {
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        this.executionParametersAsString = null;
+        try {
+            this.executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
+            logger.info("Configuration file execution-parameters.json found in working directory" +
+                    System.lineSeparator());
+        } catch (IOException e) {
+            logger.warn("Configuration file execution-parameters.json not found in working directory" +
+                    System.lineSeparator());
         }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
     }
@@ -169,8 +180,8 @@ public class DefaultConfig {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
 
-    public ParseAllExecParam parseAllExecutionParameter() throws IOException {
-        return new ParseAllExecParam(Files.readString(Paths.get("execution-parameters.json")), execParamRepo,
+    public ParseAllExecParam parseAllExecutionParameter() {
+        return new ParseAllExecParam(executionParametersAsString, execParamRepo,
                 logger);
     }
 
