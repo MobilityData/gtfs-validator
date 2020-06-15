@@ -155,7 +155,7 @@ public class Main {
             }
         }
         final long duration = System.nanoTime() - startTime;
-        logger.info("Took " + String.format("%02dh%02dm%02ds", TimeUnit.NANOSECONDS.toHours(duration),
+        logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
                 TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
                 TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
     }
