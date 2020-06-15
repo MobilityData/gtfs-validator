@@ -22,29 +22,20 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class IllegalFieldValueCombination extends ErrorNotice {
-    private final String fieldName;
-    private final String conflictingFieldName;
 
     public IllegalFieldValueCombination(final String filename, final String fieldName,
                                         final String conflictingFieldName, final String entityId) {
         super(filename, E_019,
                 "Conflicting field values",
-                "Conflicting field values for fields:" + fieldName + " and field:" + conflictingFieldName, entityId);
-        this.fieldName = fieldName;
-        this.conflictingFieldName = conflictingFieldName;
+                "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
+                        + "`" + entityId, entityId);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
     }
 
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public String getConflictingFieldName() {
-        return conflictingFieldName;
     }
 }

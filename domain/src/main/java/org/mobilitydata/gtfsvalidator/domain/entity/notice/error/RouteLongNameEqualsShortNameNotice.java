@@ -25,9 +25,9 @@ public class RouteLongNameEqualsShortNameNotice extends ErrorNotice {
 
     public RouteLongNameEqualsShortNameNotice(final String filename, final String entityId) {
         super(filename, E_028,
-                "Route long name equals Route short name",
-                "Route long name equals Route short name:" + entityId + " in file:" + filename +
-                        ". Route long name and Route short name should not be the exact same.",
+                "`route_long_name` equals `route_short_name`",
+                "`route_long_name` equals `route_short_name`:" + entityId + " in file:" + filename +
+                        ". `route_long_name` and `route_short_name` should not be the exact same.",
                 entityId);
     }
 

@@ -22,24 +22,15 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class InvalidTimeNotice extends ErrorNotice {
-    private final String fieldName;
-    private final String timeValue;
 
     public InvalidTimeNotice(String filename, String fieldName, String entityId, String timeValue) {
         super(filename, E_016,
                 "Invalid time",
-                "Invalid time:" + timeValue + " in field:" + fieldName + " for entity with id:" + entityId,
+                "Invalid time:`" + timeValue + "` in field:`" + fieldName + "` for entity with id:`" + entityId
+                        + "`",
                 entityId);
-        this.fieldName = fieldName;
-        this.timeValue = timeValue;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public String getTimeValue() {
-        return timeValue;
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_TIME_VALUE, timeValue);
     }
 
     @Override
