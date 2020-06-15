@@ -89,10 +89,10 @@ public class DefaultConfig {
         this.executionParametersAsString = null;
         try {
             this.executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
-            logger.info("Configuration file with name execution-parameters.json found in working directory" +
+            logger.info("Configuration file execution-parameters.json found in working directory" +
                     System.lineSeparator());
         } catch (IOException e) {
-            logger.warn("Configuration file with name execution-parameters.json not found in working directory" +
+            logger.warn("Configuration file execution-parameters.json not found in working directory" +
                     System.lineSeparator());
         }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
