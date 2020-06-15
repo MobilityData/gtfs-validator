@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,8 +45,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -79,7 +79,7 @@ class CalendarTest {
                 .saturday(0)
                 .sunday(0)
                 .startDate(null)
-                .endDate(LocalDateTime.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -112,7 +112,7 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
                 .endDate(null)
                 .build();
 
@@ -143,8 +143,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -181,8 +181,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -213,8 +213,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -250,8 +250,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -282,8 +282,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -319,8 +319,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -349,8 +349,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -386,8 +386,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -417,8 +417,8 @@ class CalendarTest {
                 .friday(3)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -453,8 +453,8 @@ class CalendarTest {
                 .friday(null)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -484,8 +484,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(3)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -520,8 +520,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(null)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -551,8 +551,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(3)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -588,8 +588,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(null)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof List);
@@ -619,8 +619,8 @@ class CalendarTest {
                 .friday(0)
                 .saturday(0)
                 .sunday(0)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now())
                 .build();
 
         assertTrue(buildResult.getData() instanceof Calendar);

@@ -21,7 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +33,7 @@ class CalendarDateTest {
     void createCalendarDateWithValidValueShouldNotGenerateNotice() {
         final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
-                .date(LocalDateTime.now())
+                .date(LocalDate.now())
                 .exceptionType(1)
                 .build();
         assertTrue(entityBuildResult.getData() instanceof CalendarDate);
@@ -47,7 +47,7 @@ class CalendarDateTest {
 
         //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId(null)
-                .date(LocalDateTime.now())
+                .date(LocalDate.now())
                 .exceptionType(1)
                 .build();
 
@@ -100,7 +100,7 @@ class CalendarDateTest {
 
         //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
-                .date(LocalDateTime.now())
+                .date(LocalDate.now())
                 .exceptionType(null)
                 .build();
 
@@ -124,7 +124,7 @@ class CalendarDateTest {
         final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
-                .date(LocalDateTime.now())
+                .date(LocalDate.now())
                 .exceptionType(5)
                 .build();
 
@@ -147,7 +147,7 @@ class CalendarDateTest {
     @Test
     void getCalendarDateKeyShouldReturnConcatenatedStringFieldValues() {
         final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
-        final LocalDateTime date = LocalDateTime.now();
+        final LocalDate date = LocalDate.now();
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
                 .date(date)
                 .exceptionType(2)

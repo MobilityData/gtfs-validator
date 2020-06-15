@@ -28,7 +28,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -145,7 +145,7 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addSameCalendarDateShouldReturnNull() {
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
-        final LocalDateTime mockDate = mock(LocalDateTime.class);
+        final LocalDate mockDate = mock(LocalDate.class);
         when(mockCalendarDate.getServiceId()).thenReturn("service id");
         when(mockCalendarDate.getDate()).thenReturn(mockDate);
         when(mockCalendarDate.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
@@ -173,7 +173,7 @@ class InMemoryGtfsDataRepositoryTest {
         final CalendarDate calendarDate00 = mock(CalendarDate.class);
         final CalendarDate calendarDate01 = mock(CalendarDate.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        final LocalDateTime date = LocalDateTime.now();
+        final LocalDate date = LocalDate.now();
 
         when(calendarDate00.getServiceId()).thenReturn("service id 00");
         when(calendarDate00.getDate()).thenReturn(date);

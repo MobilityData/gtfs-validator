@@ -28,7 +28,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -222,7 +222,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * parameter
      */
     @Override
-    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date) {
+    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDate date) {
         return calendarDatePerServiceIdAndDate.get(serviceId + date.toString());
     }
 
