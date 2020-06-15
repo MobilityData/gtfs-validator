@@ -13,7 +13,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +43,7 @@ class ProcessParsedCalendarDateTest {
         final ProcessParsedCalendarDate underTest = new ProcessParsedCalendarDate(mockResultRepo, mockGtfsDataRepo,
                 mockBuilder);
 
-        final LocalDateTime date = LocalDateTime.now();
+        final LocalDate date = LocalDate.now();
 
         when(mockParsedCalendarDate.get("service_id")).thenReturn("service_id");
         when(mockParsedCalendarDate.get("date")).thenReturn(date);
@@ -97,7 +97,7 @@ class ProcessParsedCalendarDateTest {
         final ProcessParsedCalendarDate underTest = new ProcessParsedCalendarDate(mockResultRepo, mockGtfsDataRepo,
                 mockBuilder);
 
-        final LocalDateTime date = LocalDateTime.now();
+        final LocalDate date = LocalDate.now();
 
         when(mockParsedCalendarDate.get("service_id")).thenReturn("service_id");
         when(mockParsedCalendarDate.get("date")).thenReturn(date);
@@ -146,7 +146,7 @@ class ProcessParsedCalendarDateTest {
 
         final ProcessParsedCalendarDate underTest = new ProcessParsedCalendarDate(mockResultRepo, mockGtfsDataRepo,
                 mockBuilder);
-        final LocalDateTime date = LocalDateTime.now();
+        final LocalDate date = LocalDate.now();
 
         when(mockParsedCalendarDate.get("service_id")).thenReturn("service_id");
         when(mockParsedCalendarDate.get("date")).thenReturn(date);

@@ -31,7 +31,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseInte
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -179,7 +179,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                     if (dateValidator.isValid(rawField, DATE_PATTERN, Locale.US)) {
                         contentByHeaderMap.put(
                                 //https://programminghints.com/2017/05/still-using-java-util-date-dont/
-                                columnSpecProto.getName(), LocalDateTime.ofInstant(
+                                columnSpecProto.getName(), LocalDate.ofInstant(
                                         dateValidator.validate(rawField, DATE_PATTERN, Locale.US).toInstant(),
                                         ZoneId.of("America/Montreal") //FIXME: retrieve timezone from agency.txt
                                 ));

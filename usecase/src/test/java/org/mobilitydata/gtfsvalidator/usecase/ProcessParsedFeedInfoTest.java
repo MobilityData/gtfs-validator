@@ -29,7 +29,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +46,8 @@ class ProcessParsedFeedInfoTest {
     private static final String FEED_VERSION = "feed_version";
     private static final String FEED_CONTACT_EMAIL = "feed_contact_email";
     private static final String FEED_CONTACT_URL = "feed_contact_url";
-    private static final LocalDateTime START_DATE = LocalDateTime.now();
-    private static final LocalDateTime END_DATE = LocalDateTime.now();
+    private static final LocalDate START_DATE = LocalDate.now();
+    private static final LocalDate END_DATE = LocalDate.now();
 
     @Test
     void validatedParsedFeedInfoShouldCreateEntityAndToBeAddedToGtfsDataRepo() {

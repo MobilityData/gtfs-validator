@@ -30,7 +30,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseInte
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mockito.ArgumentMatchers;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -803,8 +803,8 @@ class GtfsEntityParserTest {
                 0
         ));
 
-        assertThat(result.get("date_type"), instanceOf(LocalDateTime.class));
-        assertEquals(LocalDateTime.ofInstant(
+        assertThat(result.get("date_type"), instanceOf(LocalDate.class));
+        assertEquals(LocalDate.ofInstant(
                 fakeDate.toInstant(),
                 ZoneId.of("America/Montreal")),
                 result.get("date_type"));
