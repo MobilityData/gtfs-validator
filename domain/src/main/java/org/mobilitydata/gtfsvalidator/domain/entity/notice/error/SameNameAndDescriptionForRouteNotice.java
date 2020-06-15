@@ -25,8 +25,8 @@ public class SameNameAndDescriptionForRouteNotice extends ErrorNotice {
 
     public SameNameAndDescriptionForRouteNotice(final String filename, final String entityId) {
         super(filename, E_024,
-                "Same name and description for Route",
-                "Same name and description for Route ID:" + entityId + " in file:" + filename,
+                "Same name and `route_desc` for route",
+                "Same name and `route_desc` for route with `route_id`:`" + entityId + "` in file:" + filename,
                 entityId);
     }
 

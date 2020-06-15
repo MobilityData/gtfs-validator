@@ -49,7 +49,7 @@ public class PrintHelp {
 
             Options options = execParamRepo.getOptions();
 
-            final String HELP = String.join("\n",
+            final String HELP = String.join(System.lineSeparator(),
                     "Loads input GTFS feed from url or disk.",
                     "Checks files integrity, numeric type parsing and ranges as well as string format according" +
                             " to GTFS spec", "Validation results are exported to JSON file by default",

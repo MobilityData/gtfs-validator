@@ -22,11 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
-    private String fieldName;
-    private int rangeMin;
-    private int rangeMax;
-    private int actualValue;
-
     public IntegerFieldValueOutOfRangeNotice(
             String filename,
             String fieldName,
@@ -36,33 +31,17 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
             int actualValue) {
         super(filename, E_010,
                 "Out of range integer value",
-                "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
-                        " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
+                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
                 entityId);
-        this.fieldName = fieldName;
-        this.rangeMax = rangeMax;
-        this.rangeMin = rangeMin;
-        this.actualValue = actualValue;
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_RANGE_MAX, rangeMax);
+        putNoticeSpecific(KEY_RANGE_MIN, rangeMin);
+        putNoticeSpecific(KEY_ACTUAL_VALUE, actualValue);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public int getRangeMin() {
-        return rangeMin;
-    }
-
-    public int getRangeMax() {
-        return rangeMax;
-    }
-
-    public int getActualValue() {
-        return actualValue;
     }
 }

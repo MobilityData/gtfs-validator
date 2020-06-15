@@ -22,9 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class InvalidRowLengthNotice extends ErrorNotice {
-    private int rowIndex;
-    private int expectedLength;
-    private int actualLength;
 
     public InvalidRowLengthNotice(String filename, int rowIndex, int expectedLength, int actualLength) {
         super(filename, E_004,
@@ -32,25 +29,13 @@ public class InvalidRowLengthNotice extends ErrorNotice {
                 "Invalid length for row:" + rowIndex +
                         " -- expected:" + expectedLength + " actual:" + actualLength,
                 null);
-        this.rowIndex = rowIndex;
-        this.expectedLength = expectedLength;
-        this.actualLength = actualLength;
+        putNoticeSpecific(KEY_ROW_INDEX, rowIndex);
+        putNoticeSpecific(KEY_EXPECTED_LENGTH, expectedLength);
+        putNoticeSpecific(KEY_ACTUAL_LENGTH, actualLength);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public int getRowIndex() {
-        return rowIndex;
-    }
-
-    public int getExpectedLength() {
-        return expectedLength;
-    }
-
-    public int getActualLength() {
-        return actualLength;
     }
 }
