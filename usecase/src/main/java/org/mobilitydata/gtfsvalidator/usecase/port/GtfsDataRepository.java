@@ -16,11 +16,55 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+
+import java.time.LocalDateTime;
+import java.util.Collection;
+
 public interface GtfsDataRepository {
+    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
-    //public void loadStop
+    Agency getAgencyById(final String agencyId);
 
-    //public List<Stop> getStopList();
-    //public
+    Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
+    Collection<Route> getRouteAll();
+
+    Route getRouteById(final String routeId);
+
+    CalendarDate addCalendarDate(final CalendarDate newCalendarDate) throws IllegalArgumentException;
+
+    CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date);
+
+    Level addLevel(final Level newLevel) throws IllegalArgumentException;
+
+    Level getLevelById(final String levelId);
+
+    Calendar addCalendar(final Calendar newCalendar) throws IllegalArgumentException;
+
+    Calendar getCalendarByServiceId(final String serviceId);
+
+    Trip addTrip(final Trip newTrip) throws IllegalArgumentException;
+
+    Trip getTripById(final String tripId);
+
+    Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
+
+    Transfer getTransferByStopPair(final String fromStopId, final String toStopId);
+
+    FeedInfo addFeedInfo(final FeedInfo newFeedInfo) throws IllegalArgumentException;
+
+    FeedInfo getFeedInfoByFeedPublisherName(final String feedInfoPublisherName);
+
+    FareAttribute addFareAttribute(final FareAttribute newFareAttribute);
+
+    FareAttribute getFareAttributeById(final String fareId);
 }

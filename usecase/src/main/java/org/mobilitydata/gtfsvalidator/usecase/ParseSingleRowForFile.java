@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -76,7 +76,7 @@ public class ParseSingleRowForFile {
 
         if (hasNext()) {
             RawEntity rawEntity = provider.getNext();
-            parser.validateNumericTypes(rawEntity).forEach(resultRepo::addNotice);
+            parser.validateNonStringTypes(rawEntity).forEach(resultRepo::addNotice);
             toReturn = parser.parse(rawEntity);
         }
 

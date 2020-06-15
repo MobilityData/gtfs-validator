@@ -16,12 +16,21 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.exporter.JsonNoticeExporter;
+import org.mobilitydata.gtfsvalidator.exporter.ProtobufNoticeExporter;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,39 +48,21 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
 
     /**
-     * Adds an info notice to the repository and returns the notice
+     * Visit a generic notice to add it to the repository and returns the notice. Useful for automatic type inference
      *
-     * @param newInfo a info notice
-     * @return the info notice that was added to the repository
+     * @param newNotice notice
+     * @return the notice that was added to the repository
      */
     @Override
-    public InfoNotice addNotice(InfoNotice newInfo) {
-        infoNoticeList.add(newInfo);
-        return newInfo;
-    }
-
-    /**
-     * Adds an warning notice to the repository and returns the notice
-     *
-     * @param newWarning a warning notice
-     * @return the info notice that was added to the repository
-     */
-    @Override
-    public WarningNotice addNotice(WarningNotice newWarning) {
-        warningNoticeList.add(newWarning);
-        return newWarning;
-    }
-
-    /**
-     * Adds an error notice to the repository and returns the notice
-     *
-     * @param newError an error notice
-     * @return the error notice that was added to the repository
-     */
-    @Override
-    public ErrorNotice addNotice(ErrorNotice newError) {
-        errorNoticeList.add(newError);
-        return newError;
+    public Notice addNotice(Notice newNotice) {
+        if (newNotice instanceof InfoNotice) {
+            infoNoticeList.add((InfoNotice) newNotice);
+        } else if (newNotice instanceof WarningNotice) {
+            warningNoticeList.add((WarningNotice) newNotice);
+        } else {
+            errorNoticeList.add((ErrorNotice) newNotice);
+        }
+        return newNotice;
     }
 
     /**
@@ -89,14 +80,18 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
                 .collect(Collectors.toUnmodifiableList());
     }
 
-    /**
-     * Adds an error notice to the repository and returns the notice. Useful for automatic type inference
-     *
-     * @param newNotice notice
-     * @return the notice that was added to the repository
-     */
     @Override
-    public Notice addNotice(Notice newNotice) {
-        return newNotice.visit(this);
+    public NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException {
+        if (outputAsProto) {
+            return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder(),
+                    new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath));
+        } else {
+            return new JsonNoticeExporter(new ObjectMapper().getFactory().createGenerator(
+                    Files.newOutputStream(Paths.get(
+                            outputPath + File.separator + "results" +
+                                    JsonNoticeExporter.FILE_EXTENSION
+                            )
+                    )));
+        }
     }
 }

@@ -1,0 +1,9 @@
+{
+  "help": false,
+  "extract": "input",
+  "output": "output",
+  "proto": false,
+  "url": null,
+  "zipinput": null,
+  "exclude": null
+}
