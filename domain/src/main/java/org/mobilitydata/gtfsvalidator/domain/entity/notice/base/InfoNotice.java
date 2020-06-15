@@ -18,12 +18,30 @@ package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
 //TODO: use those to track progress (no error in file xxx, took xxms) maybe also have verbose level
 public abstract class InfoNotice extends Notice {
-    protected static final String I_001 = "I001";
+    private static final String level = "INFO";
+    protected static final int I_001 = 1;
 
     public InfoNotice(final String filename,
-                      final String noticeId,
+                      final int code,
                       final String title,
-                      final String description, String entityId) {
-        super(filename, noticeId, title, description, entityId);
+                      final String description,
+                      final String entityId) {
+        super(filename, code, title, description, entityId);
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    @Override
+    public String toString() {
+        return "\nNotice{" +
+                "filename='" + getFilename() + '\'' +
+                ", level='" + getLevel() + '\'' +
+                ", code='" + getCode() + '\'' +
+                ", title='" + getTitle() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", extra='" + getNoticeSpecificAll() + '\'' +
+                '}';
     }
 }
