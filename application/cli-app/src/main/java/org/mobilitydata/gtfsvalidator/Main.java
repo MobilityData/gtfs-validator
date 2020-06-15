@@ -149,6 +149,9 @@ public class Main {
                 logger.error("An exception occurred: " + e);
             }
         }
-        logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
+        final long duration = System.nanoTime() - startTime;
+        logger.info("Took " + String.format("%02dh%02dm%02ds", TimeUnit.NANOSECONDS.toHours(duration),
+                TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
+                TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
     }
 }
