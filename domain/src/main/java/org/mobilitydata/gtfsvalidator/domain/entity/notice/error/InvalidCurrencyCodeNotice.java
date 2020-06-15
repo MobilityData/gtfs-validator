@@ -22,27 +22,17 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class InvalidCurrencyCodeNotice extends ErrorNotice {
-    private final String fieldName;
-    private String currencyCode;
 
     public InvalidCurrencyCodeNotice(final String filename, final String fieldName, final String entityId,
                                      String currencyCode) {
-        super(filename, E_018, "Invalid currency code", "Invalid currency code: " + currencyCode +
-                " in field: " + fieldName + " for entity with id: " + entityId, entityId);
-        this.fieldName = fieldName;
-        this.currencyCode = currencyCode;
+        super(filename, E_018, "Invalid currency code", "Invalid currency code: `" + currencyCode +
+                "` in field: `" + fieldName + "` for entity with id: `" + entityId + "`", entityId);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_CURRENCY_CODE, currencyCode);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public String getCurrencyCode() {
-        return currencyCode;
     }
 }

@@ -21,7 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +38,8 @@ public class Calendar extends GtfsEntity {
     @NotNull private final Boolean friday;
     @NotNull private final Boolean saturday;
     @NotNull private final Boolean sunday;
-    @NotNull private final LocalDateTime startDate;
-    @NotNull private final LocalDateTime endDate;
+    @NotNull private final LocalDate startDate;
+    @NotNull private final LocalDate endDate;
 
     /**
      * Class for all entities defined in calendar.txt
@@ -64,8 +64,8 @@ public class Calendar extends GtfsEntity {
                      @NotNull final Boolean friday,
                      @NotNull final Boolean saturday,
                      @NotNull final Boolean sunday,
-                     @NotNull final LocalDateTime startDate,
-                     @NotNull final LocalDateTime endDate) {
+                     @NotNull final LocalDate startDate,
+                     @NotNull final LocalDate endDate) {
         this.serviceId = serviceId;
         this.monday = monday;
         this.tuesday = tuesday;
@@ -110,11 +110,11 @@ public class Calendar extends GtfsEntity {
         return sunday;
     }
 
-    @NotNull public LocalDateTime getStartDate() {
+    @NotNull public LocalDate getStartDate() {
         return startDate;
     }
 
-    @NotNull public LocalDateTime getEndDate() {
+    @NotNull public LocalDate getEndDate() {
         return endDate;
     }
 
@@ -138,8 +138,8 @@ public class Calendar extends GtfsEntity {
         private Integer originalSaturdayInteger;
         private Boolean sunday;
         private Integer originalSundayInteger;
-        private LocalDateTime startDate;
-        private LocalDateTime endDate;
+        private LocalDate startDate;
+        private LocalDate endDate;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
@@ -327,7 +327,7 @@ public class Calendar extends GtfsEntity {
          * @param startDate start service day for the service interval
          * @return builder for future object creation
          */
-        public CalendarBuilder startDate(@NotNull final LocalDateTime startDate) {
+        public CalendarBuilder startDate(@NotNull final LocalDate startDate) {
             this.startDate = startDate;
             return this;
         }
@@ -341,7 +341,7 @@ public class Calendar extends GtfsEntity {
         // suppressed warning regarding unused return value of method to avoid lint. This method is usually called last
         // in the process of creating an entity. Thereby its return value is not used.
         @SuppressWarnings("UnusedReturnValue")
-        public CalendarBuilder endDate(@NotNull final LocalDateTime endDate) {
+        public CalendarBuilder endDate(@NotNull final LocalDate endDate) {
             this.endDate = endDate;
             return this;
         }

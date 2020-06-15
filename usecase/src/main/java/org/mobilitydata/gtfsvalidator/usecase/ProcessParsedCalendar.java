@@ -24,7 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntit
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -63,8 +63,8 @@ public class ProcessParsedCalendar {
         final Integer friday = (Integer) validatedParsedCalendar.get("friday");
         final Integer saturday = (Integer) validatedParsedCalendar.get("saturday");
         final Integer sunday = (Integer) validatedParsedCalendar.get("sunday");
-        final LocalDateTime startDate = (LocalDateTime) validatedParsedCalendar.get("start_date");
-        final LocalDateTime endDate = (LocalDateTime) validatedParsedCalendar.get("end_date");
+        final LocalDate startDate = (LocalDate) validatedParsedCalendar.get("start_date");
+        final LocalDate endDate = (LocalDate) validatedParsedCalendar.get("end_date");
 
         builder.serviceId(serviceId)
                 .monday(monday)
