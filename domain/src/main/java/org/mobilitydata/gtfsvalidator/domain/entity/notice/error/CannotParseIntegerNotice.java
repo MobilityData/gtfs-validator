@@ -22,9 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class CannotParseIntegerNotice extends ErrorNotice {
-    private int lineNumber;
-    private String rawValue;
-    private String fieldName;
 
     public CannotParseIntegerNotice(String filename, String fieldName, int lineNumber, String rawValue) {
         super(filename, E_005,
@@ -32,21 +29,9 @@ public class CannotParseIntegerNotice extends ErrorNotice {
                 "Value: '" + rawValue + "' of field: " + fieldName
                         + " with type integer can't be parsed in file: " + filename + " at row: " + lineNumber,
                 null);
-        this.rawValue = rawValue;
-        this.fieldName = fieldName;
-        this.lineNumber = lineNumber;
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    public String getRawValue() {
-        return rawValue;
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_LINE_NUMBER, lineNumber);
+        putNoticeSpecific(KEY_RAW_VALUE, rawValue);
     }
 
     @Override

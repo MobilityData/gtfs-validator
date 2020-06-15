@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
 class FeedInfoTest {
     private static final String STRING_TEST_VALUE = "string test value";
@@ -54,7 +55,7 @@ class FeedInfoTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("feed_info.txt", notice.getFilename());
-        assertEquals("feed_publisher_name", notice.getFieldName());
+        assertEquals("feed_publisher_name", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -86,7 +87,7 @@ class FeedInfoTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("feed_info.txt", notice.getFilename());
-        assertEquals("feed_contact_url", notice.getFieldName());
+        assertEquals("feed_contact_url", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -118,7 +119,7 @@ class FeedInfoTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("feed_info.txt", notice.getFilename());
-        assertEquals("feed_lang", notice.getFieldName());
+        assertEquals("feed_lang", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
         assertTrue(entityBuildResult.getData() instanceof List);

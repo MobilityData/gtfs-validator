@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 // some fields are annotated as `@NonNull` but test require these fields to be null. Therefore annotation
@@ -108,7 +109,7 @@ class ProcessParsedAgencyTest {
         final List<Notice> noticeCollection = new ArrayList<>();
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         when(mockNotice.getFilename()).thenReturn(FILENAME);
-        when(mockNotice.getFieldName()).thenReturn(AGENCY_NAME);
+        when(mockNotice.getNoticeSpecific(ArgumentMatchers.eq(KEY_FIELD_NAME))).thenReturn(AGENCY_NAME);
         when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
 
         @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
@@ -230,7 +231,7 @@ class ProcessParsedAgencyTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals(AGENCY_ID, noticeList.get(0).getFieldName());
+        assertEquals(AGENCY_ID, noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockResultRepo, mockGtfsDataRepo, mockAgency, mockBuilder,

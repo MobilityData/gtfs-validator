@@ -25,6 +25,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 class CalendarTest {
     private static final String FILENAME = "calendar.txt";
@@ -59,7 +60,7 @@ class CalendarTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals(SERVICE_ID, notice.getFieldName());
+        assertEquals(SERVICE_ID, notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -92,7 +93,7 @@ class CalendarTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("start_date", notice.getFieldName());
+        assertEquals("start_date", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -125,7 +126,7 @@ class CalendarTest {
 
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("end_date", notice.getFieldName());
+        assertEquals("end_date", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());
@@ -158,11 +159,11 @@ class CalendarTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("monday", notice.getFieldName());
+        assertEquals("monday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
-        assertEquals(3, notice.getActualValue());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(0, notice.getRangeMin());
+        assertEquals(3, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
+        assertEquals(1, notice.getNoticeSpecific(KEY_RANGE_MAX));
+        assertEquals(0, notice.getNoticeSpecific(KEY_RANGE_MIN));
         assertEquals(1, noticeCollection.size());
         assertTrue(buildResult.getData() instanceof List);
     }
@@ -196,7 +197,7 @@ class CalendarTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("monday", notice.getFieldName());
+        assertEquals("monday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -227,11 +228,11 @@ class CalendarTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("tuesday", notice.getFieldName());
+        assertEquals("tuesday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
-        assertEquals(3, notice.getActualValue());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(0, notice.getRangeMin());
+        assertEquals(3, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
+        assertEquals(1, notice.getNoticeSpecific(KEY_RANGE_MAX));
+        assertEquals(0, notice.getNoticeSpecific(KEY_RANGE_MIN));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -265,7 +266,7 @@ class CalendarTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("tuesday", notice.getFieldName());
+        assertEquals("tuesday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -297,11 +298,11 @@ class CalendarTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("wednesday", notice.getFieldName());
+        assertEquals("wednesday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
-        assertEquals(3, notice.getActualValue());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(0, notice.getRangeMin());
+        assertEquals(3, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
+        assertEquals(1, notice.getNoticeSpecific(KEY_RANGE_MAX));
+        assertEquals(0, notice.getNoticeSpecific(KEY_RANGE_MIN));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -332,7 +333,7 @@ class CalendarTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("wednesday", notice.getFieldName());
+        assertEquals("wednesday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -364,11 +365,11 @@ class CalendarTest {
 
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("thursday", notice.getFieldName());
+        assertEquals("thursday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
-        assertEquals(3, notice.getActualValue());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(0, notice.getRangeMin());
+        assertEquals(3, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
+        assertEquals(1, notice.getNoticeSpecific(KEY_RANGE_MAX));
+        assertEquals(0, notice.getNoticeSpecific(KEY_RANGE_MIN));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -400,7 +401,7 @@ class CalendarTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("thursday", notice.getFieldName());
+        assertEquals("thursday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -431,11 +432,11 @@ class CalendarTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("friday", notice.getFieldName());
+        assertEquals("friday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
-        assertEquals(3, notice.getActualValue());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(0, notice.getRangeMin());
+        assertEquals(3, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
+        assertEquals(1, notice.getNoticeSpecific(KEY_RANGE_MAX));
+        assertEquals(0, notice.getNoticeSpecific(KEY_RANGE_MIN));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -467,7 +468,7 @@ class CalendarTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("friday", notice.getFieldName());
+        assertEquals("friday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -498,11 +499,11 @@ class CalendarTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("saturday", notice.getFieldName());
+        assertEquals("saturday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
-        assertEquals(3, notice.getActualValue());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(0, notice.getRangeMin());
+        assertEquals(3, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
+        assertEquals(1, notice.getNoticeSpecific(KEY_RANGE_MAX));
+        assertEquals(0, notice.getNoticeSpecific(KEY_RANGE_MIN));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -534,7 +535,7 @@ class CalendarTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("saturday", notice.getFieldName());
+        assertEquals("saturday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -566,11 +567,11 @@ class CalendarTest {
 
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("sunday", notice.getFieldName());
+        assertEquals("sunday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
-        assertEquals(3, notice.getActualValue());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(0, notice.getRangeMin());
+        assertEquals(3, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
+        assertEquals(1, notice.getNoticeSpecific(KEY_RANGE_MAX));
+        assertEquals(0, notice.getNoticeSpecific(KEY_RANGE_MIN));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -602,7 +603,7 @@ class CalendarTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("sunday", notice.getFieldName());
+        assertEquals("sunday", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(SERVICE_ID, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
