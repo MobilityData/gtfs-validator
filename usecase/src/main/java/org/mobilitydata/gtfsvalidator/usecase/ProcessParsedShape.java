@@ -56,7 +56,7 @@ public class ProcessParsedShape {
     public void execute(final ParsedEntity validatedShapeEntity) {
         final String shapeId = (String) validatedShapeEntity.get("shape_id");
         final Float shapePtLat = (Float) validatedShapeEntity.get("shape_pt_lat");
-        final float shapePtLon = (Float) validatedShapeEntity.get("shape_pt_lon");
+        final Float shapePtLon = (Float) validatedShapeEntity.get("shape_pt_lon");
         final Integer shapePtSequence = (Integer) validatedShapeEntity.get("shape_pt_sequence");
         final Float shapeDistTraveled = (Float) validatedShapeEntity.get("shape_dist_traveled");
 
@@ -66,7 +66,7 @@ public class ProcessParsedShape {
                 .shapePtSequence(shapePtSequence)
                 .shapeDistTraveled(shapeDistTraveled);
 
-        @SuppressWarnings("rawtypes") final EntityBuildResult shape = builder.build();
+        final EntityBuildResult<?> shape = builder.build();
 
         if (shape.isSuccess()) {
             if (gtfsDataRepository.addShape((Shape) shape.getData()) == null) {
@@ -74,6 +74,8 @@ public class ProcessParsedShape {
                         "shape_id", validatedShapeEntity.getEntityId()));
             }
         } else {
+            // at this step it is certain that calling getData method will return a list of notices, therefore there is
+            // no need for cast check
             //noinspection unchecked
             ((List<Notice>) shape.getData()).forEach(resultRepository::addNotice);
         }

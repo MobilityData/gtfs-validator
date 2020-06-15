@@ -33,9 +33,12 @@ import java.util.List;
 public class Shape extends GtfsEntity implements Comparable<Shape> {
     @NotNull
     private final String shapeId;
-    private final float shapePtLat;
-    private final float shapePtLon;
-    private final int shapePtSequence;
+    @NotNull
+    private final Float shapePtLat;
+    @NotNull
+    private final Float shapePtLon;
+    @NotNull
+    private final Integer shapePtSequence;
     @Nullable
     private final Float shapeDistTraveled;
 
@@ -50,9 +53,9 @@ public class Shape extends GtfsEntity implements Comparable<Shape> {
      *                          specified in this record
      */
     private Shape(@NotNull final String shapeId,
-                  float shapePtLat,
-                  float shapePtLon,
-                  final int shapePtSequence,
+                  @NotNull final Float shapePtLat,
+                  @NotNull final  Float shapePtLon,
+                  @NotNull final Integer shapePtSequence,
                   @Nullable final Float shapeDistTraveled) {
         this.shapeId = shapeId;
         this.shapePtLat = shapePtLat;
@@ -123,7 +126,6 @@ public class Shape extends GtfsEntity implements Comparable<Shape> {
         private Float shapePtLon;
         private Integer shapePtSequence;
         private final List<Notice> noticeCollection = new ArrayList<>();
-        @Nullable
         private Float shapeDistTraveled;
 
         /**
@@ -192,6 +194,8 @@ public class Shape extends GtfsEntity implements Comparable<Shape> {
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
 
+            // suppressed warning regarding nullability of fields shapePtLat, shapePtLon, and shapePtSequence since
+            // these fields could be provided as null values
             //noinspection ConstantConditions to avoid lint
             if (shapeId == null ||
                     shapePtLat == null || (shapePtLat != null && (shapePtLat < -90.0f || shapePtLat > 90.0f)) ||
