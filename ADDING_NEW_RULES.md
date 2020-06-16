@@ -84,7 +84,7 @@ public class CannotParseDateNotice extends ErrorNotice {
 }
 ~~~
 
-### III. Implement your new rule exportation code
+### IV. Implement your new rule exportation code
 
 1. Add a new definition at the bottom of the [`NoticeExporter` interface](https://github.com/MobilityData/gtfs-validator/blob/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/domain/entity/notice/NoticeExporter.java)
 
@@ -93,11 +93,11 @@ public class CannotParseDateNotice extends ErrorNotice {
 **Note**: JSON export required at a minimum. Leaving the protobuf implementation empty will not lead to your PR being rejected.
 The mechanism to use the protocol buffer exporter is very similar. At export time, the Notice data must be mapped to a [GTFSProblem](https://github.com/google/transitfeed/blob/cc351b9542b5dd1c75fb570063f36ded3da2bfd7/misc/gtfs_validation.proto)
 
-### IV. Implement exportation code unit tests
+### V. Implement exportation code unit tests
 
 Add a new test implementation to the [`*ExporterTest` classes](https://github.com/MobilityData/gtfs-validator/tree/master/adapter/exporter/src/test/java/org/mobilitydata/gtfsvalidator/exporter)
 
-### V. Implement your new rule in a specific use case
+### VI. Implement your new rule in a specific use case
 
 All rules in the validator are implemented in self-contained classes in the [`usecase` package](https://github.com/MobilityData/gtfs-validator/tree/master/usecase/src/main/java/org/mobilitydata/gtfsvalidator/usecase) located in its own `usecase` module
 
@@ -111,7 +111,7 @@ All rules in the validator are implemented in self-contained classes in the [`us
 Don't forget to log a meaningful message specifying what rule you are about to validate.
 
 
-### VI. Implement use case unit tests
+### VII. Implement use case unit tests
 
 Add a Test class for your new use case in the [use case test module](https://github.com/MobilityData/gtfs-validator/tree/master/usecase/src/test/java/org/mobilitydata/gtfsvalidator/usecase)
 Those should test for the following
@@ -120,7 +120,7 @@ Those should test for the following
 - The actual content of generated notices
 - Null safety regarding fields defined as optional in the GTFS specification
 
-### VII. Add a way to instantiate, retrieve and execute the use case
+### VIII. Add a way to instantiate, retrieve and execute the use case
 
 Instantiation is done through the [`DefaultConfig` class](https://github.com/MobilityData/gtfs-validator/blob/master/config/src/main/java/org/mobilitydata/gtfsvalidator/config/DefaultConfig.java)
 
