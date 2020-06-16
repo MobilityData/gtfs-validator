@@ -16,6 +16,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
@@ -25,13 +26,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ShapeTest {
+class ShapePointTest {
 
     // Field shapeId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
     @Test
-    public void createShapeWithNullIdShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithNullIdShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId(null)
@@ -48,13 +49,13 @@ class ShapeTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("shapes.txt", notice.getFilename());
-        assertEquals("shape_id", notice.getFieldName());
+        assertEquals("shape_id", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
     }
 
     @Test
-    void createShapeWithNullLatitudeShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithNullLatitudeShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
@@ -71,13 +72,13 @@ class ShapeTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("shapes.txt", notice.getFilename());
-        assertEquals("shape_pt_lat", notice.getFieldName());
+        assertEquals("shape_pt_lat", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("shape id", notice.getEntityId());
     }
 
     @Test
-    void createShapeWithNullLongitudeShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithNullLongitudeShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
@@ -94,13 +95,13 @@ class ShapeTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("shapes.txt", notice.getFilename());
-        assertEquals("shape_pt_lon", notice.getFieldName());
+        assertEquals("shape_pt_lon", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("shape id", notice.getEntityId());
     }
 
     @Test
-    void createShapeWithNullShapePtSequenceShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithNullShapePtSequenceShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
@@ -117,13 +118,13 @@ class ShapeTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("shapes.txt", notice.getFilename());
-        assertEquals("shape_pt_sequence", notice.getFieldName());
+        assertEquals("shape_pt_sequence", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("shape id", notice.getEntityId());
     }
 
     @Test
-    public void createShapeWithTooBigLatitudeShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithTooBigLatitudeShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
                 .shapePtLat(120f)
@@ -140,15 +141,15 @@ class ShapeTest {
 
         assertEquals("shapes.txt", notice.getFilename());
         assertEquals("shape id", notice.getEntityId());
-        assertEquals("shape_pt_lat", notice.getFieldName());
-        assertEquals(-90f, notice.getRangeMin());
-        assertEquals(120f, notice.getActualValue());
-        assertEquals(90f, notice.getRangeMax());
+        assertEquals("shape_pt_lat", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
+        assertEquals(-90f, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(120f, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(90f, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
     }
 
     @Test
-    public void createShapeWithTooSmallLatitudeShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithTooSmallLatitudeShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
                 .shapePtLat(-120f)
@@ -164,16 +165,16 @@ class ShapeTest {
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("shapes.txt", notice.getFilename());
-        assertEquals("shape_pt_lat", notice.getFieldName());
+        assertEquals("shape_pt_lat", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("shape id", notice.getEntityId());
-        assertEquals(-90f, notice.getRangeMin());
-        assertEquals(-120f, notice.getActualValue());
-        assertEquals(90f, notice.getRangeMax());
+        assertEquals(-90f, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(-120f, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(90f, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
     }
 
     @Test
-    public void createShapeWithTooSmallLongitudeShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithTooSmallLongitudeShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
                 .shapePtLat(0f)
@@ -190,15 +191,15 @@ class ShapeTest {
 
         assertEquals("shapes.txt", notice.getFilename());
         assertEquals("shape id", notice.getEntityId());
-        assertEquals("shape_pt_lon", notice.getFieldName());
-        assertEquals(-180f, notice.getRangeMin());
-        assertEquals(-270f, notice.getActualValue());
-        assertEquals(180f, notice.getRangeMax());
+        assertEquals("shape_pt_lon", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
+        assertEquals(-180f, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(-270f,notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(180f, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
     }
 
     @Test
-    public void createShapeWithTooBigLongitudeShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithTooBigLongitudeShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
                 .shapePtLat(0f)
@@ -214,16 +215,16 @@ class ShapeTest {
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("shapes.txt", notice.getFilename());
-        assertEquals("shape_pt_lon", notice.getFieldName());
+        assertEquals("shape_pt_lon", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("shape id", notice.getEntityId());
-        assertEquals(-180f, notice.getRangeMin());
-        assertEquals(270f, notice.getActualValue());
-        assertEquals(180f, notice.getRangeMax());
+        assertEquals(-180f, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(270f, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(180f, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
     }
 
     @Test
-    public void createShapeWithInvalidShapePtSequenceShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithInvalidShapePtSequenceShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
                 .shapePtLat(0f)
@@ -239,16 +240,16 @@ class ShapeTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("shapes.txt", notice.getFilename());
-        assertEquals("shape_pt_sequence", notice.getFieldName());
+        assertEquals("shape_pt_sequence", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("shape id", notice.getEntityId());
-        assertEquals(0, notice.getRangeMin());
-        assertEquals(-3, notice.getActualValue());
-        assertEquals(Integer.MAX_VALUE, notice.getRangeMax());
+        assertEquals(0, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(-3, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(Integer.MAX_VALUE, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
     }
 
     @Test
-    public void createShapeWithInvalidShapeDistTraveledShouldGenerateNotice() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void createShapePointWithInvalidShapeDistTraveledShouldGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
                 .shapePtLat(0f)
@@ -264,16 +265,16 @@ class ShapeTest {
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("shapes.txt", notice.getFilename());
-        assertEquals("shape_dist_traveled", notice.getFieldName());
+        assertEquals("shape_dist_traveled", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("shape id", notice.getEntityId());
-        assertEquals(0, notice.getRangeMin());
-        assertEquals(-2.0f, notice.getActualValue());
-        assertEquals(Float.MAX_VALUE, notice.getRangeMax());
+        assertEquals(0.0f, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(-2.0f, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(Float.MAX_VALUE, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
     }
 
     @Test
-    public void shapeShouldBeAbleToBeComparedToOtherShape() {
-        final Shape.ShapeBuilder underTest = new Shape.ShapeBuilder();
+    void shapePointShouldBeAbleToBeComparedToOtherShapePoint() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         underTest.shapeId("shape id")
                 .shapePtLat(0f)
@@ -281,12 +282,12 @@ class ShapeTest {
                 .shapePtSequence(0)
                 .shapeDistTraveled(0f);
 
-        final Shape firstShapeInSequence = (Shape) underTest.build().getData();
+        final ShapePoint firstShapePointInSequence = (ShapePoint) underTest.build().getData();
 
         underTest.shapePtSequence(2);
 
-        final Shape secondShapeInSequence = (Shape) underTest.build().getData();
+        final ShapePoint secondShapePointInSequence = (ShapePoint) underTest.build().getData();
 
-        assertTrue(secondShapeInSequence.isGreaterThan(firstShapeInSequence));
+        assertTrue(secondShapePointInSequence.isGreaterThan(firstShapePointInSequence));
     }
 }

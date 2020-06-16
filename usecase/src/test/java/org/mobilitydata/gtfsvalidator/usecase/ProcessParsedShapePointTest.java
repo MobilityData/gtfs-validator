@@ -3,7 +3,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Shape;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class ProcessParsedShapeTest {
+class ProcessParsedShapePointTest {
     private static final String SHAPE_ID = "shape_id";
     private static final String SHAPE_PT_LAT = "shape_pt_lat";
     private static final String SHAPE_PT_LON = "shape_pt_lon";
@@ -29,13 +29,13 @@ class ProcessParsedShapeTest {
     public void validParsedShapeShouldNotGenerateNoticeAndBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final Shape.ShapeBuilder mockBuilder = mock(Shape.ShapeBuilder.class, RETURNS_SELF);
+        final ShapePoint.ShapeBuilder mockBuilder = mock(ShapePoint.ShapeBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
-        final Shape mockShape = mock(Shape.class);
+        final ShapePoint mockShapePoint = mock(ShapePoint.class);
         //noinspection rawtypes to avoid lind
         final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
 
-        when(mockGenericObject.getData()).thenReturn(mockShape);
+        when(mockGenericObject.getData()).thenReturn(mockShapePoint);
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
         //noinspection unchecked to avoid lind
@@ -47,9 +47,9 @@ class ProcessParsedShapeTest {
         when(mockParsedShape.get(ArgumentMatchers.eq(SHAPE_PT_SEQUENCE))).thenReturn(1);
         when(mockParsedShape.get(ArgumentMatchers.eq(SHAPE_DIST_TRAVELED))).thenReturn(100f);
 
-        when(mockGtfsDataRepo.addShape(mockShape)).thenReturn(mockShape);
+        when(mockGtfsDataRepo.addShapePoint(mockShapePoint)).thenReturn(mockShapePoint);
 
-        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShapePoint underTest = new ProcessParsedShapePoint(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         underTest.execute(mockParsedShape);
 
@@ -72,7 +72,7 @@ class ProcessParsedShapeTest {
         verify(mockGenericObject, times(1)).getData();
 
         verify(mockBuilder, times(1)).build();
-        verify(mockGtfsDataRepo, times(1)).addShape(ArgumentMatchers.eq(mockShape));
+        verify(mockGtfsDataRepo, times(1)).addShapePoint(ArgumentMatchers.eq(mockShapePoint));
 
         verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockParsedShape, mockGenericObject);
     }
@@ -81,7 +81,7 @@ class ProcessParsedShapeTest {
     public void invalidParsedShapeShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final Shape.ShapeBuilder mockBuilder = mock(Shape.ShapeBuilder.class, RETURNS_SELF);
+        final ShapePoint.ShapeBuilder mockBuilder = mock(ShapePoint.ShapeBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
 
         @SuppressWarnings("unchecked") final List<Notice> mockNoticeCollection = spy(ArrayList.class);
@@ -97,7 +97,7 @@ class ProcessParsedShapeTest {
         //noinspection unchecked
         when(mockBuilder.build()).thenReturn(mockGenericObject);
 
-        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShapePoint underTest = new ProcessParsedShapePoint(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         when(mockParsedShape.get(ArgumentMatchers.eq(SHAPE_ID))).thenReturn("test id");
         when(mockParsedShape.get(ArgumentMatchers.eq(SHAPE_PT_LAT))).thenReturn(190.0f);
@@ -132,22 +132,22 @@ class ProcessParsedShapeTest {
     public void duplicateShapeShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-        final Shape.ShapeBuilder mockBuilder = mock(Shape.ShapeBuilder.class, RETURNS_SELF);
+        final ShapePoint.ShapeBuilder mockBuilder = mock(ShapePoint.ShapeBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedShape = mock(ParsedEntity.class);
         when(mockParsedShape.getEntityId()).thenReturn("shape id");
-        final Shape mockShape = mock(Shape.class);
+        final ShapePoint mockShapePoint = mock(ShapePoint.class);
 
         //noinspection rawtypes to avoid lind
         final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
         when(mockGenericObject.isSuccess()).thenReturn(true);
-        when(mockGenericObject.getData()).thenReturn(mockShape);
+        when(mockGenericObject.getData()).thenReturn(mockShapePoint);
 
-        when(mockShape.getShapeId()).thenReturn(SHAPE_ID);
+        when(mockShapePoint.getShapeId()).thenReturn(SHAPE_ID);
         //noinspection unchecked to avoid lind
         when(mockBuilder.build()).thenReturn(mockGenericObject);
-        when(mockGtfsDataRepo.addShape(mockShape)).thenReturn(null);
+        when(mockGtfsDataRepo.addShapePoint(mockShapePoint)).thenReturn(null);
 
-        final ProcessParsedShape underTest = new ProcessParsedShape(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+        final ProcessParsedShapePoint underTest = new ProcessParsedShapePoint(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
         when(mockParsedShape.get(ArgumentMatchers.eq(SHAPE_ID))).thenReturn("shape id");
         when(mockParsedShape.get(ArgumentMatchers.eq(SHAPE_PT_LAT))).thenReturn(0f);
@@ -165,7 +165,7 @@ class ProcessParsedShapeTest {
         //noinspection ResultOfMethodCallIgnored to avoid lind
         verify(mockParsedShape, times(1)).getEntityId();
 
-        verify(mockGtfsDataRepo, times(1)).addShape(ArgumentMatchers.eq(mockShape));
+        verify(mockGtfsDataRepo, times(1)).addShapePoint(ArgumentMatchers.eq(mockShapePoint));
 
 
         verify(mockBuilder, times(1)).shapeId(ArgumentMatchers.eq("shape id"));
@@ -186,10 +186,10 @@ class ProcessParsedShapeTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("shapes.txt", noticeList.get(0).getFilename());
-        assertEquals(SHAPE_ID, noticeList.get(0).getFieldName());
+        assertEquals(SHAPE_ID, noticeList.get(0).getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("shape id", noticeList.get(0).getEntityId());
 
-        verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedShape, mockShape,
+        verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedShape, mockShapePoint,
                 mockGenericObject);
     }
 }

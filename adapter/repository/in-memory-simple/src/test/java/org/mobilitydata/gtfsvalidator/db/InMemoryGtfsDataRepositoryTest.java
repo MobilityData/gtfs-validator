@@ -17,15 +17,10 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Shape;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
@@ -452,45 +447,45 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void callToAddShapeShouldSameReturnEntity() {
-        final Shape mockShape = mock(Shape.class);
-        when(mockShape.getShapeId()).thenReturn("test id");
+        final ShapePoint mockShapePoint = mock(ShapePoint.class);
+        when(mockShapePoint.getShapeId()).thenReturn("test id");
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        assertEquals(mockShape, underTest.addShape(mockShape));
+        assertEquals(mockShapePoint, underTest.addShapePoint(mockShapePoint));
     }
 
     @Test
-    void addTwiceSameShapeShouldReturnNull() {
-        final Shape mockShape = mock(Shape.class);
-        when(mockShape.getShapeId()).thenReturn("test id");
+    void addTwiceSameShapePointShouldReturnNull() {
+        final ShapePoint mockShapePoint = mock(ShapePoint.class);
+        when(mockShapePoint.getShapeId()).thenReturn("test id");
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addShape(mockShape);
-        assertNull(underTest.addShape(mockShape));
+        underTest.addShapePoint(mockShapePoint);
+        assertNull(underTest.addShapePoint(mockShapePoint));
     }
 
     @Test
-    void addNullShapeShouldThrowException() {
+    void addNullShapePointShouldThrowException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         final Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> underTest.addShape(null));
-        assertEquals("Cannot add null shape to data repository", exception.getMessage());
+                () -> underTest.addShapePoint(null));
+        assertEquals("Cannot add null shape point to data repository", exception.getMessage());
     }
 
     @Test
-    void getShapeByIdShouldReturnRelatedShape() {
-        final Shape mockShape00 = mock(Shape.class);
-        when(mockShape00.getShapeId()).thenReturn("test id00");
+    void getShapeByIdShouldReturnRelatedListOfShapePoint() {
+        final ShapePoint mockShapePoint00 = mock(ShapePoint.class);
+        when(mockShapePoint00.getShapeId()).thenReturn("test id00");
 
-        final Shape mockShape01 = mock(Shape.class);
-        when(mockShape01.getShapeId()).thenReturn("test id01");
+        final ShapePoint mockShapePoint01 = mock(ShapePoint.class);
+        when(mockShapePoint01.getShapeId()).thenReturn("test id01");
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addShape(mockShape00);
-        underTest.addShape(mockShape01);
+        underTest.addShapePoint(mockShapePoint00);
+        underTest.addShapePoint(mockShapePoint01);
 
-        assertEquals(mockShape00, underTest.getShapeById("test id00"));
-        assertEquals(mockShape01, underTest.getShapeById("test id01"));
+        assertEquals(List.of(mockShapePoint00), underTest.getShapeById("test id00"));
+        assertEquals(List.of(mockShapePoint01), underTest.getShapeById("test id01"));
     }
 }

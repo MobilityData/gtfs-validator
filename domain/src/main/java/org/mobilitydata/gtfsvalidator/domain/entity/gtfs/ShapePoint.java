@@ -28,9 +28,9 @@ import java.util.List;
 
 /**
  * Class for all entities defined in shapes.txt. Can not be directly instantiated: user must use the
- * {@link Shape.ShapeBuilder} to create this.
+ * {@link ShapePoint.ShapeBuilder} to create this.
  */
-public class Shape extends GtfsEntity implements Comparable<Shape> {
+public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
     @NotNull
     private final String shapeId;
     @NotNull
@@ -52,11 +52,11 @@ public class Shape extends GtfsEntity implements Comparable<Shape> {
      * @param shapeDistTraveled actual distance traveled along the shape from the first shape point to the point
      *                          specified in this record
      */
-    private Shape(@NotNull final String shapeId,
-                  @NotNull final Float shapePtLat,
-                  @NotNull final  Float shapePtLon,
-                  @NotNull final Integer shapePtSequence,
-                  @Nullable final Float shapeDistTraveled) {
+    private ShapePoint(@NotNull final String shapeId,
+                       @NotNull final Float shapePtLat,
+                       @NotNull final  Float shapePtLon,
+                       @NotNull final Integer shapePtSequence,
+                       @Nullable final Float shapeDistTraveled) {
         this.shapeId = shapeId;
         this.shapePtLat = shapePtLat;
         this.shapePtLon = shapePtLon;
@@ -93,32 +93,32 @@ public class Shape extends GtfsEntity implements Comparable<Shape> {
      * shape_pt_sequence is numerically less than field shape_pt_sequence of argument; and a value greater
      * than {@code 0} if this field shape_pt_sequence is numerically greater than field shape_pt_sequence of argument
      *
-     * @param shape shape to compare to
+     * @param shapePoint shape to compare to
      * @return the value {@code 0} if this {@code Shape} field shape_pt_sequence is equal to field shape_pt_sequence of
      * argument; a value less than {@code 0} if this field shape_pt_sequence is numerically less than field
      * shape_pt_sequence of argument; and a value greater than {@code 0} if this field shape_pt_sequence is numerically
      * greater than field shape_pt_sequence of argument
      */
     @Override
-    public int compareTo(@NotNull final Shape shape) {
-        return getShapePtSequence().compareTo(shape.getShapePtSequence());
+    public int compareTo(@NotNull final ShapePoint shapePoint) {
+        return getShapePtSequence().compareTo(shapePoint.getShapePtSequence());
     }
 
     /**
-     * Return true if this {@link Shape} has field shape_pt_sequence greater than {@param otherShape}
+     * Return true if this {@link ShapePoint} has field shape_pt_sequence greater than {@param otherShape}
      * field shape_pt_sequence; otherwise return false
      *
-     * @param otherShape shape to compare
-     * @return true if this {@link Shape} has field shape_pt_sequence greater than {@param otherShape}
+     * @param otherShapePoint shape to compare
+     * @return true if this {@link ShapePoint} has field shape_pt_sequence greater than {@param otherShape}
      * field shape_pt_sequence; otherwise return false
      */
-    public boolean isGreaterThan(final Shape otherShape) {
-        return compareTo(otherShape) > 0;
+    public boolean isGreaterThan(final ShapePoint otherShapePoint) {
+        return compareTo(otherShapePoint) > 0;
     }
 
     /**
-     * Builder class to create {@link Shape} objects. Allows an unordered definition of the different attributes of
-     * {@link Shape}.
+     * Builder class to create {@link ShapePoint} objects. Allows an unordered definition of the different attributes of
+     * {@link ShapePoint}.
      */
     public static class ShapeBuilder {
         private String shapeId;
@@ -233,7 +233,7 @@ public class Shape extends GtfsEntity implements Comparable<Shape> {
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {
-                return new EntityBuildResult<>(new Shape(shapeId, shapePtLat, shapePtLon, shapePtSequence, shapeDistTraveled));
+                return new EntityBuildResult<>(new ShapePoint(shapeId, shapePtLat, shapePtLon, shapePtSequence, shapeDistTraveled));
             }
         }
     }

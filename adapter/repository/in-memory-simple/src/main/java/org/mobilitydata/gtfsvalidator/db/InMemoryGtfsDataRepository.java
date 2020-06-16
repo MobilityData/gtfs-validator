@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
-
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
@@ -27,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,7 +82,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
     // Map containing Shape Entities. Entities are mapped on the value found in column shape_id of GTFS file shapes.txt
-    private final Map<String, Shape> shapePerShapeId = new HashMap<>();
+    private final Map<String, ArrayList<ShapePoint>> shapePerId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -478,37 +478,41 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Add a Shape representing a row from shapes.txt to this. Return the entity added to the repository if the
-     * uniqueness constraint of route based on shape_id is respected, if this requirement is not met, returns null.
+     * Add a shape point representing a row from shapes.txt to this. Return the entity added to the repository if not
+     * null, otherwise returns null.
      *
-     * @param newShape the internal representation of a row from shapes.txt to be added to the repository.
-     * @return the entity added to the repository if the uniqueness constraint of route based on shape_id is
-     * respected, if this requirement is not met returns null.
-     * @throws IllegalArgumentException if the shape passed as argument is null
+     * @param newShapePoint the internal representation of a row from shapes.txt to be added to the repository.
+     * @return the entity added to the repository if not null, otherwise returns null.
+     * @throws IllegalArgumentException if the shape point passed as argument is null
      */
     @Override
-    public Shape addShape(final Shape newShape) throws IllegalArgumentException {
-        if (newShape != null) {
-            if (shapePerShapeId.containsKey(newShape.getShapeId())) {
-                return null;
+    public ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException {
+        if (newShapePoint != null) {
+            final String shapeId = newShapePoint.getShapeId();
+            if (shapePerId.containsKey(shapeId)) {
+                if (shapePerId.get(shapeId).contains(newShapePoint)) {
+                    return null;
+                }
+                shapePerId.get(shapeId).add(newShapePoint);
             } else {
-                final String routeId = newShape.getShapeId();
-                shapePerShapeId.put(routeId, newShape);
-                return newShape;
+                final ArrayList<ShapePoint> shapePointPointCollection = new ArrayList<>();
+                shapePointPointCollection.add(newShapePoint);
+                shapePerId.put(shapeId, shapePointPointCollection);
             }
+            return newShapePoint;
         } else {
-            throw new IllegalArgumentException("Cannot add null shape to data repository");
+            throw new IllegalArgumentException("Cannot add null shape point to data repository");
         }
     }
 
     /**
-     * Return the Shape representing a row from shapes.txt related to the id provided as parameter
+     * Return the list of shape points from shapes.txt related to the id provided as parameter
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return the Route representing a row from shapes.txt related to the id provided as parameter
+     * @return  the list of shape points from shapes.txt related to the id provided as parameter
      */
     @Override
-    public Shape getShapeById(final String shapeId) {
-        return shapePerShapeId.get(shapeId);
+    public ArrayList<ShapePoint> getShapeById(final String shapeId) {
+        return shapePerId.get(shapeId);
     }
 }

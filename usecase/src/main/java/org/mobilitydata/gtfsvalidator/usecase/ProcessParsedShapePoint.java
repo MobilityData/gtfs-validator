@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Shape;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -29,14 +29,14 @@ import java.util.List;
 /**
  * This use case turns a parsed entity representing a row from shapes.txt into a concrete class
  */
-public class ProcessParsedShape {
+public class ProcessParsedShapePoint {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
-    private final Shape.ShapeBuilder builder;
+    private final ShapePoint.ShapeBuilder builder;
 
-    public ProcessParsedShape(final ValidationResultRepository resultRepository,
-                              final GtfsDataRepository gtfsDataRepository,
-                              final Shape.ShapeBuilder builder) {
+    public ProcessParsedShapePoint(final ValidationResultRepository resultRepository,
+                                   final GtfsDataRepository gtfsDataRepository,
+                                   final ShapePoint.ShapeBuilder builder) {
         this.resultRepository = resultRepository;
         this.gtfsDataRepository = gtfsDataRepository;
         this.builder = builder;
@@ -45,9 +45,9 @@ public class ProcessParsedShape {
     /**
      * Use case execution method to go from a row from shapes.txt to an internal representation.
      * <p>
-     * This use case extracts values from a {@code ParsedEntity} and creates a {@code Shape} object if the requirements
-     * from the official GTFS specification are met. When these requirements are mot met, related notices generated in
-     * {@code Shape.ShapeBuilder} are added to the result repository provided to the constructor.
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code ShapePoint} object if the
+     * requirements from the official GTFS specification are met. When these requirements are mot met, related notices
+     * generated in {@code Shape.ShapeBuilder} are added to the result repository provided to the constructor.
      * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
      * shape entities is not respected.
      *
@@ -69,7 +69,7 @@ public class ProcessParsedShape {
         final EntityBuildResult<?> shape = builder.build();
 
         if (shape.isSuccess()) {
-            if (gtfsDataRepository.addShape((Shape) shape.getData()) == null) {
+            if (gtfsDataRepository.addShapePoint((ShapePoint) shape.getData()) == null) {
                 resultRepository.addNotice(new DuplicatedEntityNotice("shapes.txt",
                         "shape_id", validatedShapeEntity.getEntityId()));
             }
