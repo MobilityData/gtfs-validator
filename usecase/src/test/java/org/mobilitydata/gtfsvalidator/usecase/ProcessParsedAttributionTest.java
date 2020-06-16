@@ -265,7 +265,7 @@ class ProcessParsedAttributionTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("attributions.txt", noticeList.get(0).getFilename());
-        assertEquals("organization_name", noticeList.get(0).getFieldName());
+        assertEquals("organization_name", noticeList.get(0).getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAttribution, mockResultRepo, mockGtfsDataRepo, mockAttribution, mockBuilder,

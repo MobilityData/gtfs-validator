@@ -374,10 +374,24 @@ public class Attribution extends GtfsEntity {
      *
      * @return  the key used to map {@link Attribution}
      */
-    public String getAttributionKey() {
-        return getAttributionId() + "; " + getAgencyId() + "; " + getRouteId() + "; " + getTripId() + "; "
-                + getOrganizationName() + "; " + isProducer() + "; " + isOperator() + "; " +
-                isAuthority() + "; " + getAttributionUrl() + "; " + getAttributionEmail() + "; "
-                + getAttributionPhone();
+    public static String getAttributionMappingKey(final String attributionId, final String agencyId,
+                                                  final String routeId, final String tripId,
+                                                  final String organizationName, final Boolean isProducer,
+                                                  final Boolean isOperator, final Boolean isAuthority,
+                                                  final String attributionUrl, final String attributionEmail,
+                                                  final String attributionPhone) {
+        return attributionId+agencyId+routeId+tripId+organizationName+isProducer+isOperator+isAuthority+attributionUrl+
+                attributionEmail+attributionPhone;
+    }
+
+    /**
+     * Returns the key corresponding to this {@link Attribution}
+     *
+     * @return the key corresponding to this {@link Attribution}
+     */
+    public String getAttributionMappingKey() {
+        return getAttributionMappingKey(getAttributionId(), getAgencyId(), getRouteId(), getTripId(),
+                getOrganizationName(), isProducer(), isOperator(), isAuthority(), getAttributionUrl(),
+                getAttributionEmail(), getAttributionPhone());
     }
 }

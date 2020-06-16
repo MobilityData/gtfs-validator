@@ -20,8 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Attribution;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
@@ -82,6 +80,20 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
+    // Map containing Attribution entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file attributions.txt:
+    // - attribution_id
+    // - agency_id
+    // - route_id
+    // - trip_id
+    // - organization_name
+    // - is_producer
+    // - is_operator
+    // - is_authority
+    // - attribution_url
+    // - attribution_email
+    // - attribution_phone
+    // Example of key after composition: attribution_idagency_idroute_idtrip_idorganization_nameis_produceris_operatoris_authorityattribution_urlattribution_emailattribution_phone
     private final Map<String, Attribution> attributionCollection = new HashMap<>();
 
     /**
@@ -498,7 +510,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException {
         if (newAttribution != null) {
-            final String key = newAttribution.getAttributionKey();
+            final String key = newAttribution.getAttributionMappingKey();
             if (attributionCollection.containsKey(key)) {
                 return null;
             } else {
@@ -533,8 +545,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                       final String tripId, final String organizationName, final Boolean isProducer,
                                       final Boolean isOperator, final Boolean isAuthority, final String attributionUrl,
                                       final String attributionEmail, final String attributionPhone) {
-        return attributionCollection.get(attributionId + "; " + agencyId + "; "+ routeId + "; "+ tripId + "; " +
-                organizationName + "; "+ isProducer + "; " + isOperator + "; " + isAuthority + "; " + attributionUrl
-                + "; " + attributionEmail + "; " + attributionPhone);
+        return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId,agencyId,routeId,tripId ,
+                organizationName,isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
+                attributionPhone));
     }
 }

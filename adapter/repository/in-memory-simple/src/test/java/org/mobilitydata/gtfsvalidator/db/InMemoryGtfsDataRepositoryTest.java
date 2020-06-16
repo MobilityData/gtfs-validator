@@ -17,12 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Attribution;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
@@ -461,11 +456,11 @@ class InMemoryGtfsDataRepositoryTest {
         final Attribution mockAttribution = mock(Attribution.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockAttribution.getOrganizationName()).thenReturn("organization name");
-        when(mockAttribution.getAttributionKey()).thenReturn("mock key");
+        when(mockAttribution.getAttributionMappingKey()).thenReturn("mock key");
         underTest.addAttribution(mockAttribution);
 
         assertNull(underTest.addAttribution(mockAttribution));
-        verify(mockAttribution, times(2)).getAttributionKey();
+        verify(mockAttribution, times(2)).getAttributionMappingKey();
         verifyNoMoreInteractions(mockAttribution);
     }
 
@@ -477,10 +472,10 @@ class InMemoryGtfsDataRepositoryTest {
         when(mockAttribution01.getOrganizationName()).thenReturn("organization name 1");
 
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockAttribution00.getAttributionKey())
-                .thenReturn("null; null; null; null; organization name 0; false; false; false; null; null; null");
-        when(mockAttribution01.getAttributionKey())
-                .thenReturn("null; null; null; null; organization name 1; false; false; false; null; null; null");
+        when(mockAttribution00.getAttributionMappingKey())
+                .thenReturn("nullnullnullnullorganization name 0falsefalsefalsenullnullnull");
+        when(mockAttribution01.getAttributionMappingKey())
+                .thenReturn("nullnullnullnullorganization name 1falsefalsefalsenullnullnull");
 
         assertEquals(mockAttribution00, underTest.addAttribution(mockAttribution00));
         assertEquals(mockAttribution01, underTest.addAttribution(mockAttribution01));
@@ -491,8 +486,8 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(mockAttribution01, underTest.getAttribution(null, null, null,
                 null, "organization name 1", false, false, false,
                 null, null, null));
-        verify(mockAttribution00, times(1)).getAttributionKey();
-        verify(mockAttribution01, times(1)).getAttributionKey();
+        verify(mockAttribution00, times(1)).getAttributionMappingKey();
+        verify(mockAttribution01, times(1)).getAttributionMappingKey();
         verifyNoMoreInteractions(mockAttribution00, mockAttribution01);
     }
 }

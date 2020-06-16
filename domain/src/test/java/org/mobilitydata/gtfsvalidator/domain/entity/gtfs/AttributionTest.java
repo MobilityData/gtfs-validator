@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
@@ -44,7 +45,7 @@ class AttributionTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("attributions.txt", notice.getFilename());
-        assertEquals("organization_name", notice.getFieldName());
+        assertEquals("organization_name", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(entityId, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -67,11 +68,11 @@ class AttributionTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("attributions.txt", notice.getFilename());
-        assertEquals("is_producer", notice.getFieldName());
+        assertEquals("is_producer", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(entityId, notice.getEntityId());
-        assertEquals(0, notice.getRangeMin());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(4, notice.getActualValue());
+        assertEquals(0, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(1, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
+        assertEquals(4, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -93,11 +94,11 @@ class AttributionTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("attributions.txt", notice.getFilename());
-        assertEquals("is_operator", notice.getFieldName());
+        assertEquals("is_operator", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(entityId, notice.getEntityId());
-        assertEquals(0, notice.getRangeMin());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(4, notice.getActualValue());
+        assertEquals(0, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(1, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
+        assertEquals(4, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -119,11 +120,11 @@ class AttributionTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals("attributions.txt", notice.getFilename());
-        assertEquals("is_authority", notice.getFieldName());
+        assertEquals("is_authority", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(entityId, notice.getEntityId());
-        assertEquals(0, notice.getRangeMin());
-        assertEquals(1, notice.getRangeMax());
-        assertEquals(4, notice.getActualValue());
+        assertEquals(0, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(1, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
+        assertEquals(4, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -146,9 +147,9 @@ class AttributionTest {
         final IllegalFieldValueCombination notice = noticeCollection.get(0);
 
         assertEquals("attributions.txt", notice.getFilename());
-        assertEquals("is_producer", notice.getFieldName());
+        assertEquals("is_producer", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(entityId, notice.getEntityId());
-        assertEquals("is_authority; is_operator", notice.getConflictingFieldName());
+        assertEquals("is_authority; is_operator", notice.getNoticeSpecific(Notice.KEY_CONFLICTING_FIELD_NAME));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -196,7 +197,27 @@ class AttributionTest {
         assertTrue(entityBuildResult.getData() instanceof Attribution);
         final Attribution attribution = (Attribution) entityBuildResult.getData();
 
-        assertEquals("attribution id; agency id; route id; trip id; organization name; false; true; false;" +
-                " url; email; phone", attribution.getAttributionKey());
+        assertEquals("attribution idagency idroute idtrip idorganization namefalsetruefalse" +
+                "urlemailphone", attribution.getAttributionMappingKey());
+    }
+
+    @Test
+    void getAttributionMappingKeyShouldReturnStringOfConcatenatedFieldValues() {
+        final Attribution.AttributionBuilder underTest = new Attribution.AttributionBuilder();
+        final EntityBuildResult<?> entityBuildResult = underTest.attributionId("attribution id")
+                .agencyId("agency id")
+                .routeId("route id")
+                .tripId("trip id")
+                .organizationName("organization name")
+                .isProducer(0)
+                .isOperator(1)
+                .isAuthority(0)
+                .attributionUrl("url")
+                .attributionEmail("email")
+                .attributionPhone("phone")
+                .build();
+
+        assertEquals("attribution idagency idroute idtrip idorganization namefalsetruefalseurlemailphone",
+                ((Attribution)entityBuildResult.getData()).getAttributionMappingKey());
     }
 }
