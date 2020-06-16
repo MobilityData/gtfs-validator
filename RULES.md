@@ -30,6 +30,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E026](#E026) | Invalid route type | 
 | [E027](#E027) | Missing route short name and long name | 
 | [E028](#E028) | Route long name equals short name | 
+| [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
 
 ### Table of Warnings
 
@@ -104,6 +105,15 @@ A Route color and a Route text color should be contrasting. Minimum Contrast Rat
 <a name="E028"/>
 
 ### E028 - Route long name equals short name
+
+<a name="E032"/>
+
+### E032 - `calendar.txt` `end_date` is before `start_date`
+
+In `calendar.txt`, the `end_date` of a service record must not be earlier than the `start_date`.
+
+#### References:
+* [calendar.txt specification](https://gtfs.org/reference/static/#calendartxt)
 
 # Warnings
 
