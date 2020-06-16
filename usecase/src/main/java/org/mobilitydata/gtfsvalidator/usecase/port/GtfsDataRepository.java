@@ -51,6 +51,8 @@ public interface GtfsDataRepository {
 
     Calendar getCalendarByServiceId(final String serviceId);
 
+    Collection<Calendar> getCalendarAll();
+
     Trip addTrip(final Trip newTrip) throws IllegalArgumentException;
 
     Trip getTripById(final String tripId);
