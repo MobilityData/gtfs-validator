@@ -41,9 +41,9 @@ public class LogExecutionInfo {
      */
     public void execute() {
         if (execParamRepo.hasExecParamValue(execParamRepo.URL_KEY) & !execParamRepo
-                .hasExecParamValue(execParamRepo.ZIP_INPUT_KEY)) {
+                .hasExecParamValue(execParamRepo.INPUT_KEY)) {
             logger.info("--url provided but no location to place zip (--zip option). Using default: " +
-                    execParamRepo.getExecParamValue(execParamRepo.ZIP_INPUT_KEY) + System.lineSeparator());
+                    execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY) + System.lineSeparator());
         }
 
         if (!execParamRepo.hasExecParamValue(execParamRepo.EXTRACT_KEY)) {

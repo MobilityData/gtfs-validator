@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.parser;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.google.common.base.Strings;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
@@ -58,13 +59,18 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
     @Override
     public Map<String, ExecParam> parse() {
         final Map<String, ExecParam> toReturn = new HashMap<>();
+        if (Strings.isNullOrEmpty(parameterJsonString)) {
+            logger.info("could not find execution-parameters.json file  -- will consider default values for" +
+                    " execution parameters" + System.lineSeparator());
+            return toReturn;
+        }
         try {
             objectReader.readTree(parameterJsonString).fields()
-                    .forEachRemaining(field -> toReturn.put(field.getKey(), new ExecParam(field.getKey(), field.getValue().asText())));
+                    .forEachRemaining(field -> toReturn.put(field.getKey(), new ExecParam(field.getKey(),
+                            field.getValue().asText())));
             return toReturn;
         } catch (JsonProcessingException e) {
-            logger.info("could not find execution-parameters.json file  -- will consider default values for" +
-                    " execution parameters");
+            logger.error("An error occurred" + e.getMessage());
             return toReturn;
         }
     }
