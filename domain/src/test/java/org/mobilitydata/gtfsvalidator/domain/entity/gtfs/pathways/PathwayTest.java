@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
@@ -64,7 +65,7 @@ class PathwayTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("pathway_id", notice.getFieldName());
+        assertEquals("pathway_id", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());
@@ -100,7 +101,7 @@ class PathwayTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("from_stop_id", notice.getFieldName());
+        assertEquals("from_stop_id", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());
@@ -136,7 +137,7 @@ class PathwayTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("to_stop_id", notice.getFieldName());
+        assertEquals("to_stop_id", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());
@@ -172,7 +173,7 @@ class PathwayTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("pathway_mode", notice.getFieldName());
+        assertEquals("pathway_mode", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());
@@ -205,9 +206,9 @@ class PathwayTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("pathway_mode", notice.getFieldName());
+        assertEquals("pathway_mode", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
-        assertEquals("13", notice.getEnumValue());
+        assertEquals(13, notice.getNoticeSpecific(Notice.KEY_ENUM_VALUE));
 
         assertEquals(1, noticeCollection.size());
     }
@@ -239,9 +240,9 @@ class PathwayTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("is_bidirectional", notice.getFieldName());
+        assertEquals("is_bidirectional", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
-        assertEquals("3", notice.getEnumValue());
+        assertEquals(3, notice.getNoticeSpecific(Notice.KEY_ENUM_VALUE));
 
         assertEquals(1, noticeCollection.size());
     }
@@ -250,7 +251,8 @@ class PathwayTest {
     void createPathwayWithNullIsBidirectionalShouldGenerateNotice() {
         final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
-        //noinspection ConstantConditions to avoid lint
+        // suppressed warning for test purpose: lint is generated because of NotNull annotations
+        //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
                 .fromStopId(STOP_ID_0)
                 .toStopId(STOP_ID_1)
@@ -274,7 +276,7 @@ class PathwayTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("is_bidirectional", notice.getFieldName());
+        assertEquals("is_bidirectional", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
 
         assertEquals(1, noticeCollection.size());
@@ -307,11 +309,11 @@ class PathwayTest {
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("length", notice.getFieldName());
+        assertEquals("length", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
-        assertEquals(-10.0, notice.getActualValue());
-        assertEquals(0, notice.getRangeMin());
-        assertEquals(Float.MAX_VALUE, notice.getRangeMax());
+        assertEquals(-10.0f, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(0f, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(Float.MAX_VALUE, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
 
         assertEquals(1, noticeCollection.size());
     }
@@ -343,11 +345,11 @@ class PathwayTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("traversal_time", notice.getFieldName());
+        assertEquals("traversal_time", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
-        assertEquals(-2, notice.getActualValue());
-        assertEquals(0, notice.getRangeMin());
-        assertEquals(Integer.MAX_VALUE, notice.getRangeMax());
+        assertEquals(-2, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(0, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(Integer.MAX_VALUE, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
 
         assertEquals(1, noticeCollection.size());
     }
@@ -379,11 +381,11 @@ class PathwayTest {
         final IntegerFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("stair_count", notice.getFieldName());
+        assertEquals("stair_count", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
-        assertEquals(-3, notice.getActualValue());
-        assertEquals(0, notice.getRangeMin());
-        assertEquals(Integer.MAX_VALUE, notice.getRangeMax());
+        assertEquals(-3, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(0, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(Integer.MAX_VALUE, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
 
         assertEquals(1, noticeCollection.size());
     }
@@ -414,11 +416,11 @@ class PathwayTest {
                 (List<FloatFieldValueOutOfRangeNotice>) entityBuildResult.getData();
         final FloatFieldValueOutOfRangeNotice notice = noticeCollection.get(0);
         assertEquals(FILENAME, notice.getFilename());
-        assertEquals("min_width", notice.getFieldName());
+        assertEquals("min_width", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
-        assertEquals(-30.0, notice.getActualValue());
-        assertEquals(0, notice.getRangeMin());
-        assertEquals(Float.MAX_VALUE, notice.getRangeMax());
+        assertEquals(-30.0f, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(0f, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
+        assertEquals(Float.MAX_VALUE, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
 
         assertEquals(1, noticeCollection.size());
     }

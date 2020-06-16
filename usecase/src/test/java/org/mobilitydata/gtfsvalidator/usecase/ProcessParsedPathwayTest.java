@@ -267,7 +267,7 @@ class ProcessParsedPathwayTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("pathways.txt", noticeList.get(0).getFilename());
-        assertEquals("pathway_id", noticeList.get(0).getFieldName());
+        assertEquals("pathway_id", noticeList.get(0).getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedPathway, mockPathway,
