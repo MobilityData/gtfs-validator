@@ -20,7 +20,7 @@ The command line output will tell you where the compiled JAR file is located - f
 This file can then be run from the command-line with the normal Java conventions:
 
 ```
-java -jar gtfs-validator-v1.1.0.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -e input -o output
+java -jar gtfs-validator-v1.1.0.jar -u https://transitfeeds.com/p/mbta/64/latest/download -i input.zip -e input -o output
 ```
 
 This file can also be be run from the command-line with execution parameters coming from file `execution-parameters.json` located in the working directory:
@@ -36,7 +36,7 @@ With file `execution-parameters.json` content:
   "extract": "input",
   "output": "output",
   "url": "https://transitfeeds.com/p/mbta/64/latest/download",
-  "zipinput": "input.zip"
+  "input": "input.zip"
 }
 ```
 
