@@ -1,10 +1,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.notice;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
 import java.io.IOException;
 
@@ -63,4 +60,26 @@ public interface NoticeExporter {
     void export(IllegalFieldValueCombination toExport) throws IOException;
 
     void export(UnexpectedEnumValueNotice toExport) throws IOException;
+
+    void export(InvalidLangNotice toExport) throws IOException;
+
+    void export(InvalidEmailNotice toExport) throws IOException;
+
+    void export(SameNameAndDescriptionForRouteNotice toExport) throws IOException;
+
+    void export(RouteColorAndTextInsufficientContrastNotice toExport) throws IOException;
+
+    void export(RouteShortNameTooLongNotice toExport) throws IOException;
+
+    void export(InvalidRouteTypeNotice toExport) throws IOException;
+
+    void export(MissingShortAndLongNameForRouteNotice toExport) throws IOException;
+
+    void export(MissingRouteShortNameNotice toExport) throws IOException;
+
+    void export(MissingRouteLongNameNotice toExport) throws IOException;
+
+    void export(RouteLongNameEqualsShortNameNotice toExport) throws IOException;
+
+    void export(RouteLongNameContainsShortNameNotice toExport) throws IOException;
 }

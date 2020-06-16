@@ -4,5 +4,6 @@
   "output": "output",
   "proto": false,
   "url": null,
-  "zipinput": null
+  "input": null,
+  "exclude": null
 }

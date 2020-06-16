@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
@@ -122,26 +123,42 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     }
 
     /**
-     * This method returns a parser for execution parameters based on a boolean passed as parameter. This methods
-     * either returns {@code ApacheExecParamParser} if the boolean value is set to false, or returns
-     * {@code JsonExecParamParser} if the boolean value is set to true.
+     * This method returns a parser for execution parameters.
+     * This method returns {@code JsonExecParamParser} if:
+     *  - no configuration file nor arguments are provided,
+     *  - a configuration file is present and no arguments are provided
+     *  - both configuration file and arguments are provided
+     *
+     *  This method returns {@code ApacheExecParamParser} if:
+     *  - no configuration file is present and arguments are provided
      *
      * @param parameterJsonString the configuration .json file content to extract the execution parameters from.
      *                            If this parameter is null then, execution parameters are extracted from {@param args}.
      * @param args                the argument line to parse {@link ExecParam} when {@param parameterJsonString} is null
-     * @return {@code ApacheExecParamParser} if the boolean passed as parameter is set to false,
-     * or {@code JsonExecParamParser} if this boolean value is set to true.
+     * @return                    {@code JsonExecParamParser} if:
+     *                             - no configuration file nor arguments are provided,
+     *                             - a configuration file is present and no arguments are provided
+     *                             - both configuration file and arguments are provided
+     *
+     *                             {@code ApacheExecParamParser} if:
+     *                             - no configuration file is present and arguments are provided
      */
     @Override
     public ExecParamParser getParser(final String parameterJsonString,
                                      final String[] args,
                                      final Logger logger) {
-        if (args.length != 0) {
-            logger.info("Retrieving execution parameters from command-line");
-            return new ApacheExecParamParser(new DefaultParser(), new Options(), args);
-        } else {
-            logger.info("Retrieving execution parameters from execution-parameters.json file");
+        if (Strings.isNullOrEmpty(parameterJsonString) && args.length == 0) {
+            // true when json configuration file is not present and no arguments are provided
+            logger.info("No configuration file nor arguments provided"+System.lineSeparator());
             return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
+        } else if (!Strings.isNullOrEmpty(parameterJsonString) || args.length == 0) {
+            // true when no arguments are provided or when json configuration is provided
+            logger.info("Retrieving execution parameters from execution-parameters.json file"+System.lineSeparator());
+            return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
+        } else {
+            // true when only arguments are provided
+            logger.info("Retrieving execution parameters from command-line" + System.lineSeparator());
+            return new ApacheExecParamParser(new DefaultParser(), getOptions(), args);
         }
     }
 
@@ -159,53 +176,38 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      */
     @Override
     public String getExecParamValue(final String key) throws IllegalArgumentException {
-        final String defaultValue = defaultValueCollection.get(key).getValue();
+        final List<String> defaultValue = defaultValueCollection.get(key).getValue();
 
         switch (key) {
 
             case HELP_KEY:
             case PROTO_KEY: {
                 if (hasExecParam(key)) {
-                    return hasExecParamValue(key) ? String.valueOf(true) : defaultValue;
+                    return hasExecParam(key) ? String.valueOf(true) : defaultValue.get(0);
                 } else {
-                    return defaultValue;
+                    return defaultValue.get(0);
                 }
             }
 
-            case EXTRACT_KEY: {
-                if (hasExecParam(key)) {
-                    final String paramValue = getExecParamByKey(key).getValue();
-                    return hasExecParamValue(key)
-                            ? paramValue
-                            : System.getProperty("user.dir") + File.separator + defaultValue;
-                } else {
-                    return System.getProperty("user.dir") + File.separator + defaultValue;
-                }
-            }
-
+            case EXTRACT_KEY:
             case OUTPUT_KEY: {
-                if (hasExecParam(OUTPUT_KEY)) {
-                    final String value = System.getProperty("user.dir") + File.separator
-                            + getExecParamByKey(OUTPUT_KEY).getValue();
-                    return hasExecParamValue(OUTPUT_KEY) ? value : System.getProperty("user.dir") + File.separator
-                            + defaultValue;
-                } else {
-                    return System.getProperty("user.dir") + File.separator + defaultValue;
-                }
+                return hasExecParamValue(key) && hasExecParamValue(key)
+                        ? getExecParamByKey(key).getValue().get(0)
+                        : System.getProperty("user.dir") + File.separator + defaultValue.get(0);
             }
 
             case URL_KEY: {
-                return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getValue() : defaultValue;
+                return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getValue().get(0) : defaultValue.get(0);
             }
 
-            case ZIP_KEY: {
-                String zipInputPath = hasExecParamValue(ZIP_KEY)
-                        ? getExecParamByKey(ZIP_KEY).getValue()
+            case INPUT_KEY: {
+                String zipInputPath = hasExecParamValue(INPUT_KEY)
+                        ? getExecParamByKey(INPUT_KEY).getValue().get(0)
                         : System.getProperty("user.dir");
 
-                if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(ZIP_KEY)) {
+                if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(INPUT_KEY)) {
                     logger.info("--url and relative path to zip file(--zip option) not provided. Trying to " +
-                            "find zip in: " + zipInputPath);
+                            "find zip in: " + zipInputPath + System.lineSeparator());
                     List<String> zipList;
                     try {
                         zipList = Files.walk(Paths.get(zipInputPath))
@@ -217,19 +219,25 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                     }
 
                     if (zipList.isEmpty()) {
-                        logger.error("no zip file found - exiting");
+                        logger.error("no zip file found - exiting" + System.lineSeparator());
                         System.exit(0);
                     } else if (zipList.size() > 1) {
-                        logger.error("multiple zip files found - exiting");
+                        logger.error("multiple zip files found - exiting" + System.lineSeparator());
                         System.exit(0);
                     } else {
-                        logger.info("zip file found: " + zipList.get(0));
+                        logger.info("zip file found: " + zipList.get(0) + System.lineSeparator());
                         zipInputPath = zipList.get(0);
                     }
-                } else if (!hasExecParamValue(ZIP_KEY)) {
+                } else if (!hasExecParamValue(INPUT_KEY)) {
                     zipInputPath += File.separator + "input.zip";
                 }
                 return zipInputPath;
+            }
+
+            case EXCLUSION_KEY: {
+                return hasExecParamValue(EXCLUSION_KEY) ?
+                        getExecParamByKey(EXCLUSION_KEY).getValue().toString()
+                        : null;
             }
         }
         throw new IllegalArgumentException("Requested key is not handled");
@@ -239,22 +247,40 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * This method returns the collection of available {@code Option} as {@code Options}. This method is used to print
      * help when {@link ExecParam} with key HELP_KEY="help" is present in the repository.
      *
-     * @return the collection of available {@code Option} as {@code Options}.
+     * @return the collection of available {@code Option} as {@code Options} when {@link ExecParam} with key
+     * HELP_KEY="help" is present in the repository.
      */
     @Override
     public Options getOptions() {
-        Options options = new Options();
-        options.addOption("u", "url", true, "URL to GTFS zipped archive");
-        options.addOption("z", "zipinput", true, "if --url is used, where to place " +
-                "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
-        options.addOption("e", "extract", true, "Relative path where to extract" +
-                " the zip content");
-        options.addOption("o", "output", true, "Relative path where to place" +
-                " output files");
-        options.addOption("h", "help", false, "Print this message");
-        options.addOption("p", "proto", true, "Export validation results as" +
-                " proto");
-
+        final Options options = new Options();
+        options.addOption(String.valueOf(URL_KEY.charAt(0)), URL_KEY, true,
+                "URL to GTFS zipped archive");
+        options.addOption(String.valueOf(INPUT_KEY.charAt(0)), INPUT_KEY, true,
+                "if --url is used, where to place " +
+                        "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
+        options.addOption(String.valueOf(EXTRACT_KEY.charAt(0)), EXTRACT_KEY, true,
+                "Relative path where to extract the zip content");
+        options.addOption(String.valueOf(OUTPUT_KEY.charAt(0)), OUTPUT_KEY, true,
+                "Relative path where to place output files");
+        options.addOption(String.valueOf(HELP_KEY.charAt(0)), HELP_KEY, false, "Print this message");
+        options.addOption(String.valueOf(PROTO_KEY.charAt(0)), PROTO_KEY, false,
+                "Export validation results as proto");
+        options.addOption(String.valueOf(EXCLUSION_KEY.charAt(1)), EXCLUSION_KEY, true,
+                "Exclude files from semantic GTFS validation");
+        // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
+        // Other commands only take 1 argument
+        options.getOptions().forEach(option -> {
+            switch (option.getLongOpt()) {
+                case ExecParamRepository.PROTO_KEY:
+                case ExecParamRepository.HELP_KEY: {
+                    option.setArgs(0);
+                    break;
+                }
+                default: {
+                    option.setArgs(1);
+                }
+            }
+        });
         return options;
     }
 

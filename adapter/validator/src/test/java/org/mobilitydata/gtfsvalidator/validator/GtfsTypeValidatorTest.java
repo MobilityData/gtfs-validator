@@ -16,10 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
-import org.apache.commons.validator.routines.FloatValidator;
-import org.apache.commons.validator.routines.IntegerValidator;
-import org.apache.commons.validator.routines.RegexValidator;
-import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.*;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
@@ -63,6 +60,8 @@ class GtfsTypeValidatorTest {
                 mockFloatValidator,
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -103,6 +102,8 @@ class GtfsTypeValidatorTest {
                 mockFloatValidator,
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -118,10 +119,11 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(FloatFieldValueOutOfRangeNotice.class));
-        assertEquals("E011", notice.getId());
+        assertEquals("ERROR", ((FloatFieldValueOutOfRangeNotice) notice).getLevel());
+        assertEquals(11, notice.getCode());
         assertEquals("Out of range float value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid value for field:float_with_range of entity with id:test_id -- " +
+        assertEquals("Invalid value for field:`float_with_range` of entity with id:`test_id` -- " +
                         "min:-6.66 max:66.6 actual:66.7",
                 notice.getDescription());
 
@@ -155,6 +157,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mockIntegerValidator,
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -195,6 +199,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mockIntegerValidator,
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -210,10 +216,11 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(IntegerFieldValueOutOfRangeNotice.class));
-        assertEquals("E010", notice.getId());
+        assertEquals("ERROR", ((IntegerFieldValueOutOfRangeNotice) notice).getLevel());
+        assertEquals(10, notice.getCode());
         assertEquals("Out of range integer value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid value for field:integer_with_range of entity with id:test_id -- " +
+        assertEquals("Invalid value for field:`integer_with_range` of entity with id:`test_id` -- " +
                         "min:-6 max:66 actual:67",
                 notice.getDescription());
 
@@ -243,6 +250,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mockColorValidator,
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -277,6 +286,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mockColorValidator,
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -291,10 +302,11 @@ class GtfsTypeValidatorTest {
         assertEquals(1, result.size());
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidColorNotice.class));
-        assertEquals("E014", notice.getId());
+        assertEquals("ERROR", ((InvalidColorNotice) notice).getLevel());
+        assertEquals(14, notice.getCode());
         assertEquals("Invalid color", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid color:AZ-FTJ in field:color_with_regex for entity with id:test_id",
+        assertEquals("Invalid color:`AZ-FTJ` in field:`color_with_regex` for entity with id:`test_id`",
                 notice.getDescription());
 
         verify(mockColorValidator, times(1)).isValid(ArgumentMatchers.eq("AZ-FTJ"));
@@ -319,6 +331,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mockTimeValidator,
                 Collections.emptySet()
@@ -353,6 +367,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mockTimeValidator,
                 Collections.emptySet()
@@ -367,10 +383,11 @@ class GtfsTypeValidatorTest {
         assertEquals(1, result.size());
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidTimeNotice.class));
-        assertEquals("E016", notice.getId());
+        assertEquals("ERROR", ((InvalidTimeNotice) notice).getLevel());
+        assertEquals(16, notice.getCode());
         assertEquals("Invalid time", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid time:001:2:00003 in field:time_with_regex for entity with id:test_id",
+        assertEquals("Invalid time:`001:2:00003` in field:`time_with_regex` for entity with id:`test_id`",
                 notice.getDescription());
 
         verify(mockTimeValidator, times(1)).isValid(ArgumentMatchers.eq("001:2:00003"));
@@ -395,6 +412,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mockUrlValidator,
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -413,7 +432,7 @@ class GtfsTypeValidatorTest {
     }
 
     @Test
-    void urlInInCorrectFormatGenerateNotice() {
+    void urlInIncorrectFormatGenerateNotice() {
         UrlValidator mockUrlValidator = mock(UrlValidator.class);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
@@ -430,6 +449,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mockUrlValidator,
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -444,14 +465,181 @@ class GtfsTypeValidatorTest {
         assertEquals(1, result.size());
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidUrlNotice.class));
-        assertEquals("E012", notice.getId());
+        assertEquals("ERROR", ((InvalidUrlNotice) notice).getLevel());
+        assertEquals(12, notice.getCode());
         assertEquals("Invalid url", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid url:ftp://mobilitydata.org in field:type_url for entity with id:test_id",
+        assertEquals("Invalid url:`ftp://mobilitydata.org` in field:`type_url` for entity with id:`test_id`",
                 notice.getDescription());
 
         verify(mockUrlValidator, times(1)).isValid(
                 ArgumentMatchers.eq("ftp://mobilitydata.org"));
+    }
+
+    @Test
+    void emailInCorrectFormatDoNotGenerateNotice() {
+        EmailValidator mockEmailValidator = mock(EmailValidator.class);
+        when(mockEmailValidator.isValid(ArgumentMatchers.any())).thenReturn(true);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("type_email");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.EMAIL);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mockEmailValidator,
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("type_email", "info@mobilitydata.org"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(0, result.size());
+
+        verify(mockEmailValidator, times(1)).isValid(
+                ArgumentMatchers.eq("info@mobilitydata.org"));
+    }
+
+    @Test
+    void emailInIncorrectFormatGenerateNotice() {
+        EmailValidator mockEmailValidator = mock(EmailValidator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("type_email");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.EMAIL);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mockEmailValidator,
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("type_email", "info@mobilitydata"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(1, result.size());
+        Notice notice = new ArrayList<>(result).get(0);
+        assertThat(notice, instanceOf(InvalidEmailNotice.class));
+        assertEquals("ERROR", ((InvalidEmailNotice) notice).getLevel());
+        assertEquals(23, notice.getCode());
+        assertEquals("Invalid email", notice.getTitle());
+        assertEquals(TEST_FILE_TST, notice.getFilename());
+        assertEquals("Invalid email:info@mobilitydata in field:`type_email` for entity with id:`test_id`",
+                notice.getDescription());
+
+        verify(mockEmailValidator, times(1)).isValid(
+                ArgumentMatchers.eq("info@mobilitydata"));
+    }
+
+    @Test
+    void langInCorrectFormatDoNotGenerateNotice() {
+        Bcp47Validator mocklangValidator = mock(Bcp47Validator.class);
+        when(mocklangValidator.isValid(ArgumentMatchers.any())).thenReturn(true);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("type_lang");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.LANGUAGE_CODE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mocklangValidator,
+                mock(EmailValidator.class),
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("type_lang", "en_US"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(0, result.size());
+
+        verify(mocklangValidator, times(1)).isValid(
+                ArgumentMatchers.eq("en_US"));
+    }
+
+    @Test
+    void langInIncorrectFormatGenerateNotice() {
+        Bcp47Validator mocklangValidator = mock(Bcp47Validator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("type_lang");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.LANGUAGE_CODE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mocklangValidator,
+                mock(EmailValidator.class),
+                mock(RegexValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("type_lang", "en_FR"),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(1, result.size());
+        Notice notice = new ArrayList<>(result).get(0);
+        assertThat(notice, instanceOf(InvalidLangNotice.class));
+        assertEquals("ERROR", ((InvalidLangNotice) notice).getLevel());
+        assertEquals(22, notice.getCode());
+        assertEquals("Invalid language code", notice.getTitle());
+        assertEquals(TEST_FILE_TST, notice.getFilename());
+        assertEquals("Invalid language code:`en_FR` in field:`type_lang` for entity with id:`test_id`",
+                notice.getDescription());
+
+        verify(mocklangValidator, times(1)).isValid(
+                ArgumentMatchers.eq("en_FR"));
     }
 
     @Test
@@ -470,6 +658,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Set.of("America/Montreal")
@@ -500,6 +690,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -515,10 +707,11 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidTimezoneNotice.class));
-        assertEquals("E013", notice.getId());
+        assertEquals("ERROR", ((InvalidTimezoneNotice) notice).getLevel());
+        assertEquals(13, notice.getCode());
         assertEquals("Invalid timezone", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid timezone:abc in field:type_timezone for entity with id:test_id",
+        assertEquals("Invalid timezone:`abc` in field:`type_timezone` for entity with id:`test_id`",
                 notice.getDescription());
     }
 
@@ -538,6 +731,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -568,6 +763,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -584,10 +781,11 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(NonAsciiOrNonPrintableCharNotice.class));
-        assertEquals("W003", notice.getId());
+        assertEquals("WARNING", ((NonAsciiOrNonPrintableCharNotice) notice).getLevel());
+        assertEquals(3, notice.getCode());
         assertEquals("Suspicious id", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Non ascii or non printable character(s) in:abçé in field:type_id for entity with id:test_id",
+        assertEquals("Non ascii or non printable character(s) in:`abçé` in field:`type_id` for entity with id:`test_id`",
                 notice.getDescription());
     }
 
@@ -607,6 +805,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -623,11 +823,13 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(NonAsciiOrNonPrintableCharNotice.class));
-        assertEquals("W003", notice.getId());
+        assertEquals("WARNING", ((NonAsciiOrNonPrintableCharNotice) notice).getLevel());
+        assertEquals(3, notice.getCode());
         assertEquals("Suspicious id", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
         assertEquals(
-                "Non ascii or non printable character(s) in:ab\u0003 in field:type_id for entity with id:test_id",
+                "Non ascii or non printable character(s) in:`ab\u0003` in field:`type_id` for entity with id:" +
+                        "`test_id`",
                 notice.getDescription());
     }
 
@@ -707,6 +909,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -829,6 +1033,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -844,82 +1050,92 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_unspecified marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_unspecified` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(1);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_text marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_text` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(2);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_float marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_float` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(3);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_integer marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_integer` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(4);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_color marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_color` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(5);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_timezone marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_timezone` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(6);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_id marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_id` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(7);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_url marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_url` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(8);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_time marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_time` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(9);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_date marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_date` marked as required in entity with id:`test_id`",
                 notice.getDescription());
     }
 
@@ -1019,6 +1235,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -1041,82 +1259,92 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_unspecified marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_unspecified` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(1);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_text marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_text` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(2);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_float marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_float` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(3);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_integer marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_integer` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(4);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_color marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_color` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(5);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_timezone marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_timezone` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(6);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_id marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_id` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(7);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_url marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_url` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(8);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_time marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_time` marked as required in entity with id:`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(9);
         assertThat(notice, instanceOf(MissingRequiredValueNotice.class));
-        assertEquals("E015", notice.getId());
+        assertEquals("ERROR", ((MissingRequiredValueNotice) notice).getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:type_date marked as required in entity with id:test_id",
+        assertEquals("Missing value for field:`type_date` marked as required in entity with id:`test_id`",
                 notice.getDescription());
     }
 
@@ -1136,6 +1364,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
@@ -1151,10 +1381,11 @@ class GtfsTypeValidatorTest {
 
         Notice notice = new ArrayList<>(result).get(0);
         assertThat(notice, instanceOf(InvalidCurrencyCodeNotice.class));
-        assertEquals("E018", notice.getId());
+        assertEquals("ERROR", ((InvalidCurrencyCodeNotice) notice).getLevel());
+        assertEquals(18, notice.getCode());
         assertEquals("Invalid currency code", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid currency code: JAN in field: currency_type for entity with id: test_id",
+        assertEquals("Invalid currency code: `JAN` in field: `currency_type` for entity with id: `test_id`",
                 notice.getDescription());
     }
 
@@ -1174,6 +1405,8 @@ class GtfsTypeValidatorTest {
                 mock(FloatValidator.class),
                 mock(IntegerValidator.class),
                 mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
                 mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()

@@ -20,13 +20,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
-import org.mobilitydata.gtfsvalidator.usecase.ProcessParsedAgency;
-import org.mobilitydata.gtfsvalidator.usecase.ProcessParsedRoute;
-import org.mobilitydata.gtfsvalidator.usecase.ValidateGtfsTypes;
+import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -54,26 +52,29 @@ public class Main {
                         config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
                         .execute();
 
-                final List<String> filenameList = config.validateAllRequiredFilePresence().execute();
-                filenameList.addAll(config.validateAllOptionalFileName().execute());
+                final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
 
-                // to be replaced by the call to a future use case that will create the list of files to exclude from
-                // command line option or configuration file.
-                final List<String> toExcludeFromGtfsSemanticValidation = List.of("stops.txt", "trips.txt",
-                        "stop_times.txt", "calendar.txt", "calendar_dates.txt", "fare_attributes.txt", "fare_rules.txt",
-                        "shapes.txt", "frequencies.txt", "transfers.txt", "pathways.txt", "levels.txt",
-                        "translations.txt", "feed_info.txt", "attributions.txt");
+                final ArrayList<String> datasetFilenameList = config.validateAllRequiredFilePresence().execute();
+                datasetFilenameList.addAll(config.validateAllOptionalFileName().execute());
 
-                final List<String> filenameListToProcess = config.createGtfsSemanticValidationFilenameList(filenameList)
-                        .execute(toExcludeFromGtfsSemanticValidation);
+                final List<String> filenameListToProcess =
+                        config.generateFilenameListToProcess().execute(filenameListToExclude, datasetFilenameList);
 
                 // retrieve use case to be used multiple times
                 final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
                 final ProcessParsedAgency processParsedAgency = config.processParsedAgency();
                 final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
+                final ProcessParsedCalendarDate processCalendarDate = config.processCalendarDate();
+                final ProcessParsedLevel processParsedLevel = config.processParsedLevel();
+                final ProcessParsedCalendar processParsedCalendar = config.processParsedCalendar();
+                final ProcessParsedTrip processParsedTrip = config.processParsedTrip();
+                final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
+                final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
+                final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
+                final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
 
                 // base validation + build gtfs entities
-                filenameList.forEach(filename -> {
+                filenameListToProcess.forEach(filename -> {
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
 
@@ -98,21 +99,60 @@ public class Main {
                                     processParsedRoute.execute(parsedEntity);
                                     break;
                                 }
+                                case "calendar_dates.txt": {
+                                    processCalendarDate.execute(parsedEntity);
+                                    break;
+                                }
+                                case "levels.txt": {
+                                    processParsedLevel.execute(parsedEntity);
+                                    break;
+                                }
+                                case "calendar.txt": {
+                                    processParsedCalendar.execute(parsedEntity);
+                                    break;
+                                }
+                                case "trips.txt": {
+                                    processParsedTrip.execute(parsedEntity);
+                                    break;
+                                }
+                                case "transfers.txt": {
+                                    processParsedTransfer.execute(parsedEntity);
+                                    break;
+                                }
+                                case "feed_info.txt": {
+                                    processParsedFeedInfo.execute(parsedEntity);
+                                    break;
+                                }
+                                case "fare_attributes.txt": {
+                                    processParsedFareAttribute.execute(parsedEntity);
+                                    break;
+                                }
+                                case "fare_rules.txt": {
+                                    processParsedFareRule.execute(parsedEntity);
+                                    break;
+                                }
                             }
                         }
                     }
                 });
+
+                config.validateRouteShortNameLength().execute();
+                config.validateRouteColorAndTextContrast().execute();
+                config.validateRouteDescriptionAndNameAreDifferent().execute();
+                config.validateRouteTypeIsInOptions().execute();
+                config.validateBothRouteNamesPresence().execute();
+                config.validateRouteLongNameDoesNotContainShortName().execute();
+
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
                 config.exportResultAsFile().execute();
             }
         } catch (IOException e) {
-            if (e.getMessage().contains("execution-parameters.json")) {
-                config.printHelp().execute();
-            } else {
-                logger.error("An exception occurred: " + e);
-            }
+            logger.error("An exception occurred: " + e);
         }
-        logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
+        final long duration = System.nanoTime() - startTime;
+        logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
+                TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
+                TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
     }
 }
