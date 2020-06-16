@@ -18,444 +18,198 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableCompositeKey;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableSimpleKey;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TranslationTableSingleRow;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TableName;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedTranslationTest {
     private final String STRING_TEST_VALUE = "test_value";
 
     @Test
-    public void validTranslationWithFeedInfoAsTableNameShouldCreateTranslationTableSingleRowAndBeAddedToRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+    void validTranslationShouldCreateTranslationEntityAndBeAddedToRepo() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Translation.TranslationBuilder mockBuilder = mock(Translation.TranslationBuilder.class, RETURNS_SELF);
+        final Translation mockTranslation = mock(Translation.class);
+        when(mockTranslation.getTableName()).thenReturn(TableName.FEED_INFO);
+        when(mockGtfsDataRepo.addTranslation(ArgumentMatchers.any())).thenReturn(mockTranslation);
+        final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
+        doReturn(mockEntityBuildResult).when(mockBuilder).build();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockTranslation).when(mockEntityBuildResult).getData();
+        when(mockEntityBuildResult.isSuccess()).thenReturn(true);
+        final ProcessParsedTranslation underTest =
+                new ProcessParsedTranslation(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final ParsedEntity mockParsedTranslation = mock(ParsedEntity.class);
+        when(mockParsedTranslation.get("table_name")).thenReturn("feed_info");
+        when(mockParsedTranslation.get("field_name")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("language")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("translation")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("record_id")).thenReturn(null);
+        when(mockParsedTranslation.get("record_sub_id")).thenReturn(null);
+        when(mockParsedTranslation.get("field_value")).thenReturn(null);
 
-        TranslationTableSingleRow.TranslationTableSingleRowBuilder mockTranslationSingleRowBuilder =
-                spy(TranslationTableSingleRow.TranslationTableSingleRowBuilder.class);
+        underTest.execute(mockParsedTranslation);
 
-        TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder mockTranslationSimpleKeyBuilder =
-                mock(TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder.class);
+        verify(mockParsedTranslation, times(7)).get(ArgumentMatchers.anyString());
+        verify(mockBuilder, times(1)).tableName(ArgumentMatchers.eq("feed_info"));
+        verify(mockBuilder, times(1)).fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).language(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).recordId(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).recordSubId(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).fieldValue(ArgumentMatchers.eq(null));
 
-        TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder mockTranslationCompositeKeyBuilder =
-                mock(TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder.class);
+        final InOrder inOrder = inOrder(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockTranslation,
+                mockEntityBuildResult);
 
-        ProcessParsedTranslation underTest = new ProcessParsedTranslation(mockTranslationSingleRowBuilder,
-                mockTranslationSimpleKeyBuilder,
-                mockTranslationCompositeKeyBuilder,
-                mockResultRepo,
-                mockGtfsDataRepo);
+        inOrder.verify(mockBuilder, times(1)).build();
 
-        ParsedEntity mockParsedTranslationSingleRow = mock(ParsedEntity.class);
-        when(mockParsedTranslationSingleRow.get("table_name")).thenReturn("feed_info");
-        when(mockParsedTranslationSingleRow.get("field_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSingleRow.get("language")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSingleRow.get("translation")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSingleRow.get("record_id")).thenReturn(null);
-        when(mockParsedTranslationSingleRow.get("record_sub_id")).thenReturn(null);
-        when(mockParsedTranslationSingleRow.get("field_value")).thenReturn(null);
+        inOrder.verify(mockEntityBuildResult, times(1)).isSuccess();
 
-        underTest.execute(mockParsedTranslationSingleRow);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        inOrder.verify(mockEntityBuildResult, times(1)).getData();
 
-        verify(mockParsedTranslationSingleRow, times(7))
-                .get(ArgumentMatchers.anyString());
-        verify(mockTranslationSingleRowBuilder, times(1))
-                .tableName(ArgumentMatchers.eq("feed_info"));
-        verify(mockTranslationSingleRowBuilder, times(1))
-                .fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSingleRowBuilder, times(1))
-                .translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSingleRowBuilder, times(1))
-                .language(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSingleRowBuilder, times(1))
-                .recordId(ArgumentMatchers.eq(null));
-        verify(mockTranslationSingleRowBuilder, times(1))
-                .recordSubId(ArgumentMatchers.eq(null));
-        verify(mockTranslationSingleRowBuilder, times(1))
-                .fieldValue(ArgumentMatchers.eq(null));
+        inOrder.verify(mockGtfsDataRepo, times(1)).addTranslation(mockTranslation);
 
-        ArgumentCaptor<TranslationTableSingleRow> captor = ArgumentCaptor.forClass(TranslationTableSingleRow.class);
-
-        verify(mockGtfsDataRepo, times(1)).
-                addEntity(captor.capture());
-
-        InOrder inOrder = inOrder(mockTranslationSingleRowBuilder, mockResultRepo, mockGtfsDataRepo);
-
-        inOrder.verify(mockTranslationSingleRowBuilder, times(1)).build();
-
-        verifyNoMoreInteractions(mockTranslationSingleRowBuilder, mockResultRepo, mockGtfsDataRepo);
+        verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockEntityBuildResult, mockTranslation);
     }
 
     @Test
-    public void validTranslationForStopTimesAndDefinedRecordIdShouldCreateTranslationTableCompositeKeyAndBeAddedToRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+    void invalidTranslationShouldGenerateNoticeAndShouldNotBeAddedToGtfsDataRepo() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Translation.TranslationBuilder mockBuilder = mock(Translation.TranslationBuilder.class, RETURNS_SELF);
+        final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
+        doReturn(mockEntityBuildResult).when(mockBuilder).build();
+        final List<Notice> mockNoticeCollection = spy(new ArrayList<>());
+        final UnexpectedEnumValueNotice mockNotice = mock(UnexpectedEnumValueNotice.class);
+        mockNoticeCollection.add(mockNotice);
 
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockNoticeCollection).when(mockEntityBuildResult).getData();
+        when(mockEntityBuildResult.isSuccess()).thenReturn(false);
+        final ProcessParsedTranslation underTest =
+                new ProcessParsedTranslation(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
-        TranslationTableSingleRow.TranslationTableSingleRowBuilder mockTranslationSingleRowBuilder =
-                mock(TranslationTableSingleRow.TranslationTableSingleRowBuilder.class);
+        final ParsedEntity mockParsedTranslation = mock(ParsedEntity.class);
+        when(mockParsedTranslation.get("table_name")).thenReturn("invalid table name");
+        when(mockParsedTranslation.get("field_name")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("language")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("translation")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("record_id")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("record_sub_id")).thenReturn(null);
+        when(mockParsedTranslation.get("field_value")).thenReturn(null);
 
-        TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder mockTranslationSimpleKeyBuilder =
-                mock(TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder.class);
+        underTest.execute(mockParsedTranslation);
 
-        TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder mockTranslationCompositeKeyBuilder =
-                spy(TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder.class);
+        verify(mockParsedTranslation, times(7)).get(ArgumentMatchers.anyString());
+        verify(mockBuilder, times(1))
+                .tableName(ArgumentMatchers.eq("invalid table name"));
+        verify(mockBuilder, times(1)).fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).language(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).recordId(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).recordSubId(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).fieldValue(ArgumentMatchers.eq(null));
 
-        ProcessParsedTranslation underTest = new ProcessParsedTranslation(mockTranslationSingleRowBuilder,
-                mockTranslationSimpleKeyBuilder,
-                mockTranslationCompositeKeyBuilder,
-                mockResultRepo,
-                mockGtfsDataRepo);
+        final InOrder inOrder = inOrder(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockEntityBuildResult);
 
-        ParsedEntity mockParsedTranslationCompositeKey = mock(ParsedEntity.class);
-        when(mockParsedTranslationCompositeKey.get("table_name")).thenReturn("stop_times");
-        when(mockParsedTranslationCompositeKey.get("field_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationCompositeKey.get("language")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationCompositeKey.get("translation")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationCompositeKey.get("record_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationCompositeKey.get("record_sub_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationCompositeKey.get("field_value")).thenReturn(null);
+        inOrder.verify(mockBuilder, times(1)).build();
 
-        underTest.execute(mockParsedTranslationCompositeKey);
+        inOrder.verify(mockEntityBuildResult, times(1)).isSuccess();
 
-        verify(mockParsedTranslationCompositeKey, times(7))
-                .get(ArgumentMatchers.anyString());
-        verify(mockTranslationCompositeKeyBuilder, times(1))
-                .tableName(ArgumentMatchers.eq("stop_times"));
-        verify(mockTranslationCompositeKeyBuilder, times(1))
-                .fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationCompositeKeyBuilder, times(1))
-                .translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationCompositeKeyBuilder, times(1))
-                .language(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationCompositeKeyBuilder, times(1))
-                .recordId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationCompositeKeyBuilder, times(1))
-                .recordSubId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationCompositeKeyBuilder, times(1))
-                .fieldValue(ArgumentMatchers.eq(null));
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        inOrder.verify(mockEntityBuildResult, times(1)).getData();
 
-        ArgumentCaptor<TranslationTableCompositeKey> captor = ArgumentCaptor.forClass(TranslationTableCompositeKey.class);
+        inOrder.verify(mockResultRepo, times(1)).addNotice(isA(UnexpectedEnumValueNotice.class));
 
-        verify(mockGtfsDataRepo, times(1)).
-                addEntity(captor.capture());
+        verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockEntityBuildResult);
 
-        InOrder inOrder = inOrder(mockTranslationCompositeKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-
-        inOrder.verify(mockTranslationCompositeKeyBuilder, times(1)).build();
-
-        verifyNoMoreInteractions(mockTranslationCompositeKeyBuilder, mockResultRepo, mockGtfsDataRepo);
+        verifyNoInteractions(mockGtfsDataRepo);
     }
 
     @Test
-    public void validTranslationForTripsShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-
-        TranslationTableSingleRow.TranslationTableSingleRowBuilder mockTranslationSingleRowBuilder =
-                mock(TranslationTableSingleRow.TranslationTableSingleRowBuilder.class);
-
-        TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder mockTranslationSimpleKeyBuilder =
-                spy(TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder.class);
-
-        TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder mockTranslationCompositeKeyBuilder =
-                mock(TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder.class);
-
-        ProcessParsedTranslation underTest = new ProcessParsedTranslation(mockTranslationSingleRowBuilder,
-                mockTranslationSimpleKeyBuilder,
-                mockTranslationCompositeKeyBuilder,
-                mockResultRepo,
-                mockGtfsDataRepo);
-
-        ParsedEntity mockParsedTranslationSimpleKey = mock(ParsedEntity.class);
-        when(mockParsedTranslationSimpleKey.get("table_name")).thenReturn("trips");
-        when(mockParsedTranslationSimpleKey.get("field_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("language")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("translation")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_sub_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("field_value")).thenReturn(null);
-
-        underTest.execute(mockParsedTranslationSimpleKey);
-
-        verify(mockParsedTranslationSimpleKey, times(7))
-                .get(ArgumentMatchers.anyString());
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .tableName(ArgumentMatchers.eq("trips"));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .language(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordSubId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldValue(ArgumentMatchers.eq(null));
-
-        ArgumentCaptor<TranslationTableSimpleKey> captor = ArgumentCaptor.forClass(TranslationTableSimpleKey.class);
-
-        verify(mockGtfsDataRepo, times(1)).
-                addEntity(captor.capture());
-
-        InOrder inOrder = inOrder(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-
-        inOrder.verify(mockTranslationSimpleKeyBuilder, times(1)).build();
-
-        verifyNoMoreInteractions(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-    }
-
-    @Test
-    public void validTranslationForAgencyShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-
-        TranslationTableSingleRow.TranslationTableSingleRowBuilder mockTranslationSingleRowBuilder =
-                mock(TranslationTableSingleRow.TranslationTableSingleRowBuilder.class);
-
-        TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder mockTranslationSimpleKeyBuilder =
-                spy(TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder.class);
-
-        TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder mockTranslationCompositeKeyBuilder =
-                mock(TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder.class);
-
-        ProcessParsedTranslation underTest = new ProcessParsedTranslation(mockTranslationSingleRowBuilder,
-                mockTranslationSimpleKeyBuilder,
-                mockTranslationCompositeKeyBuilder,
-                mockResultRepo,
-                mockGtfsDataRepo);
-
-        ParsedEntity mockParsedTranslationSimpleKey = mock(ParsedEntity.class);
-        when(mockParsedTranslationSimpleKey.get("table_name")).thenReturn("agency");
-        when(mockParsedTranslationSimpleKey.get("field_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("language")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("translation")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_sub_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("field_value")).thenReturn(null);
-
-        underTest.execute(mockParsedTranslationSimpleKey);
-
-        verify(mockParsedTranslationSimpleKey, times(7))
-                .get(ArgumentMatchers.anyString());
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .tableName(ArgumentMatchers.eq("agency"));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .language(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordSubId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldValue(ArgumentMatchers.eq(null));
-
-        ArgumentCaptor<TranslationTableSimpleKey> captor = ArgumentCaptor.forClass(TranslationTableSimpleKey.class);
-
-        verify(mockGtfsDataRepo, times(1)).
-                addEntity(captor.capture());
-
-        InOrder inOrder = inOrder(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-
-        inOrder.verify(mockTranslationSimpleKeyBuilder, times(1)).build();
-
-        verifyNoMoreInteractions(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-    }
-
-    @Test
-    public void validTranslationForStopsShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-
-        TranslationTableSingleRow.TranslationTableSingleRowBuilder mockTranslationSingleRowBuilder =
-                mock(TranslationTableSingleRow.TranslationTableSingleRowBuilder.class);
-
-        TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder mockTranslationSimpleKeyBuilder =
-                spy(TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder.class);
-
-        TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder mockTranslationCompositeKeyBuilder =
-                mock(TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder.class);
-
-        ProcessParsedTranslation underTest = new ProcessParsedTranslation(mockTranslationSingleRowBuilder,
-                mockTranslationSimpleKeyBuilder,
-                mockTranslationCompositeKeyBuilder,
-                mockResultRepo,
-                mockGtfsDataRepo);
-
-        ParsedEntity mockParsedTranslationSimpleKey = mock(ParsedEntity.class);
-        when(mockParsedTranslationSimpleKey.get("table_name")).thenReturn("stops");
-        when(mockParsedTranslationSimpleKey.get("field_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("language")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("translation")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_sub_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("field_value")).thenReturn(null);
-
-        underTest.execute(mockParsedTranslationSimpleKey);
-
-        verify(mockParsedTranslationSimpleKey, times(7))
-                .get(ArgumentMatchers.anyString());
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .tableName(ArgumentMatchers.eq("stops"));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .language(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordSubId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldValue(ArgumentMatchers.eq(null));
-
-        ArgumentCaptor<TranslationTableSimpleKey> captor = ArgumentCaptor.forClass(TranslationTableSimpleKey.class);
-
-        verify(mockGtfsDataRepo, times(1)).
-                addEntity(captor.capture());
-
-        InOrder inOrder = inOrder(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-
-        inOrder.verify(mockTranslationSimpleKeyBuilder, times(1)).build();
-
-        verifyNoMoreInteractions(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-    }
-
-    @Test
-    public void validTranslationForRoutesShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-
-        TranslationTableSingleRow.TranslationTableSingleRowBuilder mockTranslationSingleRowBuilder =
-                mock(TranslationTableSingleRow.TranslationTableSingleRowBuilder.class);
-
-        TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder mockTranslationSimpleKeyBuilder =
-                spy(TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder.class);
-
-        TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder mockTranslationCompositeKeyBuilder =
-                mock(TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder.class);
-
-        ProcessParsedTranslation underTest = new ProcessParsedTranslation(mockTranslationSingleRowBuilder,
-                mockTranslationSimpleKeyBuilder,
-                mockTranslationCompositeKeyBuilder,
-                mockResultRepo,
-                mockGtfsDataRepo);
-
-        ParsedEntity mockParsedTranslationSimpleKey = mock(ParsedEntity.class);
-        when(mockParsedTranslationSimpleKey.get("table_name")).thenReturn("routes");
-        when(mockParsedTranslationSimpleKey.get("field_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("language")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("translation")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_sub_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("field_value")).thenReturn(null);
-
-        underTest.execute(mockParsedTranslationSimpleKey);
-
-        verify(mockParsedTranslationSimpleKey, times(7))
-                .get(ArgumentMatchers.anyString());
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .tableName(ArgumentMatchers.eq("routes"));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .language(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordSubId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldValue(ArgumentMatchers.eq(null));
-
-        ArgumentCaptor<TranslationTableSimpleKey> captor = ArgumentCaptor.forClass(TranslationTableSimpleKey.class);
-
-        verify(mockGtfsDataRepo, times(1)).
-                addEntity(captor.capture());
-
-        InOrder inOrder = inOrder(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-
-        inOrder.verify(mockTranslationSimpleKeyBuilder, times(1)).build();
-
-        verifyNoMoreInteractions(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-    }
-
-    @Test
-    public void validTranslationForLevelsShouldCreateTranslationTableSimpleKeyAndBeAddedToRepo() {
-        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-
-        GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
-
-        TranslationTableSingleRow.TranslationTableSingleRowBuilder mockTranslationSingleRowBuilder =
-                mock(TranslationTableSingleRow.TranslationTableSingleRowBuilder.class);
-
-        TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder mockTranslationSimpleKeyBuilder =
-                spy(TranslationTableSimpleKey.TranslationTableSimpleKeyBuilder.class);
-
-        TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder mockTranslationCompositeKeyBuilder =
-                mock(TranslationTableCompositeKey.TranslationTableCompositeKeyBuilder.class);
-
-        ProcessParsedTranslation underTest = new ProcessParsedTranslation(mockTranslationSingleRowBuilder,
-                mockTranslationSimpleKeyBuilder,
-                mockTranslationCompositeKeyBuilder,
-                mockResultRepo,
-                mockGtfsDataRepo);
-
-        ParsedEntity mockParsedTranslationSimpleKey = mock(ParsedEntity.class);
-        when(mockParsedTranslationSimpleKey.get("table_name")).thenReturn("levels");
-        when(mockParsedTranslationSimpleKey.get("field_name")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("language")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("translation")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("record_sub_id")).thenReturn(STRING_TEST_VALUE);
-        when(mockParsedTranslationSimpleKey.get("field_value")).thenReturn(null);
-
-        underTest.execute(mockParsedTranslationSimpleKey);
-
-        verify(mockParsedTranslationSimpleKey, times(7))
-                .get(ArgumentMatchers.anyString());
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .tableName(ArgumentMatchers.eq("levels"));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .language(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .recordSubId(ArgumentMatchers.eq(STRING_TEST_VALUE));
-        verify(mockTranslationSimpleKeyBuilder, times(1))
-                .fieldValue(ArgumentMatchers.eq(null));
-
-        ArgumentCaptor<TranslationTableSimpleKey> captor = ArgumentCaptor.forClass(TranslationTableSimpleKey.class);
-
-        verify(mockGtfsDataRepo, times(1)).
-                addEntity(captor.capture());
-
-        InOrder inOrder = inOrder(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
-
-        inOrder.verify(mockTranslationSimpleKeyBuilder, times(1)).build();
-
-        verifyNoMoreInteractions(mockTranslationSimpleKeyBuilder, mockResultRepo, mockGtfsDataRepo);
+    void duplicateTranslationShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo () {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Translation.TranslationBuilder mockBuilder = mock(Translation.TranslationBuilder.class, RETURNS_SELF);
+        final Translation mockTranslation = mock(Translation.class);
+        when(mockTranslation.getTableName()).thenReturn(TableName.FEED_INFO);
+        when(mockGtfsDataRepo.addTranslation(ArgumentMatchers.any())).thenReturn(null);
+        final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
+        doReturn(mockEntityBuildResult).when(mockBuilder).build();
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        doReturn(mockTranslation).when(mockEntityBuildResult).getData();
+        when(mockEntityBuildResult.isSuccess()).thenReturn(true);
+        final ProcessParsedTranslation underTest =
+                new ProcessParsedTranslation(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+
+        final ParsedEntity mockParsedTranslation = mock(ParsedEntity.class);
+        when(mockParsedTranslation.get("table_name")).thenReturn("feed_info");
+        when(mockParsedTranslation.get("field_name")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("language")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("translation")).thenReturn(STRING_TEST_VALUE);
+        when(mockParsedTranslation.get("record_id")).thenReturn(null);
+        when(mockParsedTranslation.get("record_sub_id")).thenReturn(null);
+        when(mockParsedTranslation.get("field_value")).thenReturn(null);
+
+        underTest.execute(mockParsedTranslation);
+
+        verify(mockParsedTranslation, times(7)).get(ArgumentMatchers.anyString());
+        verify(mockBuilder, times(1)).tableName(ArgumentMatchers.eq("feed_info"));
+        verify(mockBuilder, times(1)).fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).language(ArgumentMatchers.eq(STRING_TEST_VALUE));
+        verify(mockBuilder, times(1)).recordId(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).recordSubId(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).fieldValue(ArgumentMatchers.eq(null));
+
+        final InOrder inOrder = inOrder(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockTranslation,
+                mockEntityBuildResult);
+
+        inOrder.verify(mockBuilder, times(1)).build();
+
+        inOrder.verify(mockEntityBuildResult, times(1)).isSuccess();
+
+        // suppressed warning regarding unused result of method, since this behavior is wanted
+        //noinspection ResultOfMethodCallIgnored
+        inOrder.verify(mockEntityBuildResult, times(1)).getData();
+
+        inOrder.verify(mockGtfsDataRepo, times(1)).addTranslation(mockTranslation);
+
+        final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
+
+        assertEquals("translations.txt", noticeList.get(0).getFilename());
+        assertEquals("table_name;field_name;language;translation;record_id;record_sub_id;field_value",
+                noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals("no id", noticeList.get(0).getEntityId());
+
+        verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockTranslation, mockEntityBuildResult, mockGtfsDataRepo);
     }
 }

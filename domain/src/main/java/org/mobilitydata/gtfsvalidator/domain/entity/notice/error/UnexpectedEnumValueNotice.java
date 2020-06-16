@@ -24,7 +24,7 @@ import java.io.IOException;
 public class UnexpectedEnumValueNotice extends ErrorNotice {
 
     public UnexpectedEnumValueNotice(final String filename, final String fieldName, final String entityId,
-                                     final Integer enumValue) {
+                                     final Object enumValue) {
         super(filename, E_021,
                 "Unexpected enum value",
                 "Invalid value :`" + enumValue + "` - for field:`" + fieldName + "` in file:`" + filename +

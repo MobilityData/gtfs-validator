@@ -21,10 +21,12 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarD
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
@@ -70,7 +72,7 @@ public interface GtfsDataRepository {
     FareRule getFareRule(final String fareId, final String routeId, final String originId, final String destinationId,
                          final String containsId);
 
-    TranslationTableBase getTranslationTableByTableName(String tableName);
+    List<Translation> getTranslationByTableName(final String tableName);
 
-    TranslationTableBase addEntity(TranslationTableBase newTranslationTable);
+    Translation addTranslation(final Translation newTranslationTable);
 }

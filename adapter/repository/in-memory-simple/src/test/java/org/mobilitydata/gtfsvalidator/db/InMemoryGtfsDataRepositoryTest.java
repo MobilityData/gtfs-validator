@@ -17,16 +17,14 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TableName;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
@@ -446,5 +444,39 @@ class InMemoryGtfsDataRepositoryTest {
                 null, null));
         assertEquals(mockFareRule01, underTest.getFareRule("fare id1", null, null,
                 null, null));
+    }
+
+    @Test
+    void addNullTranslationShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addTranslation(null));
+        assertEquals("Cannot add null Translation to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addSameTranslationTwiceShouldReturnNull() {
+        final Translation mockTranslation = mock(Translation.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTranslation.getTableName()).thenReturn(TableName.AGENCY);
+
+        underTest.addTranslation(mockTranslation);
+
+        assertNull(underTest.addTranslation(mockTranslation));
+    }
+
+    @Test
+    void addTranslationAndGetTranslationShouldReturnSameEntity() {
+        final Translation mockTranslation00 = mock(Translation.class);
+        final Translation mockTranslation01 = mock(Translation.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTranslation00.getTableName()).thenReturn(TableName.AGENCY);
+        when(mockTranslation01.getTableName()).thenReturn(TableName.STOP_TIMES);
+
+        assertEquals(mockTranslation00, underTest.addTranslation(mockTranslation00));
+        assertEquals(mockTranslation01, underTest.addTranslation(mockTranslation01));
+
+        assertEquals(List.of(mockTranslation00), underTest.getTranslationByTableName("agency"));
+        assertEquals(List.of(mockTranslation01), underTest.getTranslationByTableName("stop_times"));
     }
 }

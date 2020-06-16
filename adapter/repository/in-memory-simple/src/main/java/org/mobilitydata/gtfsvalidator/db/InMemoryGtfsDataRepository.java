@@ -17,18 +17,19 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TableName;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
@@ -79,6 +80,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - contains_id
     // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
+
+    // Map containing Translation entities. Entities are mapped on the value found in column table_name of GTFS file
+    // translations.txt.
+    private final Map<String, List<Translation>> translationPerTableName = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -437,7 +442,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * if this requirement is not met, returns null.
      *
      * @param newFareRule the internal representation of a row from fare_rules.txt to be added to the repository.
-     * @return Return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt
+     * @return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt
      * is respected, if this requirement is not met, returns null.
      */
     @Override
@@ -473,14 +478,46 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                 containsId));
     }
 
+    /**
+     * Add a {@code Translation} representing a row from translations.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
+     * respected. If this requirement is not met, returns null.
+     *
+     * @param newTranslationTable  the internal representation of a row from translations.txt to be added to the
+     *                             repository
+     * @return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
+     * respected. If this requirement is not met, returns null,
+     * @throws IllegalArgumentException if the argument is null
+     */
     @Override
-    public TranslationTableBase getTranslationTableByTableName(String tableName) {
-        return translationTableCollection.get(TableName.fromString(tableName));
+    public Translation addTranslation(final Translation newTranslationTable) throws IllegalArgumentException {
+        if (newTranslationTable != null) {
+            final String tableName = newTranslationTable.getTableName().toString();
+            if (translationPerTableName.containsKey(tableName)) {
+                if (!translationPerTableName.get(tableName).contains(newTranslationTable)) {
+                    translationPerTableName.get(tableName).add(newTranslationTable);
+                } else {
+                    return null;
+                }
+            } else {
+                final ArrayList<Translation> translationCollection = new ArrayList<>();
+                translationCollection.add(newTranslationTable);
+                translationPerTableName.put(tableName, translationCollection);
+            }
+            return newTranslationTable;
+        } else {
+            throw new IllegalArgumentException("Cannot add null Translation to data repository");
+        }
     }
 
+    /**
+     * Return the list of {@link Translation} from fare_rules.txt related to the table name provided as parameter
+     *
+     * @param tableName  the name of the table to retrieve translations from
+     * @return the list of {@link Translation} from fare_rules.txt related to the tableName provided as parameter
+     */
     @Override
-    public TranslationTableBase addEntity(final TranslationTableBase newTranslationTable) {
-        translationTableCollection.put(newTranslationTable.getTableName(), newTranslationTable);
-        return newTranslationTable;
+    public List<Translation> getTranslationByTableName(final String tableName) {
+        return translationPerTableName.get(TableName.fromString(tableName).toString());
     }
 }

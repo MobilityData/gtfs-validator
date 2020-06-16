@@ -24,65 +24,38 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class TableNameTest {
 
     @Test
-    public void createTableNameWithNullValueShouldThrowException() {
-        String unexpectedEnumValue = null;
-
-        @SuppressWarnings("ConstantConditions") Object underTest = TableName.fromString(unexpectedEnumValue);
-
-        assertNull(underTest);
+    public void createTableNameWithNullValueShouldReturnNull() {
+        assertNull(TableName.fromString(null));
     }
 
     @Test
     public void createTableNameWithUnexpectedValueShouldReturnNullValue() {
-        String unexpectedEnumValue = "test";
-
-        Object underTest = TableName.fromString(unexpectedEnumValue);
-
-        assertNull(underTest);
+        final String unexpectedEnumValue = "test";
+        assertNull(TableName.fromString(unexpectedEnumValue));
     }
 
     @Test
     public void createTableNameWithExpectedValueAgencyShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        String expectedEnumValue = "agency";
-
-        TableName tableName = TableName.fromString(expectedEnumValue);
-
-        assertEquals(tableName, TableName.AGENCY);
+        assertEquals(TableName.AGENCY, TableName.fromString("agency"));
     }
 
     @Test
     public void createTableNameWithExpectedValueStopsShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        String expectedEnumValue = "stops";
-
-        TableName tableName = TableName.fromString(expectedEnumValue);
-
-        assertEquals(tableName, TableName.STOPS);
+        assertEquals(TableName.STOPS, TableName.fromString("stops"));
     }
 
     @Test
     public void createTableNameWithExpectedValueRoutesShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        String expectedEnumValue = "routes";
-
-        TableName tableName = TableName.fromString(expectedEnumValue);
-
-        assertEquals(tableName, TableName.ROUTES);
+        assertEquals(TableName.ROUTES, TableName.fromString("routes"));
     }
 
     @Test
     public void createTableNameWithExpectedValueTripsShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        String expectedEnumValue = "trips";
-
-        TableName tableName = TableName.fromString(expectedEnumValue);
-
-        assertEquals(tableName, TableName.TRIPS);
+        assertEquals(TableName.TRIPS, TableName.fromString("trips"));
     }
 
     @Test
     public void createTableNameWithExpectedValueStopTimesShouldNotThrowExceptionAndReturnCorrectRouteType() {
-        String expectedEnumValue = "stop_times";
-
-        TableName tableName = TableName.fromString(expectedEnumValue);
-
-        assertEquals(tableName, TableName.STOP_TIMES);
+        assertEquals(TableName.STOP_TIMES, TableName.fromString("stop_times"));
     }
 }

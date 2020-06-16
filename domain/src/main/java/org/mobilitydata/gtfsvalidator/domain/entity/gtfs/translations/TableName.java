@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 /**
  * This enum matches types that can be found in the table_name field of translations.txt
  * // see https://gtfs.org/reference/static#translationstxt
- * It's used to decide which concrete type derived from {@link TranslationTableBase} to instantiate
+ * It's used to decide which concrete type derived from {@link Translation} to instantiate
  */
 public enum TableName {
     AGENCY("agency"),
@@ -40,15 +40,15 @@ public enum TableName {
     }
 
     /**
-     * Matches table_name field defined in translations.txt to its enum value. Throws an {@link IllegalArgumentException}
-     * if the value is unexpected; else returns the matching enum value
+     * Matches table_name field defined in translations.txt to its enum value. Returns the {@link TableName} enum item
+     * value matching the string passed as parameter. Returns null if the string passed parameter is null or does not
+     * match any {@link TableName} enum item.
      *
      * @param tableName defines the table that contains the field to be translated
-     * @return the matching enum value
-     * @throws IllegalArgumentException if the value is unexpected
+     * @return the {@link TableName} enum item value matching the string passed as parameter. Or null if the string
+     * passed as parameter is null or does not match any {@link TableName} enum item.
      */
-    static public TableName fromString(final String tableName) throws IllegalArgumentException {
-
+    static public TableName fromString(final String tableName)  {
         if (tableName == null) {
             return null;
         } else {
@@ -57,5 +57,21 @@ public enum TableName {
                     .findAny()
                     .orElse(null);
         }
+    }
+
+    /**
+     * Returns true if the string passed as parameter is expected for this enum, otherwise returns false
+     *
+     * @param value the string to associate with this enum values
+     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
+     */
+    static public boolean isEnumValueValid(final String value) {
+        if (value == null) {
+            return false;
+        }
+        return Stream.of(TableName.values())
+                .filter(enumItem -> Objects.equals(enumItem.value, value))
+                .findAny()
+                .orElse(null) != null;
     }
 }
