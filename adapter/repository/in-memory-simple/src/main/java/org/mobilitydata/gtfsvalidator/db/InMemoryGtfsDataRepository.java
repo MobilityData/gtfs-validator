@@ -305,6 +305,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
+     * Return a collection of Calendar objects representing all the rows from calendar.txt
+     *
+     * @return a collection of Calendar objects representing all the rows from calendar.txt
+     */
+    @Override
+    public Collection<Calendar> getCalendarAll() {
+        return calendarPerServiceId.values();
+    }
+
+    /**
      * Add a Transfer representing a row from transfers.txt to this {@link GtfsDataRepository}. Return the entity added
      * to the repository if the uniqueness constraint of route based on composite key from_stop_id and to_stop_id is
      * respected, if this requirement is not met, returns null.
