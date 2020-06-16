@@ -25,9 +25,9 @@ public class InvalidRouteTypeNotice extends ErrorNotice {
 
     public InvalidRouteTypeNotice(final String filename, final String entityId) {
         super(filename, E_026,
-                "Invalid Route type",
-                "Invalid Route type for Route with id:" + entityId + " in file:" + filename +
-                        ". A Route type should be an integer between 0 and 12.",
+                "Invalid `route_type`",
+                "Invalid `route_type` for route with `route_id`:`" + entityId + "` in file:" + filename +
+                        ". A `route_type` should be an integer between 0 and 12.",
                 entityId);
     }
 

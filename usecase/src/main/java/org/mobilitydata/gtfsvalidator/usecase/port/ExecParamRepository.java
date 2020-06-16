@@ -33,7 +33,7 @@ public interface ExecParamRepository {
     String OUTPUT_KEY = "output";
     String PROTO_KEY = "proto";
     String URL_KEY = "url";
-    String ZIP_KEY = "zipinput";
+    String INPUT_KEY = "input";
     String EXCLUSION_KEY = "exclude";
     String PATHWAY_MIN_LENGTH_KEY = "pathway_min_length";
     String PATHWAY_MAX_LENGTH_KEY = "pathway_max_length";

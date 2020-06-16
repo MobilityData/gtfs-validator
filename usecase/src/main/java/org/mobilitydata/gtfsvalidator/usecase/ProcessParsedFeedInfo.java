@@ -24,7 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntit
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -59,8 +59,8 @@ public class ProcessParsedFeedInfo {
         final String feedPublisherName = (String) validatedFeedInfo.get("feed_publisher_name");
         final String feedPublisherUrl = (String) validatedFeedInfo.get("feed_publisher_url");
         final String feedLang = (String) validatedFeedInfo.get("feed_lang");
-        final LocalDateTime feedStartDate = (LocalDateTime) validatedFeedInfo.get("feed_start_date");
-        final LocalDateTime feedEndDate = (LocalDateTime) validatedFeedInfo.get("feed_end_date");
+        final LocalDate feedStartDate = (LocalDate) validatedFeedInfo.get("feed_start_date");
+        final LocalDate feedEndDate = (LocalDate) validatedFeedInfo.get("feed_end_date");
         final String feedVersion = (String) validatedFeedInfo.get("feed_version");
         final String feedContactEmail = (String) validatedFeedInfo.get("feed_contact_email");
         final String feedContactUrl = (String) validatedFeedInfo.get("feed_contact_url");

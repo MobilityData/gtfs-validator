@@ -17,19 +17,16 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,6 +59,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
     private final Map<String, Level> levelPerId = new HashMap<>();
 
+    // Map containing FareAttribute entities. Entities are mapped on the value found in column fare_id of gtfs file
+    // fare_attributes.txt
+    private final Map<String, FareAttribute> fareAttributePerFareId = new HashMap<>();
+
     // map storing feedInfo entities on key feed_publisher_name found in file feed_info.txt
     private final Map<String, FeedInfo> feedInfoPerFeedPublisherName = new HashMap<>();
 
@@ -69,6 +70,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // from_stop_id of GTFS file transfers.txt; the second key is the value found in the column to_stop_id of the same
     // file.
     private final Map<String, Map<String, Transfer>> transferPerStopPair = new HashMap<>();
+
+    // Map containing FareRule entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file fare_rules.txt:
+    // - fare_id
+    // - route_id
+    // - origin_id
+    // - destination_id
+    // - contains_id
+    // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
+    private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
     // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
     // pathways.txt
@@ -223,7 +234,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * parameter
      */
     @Override
-    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date) {
+    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDate date) {
         return calendarDatePerServiceIdAndDate.get(serviceId + date.toString());
     }
 
@@ -296,6 +307,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Calendar getCalendarByServiceId(final String serviceId) {
         return calendarPerServiceId.get(serviceId);
+    }
+
+    /**
+     * Return a collection of Calendar objects representing all the rows from calendar.txt
+     *
+     * @return a collection of Calendar objects representing all the rows from calendar.txt
+     */
+    @Override
+    public Collection<Calendar> getCalendarAll() {
+        return calendarPerServiceId.values();
     }
 
     /**
@@ -387,6 +408,84 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
         return feedInfoPerFeedPublisherName.get(feedPublisherName);
+    }
+
+    /**
+     * Add an FareAttribute representing a row from fare_attributes.txt to this {@code GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint of agency based on fare_id is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newFareAttribute the internal representation of a row from fare_attributes.txt to be added to the
+     *                         repository.
+     * @return the entity added to the repository if the uniqueness constraint of fare_attribute based on fare_id is
+     * respected, if this requirement is not met returns null.
+     * @throws IllegalArgumentException if the argument is null
+     */
+    @Override
+    public FareAttribute addFareAttribute(final FareAttribute newFareAttribute) throws IllegalArgumentException {
+        if (newFareAttribute != null) {
+            if (fareAttributePerFareId.containsKey(newFareAttribute.getFareId())) {
+                return null;
+            } else {
+                fareAttributePerFareId.put(newFareAttribute.getFareId(), newFareAttribute);
+                return newFareAttribute;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null fare attribute to data repository");
+        }
+    }
+
+    /**
+     * Return the FareAttribute representing a row from fare_attributes.txt related to the id provided as parameter
+     *
+     * @param fareId the key from fare_attributes.txt related to the FareAttribute to be returned
+     * @return the FareAttribute representing a row from fare_attributes.txt related to the id provided as parameter
+     */
+    @Override
+    public FareAttribute getFareAttributeById(final String fareId) {
+        return fareAttributePerFareId.get(fareId);
+    }
+
+    /**
+     * Add a FareRule representing a row from fare_rules.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newFareRule the internal representation of a row from fare_rules.txt to be added to the repository.
+     * @return Return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt
+     * is respected, if this requirement is not met, returns null.
+     */
+    @Override
+    public FareRule addFareRule(final FareRule newFareRule) throws IllegalArgumentException {
+        if (newFareRule != null) {
+            final String key = newFareRule.getFareRuleMappingKey();
+            if (fareRuleCollection.containsKey(key)) {
+                return null;
+            } else {
+                fareRuleCollection.put(key, newFareRule);
+                return newFareRule;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null FareRule to data repository");
+        }
+    }
+
+    /**
+     * Return the FareRule representing a row from fare_rules.txt related to the id provided as parameter
+     *
+     * @param fareId        1st part of the composite key: identifies a fare class
+     * @param routeId       2nd part of the composite key: identifies a route associated with the fare class
+     * @param originId      3rd part of the composite key: identifies an origin zone
+     * @param destinationId 4th part of the composite key: identifies a destination zone
+     * @param containsId    5th part ot the composite key: identifies the zones that a rider will enter while using a
+     *                      given fare class
+     * @return the FareRule representing a row from fare_rules.txt related to the id provided as parameter
+     */
+    @Override
+    public FareRule getFareRule(final String fareId, final String routeId, final String originId,
+                                final String destinationId, final String containsId) {
+        return fareRuleCollection.get(FareRule.getFareRuleMappingKey(fareId, routeId, originId, destinationId,
+                containsId));
     }
 
     /**
