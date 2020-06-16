@@ -46,6 +46,8 @@ Increment the `version` in the various `build.gradle` files and add the `-SNAPSH
 
 For example, if the version you just released is `1.1.0`, change the `version` to `1.1.1-SNAPSHOT`.
 
+Update the GitHub CI [config file](https://github.com/MobilityData/gtfs-validator/blob/master/.github/workflows/gradle.yml) to point to the new `SNAPSHOT` version.
+
 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
 
 
