@@ -13,7 +13,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Build with Gradle
+      - name: Run test
+        run: ./gradlew test
+      - name: Package jar with Gradle
         run: ./gradlew shadowJar
       - name: Run validator on MBTA data
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.1.0-SNAPSHOT.jar -u https://transitfeeds.com/p/mbta/64/20200531/download -i input.zip -e input -o output
