@@ -23,7 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CalendarEndDate
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -34,13 +34,14 @@ import static org.mockito.Mockito.*;
  */
 class ValidateCalendarEndDateBeforeStartDateNoticeTest {
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void startDateBeforeEndDateShouldNotGenerateNotice() {
         Calendar mockCalendar = mock(Calendar.class);
         when(mockCalendar.getStartDate()).thenReturn(
-                LocalDateTime.of(2020, 1, 1, 12, 35, 59));
+                LocalDate.of(2020, 1, 1));
         when(mockCalendar.getEndDate()).thenReturn(
-                LocalDateTime.of(2020, 2, 1, 12, 35, 59)
+                LocalDate.of(2020, 2, 1)
         );
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
@@ -66,13 +67,14 @@ class ValidateCalendarEndDateBeforeStartDateNoticeTest {
         verifyNoMoreInteractions(mockCalendar, mockDataRepo, mockResultRepo, mockLogger);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void sameStartAndEndDateShouldNotGenerateNotice() {
         Calendar mockCalendar = mock(Calendar.class);
         when(mockCalendar.getStartDate()).thenReturn(
-                LocalDateTime.of(2020, 1, 1, 12, 35, 59));
+                LocalDate.of(2020, 1, 1));
         when(mockCalendar.getEndDate()).thenReturn(
-                LocalDateTime.of(2020, 1, 1, 12, 35, 59)
+                LocalDate.of(2020, 1, 1)
         );
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
@@ -98,13 +100,14 @@ class ValidateCalendarEndDateBeforeStartDateNoticeTest {
         verifyNoMoreInteractions(mockCalendar, mockDataRepo, mockResultRepo, mockLogger);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void endDateBeforeStartDateShouldGenerateNotice() {
         Calendar mockCalendar = mock(Calendar.class);
         when(mockCalendar.getStartDate()).thenReturn(
-                LocalDateTime.of(2020, 2, 1, 12, 35, 59));
+                LocalDate.of(2020, 2, 1));
         when(mockCalendar.getEndDate()).thenReturn(
-                LocalDateTime.of(2020, 1, 1, 12, 35, 59)
+                LocalDate.of(2020, 1, 1)
         );
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);

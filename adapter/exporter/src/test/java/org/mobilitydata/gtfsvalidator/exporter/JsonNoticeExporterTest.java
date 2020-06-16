@@ -25,7 +25,7 @@ import org.mockito.InOrder;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import static org.mockito.Mockito.*;
 
@@ -548,8 +548,8 @@ class JsonNoticeExporterTest {
         CalendarEndDateBeforeStartDateNotice toExport = new CalendarEndDateBeforeStartDateNotice(
                 FILENAME,
                 "wkend",
-                LocalDateTime.of(2020, 2, 1, 12, 35, 59),
-                LocalDateTime.of(2020, 1, 1, 12, 35, 59)
+                LocalDate.of(2020, 2, 1),
+                LocalDate.of(2020, 1, 1)
         );
         underTest.export(toExport);
 
