@@ -82,4 +82,6 @@ public interface NoticeExporter {
     void export(RouteLongNameEqualsShortNameNotice toExport) throws IOException;
 
     void export(RouteLongNameContainsShortNameNotice toExport) throws IOException;
+
+    void export(CalendarEndDateBeforeStartDateNotice toExport) throws IOException;
 }
