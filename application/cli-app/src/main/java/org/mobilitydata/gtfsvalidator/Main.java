@@ -152,11 +152,7 @@ public class Main {
                 config.exportResultAsFile().execute();
             }
         } catch (IOException e) {
-            if (e.getMessage().contains("execution-parameters.json")) {
-                config.printHelp().execute();
-            } else {
-                logger.error("An exception occurred: " + e);
-            }
+            logger.error("An exception occurred: " + e);
         }
         final long duration = System.nanoTime() - startTime;
         logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
