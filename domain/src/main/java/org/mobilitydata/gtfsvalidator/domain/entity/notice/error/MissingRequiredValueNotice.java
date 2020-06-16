@@ -22,24 +22,18 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class MissingRequiredValueNotice extends ErrorNotice {
-    private String fieldName;
 
     public MissingRequiredValueNotice(String filename, String fieldName, String entityId) {
         super(filename, E_015,
                 "Missing required value",
-                "Missing value for field:" + fieldName
-                        + " marked as required in entity with id:" + entityId,
+                "Missing value for field:`" + fieldName
+                        + "` marked as required in entity with id:`" + entityId + "`",
                 entityId);
-        this.fieldName = fieldName;
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
 }

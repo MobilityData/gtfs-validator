@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedFareRuleTest {
@@ -202,7 +203,7 @@ class ProcessParsedFareRuleTest {
 
         assertEquals("fare_rules.txt", noticeList.get(0).getFilename());
         assertEquals("fare_id; route_id; origin_id; destination_id; contains_id",
-                noticeList.get(0).getFieldName());
+                noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("entity id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedFareRule, mockResultRepo, mockGtfsDataRepo, mockFareRule, mockBuilder,
