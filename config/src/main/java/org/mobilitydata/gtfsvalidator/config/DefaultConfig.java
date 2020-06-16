@@ -22,10 +22,16 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Attribution;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 
@@ -46,6 +52,7 @@ public class DefaultConfig {
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
+    private String executionParametersAsString;
 
     @SuppressWarnings("UnstableApiUsage")
     public DefaultConfig(final Logger logger) {
@@ -79,6 +86,16 @@ public class DefaultConfig {
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        this.executionParametersAsString = null;
+        try {
+            this.executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
+            logger.info("Configuration file execution-parameters.json found in working directory" +
+                    System.lineSeparator());
+        } catch (IOException e) {
+            logger.warn("Configuration file execution-parameters.json not found in working directory" +
+                    System.lineSeparator());
         }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
     }
@@ -137,35 +154,39 @@ public class DefaultConfig {
     }
 
     public ValidateRouteColorAndTextContrast validateRouteColorAndTextContrast() {
-        return new ValidateRouteColorAndTextContrast(gtfsDataRepository, resultRepo);
+        return new ValidateRouteColorAndTextContrast(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteDescriptionAndNameAreDifferent validateRouteDescriptionAndNameAreDifferent() {
-        return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo);
+        return new ValidateRouteDescriptionAndNameAreDifferent(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteShortNameLength validateRouteShortNameLength() {
-        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo);
+        return new ValidateRouteShortNameLength(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteTypeIsInTypeOptions validateRouteTypeIsInOptions() {
-        return new ValidateRouteTypeIsInTypeOptions(gtfsDataRepository, resultRepo);
+        return new ValidateRouteTypeIsInTypeOptions(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateShortAndLongNameForRoutePresence validateBothRouteNamesPresence() {
-        return new ValidateShortAndLongNameForRoutePresence(gtfsDataRepository, resultRepo);
+        return new ValidateShortAndLongNameForRoutePresence(gtfsDataRepository, resultRepo, logger);
     }
 
     public ValidateRouteLongNameDoesNotContainOrEqualShortName validateRouteLongNameDoesNotContainShortName() {
-        return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo);
+        return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateCalendarEndDateBeforeStartDate validateCalendarEndDateBeforeStartDate() {
+        return new ValidateCalendarEndDateBeforeStartDate(gtfsDataRepository, resultRepo, logger);
     }
 
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
 
-    public ParseAllExecParam parseAllExecutionParameter() throws IOException {
-        return new ParseAllExecParam(Files.readString(Paths.get("execution-parameters.json")), execParamRepo,
+    public ParseAllExecParam parseAllExecutionParameter() {
+        return new ParseAllExecParam(executionParametersAsString, execParamRepo,
                 logger);
     }
 
@@ -191,6 +212,30 @@ public class DefaultConfig {
 
     public ProcessParsedLevel processParsedLevel() {
         return new ProcessParsedLevel(resultRepo, gtfsDataRepository, new Level.LevelBuilder());
+    }
+
+    public ProcessParsedCalendar processParsedCalendar() {
+        return new ProcessParsedCalendar(resultRepo, gtfsDataRepository, new Calendar.CalendarBuilder());
+    }
+
+    public ProcessParsedTrip processParsedTrip() {
+        return new ProcessParsedTrip(resultRepo, gtfsDataRepository, new Trip.TripBuilder());
+    }
+
+    public ProcessParsedTransfer processParsedTransfer() {
+        return new ProcessParsedTransfer(resultRepo, gtfsDataRepository, new Transfer.TransferBuilder());
+    }
+
+    public ProcessParsedFeedInfo processParsedFeedInfo() {
+        return new ProcessParsedFeedInfo(resultRepo, gtfsDataRepository, new FeedInfo.FeedInfoBuilder());
+    }
+
+    public ProcessParsedFareAttribute processParsedFareAttribute() {
+        return new ProcessParsedFareAttribute(resultRepo, gtfsDataRepository, new FareAttribute.FareAttributeBuilder());
+    }
+
+    public ProcessParsedFareRule processParsedFareRule() {
+        return new ProcessParsedFareRule(resultRepo, gtfsDataRepository, new FareRule.FareRuleBuilder());
     }
 
     public ProcessParsedAttribution processParsedAttribution() {

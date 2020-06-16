@@ -22,30 +22,29 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class RouteColorAndTextInsufficientContrastNotice extends ErrorNotice {
-    private String contrastRatio;
 
-    public RouteColorAndTextInsufficientContrastNotice(final String filename, final String entityId, final String contrastRatio) {
+    public RouteColorAndTextInsufficientContrastNotice(
+            final String filename,
+            final String entityId,
+            final double contrastRatio) {
         super(filename, E_025,
-                "Route color and text have insufficient contrast",
-                "Contrast ratio should be >= 4.5 but was " + contrastRatio + " for Route:" + entityId + " in file:" + filename +
-                        ". The route_text_color and route_color should be set to contrasting colors, as they are used " +
+                "`route_color` and `route_text_color` have insufficient contrast",
+                "Contrast ratio should be >= 4.5 but was `" + contrastRatio + "` for route:`" + entityId + "`" +
+                        " in file:`" + filename +
+                        "`. The `route_text_color` and `route_color` should be set to contrasting colors, as they are used " +
                         "as the text and background color (respectively) for displaying route names.  When left blank, " +
-                        "route_text_color defaults to 000000 (black) and route_color defaults to FFFFFF (white).  A common " +
-                        "source of issues here is setting route_color to a dark color, while leaving route_text_color set " +
-                        "to black. In this case, route_text_color should be set to a lighter color like FFFFFF to ensure " +
+                        "`route_text_color` defaults to 000000 (black) and `route_color` defaults to FFFFFF (white).  A common " +
+                        "source of issues here is setting `route_color` to a dark color, while leaving `route_text_color` set " +
+                        "to black. In this case, `route_text_color` should be set to a lighter color like FFFFFF to ensure " +
                         "a legible contrast between the two. The contrast ratio formula used can be found here : " +
                         "https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-procedure",
                 entityId);
-        this.contrastRatio = contrastRatio;
+        putNoticeSpecific(KEY_CONTRAST_RATIO, contrastRatio);
     }
 
     @Override
     public void export(final NoticeExporter exporter)
             throws IOException {
         exporter.export(this);
-    }
-
-    public String getContrastRatio() {
-        return contrastRatio;
     }
 }

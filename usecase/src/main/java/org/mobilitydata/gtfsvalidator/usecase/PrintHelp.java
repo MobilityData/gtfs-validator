@@ -45,11 +45,11 @@ public class PrintHelp {
      * repository provided in the constructor or if the ExecParamRepository provided in the constructor is empty.
      */
     public boolean execute() {
-        if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.HELP_KEY)) || execParamRepo.isEmpty()) {
+        if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.HELP_KEY))) {
 
             Options options = execParamRepo.getOptions();
 
-            final String HELP = String.join("\n",
+            final String HELP = String.join(System.lineSeparator(),
                     "Loads input GTFS feed from url or disk.",
                     "Checks files integrity, numeric type parsing and ranges as well as string format according" +
                             " to GTFS spec", "Validation results are exported to JSON file by default",
