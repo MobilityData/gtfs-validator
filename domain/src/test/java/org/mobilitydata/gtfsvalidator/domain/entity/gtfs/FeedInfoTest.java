@@ -19,11 +19,12 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
 class FeedInfoTest {
     private static final String STRING_TEST_VALUE = "string test value";
@@ -37,8 +38,8 @@ class FeedInfoTest {
         final EntityBuildResult<?> entityBuildResult = underTest.feedPublisherName(null)
                 .feedPublisherUrl(STRING_TEST_VALUE)
                 .feedLang(STRING_TEST_VALUE)
-                .feedStartDate(LocalDateTime.now())
-                .feedEndDate(LocalDateTime.now())
+                .feedStartDate(LocalDate.now())
+                .feedEndDate(LocalDate.now())
                 .feedVersion(STRING_TEST_VALUE)
                 .feedContactEmail(STRING_TEST_VALUE)
                 .feedContactUrl(STRING_TEST_VALUE)
@@ -54,7 +55,7 @@ class FeedInfoTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("feed_info.txt", notice.getFilename());
-        assertEquals("feed_publisher_name", notice.getFieldName());
+        assertEquals("feed_publisher_name", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -69,8 +70,8 @@ class FeedInfoTest {
                 underTest.feedPublisherName(STRING_TEST_VALUE)
                         .feedPublisherUrl(null)
                         .feedLang(STRING_TEST_VALUE)
-                        .feedStartDate(LocalDateTime.now())
-                        .feedEndDate(LocalDateTime.now())
+                        .feedStartDate(LocalDate.now())
+                        .feedEndDate(LocalDate.now())
                         .feedVersion(STRING_TEST_VALUE)
                         .feedContactEmail(STRING_TEST_VALUE)
                         .feedContactUrl(STRING_TEST_VALUE)
@@ -86,7 +87,7 @@ class FeedInfoTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("feed_info.txt", notice.getFilename());
-        assertEquals("feed_contact_url", notice.getFieldName());
+        assertEquals("feed_contact_url", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -101,8 +102,8 @@ class FeedInfoTest {
                 underTest.feedPublisherName(STRING_TEST_VALUE)
                         .feedPublisherUrl(STRING_TEST_VALUE)
                         .feedLang(null)
-                        .feedStartDate(LocalDateTime.now())
-                        .feedEndDate(LocalDateTime.now())
+                        .feedStartDate(LocalDate.now())
+                        .feedEndDate(LocalDate.now())
                         .feedVersion(STRING_TEST_VALUE)
                         .feedContactEmail(STRING_TEST_VALUE)
                         .feedContactUrl(STRING_TEST_VALUE)
@@ -118,7 +119,7 @@ class FeedInfoTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("feed_info.txt", notice.getFilename());
-        assertEquals("feed_lang", notice.getFieldName());
+        assertEquals("feed_lang", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
         assertTrue(entityBuildResult.getData() instanceof List);

@@ -930,7 +930,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new RouteColorAndTextInsufficientContrastNotice(FILENAME, "entity_id", "0"));
+        underTest.export(new RouteColorAndTextInsufficientContrastNotice(FILENAME, "entity_id", 0));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
@@ -939,7 +939,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setAltEntityValue(
-                ArgumentMatchers.eq("0"));
+                ArgumentMatchers.eq("0.0"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

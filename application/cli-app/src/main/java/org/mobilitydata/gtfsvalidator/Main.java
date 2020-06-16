@@ -71,6 +71,7 @@ public class Main {
                 final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
+                final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -126,6 +127,10 @@ public class Main {
                                     processParsedFareAttribute.execute(parsedEntity);
                                     break;
                                 }
+                                case "fare_rules.txt": {
+                                    processParsedFareRule.execute(parsedEntity);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -144,12 +149,11 @@ public class Main {
                 config.exportResultAsFile().execute();
             }
         } catch (IOException e) {
-            if (e.getMessage().contains("execution-parameters.json")) {
-                config.printHelp().execute();
-            } else {
-                logger.error("An exception occurred: " + e);
-            }
+            logger.error("An exception occurred: " + e);
         }
-        logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
+        final long duration = System.nanoTime() - startTime;
+        logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
+                TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
+                TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
     }
 }

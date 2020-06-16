@@ -26,8 +26,8 @@ public class ExtraFileFoundNotice extends WarningNotice {
     public ExtraFileFoundNotice(String filename) {
         super(filename,
                 W_004,
-                "Non standard file found",
-                "Extra file " + filename + " found in archive",
+                "File name not defined by the GTFS specification",
+                "Extra file `" + filename + "` found in archive",
                 null);
     }
 

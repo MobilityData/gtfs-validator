@@ -17,42 +17,59 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
 public abstract class ErrorNotice extends Notice {
+    private static final String level = "ERROR";
 
-    protected static final String E_001 = "E001";
-    protected static final String E_002 = "E002";
-    protected static final String E_003 = "E003";
-    protected static final String E_004 = "E004";
-    protected static final String E_005 = "E005";
-    protected static final String E_006 = "E006";
-    protected static final String E_007 = "E007";
-    protected static final String E_008 = "E008";
-    // protected static final String E_009 = "E009"; // RESERVED - was CouldNotCleanOrCreatePathNotice (#112)
-    protected static final String E_010 = "E010";
-    protected static final String E_011 = "E011";
-    protected static final String E_012 = "E012";
-    protected static final String E_013 = "E013";
-    protected static final String E_014 = "E014";
-    protected static final String E_015 = "E015";
-    protected static final String E_016 = "E016";
-    protected static final String E_017 = "E017";
-    protected static final String E_018 = "E018";
-    protected static final String E_019 = "E019";
-    protected static final String E_020 = "E020";
-    protected static final String E_021 = "E021";
-    protected static final String E_022 = "E022";
-    protected static final String E_023 = "E023";
-    protected static final String E_024 = "E024";
-    protected static final String E_025 = "E025";
-    protected static final String E_026 = "E026";
-    protected static final String E_027 = "E027";
-    protected static final String E_028 = "E028";
-    protected static final String E_032 = "E032";
+    protected static final int E_001 = 1;
+    protected static final int E_002 = 2;
+    protected static final int E_003 = 3;
+    protected static final int E_004 = 4;
+    protected static final int E_005 = 5;
+    protected static final int E_006 = 6;
+    protected static final int E_007 = 7;
+    protected static final int E_008 = 8;
+    // protected static final int E_009 = 9; // RESERVED - was CouldNotCleanOrCreatePathNotice (#112)
+    protected static final int E_010 = 10;
+    protected static final int E_011 = 11;
+    protected static final int E_012 = 12;
+    protected static final int E_013 = 13;
+    protected static final int E_014 = 14;
+    protected static final int E_015 = 15;
+    protected static final int E_016 = 16;
+    protected static final int E_017 = 17;
+    protected static final int E_018 = 18;
+    protected static final int E_019 = 19;
+    protected static final int E_020 = 20;
+    protected static final int E_021 = 21;
+    protected static final int E_022 = 22;
+    protected static final int E_023 = 23;
+    protected static final int E_024 = 24;
+    protected static final int E_025 = 25;
+    protected static final int E_026 = 26;
+    protected static final int E_027 = 27;
+    protected static final int E_028 = 28;
+    protected static final int E_032 = 32;
 
     public ErrorNotice(final String filename,
-                       final String noticeId,
+                       final int code,
                        final String title,
                        final String description,
-                       String entityId) {
-        super(filename, noticeId, title, description, entityId);
+                       final String entityId) {
+        super(filename, code, title, description, entityId);
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    @Override
+    public String toString() {
+        return "\nNotice{" +
+                "filename='" + getFilename() + '\'' +
+                ", level='" + getLevel() + '\'' +
+                ", code='" + getCode() + '\'' +
+                ", title='" + getTitle() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", extra='" + getNoticeSpecificAll() + '\'' +
+                '}';
     }
 }

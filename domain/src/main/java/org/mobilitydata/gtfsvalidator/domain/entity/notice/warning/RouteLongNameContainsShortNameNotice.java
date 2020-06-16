@@ -25,9 +25,9 @@ public class RouteLongNameContainsShortNameNotice extends WarningNotice {
 
     public RouteLongNameContainsShortNameNotice(final String filename, final String entityId) {
         super(filename, W_008,
-                "Route long name contains Route short name",
-                "Route long name contains Route short name:" + entityId + " in file:" + filename +
-                        ". Route long name and should not contain the Route short name .",
+                "`route_long_name` contains `route_short_name`",
+                "`route_long_name` contains `route_short_name`:`" + entityId + "` in file:`" + filename +
+                        "`. `route_long_name` and should not contain the `route_short_name`.",
                 entityId);
     }
 
