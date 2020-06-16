@@ -22,10 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
-    private String fieldName;
-    private float rangeMin;
-    private float rangeMax;
-    private float actualValue;
 
     public FloatFieldValueOutOfRangeNotice(
             String filename,
@@ -36,33 +32,17 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
             float actualValue) {
         super(filename, E_011,
                 "Out of range float value",
-                "Invalid value for field:" + fieldName + " of entity with id:" + entityId +
-                        " -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
+                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
                 entityId);
-        this.rangeMax = rangeMax;
-        this.rangeMin = rangeMin;
-        this.fieldName = fieldName;
-        this.actualValue = actualValue;
+        putNoticeSpecific(KEY_RANGE_MIN, rangeMin);
+        putNoticeSpecific(KEY_RANGE_MAX, rangeMax);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_ACTUAL_VALUE, actualValue);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public float getRangeMin() {
-        return rangeMin;
-    }
-
-    public float getRangeMax() {
-        return rangeMax;
-    }
-
-    public float getActualValue() {
-        return actualValue;
     }
 }

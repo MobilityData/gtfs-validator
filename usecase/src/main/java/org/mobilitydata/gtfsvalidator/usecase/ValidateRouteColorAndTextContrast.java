@@ -55,7 +55,7 @@ public class ValidateRouteColorAndTextContrast {
         routes.stream()
                 .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
                 .forEach(route -> resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("routes.txt",
-                        route.getRouteId(), String.valueOf(contrast(route.getRouteColor(), route.getRouteTextColor())))));
+                        route.getRouteId(), contrast(route.getRouteColor(), route.getRouteTextColor()))));
     }
 
     /**

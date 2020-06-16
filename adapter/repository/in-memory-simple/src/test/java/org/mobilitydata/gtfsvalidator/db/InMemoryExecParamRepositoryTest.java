@@ -152,26 +152,54 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    void getParserShouldReturnApacheExecParamParser() {
-        final String[] mockString = new String[1];
+    void provideCmdLineOptionAndZeroJsonConfigFileShouldReturnApacheExecParamParser() {
+        final String[] mockArgument = new String[1];
 
         final Logger mockLogger = mock(Logger.class);
         final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(null,
-                mockString, mockLogger);
+                mockArgument, mockLogger);
         assertTrue(toCheck instanceof ApacheExecParamParser);
     }
 
     @Test
-    void getParserShouldReturnJsonExecParamParser() {
-        final String[] mockString = new String[0];
-        final String mockExecParam = "";
+    void provideZeroCmdLineOptionAndOneValidJsonConfigFileShouldReturnJsonExecParamParser() {
+        final String[] mockArgument = new String[0];
+        final String mockJsonConfigFile = "{\n" +
+                "  \"key_test\": \"value_test\"\n" +
+                "}";
 
         final Logger mockLogger = mock(Logger.class);
         final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
 
-        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockExecParam, mockString, mockLogger);
+        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockJsonConfigFile, mockArgument, mockLogger);
+        assertTrue(toCheck instanceof JsonExecParamParser);
+    }
+
+    @Test
+    void provideZeroCmdLineOptionAndZeroValidJsonConfigFileShouldReturnJsonExecParamParser() {
+        final String[] mockArgument = new String[0];
+        final String mockJsonConfigFile = null;
+
+        final Logger mockLogger = mock(Logger.class);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+
+        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockJsonConfigFile, mockArgument, mockLogger);
+        assertTrue(toCheck instanceof JsonExecParamParser);
+    }
+
+    @Test
+    void provideBothCmdLineOptionAndValidJsonConfigFileShouldReturnJsonExecParamParser() {
+        final String[] mockArgument = new String[3];
+        final String mockJsonConfigFile = "{\n" +
+                "  \"key_test\": \"value_test\"\n" +
+                "}";
+
+        final Logger mockLogger = mock(Logger.class);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+
+        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockJsonConfigFile, mockArgument, mockLogger);
         assertTrue(toCheck instanceof JsonExecParamParser);
     }
 

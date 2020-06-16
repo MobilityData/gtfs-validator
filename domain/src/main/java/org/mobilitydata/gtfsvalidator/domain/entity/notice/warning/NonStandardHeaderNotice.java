@@ -23,18 +23,12 @@ import java.io.IOException;
 
 public class NonStandardHeaderNotice extends WarningNotice {
 
-    private String extraHeader;
-
     public NonStandardHeaderNotice(String filename, String extra) {
         super(filename, W_002,
-                "Non standard header",
-                "Unexpected header:" + extra + " in file:" + filename,
+                "Non standard field name",
+                "Unexpected field name:`" + extra + "` in file:`" + filename + "`",
                 null);
-        this.extraHeader = extra;
-    }
-
-    public String getExtraHeader() {
-        return extraHeader;
+        putNoticeSpecific(KEY_EXTRA_HEADER_NAME, extra);
     }
 
     @Override

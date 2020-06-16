@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +37,9 @@ public class FeedInfo extends GtfsEntity {
     @NotNull
     private final String feedLang;
     @Nullable
-    private final LocalDateTime feedStartDate;
+    private final LocalDate feedStartDate;
     @Nullable
-    private final LocalDateTime feedEndDate;
+    private final LocalDate feedEndDate;
     @Nullable
     private final String feedVersion;
     @Nullable
@@ -64,8 +64,8 @@ public class FeedInfo extends GtfsEntity {
     private FeedInfo(@NotNull String feedPublisherName,
                      @NotNull String feedPublisherUrl,
                      @NotNull String feedLang,
-                     @Nullable LocalDateTime feedStartDate,
-                     @Nullable LocalDateTime feedEndDate,
+                     @Nullable LocalDate feedStartDate,
+                     @Nullable LocalDate feedEndDate,
                      @Nullable String feedVersion,
                      @Nullable String feedContactEmail,
                      @Nullable String feedContactUrl) {
@@ -95,12 +95,12 @@ public class FeedInfo extends GtfsEntity {
     }
 
     @Nullable
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return feedStartDate;
     }
 
     @Nullable
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return feedEndDate;
     }
 
@@ -127,8 +127,8 @@ public class FeedInfo extends GtfsEntity {
         private String feedPublisherName;
         private String feedPublisherUrl;
         private String feedLang;
-        private LocalDateTime feedStartDate;
-        private LocalDateTime feedEndDate;
+        private LocalDate feedStartDate;
+        private LocalDate feedEndDate;
         private String feedVersion;
         private String feedContactEmail;
         private String feedContactUrl;
@@ -173,7 +173,7 @@ public class FeedInfo extends GtfsEntity {
          * @param feedStartDate date from which the services defined in dataset are valid
          * @return builder for future object creation
          */
-        public FeedInfoBuilder feedStartDate(final LocalDateTime feedStartDate) {
+        public FeedInfoBuilder feedStartDate(final LocalDate feedStartDate) {
             this.feedStartDate = feedStartDate;
             return this;
         }
@@ -184,7 +184,7 @@ public class FeedInfo extends GtfsEntity {
          * @param feedEndDate date until which the services defined in dataset are valid
          * @return builder for future object creation
          */
-        public FeedInfoBuilder feedEndDate(final LocalDateTime feedEndDate) {
+        public FeedInfoBuilder feedEndDate(final LocalDate feedEndDate) {
             this.feedEndDate = feedEndDate;
             return this;
         }

@@ -29,6 +29,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
+
 public class ProtobufNoticeExporter implements NoticeExporter {
 
     private final GtfsValidationOutputProto.GtfsProblem.Builder protoBuilder;
@@ -63,7 +65,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_UNKNOWN_COLUMN)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING)
-                .setAltEntityValue(toExport.getExtraHeader())
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_EXTRA_HEADER_NAME))
                 .clearAltEntityId()
                 .build()
                 .writeTo(streamGenerator.getStream());
@@ -85,7 +87,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ARCHIVE_CORRUPTED)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING)
-                .setAltEntityValue(toExport.getFieldName())
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
                 .setAltEntityId(toExport.getEntityId())
                 .build()
                 .writeTo(streamGenerator.getStream());
@@ -113,8 +115,12 @@ public class ProtobufNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(CannotParseFloatNotice toExport) throws IOException {
-        parsingNoticeToProto(toExport.getFilename(), toExport.getLineNumber(), toExport.getFieldName(),
-                toExport.getRawValue());
+        parsingNoticeToProto(
+                toExport.getFilename(),
+                (int) toExport.getNoticeSpecific(KEY_LINE_NUMBER),
+                (String) toExport.getNoticeSpecific(KEY_FIELD_NAME),
+                (String) toExport.getNoticeSpecific(KEY_RAW_VALUE)
+        );
     }
 
     private void parsingNoticeToProto(String filename, int lineNumber, String fieldName, String rawValue) throws IOException {
@@ -130,8 +136,12 @@ public class ProtobufNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(CannotParseIntegerNotice toExport) throws IOException {
-        parsingNoticeToProto(toExport.getFilename(), toExport.getLineNumber(), toExport.getFieldName(),
-                toExport.getRawValue());
+        parsingNoticeToProto(
+                toExport.getFilename(),
+                (int) toExport.getNoticeSpecific(KEY_LINE_NUMBER),
+                (String) toExport.getNoticeSpecific(KEY_FIELD_NAME),
+                (String) toExport.getNoticeSpecific(KEY_RAW_VALUE)
+        );
     }
 
     @Override
@@ -146,19 +156,24 @@ public class ProtobufNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(FloatFieldValueOutOfRangeNotice toExport) throws IOException {
-        outOfRangeNoticeToProto(toExport.getFilename(), toExport.getEntityId(), toExport.getFieldName(),
-                String.valueOf(toExport.getRangeMin()), String.valueOf(toExport.getRangeMax()),
-                String.valueOf(toExport.getActualValue()));
+        outOfRangeNoticeToProto(
+                toExport.getFilename(),
+                toExport.getEntityId(),
+                (String) toExport.getNoticeSpecific(KEY_FIELD_NAME),
+                String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MIN)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MAX)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_ACTUAL_VALUE))
+        );
     }
 
     @Override
     public void export(IntegerFieldValueOutOfRangeNotice toExport) throws IOException {
         outOfRangeNoticeToProto(toExport.getFilename(),
                 toExport.getEntityId(),
-                toExport.getFieldName(),
-                String.valueOf(toExport.getRangeMin()),
-                String.valueOf(toExport.getRangeMax()),
-                String.valueOf(toExport.getActualValue()));
+                (String) toExport.getNoticeSpecific(KEY_FIELD_NAME),
+                String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MIN)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MAX)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_ACTUAL_VALUE)));
     }
 
     private void outOfRangeNoticeToProto(String filename, String entityId, String fieldName, String rangeMinAsString,
@@ -183,8 +198,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_VALUES)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityRow(toExport.getRowIndex())
-                .setAltEntityValue(String.valueOf(toExport.getExpectedLength()))
+                .setAltEntityRow((Integer) toExport.getNoticeSpecific(KEY_ROW_INDEX))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_EXPECTED_LENGTH)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -195,8 +210,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_INVALID_TIMEZONE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getFieldName())
-                .setAltEntityValue(toExport.getTimezoneValue())
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_TIMEZONE_VALUE))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -207,8 +222,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_INVALID_URL)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getFieldName())
-                .setAltEntityValue(toExport.getUrlValue())
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_URL_VALUE))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -219,7 +234,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_COLUMN)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getMissingHeaderName())
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_MISSING_HEADER_NAME))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -241,7 +256,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_VALUE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getFieldName())
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
                 .setAltEntityValue(toExport.getEntityId())
                 .build()
                 .writeTo(streamGenerator.getStream());
@@ -253,8 +268,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getFieldName())
-                .setAltEntityValue(toExport.getColorValue())
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_COLOR_VALUE))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -275,16 +290,20 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getFieldName())
-                .setAltEntityValue(toExport.getTimeValue())
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_TIME_VALUE))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
 
     @Override
     public void export(CannotParseDateNotice toExport) throws IOException {
-        parsingNoticeToProto(toExport.getFilename(), toExport.getLineNumber(), toExport.getFieldName(),
-                toExport.getRawValue());
+        parsingNoticeToProto(
+                toExport.getFilename(),
+                (int) toExport.getNoticeSpecific(KEY_LINE_NUMBER),
+                (String) toExport.getNoticeSpecific(KEY_FIELD_NAME),
+                (String) toExport.getNoticeSpecific(KEY_RAW_VALUE)
+        );
     }
 
     @Override
@@ -293,9 +312,9 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getFieldName())
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
                 .setEntityId(toExport.getEntityId())
-                .setAltEntityValue(toExport.getCurrencyCode())
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_CURRENCY_CODE))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -306,8 +325,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setEntityId(toExport.getFieldName())
-                .setEntityValue(toExport.getEnumValue())
+                .setEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_ENUM_VALUE)))
                 .setAltEntityId(toExport.getEntityId())
                 .build()
                 .writeTo(streamGenerator.getStream());
@@ -319,8 +338,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setEntityId(toExport.getFieldName())
-                .setAltEntityId(toExport.getConflictingFieldName())
+                .setEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_CONFLICTING_FIELD_NAME))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -331,7 +350,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setEntityId(toExport.getFieldName())
+                .setEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
                 .setAltEntityId(toExport.getEntityId())
                 .build()
                 .writeTo(streamGenerator.getStream());
@@ -343,8 +362,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_INVALID_URL)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getFieldName())
-                .setAltEntityValue(toExport.getEmailValue())
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_EMAIL_VALUE))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -355,8 +374,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_INVALID_LANGUAGE_CODE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityId(toExport.getFieldName())
-                .setAltEntityValue(toExport.getLangValue())
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_LANG_VALUE))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -377,7 +396,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_COLOR_CONTRAST)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityValue(toExport.getContrastRatio())
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific("contrastRatio")))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -388,7 +407,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_SHORT_NAME_IS_TOO_LONG)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setAltEntityValue(toExport.getshortNameLength())
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_SHORT_NAME_LENGTH))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -449,6 +468,16 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_ROUTE_SHORT_NAME_IS_CONTAINED_IN_LONG_NAME)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(CalendarEndDateBeforeStartDateNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CALENDAR_START_AND_END_DATE_OUT_OF_ORDER)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
