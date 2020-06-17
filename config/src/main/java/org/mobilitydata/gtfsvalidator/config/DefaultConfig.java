@@ -24,6 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
@@ -231,6 +232,10 @@ public class DefaultConfig {
 
     public ProcessParsedFareRule processParsedFareRule() {
         return new ProcessParsedFareRule(resultRepo, gtfsDataRepository, new FareRule.FareRuleBuilder());
+    }
+
+    public ProcessParsedFrequency processParsedFrequency() {
+        return new ProcessParsedFrequency(resultRepo, gtfsDataRepository, new Frequency.FrequencyBuilder());
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {

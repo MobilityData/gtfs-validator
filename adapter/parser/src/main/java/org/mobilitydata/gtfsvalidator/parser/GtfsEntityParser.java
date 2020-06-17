@@ -185,6 +185,27 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                                 ));
                     }
 
+                } else if (columnSpecProto.getType().getType() ==
+                        GtfsSpecificationProto.ColumnInputType.InputType.TIME) {
+
+                    //Shouldn't we implement this elsewhere? Custom validator or class?
+                    Integer timeValue = null;
+                    if (rawField != null && rawField.matches("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]")) {
+                        String[] timeStringSplit = rawField.split(":");
+                        String hourString = timeStringSplit[0];
+                        String minuteString = timeStringSplit[1];
+                        String secondString = timeStringSplit[2];
+                        Integer hourValue = Integer.valueOf(hourString);
+                        Integer minuteValue = Integer.valueOf(minuteString);
+                        Integer secondValue = Integer.valueOf(secondString);
+
+                        //Converting time to an Integer value representing number of seconds
+                        timeValue = hourValue * 3600 + minuteValue * 60 + secondValue;
+                        //Setting noon as point zero, subtracting 12 * 3600 seconds
+                        timeValue = timeValue - 12 * 3600;
+                    }
+                    contentByHeaderMap.put(columnSpecProto.getName(), timeValue);
+
                 } else {
                     contentByHeaderMap.put(columnSpecProto.getName(), rawField);
                     if (columnSpecProto.getUniquevalues()) {

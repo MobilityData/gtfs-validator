@@ -194,25 +194,6 @@ public class Frequency extends GtfsEntity {
         }
     }
 
-    public static Integer convertTimeToInteger(String timeString) {
-        Integer timeValue = null;
-        if (timeString != null && timeString.matches("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]")) {
-            String[] timeStringSplit = timeString.split(":");
-            String hourString = timeStringSplit[0];
-            String minuteString = timeStringSplit[1];
-            String secondString = timeStringSplit[2];
-            Integer hourValue = Integer.valueOf(hourString);
-            Integer minuteValue = Integer.valueOf(minuteString);
-            Integer secondValue = Integer.valueOf(secondString);
-
-            //Converting time to an Integer value representing number of seconds
-            timeValue = hourValue * 3600 + minuteValue * 60 + secondValue;
-            //Setting noon as point zero, subtracting 12 * 3600 seconds
-            timeValue = timeValue - 12 * 3600;
-        }
-        return timeValue;
-    }
-
     /**
      * Returns the key corresponding to this {@link FareRule}
      *

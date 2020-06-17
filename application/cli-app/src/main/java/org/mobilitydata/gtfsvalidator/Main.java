@@ -72,6 +72,7 @@ public class Main {
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
+                final ProcessParsedFrequency processParsedFrequency = config.processParsedFrequency();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -129,6 +130,10 @@ public class Main {
                                 }
                                 case "fare_rules.txt": {
                                     processParsedFareRule.execute(parsedEntity);
+                                    break;
+                                }
+                                case "frequencies.txt": {
+                                    processParsedFrequency.execute(parsedEntity);
                                     break;
                                 }
                             }
