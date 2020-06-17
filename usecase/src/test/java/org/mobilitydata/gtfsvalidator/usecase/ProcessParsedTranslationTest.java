@@ -90,7 +90,8 @@ class ProcessParsedTranslationTest {
 
         inOrder.verify(mockGtfsDataRepo, times(1)).addTranslation(mockTranslation);
 
-        verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockGtfsDataRepo, mockEntityBuildResult, mockTranslation);
+        verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockEntityBuildResult, mockTranslation);
+        verifyNoInteractions(mockResultRepo);
     }
 
     @Test
