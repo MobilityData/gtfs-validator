@@ -233,7 +233,7 @@ public class DefaultConfig {
         return new ProcessParsedFareRule(resultRepo, gtfsDataRepository, new FareRule.FareRuleBuilder());
     }
 
-    public ProcessParsedShapePoint processParserShapePoint() {
+    public ProcessParsedShapePoint processParsedShapePoint() {
         return new ProcessParsedShapePoint(resultRepo, gtfsDataRepository, new ShapePoint.ShapeBuilder());
     }
 

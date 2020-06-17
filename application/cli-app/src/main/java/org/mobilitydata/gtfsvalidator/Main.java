@@ -72,7 +72,7 @@ public class Main {
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
-                final ProcessParsedShapePoint processParsedShapePoint = config.processParserShapePoint();
+                final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
