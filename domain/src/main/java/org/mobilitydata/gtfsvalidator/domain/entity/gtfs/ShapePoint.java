@@ -101,7 +101,13 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
      */
     @Override
     public int compareTo(@NotNull final ShapePoint shapePoint) {
-        return getShapePtSequence().compareTo(shapePoint.getShapePtSequence());
+        if (getShapePtSequence().equals(shapePoint.getShapePtSequence())) {
+            return 0;
+        } else if (getShapePtSequence() < shapePoint.getShapePtSequence()) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 
     /**

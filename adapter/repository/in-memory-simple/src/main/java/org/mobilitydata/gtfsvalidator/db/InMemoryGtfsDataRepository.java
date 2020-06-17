@@ -81,7 +81,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
-    // Map containing Shape Entities. Entities are mapped on the value found in column shape_id of GTFS file shapes.txt
+    // Map containing Shape Entities. A shape is a actually a collection ShapePoint.
+    // Entities are mapped on the value found in column shape_id of GTFS file shapes.txt
     private final Map<String, ArrayList<ShapePoint>> shapePerId = new HashMap<>();
 
     /**
@@ -488,8 +489,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Add a shape point representing a row from shapes.txt to this. Return the entity added to the repository if not
-     * null, otherwise returns null.
+     * Add a shape point to a shape. A shape is a list of shape points whereas a ShapePoint represents a row from
+     * shapes.txt to this. Return the entity added to the repository if not null, otherwise returns null.
      *
      * @param newShapePoint the internal representation of a row from shapes.txt to be added to the repository.
      * @return the entity added to the repository if not null, otherwise returns null.
@@ -516,10 +517,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the list of shape points from shapes.txt related to the id provided as parameter
+     * Return the list of shape points from shapes.txt related to the id provided as parameter; which represents a shape
+     * object.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return  the list of shape points from shapes.txt related to the id provided as parameter
+     * @return  the list of shape points from shapes.txt related to the id provided as parameter; which represents a
+     * shape object
      */
     @Override
     public ArrayList<ShapePoint> getShapeById(final String shapeId) {
