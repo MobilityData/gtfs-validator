@@ -207,11 +207,11 @@ public class Translation extends GtfsEntity {
             // statements can be true.
             //noinspection ConstantConditions
             if (tableName == null || fieldName == null || language == null || translation == null ||
-                    (recordId  != null && tableName!= null && tableName==TableName.FEED_INFO) ||
+                    (recordId  != null && tableName==TableName.FEED_INFO) ||
                     (recordId != null && fieldValue != null) ||
                     (recordId == null && fieldValue == null && tableName != TableName.FEED_INFO) ||
                     (recordSubId != null && fieldValue != null) ||
-                    (recordSubId == null && tableName!= null && tableName==TableName.STOP_TIMES && recordId != null) ||
+                    (recordSubId == null && tableName==TableName.STOP_TIMES && recordId != null) ||
                     (tableName == TableName.FEED_INFO && (recordId != null || recordSubId != null || fieldValue != null))
             ) {
                 if (tableName == null) {
@@ -257,7 +257,7 @@ public class Translation extends GtfsEntity {
                     noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
                             "record_sub_id", "field_value", null));
                 }
-                if (recordSubId == null && tableName!= null && tableName==TableName.STOP_TIMES && recordId != null) {
+                if (recordSubId == null && tableName==TableName.STOP_TIMES && recordId != null) {
                     noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
                             "record_sub_id", "table_name", null));
                 }
