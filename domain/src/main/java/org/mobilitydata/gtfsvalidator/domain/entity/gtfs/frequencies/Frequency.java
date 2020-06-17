@@ -91,8 +91,6 @@ public class Frequency extends GtfsEntity {
         private Integer endTime;
         private Integer headwaySecs;
         private ExactTimes exactTimes;
-        private String originalStartTime;
-        private String originalEndTime;
         private Integer originalExactTimes;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
@@ -116,7 +114,6 @@ public class Frequency extends GtfsEntity {
          */
         public FrequencyBuilder startTime(@NotNull String startTime) {
             this.startTime = convertTimeToInteger(startTime);
-            this.originalStartTime = startTime;
             return this;
         }
 
@@ -128,7 +125,6 @@ public class Frequency extends GtfsEntity {
          */
         public FrequencyBuilder endTime(@NotNull String endTime) {
             this.endTime = convertTimeToInteger(endTime);
-            this.originalEndTime = endTime;
             return this;
         }
 
@@ -165,13 +161,13 @@ public class Frequency extends GtfsEntity {
                             "trip_id", tripId));
                 }
 
-                if (startTime == null && originalStartTime == null) {
+                if (startTime == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt",
                             "start_time", tripId));
                 }
                 //else if (startTime == null && originalStartTime != null) InvalidTimeNotice?
 
-                if (endTime == null && originalEndTime == null) {
+                if (endTime == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt",
                             "end_time", tripId));
                 }
