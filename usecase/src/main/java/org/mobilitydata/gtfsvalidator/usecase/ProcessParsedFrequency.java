@@ -72,7 +72,7 @@ public class ProcessParsedFrequency {
         if (frequency.isSuccess()) {
             if (gtfsDataRepository.addFrequency((Frequency) frequency.getData()) == null) {
                 resultRepository.addNotice(new DuplicatedEntityNotice("frequencies.txt",
-                        "trip_id", validatedFrequency.getEntityId()));
+                        "trip_id; start_time", validatedFrequency.getEntityId()));
             }
         } else {
             // at this step it is certain that calling getData method will return a list of notices, therefore there is
