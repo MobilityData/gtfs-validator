@@ -36,9 +36,9 @@ class TranslationTest {
     private static final String DEFINED_RECORD_ID = "record id";
     private static final String DEFINED_RECORD_SUB_ID = "record sub id";
     private static final String DEFINED_FIELD_VALUE = "field value";
-    static final String UNDEFINED_FIELD_VALUE = null;
-    static final String UNDEFINED_RECORD_SUB_ID = null;
-    static final String UNDEFINED_RECORD_ID = null;
+    private static final String UNDEFINED_FIELD_VALUE = null;
+    private static final String UNDEFINED_RECORD_SUB_ID = null;
+    private static final String UNDEFINED_RECORD_ID = null;
     private static final String FILENAME = "translations.txt";
     private static final String ENTITY_ID = "no id";
 
