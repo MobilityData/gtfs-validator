@@ -31,9 +31,9 @@ import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 class FrequencyTest {
     private static final String STRING_TEST = "string test";
-    private static final String VALID_START_TIME = "12:00:00";
-    private static final String VALID_END_TIME = "18:00:00";
-    private static final Integer VALID_HEADWAY_SECS = 1800;
+    private static final Integer VALID_START_TIME = 0;
+    private static final Integer VALID_END_TIME = 3600;
+    private static final Integer VALID_HEADWAY_SECS = 600;
     private static final Integer VALID_EXACT_TIMES_INTEGER = 0;
 
     @Test
@@ -208,5 +208,20 @@ class FrequencyTest {
                 .exactTimes(null);
 
         assertTrue(underTest.build().getData() instanceof Frequency);
+    }
+
+    @Test
+    void getFrequencyMappingKeyShouldReturnStringOfConcatenatedFieldValues() {
+        final Frequency.FrequencyBuilder underTest = new Frequency.FrequencyBuilder();
+        final Frequency frequency = (Frequency) underTest.tripId("trip id")
+                .startTime(0)
+                .endTime(3600)
+                .headwaySecs(600)
+                .exactTimes(0)
+                .build()
+                .getData();
+
+        assertEquals("trip id" + 0,
+                frequency.getFrequencyMappingKey());
     }
 }

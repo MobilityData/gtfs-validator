@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
@@ -79,6 +80,13 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - contains_id
     // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
+
+    // Map containing Frequency entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file frequencies.txt:
+    // - trip_id
+    // - start_time
+    // Example of key after composition: trip_idstart_time
+    private final Map<String, Frequency> frequencyCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -480,5 +488,43 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                 final String destinationId, final String containsId) {
         return fareRuleCollection.get(FareRule.getFareRuleMappingKey(fareId, routeId, originId, destinationId,
                 containsId));
+    }
+
+    /**
+     * Add a Frequency representing a row from frequencies.txt to this {@code GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from frequencies.txt
+     * is respected, if this requirement is not met, returns null.
+     *
+     * @param newFrequency the internal representation of a row from frequencies.txt to be added to the
+     *                     repository.
+     * @return the entity added to the repository if the uniqueness constraint of frequency based on rows from
+     * frequencies.txt is respected, if this requirement is not met returns null.
+     * @throws IllegalArgumentException if the argument is null
+     */
+    @Override
+    public Frequency addFrequency(final Frequency newFrequency) throws IllegalArgumentException {
+        if (newFrequency != null) {
+            String key = newFrequency.getFrequencyMappingKey();
+            if (frequencyCollection.containsKey(key)) {
+                return null;
+            } else {
+                frequencyCollection.put(key, newFrequency);
+                return newFrequency;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null frequency to data repository");
+        }
+    }
+
+    /**
+     * Return the Frequency representing a row from frequencies.txt related to the id provided as parameter
+     *
+     * @param tripId    1st part of the composite key: identifies a fare class
+     * @param startTime 2nd part of the composite key: identifies a route associated with the fare class
+     * @return the Frequency representing a row from frequencies.txt related to the id provided as parameter
+     */
+    @Override
+    public Frequency getFrequency(final String tripId, final Integer startTime) {
+        return frequencyCollection.get(Frequency.getFrequencyMappingKey(tripId, startTime));
     }
 }

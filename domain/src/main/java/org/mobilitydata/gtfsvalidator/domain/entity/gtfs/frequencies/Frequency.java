@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
@@ -112,8 +113,8 @@ public class Frequency extends GtfsEntity {
          * @param startTime identifies a start time for a trip service at the first stop
          * @return builder for future object creation
          */
-        public FrequencyBuilder startTime(@NotNull String startTime) {
-            this.startTime = convertTimeToInteger(startTime);
+        public FrequencyBuilder startTime(@NotNull Integer startTime) {
+            this.startTime = startTime;
             return this;
         }
 
@@ -123,8 +124,8 @@ public class Frequency extends GtfsEntity {
          * @param endTime identifies an end time for a trip service at the first stop
          * @return builder for future object creation
          */
-        public FrequencyBuilder endTime(@NotNull String endTime) {
-            this.endTime = convertTimeToInteger(endTime);
+        public FrequencyBuilder endTime(@NotNull Integer endTime) {
+            this.endTime = endTime;
             return this;
         }
 
@@ -210,5 +211,18 @@ public class Frequency extends GtfsEntity {
             timeValue = timeValue - 12 * 3600;
         }
         return timeValue;
+    }
+
+    /**
+     * Returns the key corresponding to this {@link FareRule}
+     *
+     * @return the key corresponding to this {@link FareRule}
+     */
+    public static String getFrequencyMappingKey(final String tripId, final Integer startTime) {
+        return tripId + startTime;
+    }
+
+    public String getFrequencyMappingKey() {
+        return getFrequencyMappingKey(getTripId(), getStartTime());
     }
 }
