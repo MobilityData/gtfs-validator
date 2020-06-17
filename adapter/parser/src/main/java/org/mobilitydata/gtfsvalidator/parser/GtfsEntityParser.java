@@ -185,6 +185,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                                 ));
                     }
 
+                /*
                 } else if (columnSpecProto.getType().getType() ==
                         GtfsSpecificationProto.ColumnInputType.InputType.TIME) {
 
@@ -205,6 +206,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                         timeValue = timeValue - 12 * 3600;
                     }
                     contentByHeaderMap.put(columnSpecProto.getName(), timeValue);
+                    */
 
                 } else {
                     contentByHeaderMap.put(columnSpecProto.getName(), rawField);
