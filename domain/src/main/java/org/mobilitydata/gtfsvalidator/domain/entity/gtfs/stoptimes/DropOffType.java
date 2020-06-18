@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.stoptimes;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
@@ -28,7 +27,6 @@ import java.util.stream.Stream;
  * 3 - Must coordinate with driver to arrange drop off.
  */
 public enum DropOffType {
-
     REGULAR_DROP_OFF(0),
     NO_DROP_OFF(1),
     MUST_PHONE_DROP_OFF(2),
@@ -48,19 +46,33 @@ public enum DropOffType {
      * @param fromValue {@link Integer} to match with an enum value
      * @return If fromValue is null returns REGULAR_DROP_OFF by default, else returns the
      * enum value matching the {@link Integer} provided in the parameters.
-     * @throws IllegalArgumentException in case of unexpected value
      */
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    static public DropOffType fromInt(Integer fromValue) throws IllegalArgumentException {
+    static public DropOffType fromInt(Integer fromValue) {
         if (fromValue == null) {
             return REGULAR_DROP_OFF;
         }
-        if (Arrays.asList(DropOffType.values()).contains(fromValue)) {
-            throw new IllegalArgumentException("Unexpected enum value for drop_off_type");
+        if (!isEnumValid(fromValue)) {
+            return null;
         }
         return Stream.of(DropOffType.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
                 .get();
+    }
+
+    /**
+     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
+     *
+     * @param value the integer to associate with this enum values
+     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
+     */
+    static public boolean isEnumValid(final Integer value) {
+        if (value==null) {
+            return true;
+        }
+        return Stream.of(DropOffType.values())
+                .filter(enumItem -> enumItem.value == value)
+                .findAny()
+                .orElse(null) != null;
     }
 }

@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.stoptimes;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
@@ -25,7 +24,6 @@ import java.util.stream.Stream;
  * are instead approximate and/or interpolated times.
  */
 public enum Timepoint {
-
     APPROXIMATED_TIMES(0),
     EXACT_TIMES(1);
 
@@ -41,19 +39,33 @@ public enum Timepoint {
      *
      * @param fromValue int to match with an enum value
      * @return enum value matching the int provided in the parameters
-     * @throws IllegalArgumentException in case of unexpected value
      */
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    static public Timepoint fromInt(Integer fromValue) throws IllegalArgumentException {
+    static public Timepoint fromInt(Integer fromValue) {
         if (fromValue == null) {
             return EXACT_TIMES;
         }
-        if (!Arrays.asList(Timepoint.values()).contains(fromValue)) {
-            throw new IllegalArgumentException("Unexpected enum value for timepoint");
+        if (!isEnumValid(fromValue)) {
+            return null;
         }
         return Stream.of(Timepoint.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
                 .get();
+    }
+
+    /**
+     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
+     *
+     * @param value the integer to associate with this enum values
+     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
+     */
+    static public boolean isEnumValid(final Integer value) {
+        if (value==null) {
+            return true;
+        }
+        return Stream.of(Timepoint.values())
+                .filter(enumItem -> enumItem.value == value)
+                .findAny()
+                .orElse(null) != null;
     }
 }

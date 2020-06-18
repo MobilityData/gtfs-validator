@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
@@ -79,6 +81,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - contains_id
     // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
+
+    // Map containing StopTime entities. Entities are mapped on a composite key made of the values found in the columns
+    // of GTFS file stop_times.txt:
+    // - trip_id
+    // - stop_sequence
+    private final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripIdStopSequence = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -481,5 +489,44 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                 final String destinationId, final String containsId) {
         return fareRuleCollection.get(FareRule.getFareRuleMappingKey(fareId, routeId, originId, destinationId,
                 containsId));
+    }
+
+    /**
+     * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newStopTime the internal representation of a row from stop_times.txt to be added to the repository.
+     * @return Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt
+     * is respected, if this requirement is not met, returns null.
+     */
+    @Override
+    public StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException {
+        if(newStopTime!=null) {
+            final String tripId  = newStopTime.getTripId();
+            final Integer stopSequence  = newStopTime.getStopSequence();
+            if (stopTimePerTripIdStopSequence.containsKey(tripId) &&
+                    stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
+                return null;
+            } else {
+                final TreeMap<Integer, StopTime> innerMap = new TreeMap<>();
+                innerMap.put(stopSequence, newStopTime);
+                stopTimePerTripIdStopSequence.put(tripId, innerMap);
+                return newStopTime;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null StopTime to data repository");
+        }
+    }
+
+    /**
+     * Return the StopTime representing a row from stop_times.txt related to the trip_id provided as parameter
+     *
+     * @param tripId  identifies a trip
+     * @return  the StopTime representing a row from stop_times.txt related to the trip_id provided as parameter
+     */
+    @Override
+    public TreeMap<Integer, StopTime> getStopTimeByTripId(final String tripId) {
+        return stopTimePerTripIdStopSequence.get(tripId);
     }
 }

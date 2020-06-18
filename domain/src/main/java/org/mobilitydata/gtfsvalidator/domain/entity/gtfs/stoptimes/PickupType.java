@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.stoptimes;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
@@ -28,7 +27,6 @@ import java.util.stream.Stream;
  * 3 - Must coordinate with driver to arrange pickup.
  */
 public enum PickupType {
-
     REGULAR_PICKUP(0),
     NO_PICKUP(1),
     MUST_PHONE_PICKUP(2),
@@ -50,17 +48,32 @@ public enum PickupType {
      * enum value matching the {@link Integer} provided in the parameters.
      * @throws IllegalArgumentException in case of unexpected value
      */
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    static public PickupType fromInt(Integer fromValue) throws IllegalArgumentException {
+    static public PickupType fromInt(final Integer fromValue) throws IllegalArgumentException {
         if (fromValue == null) {
             return REGULAR_PICKUP;
         }
-        if (Arrays.asList(PickupType.values()).contains(fromValue)) {
-            throw new IllegalArgumentException("Unexpected enum value for pickup_type");
+        if (!isEnumValid(fromValue)) {
+            return null;
         }
         return Stream.of(PickupType.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
                 .get();
+    }
+
+    /**
+     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
+     *
+     * @param value the integer to associate with this enum values
+     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
+     */
+    static public boolean isEnumValid(final Integer value) {
+        if (value==null) {
+            return true;
+        }
+        return Stream.of(PickupType.values())
+                .filter(enumItem -> enumItem.value == value)
+                .findAny()
+                .orElse(null) != null;
     }
 }

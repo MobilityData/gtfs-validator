@@ -20,11 +20,13 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.TreeMap;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
@@ -71,4 +73,8 @@ public interface GtfsDataRepository {
 
     FareRule getFareRule(final String fareId, final String routeId, final String originId, final String destinationId,
                          final String containsId);
+
+    StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException;
+
+    TreeMap<Integer, StopTime> getStopTimeByTripId(final String tripId);
 }
