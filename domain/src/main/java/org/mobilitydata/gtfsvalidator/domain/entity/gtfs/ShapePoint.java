@@ -54,7 +54,7 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
      */
     private ShapePoint(@NotNull final String shapeId,
                        @NotNull final Float shapePtLat,
-                       @NotNull final  Float shapePtLon,
+                       @NotNull final Float shapePtLon,
                        @NotNull final Integer shapePtSequence,
                        @Nullable final Float shapeDistTraveled) {
         this.shapeId = shapeId;

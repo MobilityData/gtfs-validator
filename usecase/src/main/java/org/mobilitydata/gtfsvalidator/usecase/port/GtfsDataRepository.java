@@ -24,8 +24,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.TreeMap;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
@@ -75,5 +75,5 @@ public interface GtfsDataRepository {
 
     ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException;
 
-    ArrayList<ShapePoint> getShapeById(final String shapeId);
+    TreeMap<Integer, ShapePoint> getShapeById(final String shapeId);
 }

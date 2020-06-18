@@ -26,10 +26,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
@@ -82,8 +82,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
     // Map containing Shape Entities. A shape is a actually a collection ShapePoint.
-    // Entities are mapped on the value found in column shape_id of GTFS file shapes.txt
-    private final Map<String, ArrayList<ShapePoint>> shapePerId = new HashMap<>();
+    // Entities are mapped on the values found in column shape_id  and shape_pt_sequence of GTFS file shapes.txt
+    private final Map<String, TreeMap<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -500,15 +500,15 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException {
         if (newShapePoint != null) {
             final String shapeId = newShapePoint.getShapeId();
-            if (shapePerId.containsKey(shapeId)) {
-                if (shapePerId.get(shapeId).contains(newShapePoint)) {
+            if (shapePerIdShapePtSequence.containsKey(shapeId)) {
+                if (shapePerIdShapePtSequence.get(shapeId).containsKey(newShapePoint.getShapePtSequence())) {
                     return null;
                 }
-                shapePerId.get(shapeId).add(newShapePoint);
+                shapePerIdShapePtSequence.get(shapeId).put(newShapePoint.getShapePtSequence(), newShapePoint);
             } else {
-                final ArrayList<ShapePoint> shapePointPointCollection = new ArrayList<>();
-                shapePointPointCollection.add(newShapePoint);
-                shapePerId.put(shapeId, shapePointPointCollection);
+                final TreeMap<Integer, ShapePoint> innerMap = new TreeMap<>();
+                innerMap.put(newShapePoint.getShapePtSequence(), newShapePoint);
+                shapePerIdShapePtSequence.put(shapeId, innerMap);
             }
             return newShapePoint;
         } else {
@@ -525,7 +525,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * shape object
      */
     @Override
-    public ArrayList<ShapePoint> getShapeById(final String shapeId) {
-        return shapePerId.get(shapeId);
+    public TreeMap<Integer, ShapePoint> getShapeById(final String shapeId) {
+        return shapePerIdShapePtSequence.get(shapeId);
     }
 }
