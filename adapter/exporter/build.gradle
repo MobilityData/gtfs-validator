@@ -19,7 +19,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version '1.1.0-SNAPSHOT'
+version '1.2.1-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_11
 
@@ -36,7 +36,7 @@ dependencies {
 
     implementation 'com.google.protobuf:protobuf-java:3.8.0'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.3'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'

@@ -16,11 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CouldNotCleanOrCreatePathNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -32,37 +32,46 @@ import java.util.Comparator;
  */
 public class CleanOrCreatePath {
 
-    private final String pathToCleanOrCreate;
-    private final ValidationResultRepository resultRepo;
+    private final ExecParamRepository execParamRepo;
 
     /**
      * @param toCleanOrCreate an path specifying the target location
-     * @param resultRepo      a repository storing information about the validation
+     * @param execParamRepo a repository containing execution parameters
      */
-    public CleanOrCreatePath(final String toCleanOrCreate,
-                             final ValidationResultRepository resultRepo) {
-        this.pathToCleanOrCreate = toCleanOrCreate;
-        this.resultRepo = resultRepo;
+    public CleanOrCreatePath(final ExecParamRepository execParamRepo) {
+        this.execParamRepo = execParamRepo;
     }
 
     /**
-     * Execution method for use case: creates a path to the target location. If the target location is not
-     * * empty, all files at target are deleted. If the process fails, a {@link CouldNotCleanOrCreatePathNotice} is
-     * * generated and added to the {@link ValidationResultRepository} provided in the constructor.
+     * Execution method for use case: creates a path to the target location. If the target location is not empty, all
+     * files at target are deleted.
      *
      * @return a path to the target location
      */
-    public Path execute() {
+    public Path execute(String key) {
+        final String pathToCleanOrCreate = execParamRepo.getExecParamValue(key);
         Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
-        try {
-            // to empty any already existing directory
-            if (Files.exists(toCleanOrCreate)) {
-                //noinspection ResultOfMethodCallIgnored
+        // to empty any already existing directory
+        if (Files.exists(toCleanOrCreate)) {
+            try {
                 Files.walk(toCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
+        // Create the directory
+        try {
             Files.createDirectory(toCleanOrCreate);
+        } catch (AccessDeniedException e) {
+            // Wait and try again - Windows can initially block creating a directory immediately after a delete when a file lock exists (#112)
+            try {
+                Thread.sleep(500);
+                Files.createDirectory(toCleanOrCreate);
+            } catch (IOException | InterruptedException ex) {
+                ex.printStackTrace();
+            }
         } catch (IOException e) {
-            resultRepo.addNotice(new CouldNotCleanOrCreatePathNotice(pathToCleanOrCreate));
+            e.printStackTrace();
         }
 
         return toCleanOrCreate;

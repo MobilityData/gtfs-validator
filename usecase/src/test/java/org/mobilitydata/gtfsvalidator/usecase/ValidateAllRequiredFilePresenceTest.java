@@ -17,220 +17,91 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.MissingRequiredFileNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.InfoNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 class ValidateAllRequiredFilePresenceTest {
 
     @Test
     void allRequiredPresentShouldNotGenerateNotice() {
 
-        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        Set<String> testSet = Set.of("req0.req","req1.req","req2.req","req3.req","req4.req",
+                                        "req5.req","req6.req","req7.req","req8.req","req9.req",
+                                        "opt0.opt","opt1.opt","opt2.opt","opt3.opt","opt4.opt",
+                                        "opt5.opt","opt6.opt","opt7.opt","opt8.opt","opt9.opt");
+        when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
+
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        List<String> testRequiredList = List.of("req0.req","req1.req","req2.req","req3.req","req4.req",
+                                                "req5.req","req6.req","req7.req","req8.req","req9.req");
+        when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
-                new MockSpecRepo(10),
-                new MockRawFileRepo(10, 10),
+                mockSpecRepo,
+                mockFileRepo,
                 mockResultRepo
-
         );
 
         List<String> result = underTest.execute();
-        assertEquals(0, mockResultRepo.notices.size());
         assertEquals(10, result.size());
         assertEquals(List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req", "req5.req", "req6.req",
                 "req7.req", "req8.req", "req9.req"), result);
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
+        inOrder.verify(mockSpecRepo, times(2)).getRequiredFilenameList();
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
     @Test
     void missingRequiredShouldGenerateOneNoticePerMissingFile() {
 
-        MockValidationResultRepo mockResultRepo = new MockValidationResultRepo();
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        Set<String> testSet = Set.of("req0.req","req1.req","req2.req","req3.req","req4.req",
+                                        "req5.req","req6.req","req7.req","req8.req","req9.req",
+                                        "opt0.opt","opt1.opt","opt2.opt","opt3.opt","opt4.opt",
+                                        "opt5.opt","opt6.opt","opt7.opt","opt8.opt","opt9.opt");
+        when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
+
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        List<String> testRequiredList = List.of("req0.req","req1.req","req2.req","req3.req","req4.req",
+                                                "req5.req","req6.req","req7.req","req8.req","req9.req",
+                                                "req10.req","req11.req","req12.req","req13.req","req14.req");
+        when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
         ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
-                new MockSpecRepo(15),
-                new MockRawFileRepo(10, 10),
+                mockSpecRepo,
+                mockFileRepo,
                 mockResultRepo
         );
 
         List<String> result = underTest.execute();
-
-        assertEquals(5, mockResultRepo.notices.size());
         assertEquals(15, result.size());
 
-        Notice notice = mockResultRepo.notices.get(0);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req10.req", notice.getFilename());
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
 
-        notice = mockResultRepo.notices.get(1);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req11.req", notice.getFilename());
-
-        notice = mockResultRepo.notices.get(2);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req12.req", notice.getFilename());
-
-        notice = mockResultRepo.notices.get(3);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req13.req", notice.getFilename());
-
-        notice = mockResultRepo.notices.get(4);
-        assertThat(notice, instanceOf(MissingRequiredFileNotice.class));
-        assertEquals("E003", notice.getId());
-        assertEquals("Missing required file", notice.getTitle());
-        assertEquals("req14.req", notice.getFilename());
+        inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
+        inOrder.verify(mockSpecRepo, times(2)).getRequiredFilenameList();
+        inOrder.verify(mockFileRepo, times(15)).getFilenameAll();
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
+        verify(mockResultRepo, times(5)).addNotice(any(MissingRequiredFileNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
-
-    //mock spec repo
-    private static class MockSpecRepo implements GtfsSpecRepository {
-
-        private final int homManyReq;
-
-        public MockSpecRepo(int howManyReq) {
-            this.homManyReq = howManyReq;
-        }
-
-        @Override
-        public List<String> getRequiredFilenameList() {
-
-            List<String> toReturn = new ArrayList<>(this.homManyReq);
-
-            for (int i = 0; i < this.homManyReq; ++i) {
-                toReturn.add("req" + i + ".req");
-            }
-
-            return toReturn;
-        }
-
-        @Override
-        public List<String> getOptionalFilenameList() {
-            return null;
-        }
-
-        @Override
-        public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
-            return null;
-        }
-
-        @Override
-        public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
-            return null;
-        }
-
-        @Override
-        public RawEntityParser getParserForFile(RawFileInfo file) {
-            return null;
-        }
-
-        @Override
-        public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
-            return null;
-        }
-    }
-
-    //mock raw file repo
-    private static class MockRawFileRepo implements RawFileRepository {
-
-        private final int homManyReq;
-        private final int homManyOpt;
-
-        public MockRawFileRepo(int howManyReq, int howManyOpt) {
-            this.homManyReq = howManyReq;
-            this.homManyOpt = howManyOpt;
-        }
-
-        @Override
-        public RawFileInfo create(RawFileInfo fileInfo) {
-            return null;
-        }
-
-        @Override
-        public Optional<RawFileInfo> findByName(String filename) {
-            return Optional.empty();
-        }
-
-        @Override
-        public Collection<String> getActualHeadersForFile(RawFileInfo file) {
-            return null;
-        }
-
-        @Override
-        public Set<String> getFilenameAll() {
-            Set<String> toReturn = new HashSet<>(this.homManyReq + this.homManyOpt);
-
-            for (int i = 0; i < this.homManyReq; ++i) {
-                toReturn.add("req" + i + ".req");
-            }
-
-            for (int j = 0; j < this.homManyOpt; ++j) {
-                toReturn.add("opt" + j + ".opt");
-            }
-
-            return toReturn;
-        }
-
-        @Override
-        public Optional<RawEntityProvider> getProviderForFile(RawFileInfo file) {
-            return Optional.empty();
-        }
-    }
-
-    //mock validation result repo
-    private static class MockValidationResultRepo implements ValidationResultRepository {
-        public List<Notice> notices = new ArrayList<>();
-
-        @Override
-        public InfoNotice addNotice(InfoNotice newInfo) {
-            notices.add(newInfo);
-            return null;
-        }
-
-        @Override
-        public WarningNotice addNotice(WarningNotice newWarning) {
-            notices.add(newWarning);
-            return null;
-        }
-
-        @Override
-        public ErrorNotice addNotice(ErrorNotice newError) {
-            notices.add(newError);
-            return null;
-        }
-
-        @Override
-        public Collection<Notice> getAll() {
-            return null;
-        }
-
-        @Override
-        public NoticeExporter getExporter(boolean outputAsProto, String outputPath) {
-            return null;
-        }
-
-        @Override
-        public Notice addNotice(Notice newNotice) {
-            return null;
-        }
-    }
-
 }

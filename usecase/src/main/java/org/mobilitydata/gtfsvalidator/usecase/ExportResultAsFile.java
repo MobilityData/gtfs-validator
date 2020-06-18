@@ -16,34 +16,47 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
+import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
 
 public class ExportResultAsFile {
-
     private final ValidationResultRepository resultRepo;
-    private final String outputPath;
-    private final boolean asProto;
+    private final ExecParamRepository execParamRepo;
+    private final Logger logger;
 
     public ExportResultAsFile(final ValidationResultRepository resultRepo,
-                              final String outputPath,
-                              final boolean asProto) {
+                              final ExecParamRepository execParamRepo,
+                              final Logger logger) {
         this.resultRepo = resultRepo;
-        this.outputPath = outputPath;
-        this.asProto = asProto;
+        this.execParamRepo = execParamRepo;
+        this.logger = logger;
     }
 
     public void execute() throws IOException {
-        ValidationResultRepository.NoticeExporter exporter = resultRepo.getExporter(asProto, outputPath);
+
+        if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY))) {
+            logger.info("-p provided, exporting results as proto"+System.lineSeparator());
+        } else {
+            logger.info("Results are exported as JSON by default"+System.lineSeparator());
+        }
+
+        logger.info("Exporting validation repo content:" + resultRepo.getAll()+System.lineSeparator());
+
+        final String outputPath = execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY);
+        final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
+
+        NoticeExporter exporter = resultRepo.getExporter(asProto, outputPath);
 
         exporter.exportBegin();
 
         for (Notice notice : resultRepo.getAll()) {
             notice.export(exporter);
         }
-
         exporter.exportEnd();
     }
 }

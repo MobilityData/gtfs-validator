@@ -24,14 +24,14 @@ import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseDateNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseFloatNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseDateNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseFloatNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -135,7 +135,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
     /**
      * Returns a parsed entity where fields' type have been determined. The {@link ParsedEntity} is formatted as follows:
      * - the entityId is the header name
-     * - the contentByHeaderMap is a Map<String, Object> matching columns' header names with the type validated values
+     * - the contentByHeaderMap is a Map(String, Object) matching columns' header names with the type validated values
      * associated to the {@link RawEntity} to parse
      * - the {@link RawFileInfo} associated to the file being processed
      *
@@ -179,7 +179,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                     if (dateValidator.isValid(rawField, DATE_PATTERN, Locale.US)) {
                         contentByHeaderMap.put(
                                 //https://programminghints.com/2017/05/still-using-java-util-date-dont/
-                                columnSpecProto.getName(), LocalDateTime.ofInstant(
+                                columnSpecProto.getName(), LocalDate.ofInstant(
                                         dateValidator.validate(rawField, DATE_PATTERN, Locale.US).toInstant(),
                                         ZoneId.of("America/Montreal") //FIXME: retrieve timezone from agency.txt
                                 ));

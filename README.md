@@ -15,21 +15,109 @@ This command-line tool written in Java that performs the following steps:
 
 # Usage
 
+### Validate a locally stored GTFS dataset
+
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -u https://transitfeeds.com/p/mbta/64/latest/download -z input.zip -i input -o output
+java -jar gtfs-validator-v1.1.0.jar -i relative/path/to/zipped_dataset -o relative/output/path -e relative/extraction/path -x enumeration_of_files_to_exclude_from_validation_process
 ```
 
 ...which will:
- 1. Download the GTFS feed at the URL `https://transitfeeds.com/p/mbta/64/latest/download` and name it `input.zip`
- 1. Extract the `input.zip` contents to the directory `input`
- 1. Validate the GTFS data and output the results to the directory `output`. Validation results are exported to JSON by default.
+ 1. Search for a zipped GTFS dataset located at `relative/path/to/zipped_dataset`
+ 1. Extract the zip content to a directory located at `relative/extraction/path`
+ 1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default. The validation process will not be executed on the enumeration of files provided via option `-x` and the files that rely on them.
+
+#### Example: Validate GTFS dataset while specifying extraction, input, and output directories
+
+``` 
+java -jar gtfs-validator-v1.1.0.jar -i gtfs-dataset.zip -o output_folder -e extraction_folder
+```
+
+In order, this command line will:
+ 1. Search for a zipped GTFS dataset name `gtfs-dataset.zip` located in the working directory
+ 1. Extract its content to a directory named `extraction_folder`
+ 1. Validate the GTFS data and output the results to the directory named `output_folder`. This folder will contain a single `.json` file with information related to the validation process. 
+
+
+#### Example: Validate a subset of a GTFS dataset.
+
+``` 
+java -jar gtfs-validator-v1.1.0.jar -i gtfs-dataset.zip  -x fare_attributes.txt,attributions.txt
+```
+
+In order, this command line will:
+ 1. Search for a zipped GTFS dataset name `gtfs-dataset.zip` located in the working directory
+ 1. Create a directory named `input` 
+ 1. Extract the content of `gtfs-dataset.zip` to the directory created at step 2
+ 1. Create a directory names `output`
+ 1. Exclude files `fare_attributes.txt` and `attributions.txt` from the the validation process. But also the files that rely on them: `translations.txt` and `fare_rules.txt`
+ 1. Validate the GTFS data and output the results to the directory created at step 4. This folder will contain a single `.json` file with information related to the validation process. 
+
+### Validate a GTFS dataset stored on a remote server
+
+Sample usage:
+
+``` 
+java -jar gtfs-validator-v1.1.0.jar -u url/to/dataset -o relative/output/path -e relative/extraction/path -i input.zip
+```
+
+...which will:
+ 1. Download the GTFS feed at the URL `url/to/dataset` and name it `input.zip`  
+ 1. Extract the `input.zip` content to the directory located at `relative/extraction/path`
+ 1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default.
+
+#### Example: Validate a GTFS dataset and export the validation result as proto files
+
+``` 
+java -jar gtfs-validator-v1.1.0.jar -u url/to/dataset -o output_folder -e extraction_folder -i local-dataset.zip -p
+```
+
+In order, this command line will:
+ 1. Download the GTFS feed at the URL `url/to/dataset` and name it `local-dataset.zip`
+ 1. Extract the `local-dataset.zip` content to the directory `extraction_folder`
+ 1. Validate the GTFS data and output the results to the directory `output_folder`. As option `-p` is provided, results will be exported as `.pb` files
+
+#### Example: Validate a GTFS dataset without specifying command arguments or providing configuration file
+
+``` 
+java -jar gtfs-validator-v1.1.0.jar
+```
+
+In order, this command line will:
+ 1. Search for a zipped folder in the working directory
+ 1. Extract by default the content of the zipped GTFS dataset to directory `gtfs-validator/input/`  
+ 1. Validate the GTFS data and output the results to directory `gtfs-validator/output`. Validation results will be exported to JSON by default.
+
 
 For a list of all available commands, use `--help`:
 
 ``` 
 java -jar gtfs-validator-v1.1.0.jar --help
+```
+
+## Software configuration
+
+Execution parameters are configurable through command-line or via a configuration file `execution-parameters.json`. 
+By default, if no command-line is provided the validation process will look for execution parameters in user configurable configuration file `execution-parameters.json`.
+In the case said file could not be found or is incomplete, default values will be used.
+
+One should note that if both command-line options and configuration file are provided, the configuration file takes precedence over the command option.
+
+Sample usage:
+
+The two following sample usages are equivalent, provided that `execution-parameters.json` file is located in the working directory:
+
+``` 
+java -jar gtfs-validator-v1.1.0.jar -e relative/extraction/path -o relative/output/path -i relative/path/to/zipped_dataset -x agency.txt,routes.txt
+```
+```
+{
+  "extract": "relative/extraction/path",
+  "output": "relative/output/path",
+  "input": "relative/path/to/zipped_dataset",
+  "exclude": "agency.txt,routes.txt"
+}
 ```
 
 Note that you'll need to change the above JAR file name to whatever [release version](https://github.com/MobilityData/gtfs-validator/releases) you download.

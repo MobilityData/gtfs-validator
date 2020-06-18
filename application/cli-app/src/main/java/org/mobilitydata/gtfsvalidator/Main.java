@@ -16,155 +16,144 @@
 
 package org.mobilitydata.gtfsvalidator;
 
-import org.apache.commons.cli.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
-import org.mobilitydata.gtfsvalidator.usecase.ParseSingleRowForFile;
+import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.usecase.*;
+import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class Main {
 
     public static void main(String[] args) {
-
-        long startTime = System.nanoTime();
+        final long startTime = System.nanoTime();
         final Logger logger = LogManager.getLogger();
-        final Options options = new Options();
-
-        options.addOption("u", "url", true, "URL to GTFS zipped archive");
-        options.addOption("z", "zip", true, "if --url is used, where to place the " +
-                "downloaded archive." +
-                "Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
-        options.addOption("i", "input", true, "Relative path where to extract the zip" +
-                " content");
-        options.addOption("o", "output", true, "Relative path where to place output" +
-                " files");
-        options.addOption("h", "help", false, "Print this message");
-        options.addOption("p", "proto", false, "Export validation results as proto");
-
-        //TODO: add configurable warning threshold for GTFS time type validation - when we support time type again
-
-        final CommandLineParser parser = new DefaultParser();
-
+        final DefaultConfig config = new DefaultConfig(logger);
 
         try {
-            final DefaultConfig config = new DefaultConfig();
+            config.parseAllExecutionParameter().execute(args);
 
-            final CommandLine cmd = parser.parse(options, args);
+            // use case will inspect parameters and decide if help menu should be displayed or not
+            if (!config.printHelp().execute()) {
 
-            if (args.length == 0 || cmd.hasOption("h")) {
-                printHelp(options);
-                return;
+                // use case will inspect parameters and display relevant information about the validation execution
+                // process
+                config.logExecutionInfo().execute();
+
+                // use case will inspect parameters and decide if GTFS dataset should be downloaded or not
+                config.downloadArchiveFromNetwork().execute();
+
+                config.unzipInputArchive(
+                        config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
+                        .execute();
+
+                final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
+
+                final ArrayList<String> datasetFilenameList = config.validateAllRequiredFilePresence().execute();
+                datasetFilenameList.addAll(config.validateAllOptionalFileName().execute());
+
+                final List<String> filenameListToProcess =
+                        config.generateFilenameListToProcess().execute(filenameListToExclude, datasetFilenameList);
+
+                // retrieve use case to be used multiple times
+                final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
+                final ProcessParsedAgency processParsedAgency = config.processParsedAgency();
+                final ProcessParsedRoute processParsedRoute = config.processParsedRoute();
+                final ProcessParsedCalendarDate processCalendarDate = config.processCalendarDate();
+                final ProcessParsedLevel processParsedLevel = config.processParsedLevel();
+                final ProcessParsedCalendar processParsedCalendar = config.processParsedCalendar();
+                final ProcessParsedTrip processParsedTrip = config.processParsedTrip();
+                final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
+                final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
+                final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
+                final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
+
+                // base validation + build gtfs entities
+                filenameListToProcess.forEach(filename -> {
+                    config.validateHeadersForFile(filename).execute();
+                    config.validateAllRowLengthForFile(filename).execute();
+
+                    final ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
+                    while (parseSingleRowForFile.hasNext()) {
+                        final ParsedEntity parsedEntity = parseSingleRowForFile.execute();
+                        validateGtfsTypes.execute(parsedEntity);
+
+                        // load gtfs entities into memory
+                        // in the future all filename in filenameList will be processed. For now focusing on routes.txt
+                        // and agency.txt.
+                        // filenames in filenameList will be determined using a dependency tree defined by a JSON file,
+                        // and command lines or configuration file will be used to exclude files from the validation
+                        // process.
+                        if (filenameListToProcess.contains(filename)) {
+                            switch (filename) {
+                                case "agency.txt": {
+                                    processParsedAgency.execute(parsedEntity);
+                                    break;
+                                }
+                                case "routes.txt": {
+                                    processParsedRoute.execute(parsedEntity);
+                                    break;
+                                }
+                                case "calendar_dates.txt": {
+                                    processCalendarDate.execute(parsedEntity);
+                                    break;
+                                }
+                                case "levels.txt": {
+                                    processParsedLevel.execute(parsedEntity);
+                                    break;
+                                }
+                                case "calendar.txt": {
+                                    processParsedCalendar.execute(parsedEntity);
+                                    break;
+                                }
+                                case "trips.txt": {
+                                    processParsedTrip.execute(parsedEntity);
+                                    break;
+                                }
+                                case "transfers.txt": {
+                                    processParsedTransfer.execute(parsedEntity);
+                                    break;
+                                }
+                                case "feed_info.txt": {
+                                    processParsedFeedInfo.execute(parsedEntity);
+                                    break;
+                                }
+                                case "fare_attributes.txt": {
+                                    processParsedFareAttribute.execute(parsedEntity);
+                                    break;
+                                }
+                                case "fare_rules.txt": {
+                                    processParsedFareRule.execute(parsedEntity);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+
+                config.validateRouteShortNameLength().execute();
+                config.validateRouteColorAndTextContrast().execute();
+                config.validateRouteDescriptionAndNameAreDifferent().execute();
+                config.validateRouteTypeIsInOptions().execute();
+                config.validateBothRouteNamesPresence().execute();
+                config.validateRouteLongNameDoesNotContainShortName().execute();
+                config.validateCalendarEndDateBeforeStartDate().execute();
+
+                config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+
+                config.exportResultAsFile().execute();
             }
-
-            String zipInputPath = cmd.getOptionValue("z") != null ? cmd.getOptionValue("z") :
-                    System.getProperty("user.dir");
-            final String zipExtractTargetPath = cmd.getOptionValue("i") != null ? cmd.getOptionValue("i") :
-                    System.getProperty("user.dir") + File.separator + "input";
-            final String outputPath = cmd.getOptionValue("o") != null ?
-                    System.getProperty("user.dir") + File.separator + cmd.getOptionValue("o") :
-                    System.getProperty("user.dir") + File.separator + "output";
-            final boolean asProto = cmd.hasOption("p");
-
-            if (cmd.hasOption("u") & !cmd.hasOption("z")) {
-                logger.info("--url provided but no location to place zip (--zip option). Using default: " +
-                        zipInputPath);
-            }
-
-            if (!cmd.hasOption("u") & !cmd.hasOption("z")) {
-                logger.info("--url and relative path to zip file(--zip option) not provided. Trying to find zip in: " +
-                        zipInputPath);
-                List<String> zipList = Files.walk(Paths.get(zipInputPath))
-                        .map(Path::toString)
-                        .filter(f -> f.endsWith(".zip"))
-                        .collect(Collectors.toUnmodifiableList());
-
-                if (zipList.isEmpty()) {
-                    logger.error("no zip file found - exiting");
-                    System.exit(0);
-                } else if (zipList.size() > 1) {
-                    logger.error("multiple zip files found - exiting");
-                    System.exit(0);
-                } else {
-                    logger.info("zip file found: "+ zipList.get(0));
-                    zipInputPath = zipList.get(0);
-                }
-            } else if (!cmd.hasOption("z")) {
-                zipInputPath += File.separator + "input.zip";
-            }
-
-            if (!cmd.hasOption("i")) {
-                logger.info("--input not provided. Will extract zip content in: " + zipExtractTargetPath);
-            }
-
-            if (!cmd.hasOption("o")) {
-                logger.info("--output not provided. Will place execution results in: " + outputPath);
-            }
-
-            if (cmd.getOptionValue("u") != null) {
-                logger.info("Downloading archive");
-                config.downloadArchiveFromNetwork(cmd.getOptionValue("u"), zipInputPath).execute();
-            }
-
-            logger.info("Unzipping archive");
-            config.unzipInputArchive(zipInputPath, config.cleanOrCreatePath(zipExtractTargetPath).execute()).execute();
-
-            List<String> filenameList = config.validateAllRequiredFilePresence().execute();
-
-            filenameList.addAll(config.validateAllOptionalFileName().execute());
-
-            // base validation
-            filenameList.forEach(filename -> {
-                logger.info("Validating: " + filename);
-
-                config.validateHeadersForFile(filename).execute();
-                config.validateAllRowLengthForFile(filename).execute();
-
-                ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
-                while (parseSingleRowForFile.hasNext()) {
-                    config.validateGtfsTypes().execute(parseSingleRowForFile.execute());
-                }
-            });
-
-            if (asProto) {
-                logger.info("Results are exported as proto");
-            } else {
-                logger.info("Results are exported as JSON by default");
-            }
-
-            logger.info("Exporting validation repo content:" + config.getValidationResult());
-            config.cleanOrCreatePath(outputPath).execute();
-
-            config.exportResultAsFile(asProto, outputPath).execute();
-
-        } catch (ParseException e) {
-            logger.error("Could not parse command line arguments: " + e.getMessage());
         } catch (IOException e) {
-            logger.error("An exception occurred: " + e.getMessage());
+            logger.error("An exception occurred: " + e);
         }
-
-        logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
-    }
-
-    //TODO: make a use case out of this
-    private static void printHelp(Options options) {
-        final String HELP = String.join("\n",
-                "Loads input GTFS feed from url or disk.",
-                "Checks files integrity, numeric type parsing and ranges as well as " +
-                        "string format according to GTFS spec",
-                "Validation results are exported to " +
-                        "JSON file by default");
-        HelpFormatter formatter = new HelpFormatter();
-        System.out.println(); // blank line for legibility
-        formatter.printHelp(HELP, options);
-        System.out.println(); // blank line for legibility
+        final long duration = System.nanoTime() - startTime;
+        logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
+                TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
+                TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
     }
 }

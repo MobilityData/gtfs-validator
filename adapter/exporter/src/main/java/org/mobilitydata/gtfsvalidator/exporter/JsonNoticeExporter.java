@@ -17,16 +17,13 @@
 package org.mobilitydata.gtfsvalidator.exporter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.*;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.ExtraFileFoundNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonAsciiOrNonPrintableCharNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
 import java.io.IOException;
 
-public class JsonNoticeExporter implements ValidationResultRepository.NoticeExporter {
+public class JsonNoticeExporter implements NoticeExporter {
 
     private final JsonGenerator jsonGenerator;
 
@@ -76,87 +73,162 @@ public class JsonNoticeExporter implements ValidationResultRepository.NoticeExpo
     }
 
     @Override
-    public void export(CannotDownloadArchiveFromNetworkNotice toExport) throws IOException {
+    public void export(final CannotDownloadArchiveFromNetworkNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(CannotParseFloatNotice toExport) throws IOException {
+    public void export(final CannotParseFloatNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(CannotParseIntegerNotice toExport) throws IOException {
+    public void export(final CannotParseIntegerNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(CannotUnzipInputArchiveNotice toExport) throws IOException {
+    public void export(final CannotUnzipInputArchiveNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(FloatFieldValueOutOfRangeNotice toExport) throws IOException {
+    public void export(final FloatFieldValueOutOfRangeNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(IntegerFieldValueOutOfRangeNotice toExport) throws IOException {
+    public void export(final IntegerFieldValueOutOfRangeNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(InvalidRowLengthNotice toExport) throws IOException {
+    public void export(final InvalidRowLengthNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(InvalidTimezoneNotice toExport) throws IOException {
+    public void export(final InvalidTimezoneNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(InvalidUrlNotice toExport) throws IOException {
+    public void export(final InvalidUrlNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(MissingHeaderNotice toExport) throws IOException {
+    public void export(final MissingHeaderNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(MissingRequiredFileNotice toExport) throws IOException {
+    public void export(final MissingRequiredFileNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(MissingRequiredValueNotice toExport) throws IOException {
+    public void export(final MissingRequiredValueNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(CouldNotCleanOrCreatePathNotice toExport) throws IOException {
+    public void export(final InvalidColorNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(InvalidColorNotice toExport) throws IOException {
+    public void export(final ExtraFileFoundNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(ExtraFileFoundNotice toExport) throws IOException {
+    public void export(final InvalidTimeNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(InvalidTimeNotice toExport) throws IOException {
+    public void export(final CannotParseDateNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(CannotParseDateNotice toExport) throws IOException {
+    public void export(final InvalidCurrencyCodeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final UnexpectedEnumValueNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final IllegalFieldValueCombination toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicatedEntityNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final InvalidEmailNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final InvalidLangNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final SameNameAndDescriptionForRouteNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final RouteColorAndTextInsufficientContrastNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final RouteShortNameTooLongNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final InvalidRouteTypeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingShortAndLongNameForRouteNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingRouteShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingRouteLongNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final RouteLongNameEqualsShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final RouteLongNameContainsShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(CalendarEndDateBeforeStartDateNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

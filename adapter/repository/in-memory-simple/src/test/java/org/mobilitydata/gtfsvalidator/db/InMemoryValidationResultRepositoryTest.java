@@ -17,11 +17,11 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.WarningNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.error.CannotConstructDataProviderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,15 +31,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class InMemoryValidationResultRepositoryTest {
 
     private static final String TEST_FILE_NAME = "test.tst";
-
-
+    
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     void addingNoticeShouldExtendNoticeList() {
 
         WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
 
-        ErrorNotice errorNotice = new CannotConstructDataProviderNotice(TEST_FILE_NAME);
+        ErrorNotice errorNotice = new CannotUnzipInputArchiveNotice(TEST_FILE_NAME);
 
         ValidationResultRepository underTest = new InMemoryValidationResultRepository();
 
@@ -47,7 +46,7 @@ class InMemoryValidationResultRepositoryTest {
         assertEquals(1, underTest.getAll().size());
 
         Notice testedNotice = underTest.getAll().stream()
-                .filter(notice -> notice.getId().equals(warningNotice.getId()))
+                .filter(notice -> notice.getCode() == warningNotice.getCode())
                 .findAny()
                 .get();
 
@@ -57,10 +56,10 @@ class InMemoryValidationResultRepositoryTest {
         assertEquals(2, underTest.getAll().size());
 
         testedNotice = underTest.getAll().stream()
-                .filter(notice -> notice.getId().equals(errorNotice.getId()))
+                .filter(notice -> notice.getCode() == errorNotice.getCode())
                 .findAny()
                 .get();
 
-        assertThat(testedNotice, instanceOf(CannotConstructDataProviderNotice.class));
+        assertThat(testedNotice, instanceOf(CannotUnzipInputArchiveNotice.class));
     }
 }
