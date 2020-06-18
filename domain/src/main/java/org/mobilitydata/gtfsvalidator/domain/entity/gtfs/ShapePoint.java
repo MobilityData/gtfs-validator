@@ -204,8 +204,8 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
             // these fields could be provided as null values
             //noinspection ConstantConditions to avoid lint
             if (shapeId == null ||
-                    shapePtLat == null || (shapePtLat != null && (shapePtLat < -90.0f || shapePtLat > 90.0f)) ||
-                    shapePtLon == null || (shapePtLon != null && (shapePtLon < -180.0f || shapePtLon > 180.0f)) ||
+                    shapePtLat == null || (shapePtLat != null && !isValidLatitude()) ||
+                    shapePtLon == null || (shapePtLon != null && !isValidLongitude()) ||
                     shapePtSequence == null || (shapePtSequence != null && shapePtSequence < 0) ||
                     (shapeDistTraveled != null && shapeDistTraveled < 0)) {
                 if (shapeId == null) {
@@ -215,19 +215,20 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
                 if (shapePtLat == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("shapes.txt", "shape_pt_lat",
                             shapeId));
-                } else if (shapePtLat < -90.0f || shapePtLat > 90.0f) {
+                } else if (!isValidLatitude()) {
                     noticeCollection.add(new FloatFieldValueOutOfRangeNotice("shapes.txt",
                             "shape_pt_lat", shapeId, -90.0f, 90.0f, shapePtLat));
                 }
                 if (shapePtLon == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("shapes.txt", "shape_pt_lon",
                             shapeId));
-                } else if (shapePtLon < -180.0f || shapePtLon > 180.0f) {
+                } else if (!isValidLongitude()) {
                     noticeCollection.add(new FloatFieldValueOutOfRangeNotice("shapes.txt",
                             "shape_pt_lon", shapeId, -180.0f, 180.0f, shapePtLon));
                 }
                 if (shapePtSequence == null) {
-                    noticeCollection.add(new MissingRequiredValueNotice("shapes.txt", "shape_pt_sequence",
+                    noticeCollection.add(new MissingRequiredValueNotice("shapes.txt",
+                            "shape_pt_sequence",
                             shapeId));
                 } else if (shapePtSequence < 0) {
                     noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("shapes.txt",
@@ -239,8 +240,25 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {
-                return new EntityBuildResult<>(new ShapePoint(shapeId, shapePtLat, shapePtLon, shapePtSequence, shapeDistTraveled));
+                return new EntityBuildResult<>(new ShapePoint(shapeId, shapePtLat, shapePtLon, shapePtSequence,
+                        shapeDistTraveled));
             }
+        }
+
+        /**
+         * Utility method to determine the range validity of latitude
+         * @return true if the shapePtLat is valid, otherwise returns false
+         */
+        private boolean isValidLatitude() {
+            return shapePtLat > -90.0f && shapePtLat < 90.0f;
+        }
+
+        /**
+         * Utility method to determine the range validity of longitude
+         * @return true if shapePtLon is valid, otherwise returns false
+         */
+        private boolean isValidLongitude() {
+            return shapePtLon > -180.0f && shapePtLon < 180.0f;
         }
     }
 }
