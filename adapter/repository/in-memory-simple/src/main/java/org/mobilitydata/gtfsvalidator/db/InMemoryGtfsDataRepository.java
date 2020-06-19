@@ -83,7 +83,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing Shape Entities. A shape is a actually a collection ShapePoint.
     // Entities are mapped on the values found in column shape_id  and shape_pt_sequence of GTFS file shapes.txt
-    private final Map<String, TreeMap<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
+    private final Map<String, Map<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -508,7 +508,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                 }
                 shapePerIdShapePtSequence.get(shapeId).put(newShapePoint.getShapePtSequence(), newShapePoint);
             } else {
-                final TreeMap<Integer, ShapePoint> innerMap = new TreeMap<>();
+                final Map<Integer, ShapePoint> innerMap = new TreeMap<>();
                 innerMap.put(newShapePoint.getShapePtSequence(), newShapePoint);
                 shapePerIdShapePtSequence.put(shapeId, innerMap);
             }
@@ -520,14 +520,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     /**
      * Return the list of shape points from shapes.txt related to the id provided as parameter; which represents a shape
-     * object.
+     * object. The returned list is ordered by shape_pt_sequence.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
      * @return  the list of shape points from shapes.txt related to the id provided as parameter; which represents a
-     * shape object
+     * shape object. The returned list is ordered by shape_pt_sequence.
      */
     @Override
     public TreeMap<Integer, ShapePoint> getShapeById(final String shapeId) {
-        return shapePerIdShapePtSequence.get(shapeId);
+        return (TreeMap<Integer, ShapePoint>) shapePerIdShapePtSequence.get(shapeId);
     }
 }
