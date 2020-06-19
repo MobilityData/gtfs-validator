@@ -21,14 +21,11 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.*;
@@ -235,6 +232,10 @@ public class DefaultConfig {
 
     public ProcessParsedFareRule processParsedFareRule() {
         return new ProcessParsedFareRule(resultRepo, gtfsDataRepository, new FareRule.FareRuleBuilder());
+    }
+
+    public ProcessParsedStopTime processParsedStopTime() {
+        return new ProcessParsedStopTime(resultRepo, gtfsDataRepository, new StopTime.StopTimeBuilder());
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {

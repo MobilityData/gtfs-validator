@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
@@ -257,7 +258,7 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
          * @param stopSequence order of stops for a particular trip
          * @return builder for future object creation
          */
-        public StopTimeBuilder stopSequence(final int stopSequence) {
+        public StopTimeBuilder stopSequence(final Integer stopSequence) {
             this.stopSequence = stopSequence;
             return this;
         }
@@ -315,7 +316,6 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
          * @param continuousDropOff  indicates that the rider can alight the transit vehicle at any point along the
          *                           vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
          *                           next {@link StopTime} in the trip’s stop_sequence
-         * @param continuousDropOff Indicates drop off method.
          * @return builder for future object creation
          */
         public StopTimeBuilder continuousDropOff(@Nullable final Integer continuousDropOff) {
@@ -359,22 +359,24 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
          */
         public EntityBuildResult<?> build() {
             noticeCollection.clear();
-            if (tripId == null || stopId == null || arrivalTime == null || departureTime == null ||
+            if (tripId == null || stopId == null ||
+                    (timepoint == Timepoint.EXACT_TIMES && (arrivalTime == null || departureTime == null)) ||
                     pickupType == null || dropOffType == null || continuousPickup == null ||
-                    continuousDropOff == null || shapeDistTraveled < 0 || timepoint == null) {
+                    continuousDropOff == null || shapeDistTraveled < 0 || timepoint == null || stopSequence == null) {
                 if (tripId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stop_times.txt", "trip_id",
                             getStopTimeMappingKey(tripId, stopSequence)));
                 }
                 if (timepoint == Timepoint.EXACT_TIMES) {
                     if (arrivalTime == null) {
-                        noticeCollection.add((new MissingRequiredValueNotice("stop_times.txt",
-                                "arrival_time",
-                                getStopTimeMappingKey(tripId, stopSequence))));
+                        noticeCollection.add((new IllegalFieldValueCombination("stop_times.txt",
+                                "arrival_time", "timepoint",
+                                getStopTimeMappingKey(tripId, stopSequence)
+                                )));
                     }
                     if (departureTime == null) {
-                        noticeCollection.add((new MissingRequiredValueNotice("stop_times.txt",
-                                "departure_time",
+                        noticeCollection.add((new IllegalFieldValueCombination("stop_times.txt",
+                                "departure_time", "timepoint",
                                 getStopTimeMappingKey(tripId, stopSequence))));
                     }
                 }
