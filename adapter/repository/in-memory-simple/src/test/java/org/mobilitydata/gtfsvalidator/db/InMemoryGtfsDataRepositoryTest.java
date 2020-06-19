@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
@@ -505,5 +506,40 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(firstMapToCheck, underTest.getStopTimeByTripId("trip id00"));
         assertEquals(secondMapToCheck, underTest.getStopTimeByTripId("trip id01"));
+    }
+
+    @Test
+    void addStopTimeShouldMaintainOrder() {
+        final StopTime firstStopTimeInSequence = mock(StopTime.class);
+        when(firstStopTimeInSequence.getTripId()).thenReturn("trip id00");
+        when(firstStopTimeInSequence.getStopSequence()).thenReturn(4);
+
+        final StopTime secondStopTimeInSequence = mock(StopTime.class);
+        when(secondStopTimeInSequence.getTripId()).thenReturn("trip id00");
+        when(secondStopTimeInSequence.getStopSequence()).thenReturn(8);
+
+        final StopTime thirdStopTimeInSequence = mock(StopTime.class);
+        when(thirdStopTimeInSequence.getTripId()).thenReturn("trip id00");
+        when(thirdStopTimeInSequence.getStopSequence()).thenReturn(12);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addStopTime(thirdStopTimeInSequence);
+        underTest.addStopTime(secondStopTimeInSequence);
+
+        final List<StopTime> toCheck = new ArrayList<>();
+
+        underTest.getStopTimeByTripId("trip id00").forEach((key, value) -> toCheck.add(value));
+        assertEquals(secondStopTimeInSequence, toCheck.get(0));
+        assertEquals(thirdStopTimeInSequence, toCheck.get(1));
+
+        underTest.addStopTime(firstStopTimeInSequence);
+
+        toCheck.clear();
+        underTest.getStopTimeByTripId("trip id00").forEach((key, value) -> toCheck.add(value));
+
+        assertEquals(firstStopTimeInSequence, toCheck.get(0));
+        assertEquals(secondStopTimeInSequence, toCheck.get(1));
+        assertEquals(thirdStopTimeInSequence, toCheck.get(2));
     }
 }

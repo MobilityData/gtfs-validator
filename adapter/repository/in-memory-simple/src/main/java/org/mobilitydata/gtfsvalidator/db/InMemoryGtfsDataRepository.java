@@ -505,15 +505,17 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         if(newStopTime!=null) {
             final String tripId  = newStopTime.getTripId();
             final Integer stopSequence  = newStopTime.getStopSequence();
-            if (stopTimePerTripIdStopSequence.containsKey(tripId) &&
-                    stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
-                return null;
+            if (stopTimePerTripIdStopSequence.containsKey(tripId)) {
+                if (stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
+                    return null;
+                }
+                stopTimePerTripIdStopSequence.get(tripId).put(stopSequence, newStopTime);
             } else {
                 final TreeMap<Integer, StopTime> innerMap = new TreeMap<>();
                 innerMap.put(stopSequence, newStopTime);
                 stopTimePerTripIdStopSequence.put(tripId, innerMap);
-                return newStopTime;
             }
+            return newStopTime;
         } else {
             throw new IllegalArgumentException("Cannot add null StopTime to data repository");
         }
