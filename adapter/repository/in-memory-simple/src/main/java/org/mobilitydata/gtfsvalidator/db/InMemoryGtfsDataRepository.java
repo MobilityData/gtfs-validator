@@ -490,10 +490,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     /**
      * Add a shape point to a shape. A shape is a list of shape points whereas a ShapePoint represents a row from
-     * shapes.txt to this. Return the entity added to the repository if not null, otherwise returns null.
+     * shapes.txt to this. Return the entity added to the repository if the entity was successfully added, and returns
+     * null if the provided newShapePoint already exists in the repository.
      *
      * @param newShapePoint the internal representation of a row from shapes.txt to be added to the repository.
-     * @return the entity added to the repository if not null, otherwise returns null.
+     * @return Return the entity added to the repository if the entity was successfully added, and returns null if the
+     * provided newShapePoint already exists in the repository.
      * @throws IllegalArgumentException if the shape point passed as argument is null
      */
     @Override
