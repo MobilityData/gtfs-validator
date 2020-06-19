@@ -88,26 +88,20 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
     }
 
     /**
-     * Implement compareTo method from {@code Comparable}. Return the value {@code 0} if this {@code Shape} field
+     * Implement compareTo method from {@code Comparable}. Return the value {@code 0} if this {@code ShapePoint} field
      * shape_pt_sequence is equal to field shape_pt_sequence of argument; a value less than {@code 0} if this field
      * shape_pt_sequence is numerically less than field shape_pt_sequence of argument; and a value greater
      * than {@code 0} if this field shape_pt_sequence is numerically greater than field shape_pt_sequence of argument
      *
-     * @param shapePoint shape to compare to
-     * @return the value {@code 0} if this {@code Shape} field shape_pt_sequence is equal to field shape_pt_sequence of
-     * argument; a value less than {@code 0} if this field shape_pt_sequence is numerically less than field
-     * shape_pt_sequence of argument; and a value greater than {@code 0} if this field shape_pt_sequence is numerically
-     * greater than field shape_pt_sequence of argument
+     * @param shapePoint shape point to compare to
+     * @return the value {@code 0} if this {@code ShapePoint} field shape_pt_sequence is equal to field
+     * shape_pt_sequence of argument; a value less than {@code 0} if this field shape_pt_sequence is numerically less
+     * than field shape_pt_sequence of argument; and a value greater than {@code 0} if this field shape_pt_sequence is
+     * numerically greater than field shape_pt_sequence of argument
      */
     @Override
     public int compareTo(@NotNull final ShapePoint shapePoint) {
-        if (getShapePtSequence().equals(shapePoint.getShapePtSequence())) {
-            return 0;
-        } else if (getShapePtSequence() < shapePoint.getShapePtSequence()) {
-            return -1;
-        } else {
-            return 1;
-        }
+        return getShapePtSequence().compareTo(shapePoint.getShapePtSequence());
     }
 
     /**
