@@ -244,7 +244,7 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
          * @return true if the shapePtLat is valid, otherwise returns false
          */
         private boolean isValidLatitude() {
-            return shapePtLat > -90.0f && shapePtLat < 90.0f;
+            return shapePtLat >= -90.0f && shapePtLat <= 90.0f;
         }
 
         /**
@@ -252,7 +252,7 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
          * @return true if shapePtLon is valid, otherwise returns false
          */
         private boolean isValidLongitude() {
-            return shapePtLon > -180.0f && shapePtLon < 180.0f;
+            return shapePtLon >= -180.0f && shapePtLon <= 180.0f;
         }
     }
 }
