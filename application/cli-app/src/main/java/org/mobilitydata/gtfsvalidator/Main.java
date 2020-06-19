@@ -72,6 +72,7 @@ public class Main {
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
+                final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -121,6 +122,10 @@ public class Main {
                                 }
                                 case "feed_info.txt": {
                                     processParsedFeedInfo.execute(parsedEntity);
+                                    break;
+                                }
+                                case "pathways.txt": {
+                                    processParsedPathway.execute(parsedEntity);
                                     break;
                                 }
                                 case "fare_attributes.txt": {
