@@ -493,6 +493,11 @@ class InMemoryGtfsDataRepositoryTest {
 
         underTest.addShapePoint(mockShapePoint);
         assertNull(underTest.addShapePoint(mockShapePoint));
+        assertEquals("test id", underTest.getShapeById("test id").get(4).getShapeId());
+        assertEquals(50f, underTest.getShapeById("test id").get(4).getShapePtLat());
+        assertEquals(100f, underTest.getShapeById("test id").get(4).getShapePtLon());
+        assertEquals(4, underTest.getShapeById("test id").get(4).getShapePtSequence());
+        assertEquals(56, underTest.getShapeById("test id").get(4).getShapeDistTraveled());
     }
 
     @Test
@@ -540,10 +545,10 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addShapePoint(mockShapePoint00);
         underTest.addShapePoint(mockShapePoint01);
 
-        final TreeMap<Integer, ShapePoint> firstMapToCheck = new TreeMap<>();
+        final TreeMap<Integer, ShapePoint> firstMapToCheck = underTest.getShapeById("test id00");
         firstMapToCheck.put(4, mockShapePoint00);
 
-        final TreeMap<Integer, ShapePoint> secondMapToCheck = new TreeMap<>();
+        final TreeMap<Integer, ShapePoint> secondMapToCheck = underTest.getShapeById("test id01");
         secondMapToCheck.put(8, mockShapePoint01);
 
         assertEquals(firstMapToCheck, underTest.getShapeById("test id00"));
