@@ -35,7 +35,7 @@ import java.util.List;
  * This class can not be directly instantiated. User must use {@link StopTimeBuilder} to create a {@link StopTime}
  * object.
  */
-public class StopTime extends GtfsEntity {
+public class StopTime extends GtfsEntity implements Comparable<StopTime> {
     @NotNull private final String tripId;
     @Nullable private final Integer arrivalTime;
     @Nullable private final Integer departureTime;
@@ -153,6 +153,35 @@ public class StopTime extends GtfsEntity {
     @NotNull
     public Timepoint getTimePoint() {
         return timePoint;
+    }
+
+    /**
+     * Implement compareTo method from {@code Comparable}. Return the value {@code 0} if this {@code StopTime} field
+     * stop_sequence is equal to field stop_sequence of argument; a value less than {@code 0} if this field
+     * stop_sequence is numerically less than field stop_sequence of argument; and a value greater
+     * than {@code 0} if this field stop_sequence is numerically greater than field stop_sequence of argument
+     *
+     * @param stopTime stop_time to compare to
+     * @return the value {@code 0} if this {@link StopTime} field stop_sequence is equal to field
+     * stop_sequence of argument; a value less than {@code 0} if this field stop_sequence is numerically less
+     * than field stop_sequence of argument; and a value greater than {@code 0} if this field stop_sequence is
+     * numerically greater than field stop_sequence of argument
+     */
+    @Override
+    public int compareTo(@NotNull final StopTime stopTime) {
+        return getStopSequence().compareTo(stopTime.getStopSequence());
+    }
+
+    /**
+     * Return true if this {@link StopTime} has field stop_sequence greater than {@param otherStopTime}
+     * field stop_sequence; otherwise return false
+     *
+     * @param otherStopTime stop_time to compare
+     * @return true if this {@link StopTime} has field stop_sequence greater than {@param otherStopTime}
+     * field stop_sequence; otherwise return false
+     */
+    public boolean isGreaterThan(final StopTime otherStopTime) {
+        return compareTo(otherStopTime) > 0;
     }
 
     /**
