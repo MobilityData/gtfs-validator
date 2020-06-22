@@ -137,15 +137,18 @@ public class Attribution extends GtfsEntity {
         return attributionPhone;
     }
 
-    public boolean isProducer() {
+    @NotNull
+    public Boolean isProducer() {
         return isProducer;
     }
 
-    public boolean isAuthority() {
+    @NotNull
+    public Boolean isAuthority() {
         return isAuthority;
     }
 
-    public boolean isOperator() {
+    @NotNull
+    public Boolean isOperator() {
         return isOperator;
     }
 
@@ -376,8 +379,8 @@ public class Attribution extends GtfsEntity {
      */
     public static String getAttributionMappingKey(final String attributionId, final String agencyId,
                                                   final String routeId, final String tripId,
-                                                  final String organizationName, final Boolean isProducer,
-                                                  final Boolean isOperator, final Boolean isAuthority,
+                                                  final String organizationName, final boolean isProducer,
+                                                  final boolean isOperator, final boolean isAuthority,
                                                   final String attributionUrl, final String attributionEmail,
                                                   final String attributionPhone) {
         return attributionId+agencyId+routeId+tripId+organizationName+isProducer+isOperator+isAuthority+attributionUrl+

@@ -18,8 +18,8 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
@@ -582,8 +582,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
-                                      final String tripId, final String organizationName, final Boolean isProducer,
-                                      final Boolean isOperator, final Boolean isAuthority, final String attributionUrl,
+                                      final String tripId, final String organizationName, final boolean isProducer,
+                                      final boolean isOperator, final boolean isAuthority, final String attributionUrl,
                                       final String attributionEmail, final String attributionPhone) {
         return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId,agencyId,routeId,tripId ,
                 organizationName,isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
