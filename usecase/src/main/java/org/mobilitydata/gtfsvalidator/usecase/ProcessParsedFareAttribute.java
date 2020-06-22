@@ -62,7 +62,8 @@ public class ProcessParsedFareAttribute {
         final String agencyId = (String) validatedFareAttribute.get("agency_id");
         final Integer transferDuration = (Integer) validatedFareAttribute.get("transfer_duration");
 
-        builder.fareId(fareId)
+        builder.clearFieldAll()
+                .fareId(fareId)
                 .price(price)
                 .currencyType(currencyType)
                 .paymentMethod(paymentMethod)

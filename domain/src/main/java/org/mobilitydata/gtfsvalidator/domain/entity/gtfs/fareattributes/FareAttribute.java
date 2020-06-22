@@ -268,5 +268,23 @@ public class FareAttribute extends GtfsEntity {
             return new EntityBuildResult<>(new FareAttribute(fareId, price, currencyType, paymentMethod, transfers,
                     agencyId, transferDuration));
         }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public FareAttributeBuilder clearFieldAll() {
+            fareId = null;
+            price = null;
+            currencyType = null;
+            paymentMethod = null;
+            transfers = null;
+            agencyId = null;
+            transferDuration = null;
+            originalPaymentMethodInteger = null;
+            originalTransferInteger = null;
+            noticeCollection.clear();
+            return this;
+        }
     }
 }
