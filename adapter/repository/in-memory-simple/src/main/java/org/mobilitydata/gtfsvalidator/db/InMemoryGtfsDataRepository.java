@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
@@ -27,10 +28,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
@@ -563,15 +561,15 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the list of shape points from shapes.txt related to the id provided as parameter; which represents a shape
-     * object. The returned list is ordered by shape_pt_sequence.
+     * Return the collection of shape points from shapes.txt related to the id provided as parameter; which represents a
+     * shape object. The returned collection is ordered by shape_pt_sequence.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return  the list of shape points from shapes.txt related to the id provided as parameter; which represents a
-     * shape object. The returned list is ordered by shape_pt_sequence.
+     * @return  the collection of shape points from shapes.txt related to the id provided as parameter; which represents
+     * a shape object. The returned collection is ordered by shape_pt_sequence.
      */
     @Override
-    public TreeMap<Integer, ShapePoint> getShapeById(final String shapeId) {
-        return (TreeMap<Integer, ShapePoint>) shapePerIdShapePtSequence.get(shapeId);
+    public Collection<ShapePoint> getShapeById(final String shapeId) {
+        return new ArrayList<>(shapePerIdShapePtSequence.get(shapeId).values());
     }
 }
