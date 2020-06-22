@@ -54,7 +54,6 @@ public class ProcessParsedRoute {
      * @param validatedParsedRoute entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedParsedRoute) {
-
         final String routeId = (String) validatedParsedRoute.get("route_id");
         final String agencyId = (String) validatedParsedRoute.get("agency_id");
         final String routeShortName = (String) validatedParsedRoute.get("route_short_name");
@@ -66,7 +65,8 @@ public class ProcessParsedRoute {
         final String routeTextColor = (String) validatedParsedRoute.get("route_text_color");
         final Integer routeSortOrder = (Integer) validatedParsedRoute.get("route_sort_order");
 
-        builder.routeId(routeId)
+        builder.clearFieldAll()
+                .routeId(routeId)
                 .agencyId(agencyId)
                 .routeShortName(routeShortName)
                 .routeLongName(routeLongName)

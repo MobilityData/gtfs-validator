@@ -96,6 +96,7 @@ class ProcessParsedRouteTest {
         verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_TEXT_COLOR));
         verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_SORT_ORDER));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).routeId(ArgumentMatchers.anyString());
         verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.anyString());
         verify(mockBuilder, times(1)).routeShortName(ArgumentMatchers.anyString());
@@ -162,6 +163,7 @@ class ProcessParsedRouteTest {
         verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_TEXT_COLOR));
         verify(mockParsedRoute, times(1)).get(ArgumentMatchers.eq(ROUTE_SORT_ORDER));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).routeId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).routeShortName(ArgumentMatchers.eq(STRING_TEST_VALUE));
@@ -231,6 +233,7 @@ class ProcessParsedRouteTest {
 
         verify(mockGtfsDataRepo, times(1)).addRoute(ArgumentMatchers.isA(Route.class));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).routeId(anyString());
         verify(mockBuilder, times(1)).agencyId(anyString());
         verify(mockBuilder, times(1)).routeShortName(anyString());
