@@ -362,7 +362,8 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
             if (tripId == null || stopId == null ||
                     (timepoint == Timepoint.EXACT_TIMES && (arrivalTime == null || departureTime == null)) ||
                     pickupType == null || dropOffType == null || continuousPickup == null ||
-                    continuousDropOff == null || shapeDistTraveled < 0 || timepoint == null || stopSequence == null) {
+                    continuousDropOff == null || (shapeDistTraveled != null && shapeDistTraveled < 0) ||
+                    timepoint == null || stopSequence == null) {
                 if (tripId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stop_times.txt", "trip_id",
                             getStopTimeMappingKey(tripId, stopSequence)));
@@ -411,7 +412,7 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
                             getStopTimeMappingKey(tripId, stopSequence),
                             originalContinuousDropOff));
                 }
-                if (shapeDistTraveled < 0) {
+                if (shapeDistTraveled != null && shapeDistTraveled < 0){
                     noticeCollection.add(new FloatFieldValueOutOfRangeNotice("stop_times.txt",
                             "shape_dist_traveled",
                             getStopTimeMappingKey(tripId, stopSequence),

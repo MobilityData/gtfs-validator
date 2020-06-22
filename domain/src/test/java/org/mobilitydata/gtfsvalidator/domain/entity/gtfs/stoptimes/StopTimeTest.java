@@ -322,6 +322,27 @@ class StopTimeTest {
     }
 
     @Test
+    void createStopTimeWithNullShapeDistTraveledShouldNotGenerateNotice() {
+        final StopTime.StopTimeBuilder builder = new StopTime.StopTimeBuilder();
+        builder.tripId(TRIP_ID)
+                .arrivalTime(ARRIVAL_TIME)
+                .departureTime(DEPARTURE_TIME)
+                .stopId(STOP_ID)
+                .stopSequence(STOP_SEQUENCE)
+                .stopHeadsign(STOP_HEADSIGN)
+                .pickupType(PICKUP_TYPE)
+                .dropOffType(DROP_OFF_TYPE)
+                .continuousDropOff(CONTINUOUS_DROP_OFF)
+                .continuousPickup(CONTINUOUS_PICKUP)
+                .shapeDistTraveled(null)
+                .timepoint(TIMEPOINT);
+
+        final EntityBuildResult<?> buildResult = builder.build();
+
+        assertTrue(buildResult.getData() instanceof StopTime);
+    }
+
+    @Test
     void createStopTimeWithInvalidTimepointShouldGenerateNotice() {
         final StopTime.StopTimeBuilder builder = new StopTime.StopTimeBuilder();
         builder.tripId(TRIP_ID)
