@@ -60,7 +60,8 @@ public class ProcessParsedShapePoint {
         final Integer shapePtSequence = (Integer) validatedShapeEntity.get("shape_pt_sequence");
         final Float shapeDistTraveled = (Float) validatedShapeEntity.get("shape_dist_traveled");
 
-        builder.shapeId(shapeId)
+        builder.clearFieldAll()
+                .shapeId(shapeId)
                 .shapePtLat(shapePtLat)
                 .shapePtLon(shapePtLon)
                 .shapePtSequence(shapePtSequence)

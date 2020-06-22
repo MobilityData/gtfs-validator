@@ -231,5 +231,14 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
                         shapeDistTraveled));
             }
         }
+
+        public ShapeBuilder clearFieldAll() {
+            shapeId = null;
+            shapePtLat = null;
+            shapePtLon = null;
+            shapePtSequence = null;
+            shapeDistTraveled = null;
+            return this;
+        }
     }
 }
