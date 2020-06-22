@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
@@ -28,10 +29,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
@@ -567,14 +565,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the collection of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
-     * The returned collection is ordered by stop_sequence
+     * Return the map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
+     * The returned map is ordered by stop_sequence
      *
      * @param tripId  identifies a trip
-     * @return  the StopTime representing a row from stop_times.txt related to the trip_id provided as parameter
+     * @return  the map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     @Override
-    public TreeMap<Integer, StopTime> getStopTimeByTripId(final String tripId) {
-        return stopTimePerTripIdStopSequence.get(tripId);
+    public Map<Integer, StopTime> getStopTimeByTripId(final String tripId) {
+        return Collections.unmodifiableMap(stopTimePerTripIdStopSequence.get(tripId));
     }
 }
