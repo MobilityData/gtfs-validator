@@ -76,6 +76,7 @@ class ProcessParsedFareRuleTest {
         verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(DESTINATION_ID));
         verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(CONTAINS_ID));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).fareId(FARE_ID);
         verify(mockBuilder, times(1)).routeId(ROUTE_ID);
         verify(mockBuilder, times(1)).originId(ORIGIN_ID);
@@ -121,6 +122,7 @@ class ProcessParsedFareRuleTest {
         verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(DESTINATION_ID));
         verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(CONTAINS_ID));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).fareId(FARE_ID);
         verify(mockBuilder, times(1)).routeId(ROUTE_ID);
         verify(mockBuilder, times(1)).originId(ORIGIN_ID);
@@ -178,6 +180,7 @@ class ProcessParsedFareRuleTest {
         verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(DESTINATION_ID));
         verify(mockParsedFareRule, times(1)).get(ArgumentMatchers.eq(CONTAINS_ID));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).fareId(FARE_ID);
         verify(mockBuilder, times(1)).routeId(ROUTE_ID);
         verify(mockBuilder, times(1)).originId(ORIGIN_ID);
