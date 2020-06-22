@@ -47,7 +47,6 @@ class ContinuousPickupTest {
         assertEquals(ContinuousPickup.MUST_ASK_DRIVER_CONTINUOUS_STOPPING_PICKUP, ContinuousPickup.fromInt(3));
     }
 
-
     @Test
     void createContinuousPickupFromInvalidValue5ShouldReturnNull() {
         assertNull(ContinuousPickup.fromInt(5));

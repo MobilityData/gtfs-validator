@@ -47,7 +47,6 @@ class PickupTypeTest {
         assertEquals(PickupType.MUST_ASK_DRIVER_PICKUP, PickupType.fromInt(3));
     }
 
-
     @Test
     void createPickupFromInvalidValue5ShouldReturnNull() {
         assertNull(PickupType.fromInt(5));

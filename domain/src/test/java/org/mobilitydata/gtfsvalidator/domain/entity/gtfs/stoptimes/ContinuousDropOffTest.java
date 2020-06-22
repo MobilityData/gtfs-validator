@@ -47,7 +47,6 @@ class ContinuousDropOffTest {
         assertEquals(ContinuousDropOff.MUST_ASK_DRIVER_CONTINUOUS_STOPPING_DROP_OFF, ContinuousDropOff.fromInt(3));
     }
 
-
     @Test
     void createContinuousDropOffFromInvalidValue5ShouldReturnNull() {
         assertNull(ContinuousDropOff.fromInt(5));

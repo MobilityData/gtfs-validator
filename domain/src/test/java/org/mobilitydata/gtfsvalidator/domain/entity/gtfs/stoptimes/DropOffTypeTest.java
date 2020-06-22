@@ -47,7 +47,6 @@ class DropOffTypeTest {
         assertEquals(DropOffType.MUST_ASK_DRIVER_DROP_OFF, DropOffType.fromInt(3));
     }
 
-
     @Test
     void createDropOffFromInvalidValue5ShouldReturnNull() {
         assertNull(DropOffType.fromInt(5));
