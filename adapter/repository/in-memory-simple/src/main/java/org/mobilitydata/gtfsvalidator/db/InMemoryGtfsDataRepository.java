@@ -18,8 +18,8 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
@@ -550,10 +550,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             final String tripId  = newStopTime.getTripId();
             final Integer stopSequence  = newStopTime.getStopSequence();
             if (stopTimePerTripIdStopSequence.containsKey(tripId)) {
-                if (stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
+                if (!stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
+                    stopTimePerTripIdStopSequence.get(tripId).put(stopSequence, newStopTime);
+                } else {
                     return null;
                 }
-                stopTimePerTripIdStopSequence.get(tripId).put(stopSequence, newStopTime);
             } else {
                 final TreeMap<Integer, StopTime> innerMap = new TreeMap<>();
                 innerMap.put(stopSequence, newStopTime);
