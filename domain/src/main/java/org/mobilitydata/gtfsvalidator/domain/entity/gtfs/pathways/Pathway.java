@@ -327,8 +327,6 @@ public class Pathway extends GtfsEntity {
          * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             if (pathwayId == null ||
                     fromStopId == null ||
                     toStopId == null ||
