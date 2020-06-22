@@ -545,10 +545,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         if (newShapePoint != null) {
             final String shapeId = newShapePoint.getShapeId();
             if (shapePerIdShapePtSequence.containsKey(shapeId)) {
-                if (shapePerIdShapePtSequence.get(shapeId).containsKey(newShapePoint.getShapePtSequence())) {
+                if (!shapePerIdShapePtSequence.get(shapeId).containsKey(newShapePoint.getShapePtSequence())) {
+                    shapePerIdShapePtSequence.get(shapeId).put(newShapePoint.getShapePtSequence(), newShapePoint);
+                } else {
                     return null;
                 }
-                shapePerIdShapePtSequence.get(shapeId).put(newShapePoint.getShapePtSequence(), newShapePoint);
             } else {
                 final Map<Integer, ShapePoint> innerMap = new TreeMap<>();
                 innerMap.put(newShapePoint.getShapePtSequence(), newShapePoint);
