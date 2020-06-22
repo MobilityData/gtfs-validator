@@ -74,7 +74,27 @@ public interface GtfsDataRepository {
     FareRule getFareRule(final String fareId, final String routeId, final String originId, final String destinationId,
                          final String containsId);
 
+    /**
+     * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt is respected,
+     * if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     *
+     * @param newStopTime the internal representation of a row from stop_times.txt to be added to the repository.
+     * @return Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt
+     * is respected, if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     */
     StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException;
 
+    /**
+     * Return the collection of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
+     * The returned collection is ordered by stop_sequence
+     *
+     * @param tripId  identifies a trip
+     * @return  the StopTime representing a row from stop_times.txt related to the trip_id provided as parameter
+     */
     TreeMap<Integer, StopTime> getStopTimeByTripId(final String tripId);
 }
