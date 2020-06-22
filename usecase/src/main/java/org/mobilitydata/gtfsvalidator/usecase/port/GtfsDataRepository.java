@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Map;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
@@ -94,12 +95,12 @@ public interface GtfsDataRepository {
     ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException;
 
     /**
-     * Return the collection of shape points from shapes.txt related to the id provided as parameter; which represents a
-     * shape object. The returned collection is ordered by shape_pt_sequence.
+     * Return the map of shape points from shapes.txt related to the id provided as parameter; which represents a
+     * shape object. The returned map is ordered by shape_pt_sequence.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return  the collection of shape points from shapes.txt related to the id provided as parameter; which represents
-     * a shape object. The returned collection is ordered by shape_pt_sequence.
+     * @return  the map of shape points from shapes.txt related to the id provided as parameter; which represents
+     * a shape object. The returned map is ordered by shape_pt_sequence.
      */
-    Collection<ShapePoint> getShapeById(final String shapeId);
+    Map<Integer, ShapePoint> getShapeById(final String shapeId);
 }

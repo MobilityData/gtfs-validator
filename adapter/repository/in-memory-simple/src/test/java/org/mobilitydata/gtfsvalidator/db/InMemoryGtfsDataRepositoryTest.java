@@ -30,6 +30,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -492,13 +493,11 @@ class InMemoryGtfsDataRepositoryTest {
 
         underTest.addShapePoint(mockShapePoint);
         assertNull(underTest.addShapePoint(mockShapePoint));
-        final ArrayList<ShapePoint> toCheck = new ArrayList<>(underTest.getShapeById("test id"));
-
-        assertEquals("test id", toCheck.get(0).getShapeId());
-        assertEquals(50f, toCheck.get(0).getShapePtLat());
-        assertEquals(100f, toCheck.get(0).getShapePtLon());
-        assertEquals(4, toCheck.get(0).getShapePtSequence());
-        assertEquals(56, toCheck.get(0).getShapeDistTraveled());
+        assertEquals("test id", underTest.getShapeById("test id").get(4).getShapeId());
+        assertEquals(50f, underTest.getShapeById("test id").get(4).getShapePtLat());
+        assertEquals(100f, underTest.getShapeById("test id").get(4).getShapePtLon());
+        assertEquals(4, underTest.getShapeById("test id").get(4).getShapePtSequence());
+        assertEquals(56, underTest.getShapeById("test id").get(4).getShapeDistTraveled());
     }
 
     @Test
@@ -546,14 +545,12 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addShapePoint(mockShapePoint00);
         underTest.addShapePoint(mockShapePoint01);
 
-        final ArrayList<ShapePoint> firstShapePointCollectionToCheck =
-                new ArrayList<>(underTest.getShapeById("test id00"));
+        final Map<Integer, ShapePoint> firstMapToCheck = underTest.getShapeById("test id00");
 
-        final ArrayList<ShapePoint> secondShapePointCollectionToCheck =
-                new ArrayList<>(underTest.getShapeById("test id01"));
+        final Map<Integer, ShapePoint> secondMapToCheck = underTest.getShapeById("test id01");
 
-        assertEquals(firstShapePointCollectionToCheck, underTest.getShapeById("test id00"));
-        assertEquals(secondShapePointCollectionToCheck, underTest.getShapeById("test id01"));
+        assertEquals(firstMapToCheck, underTest.getShapeById("test id00"));
+        assertEquals(secondMapToCheck, underTest.getShapeById("test id01"));
     }
 
     @Test
@@ -575,14 +572,16 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addShapePoint(thirdShapePointInSequence);
         underTest.addShapePoint(secondShapePointInSequence);
 
-        final List<ShapePoint> toCheck = new ArrayList<>(underTest.getShapeById("test id00"));
+        final List<ShapePoint> toCheck = new ArrayList<>();
+
+        underTest.getShapeById("test id00").forEach((key, value) -> toCheck.add(value));
         assertEquals(secondShapePointInSequence, toCheck.get(0));
         assertEquals(thirdShapePointInSequence, toCheck.get(1));
 
         underTest.addShapePoint(firstShapePointInSequence);
 
         toCheck.clear();
-        toCheck.addAll(underTest.getShapeById("test id00"));
+        underTest.getShapeById("test id00").forEach((key, value) -> toCheck.add(value));
 
         assertEquals(firstShapePointInSequence, toCheck.get(0));
         assertEquals(secondShapePointInSequence, toCheck.get(1));
