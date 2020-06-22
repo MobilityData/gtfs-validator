@@ -215,8 +215,6 @@ public class FareAttribute extends GtfsEntity {
          * official GTFS specification are met. Otherwise, method returns a collection pf notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             if (price == null || price < 0 || fareId == null || currencyType == null ||
                     !PaymentMethod.isEnumValueValid(originalPaymentMethodInteger) ||
                     !Transfers.isEnumValueValid(originalTransferInteger) ||
