@@ -321,6 +321,7 @@ public class Attribution extends GtfsEntity {
          * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
+            noticeCollection.clear();
             if (organizationName == null ||
                     (originalIsOperatorInteger != null &&
                             (originalIsOperatorInteger < 0 || originalIsOperatorInteger > 1)) ||
@@ -331,9 +332,9 @@ public class Attribution extends GtfsEntity {
                     ((isAuthority == isProducer) && (isAuthority == isOperator) &&
                             (originalIsProducerInteger == null || originalIsProducerInteger == 0))
             ) {
-                final String entityId = attributionId + "; " + agencyId + "; " + routeId + "; " + tripId + "; " +
-                        organizationName + "; " + isProducer + "; " + isOperator + "; " + isAuthority + "; " +
-                        attributionUrl + "; " + attributionEmail + "; " + attributionPhone;
+                final String entityId = getAttributionMappingKey(attributionId, agencyId, routeId, tripId,
+                        organizationName, isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
+                        attributionPhone);
 
                 if (organizationName == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("attributions.txt",
@@ -401,8 +402,8 @@ public class Attribution extends GtfsEntity {
      */
     public static String getAttributionMappingKey(final String attributionId, final String agencyId,
                                                   final String routeId, final String tripId,
-                                                  final String organizationName, final boolean isProducer,
-                                                  final boolean isOperator, final boolean isAuthority,
+                                                  final String organizationName, final Boolean isProducer,
+                                                  final Boolean isOperator, final Boolean isAuthority,
                                                   final String attributionUrl, final String attributionEmail,
                                                   final String attributionPhone) {
         return attributionId+agencyId+routeId+tripId+organizationName+isProducer+isOperator+isAuthority+attributionUrl+
