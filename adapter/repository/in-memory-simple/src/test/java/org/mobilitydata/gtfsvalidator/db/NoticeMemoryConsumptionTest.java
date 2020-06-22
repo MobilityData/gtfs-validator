@@ -80,25 +80,18 @@ public class NoticeMemoryConsumptionTest {
     @Test
     @Order(3)
     public void memoryLimitTest_10_000notices() {
-        memoryLimitTest(10_000, 11_000_000);
+        memoryLimitTest(10_000, 15_000_000);
     }
 
     @Test
     @Order(4)
     public void memoryLimitTest_100_000notices() {
-        memoryLimitTest(100_000, 30_000_000);
+        memoryLimitTest(100_000, 60_000_000);
     }
 
     @Test
     @Order(5)
     public void memoryLimitTest_1_000_000notices() {
-        memoryLimitTest(1_000_000, 231_000_000);
+        memoryLimitTest(1_000_000, 500_000_000);
     }
-
-    @Test
-    @Order(6)
-    public void memoryLimitTest_2_000_000notices() {
-        memoryLimitTest(2_000_000, 454_000_000);
-    }
-
 }

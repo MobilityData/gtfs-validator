@@ -20,14 +20,17 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -161,7 +164,7 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addSameCalendarDateShouldReturnNull() {
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
-        final LocalDateTime mockDate = mock(LocalDateTime.class);
+        final LocalDate mockDate = mock(LocalDate.class);
         when(mockCalendarDate.getServiceId()).thenReturn("service id");
         when(mockCalendarDate.getDate()).thenReturn(mockDate);
         when(mockCalendarDate.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
@@ -189,7 +192,7 @@ class InMemoryGtfsDataRepositoryTest {
         final CalendarDate calendarDate00 = mock(CalendarDate.class);
         final CalendarDate calendarDate01 = mock(CalendarDate.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        final LocalDateTime date = LocalDateTime.now();
+        final LocalDate date = LocalDate.now();
 
         when(calendarDate00.getServiceId()).thenReturn("service id 00");
         when(calendarDate00.getDate()).thenReturn(date);
@@ -389,5 +392,111 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockFeedInfo00, underTest.getFeedInfoByFeedPublisherName("feed publisher 0"));
         assertEquals(mockFeedInfo01, underTest.getFeedInfoByFeedPublisherName("feed publisher 1"));
+    }
+
+    @Test
+    void addSameFareAttributeTwiceShouldReturnNull() {
+        final FareAttribute mockFareAttribute = mock(FareAttribute.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareAttribute.getFareId()).thenReturn("fare attribute id");
+
+        underTest.addFareAttribute(mockFareAttribute);
+
+        assertNull(underTest.addFareAttribute(mockFareAttribute));
+    }
+
+    @Test
+    void addNullFareAttributeShouldThrowException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addFareAttribute(null));
+        assertEquals("Cannot add null fare attribute to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addFareAttributeAndGetFareAttributeByIdShouldReturnSameEntity() {
+        final FareAttribute mockFareAttribute00 = mock(FareAttribute.class);
+        final FareAttribute mockFareAttribute01 = mock(FareAttribute.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        when(mockFareAttribute00.getFareId()).thenReturn("fare attribute id 00");
+        when(mockFareAttribute01.getFareId()).thenReturn("fare attribute id 01");
+
+        assertEquals(underTest.addFareAttribute(mockFareAttribute00),
+                underTest.getFareAttributeById("fare attribute id 00"));
+        assertEquals(underTest.addFareAttribute(mockFareAttribute01),
+                underTest.getFareAttributeById("fare attribute id 01"));
+    }
+
+    @Test
+    void addNullFareRuleShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addFareRule(null));
+        assertEquals("Cannot add null FareRule to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addSameFareRuleTwiceShouldReturnNull() {
+        final FareRule mockFareRule = mock(FareRule.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareRule.getFareId()).thenReturn("fare id");
+
+        underTest.addFareRule(mockFareRule);
+
+        assertNull(underTest.addFareRule(mockFareRule));
+    }
+
+    @Test
+    void addFareRuleAndGetFareRuleShouldReturnSameEntity() {
+        final FareRule mockFareRule00 = mock(FareRule.class);
+        final FareRule mockFareRule01 = mock(FareRule.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFareRule00.getFareId()).thenReturn("fare id0");
+        when(mockFareRule01.getFareId()).thenReturn("fare id1");
+        when(mockFareRule00.getFareRuleMappingKey()).thenReturn("fare id0" + "null" + "null" + "null" + "null");
+        when(mockFareRule01.getFareRuleMappingKey()).thenReturn("fare id1" + "null" + "null" + "null" + "null");
+
+        assertEquals(mockFareRule00, underTest.addFareRule(mockFareRule00));
+        assertEquals(mockFareRule01, underTest.addFareRule(mockFareRule01));
+
+        assertEquals(mockFareRule00, underTest.getFareRule("fare id0", null, null,
+                null, null));
+        assertEquals(mockFareRule01, underTest.getFareRule("fare id1", null, null,
+                null, null));
+    }
+
+    @Test
+    void addSamePathwayTwiceShouldReturnNull() {
+        final Pathway mockPathway = mock(Pathway.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockPathway.getPathwayId()).thenReturn("pathway id");
+        underTest.addPathway(mockPathway);
+
+        assertNull(underTest.addPathway(mockPathway));
+    }
+
+    @Test
+    void addNullPathwayShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addPathway(null));
+        assertEquals("Cannot add null pathway to data repository", exception.getMessage());
+    }
+
+    @Test
+    public void addPathwayAndGetPathwayByIdShouldReturnSameEntity() {
+        final Pathway mockPathway00 = mock(Pathway.class);
+        final Pathway mockPathway01 = mock(Pathway.class);
+        when(mockPathway00.getPathwayId()).thenReturn("pathway id 00");
+        when(mockPathway01.getPathwayId()).thenReturn("pathway id 01");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        assertEquals(mockPathway00, underTest.addPathway(mockPathway00));
+        assertEquals(mockPathway01, underTest.addPathway(mockPathway01));
+
+        assertEquals(mockPathway00, underTest.getPathwayById("pathway id 00"));
+        assertEquals(mockPathway01, underTest.getPathwayById("pathway id 01"));
     }
 }

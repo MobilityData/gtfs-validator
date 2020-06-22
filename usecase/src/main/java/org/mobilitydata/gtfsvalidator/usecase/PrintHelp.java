@@ -45,7 +45,7 @@ public class PrintHelp {
      * repository provided in the constructor or if the ExecParamRepository provided in the constructor is empty.
      */
     public boolean execute() {
-        if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.HELP_KEY)) || execParamRepo.isEmpty()) {
+        if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.HELP_KEY))) {
 
             Options options = execParamRepo.getOptions();
 

@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
 class AgencyTest {
     private static final String STRING_TEST_VALUE = "test_value";
@@ -53,7 +54,7 @@ class AgencyTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_name", notice.getFieldName());
+        assertEquals("agency_name", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -82,7 +83,7 @@ class AgencyTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_url", notice.getFieldName());
+        assertEquals("agency_url", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -111,7 +112,7 @@ class AgencyTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_timezone", notice.getFieldName());
+        assertEquals("agency_timezone", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }

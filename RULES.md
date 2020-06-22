@@ -33,6 +33,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E029](#E029) | Missing field `agency_id` | 
 | [E030](#E030) | Inconsistent field `agency_timezone` | 
 | [E031](#E031) | Invalid `agency_id` | 
+| [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
 
 ### Table of Warnings
 
@@ -126,6 +127,15 @@ All records of file `agency.txt` should have the same value for field `agency_ti
 ### E031 - Invalid `agency_id` 
 
 When provided field `agency_id` should not be blank.
+
+<a name="E032"/>
+
+### E032 - `calendar.txt` `end_date` is before `start_date`
+
+In `calendar.txt`, the `end_date` of a service record must not be earlier than the `start_date`.
+
+#### References:
+* [calendar.txt specification](https://gtfs.org/reference/static/#calendartxt)
 
 # Warnings
 

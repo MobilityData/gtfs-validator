@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.net.URL;
 
 public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
-    private URL url;
 
     public CannotDownloadArchiveFromNetworkNotice(final URL url) {
         super(String.valueOf(url),
@@ -31,13 +30,8 @@ public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
                 "Downloading error",
                 "An error occurred while trying to download archive from network: " + url,
                 null);
-        this.url = url;
+        putNoticeSpecific(KEY_URL_VALUE, url);
     }
-
-    public URL getUrl() {
-        return url;
-    }
-
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
