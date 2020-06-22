@@ -173,7 +173,7 @@ class ShapePointTest {
     }
 
     @Test
-    void shapePointShouldBeAbleToBeComparedToOtherShapePoint() {
+    void shapePointShouldBeComparableByShapePtSequenceAscending() {
         final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
         underTest.shapeId("shape id")
