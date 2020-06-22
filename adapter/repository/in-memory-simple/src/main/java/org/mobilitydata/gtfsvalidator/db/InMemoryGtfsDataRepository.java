@@ -18,8 +18,8 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
@@ -84,6 +84,22 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
     // pathways.txt
     private final Map<String, Pathway> pathwayPerId = new HashMap<>();
+
+    // Map containing Attribution entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file attributions.txt:
+    // - attribution_id
+    // - agency_id
+    // - route_id
+    // - trip_id
+    // - organization_name
+    // - is_producer
+    // - is_operator
+    // - is_authority
+    // - attribution_url
+    // - attribution_email
+    // - attribution_phone
+    // Example of key after composition: attribution_idagency_idroute_idtrip_idorganization_nameis_produceris_operatoris_authorityattribution_urlattribution_emailattribution_phone
+    private final Map<String, Attribution> attributionCollection = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -521,5 +537,56 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Pathway getPathwayById(final String pathwayId) {
         return pathwayPerId.get(pathwayId);
+    }
+
+    /**
+     * Add an Attribution representing a row from attributions.txt to this. Return the entity added to the repository if
+     * the uniqueness constraint of rows f attributions.txt is respected, if this requirement is not met, returns null.
+     *
+     * @param newAttribution the internal representation of a row from attributions.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of rows f attributions.txt is respected,
+     * if this requirement is not met, returns null.
+     */
+    @Override
+    public Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException {
+        if (newAttribution != null) {
+            final String key = newAttribution.getAttributionMappingKey();
+            if (attributionCollection.containsKey(key)) {
+                return null;
+            } else {
+                attributionCollection.put(key, newAttribution);
+                return newAttribution;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null attribution to data repository");
+        }
+    }
+
+    /**
+     * Return the Attribution representing a row from attributions.txt related to the composite key provided as
+     * parameter
+     *
+     * @param attributionId    identifies an attribution for the dataset or a subset of it
+     * @param agencyId         agency to which the attribution applies
+     * @param routeId          route to which the attribution applies
+     * @param tripId           trip to which the attribution applies
+     * @param organizationName name of the organization that the dataset is attributed to
+     * @param isProducer       the role of the organization if producer
+     * @param isOperator       the role of the organization if operator
+     * @param isAuthority      the role of the organization if authority
+     * @param attributionUrl   URL of the organization
+     * @param attributionEmail email of the organization
+     * @param attributionPhone phone number of the organization
+     * @return the Attribution representing a row from attributions.txt related to the composite key provided as
+     * parameter
+     */
+    @Override
+    public Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
+                                      final String tripId, final String organizationName, final boolean isProducer,
+                                      final boolean isOperator, final boolean isAuthority, final String attributionUrl,
+                                      final String attributionEmail, final String attributionPhone) {
+        return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId,agencyId,routeId,tripId ,
+                organizationName,isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
+                attributionPhone));
     }
 }
