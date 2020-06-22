@@ -445,7 +445,7 @@ class StopTimeTest {
     }
 
     @Test
-    void stopTimeShouldBeAbleToCompareToOtherStopTime(){
+    void stopTimeShouldBeComparableByStopSequenceAscending(){
         final StopTime.StopTimeBuilder builder = new StopTime.StopTimeBuilder();
         builder.tripId(TRIP_ID)
                 .arrivalTime(ARRIVAL_TIME)
