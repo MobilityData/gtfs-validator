@@ -173,6 +173,34 @@ class ShapePointTest {
     }
 
     @Test
+    void createShapePointWithValidValuesShouldNotGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
+                .shapePtLat(0f)
+                .shapePtLon(0f)
+                .shapePtSequence(3)
+                .shapeDistTraveled(2.0f)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof ShapePoint);
+    }
+
+    @Test
+    void createShapePointWithNullShapeDistTraveledShouldNotGenerateNotice() {
+        final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.shapeId("shape id")
+                .shapePtLat(0f)
+                .shapePtLon(0f)
+                .shapePtSequence(3)
+                .shapeDistTraveled(null)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof ShapePoint);
+    }
+
+    @Test
     void shapePointShouldBeComparableByShapePtSequenceAscending() {
         final ShapePoint.ShapeBuilder underTest = new ShapePoint.ShapeBuilder();
 
