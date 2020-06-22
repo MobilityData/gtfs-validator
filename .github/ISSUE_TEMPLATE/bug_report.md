@@ -25,6 +25,7 @@ If applicable, add screenshots to help explain your problem.
 **Environment used**
 - OS:
 - Java version:
- 
+- gtfs-validator version: 
+
 **Additional context**
 Add any other context about the problem here.

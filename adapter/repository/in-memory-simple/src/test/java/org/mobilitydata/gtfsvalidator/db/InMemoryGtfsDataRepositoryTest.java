@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
@@ -445,6 +446,40 @@ class InMemoryGtfsDataRepositoryTest {
                 null, null));
         assertEquals(mockFareRule01, underTest.getFareRule("fare id1", null, null,
                 null, null));
+    }
+
+    @Test
+    void addSamePathwayTwiceShouldReturnNull() {
+        final Pathway mockPathway = mock(Pathway.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockPathway.getPathwayId()).thenReturn("pathway id");
+        underTest.addPathway(mockPathway);
+
+        assertNull(underTest.addPathway(mockPathway));
+    }
+
+    @Test
+    void addNullPathwayShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addPathway(null));
+        assertEquals("Cannot add null pathway to data repository", exception.getMessage());
+    }
+
+    @Test
+    public void addPathwayAndGetPathwayByIdShouldReturnSameEntity() {
+        final Pathway mockPathway00 = mock(Pathway.class);
+        final Pathway mockPathway01 = mock(Pathway.class);
+        when(mockPathway00.getPathwayId()).thenReturn("pathway id 00");
+        when(mockPathway01.getPathwayId()).thenReturn("pathway id 01");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        assertEquals(mockPathway00, underTest.addPathway(mockPathway00));
+        assertEquals(mockPathway01, underTest.addPathway(mockPathway01));
+
+        assertEquals(mockPathway00, underTest.getPathwayById("pathway id 00"));
+        assertEquals(mockPathway01, underTest.getPathwayById("pathway id 01"));
     }
 
     @Test
