@@ -93,6 +93,7 @@ class ProcessParsedAttributionTest {
         verify(mockParsedAttribution, times(1)).get(ArgumentMatchers.eq(ATTRIBUTION_EMAIL));
         verify(mockParsedAttribution, times(1)).get(ArgumentMatchers.eq(ATTRIBUTION_PHONE));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).attributionId(ArgumentMatchers.eq(ATTRIBUTION_ID));
         verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockBuilder, times(1)).routeId(ArgumentMatchers.eq(ROUTE_ID));
@@ -159,6 +160,7 @@ class ProcessParsedAttributionTest {
         verify(mockParsedAttribution, times(1)).get(ArgumentMatchers.eq(ATTRIBUTION_EMAIL));
         verify(mockParsedAttribution, times(1)).get(ArgumentMatchers.eq(ATTRIBUTION_PHONE));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).attributionId(ArgumentMatchers.eq(ATTRIBUTION_ID));
         verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockBuilder, times(1)).routeId(ArgumentMatchers.eq(ROUTE_ID));
@@ -238,6 +240,7 @@ class ProcessParsedAttributionTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedAttribution, times(1)).getEntityId();
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).attributionId(ArgumentMatchers.eq(ATTRIBUTION_ID));
         verify(mockBuilder, times(1)).agencyId(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockBuilder, times(1)).routeId(ArgumentMatchers.eq(ROUTE_ID));

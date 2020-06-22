@@ -162,11 +162,11 @@ public class Attribution extends GtfsEntity {
         private String routeId;
         private String tripId;
         private String organizationName;
-        private boolean isProducer;
+        private Boolean isProducer;
         private Integer originalIsProducerInteger;
-        private boolean isAuthority;
+        private Boolean isAuthority;
         private Integer originalIsAuthorityInteger;
-        private boolean isOperator;
+        private Boolean isOperator;
         private Integer originalIsOperatorInteger;
         private String attributionUrl;
         private String attributionEmail;
@@ -321,7 +321,6 @@ public class Attribution extends GtfsEntity {
          * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
             if (organizationName == null ||
                     (originalIsOperatorInteger != null &&
                             (originalIsOperatorInteger < 0 || originalIsOperatorInteger > 1)) ||
@@ -369,6 +368,29 @@ public class Attribution extends GtfsEntity {
                         organizationName, isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
                         attributionPhone));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public AttributionBuilder clearFieldAll() {
+            attributionId = null;
+            agencyId = null;
+            routeId = null;
+            tripId = null;
+            organizationName = null;
+            isProducer = null;
+            originalIsProducerInteger = null;
+            isAuthority = null;
+            originalIsAuthorityInteger = null;
+            isOperator = null;
+            originalIsOperatorInteger = null;
+            attributionUrl = null;
+            attributionEmail = null;
+            attributionPhone = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 
