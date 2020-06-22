@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
@@ -30,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class for all entities defined in transfers.txt. Can not be directly instantiated: user must use the
+ * Class for all entities defined in frequencies.txt. Can not be directly instantiated: user must use the
  * {@link FrequencyBuilder} to create this.
  */
 public class Frequency extends GtfsEntity {
@@ -166,13 +165,11 @@ public class Frequency extends GtfsEntity {
                     noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt",
                             "start_time", tripId));
                 }
-                //else if (startTime == null && originalStartTime != null) InvalidTimeNotice?
 
                 if (endTime == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt",
                             "end_time", tripId));
                 }
-                //else if (endTime == null && originalEndTime != null) InvalidTimeNotice?
 
                 if (headwaySecs == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt",
@@ -182,7 +179,7 @@ public class Frequency extends GtfsEntity {
                             "headway_secs", tripId, 0, Integer.MAX_VALUE, headwaySecs));
                 }
 
-                // the following statement is true when ExactTimes.isEnumValueValid(originalTransferInteger)
+                // the following statement is true when ExactTimes.isEnumValueValid(originalExactTimes)
                 // returns false
                 if (exactTimes == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("frequencies.txt",
@@ -195,9 +192,9 @@ public class Frequency extends GtfsEntity {
     }
 
     /**
-     * Returns the key corresponding to this {@link FareRule}
+     * Returns the key corresponding to this {@link Frequency}
      *
-     * @return the key corresponding to this {@link FareRule}
+     * @return the key corresponding to this {@link Frequency}
      */
     public static String getFrequencyMappingKey(final String tripId, final Integer startTime) {
         return tripId + startTime;

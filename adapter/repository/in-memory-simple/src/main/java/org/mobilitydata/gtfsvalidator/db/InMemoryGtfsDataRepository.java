@@ -86,7 +86,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - trip_id
     // - start_time
     // Example of key after composition: trip_idstart_time
-    private final Map<String, Frequency> frequencyCollection = new HashMap<>();
+    private final Map<String, Frequency> frequencyPerTripIdStartTime = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -504,11 +504,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Frequency addFrequency(final Frequency newFrequency) throws IllegalArgumentException {
         if (newFrequency != null) {
-            String key = newFrequency.getFrequencyMappingKey();
-            if (frequencyCollection.containsKey(key)) {
+            final String key = newFrequency.getFrequencyMappingKey();
+            if (frequencyPerTripIdStartTime.containsKey(key)) {
                 return null;
             } else {
-                frequencyCollection.put(key, newFrequency);
+                frequencyPerTripIdStartTime.put(key, newFrequency);
                 return newFrequency;
             }
         } else {
@@ -525,6 +525,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Frequency getFrequency(final String tripId, final Integer startTime) {
-        return frequencyCollection.get(Frequency.getFrequencyMappingKey(tripId, startTime));
+        return frequencyPerTripIdStartTime.get(Frequency.getFrequencyMappingKey(tripId, startTime));
     }
 }

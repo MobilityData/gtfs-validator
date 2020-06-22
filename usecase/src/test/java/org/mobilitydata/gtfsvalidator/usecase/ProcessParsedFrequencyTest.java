@@ -88,6 +88,7 @@ class ProcessParsedFrequencyTest {
         verify(mockBuilder, times(1)).build();
         verify(mockGtfsDataRepo, times(1)).addFrequency(ArgumentMatchers.eq(mockFrequency));
 
+        verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockBuilder, mockFrequency, mockParsedFrequency, mockGtfsDataRepo);
     }
 
@@ -144,6 +145,7 @@ class ProcessParsedFrequencyTest {
         verify(mockResultRepo, times(1)).
                 addNotice(captor.capture());
 
+        verifyNoInteractions(mockGtfsDataRepo);
         verifyNoMoreInteractions(mockParsedFrequency, mockGtfsDataRepo, mockBuilder, mockResultRepo, mockGenericObject);
     }
 

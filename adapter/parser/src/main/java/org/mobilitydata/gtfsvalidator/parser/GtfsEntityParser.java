@@ -190,24 +190,23 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                         GtfsSpecificationProto.ColumnInputType.InputType.TIME) {
 
                     //Shouldn't we implement this elsewhere? Custom validator or class?
-                    Integer timeValue = null;
+                    Integer timeValueAsInt = null;
                     if (rawField != null && rawField.matches("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]")) {
-                        String[] timeStringSplit = rawField.split(":");
-                        String hourString = timeStringSplit[0];
-                        String minuteString = timeStringSplit[1];
-                        String secondString = timeStringSplit[2];
-                        Integer hourValue = Integer.valueOf(hourString);
-                        Integer minuteValue = Integer.valueOf(minuteString);
-                        Integer secondValue = Integer.valueOf(secondString);
+                        final String[] timeStringSplit = rawField.split(":");
+                        final String hourString = timeStringSplit[0];
+                        final String minuteString = timeStringSplit[1];
+                        final String secondString = timeStringSplit[2];
+                        final Integer hourValue = Integer.valueOf(hourString);
+                        final Integer minuteValue = Integer.valueOf(minuteString);
+                        final Integer secondValue = Integer.valueOf(secondString);
 
                         //Converting time to an Integer value representing number of seconds
-                        timeValue = hourValue * 3600 + minuteValue * 60 + secondValue;
+                        timeValueAsInt = hourValue * 3600 + minuteValue * 60 + secondValue;
                         //Setting noon as point zero, subtracting 12 * 3600 seconds
-                        timeValue = timeValue - 12 * 3600;
+                        timeValueAsInt = timeValueAsInt - 12 * 3600;
                     }
-                    contentByHeaderMap.put(columnSpecProto.getName(), timeValue);
-                    */
-
+                    contentByHeaderMap.put(columnSpecProto.getName(), timeValueAsInt);
+                */
                 } else {
                     contentByHeaderMap.put(columnSpecProto.getName(), rawField);
                     if (columnSpecProto.getUniquevalues()) {
