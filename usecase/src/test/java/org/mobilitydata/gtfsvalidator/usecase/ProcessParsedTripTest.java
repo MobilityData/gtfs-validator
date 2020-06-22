@@ -70,6 +70,7 @@ class ProcessParsedTripTest {
                 .get(ArgumentMatchers.eq("wheelchair_accessible"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("bikes_allowed"));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).routeId("route_id");
         verify(mockBuilder, times(1)).serviceId("service_id");
         verify(mockBuilder, times(1)).tripId("trip_id");
@@ -134,6 +135,7 @@ class ProcessParsedTripTest {
                 .get(ArgumentMatchers.eq("wheelchair_accessible"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("bikes_allowed"));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         // parameter of method .routeId() is annotated as non null, removing this warning for the purpose of the test
         //noinspection ConstantConditions
         verify(mockBuilder, times(1)).routeId(null);
@@ -198,6 +200,7 @@ class ProcessParsedTripTest {
 
         verify(mockGtfsDataRepo, times(1)).addTrip(ArgumentMatchers.isA(Trip.class));
 
+        verify(mockBuilder, times(1)).clearFieldAll();
         verify(mockBuilder, times(1)).routeId("route_id");
         verify(mockBuilder, times(1)).serviceId("service_id");
         verify(mockBuilder, times(1)).tripId("trip_id");
