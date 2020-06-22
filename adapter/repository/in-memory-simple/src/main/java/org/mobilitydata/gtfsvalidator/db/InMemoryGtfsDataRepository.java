@@ -18,8 +18,9 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
@@ -79,6 +80,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - contains_id
     // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
+
+    // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
+    // pathways.txt
+    private final Map<String, Pathway> pathwayPerId = new HashMap<>();
 
     // Map containing Attribution entities. Entities are mapped on a composite key made of the values found in the
     // columns of GTFS file attributions.txt:
@@ -497,6 +502,41 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                 final String destinationId, final String containsId) {
         return fareRuleCollection.get(FareRule.getFareRuleMappingKey(fareId, routeId, originId, destinationId,
                 containsId));
+    }
+
+    /**
+     * Add a Pathway representing a row from pathways.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint of route based on pathway_id is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newPathway the internal representation of a row from routes.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on pathway_id is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException {
+        if (newPathway != null) {
+            final String pathwayId = newPathway.getPathwayId();
+            if (pathwayPerId.containsKey(pathwayId)) {
+                return null;
+            } else {
+                pathwayPerId.put(pathwayId, newPathway);
+                return newPathway;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null pathway to data repository");
+        }
+    }
+
+    /**
+     * Return the Pathway representing a row from pathways.txt related to the id provided as parameter
+     *
+     * @param pathwayId the key from pathways.txt related to the Pathway to be returned
+     * @return the Pathway representing a row from pathways.txt related to the id provided as parameter
+     */
+    @Override
+    public Pathway getPathwayById(final String pathwayId) {
+        return pathwayPerId.get(pathwayId);
     }
 
     /**
