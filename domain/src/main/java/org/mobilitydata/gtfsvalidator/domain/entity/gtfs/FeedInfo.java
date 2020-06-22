@@ -232,8 +232,6 @@ public class FeedInfo extends GtfsEntity {
          * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             if (feedPublisherName == null || feedPublisherUrl == null || feedLang == null) {
                 if (feedPublisherName == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("feed_info.txt",
@@ -252,6 +250,23 @@ public class FeedInfo extends GtfsEntity {
                 return new EntityBuildResult<>(new FeedInfo(feedPublisherName, feedPublisherUrl, feedLang,
                         feedStartDate, feedEndDate, feedVersion, feedContactEmail, feedContactUrl));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public FeedInfoBuilder clearFieldAll() {
+            feedPublisherName = null;
+            feedPublisherUrl = null;
+            feedLang = null;
+            feedStartDate = null;
+            feedEndDate = null;
+            feedVersion = null;
+            feedContactEmail = null;
+            feedContactUrl = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }

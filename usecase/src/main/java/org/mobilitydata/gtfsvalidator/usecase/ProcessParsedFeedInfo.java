@@ -65,7 +65,8 @@ public class ProcessParsedFeedInfo {
         final String feedContactEmail = (String) validatedFeedInfo.get("feed_contact_email");
         final String feedContactUrl = (String) validatedFeedInfo.get("feed_contact_url");
 
-        builder.feedPublisherName(feedPublisherName)
+        builder.clearFieldAll()
+                .feedPublisherName(feedPublisherName)
                 .feedPublisherUrl(feedPublisherUrl)
                 .feedLang(feedLang)
                 .feedStartDate(feedStartDate)
