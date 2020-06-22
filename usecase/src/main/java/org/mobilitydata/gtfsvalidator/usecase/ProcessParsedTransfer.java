@@ -59,7 +59,8 @@ public class ProcessParsedTransfer {
         final Integer transferType = (Integer) validatedParsedTransfer.get("transfer_type");
         final Integer minTransferTime = (Integer) validatedParsedTransfer.get("min_transfer_time");
 
-        builder.fromStopId(fromStopId)
+        builder.clearFieldAll()
+                .fromStopId(fromStopId)
                 .toStopId(toStopId)
                 .transferType(transferType)
                 .minTransferTime(minTransferTime);
