@@ -396,5 +396,28 @@ public class Pathway extends GtfsEntity {
                         reversedSignpostedAs));
             }
         }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public PathwayBuilder clearFieldAll() {
+            pathwayId = null;
+            fromStopId = null;
+            toStopId = null;
+            pathwayMode = null;
+            isBidirectional = null;
+            length = null;
+            traversalTime = null;
+            stairCount = null;
+            maxSlope = null;
+            minWidth = null;
+            signpostedAs = null;
+            reversedSignpostedAs = null;
+            originalPathwayModeInteger = null;
+            originalIsBiDirectionalInteger = null;
+            noticeCollection.clear();
+            return this;
+        }
     }
 }
