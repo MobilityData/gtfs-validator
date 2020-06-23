@@ -85,7 +85,67 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +
-                " contrast'"+ System.lineSeparator());
+                " contrast'" + System.lineSeparator());
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
+    }
+
+    @Test
+    void invalidRouteColorShouldNotGenerateNotice() {
+
+        Route mockRoute = mock(Route.class);
+        when(mockRoute.getRouteColor()).thenReturn("0");
+        when(mockRoute.getRouteTextColor()).thenReturn("ffffff");
+
+        GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        Logger mockLogger = mock(Logger.class);
+
+        ValidateRouteColorAndTextContrast underTest = new ValidateRouteColorAndTextContrast(
+                mockDataRepo,
+                mockResultRepo,
+                mockLogger);
+
+        underTest.execute();
+
+        verify(mockDataRepo, times(1)).getRouteAll();
+        verify(mockRoute, times(1)).getRouteColor();
+        verify(mockRoute, times(1)).getRouteTextColor();
+        verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +
+                " contrast'" + System.lineSeparator());
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
+    }
+
+    @Test
+    void invalidRouteTextColorShouldNotGenerateNotice() {
+
+        Route mockRoute = mock(Route.class);
+        when(mockRoute.getRouteColor()).thenReturn("ffffff");
+        when(mockRoute.getRouteTextColor()).thenReturn("E+47");
+
+        GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        Logger mockLogger = mock(Logger.class);
+
+        ValidateRouteColorAndTextContrast underTest = new ValidateRouteColorAndTextContrast(
+                mockDataRepo,
+                mockResultRepo,
+                mockLogger);
+
+        underTest.execute();
+
+        verify(mockDataRepo, times(1)).getRouteAll();
+        verify(mockRoute, times(1)).getRouteColor();
+        verify(mockRoute, times(1)).getRouteTextColor();
+        verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +
+                " contrast'" + System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
