@@ -54,9 +54,8 @@ public class ValidateAgencyIdRequirement {
     public void execute() {
         logger.info("Validating rule 'E029 - Missing field `agency_id` for file agency.txt with more than 1 record'"
                 + System.lineSeparator());
-        final Collection<Agency> agencyPerId = dataRepo.getAgencyAll();
-        if (agencyPerId.size() > 1) {
-            agencyPerId.stream()
+        if (dataRepo.getAgencyCount() > 1) {
+            dataRepo.getAgencyAll().stream()
                     .filter(agency -> agency.getAgencyId() == null)
                     .forEach(invalidAgency -> resultRepo
                             .addNotice(new MissingAgencyIdNotice(invalidAgency.getAgencyName())));

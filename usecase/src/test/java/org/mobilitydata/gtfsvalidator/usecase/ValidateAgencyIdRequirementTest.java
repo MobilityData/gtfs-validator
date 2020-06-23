@@ -49,7 +49,7 @@ class ValidateAgencyIdRequirementTest {
                 .info("Validating rule 'E029 - Missing field `agency_id` for file agency.txt with more than 1 record'"
                         + System.lineSeparator());
 
-        inOrder.verify(mockDataRepo, times(1)).getAgencyAll();
+        inOrder.verify(mockDataRepo, times(1)).getAgencyCount();
 
         verifyNoMoreInteractions(mockDataRepo, mockResultRepo, mockLogger, mockAgency);
     }
@@ -62,6 +62,7 @@ class ValidateAgencyIdRequirementTest {
         when(mockAgency01.getAgencyId()).thenReturn("agency id 01");
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getAgencyAll()).thenReturn(new ArrayList<>(List.of(mockAgency00, mockAgency01)));
+        when(mockDataRepo.getAgencyCount()).thenReturn(2);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
@@ -75,8 +76,8 @@ class ValidateAgencyIdRequirementTest {
                 .info("Validating rule 'E029 - Missing field `agency_id` for file agency.txt with more than 1 record'"
                         + System.lineSeparator());
 
+        inOrder.verify(mockDataRepo, times(1)).getAgencyCount();
         inOrder.verify(mockDataRepo, times(1)).getAgencyAll();
-
         // suppress warning regarding ignored result of method since it is not necessary here.
         //noinspection ResultOfMethodCallIgnored
         inOrder.verify(mockAgency00, times(1)).getAgencyId();
@@ -95,6 +96,7 @@ class ValidateAgencyIdRequirementTest {
         when(mockAgency01.getAgencyId()).thenReturn("agency id 01");
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getAgencyAll()).thenReturn(new ArrayList<>(List.of(mockAgency00, mockAgency01)));
+        when(mockDataRepo.getAgencyCount()).thenReturn(2);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
@@ -108,6 +110,7 @@ class ValidateAgencyIdRequirementTest {
                 .info("Validating rule 'E029 - Missing field `agency_id` for file agency.txt with more than 1 record'"
                         + System.lineSeparator());
 
+        inOrder.verify(mockDataRepo, times(1)).getAgencyCount();
         inOrder.verify(mockDataRepo, times(1)).getAgencyAll();
 
         // suppress warning regarding ignored result of method since it is not necessary here.

@@ -147,6 +147,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
+     * Return the number of {@link Agency} contained in this {@link GtfsDataRepository}
+     *
+     * @return the number of {@link Agency} contained in this {@link GtfsDataRepository}
+     */
+    @Override
+    public int getAgencyCount() {
+        return agencyPerId.size();
+    }
+
+    /**
      * Add a Route representing a row from routes.txt to this. Return the entity added to the repository if the
      * uniqueness constraint of route based on route_id is respected, if this requirement is not met, returns null.
      *
