@@ -56,8 +56,8 @@ public class ProcessParsedFrequency {
      */
     public void execute(final ParsedEntity validatedFrequency) {
         final String tripId = (String) validatedFrequency.get("trip_id");
-        final Integer startTime = (Integer) validatedFrequency.get("start_time");
-        final Integer endTime = (Integer) validatedFrequency.get("end_time");
+        final String startTime = (String) validatedFrequency.get("start_time");
+        final String endTime = (String) validatedFrequency.get("end_time");
         final Integer headwaySecs = (Integer) validatedFrequency.get("headway_secs");
         final Integer exactTimes = (Integer) validatedFrequency.get("exact_times");
 

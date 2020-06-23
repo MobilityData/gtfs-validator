@@ -38,9 +38,9 @@ import static org.mockito.Mockito.*;
 class ProcessParsedFrequencyTest {
     private static final String TRIP_ID = "trip_id";
     private static final String START_TIME = "start_time";
-    private static final Integer START_TIME_VALUE = 0;
+    private static final String START_TIME_VALUE = "12:00:00";
     private static final String END_TIME = "end_time";
-    private static final Integer END_TIME_VALUE = 3600;
+    private static final String END_TIME_VALUE = "12:00:00";
     private static final String HEADWAY_SECS = "headway_secs";
     private static final Integer HEADWAY_SECS_VALUE = 600;
     private static final String EXACT_TIMES = "exact_times";

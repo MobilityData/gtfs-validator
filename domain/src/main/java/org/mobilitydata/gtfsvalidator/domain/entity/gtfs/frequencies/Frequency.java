@@ -94,7 +94,6 @@ public class Frequency extends GtfsEntity {
         private Integer originalExactTimes;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
-
         /**
          * Sets field tripId value and returns this
          *
@@ -112,8 +111,8 @@ public class Frequency extends GtfsEntity {
          * @param startTime identifies a start time for a trip service at the first stop
          * @return builder for future object creation
          */
-        public FrequencyBuilder startTime(@NotNull Integer startTime) {
-            this.startTime = startTime;
+        public FrequencyBuilder startTime(@NotNull String startTime) {
+            this.startTime = convertHHMMSSToIntFromNoonOfDayOfService(startTime);
             return this;
         }
 
@@ -123,8 +122,8 @@ public class Frequency extends GtfsEntity {
          * @param endTime identifies an end time for a trip service at the first stop
          * @return builder for future object creation
          */
-        public FrequencyBuilder endTime(@NotNull Integer endTime) {
-            this.endTime = endTime;
+        public FrequencyBuilder endTime(@NotNull String endTime) {
+            this.endTime = convertHHMMSSToIntFromNoonOfDayOfService(endTime);
             return this;
         }
 
@@ -152,7 +151,7 @@ public class Frequency extends GtfsEntity {
         }
 
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
+            EntityBuildResult<?> toReturn;
             if (tripId == null || startTime == null || endTime == null || headwaySecs == null ||
                     headwaySecs < 0 || exactTimes == null) {
 
@@ -185,9 +184,32 @@ public class Frequency extends GtfsEntity {
                     noticeCollection.add(new UnexpectedEnumValueNotice("frequencies.txt",
                             "exact_times", tripId, originalExactTimes));
                 }
-                return new EntityBuildResult<>(noticeCollection);
+                toReturn = new EntityBuildResult<>(noticeCollection);
+                noticeCollection.clear();
+            } else {
+                toReturn = new EntityBuildResult<>(new Frequency(tripId, startTime, endTime, headwaySecs, exactTimes));
             }
-            return new EntityBuildResult<>(new Frequency(tripId, startTime, endTime, headwaySecs, exactTimes));
+            return toReturn;
+        }
+    }
+
+    //Temporary implementation before TimeConversionUtils class implementation
+    public static Integer convertHHMMSSToIntFromNoonOfDayOfService(final String timeAsString) {
+        if (timeAsString != null && timeAsString.matches("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]")) {
+            final String[] timeStringSplit = timeAsString.split(":");
+            try {
+                final int hourValue = Integer.parseInt(timeStringSplit[0]);
+                final int minuteValue = Integer.parseInt(timeStringSplit[1]);
+                final int secondValue = Integer.parseInt(timeStringSplit[2]);
+                // Converting time to an Integer value representing number of seconds
+                final int timeValueAsInt = hourValue * 3600 + minuteValue * 60 + secondValue;
+                // Setting noon as point zero, subtracting 12 * 3600 seconds
+                return timeValueAsInt - (12 * 3600);
+            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 
