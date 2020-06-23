@@ -651,12 +651,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the map of shape points from shapes.txt related to the id provided as parameter; which represents a
-     * shape object. The returned map is ordered by shape_pt_sequence.
+     * Return an immutable map of shape points from shapes.txt related to the id provided as parameter; which represents
+     * a shape object. The returned map is ordered by shape_pt_sequence.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return  the map of shape points from shapes.txt related to the id provided as parameter; which represents
-     * a shape object. The returned map is ordered by shape_pt_sequence.
+     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * represents a shape object. The returned map is ordered by shape_pt_sequence.
      */
     @Override
     public Map<Integer, ShapePoint> getShapeById(final String shapeId) {
