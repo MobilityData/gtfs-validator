@@ -95,11 +95,11 @@ public interface GtfsDataRepository {
     StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException;
 
     /**
-     * Return the collection of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
-     * The returned collection is ordered by stop_sequence
+     * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
+     * The returned map is ordered by stop_sequence
      *
      * @param tripId  identifies a trip
-     * @return  the StopTime representing a row from stop_times.txt related to the trip_id provided as parameter
+     * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     Map<Integer, StopTime> getStopTimeByTripId(final String tripId);
 }
