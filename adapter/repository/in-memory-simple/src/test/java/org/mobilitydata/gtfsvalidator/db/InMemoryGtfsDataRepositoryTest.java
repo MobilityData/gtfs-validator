@@ -82,6 +82,38 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void callToGetAgencyAllShouldReturnAgencyCollection() {
+        final Agency mockAgency00 = mock(Agency.class);
+        when(mockAgency00.getAgencyId()).thenReturn("agency id0");
+        final Agency mockAgency01 = mock(Agency.class);
+        when(mockAgency01.getAgencyId()).thenReturn("agency id1");
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addAgency(mockAgency00);
+        underTest.addAgency(mockAgency01);
+
+        final Collection<Agency> toCheck = underTest.getAgencyAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.contains(mockAgency00));
+        assertTrue(toCheck.contains(mockAgency01));
+    }
+
+    @Test
+    void getAgencyCountShouldReturnExactNumberOfAgenciesInDataRepo() {
+        final Agency mockAgency00 = mock(Agency.class);
+        when(mockAgency00.getAgencyId()).thenReturn("agency id0");
+        final Agency mockAgency01 = mock(Agency.class);
+        when(mockAgency01.getAgencyId()).thenReturn("agency id1");
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        assertEquals(0, underTest.getAgencyCount());
+        underTest.addAgency(mockAgency00);
+        assertEquals(1, underTest.getAgencyCount());
+        underTest.addAgency(mockAgency01);
+        assertEquals(2, underTest.getAgencyCount());
+    }
+
+    @Test
     void callToAddRouteShouldAddRouteToRepoAndReturnEntity() {
         final Route mockRoute = mock(Route.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();

@@ -28,6 +28,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.*;
 
 /**
@@ -136,6 +138,26 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Agency getAgencyById(final String agencyId) {
         return agencyPerId.get(agencyId);
+    }
+
+    /**
+     * Return an immutable collection of Agency objects representing all the rows from agency.txt
+     *
+     * @return a immutable collection of Agency objects representing all the rows from agency.txt
+     */
+    @Override
+    public Collection<Agency> getAgencyAll() {
+        return Collections.unmodifiableCollection(agencyPerId.values());
+    }
+
+    /**
+     * Return the number of {@link Agency} contained in this {@link GtfsDataRepository}
+     *
+     * @return the number of {@link Agency} contained in this {@link GtfsDataRepository}
+     */
+    @Override
+    public int getAgencyCount() {
+        return agencyPerId.size();
     }
 
     /**
@@ -422,7 +444,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the FeedInfo representing a row from feed_info.txt related to the name provided as parameter
      *
      * @param feedPublisherName the key from feed_info.txt related to the FeedInfo to be returned
-     * @return the eedInfo representing a row from feed_info.txt related to the name provided as parameter
+     * @return the feedInfo representing a row from feed_info.txt related to the name provided as parameter
      */
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {

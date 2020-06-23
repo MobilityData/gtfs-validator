@@ -482,6 +482,40 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final MissingAgencyIdNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setValue(toExport.getFieldName())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final InconsistentAgencyTimezoneNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_AGENCIES_WITH_DIFFERENT_TIMEZONES)
+                .setValue(toExport.getFieldName())
+                .setEntityId(toExport.getConflictingTimezoneCollection())
+                .setEntityValue(String.valueOf(toExport.getDistinctTimezoneCount()))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final InvalidAgencyIdNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setValue(toExport.getFieldName())
+                .setEntityValue(String.valueOf(toExport.getEntityId()))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();
