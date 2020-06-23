@@ -121,7 +121,6 @@ All records of file `agency.txt` should have a non-null value for field [agency_
 
 All records of file `agency.txt` should have the same value for field `agency_timezone` [agency_id](https://gtfs.org/reference/static/#agencytxt) when this file counts more than one record.
 
-
 <a name="E031"/>
 
 ### E031 - Invalid `agency_id` 
