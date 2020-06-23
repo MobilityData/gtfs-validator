@@ -137,9 +137,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return a collection of Agency objects representing all the rows from agency.txt
+     * Return an immutable collection of Agency objects representing all the rows from agency.txt
      *
-     * @return a collection of Agency objects representing all the rows from agency.txt
+     * @return a immutable collection of Agency objects representing all the rows from agency.txt
      */
     @Override
     public Collection<Agency> getAgencyAll() {
