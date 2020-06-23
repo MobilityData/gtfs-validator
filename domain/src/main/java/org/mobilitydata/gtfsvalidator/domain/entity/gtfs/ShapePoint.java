@@ -192,8 +192,6 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             // suppressed warning regarding nullability of fields shapePtLat, shapePtLon, and shapePtSequence since
             // these fields could be provided as null values
             //noinspection ConstantConditions to avoid lint
@@ -232,12 +230,13 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
             }
         }
 
-        public ShapeBuilder clearFieldAll() {
+        public ShapeBuilder clear() {
             shapeId = null;
             shapePtLat = null;
             shapePtLon = null;
             shapePtSequence = null;
             shapeDistTraveled = null;
+            noticeCollection.clear();
             return this;
         }
     }
