@@ -163,8 +163,6 @@ public class FareRule extends GtfsEntity {
          * official GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             if (fareId == null) {
                 noticeCollection.add(new MissingRequiredValueNotice("fare_rules.txt", "fare_id",
                         fareId));
@@ -172,6 +170,20 @@ public class FareRule extends GtfsEntity {
             } else {
                 return new EntityBuildResult<>(new FareRule(fareId, routeId, originId, destinationId, containsId));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public FareRuleBuilder clear() {
+            fareId = null;
+            routeId = null;
+            originId = null;
+            destinationId = null;
+            containsId = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 
