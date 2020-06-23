@@ -67,7 +67,8 @@ public class ProcessParsedStopTime {
         final Float shapeDistTraveled = (Float) validatedParsedStopTime.get("shape_dist_traveled");
         final Integer timepoint = (Integer) validatedParsedStopTime.get("timepoint");
 
-        builder.tripId(tripId)
+        builder.clear()
+                .tripId(tripId)
                 .arrivalTime(arrivalTime)
                 .departureTime(departureTime)
                 .stopId(stopId)

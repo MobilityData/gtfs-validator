@@ -358,7 +358,6 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
          *                                  is set as {@link Timepoint#EXACT_TIMES}
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
             if (tripId == null || stopId == null ||
                     (timepoint == Timepoint.EXACT_TIMES && (arrivalTime == null || departureTime == null)) ||
                     pickupType == null || dropOffType == null || continuousPickup == null ||
@@ -429,6 +428,32 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
                         stopHeadsign, pickupType, dropOffType, continuousPickup, continuousDropOff, shapeDistTraveled,
                         timepoint));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public StopTimeBuilder clear() {
+            tripId = null;
+            arrivalTime = null;
+            departureTime = null;
+            stopId = null;
+            stopSequence = null;
+            stopHeadsign = null;
+            pickupType = null;
+            originalPickupType = null;
+            dropOffType = null;
+            originalDropOffType = null;
+            continuousPickup = null;
+            originalContinuousPickup = null;
+            continuousDropOff = null;
+            originalContinuousDropOff = null;
+            shapeDistTraveled = null;
+            timepoint = null;
+            originalTimepoint = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 

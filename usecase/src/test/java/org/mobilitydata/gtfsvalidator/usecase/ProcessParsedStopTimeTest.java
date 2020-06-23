@@ -85,6 +85,7 @@ class ProcessParsedStopTimeTest {
         verify(mockParsedEntity, times(1)).get(ArgumentMatchers.eq("shape_dist_traveled"));
         verify(mockParsedEntity, times(1)).get(ArgumentMatchers.eq("timepoint"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).tripId(ArgumentMatchers.eq("trip_id"));
         verify(mockBuilder, times(1)).arrivalTime(ArgumentMatchers.eq(34));
         verify(mockBuilder, times(1)).departureTime(ArgumentMatchers.eq(45));
@@ -158,6 +159,7 @@ class ProcessParsedStopTimeTest {
         verify(mockParsedEntity, times(1)).get(ArgumentMatchers.eq("shape_dist_traveled"));
         verify(mockParsedEntity, times(1)).get(ArgumentMatchers.eq("timepoint"));
 
+        verify(mockBuilder, times(1)).clear();
         // parameter of method .tripId is annotated as non null, for the purpose of this test, we suppress the
         // warning resulting form passing null value to method.
         //noinspection ConstantConditions
@@ -237,6 +239,7 @@ class ProcessParsedStopTimeTest {
         verify(mockParsedEntity, times(1)).get(ArgumentMatchers.eq("shape_dist_traveled"));
         verify(mockParsedEntity, times(1)).get(ArgumentMatchers.eq("timepoint"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).tripId(ArgumentMatchers.eq("trip_id"));
         verify(mockBuilder, times(1)).arrivalTime(ArgumentMatchers.eq(34));
         verify(mockBuilder, times(1)).departureTime(ArgumentMatchers.eq(45));
