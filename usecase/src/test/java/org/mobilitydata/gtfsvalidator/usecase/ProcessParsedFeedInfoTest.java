@@ -91,6 +91,7 @@ class ProcessParsedFeedInfoTest {
         verify(mockParsedFeedInfo, times(1)).get(ArgumentMatchers.eq(FEED_CONTACT_EMAIL));
         verify(mockParsedFeedInfo, times(1)).get(ArgumentMatchers.eq(FEED_CONTACT_URL));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1))
                 .feedPublisherName(ArgumentMatchers.eq(FEED_PUBLISHER_NAME));
         verify(mockBuilder, times(1)).feedPublisherUrl(ArgumentMatchers.eq(FEED_PUBLISHER_URL));
@@ -156,6 +157,7 @@ class ProcessParsedFeedInfoTest {
         verify(mockParsedFeedInfo, times(1)).get(ArgumentMatchers.eq(FEED_CONTACT_EMAIL));
         verify(mockParsedFeedInfo, times(1)).get(ArgumentMatchers.eq(FEED_CONTACT_URL));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1))
                 .feedPublisherName(ArgumentMatchers.eq(FEED_PUBLISHER_NAME));
         verify(mockBuilder, times(1)).feedPublisherUrl(ArgumentMatchers.eq(FEED_PUBLISHER_URL));
@@ -219,6 +221,7 @@ class ProcessParsedFeedInfoTest {
 
         verify(mockGtfsDataRepo, times(1)).addFeedInfo(ArgumentMatchers.eq(mockFeedInfo));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1))
                 .feedPublisherName(ArgumentMatchers.eq(FEED_PUBLISHER_NAME));
         verify(mockBuilder, times(1)).feedPublisherUrl(ArgumentMatchers.eq(FEED_PUBLISHER_URL));

@@ -230,8 +230,6 @@ public class Agency extends GtfsEntity {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
 
                 if (agencyName == null) {
@@ -251,6 +249,23 @@ public class Agency extends GtfsEntity {
                 return new EntityBuildResult<>(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
                         agencyPhone, agencyFareUrl, agencyEmail));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public AgencyBuilder clear() {
+            agencyId = null;
+            agencyName = null;
+            agencyUrl = null;
+            agencyTimezone = null;
+            agencyLang = null;
+            agencyPhone = null;
+            agencyFareUrl = null;
+            agencyEmail = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }

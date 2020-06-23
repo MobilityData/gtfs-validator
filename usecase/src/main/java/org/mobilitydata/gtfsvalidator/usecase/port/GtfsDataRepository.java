@@ -78,6 +78,13 @@ public interface GtfsDataRepository {
 
     Pathway getPathwayById(final String pathwayId);
 
+    Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException;
+
+    Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
+                               final String tripId, final String organizationName, final boolean isProducer,
+                               final boolean isOperator, final boolean isAuthority, final String attributionUrl,
+                               final String attributionEmail, final String attributionPhone);
+
     /**
      * Add a {@link ShapePoint} to a shape. A shape is a list of{@link ShapePoint} whereas a {@link ShapePoint}
      * represents a row from shapes.txt to this. Return the entity added to the repository if the entity was

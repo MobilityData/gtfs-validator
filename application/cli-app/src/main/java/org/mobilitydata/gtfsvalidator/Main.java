@@ -73,6 +73,7 @@ public class Main {
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
                 final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
+                final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
                 final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
 
                 // base validation + build gtfs entities
@@ -107,6 +108,10 @@ public class Main {
                                 }
                                 case "levels.txt": {
                                     processParsedLevel.execute(parsedEntity);
+                                    break;
+                                }
+                                case "attributions.txt": {
+                                    processParsedAttribution.execute(parsedEntity);
                                     break;
                                 }
                                 case "calendar.txt": {
