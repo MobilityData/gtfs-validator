@@ -63,7 +63,8 @@ public class ProcessParsedAgency {
         final String agencyFareUrl = (String) validatedAgencyEntity.get("agency_fare_url");
         final String agencyEmail = (String) validatedAgencyEntity.get("agency_email");
 
-        builder.agencyId(agencyId)
+        builder.clear()
+                .agencyId(agencyId)
                 .agencyName(agencyName)
                 .agencyUrl(agencyUrl)
                 .agencyTimezone(agencyTimezone)

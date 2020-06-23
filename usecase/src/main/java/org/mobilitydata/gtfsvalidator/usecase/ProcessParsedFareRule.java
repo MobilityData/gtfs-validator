@@ -60,7 +60,8 @@ public class ProcessParsedFareRule {
         final String destinationId = (String) validatedParsedFareRuleEntity.get("destination_id");
         final String containsId = (String) validatedParsedFareRuleEntity.get("contains_id");
 
-        builder.fareId(fareId)
+        builder.clear()
+                .fareId(fareId)
                 .routeId(routeId)
                 .originId(originId)
                 .destinationId(destinationId)

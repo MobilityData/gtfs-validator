@@ -147,8 +147,6 @@ public class Transfer extends GtfsEntity {
          * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues,
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             if (fromStopId == null || toStopId == null || transferType == null ||
                     (minTransferTime != null && minTransferTime < 0)) {
 
@@ -175,6 +173,20 @@ public class Transfer extends GtfsEntity {
             } else {
                 return new EntityBuildResult<>(new Transfer(fromStopId, toStopId, transferType, minTransferTime));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public TransferBuilder clear() {
+            fromStopId = null;
+            toStopId = null;
+            transferType = null;
+            originalTransferTypeInteger = null;
+            minTransferTime = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }
