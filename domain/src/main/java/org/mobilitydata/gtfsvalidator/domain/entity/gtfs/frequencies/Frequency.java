@@ -151,7 +151,7 @@ public class Frequency extends GtfsEntity {
         }
 
         public EntityBuildResult<?> build() {
-            EntityBuildResult<?> toReturn;
+            noticeCollection.clear();
             if (tripId == null || startTime == null || endTime == null || headwaySecs == null ||
                     headwaySecs < 0 || exactTimes == null) {
 
@@ -184,12 +184,9 @@ public class Frequency extends GtfsEntity {
                     noticeCollection.add(new UnexpectedEnumValueNotice("frequencies.txt",
                             "exact_times", tripId, originalExactTimes));
                 }
-                toReturn = new EntityBuildResult<>(noticeCollection);
-                noticeCollection.clear();
-            } else {
-                toReturn = new EntityBuildResult<>(new Frequency(tripId, startTime, endTime, headwaySecs, exactTimes));
+                return new EntityBuildResult<>(noticeCollection);
             }
-            return toReturn;
+            return new EntityBuildResult<>(new Frequency(tripId, startTime, endTime, headwaySecs, exactTimes));
         }
     }
 
