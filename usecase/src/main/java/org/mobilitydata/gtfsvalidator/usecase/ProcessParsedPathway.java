@@ -67,7 +67,7 @@ public class ProcessParsedPathway {
         final String signpostedAs = (String) validatedParsedPathway.get("signposted_as");
         final String reversedSignpostedAs = (String) validatedParsedPathway.get("reserved_signposted_as");
 
-        builder.clearFieldAll()
+        builder.clear()
                 .pathwayId(pathwayId)
                 .fromStopId(fromStopId)
                 .toStopId(toStopId)

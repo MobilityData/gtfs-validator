@@ -59,7 +59,7 @@ public class ProcessParsedCalendarDate {
         final LocalDate date = (LocalDate) validatedParsedRoute.get("date");
         final Integer exceptionType = (Integer) validatedParsedRoute.get("exception_type");
 
-        builder.clearFieldAll()
+        builder.clear()
                 .serviceId(serviceId)
                 .date(date)
                 .exceptionType(exceptionType);

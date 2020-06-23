@@ -92,7 +92,7 @@ class ProcessParsedCalendarTest {
         verify(mockParsedCalendar, times(1)).get(START_DATE);
         verify(mockParsedCalendar, times(1)).get(END_DATE);
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).monday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).tuesday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).wednesday(ArgumentMatchers.eq(0));
@@ -158,7 +158,7 @@ class ProcessParsedCalendarTest {
         verify(mockParsedCalendar, times(1)).get(START_DATE);
         verify(mockParsedCalendar, times(1)).get(END_DATE);
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).monday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).tuesday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).wednesday(ArgumentMatchers.eq(0));
@@ -224,7 +224,7 @@ class ProcessParsedCalendarTest {
 
         verify(mockGtfsDataRepo, times(1)).addCalendar(ArgumentMatchers.eq(mockCalendar));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).monday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).tuesday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).wednesday(ArgumentMatchers.eq(0));

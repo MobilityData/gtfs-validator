@@ -65,7 +65,7 @@ public class ProcessParsedRoute {
         final String routeTextColor = (String) validatedParsedRoute.get("route_text_color");
         final Integer routeSortOrder = (Integer) validatedParsedRoute.get("route_sort_order");
 
-        builder.clearFieldAll()
+        builder.clear()
                 .routeId(routeId)
                 .agencyId(agencyId)
                 .routeShortName(routeShortName)

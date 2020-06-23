@@ -255,7 +255,7 @@ public class Agency extends GtfsEntity {
          * Method to reset all fields of builder. Returns builder with all fields set to null.
          * @return builder with all fields set to null;
          */
-        public AgencyBuilder clearFieldAll() {
+        public AgencyBuilder clear() {
             agencyId = null;
             agencyName = null;
             agencyUrl = null;

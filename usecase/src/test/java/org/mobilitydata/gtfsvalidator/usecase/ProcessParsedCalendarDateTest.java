@@ -58,7 +58,7 @@ class ProcessParsedCalendarDateTest {
         verify(mockParsedCalendarDate, times(1))
                 .get(ArgumentMatchers.eq("exception_type"));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).serviceId(ArgumentMatchers.eq("service_id"));
         verify(mockBuilder, times(1)).date(ArgumentMatchers.eq(date));
         verify(mockBuilder, times(1)).exceptionType(ArgumentMatchers.eq(1));
@@ -111,7 +111,7 @@ class ProcessParsedCalendarDateTest {
         verify(mockParsedCalendarDate, times(1))
                 .get(ArgumentMatchers.eq("exception_type"));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).serviceId(ArgumentMatchers.eq("service_id"));
         verify(mockBuilder, times(1)).date(ArgumentMatchers.eq(date));
         verify(mockBuilder, times(1)).exceptionType(ArgumentMatchers.eq(1));
@@ -164,7 +164,7 @@ class ProcessParsedCalendarDateTest {
         verify(mockGtfsDataRepo, times(1))
                 .addCalendarDate(ArgumentMatchers.eq(mockCalendarDate));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).serviceId(ArgumentMatchers.eq("service_id"));
         verify(mockBuilder, times(1)).date(ArgumentMatchers.eq(date));
         verify(mockBuilder, times(1)).exceptionType(ArgumentMatchers.eq(1));

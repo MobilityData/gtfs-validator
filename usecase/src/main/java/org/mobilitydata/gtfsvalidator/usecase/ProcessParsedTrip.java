@@ -65,7 +65,7 @@ public class ProcessParsedTrip {
         final Integer wheelchairAccessible = (Integer) validatedTripEntity.get("wheelchair_accessible");
         final Integer bikesAllowed = (Integer) validatedTripEntity.get("bikes_allowed");
 
-        builder.clearFieldAll()
+        builder.clear()
                 .routeId(routeId)
                 .serviceId(serviceId)
                 .tripId(tripId)

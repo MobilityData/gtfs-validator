@@ -85,7 +85,7 @@ class ProcessParsedAgencyTest {
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).agencyId(anyString());
         verify(mockBuilder, times(1)).agencyName(anyString());
         verify(mockBuilder, times(1)).agencyUrl(anyString());
@@ -144,7 +144,7 @@ class ProcessParsedAgencyTest {
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).agencyId(AGENCY_ID);
         verify(mockBuilder, times(1)).agencyName(AGENCY_NAME);
         verify(mockBuilder, times(1)).agencyUrl(AGENCY_URL);
@@ -212,7 +212,7 @@ class ProcessParsedAgencyTest {
 
         verify(mockGtfsDataRepo, times(1)).addAgency(ArgumentMatchers.isA(Agency.class));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).agencyId(anyString());
         verify(mockBuilder, times(1)).agencyName(anyString());
         verify(mockBuilder, times(1)).agencyUrl(anyString());

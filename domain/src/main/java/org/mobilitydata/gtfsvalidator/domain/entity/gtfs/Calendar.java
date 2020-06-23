@@ -436,7 +436,7 @@ public class Calendar extends GtfsEntity {
          * Method to reset all fields of builder. Returns builder with all fields set to null.
          * @return builder with all fields set to null;
          */
-        public CalendarBuilder clearFieldAll() {
+        public CalendarBuilder clear() {
             serviceId = null;
             monday = null;
             originalMondayInteger = null;

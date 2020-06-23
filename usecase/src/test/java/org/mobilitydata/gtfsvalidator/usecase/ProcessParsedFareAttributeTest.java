@@ -89,7 +89,7 @@ class ProcessParsedFareAttributeTest {
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFER_DURATION));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
         verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
         verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
@@ -153,7 +153,7 @@ class ProcessParsedFareAttributeTest {
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFER_DURATION));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
         verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
@@ -218,7 +218,7 @@ class ProcessParsedFareAttributeTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedFareAttribute, times(1)).getEntityId();
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
         verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
         verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));

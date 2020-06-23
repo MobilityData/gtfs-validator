@@ -88,7 +88,7 @@ class ProcessParsedPathwayTest {
         inOrder.verify(mockParsedPathway, times(1))
                 .get(ArgumentMatchers.eq(RESERVED_SIGNPOSTED_AS));
 
-        inOrder.verify(mockBuilder, times(1)).clearFieldAll();
+        inOrder.verify(mockBuilder, times(1)).clear();
         inOrder.verify(mockBuilder, times(1)).pathwayId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         inOrder.verify(mockBuilder, times(1)).fromStopId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         inOrder.verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq(STRING_TEST_VALUE));
@@ -163,7 +163,7 @@ class ProcessParsedPathwayTest {
         verify(mockParsedPathway, times(1)).get(ArgumentMatchers.eq(SIGNPOSTED_AS));
         verify(mockParsedPathway, times(1)).get(ArgumentMatchers.eq(RESERVED_SIGNPOSTED_AS));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).pathwayId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).fromStopId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq(STRING_TEST_VALUE));
@@ -243,7 +243,7 @@ class ProcessParsedPathwayTest {
 
         verify(mockGtfsDataRepo, times(1)).addPathway(ArgumentMatchers.eq(mockPathway));
 
-        verify(mockBuilder, times(1)).clearFieldAll();
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).pathwayId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).fromStopId(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq(STRING_TEST_VALUE));
