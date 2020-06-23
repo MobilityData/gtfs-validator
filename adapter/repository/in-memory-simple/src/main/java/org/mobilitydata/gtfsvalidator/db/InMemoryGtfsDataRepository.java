@@ -28,6 +28,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -142,7 +143,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public Collection<Agency> getAgencyAll() {
-        return agencyPerId.values();
+        return Collections.unmodifiableCollection(agencyPerId.values());
     }
 
     /**
