@@ -33,6 +33,23 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
         putNoticeSpecific(KEY_ENUM_VALUE, enumValue);
     }
 
+    public UnexpectedEnumValueNotice(final String filename, final String fieldName,
+                                     final Integer enumValue, final String compositeKeyFirstPart,
+                                     final String compositeKeySecondPart, final Object compositeKeyFirstValue,
+                                     final Object compositeKeySecondValue) {
+        super(filename, E_021,
+                "Unexpected enum value",
+                "Invalid value :`" + enumValue + "` - for field:`" + fieldName + "` in file:`" + filename +
+                        "` for entity with composite id:`" + compositeKeyFirstValue + "`+`" + compositeKeySecondPart
+                        + "`" , null);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_ENUM_VALUE, enumValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+    }
+
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);

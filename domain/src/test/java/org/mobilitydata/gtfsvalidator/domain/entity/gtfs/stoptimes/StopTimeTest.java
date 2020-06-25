@@ -25,8 +25,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumV
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 class StopTimeTest {
@@ -76,7 +75,11 @@ class StopTimeTest {
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals("null"+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertNull(notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -112,7 +115,11 @@ class StopTimeTest {
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("stop_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(TRIP_ID+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -145,7 +152,11 @@ class StopTimeTest {
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(TRIP_ID+"null", notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertNull(notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -178,8 +189,12 @@ class StopTimeTest {
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("pickup_type", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(TRIP_ID+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
         assertEquals(4, notice.getNoticeSpecific(KEY_ENUM_VALUE));
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -212,8 +227,12 @@ class StopTimeTest {
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("drop_off_type", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(TRIP_ID+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
         assertEquals(4, notice.getNoticeSpecific(KEY_ENUM_VALUE));
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -246,8 +265,12 @@ class StopTimeTest {
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("continuous_drop_off", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(TRIP_ID+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
         assertEquals(4, notice.getNoticeSpecific(KEY_ENUM_VALUE));
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -280,8 +303,12 @@ class StopTimeTest {
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("continuous_pickup", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(TRIP_ID+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
         assertEquals(4, notice.getNoticeSpecific(KEY_ENUM_VALUE));
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -314,10 +341,14 @@ class StopTimeTest {
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("shape_dist_traveled", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(TRIP_ID+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
         assertEquals(0f, notice.getNoticeSpecific(KEY_RANGE_MIN));
         assertEquals(Float.MAX_VALUE, notice.getNoticeSpecific(KEY_RANGE_MAX));
         assertEquals(-3f, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -371,8 +402,12 @@ class StopTimeTest {
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("timepoint", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(TRIP_ID+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
         assertEquals(5, notice.getNoticeSpecific(KEY_ENUM_VALUE));
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -406,7 +441,11 @@ class StopTimeTest {
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("arrival_time", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("timepoint", notice.getNoticeSpecific(KEY_CONFLICTING_FIELD_NAME));
-        assertEquals(TRIP_ID+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -440,7 +479,11 @@ class StopTimeTest {
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("departure_time", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("timepoint", notice.getNoticeSpecific(KEY_CONFLICTING_FIELD_NAME));
-        assertEquals(TRIP_ID+STOP_SEQUENCE, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(TRIP_ID, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(STOP_SEQUENCE, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 

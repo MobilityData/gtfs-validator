@@ -33,6 +33,24 @@ public class IllegalFieldValueCombination extends ErrorNotice {
         putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
     }
 
+    public IllegalFieldValueCombination(final String filename, final String fieldName,
+                                        final String conflictingFieldName, final String compositeKeyFirstPart,
+                                        final String compositeKeySecondPart, final Object compositeKeyFirstValue,
+                                        final Object compositeKeySecondValue) {
+        super(filename, E_019,
+                "Conflicting field values",
+                "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
+                        + "` for entity with composite id: " + System.lineSeparator() +
+                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + System.lineSeparator() +
+                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`" + System.lineSeparator(),
+                null);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+    }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {

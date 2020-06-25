@@ -365,62 +365,60 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
                     timepoint == null || stopSequence == null) {
                 if (tripId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stop_times.txt", "trip_id",
-                            getStopTimeMappingKey(tripId, stopSequence)));
+                            "trip_id", "stop_sequence", tripId, stopSequence));
                 }
                 if (timepoint == Timepoint.EXACT_TIMES) {
                     if (arrivalTime == null) {
                         noticeCollection.add((new IllegalFieldValueCombination("stop_times.txt",
-                                "arrival_time", "timepoint",
-                                getStopTimeMappingKey(tripId, stopSequence)
-                                )));
+                                "arrival_time", "timepoint", "trip_id",
+                                "stop_sequence", tripId, stopSequence)));
                     }
                     if (departureTime == null) {
                         noticeCollection.add((new IllegalFieldValueCombination("stop_times.txt",
                                 "departure_time", "timepoint",
-                                getStopTimeMappingKey(tripId, stopSequence))));
+                                "trip_id", "stop_sequence", tripId,
+                                stopSequence)));
+
                     }
                 }
                 if (stopId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stop_times.txt", "stop_id",
-                            getStopTimeMappingKey(tripId, stopSequence)));
+                            "trip_id", "stop_sequence", tripId, stopSequence));
                 }
                 if (stopSequence == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stop_times.txt",
-                            "stop_sequence",
-                            getStopTimeMappingKey(tripId, stopSequence)));
+                            "stop_sequence","trip_id",
+                            "stop_sequence", tripId, stopSequence));
                 }
                 if (pickupType == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("stop_times.txt", "pickup_type",
-                            getStopTimeMappingKey(tripId, stopSequence),
-                            originalPickupType));
+                            originalPickupType,"trip_id", "stop_sequence",
+                            tripId, stopSequence));
                 }
                 if (dropOffType == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("stop_times.txt", "drop_off_type",
-                            getStopTimeMappingKey(tripId, stopSequence),
-                            originalDropOffType));
+                            originalDropOffType, "trip_id", "stop_sequence",
+                            tripId, stopSequence));
                 }
                 if (continuousPickup == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("stop_times.txt",
-                            "continuous_pickup",
-                            getStopTimeMappingKey(tripId, stopSequence),
-                            originalContinuousPickup));
+                            "continuous_pickup", originalContinuousPickup, "trip_id",
+                            "stop_sequence", tripId, stopSequence));
                 }
                 if (continuousDropOff == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("stop_times.txt",
-                            "continuous_drop_off",
-                            getStopTimeMappingKey(tripId, stopSequence),
-                            originalContinuousDropOff));
+                            "continuous_drop_off", originalContinuousDropOff, "trip_id",
+                            "stop_sequence", tripId, stopSequence));
                 }
                 if (shapeDistTraveled != null && shapeDistTraveled < 0){
                     noticeCollection.add(new FloatFieldValueOutOfRangeNotice("stop_times.txt",
-                            "shape_dist_traveled",
-                            getStopTimeMappingKey(tripId, stopSequence),
-                            0, Float.MAX_VALUE, shapeDistTraveled));
+                            "shape_dist_traveled", 0, Float.MAX_VALUE, shapeDistTraveled,
+                            "trip_id", "stop_sequence", tripId, stopSequence));
                 }
                 if (timepoint == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("stop_times.txt", "timepoint",
-                            getStopTimeMappingKey(tripId, stopSequence),
-                            originalTimepoint));
+                           originalTimepoint, "trip_id", "stop_sequence",
+                            tripId, stopSequence));
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {

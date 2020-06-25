@@ -23,13 +23,30 @@ import java.io.IOException;
 
 public class MissingRequiredValueNotice extends ErrorNotice {
 
-    public MissingRequiredValueNotice(String filename, String fieldName, String entityId) {
+    public MissingRequiredValueNotice(final String filename, final String fieldName, final String entityId) {
         super(filename, E_015,
                 "Missing required value",
                 "Missing value for field:`" + fieldName
                         + "` marked as required in entity with id:`" + entityId + "`",
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+    }
+
+    public MissingRequiredValueNotice(final String filename, final String fieldName,
+                                      final String compositeKeyFirstPart, final String compositeKeySecondPart,
+                                      final Object compositeKeyFirstValue, final Object compositeKeySecondValue) {
+        super(filename, E_015,
+                "Missing required value",
+                "Missing value for field:`" + fieldName
+                        + "` marked as required in entity with composite id: " + System.lineSeparator() +
+                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + System.lineSeparator() +
+                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`" + System.lineSeparator(),
+                null);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
     }
 
     @Override

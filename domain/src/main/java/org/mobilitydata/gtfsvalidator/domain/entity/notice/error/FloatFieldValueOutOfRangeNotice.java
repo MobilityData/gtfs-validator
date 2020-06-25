@@ -24,12 +24,12 @@ import java.io.IOException;
 public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
 
     public FloatFieldValueOutOfRangeNotice(
-            String filename,
-            String fieldName,
-            String entityId,
-            float rangeMin,
-            float rangeMax,
-            float actualValue) {
+            final String filename,
+            final String fieldName,
+            final String entityId,
+            final float rangeMin,
+            final float rangeMax,
+            final float actualValue) {
         super(filename, E_011,
                 "Out of range float value",
                 "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
@@ -39,6 +39,34 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
         putNoticeSpecific(KEY_RANGE_MAX, rangeMax);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_ACTUAL_VALUE, actualValue);
+    }
+
+    public FloatFieldValueOutOfRangeNotice(
+            final String filename,
+            final String fieldName,
+            final float rangeMin,
+            final float rangeMax,
+            final float actualValue,
+            final String compositeKeyFirstPart,
+            final String compositeKeySecondPart,
+            final Object compositeKeyFirstValue,
+            final Object compositeKeySecondValue) {
+        super(filename, E_011,
+                "Out of range float value",
+                "Invalid value for field:`" + fieldName + "` of entity with composite id: " +
+                        System.lineSeparator() +
+                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + System.lineSeparator() +
+                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`" + System.lineSeparator() +
+                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                null);
+        putNoticeSpecific(KEY_RANGE_MIN, rangeMin);
+        putNoticeSpecific(KEY_RANGE_MAX, rangeMax);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_ACTUAL_VALUE, actualValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
     }
 
     @Override
