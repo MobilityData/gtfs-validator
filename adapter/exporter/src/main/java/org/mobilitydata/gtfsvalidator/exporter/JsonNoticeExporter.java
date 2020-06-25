@@ -246,4 +246,9 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final InvalidAgencyIdNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final NonExistingRouteIdNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

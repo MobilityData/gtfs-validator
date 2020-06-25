@@ -34,6 +34,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E030](#E030) | Inconsistent field `agency_timezone` | 
 | [E031](#E031) | Invalid `agency_id` | 
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
+| [E032](#E033) | Reference to non-existing `route_id` in `trips.txt` |
 
 ### Table of Warnings
 
@@ -132,6 +133,12 @@ When provided field `agency_id` should not be blank.
 ### E032 - `calendar.txt` `end_date` is before `start_date`
 
 In `calendar.txt`, the `end_date` of a service record must not be earlier than the `start_date`.
+
+<a name="E033"/>
+
+### E033 - Reference to non-existing `route_id` in `trips.txt`
+
+Each record of `trips.txt` should refer to an existing record of `routes.txt` by its `route_id`.
 
 #### References:
 * [calendar.txt specification](https://gtfs.org/reference/static/#calendartxt)

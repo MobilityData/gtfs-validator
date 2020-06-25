@@ -262,4 +262,8 @@ public class DefaultConfig {
     public ValidateAgenciesHaveSameAgencyTimezone validateAgenciesHaveSameAgencyTimezone() {
         return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
     }
+
+    public ValidateTripRouteId validateTripRouteId() {
+        return new ValidateTripRouteId(gtfsDataRepository, resultRepo, logger);
+    }
 }

@@ -46,6 +46,7 @@ public abstract class Notice {
     public static final String KEY_EXTRA_HEADER_NAME = "extraHeaderName";
     public static final String KEY_CONTRAST_RATIO = "contrastRatio";
     public static final String KEY_SHORT_NAME_LENGTH = "shortNameLength";
+    public static final String KEY_ROUTE_ID = "invalidRouteId";
 
     private final String filename;
     private final int code;

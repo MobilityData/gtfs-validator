@@ -60,6 +60,8 @@ public interface GtfsDataRepository {
 
     Trip getTripById(final String tripId);
 
+    Collection<Trip> getTripAll();
+
     Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 
     Transfer getTransferByStopPair(final String fromStopId, final String toStopId);
