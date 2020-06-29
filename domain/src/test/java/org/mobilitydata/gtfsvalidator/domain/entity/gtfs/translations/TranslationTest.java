@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombinationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
@@ -182,8 +182,8 @@ class TranslationTest {
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
         // we do not need to cast check
         //noinspection unchecked
-        final List<IllegalFieldValueCombination> toCheck =
-                (List<IllegalFieldValueCombination>) entityBuildResult.getData();
+        final List<IllegalFieldValueCombinationNotice> toCheck =
+                (List<IllegalFieldValueCombinationNotice>) entityBuildResult.getData();
         assertEquals(1, toCheck.size());
         assertEquals(FILENAME, toCheck.get(0).getFilename());
         assertEquals(ENTITY_ID, toCheck.get(0).getEntityId());
@@ -207,7 +207,7 @@ class TranslationTest {
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
         // we do not need to cast check
         //noinspection unchecked
-        List<IllegalFieldValueCombination> toCheck = (List<IllegalFieldValueCombination>) entityBuildResult.getData();
+        List<IllegalFieldValueCombinationNotice> toCheck = (List<IllegalFieldValueCombinationNotice>) entityBuildResult.getData();
         assertEquals(1, toCheck.size());
         assertEquals(FILENAME, toCheck.get(0).getFilename());
         assertEquals(ENTITY_ID, toCheck.get(0).getEntityId());
@@ -228,7 +228,7 @@ class TranslationTest {
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
         // we do not need to cast check
         //noinspection unchecked
-        toCheck = (List<IllegalFieldValueCombination>) entityBuildResult.getData();
+        toCheck = (List<IllegalFieldValueCombinationNotice>) entityBuildResult.getData();
         assertEquals(1, toCheck.size());
         assertEquals(FILENAME, toCheck.get(0).getFilename());
         assertEquals(ENTITY_ID, toCheck.get(0).getEntityId());
@@ -252,7 +252,7 @@ class TranslationTest {
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
         // we do not need to cast check
         //noinspection unchecked
-        final List<IllegalFieldValueCombination> toCheck = (List<IllegalFieldValueCombination>) entityBuildResult.getData();
+        final List<IllegalFieldValueCombinationNotice> toCheck = (List<IllegalFieldValueCombinationNotice>) entityBuildResult.getData();
         assertEquals(1, toCheck.size());
         assertEquals(FILENAME, toCheck.get(0).getFilename());
         assertEquals(ENTITY_ID, toCheck.get(0).getEntityId());
@@ -276,7 +276,7 @@ class TranslationTest {
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
         // we do not need to cast check
         //noinspection unchecked
-        final List<IllegalFieldValueCombination> toCheck = (List<IllegalFieldValueCombination>) entityBuildResult.getData();
+        final List<IllegalFieldValueCombinationNotice> toCheck = (List<IllegalFieldValueCombinationNotice>) entityBuildResult.getData();
         assertEquals(1, toCheck.size());
         assertEquals(FILENAME, toCheck.get(0).getFilename());
         assertEquals(ENTITY_ID, toCheck.get(0).getEntityId());
@@ -300,8 +300,8 @@ class TranslationTest {
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
         // we do not need to cast check
         //noinspection unchecked
-        final List<IllegalFieldValueCombination> toCheck =
-                (List<IllegalFieldValueCombination>) entityBuildResult.getData();
+        final List<IllegalFieldValueCombinationNotice> toCheck =
+                (List<IllegalFieldValueCombinationNotice>) entityBuildResult.getData();
         assertEquals(1, toCheck.size());
         assertEquals(FILENAME, toCheck.get(0).getFilename());
         assertEquals(ENTITY_ID, toCheck.get(0).getEntityId());

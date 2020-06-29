@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombinationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
@@ -247,14 +247,14 @@ public class Translation extends GtfsEntity {
                 }
                 if (tableName==TableName.FEED_INFO) {
                     if (recordId != null) {
-                        noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
+                        noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                                 "record_id", "table_name", null,
                                 "table_name",
                                 "field_name", "language",
                                 "translation", originalTableName, fieldName, language,
                                 translation));
                     } else if (recordSubId != null){
-                        noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
+                        noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                                 "record_sub_id", "table_name", null,
                                 "table_name",
                                 "field_name", "language",
@@ -262,7 +262,7 @@ public class Translation extends GtfsEntity {
                                 translation));
                     }
                     else if (fieldValue != null) {
-                        noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
+                        noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                                 "field_value", "table_name", null,
                                 "table_name",
                                 "field_name", "language",
@@ -272,21 +272,21 @@ public class Translation extends GtfsEntity {
                 }
                 if (tableName != TableName.FEED_INFO && ((recordId != null && fieldValue != null) ||
                         (recordId == null && fieldValue == null))){
-                    noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
+                    noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                             "record_id", "field_value", null,
                             "table_name",
                             "field_name", "language",
                             "translation", originalTableName, fieldName, language, translation));
                 }
                 if (recordSubId != null && fieldValue != null) {
-                    noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
+                    noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                             "record_sub_id", "field_value", null,
                             "table_name",
                             "field_name", "language",
                             "translation", originalTableName, fieldName, language, translation));
                 }
                 if (recordSubId == null && tableName==TableName.STOP_TIMES && recordId != null) {
-                    noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
+                    noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                             "record_sub_id", "table_name", null,
                             "table_name",
                             "field_name", "language",
