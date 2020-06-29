@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /**
- * Utility class to carry out operations related to GTFS TYPE type
+ * Utility class to carry out operations related to GTFS TIME type
  */
 public class TimeConversionUtils {
     // HH:MM:SS pattern to represent time. Examples of string matching the related regexp:
