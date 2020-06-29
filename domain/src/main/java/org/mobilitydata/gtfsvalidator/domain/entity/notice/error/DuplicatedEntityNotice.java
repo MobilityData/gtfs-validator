@@ -31,6 +31,23 @@ public class DuplicatedEntityNotice extends ErrorNotice {
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
 
+    public DuplicatedEntityNotice(final String filename, final String fieldName, final String entityId,
+                                  final String compositeKeyFirstPart, final String compositeKeySecondPart,
+                                  final Object compositeKeyFirstValue, final Object compositeKeySecondValue) {
+        super(filename, E_020,
+                "Duplicate entity",
+                "Entity must be unique in file: `" + filename + "` found other entity with same value for " +
+                        "fields: " + System.lineSeparator() +
+                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + System.lineSeparator() +
+                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + System.lineSeparator() +
+                        "`.", entityId);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+    }
+
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);

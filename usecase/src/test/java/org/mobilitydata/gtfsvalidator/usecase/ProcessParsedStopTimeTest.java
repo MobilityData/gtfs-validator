@@ -32,7 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedStopTimeTest {
@@ -257,14 +258,13 @@ class ProcessParsedStopTimeTest {
         verify(mockEntityBuildResult, times(1)).isSuccess();
         // suppressed warning regarding unused result of method, since this behavior is wanted
         //noinspection ResultOfMethodCallIgnored
-        verify(mockEntityBuildResult, times(2)).getData();
+        verify(mockEntityBuildResult, times(1)).getData();
 
         verify(mockDataRepo, times(1)).addStopTime(mockStopTime);
 
         //result of method .getEntityId() is not used here, therefore removing this warning to avoid lint
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedEntity, times(1)).getEntityId();
-        verify(mockStopTime, times(1)).getStopTimeMappingKey();
 
         final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
 
@@ -273,8 +273,12 @@ class ProcessParsedStopTimeTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("stop_times.txt", noticeList.get(0).getFilename());
-        assertEquals("stop time key", noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
+        assertNull(noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
+        assertEquals("trip_id", noticeList.get(0).getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("stop_sequence", noticeList.get(0).getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals("trip_id", noticeList.get(0).getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(3, noticeList.get(0).getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
 
         verifyNoMoreInteractions(mockBuilder, mockEntityBuildResult, mockParsedEntity, mockResultRepo,
                 mockEntityBuildResult, mockDataRepo);
