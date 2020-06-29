@@ -86,7 +86,7 @@ public class ProcessParsedStopTime {
         if (stopTime.isSuccess()) {
             if (gtfsDataRepository.addStopTime((StopTime) stopTime.getData()) == null) {
                 resultRepository.addNotice(new DuplicatedEntityNotice("stop_times.txt", null,
-                        validatedParsedStopTime.getEntityId(), "trip_id",
+                        "trip_id",
                         "stop_sequence", tripId, stopSequence));
             }
         } else {

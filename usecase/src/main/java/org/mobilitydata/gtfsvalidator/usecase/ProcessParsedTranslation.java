@@ -77,7 +77,7 @@ public class ProcessParsedTranslation {
         if (translationEntity.isSuccess()) {
             if (gtfsDataRepository.addTranslation((Translation) translationEntity.getData()) == null) {
                 resultRepository.addNotice(new DuplicatedEntityNotice("translations.txt",
-                        null, validatedTranslation.getEntityId(),
+                        null,
                         "table_name",
                         "field_name", "language",
                         "translation", tableName, fieldName, language, translation));

@@ -33,6 +33,21 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
         putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
     }
 
+    /**
+     * Notice alternative constructor handling entities with no id, but with a composite key made of 4 elements
+     *
+     * @param filename                 the name of the file
+     * @param fieldName                the name of the field
+     * @param conflictingFieldName     the name of the field whose value clashes with the value contained in "fieldName"
+     * @param compositeKeyFirstPart    the "title" of the first part of the composite key
+     * @param compositeKeySecondPart   the "title" of the second part of the composite key
+     * @param compositeKeyThirdPart    the "title" of the third part of the composite key
+     * @param compositeKeyFourthPart   the "title" of the fourth part of the composite key
+     * @param compositeKeyFirstValue   the value of the first part of the composite key
+     * @param compositeKeySecondValue  the value of the second part of the composite key
+     * @param compositeKeyThirdValue   the value of the third part of the composite key
+     * @param compositeKeyFourthValue  the value of the fourth part of the composite key
+     */
     public IllegalFieldValueCombinationNotice(final String filename, final String fieldName,
                                               final String conflictingFieldName, final String entityId,
                                               final String compositeKeyFirstPart, final String compositeKeySecondPart,
@@ -58,6 +73,35 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
         putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE, compositeKeyThirdValue);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FOURTH_VALUE, compositeKeyFourthValue);
     }
+
+    /**
+     * Notice alternative constructor handling entities with no id, but with a composite key made of 2 elements
+     *
+     * @param filename                 the name of the file
+     * @param fieldName                the name of the field
+     * @param conflictingFieldName     the name of the field whose value clashes with the value contained in "fieldName"
+     * @param compositeKeyFirstPart    the "title" of the first part of the composite key
+     * @param compositeKeySecondPart   the "title" of the second part of the composite key
+     * @param compositeKeyFirstValue   the value of the first part of the composite key
+     * @param compositeKeySecondValue  the value of the second part of the composite key
+     */
+    public IllegalFieldValueCombinationNotice(final String filename, final String fieldName,
+                                        final String conflictingFieldName, final String compositeKeyFirstPart,
+                                        final String compositeKeySecondPart, final Object compositeKeyFirstValue,
+                                        final Object compositeKeySecondValue) {
+        super(filename, E_019,
+                "Conflicting field values",
+                "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
+                        + "` for entity with composite id: `" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue
+                        + "`" + "--" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`.", null);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+    }
+
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {

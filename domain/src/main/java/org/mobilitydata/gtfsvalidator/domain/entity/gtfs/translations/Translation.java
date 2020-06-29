@@ -221,7 +221,7 @@ public class Translation extends GtfsEntity {
                                 "translation", originalTableName, fieldName, language, translation));
                     } else if (!TableName.isEnumValueValid(originalTableName)){
                         noticeCollection.add(new UnexpectedEnumValueNotice("translations.txt",
-                                "table_name", null, originalTableName,
+                                "table_name", originalTableName,
                                 "table_name", "field_name",
                                 "language", "translation",
                                 originalTableName, fieldName, language, translation));

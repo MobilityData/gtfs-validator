@@ -31,7 +31,17 @@ public class DuplicatedEntityNotice extends ErrorNotice {
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
 
-    public DuplicatedEntityNotice(final String filename, final String fieldName, final String entityId,
+    /**
+     * Notice alternative constructor handling entities with no id, but with a composite key made of 2 elements
+     *
+     * @param filename                 the name of the file
+     * @param fieldName                the name of the field
+     * @param compositeKeyFirstPart    the "title" of the first part of the composite key
+     * @param compositeKeySecondPart   the "title" of the second part of the composite key
+     * @param compositeKeyFirstValue   the value of the first part of the composite key
+     * @param compositeKeySecondValue  the value of the second part of the composite key
+     */
+    public DuplicatedEntityNotice(final String filename, final String fieldName,
                                   final String compositeKeyFirstPart, final String compositeKeySecondPart,
                                   final Object compositeKeyFirstValue, final Object compositeKeySecondValue) {
         super(filename, E_020,
@@ -39,7 +49,7 @@ public class DuplicatedEntityNotice extends ErrorNotice {
                 "Entity must be unique in file: `" + filename + "` found other entity with same value for " +
                         "fields: " +
                         "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`.", entityId);
+                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`.", null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
@@ -47,7 +57,21 @@ public class DuplicatedEntityNotice extends ErrorNotice {
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
     }
 
-    public DuplicatedEntityNotice(final String filename, final String fieldName, final String entityId,
+    /**
+     * Notice alternative constructor handling entities with no id, but with a composite key made of 4 elements
+     *
+     * @param filename                 the name of the file
+     * @param fieldName                the name of the field
+     * @param compositeKeyFirstPart    the "title" of the first part of the composite key
+     * @param compositeKeySecondPart   the "title" of the second part of the composite key
+     * @param compositeKeyThirdPart    the "title" of the third part of the composite key
+     * @param compositeKeyFourthPart   the "title" of the fourth part of the composite key
+     * @param compositeKeyFirstValue   the value of the first part of the composite key
+     * @param compositeKeySecondValue  the value of the second part of the composite key
+     * @param compositeKeyThirdValue   the value of the third part of the composite key
+     * @param compositeKeyFourthValue  the value of the fourth part of the composite key
+     */
+    public DuplicatedEntityNotice(final String filename, final String fieldName,
                                   final String compositeKeyFirstPart, final String compositeKeySecondPart,
                                   final String compositeKeyThirdPart, final String compositeKeyFourthPart,
                                   final Object compositeKeyFirstValue, final Object compositeKeySecondValue,
@@ -59,7 +83,7 @@ public class DuplicatedEntityNotice extends ErrorNotice {
                         "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
                         "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
                         "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", entityId);
+                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
