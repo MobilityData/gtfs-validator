@@ -102,7 +102,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Example of key after composition: attribution_idagency_idroute_idtrip_idorganization_nameis_produceris_operatoris_authorityattribution_urlattribution_emailattribution_phone
     private final Map<String, Attribution> attributionCollection = new HashMap<>();
 
-    // Map containing Shape Entities. A shape is a actually a collection ShapePoint.
+    // Map containing Shape Entities. A shape is a actually a collection of ShapePoint.
     // Entities are mapped on the values found in column shape_id  and shape_pt_sequence of GTFS file shapes.txt
     private final Map<String, Map<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
 
@@ -617,7 +617,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     /**
      * Add a {@link ShapePoint} to a shape. A shape is a list of{@link ShapePoint} whereas a {@link ShapePoint}
-     * represents a row from shapes.txt to this. Return the entity added to the repository if the entity was
+     * represents a row from shapes.txt. Return the entity added to the repository if the entity was
      * successfully added, and returns null if the provided newShapePoint already exists in the repository. This method
      * adds the {@link ShapePoint} to this {@link GtfsDataRepository} while maintaining the order according to the
      * value of this {@link ShapePoint} shape_pt_sequence.
