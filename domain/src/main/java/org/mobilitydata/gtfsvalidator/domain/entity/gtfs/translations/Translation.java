@@ -202,7 +202,6 @@ public class Translation extends GtfsEntity {
          * specification are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
             // suppressed warning for the necessity of null check. Lint is due to annotations, but the following
             // statements can be true.
             //noinspection ConstantConditions
@@ -298,6 +297,23 @@ public class Translation extends GtfsEntity {
                 return new EntityBuildResult<>(new Translation(tableName, fieldName, language, translation, recordId,
                         recordSubId, fieldValue));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null
+         */
+        public TranslationBuilder clear() {
+            tableName = null;
+            originalTableName = null;
+            fieldName = null;
+            language = null;
+            translation = null;
+            recordId = null;
+            recordSubId = null;
+            fieldValue = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }

@@ -70,6 +70,7 @@ class ProcessParsedTranslationTest {
         underTest.execute(mockParsedTranslation);
 
         verify(mockParsedTranslation, times(7)).get(ArgumentMatchers.anyString());
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).tableName(ArgumentMatchers.eq("feed_info"));
         verify(mockBuilder, times(1)).fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
@@ -127,6 +128,7 @@ class ProcessParsedTranslationTest {
         verify(mockParsedTranslation, times(7)).get(ArgumentMatchers.anyString());
         verify(mockBuilder, times(1))
                 .tableName(ArgumentMatchers.eq("invalid table name"));
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).translation(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).language(ArgumentMatchers.eq(STRING_TEST_VALUE));
@@ -180,6 +182,7 @@ class ProcessParsedTranslationTest {
         underTest.execute(mockParsedTranslation);
 
         verify(mockParsedTranslation, times(7)).get(ArgumentMatchers.anyString());
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).tableName(ArgumentMatchers.eq("feed_info"));
         verify(mockBuilder, times(1)).fieldName(ArgumentMatchers.eq(STRING_TEST_VALUE));
         verify(mockBuilder, times(1)).translation(ArgumentMatchers.eq(STRING_TEST_VALUE));

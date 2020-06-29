@@ -63,7 +63,8 @@ public class ProcessParsedTranslation {
         final String recordSubId = (String) validatedTranslation.get("record_sub_id");
         final String fieldValue = (String) validatedTranslation.get("field_value");
 
-        builder.tableName(tableName)
+        builder.clear()
+                .tableName(tableName)
                 .fieldName(fieldName)
                 .language(language)
                 .translation(translation)

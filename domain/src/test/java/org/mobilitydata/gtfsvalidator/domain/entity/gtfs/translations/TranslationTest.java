@@ -214,7 +214,8 @@ class TranslationTest {
         assertEquals("record_id", toCheck.get(0).getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals("field_value", toCheck.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_FIELD_NAME));
 
-        underTest.tableName(VALID_TABLE_NAME)
+        underTest.clear().
+                tableName(VALID_TABLE_NAME)
                 .fieldName(FIELD_NAME)
                 .language(LANGUAGE)
                 .translation(TRANSLATION)
