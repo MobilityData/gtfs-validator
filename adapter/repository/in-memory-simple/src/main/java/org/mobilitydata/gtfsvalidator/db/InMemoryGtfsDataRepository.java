@@ -24,7 +24,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttr
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TableName;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -102,9 +101,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Example of key after composition: attribution_idagency_idroute_idtrip_idorganization_nameis_produceris_operatoris_authorityattribution_urlattribution_emailattribution_phone
     private final Map<String, Attribution> attributionCollection = new HashMap<>();
 
-    // Map containing Translation entities. Entities are mapped on the value found in column table_name of GTFS file
-    // translations.txt.
-    private final Map<String, List<Translation>> translationPerTableName = new HashMap<>();
+    // Map containing Translation entities. Entities are mapped on the value found in column table_name, field_value and
+    // language of GTFS file translations.txt.
+    private final Map<String, Map<String, Map<String, Translation>>> translationPerTableName = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -629,17 +628,28 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Translation addTranslation(final Translation newTranslationTable) throws IllegalArgumentException {
         if (newTranslationTable != null) {
-            final String tableName = newTranslationTable.getTableName().toString();
+            final String tableName = newTranslationTable.getTableName().toString().toLowerCase();
+            final String fieldName = newTranslationTable.getFieldName();
+            final String language = newTranslationTable.getLanguage();
             if (translationPerTableName.containsKey(tableName)) {
-                if (!translationPerTableName.get(tableName).contains(newTranslationTable)) {
-                    translationPerTableName.get(tableName).add(newTranslationTable);
+                if (translationPerTableName.get(tableName).containsKey(fieldName)) {
+                    if (translationPerTableName.get(tableName).get(fieldName).containsKey(language)) {
+                        return null;
+                    } else {
+                        translationPerTableName.get(tableName).get(fieldName).put(language, newTranslationTable);
+                    }
                 } else {
-                    return null;
+                    final Map<String, Translation> firstLevelMap= new TreeMap<>();
+                    final Map<String, Map<String, Translation>> secondLevelMap = new TreeMap<>();
+                    secondLevelMap.put(language, firstLevelMap);
+                    translationPerTableName.put(fieldName, secondLevelMap);
                 }
             } else {
-                final ArrayList<Translation> translationCollection = new ArrayList<>();
-                translationCollection.add(newTranslationTable);
-                translationPerTableName.put(tableName, translationCollection);
+                final Map<String, Translation> firstLevelMap = new TreeMap<>();
+                firstLevelMap.put(language, newTranslationTable);
+                final Map<String, Map<String, Translation>> secondLevelMap = new TreeMap<>();
+                secondLevelMap.put(fieldName, firstLevelMap);
+                translationPerTableName.put(tableName, secondLevelMap);
             }
             return newTranslationTable;
         } else {
@@ -648,13 +658,19 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the list of {@link Translation} from fare_rules.txt related to the table name provided as parameter
+     * Return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
+     * provided as parameter
      *
-     * @param tableName  the name of the table to retrieve translations from
-     * @return the list of {@link Translation} from fare_rules.txt related to the tableName provided as parameter
+     * @param tableName   the name of the table to retrieve translations from
+     * @param fieldName  the name of the field to be translated
+     * @param language    the language of translation
+     * @return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
+     * provided as parameter
      */
     @Override
-    public List<Translation> getTranslationByTableName(final String tableName) {
-        return translationPerTableName.get(TableName.fromString(tableName).toString());
+    public Translation getTranslationByTableNameFieldValueLanguage(final String tableName,
+                                                                   final String fieldName,
+                                                                   final String language) {
+        return translationPerTableName.get(tableName).get(fieldName).get(language);
     }
 }

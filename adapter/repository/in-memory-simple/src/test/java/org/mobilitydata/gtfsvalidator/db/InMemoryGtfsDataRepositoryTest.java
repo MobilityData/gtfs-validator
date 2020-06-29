@@ -573,10 +573,30 @@ class InMemoryGtfsDataRepositoryTest {
         final Translation mockTranslation = mock(Translation.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockTranslation.getTableName()).thenReturn(TableName.AGENCY);
+        when(mockTranslation.getFieldName()).thenReturn("field name");
+        when(mockTranslation.getLanguage()).thenReturn("language");
 
         underTest.addTranslation(mockTranslation);
 
         assertNull(underTest.addTranslation(mockTranslation));
+    }
+
+    @Test
+    void addTranslationWithSameDataShouldReturnNul() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Translation mockTranslation00 = mock(Translation.class);
+        when(mockTranslation00.getTableName()).thenReturn(TableName.AGENCY);
+        when(mockTranslation00.getFieldName()).thenReturn("field name");
+        when(mockTranslation00.getLanguage()).thenReturn("language");
+
+        final Translation duplicateTranslation = mock(Translation.class);
+        when(duplicateTranslation.getTableName()).thenReturn(TableName.AGENCY);
+        when(duplicateTranslation.getFieldName()).thenReturn("field name");
+        when(duplicateTranslation.getLanguage()).thenReturn("language");
+
+        underTest.addTranslation(mockTranslation00);
+
+        assertNull(underTest.addTranslation(duplicateTranslation));
     }
 
     @Test
@@ -585,12 +605,20 @@ class InMemoryGtfsDataRepositoryTest {
         final Translation mockTranslation01 = mock(Translation.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockTranslation00.getTableName()).thenReturn(TableName.AGENCY);
+        when(mockTranslation00.getFieldName()).thenReturn("field");
+        when(mockTranslation00.getLanguage()).thenReturn("french");
         when(mockTranslation01.getTableName()).thenReturn(TableName.STOP_TIMES);
+        when(mockTranslation01.getFieldName()).thenReturn("field");
+        when(mockTranslation01.getLanguage()).thenReturn("spanish");
 
         assertEquals(mockTranslation00, underTest.addTranslation(mockTranslation00));
         assertEquals(mockTranslation01, underTest.addTranslation(mockTranslation01));
 
-        assertEquals(List.of(mockTranslation00), underTest.getTranslationByTableName("agency"));
-        assertEquals(List.of(mockTranslation01), underTest.getTranslationByTableName("stop_times"));
+        assertEquals(mockTranslation00,
+                underTest.getTranslationByTableNameFieldValueLanguage("agency",
+                        "field", "french"));
+        assertEquals(mockTranslation01,
+                underTest.getTranslationByTableNameFieldValueLanguage("stop_times",
+                        "field", "spanish"));
     }
 }
