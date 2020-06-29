@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarD
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
@@ -100,6 +101,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - attribution_phone
     // Example of key after composition: attribution_idagency_idroute_idtrip_idorganization_nameis_produceris_operatoris_authorityattribution_urlattribution_emailattribution_phone
     private final Map<String, Attribution> attributionCollection = new HashMap<>();
+
+    // Map containing Shape Entities. A shape is a actually a collection of ShapePoint.
+    // Entities are mapped on the values found in column shape_id  and shape_pt_sequence of GTFS file shapes.txt
+    private final Map<String, Map<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
+
+    // Map containing StopTime entities. Entities are mapped on a composite key made of the values found in the columns
+    // of GTFS file stop_times.txt:
+    // - trip_id
+    // - stop_sequence
+    private final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripIdStopSequence = new HashMap<>();
 
     // Map containing Translation entities. Entities are mapped on the value found in column table_name, field_value and
     // language of GTFS file translations.txt.
@@ -612,6 +623,101 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId,agencyId,routeId,tripId ,
                 organizationName,isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
                 attributionPhone));
+    }
+
+    /**
+     * Add a {@link ShapePoint} to a shape. A shape is a list of{@link ShapePoint} whereas a {@link ShapePoint}
+     * represents a row from shapes.txt. Return the entity added to the repository if the entity was
+     * successfully added, and returns null if the provided newShapePoint already exists in the repository. This method
+     * adds the {@link ShapePoint} to this {@link GtfsDataRepository} while maintaining the order according to the
+     * value of this {@link ShapePoint} shape_pt_sequence.
+     *
+     * @param newShapePoint the internal representation of a row from shapes.txt to be added to the repository.
+     * @return Return the entity added to the repository if the entity was successfully added, and returns null if the
+     * provided newShapePoint already exists in the repository.  This method adds the {@link ShapePoint} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link ShapePoint}
+     * shape_pt_sequence.
+     * @throws IllegalArgumentException if the shape point passed as argument is null
+     */
+    @Override
+    public ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException {
+        if (newShapePoint != null) {
+            final String shapeId = newShapePoint.getShapeId();
+            if (shapePerIdShapePtSequence.containsKey(shapeId)) {
+                if (!shapePerIdShapePtSequence.get(shapeId).containsKey(newShapePoint.getShapePtSequence())) {
+                    shapePerIdShapePtSequence.get(shapeId).put(newShapePoint.getShapePtSequence(), newShapePoint);
+                } else {
+                    return null;
+                }
+            } else {
+                final Map<Integer, ShapePoint> innerMap = new TreeMap<>();
+                innerMap.put(newShapePoint.getShapePtSequence(), newShapePoint);
+                shapePerIdShapePtSequence.put(shapeId, innerMap);
+            }
+            return newShapePoint;
+        } else {
+            throw new IllegalArgumentException("Cannot add null shape point to data repository");
+        }
+    }
+
+    /**
+     * Return an immutable map of shape points from shapes.txt related to the id provided as parameter; which represents
+     * a shape object. The returned map is ordered by shape_pt_sequence.
+     *
+     * @param shapeId the key from shapes.txt related to the Route to be returned
+     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * represents a shape object. The returned map is ordered by shape_pt_sequence.
+     */
+    @Override
+    public Map<Integer, ShapePoint> getShapeById(final String shapeId) {
+        return Collections.unmodifiableMap(shapePerIdShapePtSequence.get(shapeId));
+    }
+
+    /**
+     * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt is respected,
+     * if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     *
+     * @param newStopTime the internal representation of a row from stop_times.txt to be added to the repository.
+     * @return Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt
+     * is respected, if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     */
+    @Override
+    public StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException {
+        if(newStopTime!=null) {
+            final String tripId  = newStopTime.getTripId();
+            final Integer stopSequence  = newStopTime.getStopSequence();
+            if (stopTimePerTripIdStopSequence.containsKey(tripId)) {
+                if (!stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
+                    stopTimePerTripIdStopSequence.get(tripId).put(stopSequence, newStopTime);
+                } else {
+                    return null;
+                }
+            } else {
+                final TreeMap<Integer, StopTime> innerMap = new TreeMap<>();
+                innerMap.put(stopSequence, newStopTime);
+                stopTimePerTripIdStopSequence.put(tripId, innerMap);
+            }
+            return newStopTime;
+        } else {
+            throw new IllegalArgumentException("Cannot add null StopTime to data repository");
+        }
+    }
+
+    /**
+     * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
+     * The returned map is ordered by stop_sequence
+     *
+     * @param tripId  identifies a trip
+     * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
+     */
+    @Override
+    public Map<Integer, StopTime> getStopTimeByTripId(final String tripId) {
+        return Collections.unmodifiableMap(stopTimePerTripIdStopSequence.get(tripId));
     }
 
     /**

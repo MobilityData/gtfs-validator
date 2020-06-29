@@ -74,6 +74,7 @@ public class Main {
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
                 final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
                 final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
+                final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
                 final ProcessParsedTranslation processParsedTranslation = config.processParsedTranslation();
 
                 // base validation + build gtfs entities
@@ -141,6 +142,9 @@ public class Main {
                                 case "fare_rules.txt": {
                                     processParsedFareRule.execute(parsedEntity);
                                     break;
+                                }
+                                case "shapes.txt": {
+                                    processParsedShapePoint.execute(parsedEntity);
                                 }
                                 case "translations.txt" :{
                                     processParsedTranslation.execute(parsedEntity);

@@ -319,8 +319,7 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new FloatFieldValueOutOfRangeNotice(FILENAME, "field_name", "entity_id",
-                0, 66, 666
-        ));
+                0, 66, 666));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
@@ -331,12 +330,16 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setAltEntityId(ArgumentMatchers.eq("entity_id"));
         verify(mockBuilder, times(1)).addCsvColumnName(
                 ArgumentMatchers.eq("field_name"));
-        verify(mockBuilder, times(1)).setValue(
-                ArgumentMatchers.eq("0.0"));
-        verify(mockBuilder, times(1)).setAltValue(
-                ArgumentMatchers.eq("66.0"));
-        verify(mockBuilder, times(1)).setAltEntityValue(
-                ArgumentMatchers.eq("666.0"));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("0.0"));
+        verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq("66.0"));
+        verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("666.0"));
+        // FIXME: find source of NPE when checking call on mockBuilder with null value whereas no NPE is thrown when
+        //  building proto. See issue #296
+//        verify(mockBuilder, times(1)).setAltEntityName(ArgumentMatchers.eq(null));
+//        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq(null));
+//        verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq(null));
+//        verify(mockBuilder, times(1)).setAltEntityId(ArgumentMatchers.eq(null));
+
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -565,6 +568,10 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("entity_id"));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).setAltEntityName(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -785,6 +792,10 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setAltEntityId(
                 ArgumentMatchers.eq("conflicting_field_name"));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq(null));
+        verify(mockBuilder, times(1)).setAltEntityName(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

@@ -24,12 +24,12 @@ import java.io.IOException;
 public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
 
     public FloatFieldValueOutOfRangeNotice(
-            String filename,
-            String fieldName,
-            String entityId,
-            float rangeMin,
-            float rangeMax,
-            float actualValue) {
+            final String filename,
+            final String fieldName,
+            final String entityId,
+            final float rangeMin,
+            final float rangeMax,
+            final float actualValue) {
         super(filename, E_011,
                 "Out of range float value",
                 "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
@@ -39,6 +39,46 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
         putNoticeSpecific(KEY_RANGE_MAX, rangeMax);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_ACTUAL_VALUE, actualValue);
+    }
+
+    /**
+     * Notice alternative constructor handling entities with no id
+     *
+     * @param filename                 the name of the file
+     * @param fieldName                the name of the field
+     * @param rangeMin                 the lower bound for thew value contained in field with field name "fieldName"
+     * @param rangeMax                 the upper bound for thew value contained in field with field name "fieldName"
+     * @param actualValue              the provided value in field "fieldName"
+     * @param compositeKeyFirstPart    the "title" of the first part of the composite key
+     * @param compositeKeySecondPart   the "title" of the second part of the composite key
+     * @param compositeKeyFirstValue   the value of the first part of the composite key
+     * @param compositeKeySecondValue  the value of the second part of the composite key
+     */
+    public FloatFieldValueOutOfRangeNotice(
+            final String filename,
+            final String fieldName,
+            final float rangeMin,
+            final float rangeMax,
+            final float actualValue,
+            final String compositeKeyFirstPart,
+            final String compositeKeySecondPart,
+            final Object compositeKeyFirstValue,
+            final Object compositeKeySecondValue) {
+        super(filename, E_011,
+                "Out of range float value",
+                "Invalid value for field:`" + fieldName + "` of entity with composite id: " +
+                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + "--" +
+                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`." +
+                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                null);
+        putNoticeSpecific(KEY_RANGE_MIN, rangeMin);
+        putNoticeSpecific(KEY_RANGE_MAX, rangeMax);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_ACTUAL_VALUE, actualValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
     }
 
     @Override
