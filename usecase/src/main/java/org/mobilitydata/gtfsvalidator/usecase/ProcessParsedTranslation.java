@@ -76,8 +76,10 @@ public class ProcessParsedTranslation {
         if (translationEntity.isSuccess()) {
             if (gtfsDataRepository.addTranslation((Translation) translationEntity.getData()) == null) {
                 resultRepository.addNotice(new DuplicatedEntityNotice("translations.txt",
-                        "table_name;field_name;language;translation;record_id;record_sub_id;field_value",
-                        validatedTranslation.getEntityId()));
+                        null, validatedTranslation.getEntityId(),
+                        "table_name",
+                        "field_name", "language",
+                        "translation", tableName, fieldName, language, translation));
             }
         } else {
             // at this step it is certain that calling getData method will return a list of notices, therefore there is

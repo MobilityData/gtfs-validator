@@ -33,6 +33,35 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
         putNoticeSpecific(KEY_ENUM_VALUE, enumValue);
     }
 
+    public UnexpectedEnumValueNotice(final String filename, final String fieldName, final String entityId,
+                                     final Object enumValue,
+                                     final String compositeKeyFirstPart, final String compositeKeySecondPart,
+                                     final String compositeKeyThirdPart, final String compositeKeyFourthPart,
+                                     final Object compositeKeyFirstValue, final Object compositeKeySecondValue,
+                                     final Object compositeKeyThirdValue, final Object compositeKeyFourthValue) {
+        super(filename, E_021,
+                "Unexpected enum value",
+                "Invalid value :`" + enumValue + "` - for field:`" + fieldName + "` in file:`" + filename +
+                        "` for entity with composite id:`" + System.lineSeparator() +
+                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + System.lineSeparator() +
+                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + System.lineSeparator() +
+                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + System.lineSeparator() +
+                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`" + System.lineSeparator() +
+                        "`." ,
+                entityId);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_ENUM_VALUE, enumValue);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART, compositeKeyThirdPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FOURTH_PART, compositeKeyFourthPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE, compositeKeyThirdValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FOURTH_VALUE, compositeKeyFourthValue);
+    }
+
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);

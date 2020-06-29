@@ -217,49 +217,81 @@ public class Translation extends GtfsEntity {
                 if (tableName == null) {
                     if (originalTableName == null) {
                         noticeCollection.add(new MissingRequiredValueNotice("translations.txt",
-                                "table_name", null));
+                                "table_name", null, "table_name",
+                                "field_name", "language",
+                                "translation", originalTableName, fieldName, language, translation));
                     } else if (!TableName.isEnumValueValid(originalTableName)){
                         noticeCollection.add(new UnexpectedEnumValueNotice("translations.txt",
-                                "table_name", null, originalTableName));
+                                "table_name", null, originalTableName,
+                                "table_name", "field_name",
+                                "language", "translation",
+                                originalTableName, fieldName, language, translation));
                     }
                 }
                 if (fieldName == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("translations.txt",
-                            "field_name", null));
+                            "field_name", null, "table_name",
+                            "field_name", "language",
+                            "translation", originalTableName, fieldName, language, translation));
                 }
                 if (language == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("translations.txt",
-                            "language", null));
+                            "language", null, "table_name",
+                            "field_name", "language",
+                            "translation", originalTableName, fieldName, language, translation));
                 }
                 if (translation == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("translations.txt",
-                            "translation", null));
+                            "translation", null, "table_name",
+                            "field_name", "language",
+                            "translation", originalTableName, fieldName, language, translation));
                 }
                 if (tableName==TableName.FEED_INFO) {
                     if (recordId != null) {
                         noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
-                                "record_id", "table_name", null));
+                                "record_id", "table_name", null,
+                                "table_name",
+                                "field_name", "language",
+                                "translation", originalTableName, fieldName, language,
+                                translation));
                     } else if (recordSubId != null){
                         noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
-                                "record_sub_id", "table_name", null));
+                                "record_sub_id", "table_name", null,
+                                "table_name",
+                                "field_name", "language",
+                                "translation", originalTableName, fieldName, language,
+                                translation));
                     }
                     else if (fieldValue != null) {
                         noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
-                                "field_value", "table_name", null));
+                                "field_value", "table_name", null,
+                                "table_name",
+                                "field_name", "language",
+                                "translation", originalTableName, fieldName, language,
+                                translation));
                     }
                 }
                 if (tableName != TableName.FEED_INFO && ((recordId != null && fieldValue != null) ||
                         (recordId == null && fieldValue == null))){
                     noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
-                            "record_id", "field_value", null));
+                            "record_id", "field_value", null,
+                            "table_name",
+                            "field_name", "language",
+                            "translation", originalTableName, fieldName, language, translation));
                 }
                 if (recordSubId != null && fieldValue != null) {
                     noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
-                            "record_sub_id", "field_value", null));
+                            "record_sub_id", "field_value", null,
+                            "table_name",
+                            "field_name", "language",
+                            "translation", originalTableName, fieldName, language, translation));
                 }
                 if (recordSubId == null && tableName==TableName.STOP_TIMES && recordId != null) {
                     noticeCollection.add(new IllegalFieldValueCombination("translations.txt",
-                            "record_sub_id", "table_name", null));
+                            "record_sub_id", "table_name", null,
+                            "table_name",
+                            "field_name", "language",
+                            "translation", originalTableName, fieldName, language, translation));
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
@@ -207,8 +208,7 @@ class ProcessParsedTranslationTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("translations.txt", noticeList.get(0).getFilename());
-        assertEquals("table_name;field_name;language;translation;record_id;record_sub_id;field_value",
-                noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
+        assertNull(noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockResultRepo, mockTranslation, mockEntityBuildResult, mockGtfsDataRepo);
