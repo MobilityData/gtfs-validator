@@ -17,12 +17,19 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.timeconversionutils;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * Utility class to carry out operations related to GTFS TYPE type
  */
 public class TimeConversionUtils {
-    final static String pattern = "([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]";
+    // HH:MM:SS pattern to represent time. Examples of string matching the related regexp:
+    // - "00:45:32"
+    // - "26:45:22"
+    // Examples of string that do not match the regexp:
+    // - "23:90"
+    // - "abcdefg"
+    final static Pattern pattern = Pattern.compile("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]");
 
     /**
      * Class constructor. Constructor is private to avoid instantiation of class.
@@ -34,13 +41,13 @@ public class TimeConversionUtils {
      * This method converts a time formatted as HH:MM:SS to a number of seconds elapsed since noon.
      * The time is measured from "noon minus 12h" of the service day (effectively midnight except for days on which
      * daylight savings time changes occur).
-     * @param timeAsString the time formatted as HH:MM:SS to convert as  a number of seconds elapsed since noon of day
-     *                     of service.
+     * @param timeAsString   the time formatted as HH:MM:SS to convert as  a number of seconds elapsed since noon of day
+     *                       of service.
      * @return  the number of seconds elapsed since noon of day of service. The time is measured from "noon minus 12h"
      * of the service day (effectively midnight except for days on which daylight savings time changes occur).
      */
     public static Integer convertHHMMSSToIntFromNoonOfDayOfService(final String timeAsString) {
-        if (timeAsString != null && timeAsString.matches(pattern)) {
+        if (timeAsString != null && pattern.matcher(timeAsString).matches()) {
             final String[] timeStringSplit = timeAsString.split(":");
             try {
                 final int hourValue = Integer.parseInt(timeStringSplit[0]);
