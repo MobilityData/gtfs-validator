@@ -23,13 +23,12 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarD
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.*;
 
 /**
@@ -105,6 +104,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Map containing Shape Entities. A shape is a actually a collection of ShapePoint.
     // Entities are mapped on the values found in column shape_id  and shape_pt_sequence of GTFS file shapes.txt
     private final Map<String, Map<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
+
+    // Map containing StopTime entities. Entities are mapped on a composite key made of the values found in the columns
+    // of GTFS file stop_times.txt:
+    // - trip_id
+    // - stop_sequence
+    private final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripIdStopSequence = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -661,5 +666,52 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Map<Integer, ShapePoint> getShapeById(final String shapeId) {
         return Collections.unmodifiableMap(shapePerIdShapePtSequence.get(shapeId));
+    }
+
+    /**
+     * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt is respected,
+     * if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     *
+     * @param newStopTime the internal representation of a row from stop_times.txt to be added to the repository.
+     * @return Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt
+     * is respected, if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     */
+    @Override
+    public StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException {
+        if(newStopTime!=null) {
+            final String tripId  = newStopTime.getTripId();
+            final Integer stopSequence  = newStopTime.getStopSequence();
+            if (stopTimePerTripIdStopSequence.containsKey(tripId)) {
+                if (!stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
+                    stopTimePerTripIdStopSequence.get(tripId).put(stopSequence, newStopTime);
+                } else {
+                    return null;
+                }
+            } else {
+                final TreeMap<Integer, StopTime> innerMap = new TreeMap<>();
+                innerMap.put(stopSequence, newStopTime);
+                stopTimePerTripIdStopSequence.put(tripId, innerMap);
+            }
+            return newStopTime;
+        } else {
+            throw new IllegalArgumentException("Cannot add null StopTime to data repository");
+        }
+    }
+
+    /**
+     * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
+     * The returned map is ordered by stop_sequence
+     *
+     * @param tripId  identifies a trip
+     * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
+     */
+    @Override
+    public Map<Integer, StopTime> getStopTimeByTripId(final String tripId) {
+        return Collections.unmodifiableMap(stopTimePerTripIdStopSequence.get(tripId));
     }
 }
