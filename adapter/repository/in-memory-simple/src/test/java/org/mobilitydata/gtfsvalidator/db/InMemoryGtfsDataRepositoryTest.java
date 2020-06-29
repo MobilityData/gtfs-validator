@@ -584,17 +584,17 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void addTranslationWithSameDataShouldReturnNul() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        final Translation mockTranslation00 = mock(Translation.class);
-        when(mockTranslation00.getTableName()).thenReturn(TableName.AGENCY);
-        when(mockTranslation00.getFieldName()).thenReturn("field name");
-        when(mockTranslation00.getLanguage()).thenReturn("language");
+        final Translation mockTranslation = mock(Translation.class);
+        when(mockTranslation.getTableName()).thenReturn(TableName.AGENCY);
+        when(mockTranslation.getFieldName()).thenReturn("field name");
+        when(mockTranslation.getLanguage()).thenReturn("language");
 
         final Translation duplicateTranslation = mock(Translation.class);
         when(duplicateTranslation.getTableName()).thenReturn(TableName.AGENCY);
         when(duplicateTranslation.getFieldName()).thenReturn("field name");
         when(duplicateTranslation.getLanguage()).thenReturn("language");
 
-        underTest.addTranslation(mockTranslation00);
+        underTest.addTranslation(mockTranslation);
 
         assertNull(underTest.addTranslation(duplicateTranslation));
     }

@@ -40,12 +40,11 @@ public class MissingRequiredValueNotice extends ErrorNotice {
         super(filename, E_015,
                 "Missing required value",
                 "Missing value for field:`" + fieldName
-                        + "` marked as required in entity with composite id:`" + System.lineSeparator() +
-                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`" + System.lineSeparator() +
-                        "`." ,
+                        + "` marked as required in entity with composite id:`" +
+                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
+                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
+                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
+                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.",
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);

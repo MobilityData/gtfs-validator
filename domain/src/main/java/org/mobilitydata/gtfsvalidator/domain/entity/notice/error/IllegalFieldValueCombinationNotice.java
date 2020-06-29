@@ -21,10 +21,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class IllegalFieldValueCombination extends ErrorNotice {
+public class IllegalFieldValueCombinationNotice extends ErrorNotice {
 
-    public IllegalFieldValueCombination(final String filename, final String fieldName,
-                                        final String conflictingFieldName, final String entityId) {
+    public IllegalFieldValueCombinationNotice(final String filename, final String fieldName,
+                                              final String conflictingFieldName, final String entityId) {
         super(filename, E_019,
                 "Conflicting field values",
                 "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
@@ -33,22 +33,20 @@ public class IllegalFieldValueCombination extends ErrorNotice {
         putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
     }
 
-    public IllegalFieldValueCombination(final String filename, final String fieldName,
-                                        final String conflictingFieldName, final String entityId,
-                                        final String compositeKeyFirstPart, final String compositeKeySecondPart,
-                                        final String compositeKeyThirdPart, final String compositeKeyFourthPart,
-                                        final Object compositeKeyFirstValue, final Object compositeKeySecondValue,
-                                        final Object compositeKeyThirdValue, final Object compositeKeyFourthValue) {
+    public IllegalFieldValueCombinationNotice(final String filename, final String fieldName,
+                                              final String conflictingFieldName, final String entityId,
+                                              final String compositeKeyFirstPart, final String compositeKeySecondPart,
+                                              final String compositeKeyThirdPart, final String compositeKeyFourthPart,
+                                              final Object compositeKeyFirstValue, final Object compositeKeySecondValue,
+                                              final Object compositeKeyThirdValue, final Object compositeKeyFourthValue) {
         super(filename, E_019,
                 "Conflicting field values",
                 "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
-                        + "` for entity with composite id:" + System.lineSeparator() +
-                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`" + System.lineSeparator() +
-                        "`."
-                , entityId);
+                        + "` for entity with composite id:" +
+                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
+                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
+                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
+                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);

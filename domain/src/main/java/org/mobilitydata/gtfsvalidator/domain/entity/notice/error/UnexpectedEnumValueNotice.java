@@ -42,12 +42,11 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
         super(filename, E_021,
                 "Unexpected enum value",
                 "Invalid value :`" + enumValue + "` - for field:`" + fieldName + "` in file:`" + filename +
-                        "` for entity with composite id:`" + System.lineSeparator() +
-                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`" + System.lineSeparator() +
-                        "`." ,
+                        "` for entity with composite id:`"+
+                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
+                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
+                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
+                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.",
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_ENUM_VALUE, enumValue);
