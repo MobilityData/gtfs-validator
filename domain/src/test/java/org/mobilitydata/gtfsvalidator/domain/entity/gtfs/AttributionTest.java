@@ -37,7 +37,7 @@ class AttributionTest {
         final EntityBuildResult<?> entityBuildResult = underTest.organizationName(null)
                 .isProducer(1)
                 .build();
-        final String entityId = "null; null; null; null; null; true; false; false; null; null; null";
+        final String entityId = "nullnullnullnullnulltruenullnullnullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //noinspection unchecked to avoid lint
         final List<MissingRequiredValueNotice> noticeCollection =
@@ -58,7 +58,7 @@ class AttributionTest {
                 .isProducer(4)
                 .isAuthority(1)
                 .build();
-        final String entityId = "null; null; null; null; organization name; false; false; true; null; null; null";
+        final String entityId = "nullnullnullnullorganization namefalsenulltruenullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
         // there is no need for cast check
@@ -84,7 +84,7 @@ class AttributionTest {
                 .isProducer(1)
                 .isOperator(4)
                 .build();
-        final String entityId = "null; null; null; null; organization name; true; false; false; null; null; null";
+        final String entityId = "nullnullnullnullorganization nametruefalsenullnullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
         // there is no need for cast check
@@ -110,7 +110,7 @@ class AttributionTest {
                 .isProducer(1)
                 .isAuthority(4)
                 .build();
-        final String entityId = "null; null; null; null; organization name; true; false; false; null; null; null";
+        final String entityId = "nullnullnullnullorganization nametruenullfalsenullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
         // there is no need for cast check
@@ -137,7 +137,7 @@ class AttributionTest {
                 .isAuthority(0)
                 .isOperator(0)
                 .build();
-        final String entityId = "null; null; null; null; organization name; false; false; false; null; null; null";
+        final String entityId = "nullnullnullnullorganization namefalsefalsefalsenullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
         // there is no need for cast check

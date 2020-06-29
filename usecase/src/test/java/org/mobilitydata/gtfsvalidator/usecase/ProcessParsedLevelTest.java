@@ -68,6 +68,7 @@ class ProcessParsedLevelTest {
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_index"));
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_name"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).levelId("level id");
         verify(mockBuilder, times(1)).levelIndex(2.0f);
         verify(mockBuilder, times(1)).levelName("level name");
@@ -116,6 +117,7 @@ class ProcessParsedLevelTest {
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_index"));
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_name"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).levelId(ArgumentMatchers.eq("level id"));
         verify(mockBuilder, times(1)).levelIndex(ArgumentMatchers.eq(2.0f));
         verify(mockBuilder, times(1)).levelName(ArgumentMatchers.eq("level name"));
@@ -162,6 +164,7 @@ class ProcessParsedLevelTest {
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_index"));
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_name"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).levelId(ArgumentMatchers.eq("level id"));
         verify(mockBuilder, times(1)).levelIndex(ArgumentMatchers.eq(2.0f));
         verify(mockBuilder, times(1)).levelName(ArgumentMatchers.eq("level name"));

@@ -32,6 +32,10 @@ public interface GtfsDataRepository {
 
     Agency getAgencyById(final String agencyId);
 
+    int getAgencyCount();
+
+    Collection<Agency> getAgencyAll();
+
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
     Collection<Route> getRouteAll();
