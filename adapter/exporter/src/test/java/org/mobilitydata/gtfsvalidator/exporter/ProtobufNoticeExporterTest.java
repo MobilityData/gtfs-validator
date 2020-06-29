@@ -335,8 +335,8 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("0.0"));
         verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq("66.0"));
         verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("666.0"));
-        // FIXME: find source of NPE when checking call on mockBuilder with null value whereas no NPE is throws when
-        //  building proto
+        // FIXME: find source of NPE when checking call on mockBuilder with null value whereas no NPE is thrown when
+        //  building proto. See issue #296
 //        verify(mockBuilder, times(1)).setAltEntityName(ArgumentMatchers.eq(null));
 //        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq(null));
 //        verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq(null));
