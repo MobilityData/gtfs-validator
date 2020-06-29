@@ -25,8 +25,8 @@ class TimeConversionUtilsTest {
 
     @Test
     void hourInHMMSSShouldConvertToIntegerFromNoon() {
-        final String threePM = "15:00:00";
-        int toCheck = TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(threePM);
+        final String threePm = "15:00:00";
+        int toCheck = TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(threePm);
         assertEquals(3600*3, toCheck);
 
         final String noon = "12:00:00";
@@ -37,16 +37,16 @@ class TimeConversionUtilsTest {
         toCheck = TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(midnight);
         assertEquals(3600*12, toCheck);
 
-        final String sixFortyPM = "18:40:00";
-        toCheck = TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(sixFortyPM);
+        final String sixFortyPm = "18:40:00";
+        toCheck = TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(sixFortyPm);
         assertEquals(3600*6 + 40*60, toCheck);
 
-        final String tenAM = "10:00:00";
-        toCheck = TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(tenAM);
+        final String tenAm = "10:00:00";
+        toCheck = TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(tenAm);
         assertEquals(-3600*2, toCheck);
 
-        final String sixThirtyAM20sec = "06:30:20";
-        toCheck = TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(sixThirtyAM20sec);
+        final String sixThirtyAm20sec = "06:30:20";
+        toCheck = TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(sixThirtyAm20sec);
         assertEquals((3600*6 + 30*60 + 20) - 12 * 3600, toCheck);
 
         final String oneThirtyAm40sec = "25:30:40";
@@ -77,8 +77,8 @@ class TimeConversionUtilsTest {
 
     @Test
     void hourAsIntShouldConvertToHHMMSS() {
-        final int threePM = 3600 * 3;
-        String toCheck = TimeConversionUtils.convertIntegerToHMMSS(threePM);
+        final int threePm = 3600 * 3;
+        String toCheck = TimeConversionUtils.convertIntegerToHMMSS(threePm);
         assertEquals("15:00:00", toCheck);
 
         final int noon = 0;
@@ -89,16 +89,16 @@ class TimeConversionUtilsTest {
         toCheck = TimeConversionUtils.convertIntegerToHMMSS(midnight);
         assertEquals("24:00:00", toCheck);
 
-        final int sixFortyPM = 3600 * 6 + 40 * 60;
-        toCheck = TimeConversionUtils.convertIntegerToHMMSS(sixFortyPM);
+        final int sixFortyPm = 3600 * 6 + 40 * 60;
+        toCheck = TimeConversionUtils.convertIntegerToHMMSS(sixFortyPm);
         assertEquals("18:40:00", toCheck);
 
-        final int tenAM = - 3600 * 2;
-        toCheck = TimeConversionUtils.convertIntegerToHMMSS(tenAM);
+        final int tenAm = - 3600 * 2;
+        toCheck = TimeConversionUtils.convertIntegerToHMMSS(tenAm);
         assertEquals("10:00:00", toCheck);
 
-        final int sixThirtyAM20sec = (3600*6+30*60+20)-(3600*12);
-        toCheck = TimeConversionUtils.convertIntegerToHMMSS(sixThirtyAM20sec);
+        final int sixThirtyAm20sec = (3600*6+30*60+20)-(3600*12);
+        toCheck = TimeConversionUtils.convertIntegerToHMMSS(sixThirtyAm20sec);
         assertEquals("06:30:20", toCheck);
 
         final int oneThirtyAm40sec = 3600*13 + 30*60 + 40;
@@ -115,18 +115,18 @@ class TimeConversionUtilsTest {
         assertEquals(toCheck, TimeConversionUtils.convertIntegerToHMMSS(
                 TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
-        final int sixThirtyAM20sec = -(3600*5 + 29*60 + 40);
-        toCheck = TimeConversionUtils.convertIntegerToHMMSS(sixThirtyAM20sec);
+        final int sixThirtyAm20sec = -(3600*5 + 29*60 + 40);
+        toCheck = TimeConversionUtils.convertIntegerToHMMSS(sixThirtyAm20sec);
         assertEquals(toCheck, TimeConversionUtils.convertIntegerToHMMSS(
                 TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
-        final int tenAM = - 3600 * 2;
-        toCheck = TimeConversionUtils.convertIntegerToHMMSS(tenAM);
+        final int tenAm = - 3600 * 2;
+        toCheck = TimeConversionUtils.convertIntegerToHMMSS(tenAm);
         assertEquals(toCheck,TimeConversionUtils.convertIntegerToHMMSS(
                 TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
-        final int sixFortyPM = 3600 * 6 + 40 * 60;
-        toCheck = TimeConversionUtils.convertIntegerToHMMSS(sixFortyPM);
+        final int sixFortyPm = 3600 * 6 + 40 * 60;
+        toCheck = TimeConversionUtils.convertIntegerToHMMSS(sixFortyPm);
         assertEquals(toCheck,TimeConversionUtils.convertIntegerToHMMSS(
                 TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
@@ -140,8 +140,8 @@ class TimeConversionUtilsTest {
         assertEquals(toCheck,TimeConversionUtils.convertIntegerToHMMSS(
                 TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
-        final int threePM = 3600 * 3;
-        toCheck = TimeConversionUtils.convertIntegerToHMMSS(threePM);
+        final int threePm = 3600 * 3;
+        toCheck = TimeConversionUtils.convertIntegerToHMMSS(threePm);
         assertEquals(toCheck,TimeConversionUtils.convertIntegerToHMMSS(
                 TimeConversionUtils.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
     }
