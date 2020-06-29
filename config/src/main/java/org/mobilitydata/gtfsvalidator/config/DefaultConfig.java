@@ -24,10 +24,12 @@ import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FareRule;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Attribution;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
@@ -238,6 +240,14 @@ public class DefaultConfig {
         return new ProcessParsedFareRule(resultRepo, gtfsDataRepository, new FareRule.FareRuleBuilder());
     }
 
+    public ProcessParsedPathway processParsedPathway() {
+        return new ProcessParsedPathway(resultRepo, gtfsDataRepository, new Pathway.PathwayBuilder());
+    }
+
+    public ProcessParsedAttribution processParsedAttribution() {
+        return new ProcessParsedAttribution(resultRepo, gtfsDataRepository, new Attribution.AttributionBuilder());
+    }
+
     public ProcessParsedTranslation processParsedTranslation() {
         return new ProcessParsedTranslation(resultRepo, gtfsDataRepository, new Translation.TranslationBuilder());
     }
@@ -248,5 +258,13 @@ public class DefaultConfig {
 
     public GenerateFilenameListToProcess generateFilenameListToProcess() {
         return new GenerateFilenameListToProcess(logger);
+    }
+
+    public ValidateAgencyIdRequirement validateAgencyIdRequirement() {
+        return new ValidateAgencyIdRequirement(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateAgenciesHaveSameAgencyTimezone validateAgenciesHaveSameAgencyTimezone() {
+        return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
     }
 }

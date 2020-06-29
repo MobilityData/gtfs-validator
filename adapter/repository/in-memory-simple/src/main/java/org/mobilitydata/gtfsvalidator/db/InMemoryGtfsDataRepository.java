@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.TableName;
@@ -81,6 +82,26 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
+    // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
+    // pathways.txt
+    private final Map<String, Pathway> pathwayPerId = new HashMap<>();
+
+    // Map containing Attribution entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file attributions.txt:
+    // - attribution_id
+    // - agency_id
+    // - route_id
+    // - trip_id
+    // - organization_name
+    // - is_producer
+    // - is_operator
+    // - is_authority
+    // - attribution_url
+    // - attribution_email
+    // - attribution_phone
+    // Example of key after composition: attribution_idagency_idroute_idtrip_idorganization_nameis_produceris_operatoris_authorityattribution_urlattribution_emailattribution_phone
+    private final Map<String, Attribution> attributionCollection = new HashMap<>();
+
     // Map containing Translation entities. Entities are mapped on the value found in column table_name of GTFS file
     // translations.txt.
     private final Map<String, List<Translation>> translationPerTableName = new HashMap<>();
@@ -117,6 +138,26 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Agency getAgencyById(final String agencyId) {
         return agencyPerId.get(agencyId);
+    }
+
+    /**
+     * Return an immutable collection of Agency objects representing all the rows from agency.txt
+     *
+     * @return a immutable collection of Agency objects representing all the rows from agency.txt
+     */
+    @Override
+    public Collection<Agency> getAgencyAll() {
+        return Collections.unmodifiableCollection(agencyPerId.values());
+    }
+
+    /**
+     * Return the number of {@link Agency} contained in this {@link GtfsDataRepository}
+     *
+     * @return the number of {@link Agency} contained in this {@link GtfsDataRepository}
+     */
+    @Override
+    public int getAgencyCount() {
+        return agencyPerId.size();
     }
 
     /**
@@ -403,7 +444,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the FeedInfo representing a row from feed_info.txt related to the name provided as parameter
      *
      * @param feedPublisherName the key from feed_info.txt related to the FeedInfo to be returned
-     * @return the eedInfo representing a row from feed_info.txt related to the name provided as parameter
+     * @return the feedInfo representing a row from feed_info.txt related to the name provided as parameter
      */
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
@@ -486,6 +527,92 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                 final String destinationId, final String containsId) {
         return fareRuleCollection.get(FareRule.getFareRuleMappingKey(fareId, routeId, originId, destinationId,
                 containsId));
+    }
+
+    /**
+     * Add a Pathway representing a row from pathways.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint of route based on pathway_id is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newPathway the internal representation of a row from routes.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on pathway_id is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException {
+        if (newPathway != null) {
+            final String pathwayId = newPathway.getPathwayId();
+            if (pathwayPerId.containsKey(pathwayId)) {
+                return null;
+            } else {
+                pathwayPerId.put(pathwayId, newPathway);
+                return newPathway;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null pathway to data repository");
+        }
+    }
+
+    /**
+     * Return the Pathway representing a row from pathways.txt related to the id provided as parameter
+     *
+     * @param pathwayId the key from pathways.txt related to the Pathway to be returned
+     * @return the Pathway representing a row from pathways.txt related to the id provided as parameter
+     */
+    @Override
+    public Pathway getPathwayById(final String pathwayId) {
+        return pathwayPerId.get(pathwayId);
+    }
+
+    /**
+     * Add an Attribution representing a row from attributions.txt to this. Return the entity added to the repository if
+     * the uniqueness constraint of rows f attributions.txt is respected, if this requirement is not met, returns null.
+     *
+     * @param newAttribution the internal representation of a row from attributions.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of rows f attributions.txt is respected,
+     * if this requirement is not met, returns null.
+     */
+    @Override
+    public Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException {
+        if (newAttribution != null) {
+            final String key = newAttribution.getAttributionMappingKey();
+            if (attributionCollection.containsKey(key)) {
+                return null;
+            } else {
+                attributionCollection.put(key, newAttribution);
+                return newAttribution;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null attribution to data repository");
+        }
+    }
+
+    /**
+     * Return the Attribution representing a row from attributions.txt related to the composite key provided as
+     * parameter
+     *
+     * @param attributionId    identifies an attribution for the dataset or a subset of it
+     * @param agencyId         agency to which the attribution applies
+     * @param routeId          route to which the attribution applies
+     * @param tripId           trip to which the attribution applies
+     * @param organizationName name of the organization that the dataset is attributed to
+     * @param isProducer       the role of the organization if producer
+     * @param isOperator       the role of the organization if operator
+     * @param isAuthority      the role of the organization if authority
+     * @param attributionUrl   URL of the organization
+     * @param attributionEmail email of the organization
+     * @param attributionPhone phone number of the organization
+     * @return the Attribution representing a row from attributions.txt related to the composite key provided as
+     * parameter
+     */
+    @Override
+    public Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
+                                      final String tripId, final String organizationName, final boolean isProducer,
+                                      final boolean isOperator, final boolean isAuthority, final String attributionUrl,
+                                      final String attributionEmail, final String attributionPhone) {
+        return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId,agencyId,routeId,tripId ,
+                organizationName,isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
+                attributionPhone));
     }
 
     /**

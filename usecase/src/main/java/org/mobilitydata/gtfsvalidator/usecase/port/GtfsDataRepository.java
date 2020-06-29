@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
@@ -32,6 +33,10 @@ public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
+
+    int getAgencyCount();
+
+    Collection<Agency> getAgencyAll();
 
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
@@ -73,6 +78,17 @@ public interface GtfsDataRepository {
 
     FareRule getFareRule(final String fareId, final String routeId, final String originId, final String destinationId,
                          final String containsId);
+
+    Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException;
+
+    Pathway getPathwayById(final String pathwayId);
+
+    Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException;
+
+    Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
+                               final String tripId, final String organizationName, final boolean isProducer,
+                               final boolean isOperator, final boolean isAuthority, final String attributionUrl,
+                               final String attributionEmail, final String attributionPhone);
 
     List<Translation> getTranslationByTableName(final String tableName);
 

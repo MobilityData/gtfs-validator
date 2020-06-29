@@ -72,6 +72,8 @@ public class Main {
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
+                final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
+                final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
                 final ProcessParsedTranslation processParsedTranslation = config.processParsedTranslation();
 
                 // base validation + build gtfs entities
@@ -108,6 +110,10 @@ public class Main {
                                     processParsedLevel.execute(parsedEntity);
                                     break;
                                 }
+                                case "attributions.txt": {
+                                    processParsedAttribution.execute(parsedEntity);
+                                    break;
+                                }
                                 case "calendar.txt": {
                                     processParsedCalendar.execute(parsedEntity);
                                     break;
@@ -122,6 +128,10 @@ public class Main {
                                 }
                                 case "feed_info.txt": {
                                     processParsedFeedInfo.execute(parsedEntity);
+                                    break;
+                                }
+                                case "pathways.txt": {
+                                    processParsedPathway.execute(parsedEntity);
                                     break;
                                 }
                                 case "fare_attributes.txt": {
@@ -147,6 +157,8 @@ public class Main {
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
                 config.validateCalendarEndDateBeforeStartDate().execute();
+                config.validateAgencyIdRequirement().execute();
+                config.validateAgenciesHaveSameAgencyTimezone().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

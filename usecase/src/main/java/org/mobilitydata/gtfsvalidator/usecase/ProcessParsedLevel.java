@@ -58,7 +58,8 @@ public class ProcessParsedLevel {
         final Float levelIndex = (Float) validatedParsedLevel.get("level_index");
         final String levelName = (String) validatedParsedLevel.get("level_name");
 
-        builder.levelId(levelId)
+        builder.clear()
+                .levelId(levelId)
                 .levelIndex(levelIndex)
                 .levelName(levelName);
         final EntityBuildResult<?> level = builder.build();
