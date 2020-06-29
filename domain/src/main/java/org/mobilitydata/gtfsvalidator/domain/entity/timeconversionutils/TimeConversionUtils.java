@@ -68,33 +68,39 @@ public class TimeConversionUtils {
     /**
      * This method converts a number of seconds elapsed since noon of say of service to a string formatted as HH:MM:SS.
      *
-     * @param timeAsInt  the number of seconds elapsed since noon of say of service to be converted as a string
-     *                   formatted as HH:MM:SS.
+     * @param elapsedDurationSinceNoon  the number of seconds elapsed since noon of say of service to be converted as a
+     *                                  string formatted as HH:MM:SS.
      * @return  the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */
-    public static String convertIntegerToHMMSS(final Integer timeAsInt) {
-        if (timeAsInt != null) {
-            int hourValue = (int) (TimeUnit.SECONDS.toHours(timeAsInt) + 12);
+    public static String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoon) {
+        if (elapsedDurationSinceNoon != null) {
+            // Determine number of hours elapsed
+            int hourValue = (int) (TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon) + 12);
             int minuteValue;
             int secondValue;
-            if (timeAsInt > 0) {
-                minuteValue = (int) (TimeUnit.SECONDS.toMinutes(timeAsInt) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(timeAsInt)));
-                secondValue = (int) (TimeUnit.SECONDS.toSeconds(timeAsInt) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(timeAsInt)));
+            // elapsedDurationSinceNoon > 0 for times after noon, e.g 14:00PM is represented a +2*3600s=+7200s
+            // elapsedDurationSinceNoon < 0 for times before noon, e.g 11:00AM is represented as -1*3600s=-3600s
+            if (elapsedDurationSinceNoon > 0) {
+                // Determine number of minutes and seconds elapsed
+                minuteValue = (int) (TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon)));
+                secondValue = (int) (TimeUnit.SECONDS.toSeconds(elapsedDurationSinceNoon) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon)));
             } else {
-                minuteValue = ((int) (TimeUnit.SECONDS.toMinutes(timeAsInt) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(timeAsInt)))) % 60;
+                // Determine number of minutes elapsed minus the number of hours elapsed
+                minuteValue = ((int) (TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon)))) % 60;
                 if (minuteValue < 0) {
                     hourValue = hourValue - 1;
-                    minuteValue = 1 + ((int) -(TimeUnit.SECONDS.toMinutes(timeAsInt) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(timeAsInt))));
+                    minuteValue = 1 + ((int) -(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon))));
                 }
-                secondValue = (int) (TimeUnit.SECONDS.toSeconds(timeAsInt) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(timeAsInt)));
-                if ((int) (TimeUnit.SECONDS.toSeconds(timeAsInt) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(timeAsInt))) < 0) {
+                // Determine number of seconds elapsed minus the number of hours and minutes elapsed
+                secondValue = (int) (TimeUnit.SECONDS.toSeconds(elapsedDurationSinceNoon) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon)));
+                if ((int) (TimeUnit.SECONDS.toSeconds(elapsedDurationSinceNoon) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon))) < 0) {
                     secondValue = 60 + secondValue;
                 }
             }
