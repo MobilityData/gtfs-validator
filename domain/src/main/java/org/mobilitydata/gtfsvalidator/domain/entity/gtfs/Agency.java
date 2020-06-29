@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
 import java.util.ArrayList;
@@ -230,10 +231,11 @@ public class Agency extends GtfsEntity {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
-            if (agencyName == null || agencyUrl == null || agencyTimezone == null) {
-
+            if (agencyName == null || agencyUrl == null || agencyTimezone == null ||
+                    (agencyId!=null && agencyId.isBlank())) {
+                if (agencyId!=null && agencyId.isBlank()) {
+                    noticeCollection.add(new InvalidAgencyIdNotice(agencyId));
+                }
                 if (agencyName == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("agency.txt", "agency_name",
                             agencyId));
@@ -251,6 +253,23 @@ public class Agency extends GtfsEntity {
                 return new EntityBuildResult<>(new Agency(agencyId, agencyName, agencyUrl, agencyTimezone, agencyLang,
                         agencyPhone, agencyFareUrl, agencyEmail));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public AgencyBuilder clear() {
+            agencyId = null;
+            agencyName = null;
+            agencyUrl = null;
+            agencyTimezone = null;
+            agencyLang = null;
+            agencyPhone = null;
+            agencyFareUrl = null;
+            agencyEmail = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }

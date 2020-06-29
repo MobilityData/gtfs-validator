@@ -34,6 +34,10 @@ public interface GtfsDataRepository {
 
     Agency getAgencyById(final String agencyId);
 
+    int getAgencyCount();
+
+    Collection<Agency> getAgencyAll();
+
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
     Collection<Route> getRouteAll();
@@ -78,6 +82,13 @@ public interface GtfsDataRepository {
     Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException;
 
     Pathway getPathwayById(final String pathwayId);
+
+    Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException;
+
+    Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
+                               final String tripId, final String organizationName, final boolean isProducer,
+                               final boolean isOperator, final boolean isAuthority, final String attributionUrl,
+                               final String attributionEmail, final String attributionPhone);
 
     /**
      * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.

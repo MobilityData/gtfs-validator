@@ -73,6 +73,7 @@ public class Main {
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
                 final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
+                final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -106,6 +107,10 @@ public class Main {
                                 }
                                 case "levels.txt": {
                                     processParsedLevel.execute(parsedEntity);
+                                    break;
+                                }
+                                case "attributions.txt": {
+                                    processParsedAttribution.execute(parsedEntity);
                                     break;
                                 }
                                 case "calendar.txt": {
@@ -148,6 +153,8 @@ public class Main {
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
                 config.validateCalendarEndDateBeforeStartDate().execute();
+                config.validateAgencyIdRequirement().execute();
+                config.validateAgenciesHaveSameAgencyTimezone().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

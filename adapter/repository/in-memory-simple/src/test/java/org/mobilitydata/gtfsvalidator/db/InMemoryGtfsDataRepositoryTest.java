@@ -34,8 +34,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class InMemoryGtfsDataRepositoryTest {
 
@@ -81,6 +80,38 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockAgency00, underTest.getAgencyById("agency id0"));
         assertEquals(mockAgency01, underTest.getAgencyById("agency id1"));
+    }
+
+    @Test
+    void callToGetAgencyAllShouldReturnAgencyCollection() {
+        final Agency mockAgency00 = mock(Agency.class);
+        when(mockAgency00.getAgencyId()).thenReturn("agency id0");
+        final Agency mockAgency01 = mock(Agency.class);
+        when(mockAgency01.getAgencyId()).thenReturn("agency id1");
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addAgency(mockAgency00);
+        underTest.addAgency(mockAgency01);
+
+        final Collection<Agency> toCheck = underTest.getAgencyAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.contains(mockAgency00));
+        assertTrue(toCheck.contains(mockAgency01));
+    }
+
+    @Test
+    void getAgencyCountShouldReturnExactNumberOfAgenciesInDataRepo() {
+        final Agency mockAgency00 = mock(Agency.class);
+        when(mockAgency00.getAgencyId()).thenReturn("agency id0");
+        final Agency mockAgency01 = mock(Agency.class);
+        when(mockAgency01.getAgencyId()).thenReturn("agency id1");
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        assertEquals(0, underTest.getAgencyCount());
+        underTest.addAgency(mockAgency00);
+        assertEquals(1, underTest.getAgencyCount());
+        underTest.addAgency(mockAgency01);
+        assertEquals(2, underTest.getAgencyCount());
     }
 
     @Test
@@ -480,6 +511,54 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockPathway00, underTest.getPathwayById("pathway id 00"));
         assertEquals(mockPathway01, underTest.getPathwayById("pathway id 01"));
+    }
+
+    @Test
+    void addNullAttributionShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addAttribution(null));
+        assertEquals("Cannot add null attribution to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addSameAttributionTwiceShouldReturnNull() {
+        final Attribution mockAttribution = mock(Attribution.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockAttribution.getOrganizationName()).thenReturn("organization name");
+        when(mockAttribution.getAttributionMappingKey()).thenReturn("mock key");
+        underTest.addAttribution(mockAttribution);
+
+        assertNull(underTest.addAttribution(mockAttribution));
+        verify(mockAttribution, times(2)).getAttributionMappingKey();
+        verifyNoMoreInteractions(mockAttribution);
+    }
+
+    @Test
+    void addAttributionAndGetAttributionShouldReturnSameEntity() {
+        final Attribution mockAttribution00 = mock(Attribution.class);
+        when(mockAttribution00.getOrganizationName()).thenReturn("organization name 0");
+        final Attribution mockAttribution01 = mock(Attribution.class);
+        when(mockAttribution01.getOrganizationName()).thenReturn("organization name 1");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockAttribution00.getAttributionMappingKey())
+                .thenReturn("nullnullnullnullorganization name 0falsefalsefalsenullnullnull");
+        when(mockAttribution01.getAttributionMappingKey())
+                .thenReturn("nullnullnullnullorganization name 1falsefalsefalsenullnullnull");
+
+        assertEquals(mockAttribution00, underTest.addAttribution(mockAttribution00));
+        assertEquals(mockAttribution01, underTest.addAttribution(mockAttribution01));
+
+        assertEquals(mockAttribution00, underTest.getAttribution(null, null, null,
+                null, "organization name 0", false, false, false,
+                null, null, null));
+        assertEquals(mockAttribution01, underTest.getAttribution(null, null, null,
+                null, "organization name 1", false, false, false,
+                null, null, null));
+        verify(mockAttribution00, times(1)).getAttributionMappingKey();
+        verify(mockAttribution01, times(1)).getAttributionMappingKey();
+        verifyNoMoreInteractions(mockAttribution00, mockAttribution01);
     }
 
     @Test

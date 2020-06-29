@@ -71,6 +71,7 @@ class ProcessParsedTransferTest {
         verify(mockParsedTransfer, times(1))
                 .get(ArgumentMatchers.eq("min_transfer_time"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fromStopId(ArgumentMatchers.eq("stop id 0"));
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq("stop id 1"));
         verify(mockBuilder, times(1)).transferType(ArgumentMatchers.eq(1));
@@ -116,6 +117,7 @@ class ProcessParsedTransferTest {
         verify(mockParsedTransfer, times(1))
                 .get(ArgumentMatchers.eq("min_transfer_time"));
 
+        verify(mockBuilder, times(1)).clear();
         // parameter of method .fromStopId is annotated as non null, for the purpose of this test, we suppress the
         // warning resulting form passing null value to method.
         //noinspection ConstantConditions
@@ -181,6 +183,7 @@ class ProcessParsedTransferTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedTransfer, times(1)).getEntityId();
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fromStopId(ArgumentMatchers.eq("stop id 0"));
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq("stop id 1"));
         verify(mockBuilder, times(1)).transferType(ArgumentMatchers.eq(1));
