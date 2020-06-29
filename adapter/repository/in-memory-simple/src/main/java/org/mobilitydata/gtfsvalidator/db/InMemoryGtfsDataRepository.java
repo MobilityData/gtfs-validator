@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
@@ -27,10 +28,9 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.*;
 
 /**
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
@@ -101,6 +101,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - attribution_phone
     // Example of key after composition: attribution_idagency_idroute_idtrip_idorganization_nameis_produceris_operatoris_authorityattribution_urlattribution_emailattribution_phone
     private final Map<String, Attribution> attributionCollection = new HashMap<>();
+
+    // Map containing Shape Entities. A shape is a actually a collection of ShapePoint.
+    // Entities are mapped on the values found in column shape_id  and shape_pt_sequence of GTFS file shapes.txt
+    private final Map<String, Map<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -609,5 +613,53 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId,agencyId,routeId,tripId ,
                 organizationName,isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
                 attributionPhone));
+    }
+
+    /**
+     * Add a {@link ShapePoint} to a shape. A shape is a list of{@link ShapePoint} whereas a {@link ShapePoint}
+     * represents a row from shapes.txt. Return the entity added to the repository if the entity was
+     * successfully added, and returns null if the provided newShapePoint already exists in the repository. This method
+     * adds the {@link ShapePoint} to this {@link GtfsDataRepository} while maintaining the order according to the
+     * value of this {@link ShapePoint} shape_pt_sequence.
+     *
+     * @param newShapePoint the internal representation of a row from shapes.txt to be added to the repository.
+     * @return Return the entity added to the repository if the entity was successfully added, and returns null if the
+     * provided newShapePoint already exists in the repository.  This method adds the {@link ShapePoint} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link ShapePoint}
+     * shape_pt_sequence.
+     * @throws IllegalArgumentException if the shape point passed as argument is null
+     */
+    @Override
+    public ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException {
+        if (newShapePoint != null) {
+            final String shapeId = newShapePoint.getShapeId();
+            if (shapePerIdShapePtSequence.containsKey(shapeId)) {
+                if (!shapePerIdShapePtSequence.get(shapeId).containsKey(newShapePoint.getShapePtSequence())) {
+                    shapePerIdShapePtSequence.get(shapeId).put(newShapePoint.getShapePtSequence(), newShapePoint);
+                } else {
+                    return null;
+                }
+            } else {
+                final Map<Integer, ShapePoint> innerMap = new TreeMap<>();
+                innerMap.put(newShapePoint.getShapePtSequence(), newShapePoint);
+                shapePerIdShapePtSequence.put(shapeId, innerMap);
+            }
+            return newShapePoint;
+        } else {
+            throw new IllegalArgumentException("Cannot add null shape point to data repository");
+        }
+    }
+
+    /**
+     * Return an immutable map of shape points from shapes.txt related to the id provided as parameter; which represents
+     * a shape object. The returned map is ordered by shape_pt_sequence.
+     *
+     * @param shapeId the key from shapes.txt related to the Route to be returned
+     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * represents a shape object. The returned map is ordered by shape_pt_sequence.
+     */
+    @Override
+    public Map<Integer, ShapePoint> getShapeById(final String shapeId) {
+        return Collections.unmodifiableMap(shapePerIdShapePtSequence.get(shapeId));
     }
 }

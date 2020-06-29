@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Map;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
@@ -87,4 +88,30 @@ public interface GtfsDataRepository {
                                final String tripId, final String organizationName, final boolean isProducer,
                                final boolean isOperator, final boolean isAuthority, final String attributionUrl,
                                final String attributionEmail, final String attributionPhone);
+
+    /**
+     * Add a {@link ShapePoint} to a shape. A shape is a list of{@link ShapePoint} whereas a {@link ShapePoint}
+     * represents a row from shapes.txt to this. Return the entity added to the repository if the entity was
+     * successfully added, and returns null if the provided newShapePoint already exists in the repository. This method
+     * adds the {@link ShapePoint} to this {@link GtfsDataRepository} while maintaining the order according to the
+     * value of this {@link ShapePoint} shape_pt_sequence.
+     *
+     * @param newShapePoint the internal representation of a row from shapes.txt to be added to the repository.
+     * @return Return the entity added to the repository if the entity was successfully added, and returns null if the
+     * provided newShapePoint already exists in the repository.  This method adds the {@link ShapePoint} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link ShapePoint}
+     * shape_pt_sequence.
+     * @throws IllegalArgumentException if the shape point passed as argument is null
+     */
+    ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException;
+
+    /**
+     * Return an immutable map of shape points from shapes.txt related to the id provided as parameter; which represents
+     * a shape object. The returned map is ordered by shape_pt_sequence.
+     *
+     * @param shapeId the key from shapes.txt related to the Route to be returned
+     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * represents a shape object. The returned map is ordered by shape_pt_sequence.
+     */
+    Map<Integer, ShapePoint> getShapeById(final String shapeId);
 }

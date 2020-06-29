@@ -21,8 +21,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
@@ -245,6 +244,10 @@ public class DefaultConfig {
 
     public ProcessParsedAttribution processParsedAttribution() {
         return new ProcessParsedAttribution(resultRepo, gtfsDataRepository, new Attribution.AttributionBuilder());
+    }
+
+    public ProcessParsedShapePoint processParsedShapePoint() {
+        return new ProcessParsedShapePoint(resultRepo, gtfsDataRepository, new ShapePoint.ShapeBuilder());
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {
