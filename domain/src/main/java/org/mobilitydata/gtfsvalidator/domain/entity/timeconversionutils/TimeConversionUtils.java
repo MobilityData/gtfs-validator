@@ -23,12 +23,12 @@ import java.util.regex.Pattern;
  * Utility class to carry out operations related to GTFS TIME type
  */
 public class TimeConversionUtils {
-    // HH:MM:SS pattern to represent time. Examples of string matching the related regexp:
-    // - "00:45:32"
-    // - "26:45:22"
-    // Examples of string that do not match the regexp:
-    // - "23:90"
-    // - "abcdefg"
+    // Matches any time string representing time in HH:MM:SS format with:
+    // - hours between 0 and 99h,
+    // - minutes between 0 and 60min
+    // - seconds between 0 and 0sec.
+    // Examples of string matching the related regexp: "00:45:32" or "26:45:22".
+    // Examples of string that do not match the regexp: "23:90", "23:90:62" or "abcdefg"
     final static Pattern pattern = Pattern.compile("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]");
 
     /**
