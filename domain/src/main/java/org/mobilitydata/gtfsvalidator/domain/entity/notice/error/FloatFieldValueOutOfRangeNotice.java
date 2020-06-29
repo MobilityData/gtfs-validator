@@ -67,9 +67,8 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
         super(filename, E_011,
                 "Out of range float value",
                 "Invalid value for field:`" + fieldName + "` of entity with composite id: " +
-                        System.lineSeparator() +
-                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`" + System.lineSeparator() +
+                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + "--" +
+                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`." +
                         "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
                 null);
         putNoticeSpecific(KEY_RANGE_MIN, rangeMin);

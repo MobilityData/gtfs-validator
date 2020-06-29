@@ -37,10 +37,9 @@ public class DuplicatedEntityNotice extends ErrorNotice {
         super(filename, E_020,
                 "Duplicate entity",
                 "Entity must be unique in file: `" + filename + "` found other entity with same value for " +
-                        "fields: " + System.lineSeparator() +
-                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + System.lineSeparator() +
-                        "`.", entityId);
+                        "fields: " +
+                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
+                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`.", entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);

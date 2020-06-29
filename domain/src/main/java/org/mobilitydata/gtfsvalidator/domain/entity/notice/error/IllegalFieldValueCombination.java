@@ -51,10 +51,8 @@ public class IllegalFieldValueCombination extends ErrorNotice {
         super(filename, E_019,
                 "Conflicting field values",
                 "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
-                        + "` for entity with composite id: " + System.lineSeparator() +
-                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + System.lineSeparator() +
-                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`" + System.lineSeparator(),
-                null);
+                        + "` for entity with composite id: `" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue
+                        + "`" + "--" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`.", null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);

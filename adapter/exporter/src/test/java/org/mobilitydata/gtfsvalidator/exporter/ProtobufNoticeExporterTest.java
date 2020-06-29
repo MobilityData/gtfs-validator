@@ -27,8 +27,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.time.LocalDate;
 
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_COMPOSITE_KEY_SECOND_VALUE;
 import static org.mockito.Mockito.*;
 
 class ProtobufNoticeExporterTest {
