@@ -91,6 +91,32 @@ public interface GtfsDataRepository {
                                final String attributionEmail, final String attributionPhone);
 
     /**
+     * Add a {@link ShapePoint} to a shape. A shape is a list of{@link ShapePoint} whereas a {@link ShapePoint}
+     * represents a row from shapes.txt to this. Return the entity added to the repository if the entity was
+     * successfully added, and returns null if the provided newShapePoint already exists in the repository. This method
+     * adds the {@link ShapePoint} to this {@link GtfsDataRepository} while maintaining the order according to the
+     * value of this {@link ShapePoint} shape_pt_sequence.
+     *
+     * @param newShapePoint the internal representation of a row from shapes.txt to be added to the repository.
+     * @return Return the entity added to the repository if the entity was successfully added, and returns null if the
+     * provided newShapePoint already exists in the repository.  This method adds the {@link ShapePoint} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link ShapePoint}
+     * shape_pt_sequence.
+     * @throws IllegalArgumentException if the shape point passed as argument is null
+     */
+    ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException;
+
+    /**
+     * Return an immutable map of shape points from shapes.txt related to the id provided as parameter; which represents
+     * a shape object. The returned map is ordered by shape_pt_sequence.
+     *
+     * @param shapeId the key from shapes.txt related to the Route to be returned
+     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * represents a shape object. The returned map is ordered by shape_pt_sequence.
+     */
+    Map<Integer, ShapePoint> getShapeById(final String shapeId);
+
+    /**
      * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
      * Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt is respected,
      * if this requirement is not met, returns null. This method adds the {@link StopTime} to this

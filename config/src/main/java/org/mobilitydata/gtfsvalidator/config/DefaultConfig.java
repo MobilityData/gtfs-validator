@@ -247,6 +247,10 @@ public class DefaultConfig {
         return new ProcessParsedAttribution(resultRepo, gtfsDataRepository, new Attribution.AttributionBuilder());
     }
 
+    public ProcessParsedShapePoint processParsedShapePoint() {
+        return new ProcessParsedShapePoint(resultRepo, gtfsDataRepository, new ShapePoint.ShapeBuilder());
+    }
+
     public ProcessParsedStopTime processParsedStopTime() {
         return new ProcessParsedStopTime(resultRepo, gtfsDataRepository, new StopTime.StopTimeBuilder());
     }

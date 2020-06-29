@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -559,6 +560,113 @@ class InMemoryGtfsDataRepositoryTest {
         verify(mockAttribution00, times(1)).getAttributionMappingKey();
         verify(mockAttribution01, times(1)).getAttributionMappingKey();
         verifyNoMoreInteractions(mockAttribution00, mockAttribution01);
+    }
+
+    @Test
+    void addTwiceSameShapePointShouldReturnNull() {
+        final ShapePoint mockShapePoint = mock(ShapePoint.class);
+        when(mockShapePoint.getShapeId()).thenReturn("test id");
+        when(mockShapePoint.getShapePtLat()).thenReturn(50f);
+        when(mockShapePoint.getShapePtLon()).thenReturn(100f);
+        when(mockShapePoint.getShapePtSequence()).thenReturn(4);
+        when(mockShapePoint.getShapeDistTraveled()).thenReturn(56f);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShapePoint(mockShapePoint);
+        assertNull(underTest.addShapePoint(mockShapePoint));
+        assertEquals("test id", underTest.getShapeById("test id").get(4).getShapeId());
+        assertEquals(50f, underTest.getShapeById("test id").get(4).getShapePtLat());
+        assertEquals(100f, underTest.getShapeById("test id").get(4).getShapePtLon());
+        assertEquals(4, underTest.getShapeById("test id").get(4).getShapePtSequence());
+        assertEquals(56, underTest.getShapeById("test id").get(4).getShapeDistTraveled());
+    }
+
+    @Test
+    void addShapePointWithSameDataShouldReturnNull () {
+        final ShapePoint firstShapePoint = mock(ShapePoint.class);
+        when(firstShapePoint.getShapeId()).thenReturn("test id00");
+        when(firstShapePoint.getShapePtLat()).thenReturn(50f);
+        when(firstShapePoint.getShapePtLon()).thenReturn(100f);
+        when(firstShapePoint.getShapePtSequence()).thenReturn(4);
+        when(firstShapePoint.getShapeDistTraveled()).thenReturn(56f);
+
+        final ShapePoint duplicateShapePoint = mock(ShapePoint.class);
+        when(duplicateShapePoint.getShapeId()).thenReturn("test id00");
+        when(duplicateShapePoint.getShapePtLat()).thenReturn(50f);
+        when(duplicateShapePoint.getShapePtLon()).thenReturn(100f);
+        when(duplicateShapePoint.getShapePtSequence()).thenReturn(4);
+        when(duplicateShapePoint.getShapeDistTraveled()).thenReturn(56f);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        assertEquals(firstShapePoint, underTest.addShapePoint(firstShapePoint));
+        assertNull(underTest.addShapePoint(duplicateShapePoint));
+    }
+
+    @Test
+    void addNullShapePointShouldThrowException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addShapePoint(null));
+        assertEquals("Cannot add null shape point to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addShapeAndGetShapeByIdShouldReturnSameEntity() {
+        final ShapePoint mockShapePoint00 = mock(ShapePoint.class);
+        when(mockShapePoint00.getShapeId()).thenReturn("test id00");
+        when(mockShapePoint00.getShapePtSequence()).thenReturn(4);
+
+        final ShapePoint mockShapePoint01 = mock(ShapePoint.class);
+        when(mockShapePoint01.getShapeId()).thenReturn("test id01");
+        when(mockShapePoint01.getShapePtSequence()).thenReturn(8);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShapePoint(mockShapePoint00);
+        underTest.addShapePoint(mockShapePoint01);
+
+        final Map<Integer, ShapePoint> firstMapToCheck = underTest.getShapeById("test id00");
+
+        final Map<Integer, ShapePoint> secondMapToCheck = underTest.getShapeById("test id01");
+
+        assertEquals(firstMapToCheck, underTest.getShapeById("test id00"));
+        assertEquals(secondMapToCheck, underTest.getShapeById("test id01"));
+    }
+
+    @Test
+    void addShapePointShouldMaintainOrder() {
+        final ShapePoint firstShapePointInSequence = mock(ShapePoint.class);
+        when(firstShapePointInSequence.getShapeId()).thenReturn("test id00");
+        when(firstShapePointInSequence.getShapePtSequence()).thenReturn(4);
+
+        final ShapePoint secondShapePointInSequence = mock(ShapePoint.class);
+        when(secondShapePointInSequence.getShapeId()).thenReturn("test id00");
+        when(secondShapePointInSequence.getShapePtSequence()).thenReturn(8);
+
+        final ShapePoint thirdShapePointInSequence = mock(ShapePoint.class);
+        when(thirdShapePointInSequence.getShapeId()).thenReturn("test id00");
+        when(thirdShapePointInSequence.getShapePtSequence()).thenReturn(12);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShapePoint(thirdShapePointInSequence);
+        underTest.addShapePoint(secondShapePointInSequence);
+
+        final List<ShapePoint> toCheck = new ArrayList<>();
+
+        underTest.getShapeById("test id00").forEach((key, value) -> toCheck.add(value));
+        assertEquals(secondShapePointInSequence, toCheck.get(0));
+        assertEquals(thirdShapePointInSequence, toCheck.get(1));
+
+        underTest.addShapePoint(firstShapePointInSequence);
+
+        toCheck.clear();
+        underTest.getShapeById("test id00").forEach((key, value) -> toCheck.add(value));
+
+        assertEquals(firstShapePointInSequence, toCheck.get(0));
+        assertEquals(secondShapePointInSequence, toCheck.get(1));
+        assertEquals(thirdShapePointInSequence, toCheck.get(2));
     }
 
     @Test
