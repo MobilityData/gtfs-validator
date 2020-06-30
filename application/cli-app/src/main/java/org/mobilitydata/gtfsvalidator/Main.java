@@ -145,9 +145,11 @@ public class Main {
                                 }
                                 case "shapes.txt": {
                                     processParsedShapePoint.execute(parsedEntity);
+                                    break;
                                 }
                                 case "translations.txt" :{
                                     processParsedTranslation.execute(parsedEntity);
+                                    break;
                                 }
                             }
                         }
