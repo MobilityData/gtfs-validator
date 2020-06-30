@@ -235,9 +235,12 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             }
 
             case EXCLUSION_KEY: {
-                return hasExecParamValue(EXCLUSION_KEY) ?
-                        getExecParamByKey(EXCLUSION_KEY).getValue().toString()
-                        : null;
+                return hasExecParamValue(EXCLUSION_KEY) ? getExecParamByKey(EXCLUSION_KEY).getValue().toString() : null;
+            }
+
+            case TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN :
+            case TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX : {
+                return hasExecParamValue(key) ? getExecParamByKey(key).getValue().toString() : defaultValue.get(0);
             }
         }
         throw new IllegalArgumentException("Requested key is not handled");
@@ -269,24 +272,10 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
         // define options related to GTFS file `pathways.txt`
         options.addOption(String.valueOf(EXCLUSION_KEY.charAt(1)), EXCLUSION_KEY, true,
                 "Exclude files from semantic GTFS validation");
-        options.addOption(PATHWAY_MIN_LENGTH_KEY, PATHWAY_MIN_LENGTH_KEY, true,
-                "Minimum admissible value for field length of file pathways.txt");
-        options.addOption(PATHWAY_MAX_LENGTH_KEY, PATHWAY_MAX_LENGTH_KEY, true,
-                "Maximum admissible value for field length of file pathways.txt");
-        options.addOption(PATHWAY_MIN_TRAVERSAL_TIME_KEY, PATHWAY_MIN_TRAVERSAL_TIME_KEY, true,
-                "Minimum admissible value for field traversal_time of file pathways.txt");
-        options.addOption(PATHWAY_MAX_TRAVERSAL_TIME_KEY, PATHWAY_MAX_TRAVERSAL_TIME_KEY, true,
-                "Maximum admissible value for field traversal_time of file pathways.txt");
-        options.addOption(PATHWAY_MIN_STAIR_COUNT_KEY, PATHWAY_MIN_STAIR_COUNT_KEY, true,
-                "Maximum admissible value for field stair_count of file pathways.txt");
-        options.addOption(PATHWAY_MAX_STAIR_COUNT_KEY, PATHWAY_MAX_STAIR_COUNT_KEY, true,
-                "Maximum admissible value for field stair_count of file pathways.txt");
-        options.addOption(PATHWAY_MAX_SLOPE_KEY, PATHWAY_MAX_LENGTH_KEY, true,
-                "Maximum admissible value for field slope of file pathways.txt");
-        options.addOption(PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY, PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY, true,
-                "Minimum admissible value for field min_width of file pathways.txt");
-        options.addOption(PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY, PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY, true,
-                "Maximum admissible value for field min_width of file pathways.txt");
+        options.addOption(TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN, TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN, true,
+                "Minimum admissible value for field min_transfer_time of file transfers.txt");
+        options.addOption(TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX, TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX, true,
+                "Maximum admissible value for field min_transfer_time of file transfers.txt");
 
         // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
         // Other commands only take 1 argument

@@ -375,6 +375,38 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void getTransferAllShouldReturnTransferCollection() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        final Transfer mockTransfer00 = mock(Transfer.class);
+        when(mockTransfer00.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer00.getToStopId()).thenReturn("stop id 1");
+
+        final Transfer mockTransfer01 = mock(Transfer.class);
+        when(mockTransfer01.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer01.getToStopId()).thenReturn("stop id 2");
+
+        final Transfer mockTransfer02 = mock(Transfer.class);
+        when(mockTransfer02.getFromStopId()).thenReturn("stop id 4");
+        when(mockTransfer02.getToStopId()).thenReturn("stop id 5");
+
+        final Transfer mockTransfer03 = mock(Transfer.class);
+        when(mockTransfer03.getFromStopId()).thenReturn("stop id 0");
+        when(mockTransfer03.getToStopId()).thenReturn("stop id 5");
+
+        underTest.addTransfer(mockTransfer00);
+        underTest.addTransfer(mockTransfer01);
+        underTest.addTransfer(mockTransfer02);
+        underTest.addTransfer(mockTransfer03);
+
+        assertEquals(4, underTest.getTransferAll().size());
+        assertTrue(underTest.getTransferAll().contains(mockTransfer00));
+        assertTrue(underTest.getTransferAll().contains(mockTransfer01));
+        assertTrue(underTest.getTransferAll().contains(mockTransfer02));
+        assertTrue(underTest.getTransferAll().contains(mockTransfer03));
+    }
+
+    @Test
     void addSameFeedInfoTwiceShouldReturnNull() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();

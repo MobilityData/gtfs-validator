@@ -423,6 +423,19 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
+     * Return an immutable collection of {@code Transfer} objects representing all the rows from transfers.txt
+     *
+     * @return an immutable collection of {@link Transfer} objects representing all the rows from transfers.txt
+     */
+    @Override
+    public Collection<Transfer> getTransferAll() {
+        final Set<String> fromStopIdList = transferPerStopPair.keySet();
+        final List<Transfer> toReturn = new ArrayList<>();
+        fromStopIdList.forEach(fromStopId -> toReturn.addAll(transferPerStopPair.get(fromStopId).values()));
+        return Collections.unmodifiableList(toReturn);
+    }
+
+    /**
      * Add a FeedInfo representing a row from feed_info.txt to this {@link GtfsDataRepository}. Return the entity added
      * to the repository if the uniqueness constraint of feed_info based on feed_publisher_name is respected,
      * if this requirement is not met,returns null.

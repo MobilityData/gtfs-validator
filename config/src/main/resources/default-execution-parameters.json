@@ -5,5 +5,7 @@
   "proto": false,
   "url": null,
   "input": null,
-  "exclude": null
+  "exclude": null,
+  "transferMinTransferTimeRangeMin": 0,
+  "transferMinTransferTimeRangeMax": 86400
 }

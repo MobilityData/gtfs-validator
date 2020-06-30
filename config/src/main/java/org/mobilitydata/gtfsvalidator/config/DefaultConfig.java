@@ -270,4 +270,8 @@ public class DefaultConfig {
     public ValidateAgenciesHaveSameAgencyTimezone validateAgenciesHaveSameAgencyTimezone() {
         return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
     }
+
+    public ValidateMinTransferTimeValue validateMinTransferTimeValue() {
+        return new ValidateMinTransferTimeValue(gtfsDataRepository, resultRepo, execParamRepo, logger);
+    }
 }
