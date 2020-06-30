@@ -23,12 +23,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.Exception
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -556,5 +560,208 @@ class InMemoryGtfsDataRepositoryTest {
         verify(mockAttribution00, times(1)).getAttributionMappingKey();
         verify(mockAttribution01, times(1)).getAttributionMappingKey();
         verifyNoMoreInteractions(mockAttribution00, mockAttribution01);
+    }
+
+    @Test
+    void addTwiceSameShapePointShouldReturnNull() {
+        final ShapePoint mockShapePoint = mock(ShapePoint.class);
+        when(mockShapePoint.getShapeId()).thenReturn("test id");
+        when(mockShapePoint.getShapePtLat()).thenReturn(50f);
+        when(mockShapePoint.getShapePtLon()).thenReturn(100f);
+        when(mockShapePoint.getShapePtSequence()).thenReturn(4);
+        when(mockShapePoint.getShapeDistTraveled()).thenReturn(56f);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShapePoint(mockShapePoint);
+        assertNull(underTest.addShapePoint(mockShapePoint));
+        assertEquals("test id", underTest.getShapeById("test id").get(4).getShapeId());
+        assertEquals(50f, underTest.getShapeById("test id").get(4).getShapePtLat());
+        assertEquals(100f, underTest.getShapeById("test id").get(4).getShapePtLon());
+        assertEquals(4, underTest.getShapeById("test id").get(4).getShapePtSequence());
+        assertEquals(56, underTest.getShapeById("test id").get(4).getShapeDistTraveled());
+    }
+
+    @Test
+    void addShapePointWithSameDataShouldReturnNull () {
+        final ShapePoint firstShapePoint = mock(ShapePoint.class);
+        when(firstShapePoint.getShapeId()).thenReturn("test id00");
+        when(firstShapePoint.getShapePtLat()).thenReturn(50f);
+        when(firstShapePoint.getShapePtLon()).thenReturn(100f);
+        when(firstShapePoint.getShapePtSequence()).thenReturn(4);
+        when(firstShapePoint.getShapeDistTraveled()).thenReturn(56f);
+
+        final ShapePoint duplicateShapePoint = mock(ShapePoint.class);
+        when(duplicateShapePoint.getShapeId()).thenReturn("test id00");
+        when(duplicateShapePoint.getShapePtLat()).thenReturn(50f);
+        when(duplicateShapePoint.getShapePtLon()).thenReturn(100f);
+        when(duplicateShapePoint.getShapePtSequence()).thenReturn(4);
+        when(duplicateShapePoint.getShapeDistTraveled()).thenReturn(56f);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        assertEquals(firstShapePoint, underTest.addShapePoint(firstShapePoint));
+        assertNull(underTest.addShapePoint(duplicateShapePoint));
+    }
+
+    @Test
+    void addNullShapePointShouldThrowException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addShapePoint(null));
+        assertEquals("Cannot add null shape point to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addShapeAndGetShapeByIdShouldReturnSameEntity() {
+        final ShapePoint mockShapePoint00 = mock(ShapePoint.class);
+        when(mockShapePoint00.getShapeId()).thenReturn("test id00");
+        when(mockShapePoint00.getShapePtSequence()).thenReturn(4);
+
+        final ShapePoint mockShapePoint01 = mock(ShapePoint.class);
+        when(mockShapePoint01.getShapeId()).thenReturn("test id01");
+        when(mockShapePoint01.getShapePtSequence()).thenReturn(8);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShapePoint(mockShapePoint00);
+        underTest.addShapePoint(mockShapePoint01);
+
+        final Map<Integer, ShapePoint> firstMapToCheck = underTest.getShapeById("test id00");
+
+        final Map<Integer, ShapePoint> secondMapToCheck = underTest.getShapeById("test id01");
+
+        assertEquals(firstMapToCheck, underTest.getShapeById("test id00"));
+        assertEquals(secondMapToCheck, underTest.getShapeById("test id01"));
+    }
+
+    @Test
+    void addShapePointShouldMaintainOrder() {
+        final ShapePoint firstShapePointInSequence = mock(ShapePoint.class);
+        when(firstShapePointInSequence.getShapeId()).thenReturn("test id00");
+        when(firstShapePointInSequence.getShapePtSequence()).thenReturn(4);
+
+        final ShapePoint secondShapePointInSequence = mock(ShapePoint.class);
+        when(secondShapePointInSequence.getShapeId()).thenReturn("test id00");
+        when(secondShapePointInSequence.getShapePtSequence()).thenReturn(8);
+
+        final ShapePoint thirdShapePointInSequence = mock(ShapePoint.class);
+        when(thirdShapePointInSequence.getShapeId()).thenReturn("test id00");
+        when(thirdShapePointInSequence.getShapePtSequence()).thenReturn(12);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShapePoint(thirdShapePointInSequence);
+        underTest.addShapePoint(secondShapePointInSequence);
+
+        final List<ShapePoint> toCheck = new ArrayList<>();
+
+        underTest.getShapeById("test id00").forEach((key, value) -> toCheck.add(value));
+        assertEquals(secondShapePointInSequence, toCheck.get(0));
+        assertEquals(thirdShapePointInSequence, toCheck.get(1));
+
+        underTest.addShapePoint(firstShapePointInSequence);
+
+        toCheck.clear();
+        underTest.getShapeById("test id00").forEach((key, value) -> toCheck.add(value));
+
+        assertEquals(firstShapePointInSequence, toCheck.get(0));
+        assertEquals(secondShapePointInSequence, toCheck.get(1));
+        assertEquals(thirdShapePointInSequence, toCheck.get(2));
+    }
+
+    @Test
+    void addNullStopTimeShouldThrowException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addStopTime(null));
+        assertEquals("Cannot add null StopTime to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addSameStopTimeTwiceShouldReturnNull() {
+        final StopTime mockStopTime = mock(StopTime.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockStopTime.getTripId()).thenReturn("trip id");
+        when(mockStopTime.getStopSequence()).thenReturn(3);
+
+        underTest.addStopTime(mockStopTime);
+
+        assertNull(underTest.addStopTime(mockStopTime));
+    }
+
+    @Test
+    void addStopTimeWithSameDataShouldReturnNull () {
+        final StopTime firstStopTime = mock(StopTime.class);
+        when(firstStopTime.getTripId()).thenReturn("trip id");
+        when(firstStopTime.getStopSequence()).thenReturn(3);
+
+        final StopTime duplicateStopTime = mock(StopTime.class);
+        when(duplicateStopTime.getTripId()).thenReturn("trip id");
+        when(duplicateStopTime.getStopSequence()).thenReturn(3);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        assertEquals(firstStopTime, underTest.addStopTime(firstStopTime));
+        assertNull(underTest.addStopTime(duplicateStopTime));
+    }
+
+    @Test
+    void getStopTimeByTripIdAndAddStopTimeShouldReturnSameEntity(){
+        final StopTime mockStopTime00 = mock(StopTime.class);
+        when(mockStopTime00.getTripId()).thenReturn("trip id00");
+        when(mockStopTime00.getStopSequence()).thenReturn(3);
+
+        final StopTime mockStopTime01 = mock(StopTime.class);
+        when(mockStopTime01.getTripId()).thenReturn("trip id01");
+        when(mockStopTime01.getStopSequence()).thenReturn(4);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addStopTime(mockStopTime00);
+        underTest.addStopTime(mockStopTime01);
+
+        final TreeMap<Integer, StopTime> firstMapToCheck = new TreeMap<>();
+        firstMapToCheck.put(3, mockStopTime00);
+
+        final TreeMap<Integer, StopTime> secondMapToCheck = new TreeMap<>();
+        secondMapToCheck.put(4, mockStopTime01);
+
+        assertEquals(firstMapToCheck, underTest.getStopTimeByTripId("trip id00"));
+        assertEquals(secondMapToCheck, underTest.getStopTimeByTripId("trip id01"));
+    }
+
+    @Test
+    void addStopTimeShouldMaintainOrder() {
+        final StopTime firstStopTimeInSequence = mock(StopTime.class);
+        when(firstStopTimeInSequence.getTripId()).thenReturn("trip id00");
+        when(firstStopTimeInSequence.getStopSequence()).thenReturn(4);
+
+        final StopTime secondStopTimeInSequence = mock(StopTime.class);
+        when(secondStopTimeInSequence.getTripId()).thenReturn("trip id00");
+        when(secondStopTimeInSequence.getStopSequence()).thenReturn(8);
+
+        final StopTime thirdStopTimeInSequence = mock(StopTime.class);
+        when(thirdStopTimeInSequence.getTripId()).thenReturn("trip id00");
+        when(thirdStopTimeInSequence.getStopSequence()).thenReturn(12);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addStopTime(thirdStopTimeInSequence);
+        underTest.addStopTime(secondStopTimeInSequence);
+
+        final List<StopTime> toCheck = new ArrayList<>();
+
+        underTest.getStopTimeByTripId("trip id00").forEach((key, value) -> toCheck.add(value));
+        assertEquals(secondStopTimeInSequence, toCheck.get(0));
+        assertEquals(thirdStopTimeInSequence, toCheck.get(1));
+
+        underTest.addStopTime(firstStopTimeInSequence);
+
+        toCheck.clear();
+        underTest.getStopTimeByTripId("trip id00").forEach((key, value) -> toCheck.add(value));
+
+        assertEquals(firstStopTimeInSequence, toCheck.get(0));
+        assertEquals(secondStopTimeInSequence, toCheck.get(1));
+        assertEquals(thirdStopTimeInSequence, toCheck.get(2));
     }
 }
