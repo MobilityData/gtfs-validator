@@ -73,7 +73,7 @@ public class MissingRequiredValueNotice extends ErrorNotice {
      * @param compositeKeyThirdValue  the value of the third part of the composite key
      * @param compositeKeyFourthValue  the value of the fourth part of the composite key
      */
-    public MissingRequiredValueNotice(final String filename, final String fieldName, final String entityId,
+    public MissingRequiredValueNotice(final String filename, final String fieldName,
                                       final String compositeKeyFirstPart, final String compositeKeySecondPart,
                                       final String compositeKeyThirdPart, final String compositeKeyFourthPart,
                                       final String compositeKeyFirstValue, final String compositeKeySecondValue,
@@ -85,8 +85,7 @@ public class MissingRequiredValueNotice extends ErrorNotice {
                         "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
                         "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
                         "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.",
-                entityId);
+                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);

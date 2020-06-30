@@ -49,7 +49,7 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
      * @param compositeKeyFourthValue  the value of the fourth part of the composite key
      */
     public IllegalFieldValueCombinationNotice(final String filename, final String fieldName,
-                                              final String conflictingFieldName, final String entityId,
+                                              final String conflictingFieldName,
                                               final String compositeKeyFirstPart, final String compositeKeySecondPart,
                                               final String compositeKeyThirdPart, final String compositeKeyFourthPart,
                                               final Object compositeKeyFirstValue, final Object compositeKeySecondValue,
@@ -61,7 +61,7 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
                         "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
                         "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
                         "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", entityId);
+                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
@@ -101,7 +101,6 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
     }
-
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
