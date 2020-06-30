@@ -46,6 +46,10 @@ public abstract class Notice {
     public static final String KEY_EXTRA_HEADER_NAME = "extraHeaderName";
     public static final String KEY_CONTRAST_RATIO = "contrastRatio";
     public static final String KEY_SHORT_NAME_LENGTH = "shortNameLength";
+    public static final String KEY_COMPOSITE_KEY_FIRST_PART = "compositeKeyFirstPart";
+    public static final String KEY_COMPOSITE_KEY_SECOND_PART = "compositeKeySecondPart";
+    public static final String KEY_COMPOSITE_KEY_FIRST_VALUE = "compositeKeyFirstValue";
+    public static final String KEY_COMPOSITE_KEY_SECOND_VALUE = "compositeKeySecondValue";
 
     private final String filename;
     private final int code;
