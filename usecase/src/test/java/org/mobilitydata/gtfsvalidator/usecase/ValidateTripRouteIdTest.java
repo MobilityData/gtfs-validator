@@ -74,6 +74,8 @@ class ValidateTripRouteIdTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockTrip01, times(2)).getRouteId();
         verify(mockResultRepo, times(2)).addNotice(any(NonExistingRouteIdNotice.class));
+
+        verifyNoMoreInteractions(mockTrip00, mockTrip01, mockDataRepo, mockResultRepo, mockLogger);
     }
 
     @Test
@@ -110,5 +112,21 @@ class ValidateTripRouteIdTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();
+
+        // suppress warning regarding ignored result of method since it is not necessary here.
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockTrip00, times(1)).getRouteId();
+        // suppress warning regarding ignored result of method since it is not necessary here.
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockRoute00, times(1)).getRouteId();
+        // suppress warning regarding ignored result of method since it is not necessary here.
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockTrip01, times(1)).getRouteId();
+        // suppress warning regarding ignored result of method since it is not necessary here.
+        //noinspection ResultOfMethodCallIgnored
+        verify(mockRoute01, times(1)).getRouteId();
+
+        verifyNoMoreInteractions(mockTrip00, mockTrip01, mockRoute00, mockRoute01, mockDataRepo, mockResultRepo,
+                mockLogger);
     }
 }

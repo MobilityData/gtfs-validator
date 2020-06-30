@@ -24,10 +24,10 @@ import java.io.IOException;
 public class NonExistingRouteIdNotice extends ErrorNotice {
     public NonExistingRouteIdNotice(final String filename, final String entityId, final String routeId,
                                     final String fieldName) {
-        super(filename, E_033, "Non existing `route_id`", "Trip with `trip_id` refers to non-existing " +
-                "route from file `routes.txt` with " + "`route_id`: " + routeId + "", entityId);
+        super(filename, E_033, "Non existing `route_id`", "Trip with `trip_id`: "+ entityId + " refers" +
+                " to non-existing route from file `routes.txt` with " + "`route_id`: " + routeId + "`.", entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
-        putNoticeSpecific(KEY_ROUTE_ID, routeId);
+        putNoticeSpecific(KEY_UNKNOWN_ROUTE_ID, routeId);
     }
 
     @Override
