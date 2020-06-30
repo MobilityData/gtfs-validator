@@ -540,6 +540,23 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final SuspiciousMinTransferTimeNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setValue((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MIN)))
+                .setEntityId((String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MAX))))
+                .setAltEntityValue((String.valueOf(toExport.getNoticeSpecific(KEY_ACTUAL_VALUE))))
+                .setAltValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART))
+                .setParentEntityId((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART))
+                .setEntityName((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE))
+                .setCsvKeyName((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();

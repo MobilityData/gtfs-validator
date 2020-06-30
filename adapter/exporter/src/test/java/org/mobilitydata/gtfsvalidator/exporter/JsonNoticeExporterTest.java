@@ -593,4 +593,19 @@ class JsonNoticeExporterTest {
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
+
+    @Test
+    void exportSuspiciousMinTransferTimeNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final SuspiciousMinTransferTimeNotice toExport = new SuspiciousMinTransferTimeNotice(0,
+                66, 99, "composite key first part",
+                "composite key second part", "composite key first value",
+                "composite key second value");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
 }
