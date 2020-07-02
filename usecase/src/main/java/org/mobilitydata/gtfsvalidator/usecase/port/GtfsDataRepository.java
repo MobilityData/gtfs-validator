@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
@@ -26,8 +27,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
@@ -139,4 +139,12 @@ public interface GtfsDataRepository {
      * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     Map<Integer, StopTime> getStopTimeByTripId(final String tripId);
+
+    /**
+     * Return an immutable map representing all records from stop_times.txt. Elements of this map are mapped by
+     * "trip_id" and ordered by ascending by stop_sequence
+     *
+     * @return  an immutable map representing all records from stop_times.txt
+     */
+    Map<String, TreeMap<Integer, StopTime>> getStopTimeAll();
 }
