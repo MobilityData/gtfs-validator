@@ -50,6 +50,7 @@ public abstract class Notice {
     public static final String KEY_COMPOSITE_KEY_SECOND_PART = "compositeKeySecondPart";
     public static final String KEY_COMPOSITE_KEY_FIRST_VALUE = "compositeKeyFirstValue";
     public static final String KEY_COMPOSITE_KEY_SECOND_VALUE = "compositeKeySecondValue";
+    public static final String KEY_UNKNOWN_SHAPE_ID = "unknownShapeId";
 
     private final String filename;
     private final int code;

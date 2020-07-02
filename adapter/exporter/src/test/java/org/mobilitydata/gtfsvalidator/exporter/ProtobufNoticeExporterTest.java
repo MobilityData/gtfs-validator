@@ -1276,4 +1276,45 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
+
+    @Test
+    void exportNonExistingShapeIdNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new NonExistingShapeNotice("filename", "field name",
+                        "composite key first part",
+                        "composite key second part",
+                        "composite key first value",
+                        "composite key second value", "shape id"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("field name"));
+        verify(mockBuilder, times(1))
+                .setEntityValue(ArgumentMatchers.eq("composite key first part"));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("composite key second part"));
+        verify(mockBuilder, times(1))
+                .setAltEntityValue(ArgumentMatchers.eq("composite key first value"));
+        verify(mockBuilder, times(1))
+                .setAltValue(ArgumentMatchers.eq("composite key second value"));
+        verify(mockBuilder, times(1))
+                .setCsvKeyName(ArgumentMatchers.eq("shape id"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
 }
