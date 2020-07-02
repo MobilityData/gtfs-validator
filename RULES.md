@@ -47,6 +47,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W006](#W006) | Missing route short name |
 | [W007](#W007) | Missing route long name |
 | [W008](#W008) | Route long name contains short name | 
+| [W008](#W009) | `transfer.min_transfer_time` is outside allowed range | 
 
 # Errors
 
@@ -153,3 +154,13 @@ In `calendar.txt`, the `end_date` of a service record must not be earlier than t
 <a name="W008"/>
 
 ### W008 - Route long name contains short name
+
+<a name="W009"/>
+
+### W009 - `min_transfer_time` is outside allowed range
+
+`min_transfer_time` should be inside allowed range. The range can be specified by the software user by either command line arguments or within `execution-parameters.json`; and its thresholds are inclusive.
+
+If said thresholds are not provided, default values will be used:
+- min range: 0 sec
+- max range: 86 400sec (24 hours)

@@ -64,8 +64,7 @@ public class ValidateMinTransferTimeValue {
      * - range max: 86400 sec (24 hours)
      */
     public void execute() {
-        logger.info("Validating rule 'W009 - records from `transfers.txt` must not contain suspicious value for field "+
-                "`min_transfer_time`'" + System.lineSeparator());
+        logger.info("Validating rule 'W009 - `min_transfer_time` is outside allowed range" + System.lineSeparator());
         final int minTransferTimeRangeMin =
                 Integer.parseInt(
                         execParamRepo.getExecParamValue(ExecParamRepository.TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN));

@@ -273,9 +273,9 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
         options.addOption(String.valueOf(EXCLUSION_KEY.charAt(1)), EXCLUSION_KEY, true,
                 "Exclude files from semantic GTFS validation");
         options.addOption(TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN, TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN, true,
-                "Minimum admissible value for field min_transfer_time of file transfers.txt");
+                "Minimum allowed value for field min_transfer_time of file transfers.txt");
         options.addOption(TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX, TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX, true,
-                "Maximum admissible value for field min_transfer_time of file transfers.txt");
+                "Maximum allowed value for field min_transfer_time of file transfers.txt");
 
         // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
         // Other commands only take 1 argument
