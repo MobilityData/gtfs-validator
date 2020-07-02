@@ -61,7 +61,8 @@ public class ValidateShapeIdReferenceInStopTime {
      * constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E034 - `shape_id` must be provided and valid when stop_times.shape_dist_travelled" +
+        logger.info("Validating rule 'E034 - `shape_id` must be provided and exist in GTFS data when" +
+                " stop_times.shape_dist_travelled" +
                 " is provided'" + System.lineSeparator());
 
         final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripId = dataRepo.getStopTimeAll();
