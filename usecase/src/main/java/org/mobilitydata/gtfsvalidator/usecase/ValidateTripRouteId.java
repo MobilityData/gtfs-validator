@@ -52,8 +52,7 @@ public class ValidateTripRouteId {
       * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
       */
     public void execute() {
-        logger.info("Validating rule E033 - Field `route_id` of file `trips.txt` should refer to existing record " +
-                "of file `routes.txt`"  + System.lineSeparator());
+        logger.info("Validating rule E033 - GTFS `route_id` does not exist in `trips.txt`" + System.lineSeparator());
         final Set<String> routeIdCollection = new HashSet<>();
         dataRepo.getRouteAll().forEach(route -> routeIdCollection.add(route.getRouteId()));
         dataRepo.getTripAll()

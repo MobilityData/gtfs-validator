@@ -34,7 +34,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E030](#E030) | Inconsistent field `agency_timezone` | 
 | [E031](#E031) | Invalid `agency_id` | 
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
-| [E032](#E033) | Reference to non-existing `route_id` in `trips.txt` |
+| [E032](#E033) | GTFS `route_id` does not exist in `trips.txt` |
 
 ### Table of Warnings
 
@@ -136,7 +136,7 @@ In `calendar.txt`, the `end_date` of a service record must not be earlier than t
 
 <a name="E033"/>
 
-### E033 - Reference to non-existing `route_id` in `trips.txt`
+### E033 - GTFS `route_id` does not exist in `trips.txt`
 
 Each record of `trips.txt` should refer to an existing record of `routes.txt` by its `route_id`.
 

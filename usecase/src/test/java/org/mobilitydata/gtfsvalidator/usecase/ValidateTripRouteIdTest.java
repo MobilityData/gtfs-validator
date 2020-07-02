@@ -54,9 +54,7 @@ class ValidateTripRouteIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E033 - Field `route_id` of file `trips.txt` should refer to existing record " +
-                        "of file `routes.txt`"  + System.lineSeparator()
-        ));
+                "Validating rule E033 - GTFS `route_id` does not exist in `trips.txt`" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();
@@ -106,9 +104,7 @@ class ValidateTripRouteIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E033 - Field `route_id` of file `trips.txt` should refer to existing record " +
-                        "of file `routes.txt`"  + System.lineSeparator()
-        ));
+                "Validating rule E033 - GTFS `route_id` does not exist in `trips.txt`" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();
