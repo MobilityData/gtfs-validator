@@ -34,6 +34,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E030](#E030) | Inconsistent field `agency_timezone` | 
 | [E031](#E031) | Invalid `agency_id` | 
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
+| [E034](#E034) | `shape_id` must be provided and valid when stop_times.shape_dist_travelled is provided |
 
 ### Table of Warnings
 
@@ -135,6 +136,11 @@ In `calendar.txt`, the `end_date` of a service record must not be earlier than t
 
 #### References:
 * [calendar.txt specification](https://gtfs.org/reference/static/#calendartxt)
+
+### E034 - `shape_id` must be provided and valid when stop_times.shape_dist_travelled is provided
+
+In `stop_times.txt` all records having a non-null value for field `shape_dist_travelled` must refer to a record from 
+`trips.txt` that itself refers to an existing record of `shapes.txt`.
 
 # Warnings
 
