@@ -26,11 +26,21 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.*;
 
+/**
+ * Use case to validate that in `stop_times.txt` all records having a non-null value for field `shape_dist_travelled`
+ * refer to a record from `trips.txt` that itself refers to an existing record of `shapes.txt`.
+ */
 public class ValidateShapeIdReferenceInStopTime {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
 
+    /**
+     *
+     * @param dataRepo    a repository storing the data of a GTFS dataset
+     * @param resultRepo  a repository storing information about the validation process
+     * @param logger      a logger displaying information about the validation process
+     */
     public ValidateShapeIdReferenceInStopTime(final GtfsDataRepository dataRepo,
                                               final ValidationResultRepository resultRepo,
                                               final Logger logger) {
@@ -39,8 +49,20 @@ public class ValidateShapeIdReferenceInStopTime {
         this.logger = logger;
     }
 
+    /**
+     * Use case execution method: checks if every record of file `stop_times.txt` that have a non-null value for field
+     * `shape_dist_travelled` refer to a record from `trips.txt` which itself refers to an existing record from
+     * `shapes.txt`.
+     * Each time a record from `stop_times.txt` that has a non-null value for field `shape_dist_travelled` refers to
+     * a non existing record from `shapes.txt` a {@code NonExistingShapeNotice} is generated and added to the
+     * {@code ValidationResultRepository} provided in the constructor.
+     * Each time a record from `stop_times.txt` that has a non-null value for field `shape_dist_travelled` refers to a
+     * record from `trips.txt` that itself does not refer to any record from `shapes.txt` a
+     * {@code MissingRequiredValueNotice} is generated and added to th {@code ValidationResultRepository} in the
+     * constructor.
+     */
     public void execute() {
-        logger.info("Validating rule 'E034 - shape_id must be provided and valid when stop_times.shape_dist_travelled" +
+        logger.info("Validating rule 'E034 - `shape_id` must be provided and valid when stop_times.shape_dist_travelled" +
                 " is provided'" + System.lineSeparator());
 
         final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripId = dataRepo.getStopTimeAll();
