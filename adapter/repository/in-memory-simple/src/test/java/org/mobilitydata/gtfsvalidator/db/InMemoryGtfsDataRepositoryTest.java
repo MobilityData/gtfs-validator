@@ -399,11 +399,13 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addTransfer(mockTransfer02);
         underTest.addTransfer(mockTransfer03);
 
-        assertEquals(4, underTest.getTransferAll().size());
-        assertTrue(underTest.getTransferAll().contains(mockTransfer00));
-        assertTrue(underTest.getTransferAll().contains(mockTransfer01));
-        assertTrue(underTest.getTransferAll().contains(mockTransfer02));
-        assertTrue(underTest.getTransferAll().contains(mockTransfer03));
+        final Map<String, Map<String, Transfer>> toCheck = underTest.getTransferAll();
+
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.get("stop id 0").containsKey(mockTransfer00.getToStopId()));
+        assertTrue(toCheck.get("stop id 0").containsKey(mockTransfer01.getToStopId()));
+        assertTrue(toCheck.get("stop id 0").containsKey(mockTransfer03.getToStopId()));
+        assertTrue(toCheck.get("stop id 4").containsKey(mockTransfer02.getToStopId()));
     }
 
     @Test

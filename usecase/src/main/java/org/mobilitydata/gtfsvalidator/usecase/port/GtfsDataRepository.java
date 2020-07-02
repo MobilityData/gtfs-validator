@@ -66,7 +66,7 @@ public interface GtfsDataRepository {
 
     Transfer getTransferByStopPair(final String fromStopId, final String toStopId);
 
-    Collection<Transfer> getTransferAll();
+    Map<String, Map<String, Transfer>> getTransferAll();
 
     FeedInfo addFeedInfo(final FeedInfo newFeedInfo) throws IllegalArgumentException;
 

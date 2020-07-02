@@ -26,8 +26,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
@@ -41,7 +42,10 @@ class ValidateMinTransferTimeValueTest {
         when(mockTransfer.getToStopId()).thenReturn("stop id 1");
         when(mockTransfer.getFromStopId()).thenReturn("stop id 0");
         when(mockTransfer.getMinTransferTime()).thenReturn(240);
-        final List<Transfer> mockTransferCollection = new ArrayList<>(List.of(mockTransfer));
+        final Map<String, Map<String, Transfer>> mockTransferCollection = new HashMap<>();
+        final Map<String, Transfer> innerMap = new HashMap<>();
+        innerMap.put("stop id 1", mockTransfer);
+        mockTransferCollection.put("stop id 1", innerMap);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getTransferAll()).thenReturn(mockTransferCollection);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -57,9 +61,8 @@ class ValidateMinTransferTimeValueTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule 'W009 - records from " +
-                "`transfers.txt` must not contain suspicious value for field " +
-                "`min_transfer_time`'" + System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'W009 - `min_transfer_time` is" +
+                        " outside allowed range" + System.lineSeparator());
 
         verify(mockExecParamRepo, times(1)).getExecParamValue(
                 ArgumentMatchers.eq(ExecParamRepository.TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN));
@@ -105,8 +108,12 @@ class ValidateMinTransferTimeValueTest {
         when(mockTransfer.getToStopId()).thenReturn("stop id 1");
         when(mockTransfer.getFromStopId()).thenReturn("stop id 0");
         when(mockTransfer.getMinTransferTime()).thenReturn(3);
-        final List<Transfer> mockTransferCollection = new ArrayList<>(List.of(mockTransfer));
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        final Map<String, Map<String, Transfer>> mockTransferCollection = new HashMap<>();
+        final Map<String, Transfer> innerMap = new HashMap<>();
+        innerMap.put("stop id 1", mockTransfer);
+        mockTransferCollection.put("stop id 1", innerMap);
+
         when(mockDataRepo.getTransferAll()).thenReturn(mockTransferCollection);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
@@ -121,9 +128,8 @@ class ValidateMinTransferTimeValueTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule 'W009 - records from " +
-                "`transfers.txt` must not contain suspicious value for field " +
-                "`min_transfer_time`'" + System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'W009 - `min_transfer_time` is" +
+                " outside allowed range" + System.lineSeparator());
 
         verify(mockExecParamRepo, times(1)).getExecParamValue(
                 ArgumentMatchers.eq(ExecParamRepository.TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN));
@@ -169,9 +175,14 @@ class ValidateMinTransferTimeValueTest {
         when(mockTransfer.getToStopId()).thenReturn("stop id 1");
         when(mockTransfer.getFromStopId()).thenReturn("stop id 0");
         when(mockTransfer.getMinTransferTime()).thenReturn(90);
-        final List<Transfer> mockTransferCollection = new ArrayList<>(List.of(mockTransfer));
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        final Map<String, Map<String, Transfer>> mockTransferCollection = new HashMap<>();
+        final Map<String, Transfer> innerMap = new HashMap<>();
+        innerMap.put("stop id 1", mockTransfer);
+        mockTransferCollection.put("stop id 1", innerMap);
+
         when(mockDataRepo.getTransferAll()).thenReturn(mockTransferCollection);
+
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
         when(mockExecParamRepo.getExecParamValue(ExecParamRepository.TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN))
@@ -185,9 +196,8 @@ class ValidateMinTransferTimeValueTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule 'W009 - records from " +
-                "`transfers.txt` must not contain suspicious value for field " +
-                "`min_transfer_time`'" + System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'W009 - `min_transfer_time` is" +
+                " outside allowed range" + System.lineSeparator());
 
         verify(mockExecParamRepo, times(1)).getExecParamValue(
                 ArgumentMatchers.eq(ExecParamRepository.TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN));
@@ -208,8 +218,12 @@ class ValidateMinTransferTimeValueTest {
         when(mockTransfer.getToStopId()).thenReturn("stop id 1");
         when(mockTransfer.getFromStopId()).thenReturn("stop id 0");
         when(mockTransfer.getMinTransferTime()).thenReturn(null);
-        final List<Transfer> mockTransferCollection = new ArrayList<>(List.of(mockTransfer));
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        final Map<String, Map<String, Transfer>> mockTransferCollection = new HashMap<>();
+        final Map<String, Transfer> innerMap = new HashMap<>();
+        innerMap.put("stop id 1", mockTransfer);
+        mockTransferCollection.put("stop id 1", innerMap);
+
         when(mockDataRepo.getTransferAll()).thenReturn(mockTransferCollection);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
@@ -224,9 +238,8 @@ class ValidateMinTransferTimeValueTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule 'W009 - records from " +
-                "`transfers.txt` must not contain suspicious value for field " +
-                "`min_transfer_time`'" + System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'W009 - `min_transfer_time` is" +
+                " outside allowed range" + System.lineSeparator());
 
         verify(mockExecParamRepo, times(1)).getExecParamValue(
                 ArgumentMatchers.eq(ExecParamRepository.TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN));
