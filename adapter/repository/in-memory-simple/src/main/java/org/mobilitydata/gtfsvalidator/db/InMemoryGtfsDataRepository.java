@@ -714,4 +714,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public Map<Integer, StopTime> getStopTimeByTripId(final String tripId) {
         return Collections.unmodifiableMap(stopTimePerTripIdStopSequence.get(tripId));
     }
+
+    /**
+     * Return an immutable map representing all records from stop_times.txt. Elements of this map are mapped by
+     * "trip_id" and ordered by ascending by stop_sequence
+     *
+     * @return  an immutable map representing all records from stop_times.txt
+     */
+    public Map<String, TreeMap<Integer, StopTime>> getStopTimeAll() {
+        return Collections.unmodifiableMap(stopTimePerTripIdStopSequence);
+    }
 }

@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
@@ -28,11 +29,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -763,5 +760,34 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(firstStopTimeInSequence, toCheck.get(0));
         assertEquals(secondStopTimeInSequence, toCheck.get(1));
         assertEquals(thirdStopTimeInSequence, toCheck.get(2));
+    }
+
+    @Test
+    void getStopTimeAllShouldReturnStopTimeCollection() {
+        final StopTime firstStopTimeInSequenceOfTrip00 = mock(StopTime.class);
+        when(firstStopTimeInSequenceOfTrip00.getTripId()).thenReturn("trip id00");
+        when(firstStopTimeInSequenceOfTrip00.getStopSequence()).thenReturn(4);
+
+        final StopTime secondStopTimeInSequenceOfTrip00 = mock(StopTime.class);
+        when(secondStopTimeInSequenceOfTrip00.getTripId()).thenReturn("trip id00");
+        when(secondStopTimeInSequenceOfTrip00.getStopSequence()).thenReturn(8);
+
+        final StopTime firstStopTimeInSequenceOfTrip01 = mock(StopTime.class);
+        when(firstStopTimeInSequenceOfTrip01.getTripId()).thenReturn("trip id01");
+        when(firstStopTimeInSequenceOfTrip01.getStopSequence()).thenReturn(12);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addStopTime(firstStopTimeInSequenceOfTrip00);
+        underTest.addStopTime(secondStopTimeInSequenceOfTrip00);
+        underTest.addStopTime(firstStopTimeInSequenceOfTrip01);
+
+        final Map<String, TreeMap<Integer, StopTime>> toCheck = underTest.getStopTimeAll();
+        assertEquals(2, toCheck.size());
+        assertEquals(2, toCheck.get("trip id00").size());
+        assertTrue(toCheck.get("trip id00").containsKey(4));
+        assertTrue(toCheck.get("trip id00").containsKey(8));
+        assertEquals(1, toCheck.get("trip id01").size());
+        assertTrue(toCheck.get("trip id01").containsKey(12));
     }
 }
