@@ -159,6 +159,7 @@ public class Main {
                 config.validateCalendarEndDateBeforeStartDate().execute();
                 config.validateAgencyIdRequirement().execute();
                 config.validateAgenciesHaveSameAgencyTimezone().execute();
+                config.validateShapeIdReferenceInStopTime().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
