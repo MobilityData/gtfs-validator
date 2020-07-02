@@ -270,4 +270,8 @@ public class DefaultConfig {
     public ValidateAgenciesHaveSameAgencyTimezone validateAgenciesHaveSameAgencyTimezone() {
         return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
     }
+
+    public ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime() {
+        return new ValidateShapeIdReferenceInStopTime(gtfsDataRepository, resultRepo, logger);
+    }
 }
