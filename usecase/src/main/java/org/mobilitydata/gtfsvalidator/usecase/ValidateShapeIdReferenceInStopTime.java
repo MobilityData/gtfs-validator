@@ -36,7 +36,6 @@ public class ValidateShapeIdReferenceInStopTime {
     private final Logger logger;
 
     /**
-     *
      * @param dataRepo    a repository storing the data of a GTFS dataset
      * @param resultRepo  a repository storing information about the validation process
      * @param logger      a logger displaying information about the validation process
