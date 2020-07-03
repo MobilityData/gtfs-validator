@@ -562,7 +562,7 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        final MissingAgencyIdNotice toExport = new MissingAgencyIdNotice("agency_name");
+        final MissingAgencyIdNotice toExport = new MissingAgencyIdNotice("agency_name", "entity id");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
@@ -588,6 +588,19 @@ class JsonNoticeExporterTest {
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         final InvalidAgencyIdNotice toExport = new InvalidAgencyIdNotice("  ");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportNonExistingAgencyIdNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final NonExistingAgencyId toExport = new NonExistingAgencyId("filename", "field name",
+                "entity id");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
