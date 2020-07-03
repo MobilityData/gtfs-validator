@@ -1264,15 +1264,15 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new InvalidAgencyIdNotice("   "));
+        underTest.export(new InvalidAgencyIdNotice("filename", "field name", "entity id" ));
 
         verify(mockBuilder, times(1)).clear();
-        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("agency.txt"));
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("agency_id"));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("field name"));
         verify(mockBuilder, times(1))
-                .setEntityValue(ArgumentMatchers.eq("   "));
+                .setEntityValue(ArgumentMatchers.eq("entity id"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

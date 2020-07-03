@@ -534,7 +534,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setValue(toExport.getFieldName())
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
                 .setEntityValue(String.valueOf(toExport.getEntityId()))
                 .build()
                 .writeTo(streamGenerator.getStream());

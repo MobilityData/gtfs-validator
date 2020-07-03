@@ -587,7 +587,8 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        final InvalidAgencyIdNotice toExport = new InvalidAgencyIdNotice("  ");
+        final InvalidAgencyIdNotice toExport = new InvalidAgencyIdNotice("filename", "field name",
+                "entity id");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
