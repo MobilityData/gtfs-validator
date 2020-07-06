@@ -16,10 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.distancecalculationutils;
 
-
-// todo: javadoc
-// this class might be not be needed. To be discussed
+/**
+ * Enum describing the different metric unit available for computation: meter, kilometers.
+ */
 public enum DistanceUnit {
+// this class might be not be needed. To be discussed
     METER("meter"),
     KILOMETER("kilometer");
 
