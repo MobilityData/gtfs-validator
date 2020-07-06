@@ -67,9 +67,9 @@ class ValidateShapeDistTraveledTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule 'E036 - `If provided," +
-                " stop_times.shape_dist_traveled` must be smaller or equal to shape total distance" +
-                System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'E036 -" +
+                        " `stop_times.shape_dist_traveled` must be smaller or equal to"+
+                        " shape total distance" + System.lineSeparator());
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
 
@@ -116,9 +116,9 @@ class ValidateShapeDistTraveledTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule 'E036 - `If provided," +
-                " stop_times.shape_dist_traveled` must be smaller or equal to shape total distance" +
-                System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'E036 -" +
+                " `stop_times.shape_dist_traveled` must be smaller or equal to"+
+                " shape total distance" + System.lineSeparator());
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1)).getStopTimeByTripId(ArgumentMatchers.eq("trip id"));
@@ -185,9 +185,9 @@ class ValidateShapeDistTraveledTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule 'E036 - `If provided," +
-                " stop_times.shape_dist_traveled` must be smaller or equal to shape total distance" +
-                System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule 'E036 -" +
+                " `stop_times.shape_dist_traveled` must be smaller or equal to"+
+                " shape total distance" + System.lineSeparator());
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1)).getStopTimeByTripId(ArgumentMatchers.eq("trip id"));

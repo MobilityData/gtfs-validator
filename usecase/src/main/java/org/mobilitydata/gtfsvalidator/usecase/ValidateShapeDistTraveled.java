@@ -60,7 +60,7 @@ public class ValidateShapeDistTraveled {
      * total length.
      */
     public void execute() {
-        logger.info("Validating rule 'E036 - `If provided, stop_times.shape_dist_traveled` must be smaller or equal to"+
+        logger.info("Validating rule 'E036 - `stop_times.shape_dist_traveled` must be smaller or equal to"+
                 " shape total distance" + System.lineSeparator());
 
         final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripId = dataRepo.getStopTimeAll();

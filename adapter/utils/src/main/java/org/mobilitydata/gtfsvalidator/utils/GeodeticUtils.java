@@ -86,7 +86,8 @@ public class GeodeticUtils implements DistanceCalculationUtils {
      * Method returns the total length of a shape. As a reminder, a shape is a collection of {@code ShapePoint} ordered
      * by shape_pt_sequence. The result is expressed in the specified unit.
      *
-     * @param shape          the collection of {@link ShapePoint} whose total length is to be computed
+     * @param shape          the collection of {@link ShapePoint} sorted by `shape_pt_sequence` whose total length is to
+     *                       be computed
      * @param distanceUnit   the {@code DistanceUnit} of the result (meter, kilometers)
      * @return the total length of a shape in the specified unit
      */
