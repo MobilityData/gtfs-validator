@@ -65,7 +65,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - shape_id must be provided and valid when" +
+                "Validating rule 'E034 - `shape_id` must be provided and exist in GTFS data when" +
                         " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
@@ -104,7 +104,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - shape_id must be provided and valid when" +
+                "Validating rule 'E034 - `shape_id` must be provided and exist in GTFS data when" +
                         " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
@@ -148,7 +148,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - shape_id must be provided and valid when" +
+                "Validating rule 'E034 - `shape_id` must be provided and exist in GTFS data when" +
                         " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
@@ -207,7 +207,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - shape_id must be provided and valid when" +
+                "Validating rule 'E034 - `shape_id` must be provided and exist in GTFS data when" +
                         " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
@@ -276,7 +276,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - shape_id must be provided and valid when" +
+                "Validating rule 'E034 - `shape_id` must be provided and exist in GTFS data when" +
                         " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
