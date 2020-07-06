@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.usecase.distancecalculationutils.DistanceCalculationUtils;
 import org.mobilitydata.gtfsvalidator.usecase.distancecalculationutils.DistanceUnit;
+import org.mobilitydata.gtfsvalidator.utils.GeodeticUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class GavaghanDistanceCalculationUtilsTest {
+class GeodeticUtilsTest {
     private static final float MONTREAL_LATITUDE = 45.5017f;
     private static final float MONTREAL_LONGITUDE = -73.5673f;
     private static final float NEW_YORK_LATITUDE = 40.7128f;
@@ -38,14 +39,18 @@ class GavaghanDistanceCalculationUtilsTest {
 
     @Test
     void distanceBetweenSamePointShouldBeZero(){
-        assertEquals(0, new GavaghanDistanceCalculationUtils().distanceBetweenTwoPoints(
-                        30,30,45,45, DistanceUnit.KILOMETER));
+        assertEquals(0, new GeodeticUtils().distanceBetweenTwoPoints(
+                        30,30,45,45,
+                DistanceUnit.KILOMETER));
+        assertEquals(0, new GeodeticUtils().distanceBetweenTwoPoints(
+                        30,30,45,45,
+                DistanceUnit.METER));
     }
 
     @Test
     void distanceBetweenMontrealAndPointeAPitreShouldBeSufficientlyAccurate() {
         final double distance =
-                new GavaghanDistanceCalculationUtils().distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE,MONTREAL_LATITUDE,
+                new GeodeticUtils().distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE,MONTREAL_LATITUDE,
                         POINTE_A_PITRE_LONGITUDE, MONTREAL_LONGITUDE, DistanceUnit.KILOMETER);
         assertTrue(3433-.5 <= distance && distance <= 3443+.5);
     }
@@ -53,9 +58,9 @@ class GavaghanDistanceCalculationUtilsTest {
     @Test
     void shapeTotalDistanceShouldBeTheSumOfDistancesBetweenShapePoints() {
         final Map<Integer, ShapePoint> mockShape = new HashMap<>();
-        final DistanceCalculationUtils distanceCalculationUtils = new GavaghanDistanceCalculationUtils();
+        final DistanceCalculationUtils distanceCalculationUtils = new GeodeticUtils();
 
-        // first shape point is located at Montréal (Canada_
+        // first shape point is located at Montréal (Canada)
         final ShapePoint firstShapePointInSequence = mock(ShapePoint.class);
         when(firstShapePointInSequence.getShapePtLat()).thenReturn(MONTREAL_LATITUDE);
         when(firstShapePointInSequence.getShapePtLon()).thenReturn(MONTREAL_LONGITUDE);
@@ -99,7 +104,7 @@ class GavaghanDistanceCalculationUtilsTest {
 
     @Test
     void computeDistanceBetweenPointWithoutSpecifyingUnitShouldReturnResultInKilometer() {
-        final DistanceCalculationUtils distanceCalculationUtils = new GavaghanDistanceCalculationUtils();
+        final DistanceCalculationUtils distanceCalculationUtils = new GeodeticUtils();
 
         assertEquals(distanceCalculationUtils.distanceBetweenTwoPoints(
                 30,30,45,45, null),

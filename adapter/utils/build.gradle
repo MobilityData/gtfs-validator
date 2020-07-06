@@ -33,7 +33,7 @@ dependencies {
             project(':usecase')
     )
 
-    implementation 'org.gavaghan:geodesy:1.1.3'
+    implementation 'org.locationtech.spatial4j:spatial4j:0.7'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testImplementation 'org.mockito:mockito-core:3.3.0'

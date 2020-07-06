@@ -59,10 +59,6 @@ public class ValidateShapeDistTraveled {
      * Use case execution method: checks if `stop_times.shape_dist_traveled` is smaller or equal to the related shape
      * total length.
      */
-    // todo: javadoc implement tests:
-    // - stopTime with null `shape_dist_Travelled` should not generate notice
-    // - stopTime with too big shape dist traveled should generate notice
-
     public void execute() {
         logger.info("Validating rule 'E036 - `If provided, stop_times.shape_dist_traveled` must be smaller or equal to"+
                 " shape total distance" + System.lineSeparator());
@@ -71,23 +67,22 @@ public class ValidateShapeDistTraveled {
         stopTimePerTripId.forEach(
                 (tripId, stopTimeCollection) -> dataRepo.getStopTimeByTripId(tripId)
                         .forEach((stopSequence, stopTime) -> {
-                            if (stopTime.getShapeDistTraveled() != null) {
+                            final Float shapeDistanceTraveled = stopTime.getShapeDistTraveled();
+                            if (shapeDistanceTraveled != null) {
                                 final Trip trip = dataRepo.getTripById(tripId);
                                 if (trip != null) {
                                     final String shapeId = trip.getShapeId();
                                     if (shapeId != null) {
                                         final Map<Integer, ShapePoint> shape = dataRepo.getShapeById(shapeId);
                                         if (shape != null) {
-                                            if (stopTime.getShapeDistTraveled() >
-                                                    distanceCalculationUtils
-                                                            .getShapeTotalDistance(shape, DistanceUnit.KILOMETER)) {
+                                            final float shapeTotalDistance = (float) distanceCalculationUtils
+                                                    .getShapeTotalDistance(shape, DistanceUnit.KILOMETER);
+                                            if (shapeDistanceTraveled > shapeTotalDistance) {
                                                 resultRepo.addNotice(
                                                         new FloatFieldValueOutOfRangeNotice("stop_times.txt",
                                                                 "shape_dist_traveled", 0,
-                                                                (float) distanceCalculationUtils
-                                                                        .getShapeTotalDistance(shape,
-                                                                                DistanceUnit.KILOMETER),
-                                                                stopTime.getShapeDistTraveled(),
+                                                                shapeTotalDistance,
+                                                                shapeDistanceTraveled,
                                                                 "trip_id",
                                                                 "stop_sequence",
                                                                 tripId, stopSequence));
