@@ -27,8 +27,8 @@ public interface DistanceCalculationUtils {
     int KILOMETER_TO_METER_CONVERSION_FACTOR = 1000; // conversion factor from kilometers to meters
 
     /**
-     * Return the distance between two points given there lat/lon positions. Note that points of origin and destination
-     * can be swapped.
+     * Return the distance between two points given there lat/lon positions in the specified unit. Note that points of
+     * origin and destination can be swapped.
      *
      * @param originLatitude        latitude of the origin point
      * @param destinationLatitude   latitude of the destination point

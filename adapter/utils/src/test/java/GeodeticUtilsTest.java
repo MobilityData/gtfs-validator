@@ -32,27 +32,28 @@ class GeodeticUtilsTest {
     private static final float MONTREAL_LONGITUDE = -73.5673f;
     private static final float NEW_YORK_LATITUDE = 40.7128f;
     private static final float NEW_YORK_LONGITUDE = -74.0060f;
-    private static final float POINTE_A_PITRE_LATITUDE = 16.24125f;
-    private static final float POINTE_A_PITRE_LONGITUDE = -61.53614f;
+    private static final float POINTE_A_PITRE_LATITUDE = 16.2650f;
+    private static final float POINTE_A_PITRE_LONGITUDE = -61.5510f;
     private static final float FORT_DE_FRANCE_LATITUDE = 14.6161f;
     private static final float FORT_DE_FRANCE_LONGITUDE = -61.0588f;
 
     @Test
     void distanceBetweenSamePointShouldBeZero(){
         assertEquals(0, new GeodeticUtils().distanceBetweenTwoPoints(
-                        30,30,45,45,
+                        30,45,30,45,
                 DistanceUnit.KILOMETER));
         assertEquals(0, new GeodeticUtils().distanceBetweenTwoPoints(
-                        30,30,45,45,
+                        30,45,30,45,
                 DistanceUnit.METER));
     }
 
     @Test
     void distanceBetweenMontrealAndPointeAPitreShouldBeSufficientlyAccurate() {
         final double distance =
-                new GeodeticUtils().distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE,MONTREAL_LATITUDE,
-                        POINTE_A_PITRE_LONGITUDE, MONTREAL_LONGITUDE, DistanceUnit.KILOMETER);
-        assertTrue(3433-.5 <= distance && distance <= 3443+.5);
+                new GeodeticUtils().distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE,POINTE_A_PITRE_LONGITUDE,
+                        MONTREAL_LATITUDE, MONTREAL_LONGITUDE, DistanceUnit.KILOMETER);
+        // see https://www.movable-type.co.uk/scripts/latlong.html
+        assertTrue(3438-.5 <= distance && distance <= 3438+.5); // unit is kilometers
     }
 
     @Test
@@ -86,14 +87,12 @@ class GeodeticUtilsTest {
         mockShape.put(11, fourthShapePointInSequence);
 
         final double montrealNewYorkDistance = distanceCalculationUtils.distanceBetweenTwoPoints(MONTREAL_LATITUDE,
-                NEW_YORK_LATITUDE,
-                MONTREAL_LONGITUDE, NEW_YORK_LONGITUDE, DistanceUnit.KILOMETER);
+                MONTREAL_LONGITUDE, NEW_YORK_LATITUDE, NEW_YORK_LONGITUDE, DistanceUnit.KILOMETER);
         final double newYorkPointeAPitreDistance = distanceCalculationUtils.distanceBetweenTwoPoints(NEW_YORK_LATITUDE,
-                POINTE_A_PITRE_LATITUDE,
-                NEW_YORK_LONGITUDE, POINTE_A_PITRE_LONGITUDE, DistanceUnit.KILOMETER);
+                NEW_YORK_LONGITUDE, POINTE_A_PITRE_LATITUDE, POINTE_A_PITRE_LONGITUDE, DistanceUnit.KILOMETER);
         final double pointeAPitreFortDeFranceDistance =
-                distanceCalculationUtils.distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE, FORT_DE_FRANCE_LATITUDE,
-                        POINTE_A_PITRE_LONGITUDE, FORT_DE_FRANCE_LONGITUDE, DistanceUnit.KILOMETER);
+                distanceCalculationUtils.distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE, POINTE_A_PITRE_LONGITUDE,
+                        FORT_DE_FRANCE_LATITUDE, FORT_DE_FRANCE_LONGITUDE, DistanceUnit.KILOMETER);
 
         final double shapeTotalDistance = montrealNewYorkDistance + newYorkPointeAPitreDistance +
                 pointeAPitreFortDeFranceDistance;
@@ -107,8 +106,8 @@ class GeodeticUtilsTest {
         final DistanceCalculationUtils distanceCalculationUtils = new GeodeticUtils();
 
         assertEquals(distanceCalculationUtils.distanceBetweenTwoPoints(
-                30,30,45,45, null),
+                30,45,30,45, null),
                 distanceCalculationUtils.distanceBetweenTwoPoints(
-                30,30,45,45, DistanceUnit.KILOMETER));
+                30,45,30,45, DistanceUnit.KILOMETER));
     }
 }

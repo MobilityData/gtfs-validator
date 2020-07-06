@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.utils;
 
 import org.locationtech.spatial4j.distance.DistanceCalculator;
+import org.locationtech.spatial4j.distance.DistanceUtils;
 import org.locationtech.spatial4j.shape.Point;
 import org.locationtech.spatial4j.shape.ShapeFactory;
 
@@ -35,31 +36,33 @@ import java.util.Map;
 public class GeodeticUtils implements DistanceCalculationUtils {
 
     /**
-     * Return the distance between two points given there lat/lon positions. Note that points of origin and destination
-     * can be swapped.
+     * Return the distance between two points given there lat/lon positions in the specified unit. Note that points of
+     * origin and destination can be swapped.
      *
      * @param originLatitude        latitude of the origin point
-     * @param destinationLatitude   latitude of the destination point
      * @param originLongitude       longitude of the origin point
+     * @param destinationLatitude   latitude of the destination point
      * @param destinationLongitude  longitude of the destination point
      * @param distanceUnit          unit of the desired result of computation
      * @return the distance between two points given there lat/lon positions in the specified unit
      */
     @Override
-    public double distanceBetweenTwoPoints(final float originLatitude, final float destinationLatitude,
-                                                  final float originLongitude, final float destinationLongitude,
+    public double distanceBetweenTwoPoints(final float originLatitude, final float originLongitude,
+                                           final float destinationLatitude, final float destinationLongitude,
                                                   final DistanceUnit distanceUnit) {
         final ShapeFactory shapeFactory= getShapeFactory();
         final DistanceCalculator distanceCalculator = getDistanceCalculator();
 
         final Point origin = shapeFactory.pointXY(originLongitude, originLatitude);
         final Point destination = shapeFactory.pointXY(destinationLongitude, destinationLatitude);
-        final double distance = distanceCalculator.distance(origin, destination);
-
-        if (distanceUnit == DistanceUnit.METER) {
+        // implementation uses harvesine formula which determines the great-circle distance between two points on a
+        // sphere given their longitudes and latitudes. Note that the elevation of both points is not taken into
+        // consideration.
+        final double distance = DistanceUtils.DEG_TO_KM*distanceCalculator.distance(origin, destination);
+        if (distanceUnit == DistanceUnit.KILOMETER) {
                 return distance;
         } else {
-                return distance/KILOMETER_TO_METER_CONVERSION_FACTOR;
+                return distance* KILOMETER_TO_METER_CONVERSION_FACTOR;
         }
     }
 
@@ -96,8 +99,8 @@ public class GeodeticUtils implements DistanceCalculationUtils {
         if (origin!= null) {
             for (Map.Entry<Integer, ShapePoint> integerShapePointEntry : shape.entrySet()) {
                 final ShapePoint destination = integerShapePointEntry.getValue();
-                shapeTotalDistance += distanceBetweenTwoPoints(origin.getShapePtLat(), destination.getShapePtLat(),
-                        origin.getShapePtLon(), destination.getShapePtLon(), distanceUnit);
+                shapeTotalDistance += distanceBetweenTwoPoints(origin.getShapePtLat(), origin.getShapePtLon(),
+                        destination.getShapePtLat(), destination.getShapePtLon(), distanceUnit);
                 origin = destination;
             }
         }
