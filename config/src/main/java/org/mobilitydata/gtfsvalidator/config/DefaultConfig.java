@@ -34,6 +34,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.*;
+import org.mobilitydata.gtfsvalidator.usecase.distancecalculationutils.DistanceCalculationUtils;
+import org.mobilitydata.gtfsvalidator.utils.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 
 import java.io.IOException;
@@ -50,6 +52,7 @@ public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
+    private final DistanceCalculationUtils distanceCalculationUtils = new GeodeticUtils();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -269,5 +272,9 @@ public class DefaultConfig {
 
     public ValidateAgenciesHaveSameAgencyTimezone validateAgenciesHaveSameAgencyTimezone() {
         return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateShapeDistTraveled validateShapeDistTraveled() {
+        return new ValidateShapeDistTraveled(gtfsDataRepository, resultRepo, distanceCalculationUtils, logger);
     }
 }
