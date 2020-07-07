@@ -34,8 +34,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.timeutils.TimeConversionUtils;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
+import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -51,6 +53,7 @@ public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
+    private final TimeUtils timeUtils = new TimeConversionUtils();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -253,7 +256,7 @@ public class DefaultConfig {
     }
 
     public ProcessParsedStopTime processParsedStopTime() {
-        return new ProcessParsedStopTime(resultRepo, gtfsDataRepository, new StopTime.StopTimeBuilder());
+        return new ProcessParsedStopTime(resultRepo, gtfsDataRepository, timeUtils, new StopTime.StopTimeBuilder());
     }
 
     public ProcessParsedTranslation processParsedTranslation() {
