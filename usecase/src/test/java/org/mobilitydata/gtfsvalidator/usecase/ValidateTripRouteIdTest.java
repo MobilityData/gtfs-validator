@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.NonExistingRouteIdNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteIdNotFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentMatchers;
@@ -54,7 +54,7 @@ class ValidateTripRouteIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E033 - GTFS `route_id` does not exist in `trips.txt`" + System.lineSeparator()));
+                "Validating rule E033 - Invalid `route_id`" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();
@@ -71,7 +71,7 @@ class ValidateTripRouteIdTest {
         // suppress warning regarding ignored result of method since it is not necessary here.
         //noinspection ResultOfMethodCallIgnored
         verify(mockTrip01, times(2)).getRouteId();
-        verify(mockResultRepo, times(2)).addNotice(any(NonExistingRouteIdNotice.class));
+        verify(mockResultRepo, times(2)).addNotice(any(RouteIdNotFoundNotice.class));
 
         verifyNoMoreInteractions(mockTrip00, mockTrip01, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -104,7 +104,7 @@ class ValidateTripRouteIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E033 - GTFS `route_id` does not exist in `trips.txt`" + System.lineSeparator()));
+                "Validating rule E033 - Invalid `route_id`" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();

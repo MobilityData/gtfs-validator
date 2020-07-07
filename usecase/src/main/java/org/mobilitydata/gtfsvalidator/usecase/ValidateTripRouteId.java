@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.NonExistingRouteIdNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteIdNotFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -52,14 +52,14 @@ public class ValidateTripRouteId {
       * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
       */
     public void execute() {
-        logger.info("Validating rule E033 - GTFS `route_id` does not exist in `trips.txt`" + System.lineSeparator());
+        logger.info("Validating rule E033 - Invalid `route_id`" + System.lineSeparator());
         final Set<String> routeIdCollection = new HashSet<>();
         dataRepo.getRouteAll().forEach(route -> routeIdCollection.add(route.getRouteId()));
         dataRepo.getTripAll()
                 .forEach(trip -> {
                     if (!routeIdCollection.contains(trip.getRouteId())) {
                         resultRepo.addNotice(
-                                new NonExistingRouteIdNotice("trips.txt",
+                                new RouteIdNotFoundNotice("trips.txt",
                                         trip.getTripId(),
                                         trip.getRouteId(),
                                         "route_id")

@@ -541,7 +541,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final NonExistingRouteIdNotice toExport) throws IOException {
+    public void export(final RouteIdNotFoundNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)

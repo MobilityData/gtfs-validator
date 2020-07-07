@@ -248,7 +248,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final NonExistingRouteIdNotice toExport) throws IOException {
+    public void export(final RouteIdNotFoundNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

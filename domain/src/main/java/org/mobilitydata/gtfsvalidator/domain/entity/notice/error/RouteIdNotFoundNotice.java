@@ -21,9 +21,9 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class NonExistingRouteIdNotice extends ErrorNotice {
-    public NonExistingRouteIdNotice(final String filename, final String entityId, final String routeId,
-                                    final String fieldName) {
+public class RouteIdNotFoundNotice extends ErrorNotice {
+    public RouteIdNotFoundNotice(final String filename, final String entityId, final String routeId,
+                                 final String fieldName) {
         super(filename, E_033, "Non existing `route_id`", "Trip with `trip_id`: "+ entityId + " refers" +
                 " to non-existing route from file `routes.txt` with " + "`route_id`: " + routeId + "`.", entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);

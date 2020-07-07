@@ -1279,7 +1279,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportNonExistingRouteIdNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportRouteIdNotFoundNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -1294,7 +1294,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new NonExistingRouteIdNotice("filename", "entity id", "route id",
+        underTest.export(new RouteIdNotFoundNotice("filename", "entity id", "route id",
                 "entity id"));
 
         verify(mockBuilder, times(1)).clear();

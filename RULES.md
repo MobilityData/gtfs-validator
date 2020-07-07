@@ -134,14 +134,14 @@ When provided field `agency_id` should not be blank.
 
 In `calendar.txt`, the `end_date` of a service record must not be earlier than the `start_date`.
 
-<a name="E033"/>
-
-### E033 - GTFS `route_id` does not exist in `trips.txt`
-
-Each record of `trips.txt` should refer to an existing record of `routes.txt` by its `route_id`.
-
 #### References:
 * [calendar.txt specification](https://gtfs.org/reference/static/#calendartxt)
+
+<a name="E033"/>
+
+### E033 - Invalid `route_id`
+
+Value of field `route_id` should exist in GTFS data.
 
 # Warnings
 

@@ -595,11 +595,11 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportNonExistingRouteIdNoticeShouldWriteObject() throws IOException {
+    void exportNRouteIdNotFoundNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        final NonExistingRouteIdNotice toExport = new NonExistingRouteIdNotice("filename", "entity id",
+        final RouteIdNotFoundNotice toExport = new RouteIdNotFoundNotice("filename", "entity id",
                 "route id", "field name");
         underTest.export(toExport);
 
