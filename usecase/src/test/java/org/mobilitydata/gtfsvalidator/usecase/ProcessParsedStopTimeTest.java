@@ -25,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntit
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
@@ -43,6 +44,7 @@ class ProcessParsedStopTimeTest {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
+        final TimeUtils mockTimeUtil = mock(TimeUtils.class);
 
         final StopTime mockStopTime = mock(StopTime.class);
 
@@ -57,8 +59,8 @@ class ProcessParsedStopTimeTest {
 
         final ParsedEntity mockParsedEntity = mock(ParsedEntity.class);
         when(mockParsedEntity.get("trip_id")).thenReturn("trip_id");
-        when(mockParsedEntity.get("arrival_time")).thenReturn(34);
-        when(mockParsedEntity.get("departure_time")).thenReturn(45);
+        when(mockParsedEntity.get("arrival_time")).thenReturn("arrival time");
+        when(mockParsedEntity.get("departure_time")).thenReturn("departure time");
         when(mockParsedEntity.get("stop_id")).thenReturn("stop_id");
         when(mockParsedEntity.get("stop_sequence")).thenReturn(3);
         when(mockParsedEntity.get("stop_headsign")).thenReturn("stop_headsign");
@@ -69,7 +71,13 @@ class ProcessParsedStopTimeTest {
         when(mockParsedEntity.get("shape_dist_traveled")).thenReturn(30f);
         when(mockParsedEntity.get("timepoint")).thenReturn(0);
 
-        final ProcessParsedStopTime underTest = new ProcessParsedStopTime(mockResultRepo, mockDataRepo, mockBuilder);
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq("arrival time")))
+                .thenReturn(34);
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq("departure time")))
+                .thenReturn(45);
+
+        final ProcessParsedStopTime underTest = new ProcessParsedStopTime(mockResultRepo, mockDataRepo, mockTimeUtil,
+                mockBuilder);
 
         underTest.execute(mockParsedEntity);
 
@@ -118,6 +126,7 @@ class ProcessParsedStopTimeTest {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
+        final TimeUtils mockTimeUtil = mock(TimeUtils.class);
 
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         final List<Notice> mockNoticeCollection = new ArrayList<>(List.of(mockNotice));
@@ -131,8 +140,8 @@ class ProcessParsedStopTimeTest {
 
         final ParsedEntity mockParsedEntity = mock(ParsedEntity.class);
         when(mockParsedEntity.get("trip_id")).thenReturn(null);
-        when(mockParsedEntity.get("arrival_time")).thenReturn(34);
-        when(mockParsedEntity.get("departure_time")).thenReturn(45);
+        when(mockParsedEntity.get("arrival_time")).thenReturn("arrival time");
+        when(mockParsedEntity.get("departure_time")).thenReturn("departure time");
         when(mockParsedEntity.get("stop_id")).thenReturn("stop_id");
         when(mockParsedEntity.get("stop_sequence")).thenReturn(3);
         when(mockParsedEntity.get("stop_headsign")).thenReturn("stop_headsign");
@@ -143,7 +152,13 @@ class ProcessParsedStopTimeTest {
         when(mockParsedEntity.get("shape_dist_traveled")).thenReturn(30f);
         when(mockParsedEntity.get("timepoint")).thenReturn(0);
 
-        final ProcessParsedStopTime underTest = new ProcessParsedStopTime(mockResultRepo, mockDataRepo, mockBuilder);
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq("arrival time")))
+                .thenReturn(34);
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq("departure time")))
+                .thenReturn(45);
+
+        final ProcessParsedStopTime underTest = new ProcessParsedStopTime(mockResultRepo, mockDataRepo, mockTimeUtil,
+                mockBuilder);
 
         underTest.execute(mockParsedEntity);
 
@@ -196,6 +211,7 @@ class ProcessParsedStopTimeTest {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
+        final TimeUtils mockTimeUtil = mock(TimeUtils.class);
 
         final StopTime mockStopTime = mock(StopTime.class);
         when(mockStopTime.getStopTimeMappingKey()).thenReturn("stop time key");
@@ -211,8 +227,8 @@ class ProcessParsedStopTimeTest {
 
         final ParsedEntity mockParsedEntity = mock(ParsedEntity.class);
         when(mockParsedEntity.get("trip_id")).thenReturn("trip_id");
-        when(mockParsedEntity.get("arrival_time")).thenReturn(34);
-        when(mockParsedEntity.get("departure_time")).thenReturn(45);
+        when(mockParsedEntity.get("arrival_time")).thenReturn("arrival time");
+        when(mockParsedEntity.get("departure_time")).thenReturn("departure time");
         when(mockParsedEntity.get("stop_id")).thenReturn("stop_id");
         when(mockParsedEntity.get("stop_sequence")).thenReturn(3);
         when(mockParsedEntity.get("stop_headsign")).thenReturn("stop_headsign");
@@ -223,7 +239,13 @@ class ProcessParsedStopTimeTest {
         when(mockParsedEntity.get("shape_dist_traveled")).thenReturn(30f);
         when(mockParsedEntity.get("timepoint")).thenReturn(0);
 
-        final ProcessParsedStopTime underTest = new ProcessParsedStopTime(mockResultRepo, mockDataRepo, mockBuilder);
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq("arrival time")))
+                .thenReturn(34);
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq("departure time")))
+                .thenReturn(45);
+
+        final ProcessParsedStopTime underTest = new ProcessParsedStopTime(mockResultRepo, mockDataRepo, mockTimeUtil,
+                mockBuilder);
 
         underTest.execute(mockParsedEntity);
 
@@ -261,10 +283,6 @@ class ProcessParsedStopTimeTest {
         verify(mockEntityBuildResult, times(1)).getData();
 
         verify(mockDataRepo, times(1)).addStopTime(mockStopTime);
-
-        //result of method .getEntityId() is not used here, therefore removing this warning to avoid lint
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockParsedEntity, times(1)).getEntityId();
 
         final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
 

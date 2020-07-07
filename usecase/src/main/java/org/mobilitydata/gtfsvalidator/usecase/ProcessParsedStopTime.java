@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.util.List;
 
@@ -32,13 +33,16 @@ import java.util.List;
 public class ProcessParsedStopTime {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
+    private final TimeUtils timeUtils;
     private final StopTime.StopTimeBuilder builder;
 
     public ProcessParsedStopTime(final ValidationResultRepository resultRepository,
                                  final GtfsDataRepository gtfsDataRepository,
+                                 final TimeUtils timeUtils,
                                  final StopTime.StopTimeBuilder builder) {
         this.resultRepository = resultRepository;
         this.gtfsDataRepository = gtfsDataRepository;
+        this.timeUtils = timeUtils;
         this.builder = builder;
     }
 
@@ -55,8 +59,10 @@ public class ProcessParsedStopTime {
      */
     public void execute(final ParsedEntity validatedParsedStopTime) {
         final String tripId = (String) validatedParsedStopTime.get("trip_id");
-        final Integer arrivalTime = (Integer) validatedParsedStopTime.get("arrival_time");
-        final Integer departureTime = (Integer) validatedParsedStopTime.get("departure_time");
+        final Integer arrivalTime = timeUtils.convertHHMMSSToIntFromNoonOfDayOfService(
+                (String) validatedParsedStopTime.get("arrival_time"));
+        final Integer departureTime = timeUtils.convertHHMMSSToIntFromNoonOfDayOfService(
+                (String) validatedParsedStopTime.get("departure_time"));
         final String stopId = (String) validatedParsedStopTime.get("stop_id");
         final Integer stopSequence = (Integer) validatedParsedStopTime.get("stop_sequence");
         final String stopHeadsign = (String) validatedParsedStopTime.get("stop_headsign");
@@ -85,9 +91,14 @@ public class ProcessParsedStopTime {
 
         if (stopTime.isSuccess()) {
             if (gtfsDataRepository.addStopTime((StopTime) stopTime.getData()) == null) {
-                resultRepository.addNotice(new DuplicatedEntityNotice("stop_times.txt", null,
-                        validatedParsedStopTime.getEntityId(), "trip_id",
-                        "stop_sequence", tripId, stopSequence));
+                resultRepository.addNotice(
+                        new DuplicatedEntityNotice(
+                                "stop_times.txt",
+                        "trip_id",
+                        "stop_sequence",
+                                tripId,
+                                stopSequence)
+                );
             }
         } else {
             // at this step it is certain that calling getData method will return a list of notices, therefore there is

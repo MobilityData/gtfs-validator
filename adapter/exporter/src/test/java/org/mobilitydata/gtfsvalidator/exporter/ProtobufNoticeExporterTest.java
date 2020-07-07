@@ -781,7 +781,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new IllegalFieldValueCombination(FILENAME, "field_name",
+        underTest.export(new IllegalFieldValueCombinationNotice(FILENAME, "field_name",
                 "conflicting_field_name", "entity_id"));
 
         verify(mockBuilder, times(1)).clear();

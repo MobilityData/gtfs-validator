@@ -163,7 +163,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final IllegalFieldValueCombination toExport) throws IOException {
+    public void export(final IllegalFieldValueCombinationNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 

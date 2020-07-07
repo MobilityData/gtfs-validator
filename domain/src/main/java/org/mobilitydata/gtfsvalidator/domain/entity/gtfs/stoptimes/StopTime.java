@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombinationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
@@ -369,12 +369,12 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
                 }
                 if (timepoint == Timepoint.EXACT_TIMES) {
                     if (arrivalTime == null) {
-                        noticeCollection.add((new IllegalFieldValueCombination("stop_times.txt",
+                        noticeCollection.add((new IllegalFieldValueCombinationNotice("stop_times.txt",
                                 "arrival_time", "timepoint", "trip_id",
                                 "stop_sequence", tripId, stopSequence)));
                     }
                     if (departureTime == null) {
-                        noticeCollection.add((new IllegalFieldValueCombination("stop_times.txt",
+                        noticeCollection.add((new IllegalFieldValueCombinationNotice("stop_times.txt",
                                 "departure_time", "timepoint",
                                 "trip_id", "stop_sequence", tripId,
                                 stopSequence)));
