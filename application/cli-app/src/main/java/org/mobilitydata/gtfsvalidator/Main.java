@@ -77,6 +77,7 @@ public class Main {
                 final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
                 final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
                 final ProcessParsedTranslation processParsedTranslation = config.processParsedTranslation();
+                final ProcessParsedStopTime processParsedStopTime = config.processParsedStopTime();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -154,6 +155,10 @@ public class Main {
                                 }
                                 case "translations.txt": {
                                     processParsedTranslation.execute(parsedEntity);
+                                    break;
+                                }
+                                case "stop_times.txt": {
+                                    processParsedStopTime.execute(parsedEntity);
                                     break;
                                 }
                             }

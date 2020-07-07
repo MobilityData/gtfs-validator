@@ -232,7 +232,6 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
-         *
          * @return builder with all fields set to null
          */
         public ShapeBuilder clear() {

@@ -319,7 +319,6 @@ public class Trip extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
-         *
          * @return builder with all fields set to null;
          */
         public TripBuilder clear() {

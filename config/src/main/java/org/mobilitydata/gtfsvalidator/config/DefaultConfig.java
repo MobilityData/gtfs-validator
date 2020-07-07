@@ -50,7 +50,7 @@ public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
-    private final TimeUtils timeUtils = new TimeConversionUtils();
+    private final TimeUtils timeUtils = TimeConversionUtils.getInstance();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -253,7 +253,8 @@ public class DefaultConfig {
     }
 
     public ProcessParsedStopTime processParsedStopTime() {
-        return new ProcessParsedStopTime(resultRepo, gtfsDataRepository, new StopTime.StopTimeBuilder());
+        return new ProcessParsedStopTime(resultRepo, gtfsDataRepository, timeUtils,
+                new StopTime.StopTimeBuilder());
     }
 
     public ProcessParsedTranslation processParsedTranslation() {

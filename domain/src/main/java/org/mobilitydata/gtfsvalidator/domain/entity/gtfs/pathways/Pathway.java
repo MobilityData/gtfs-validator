@@ -289,7 +289,7 @@ public class Pathway extends GtfsEntity {
         /**
          * Sets field minWidth value and returns this
          *
-         * @param minWidth minimum width of the pathway in meters
+         * @param minWidth  minimum width of the pathway in meters
          * @return builder for future object creation
          */
         public PathwayBuilder minWidth(@Nullable final Float minWidth) {
@@ -397,7 +397,6 @@ public class Pathway extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
-         *
          * @return builder with all fields set to null;
          */
         public PathwayBuilder clear() {

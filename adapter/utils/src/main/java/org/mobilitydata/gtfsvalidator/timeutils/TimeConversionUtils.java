@@ -32,6 +32,22 @@ public class TimeConversionUtils implements TimeUtils {
     // Examples of string matching the related regexp: "00:45:32" or "26:45:22".
     // Examples of string that do not match the regexp: "23:90", "23:90:62" or "abcdefg"
     final static Pattern pattern = Pattern.compile("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]");
+    private static TimeConversionUtils TIME_CONVERSION_UTILS = null;
+
+    private TimeConversionUtils() {
+    }
+
+    /**
+     * Implement singleton pattern
+     *
+     * @return a unique instance of {@code TimeConversionUtils}
+     */
+    public static TimeConversionUtils getInstance() {
+        if (TIME_CONVERSION_UTILS == null) {
+            TIME_CONVERSION_UTILS = new TimeConversionUtils();
+        }
+        return TIME_CONVERSION_UTILS;
+    }
 
     /**
      * This method converts a time formatted as HH:MM:SS to a number of seconds elapsed since noon.
@@ -65,8 +81,8 @@ public class TimeConversionUtils implements TimeUtils {
     /**
      * This method converts a number of seconds elapsed since noon of say of service to a string formatted as HH:MM:SS.
      *
-     * @param elapsedDurationSinceNoon the number of seconds elapsed since noon of say of service to be converted as a
-     *                                 string formatted as HH:MM:SS.
+     * @param elapsedDurationSinceNoon  the number of seconds elapsed since noon of say of service to be converted as a
+     *                                  string formatted as HH:MM:SS.
      * @return the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */
