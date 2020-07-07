@@ -56,6 +56,7 @@ public abstract class Notice {
     public static final String KEY_COMPOSITE_KEY_THIRD_VALUE = "compositeKeyThirdValue";
     public static final String KEY_COMPOSITE_KEY_FOURTH_VALUE = "compositeKeyFourthValue";
     public static final String KEY_COMPOSITE_KEY_FIFTH_VALUE = "compositeKeyFifthValue";
+    public static final String KEY_UNKNOWN_ROUTE_ID = "unknownRouteId";
 
     private final String filename;
     private final int code;
