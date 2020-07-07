@@ -29,7 +29,6 @@ import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
