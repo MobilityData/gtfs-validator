@@ -71,7 +71,7 @@ public class GeodeticUtils implements DistanceCalculationUtils {
 
         final Point origin = shapeFactory.pointXY(originLongitude, originLatitude);
         final Point destination = shapeFactory.pointXY(destinationLongitude, destinationLatitude);
-        // implementation uses harvesine formula which determines the great-circle distance between two points on a
+        // implementation uses haversine formula which determines the great-circle distance between two points on a
         // sphere given their longitudes and latitudes. Note that the elevation of both points is not taken into
         // consideration.
         final double distance = DistanceUtils.DEG_TO_KM * distanceCalculator.distance(origin, destination);
