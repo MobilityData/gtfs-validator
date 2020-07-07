@@ -14,7 +14,9 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.timeconversionutils;
+package org.mobilitydata.gtfsvalidator.timeutils;
+
+import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -22,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Utility class to carry out operations related to GTFS TIME type
  */
-public class TimeConversionUtils {
+public class TimeConversionUtils implements TimeUtils {
     // Matches any time string representing time in HH:MM:SS format with:
     // - hours between 0 and 99h,
     // - minutes between 0 and 60min
@@ -30,12 +32,6 @@ public class TimeConversionUtils {
     // Examples of string matching the related regexp: "00:45:32" or "26:45:22".
     // Examples of string that do not match the regexp: "23:90", "23:90:62" or "abcdefg"
     final static Pattern pattern = Pattern.compile("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]");
-
-    /**
-     * Class constructor. Constructor is private to avoid instantiation of class.
-     */
-    private TimeConversionUtils() {
-    }
 
     /**
      * This method converts a time formatted as HH:MM:SS to a number of seconds elapsed since noon.
@@ -46,7 +42,7 @@ public class TimeConversionUtils {
      * @return  the number of seconds elapsed since noon of day of service. The time is measured from "noon minus 12h"
      * of the service day (effectively midnight except for days on which daylight savings time changes occur).
      */
-    public static Integer convertHHMMSSToIntFromNoonOfDayOfService(final String timeAsString) {
+    public Integer convertHHMMSSToIntFromNoonOfDayOfService(final String timeAsString) {
         if (timeAsString != null && pattern.matcher(timeAsString).matches()) {
             final String[] timeStringSplit = timeAsString.split(":");
             try {
@@ -73,7 +69,7 @@ public class TimeConversionUtils {
      * @return  the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */
-    public static String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoon) {
+    public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoon) {
         if (elapsedDurationSinceNoon != null) {
             // Determine number of hours elapsed
             int hourValue = (int) (TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon) + 12);
