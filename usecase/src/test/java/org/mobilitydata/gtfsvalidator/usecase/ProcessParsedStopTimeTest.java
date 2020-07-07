@@ -262,10 +262,6 @@ class ProcessParsedStopTimeTest {
 
         verify(mockDataRepo, times(1)).addStopTime(mockStopTime);
 
-        //result of method .getEntityId() is not used here, therefore removing this warning to avoid lint
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockParsedEntity, times(1)).getEntityId();
-
         final ArgumentCaptor<DuplicatedEntityNotice> captor = ArgumentCaptor.forClass(DuplicatedEntityNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());

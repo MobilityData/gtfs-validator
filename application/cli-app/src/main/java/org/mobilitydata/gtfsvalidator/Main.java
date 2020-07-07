@@ -75,6 +75,7 @@ public class Main {
                 final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
                 final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
                 final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
+                final ProcessParsedTranslation processParsedTranslation = config.processParsedTranslation();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -144,6 +145,11 @@ public class Main {
                                 }
                                 case "shapes.txt": {
                                     processParsedShapePoint.execute(parsedEntity);
+                                    break;
+                                }
+                                case "translations.txt" :{
+                                    processParsedTranslation.execute(parsedEntity);
+                                    break;
                                 }
                             }
                         }
