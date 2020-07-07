@@ -57,7 +57,7 @@ public interface NoticeExporter {
 
     void export(DuplicatedEntityNotice toExport) throws IOException;
 
-    void export(IllegalFieldValueCombination toExport) throws IOException;
+    void export(IllegalFieldValueCombinationNotice toExport) throws IOException;
 
     void export(UnexpectedEnumValueNotice toExport) throws IOException;
 
