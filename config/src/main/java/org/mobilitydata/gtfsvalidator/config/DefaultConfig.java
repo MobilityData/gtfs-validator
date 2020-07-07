@@ -35,7 +35,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.*;
-import org.mobilitydata.gtfsvalidator.usecase.distancecalculationutils.DistanceCalculationUtils;
 import org.mobilitydata.gtfsvalidator.utils.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 
@@ -53,6 +52,7 @@ public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
+    private final GeodeticUtils timeUtils = GeodeticUtils.getInstance();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -279,6 +279,6 @@ public class DefaultConfig {
     }
 
     public ValidateShapeDistTraveled validateShapeDistTraveled() {
-        return new ValidateShapeDistTraveled(gtfsDataRepository, resultRepo, GeodeticUtils.getInstance(), logger);
+        return new ValidateShapeDistTraveled(gtfsDataRepository, resultRepo, timeUtils, logger);
     }
 }
