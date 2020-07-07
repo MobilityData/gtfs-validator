@@ -52,7 +52,7 @@ public class ValidateTripRouteId {
       * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
       */
     public void execute() {
-        logger.info("Validating rule E033 - Invalid `route_id`" + System.lineSeparator());
+        logger.info("Validating rule E033 - `route_id` not found" + System.lineSeparator());
         final Set<String> routeIdCollection = new HashSet<>();
         dataRepo.getRouteAll().forEach(route -> routeIdCollection.add(route.getRouteId()));
         dataRepo.getTripAll()
