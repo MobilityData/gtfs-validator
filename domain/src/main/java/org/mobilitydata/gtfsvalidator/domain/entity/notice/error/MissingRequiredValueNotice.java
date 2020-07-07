@@ -33,7 +33,7 @@ public class MissingRequiredValueNotice extends ErrorNotice {
     }
 
     /**
-     * Notice alternative constructor handling entities with no id
+     * Notice alternative constructor handling entities with no id, but a composite key made of 2 elements
      *
      * @param filename                 the name of the file
      * @param fieldName                the name of the field whose value is missing
@@ -57,6 +57,44 @@ public class MissingRequiredValueNotice extends ErrorNotice {
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+    }
+
+    /**
+     * Notice alternative constructor handling entities with no id, but a composite key made of 4 elements
+     *
+     * @param filename                 the name of the file
+     * @param fieldName                the name of the field whose value is missing
+     * @param compositeKeyFirstPart    the "title" of the first part of the composite key
+     * @param compositeKeySecondPart   the "title" of the second part of the composite key
+     * @param compositeKeyThirdPart   the "title" of the third part of the composite key
+     * @param compositeKeyFourthPart   the "title" of the fourth part of the composite key
+     * @param compositeKeyFirstValue   the value of the first part of the composite key
+     * @param compositeKeySecondValue  the value of the second part of the composite key
+     * @param compositeKeyThirdValue  the value of the third part of the composite key
+     * @param compositeKeyFourthValue  the value of the fourth part of the composite key
+     */
+    public MissingRequiredValueNotice(final String filename, final String fieldName,
+                                      final String compositeKeyFirstPart, final String compositeKeySecondPart,
+                                      final String compositeKeyThirdPart, final String compositeKeyFourthPart,
+                                      final String compositeKeyFirstValue, final String compositeKeySecondValue,
+                                      final String compositeKeyThirdValue, final String compositeKeyFourthValue){
+        super(filename, E_015,
+                "Missing required value",
+                "Missing value for field:`" + fieldName
+                        + "` marked as required in entity with composite id:`" +
+                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
+                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
+                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
+                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", null);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART, compositeKeyThirdPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FOURTH_PART, compositeKeyFourthPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE, compositeKeyThirdValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FOURTH_VALUE, compositeKeyFourthValue);
     }
 
     @Override

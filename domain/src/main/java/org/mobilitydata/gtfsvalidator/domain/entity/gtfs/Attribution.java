@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombinationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
@@ -359,7 +359,7 @@ public class Attribution extends GtfsEntity {
                 if ((isAuthority == isProducer) && (isAuthority == isOperator) &&
                         (originalIsProducerInteger == null || originalIsProducerInteger == 0)) {
                     noticeCollection.add(
-                            new IllegalFieldValueCombination("attributions.txt", "is_producer",
+                            new IllegalFieldValueCombinationNotice("attributions.txt", "is_producer",
                                     "is_authority; is_operator",
                                     entityId));
                 }

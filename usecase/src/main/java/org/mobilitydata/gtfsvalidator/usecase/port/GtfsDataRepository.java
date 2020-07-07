@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
@@ -139,4 +140,10 @@ public interface GtfsDataRepository {
      * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     Map<Integer, StopTime> getStopTimeByTripId(final String tripId);
+
+    Translation getTranslationByTableNameFieldValueLanguage(final String tableName,
+                                                            final String fieldValue,
+                                                            final String language);
+
+    Translation addTranslation(final Translation newTranslationTable);
 }
