@@ -85,9 +85,14 @@ public class ProcessParsedStopTime {
 
         if (stopTime.isSuccess()) {
             if (gtfsDataRepository.addStopTime((StopTime) stopTime.getData()) == null) {
-                resultRepository.addNotice(new DuplicatedEntityNotice("stop_times.txt", null,
+                resultRepository.addNotice(
+                        new DuplicatedEntityNotice(
+                                "stop_times.txt",
                         "trip_id",
-                        "stop_sequence", tripId, stopSequence));
+                        "stop_sequence",
+                                tripId,
+                                stopSequence)
+                );
             }
         } else {
             // at this step it is certain that calling getData method will return a list of notices, therefore there is
