@@ -374,7 +374,6 @@ public class Calendar extends GtfsEntity {
          * are met. Otherwise, method returns list of {@link Notice}.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
             if (monday == null || tuesday == null || wednesday == null || thursday == null || friday == null
                     || saturday == null || sunday == null || startDate == null || endDate == null || serviceId == null) {
                 if (originalMondayInteger == null) {
@@ -451,6 +450,33 @@ public class Calendar extends GtfsEntity {
                 return new EntityBuildResult<>(new Calendar(serviceId, monday, tuesday, wednesday, thursday, friday,
                         saturday, sunday, startDate, endDate));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
+         * @return builder with all fields set to null;
+         */
+        public CalendarBuilder clear() {
+            serviceId = null;
+            monday = null;
+            originalMondayInteger = null;
+            tuesday = null;
+            originalTuesdayInteger = null;
+            wednesday = null;
+            originalWednesdayInteger = null;
+            thursday = null;
+            originalThursdayInteger = null;
+            friday = null;
+            originalFridayInteger = null;
+            saturday = null;
+            originalSaturdayInteger = null;
+            sunday = null;
+            originalSundayInteger = null;
+            startDate = null;
+            endDate = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }

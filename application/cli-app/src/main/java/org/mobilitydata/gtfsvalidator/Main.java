@@ -73,6 +73,10 @@ public class Main {
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
                 final ProcessParsedFrequency processParsedFrequency = config.processParsedFrequency();
+                final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
+                final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
+                final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
+                final ProcessParsedTranslation processParsedTranslation = config.processParsedTranslation();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -108,6 +112,10 @@ public class Main {
                                     processParsedLevel.execute(parsedEntity);
                                     break;
                                 }
+                                case "attributions.txt": {
+                                    processParsedAttribution.execute(parsedEntity);
+                                    break;
+                                }
                                 case "calendar.txt": {
                                     processParsedCalendar.execute(parsedEntity);
                                     break;
@@ -124,6 +132,10 @@ public class Main {
                                     processParsedFeedInfo.execute(parsedEntity);
                                     break;
                                 }
+                                case "pathways.txt": {
+                                    processParsedPathway.execute(parsedEntity);
+                                    break;
+                                }
                                 case "fare_attributes.txt": {
                                     processParsedFareAttribute.execute(parsedEntity);
                                     break;
@@ -134,6 +146,14 @@ public class Main {
                                 }
                                 case "frequencies.txt": {
                                     processParsedFrequency.execute(parsedEntity);
+                                    break;
+                                }
+                                case "shapes.txt": {
+                                    processParsedShapePoint.execute(parsedEntity);
+                                    break;
+                                }
+                                case "translations.txt": {
+                                    processParsedTranslation.execute(parsedEntity);
                                     break;
                                 }
                             }
@@ -148,6 +168,8 @@ public class Main {
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
                 config.validateCalendarEndDateBeforeStartDate().execute();
+                config.validateAgencyIdRequirement().execute();
+                config.validateAgenciesHaveSameAgencyTimezone().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

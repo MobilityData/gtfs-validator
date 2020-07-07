@@ -66,7 +66,8 @@ public class ProcessParsedCalendar {
         final LocalDate startDate = (LocalDate) validatedParsedCalendar.get("start_date");
         final LocalDate endDate = (LocalDate) validatedParsedCalendar.get("end_date");
 
-        builder.serviceId(serviceId)
+        builder.clear()
+                .serviceId(serviceId)
                 .monday(monday)
                 .tuesday(tuesday)
                 .wednesday(wednesday)

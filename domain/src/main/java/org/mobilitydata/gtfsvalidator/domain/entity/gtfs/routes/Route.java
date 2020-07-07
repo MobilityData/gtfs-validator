@@ -276,8 +276,6 @@ public class Route extends GtfsEntity {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() throws IllegalArgumentException {
-            noticeCollection.clear();
-
             if (routeId == null || routeType == null) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
@@ -296,6 +294,27 @@ public class Route extends GtfsEntity {
                 return new EntityBuildResult(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
                         routeType, routeUrl, routeColor, routeTextColor, routeSortOrder));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
+         * @return builder with all fields set to null;
+         */
+        public RouteBuilder clear() {
+            routeId = null;
+            agencyId = null;
+            routeShortName = null;
+            routeLongName = null;
+            routeDesc = null;
+            routeType = null;
+            routeUrl = null;
+            routeColor = null;
+            routeTextColor = null;
+            routeSortOrder = null;
+            originalRouteTypeInteger = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }

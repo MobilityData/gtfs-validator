@@ -20,17 +20,25 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Map;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
+
+    int getAgencyCount();
+
+    Collection<Agency> getAgencyAll();
 
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
@@ -76,4 +84,71 @@ public interface GtfsDataRepository {
     Frequency addFrequency(final Frequency newFrequency);
 
     Frequency getFrequency(final String tripId, final Integer startTime);
+
+    Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException;
+
+    Pathway getPathwayById(final String pathwayId);
+
+    Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException;
+
+    Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
+                               final String tripId, final String organizationName, final boolean isProducer,
+                               final boolean isOperator, final boolean isAuthority, final String attributionUrl,
+                               final String attributionEmail, final String attributionPhone);
+
+    /**
+     * Add a {@link ShapePoint} to a shape. A shape is a list of{@link ShapePoint} whereas a {@link ShapePoint}
+     * represents a row from shapes.txt to this. Return the entity added to the repository if the entity was
+     * successfully added, and returns null if the provided newShapePoint already exists in the repository. This method
+     * adds the {@link ShapePoint} to this {@link GtfsDataRepository} while maintaining the order according to the
+     * value of this {@link ShapePoint} shape_pt_sequence.
+     *
+     * @param newShapePoint the internal representation of a row from shapes.txt to be added to the repository.
+     * @return Return the entity added to the repository if the entity was successfully added, and returns null if the
+     * provided newShapePoint already exists in the repository.  This method adds the {@link ShapePoint} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link ShapePoint}
+     * shape_pt_sequence.
+     * @throws IllegalArgumentException if the shape point passed as argument is null
+     */
+    ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException;
+
+    /**
+     * Return an immutable map of shape points from shapes.txt related to the id provided as parameter; which represents
+     * a shape object. The returned map is ordered by shape_pt_sequence.
+     *
+     * @param shapeId the key from shapes.txt related to the Route to be returned
+     * @return an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * represents a shape object. The returned map is ordered by shape_pt_sequence.
+     */
+    Map<Integer, ShapePoint> getShapeById(final String shapeId);
+
+    /**
+     * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt is respected,
+     * if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     *
+     * @param newStopTime the internal representation of a row from stop_times.txt to be added to the repository.
+     * @return Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt
+     * is respected, if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     */
+    StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException;
+
+    /**
+     * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
+     * The returned map is ordered by stop_sequence
+     *
+     * @param tripId identifies a trip
+     * @return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
+     */
+    Map<Integer, StopTime> getStopTimeByTripId(final String tripId);
+
+    Translation getTranslationByTableNameFieldValueLanguage(final String tableName,
+                                                            final String fieldValue,
+                                                            final String language);
+
+    Translation addTranslation(final Translation newTranslationTable);
 }

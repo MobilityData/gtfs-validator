@@ -155,29 +155,41 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(FloatFieldValueOutOfRangeNotice toExport) throws IOException {
+    public void export(final FloatFieldValueOutOfRangeNotice toExport) throws IOException {
         outOfRangeNoticeToProto(
                 toExport.getFilename(),
                 toExport.getEntityId(),
                 (String) toExport.getNoticeSpecific(KEY_FIELD_NAME),
                 String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MIN)),
                 String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MAX)),
-                String.valueOf(toExport.getNoticeSpecific(KEY_ACTUAL_VALUE))
+                String.valueOf(toExport.getNoticeSpecific(KEY_ACTUAL_VALUE)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE))
         );
     }
 
     @Override
-    public void export(IntegerFieldValueOutOfRangeNotice toExport) throws IOException {
+    public void export(final IntegerFieldValueOutOfRangeNotice toExport) throws IOException {
         outOfRangeNoticeToProto(toExport.getFilename(),
                 toExport.getEntityId(),
                 (String) toExport.getNoticeSpecific(KEY_FIELD_NAME),
                 String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MIN)),
                 String.valueOf(toExport.getNoticeSpecific(KEY_RANGE_MAX)),
-                String.valueOf(toExport.getNoticeSpecific(KEY_ACTUAL_VALUE)));
+                String.valueOf(toExport.getNoticeSpecific(KEY_ACTUAL_VALUE)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)),
+                String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE))
+        );
     }
 
-    private void outOfRangeNoticeToProto(String filename, String entityId, String fieldName, String rangeMinAsString,
-                                         String rangeMaxAsString, String actualValueAsString)
+    private void outOfRangeNoticeToProto(final String filename, final String entityId, final String fieldName,
+                                         final String rangeMinAsString,
+                                         final String rangeMaxAsString, final String actualValueAsString,
+                                         final String compositeKeyFirstPart, final String compositeKeySecondPart,
+                                         final String compositeKeyFirstValue, final String compositeKeySecondValue)
             throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(filename)
@@ -188,6 +200,10 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setValue(rangeMinAsString)
                 .setAltValue(rangeMaxAsString)
                 .setAltEntityValue(actualValueAsString)
+                .setAltEntityName(compositeKeyFirstPart)
+                .setEntityId(compositeKeySecondPart)
+                .setEntityValue(compositeKeyFirstValue)
+                .setAltEntityId(compositeKeySecondValue)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -258,6 +274,10 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
                 .setAltEntityValue(toExport.getEntityId())
+                .setValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART))
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART))
+                .setAltValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE))
+                .setAltEntityName((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -333,13 +353,17 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(IllegalFieldValueCombination toExport) throws IOException {
+    public void export(final IllegalFieldValueCombinationNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityId((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
                 .setAltEntityId((String) toExport.getNoticeSpecific(KEY_CONFLICTING_FIELD_NAME))
+                .setValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART))
+                .setEntityValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART))
+                .setAltValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE))
+                .setAltEntityName((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -478,6 +502,40 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CALENDAR_START_AND_END_DATE_OUT_OF_ORDER)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final MissingAgencyIdNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setValue(toExport.getFieldName())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final InconsistentAgencyTimezoneNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_AGENCIES_WITH_DIFFERENT_TIMEZONES)
+                .setValue(toExport.getFieldName())
+                .setEntityId(toExport.getConflictingTimezoneCollection())
+                .setEntityValue(String.valueOf(toExport.getDistinctTimezoneCount()))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final InvalidAgencyIdNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setValue(toExport.getFieldName())
+                .setEntityValue(String.valueOf(toExport.getEntityId()))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

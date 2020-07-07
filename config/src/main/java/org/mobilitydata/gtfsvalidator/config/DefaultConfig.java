@@ -25,11 +25,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.timeutils.TimeConversionUtils;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
+import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -45,6 +50,7 @@ public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
+    private final TimeUtils timeUtils = new TimeConversionUtils();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -234,8 +240,28 @@ public class DefaultConfig {
         return new ProcessParsedFareRule(resultRepo, gtfsDataRepository, new FareRule.FareRuleBuilder());
     }
 
+    public ProcessParsedPathway processParsedPathway() {
+        return new ProcessParsedPathway(resultRepo, gtfsDataRepository, new Pathway.PathwayBuilder());
+    }
+
+    public ProcessParsedAttribution processParsedAttribution() {
+        return new ProcessParsedAttribution(resultRepo, gtfsDataRepository, new Attribution.AttributionBuilder());
+    }
+
+    public ProcessParsedShapePoint processParsedShapePoint() {
+        return new ProcessParsedShapePoint(resultRepo, gtfsDataRepository, new ShapePoint.ShapeBuilder());
+    }
+
+    public ProcessParsedStopTime processParsedStopTime() {
+        return new ProcessParsedStopTime(resultRepo, gtfsDataRepository, new StopTime.StopTimeBuilder());
+    }
+
+    public ProcessParsedTranslation processParsedTranslation() {
+        return new ProcessParsedTranslation(resultRepo, gtfsDataRepository, new Translation.TranslationBuilder());
+    }
+
     public ProcessParsedFrequency processParsedFrequency() {
-        return new ProcessParsedFrequency(resultRepo, gtfsDataRepository, new Frequency.FrequencyBuilder());
+        return new ProcessParsedFrequency(resultRepo, gtfsDataRepository, timeUtils, new Frequency.FrequencyBuilder());
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {
@@ -244,5 +270,13 @@ public class DefaultConfig {
 
     public GenerateFilenameListToProcess generateFilenameListToProcess() {
         return new GenerateFilenameListToProcess(logger);
+    }
+
+    public ValidateAgencyIdRequirement validateAgencyIdRequirement() {
+        return new ValidateAgencyIdRequirement(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateAgenciesHaveSameAgencyTimezone validateAgenciesHaveSameAgencyTimezone() {
+        return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
     }
 }

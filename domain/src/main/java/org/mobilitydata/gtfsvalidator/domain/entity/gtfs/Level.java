@@ -118,8 +118,6 @@ public class Level extends GtfsEntity {
          * GTFS specification are met. Otherwise, method returns an entity representing a collection of notices.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             if (levelId == null || levelIndex == null) {
                 if (levelId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("levels.txt", "level_id",
@@ -133,6 +131,19 @@ public class Level extends GtfsEntity {
             } else {
                 return new EntityBuildResult<>(new Level(levelId, levelIndex, levelName));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
+         * @return builder with all fields set to null;
+         */
+        public LevelBuilder clear() {
+            levelId = null;
+            levelIndex = null;
+            levelName = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }

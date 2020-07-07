@@ -21,21 +21,23 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class IllegalFieldValueCombination extends ErrorNotice {
+public class MissingAgencyIdNotice extends ErrorNotice {
+    private final String fieldName;
 
-    public IllegalFieldValueCombination(final String filename, final String fieldName,
-                                        final String conflictingFieldName, final String entityId) {
-        super(filename, E_019,
-                "Conflicting field values",
-                "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
-                        + "`" + entityId, entityId);
-        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
-        putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
+    public MissingAgencyIdNotice(final String agencyName) {
+        super("agency.txt", E_029,
+                "Missing `agency_id` value",
+                "File `agency.txt` count more than one record. Missing value for field: `agency_id`"
+                        + " marked as required for agency with name: `" + agencyName + "`", null);
+        this.fieldName = "agency_id";
     }
-
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
+    }
+
+    public String getFieldName() {
+        return fieldName;
     }
 }

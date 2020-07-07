@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.util.List;
 
@@ -33,13 +34,16 @@ import java.util.List;
 public class ProcessParsedFrequency {
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsDataRepository;
+    private final TimeUtils timeUtils;
     private final Frequency.FrequencyBuilder builder;
 
     public ProcessParsedFrequency(final ValidationResultRepository resultRepository,
                                   final GtfsDataRepository gtfsDataRepository,
+                                  final TimeUtils timeUtils,
                                   final Frequency.FrequencyBuilder builder) {
         this.resultRepository = resultRepository;
         this.gtfsDataRepository = gtfsDataRepository;
+        this.timeUtils = timeUtils;
         this.builder = builder;
     }
 
@@ -56,8 +60,10 @@ public class ProcessParsedFrequency {
      */
     public void execute(final ParsedEntity validatedFrequency) {
         final String tripId = (String) validatedFrequency.get("trip_id");
-        final String startTime = (String) validatedFrequency.get("start_time");
-        final String endTime = (String) validatedFrequency.get("end_time");
+        final Integer startTime = timeUtils.convertHHMMSSToIntFromNoonOfDayOfService(
+                (String) validatedFrequency.get("start_time"));
+        final Integer endTime = timeUtils.convertHHMMSSToIntFromNoonOfDayOfService(
+                (String) validatedFrequency.get("end_time"));
         final Integer headwaySecs = (Integer) validatedFrequency.get("headway_secs");
         final Integer exactTimes = (Integer) validatedFrequency.get("exact_times");
 

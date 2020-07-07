@@ -120,7 +120,6 @@ public class CalendarDate extends GtfsEntity {
          * official GTFS specification are met. Otherwise, method returns a collection of notices describing the issues.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
             if (serviceId == null || date == null || exceptionType == null) {
                 if (serviceId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("calendar_dates.txt",
@@ -143,6 +142,20 @@ public class CalendarDate extends GtfsEntity {
             } else {
                 return new EntityBuildResult<>(new CalendarDate(serviceId, date, exceptionType));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
+         * @return builder with all fields set to null;
+         */
+        public CalendarDateBuilder clear() {
+            serviceId = null;
+            date = null;
+            exceptionType = null;
+            originalExceptionTypeInteger = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 

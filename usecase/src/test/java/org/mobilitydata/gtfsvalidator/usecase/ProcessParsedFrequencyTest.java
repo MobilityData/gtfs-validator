@@ -25,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntit
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
@@ -40,7 +41,7 @@ class ProcessParsedFrequencyTest {
     private static final String START_TIME = "start_time";
     private static final String START_TIME_VALUE = "12:00:00";
     private static final String END_TIME = "end_time";
-    private static final String END_TIME_VALUE = "12:00:00";
+    private static final String END_TIME_VALUE = "13:00:00";
     private static final String HEADWAY_SECS = "headway_secs";
     private static final Integer HEADWAY_SECS_VALUE = 600;
     private static final String EXACT_TIMES = "exact_times";
@@ -54,6 +55,7 @@ class ProcessParsedFrequencyTest {
         final Frequency mockFrequency = mock(Frequency.class);
         final ParsedEntity mockParsedFrequency = mock(ParsedEntity.class);
         final EntityBuildResult<?> mockEntityBuildResult = mock(EntityBuildResult.class);
+        final TimeUtils mockTimeUtil = mock(TimeUtils.class);
 
         doReturn(mockEntityBuildResult).when(mockBuilder).build();
         when(mockEntityBuildResult.isSuccess()).thenReturn(true);
@@ -69,8 +71,13 @@ class ProcessParsedFrequencyTest {
 
         when(mockGtfsDataRepo.addFrequency(mockFrequency)).thenReturn(mockFrequency);
 
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq(START_TIME_VALUE)))
+                .thenReturn(0);
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq(END_TIME_VALUE)))
+                .thenReturn(3600);
+
         final ProcessParsedFrequency underTest =
-                new ProcessParsedFrequency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+                new ProcessParsedFrequency(mockResultRepo, mockGtfsDataRepo, mockTimeUtil, mockBuilder);
 
         underTest.execute(mockParsedFrequency);
 
@@ -81,8 +88,8 @@ class ProcessParsedFrequencyTest {
         verify(mockParsedFrequency, times(1)).get(ArgumentMatchers.eq(EXACT_TIMES));
 
         verify(mockBuilder, times(1)).tripId(TRIP_ID);
-        verify(mockBuilder, times(1)).startTime(START_TIME_VALUE);
-        verify(mockBuilder, times(1)).endTime(END_TIME_VALUE);
+        verify(mockBuilder, times(1)).startTime(0);
+        verify(mockBuilder, times(1)).endTime(3600);
         verify(mockBuilder, times(1)).headwaySecs(HEADWAY_SECS_VALUE);
         verify(mockBuilder, times(1)).exactTimes(EXACT_TIMES_VALUE);
         verify(mockBuilder, times(1)).build();
@@ -93,7 +100,7 @@ class ProcessParsedFrequencyTest {
     }
 
     @Test
-    void invalidFareRuleEntityShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
+    void invalidFrequencyEntityShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Frequency.FrequencyBuilder mockBuilder = mock(Frequency.FrequencyBuilder.class, RETURNS_SELF);
@@ -102,6 +109,7 @@ class ProcessParsedFrequencyTest {
         final List<Notice> noticeCollection = new ArrayList<>();
         noticeCollection.add(mockNotice);
         final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
+        final TimeUtils mockTimeUtil = mock(TimeUtils.class);
 
         doReturn(mockGenericObject).when(mockBuilder).build();
         when(mockGenericObject.isSuccess()).thenReturn(false);
@@ -110,13 +118,18 @@ class ProcessParsedFrequencyTest {
         doReturn(noticeCollection).when(mockGenericObject).getData();
 
         final ProcessParsedFrequency underTest =
-                new ProcessParsedFrequency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+                new ProcessParsedFrequency(mockResultRepo, mockGtfsDataRepo, mockTimeUtil, mockBuilder);
 
         when(mockParsedFrequency.get(TRIP_ID)).thenReturn(TRIP_ID);
         when(mockParsedFrequency.get(START_TIME)).thenReturn(START_TIME_VALUE);
         when(mockParsedFrequency.get(END_TIME)).thenReturn(END_TIME_VALUE);
         when(mockParsedFrequency.get(HEADWAY_SECS)).thenReturn(HEADWAY_SECS_VALUE);
         when(mockParsedFrequency.get(EXACT_TIMES)).thenReturn(EXACT_TIMES_VALUE);
+
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq(START_TIME_VALUE)))
+                .thenReturn(0);
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq(END_TIME_VALUE)))
+                .thenReturn(3600);
 
         underTest.execute(mockParsedFrequency);
 
@@ -127,8 +140,8 @@ class ProcessParsedFrequencyTest {
         verify(mockParsedFrequency, times(1)).get(ArgumentMatchers.eq(EXACT_TIMES));
 
         verify(mockBuilder, times(1)).tripId(TRIP_ID);
-        verify(mockBuilder, times(1)).startTime(START_TIME_VALUE);
-        verify(mockBuilder, times(1)).endTime(END_TIME_VALUE);
+        verify(mockBuilder, times(1)).startTime(0);
+        verify(mockBuilder, times(1)).endTime(3600);
         verify(mockBuilder, times(1)).headwaySecs(HEADWAY_SECS_VALUE);
         verify(mockBuilder, times(1)).exactTimes(EXACT_TIMES_VALUE);
         verify(mockBuilder, times(1)).build();
@@ -150,13 +163,14 @@ class ProcessParsedFrequencyTest {
     }
 
     @Test
-    void duplicateFareRuleShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
+    void duplicateFrequencyEntityShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Frequency.FrequencyBuilder mockBuilder = mock(Frequency.FrequencyBuilder.class, RETURNS_SELF);
         final ParsedEntity mockParsedFrequency = mock(ParsedEntity.class);
         when(mockParsedFrequency.getEntityId()).thenReturn("entity id");
         final EntityBuildResult<?> mockGenericObject = mock(EntityBuildResult.class);
+        final TimeUtils mockTimeUtil = mock(TimeUtils.class);
 
         final Frequency mockFrequency = mock(Frequency.class);
         // suppressed warning regarding unused result of method, since this behavior is wanted
@@ -167,8 +181,13 @@ class ProcessParsedFrequencyTest {
         doReturn(mockGenericObject).when(mockBuilder).build();
         when(mockGtfsDataRepo.addFrequency(mockFrequency)).thenReturn(null);
 
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq(START_TIME_VALUE)))
+                .thenReturn(0);
+        when(mockTimeUtil.convertHHMMSSToIntFromNoonOfDayOfService(ArgumentMatchers.eq(END_TIME_VALUE)))
+                .thenReturn(3600);
+
         final ProcessParsedFrequency underTest =
-                new ProcessParsedFrequency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
+                new ProcessParsedFrequency(mockResultRepo, mockGtfsDataRepo, mockTimeUtil, mockBuilder);
 
         when(mockParsedFrequency.get(TRIP_ID)).thenReturn(TRIP_ID);
         when(mockParsedFrequency.get(START_TIME)).thenReturn(START_TIME_VALUE);
@@ -185,8 +204,8 @@ class ProcessParsedFrequencyTest {
         verify(mockParsedFrequency, times(1)).get(ArgumentMatchers.eq(EXACT_TIMES));
 
         verify(mockBuilder, times(1)).tripId(TRIP_ID);
-        verify(mockBuilder, times(1)).startTime(START_TIME_VALUE);
-        verify(mockBuilder, times(1)).endTime(END_TIME_VALUE);
+        verify(mockBuilder, times(1)).startTime(0);
+        verify(mockBuilder, times(1)).endTime(3600);
         verify(mockBuilder, times(1)).headwaySecs(HEADWAY_SECS_VALUE);
         verify(mockBuilder, times(1)).exactTimes(EXACT_TIMES_VALUE);
         verify(mockBuilder, times(1)).build();

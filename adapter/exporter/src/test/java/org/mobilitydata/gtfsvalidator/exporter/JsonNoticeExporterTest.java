@@ -383,7 +383,7 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        IllegalFieldValueCombination toExport = new IllegalFieldValueCombination(FILENAME, "field_name",
+        IllegalFieldValueCombinationNotice toExport = new IllegalFieldValueCombinationNotice(FILENAME, "field_name",
                 "conflicting_field_name", "entity_id");
         underTest.export(toExport);
 
@@ -551,6 +551,43 @@ class JsonNoticeExporterTest {
                 LocalDate.of(2020, 2, 1),
                 LocalDate.of(2020, 1, 1)
         );
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportMissingAgencyIdNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final MissingAgencyIdNotice toExport = new MissingAgencyIdNotice("agency_name");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportInconsistentAgencyTimezoneNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final InconsistentAgencyTimezoneNotice toExport = new InconsistentAgencyTimezoneNotice(2,
+                "set of inconsistent timezone");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportInvalidAgencyIdNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final InvalidAgencyIdNotice toExport = new InvalidAgencyIdNotice("  ");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
