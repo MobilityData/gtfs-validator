@@ -57,8 +57,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - GTFS `routes.agency_id` exists in GTFS data" +
-                        System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -100,8 +99,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - GTFS `routes.agency_id` exists in GTFS data" +
-                        System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -146,8 +144,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - GTFS `routes.agency_id` exists in GTFS data" +
-                        System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -191,8 +188,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - GTFS `routes.agency_id` exists in GTFS data" +
-                        System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -227,8 +223,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - GTFS `routes.agency_id` exists in GTFS data" +
-                        System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -265,8 +260,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - GTFS `routes.agency_id` exists in GTFS data" +
-                        System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();

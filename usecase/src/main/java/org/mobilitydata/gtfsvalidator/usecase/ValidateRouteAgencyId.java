@@ -36,7 +36,7 @@ public class ValidateRouteAgencyId {
     }
 
     public void execute() {
-        logger.info("Validating rule 'E035 - GTFS `routes.agency_id` exists in GTFS data" + System.lineSeparator());
+        logger.info("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator());
 
         final int agencyCount = dataRepo.getAgencyCount();
         dataRepo.getRouteAll().forEach(route -> {
