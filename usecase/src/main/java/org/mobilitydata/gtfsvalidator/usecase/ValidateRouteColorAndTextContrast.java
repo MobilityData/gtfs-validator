@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteColorAndTextInsufficientContrastNotice;
@@ -32,8 +31,6 @@ public class ValidateRouteColorAndTextContrast {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
-    private final RegexValidator colorValidator;
-    private static final String VALID_COLOR_REGEX_PATTERN = "[0-9a-fA-F]{6}";
 
     /**
      * @param dataRepo   a repository storing the data of a GTFS dataset
@@ -45,7 +42,6 @@ public class ValidateRouteColorAndTextContrast {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
         this.logger = logger;
-        this.colorValidator = new RegexValidator(VALID_COLOR_REGEX_PATTERN);
     }
 
     /**
@@ -100,24 +96,9 @@ public class ValidateRouteColorAndTextContrast {
      */
     private boolean areContrasting(String routeColor, String textColor) {
         boolean areContrasting = true;
-        if (colorValidator.isValid(routeColor) && colorValidator.isValid(textColor)) {
+        if (routeColor != null && textColor != null) {
             areContrasting = contrast(routeColor, textColor) >= 4.5;
         }
         return areContrasting;
-    }
-
-    /**
-     * Verifies if 2 colors are contrasting according to W3C recommendations
-     * Ref. https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-procedure
-     *
-     * @param color an hexadecimal string representing a color. Ex. a5ff00
-     * @return true if color is a valid hexadecimal or null, false if not.
-     */
-    private boolean isValid(String color) {
-        boolean isValid = false;
-        if (color == null || colorValidator.isValid(color)) {
-            isValid = true;
-        }
-        return isValid;
     }
 }

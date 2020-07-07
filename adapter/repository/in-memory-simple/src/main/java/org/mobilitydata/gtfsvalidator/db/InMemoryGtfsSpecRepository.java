@@ -168,7 +168,8 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                 file,
                 FloatValidator.getInstance(),
                 IntegerValidator.getInstance(),
-                DateValidator.getInstance());
+                DateValidator.getInstance(),
+                new RegexValidator(VALID_COLOR_REGEX_PATTERN));
     }
 
     /**
