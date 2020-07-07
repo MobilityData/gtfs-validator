@@ -31,7 +31,8 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 class ValidateTripRouteIdTest {
-
+    // suppress warning regarding ignored result of method since it is not necessary here.
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void tripWithInvalidReferenceToRouteShouldGenerateNotice() {
         final Trip mockTrip00 = mock(Trip.class);
@@ -54,28 +55,22 @@ class ValidateTripRouteIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E033 - Invalid `route_id`" + System.lineSeparator()));
+                "Validating rule E033 - `route_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();
 
-        // suppress warning regarding ignored result of method since it is not necessary here.
-        //noinspection ResultOfMethodCallIgnored
         verify(mockTrip00, times(1)).getTripId();
-        // suppress warning regarding ignored result of method since it is not necessary here.
-        //noinspection ResultOfMethodCallIgnored
         verify(mockTrip00, times(2)).getRouteId();
-        // suppress warning regarding ignored result of method since it is not necessary here.
-        //noinspection ResultOfMethodCallIgnored
         verify(mockTrip01, times(1)).getTripId();
-        // suppress warning regarding ignored result of method since it is not necessary here.
-        //noinspection ResultOfMethodCallIgnored
         verify(mockTrip01, times(2)).getRouteId();
         verify(mockResultRepo, times(2)).addNotice(any(RouteIdNotFoundNotice.class));
 
         verifyNoMoreInteractions(mockTrip00, mockTrip01, mockDataRepo, mockResultRepo, mockLogger);
     }
 
+    // suppress warning regarding ignored result of method since it is not necessary here.
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void tripWithValidReferenceToRouteShouldNotGenerateNotice() {
         final Trip mockTrip00 = mock(Trip.class);
@@ -104,22 +99,14 @@ class ValidateTripRouteIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E033 - Invalid `route_id`" + System.lineSeparator()));
+                "Validating rule E033 - `route_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();
 
-        // suppress warning regarding ignored result of method since it is not necessary here.
-        //noinspection ResultOfMethodCallIgnored
         verify(mockTrip00, times(1)).getRouteId();
-        // suppress warning regarding ignored result of method since it is not necessary here.
-        //noinspection ResultOfMethodCallIgnored
         verify(mockRoute00, times(1)).getRouteId();
-        // suppress warning regarding ignored result of method since it is not necessary here.
-        //noinspection ResultOfMethodCallIgnored
         verify(mockTrip01, times(1)).getRouteId();
-        // suppress warning regarding ignored result of method since it is not necessary here.
-        //noinspection ResultOfMethodCallIgnored
         verify(mockRoute01, times(1)).getRouteId();
 
         verifyNoMoreInteractions(mockTrip00, mockTrip01, mockRoute00, mockRoute01, mockDataRepo, mockResultRepo,
