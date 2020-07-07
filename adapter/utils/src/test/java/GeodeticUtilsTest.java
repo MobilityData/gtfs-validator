@@ -36,13 +36,14 @@ class GeodeticUtilsTest {
     private static final float POINTE_A_PITRE_LONGITUDE = -61.5510f;
     private static final float FORT_DE_FRANCE_LATITUDE = 14.6161f;
     private static final float FORT_DE_FRANCE_LONGITUDE = -61.0588f;
+    private static GeodeticUtils DISTANCE_CALCULATION_UTILS = GeodeticUtils.getInstance();
 
     @Test
     void distanceBetweenSamePointShouldBeZero(){
-        assertEquals(0, new GeodeticUtils().distanceBetweenTwoPoints(
+        assertEquals(0,DISTANCE_CALCULATION_UTILS.distanceBetweenTwoPoints(
                         30,45,30,45,
                 DistanceUnit.KILOMETER));
-        assertEquals(0, new GeodeticUtils().distanceBetweenTwoPoints(
+        assertEquals(0, DISTANCE_CALCULATION_UTILS.distanceBetweenTwoPoints(
                         30,45,30,45,
                 DistanceUnit.METER));
     }
@@ -50,7 +51,7 @@ class GeodeticUtilsTest {
     @Test
     void distanceBetweenMontrealAndPointeAPitreShouldBeSufficientlyAccurate() {
         final double distance =
-                new GeodeticUtils().distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE,POINTE_A_PITRE_LONGITUDE,
+                DISTANCE_CALCULATION_UTILS.distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE,POINTE_A_PITRE_LONGITUDE,
                         MONTREAL_LATITUDE, MONTREAL_LONGITUDE, DistanceUnit.KILOMETER);
         // see https://www.movable-type.co.uk/scripts/latlong.html
         assertEquals(3438, distance, .5); // unit is kilometers
@@ -59,7 +60,6 @@ class GeodeticUtilsTest {
     @Test
     void shapeTotalDistanceShouldBeTheSumOfDistancesBetweenShapePoints() {
         final Map<Integer, ShapePoint> mockShape = new HashMap<>();
-        final DistanceCalculationUtils distanceCalculationUtils = new GeodeticUtils();
 
         // first shape point is located at Montréal (Canada)
         final ShapePoint firstShapePointInSequence = mock(ShapePoint.class);
@@ -86,28 +86,26 @@ class GeodeticUtilsTest {
         mockShape.put(10, thirdShapePointInSequence);
         mockShape.put(11, fourthShapePointInSequence);
 
-        final double montrealNewYorkDistance = distanceCalculationUtils.distanceBetweenTwoPoints(MONTREAL_LATITUDE,
+        final double montrealNewYorkDistance = DISTANCE_CALCULATION_UTILS.distanceBetweenTwoPoints(MONTREAL_LATITUDE,
                 MONTREAL_LONGITUDE, NEW_YORK_LATITUDE, NEW_YORK_LONGITUDE, DistanceUnit.KILOMETER);
-        final double newYorkPointeAPitreDistance = distanceCalculationUtils.distanceBetweenTwoPoints(NEW_YORK_LATITUDE,
+        final double newYorkPointeAPitreDistance = DISTANCE_CALCULATION_UTILS.distanceBetweenTwoPoints(NEW_YORK_LATITUDE,
                 NEW_YORK_LONGITUDE, POINTE_A_PITRE_LATITUDE, POINTE_A_PITRE_LONGITUDE, DistanceUnit.KILOMETER);
         final double pointeAPitreFortDeFranceDistance =
-                distanceCalculationUtils.distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE, POINTE_A_PITRE_LONGITUDE,
+                DISTANCE_CALCULATION_UTILS.distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE, POINTE_A_PITRE_LONGITUDE,
                         FORT_DE_FRANCE_LATITUDE, FORT_DE_FRANCE_LONGITUDE, DistanceUnit.KILOMETER);
 
         final double shapeTotalDistance = montrealNewYorkDistance + newYorkPointeAPitreDistance +
                 pointeAPitreFortDeFranceDistance;
 
-        assertEquals(shapeTotalDistance, distanceCalculationUtils.getShapeTotalDistance(mockShape,
+        assertEquals(shapeTotalDistance, DISTANCE_CALCULATION_UTILS.getShapeTotalDistance(mockShape,
                 DistanceUnit.KILOMETER));
     }
 
     @Test
     void computeDistanceBetweenPointWithoutSpecifyingUnitShouldReturnResultInKilometer() {
-        final DistanceCalculationUtils distanceCalculationUtils = new GeodeticUtils();
-
-        assertEquals(distanceCalculationUtils.distanceBetweenTwoPoints(
+        assertEquals(DISTANCE_CALCULATION_UTILS.distanceBetweenTwoPoints(
                 30,45,30,45, null),
-                distanceCalculationUtils.distanceBetweenTwoPoints(
+                DISTANCE_CALCULATION_UTILS.distanceBetweenTwoPoints(
                 30,45,30,45, DistanceUnit.KILOMETER));
     }
 }

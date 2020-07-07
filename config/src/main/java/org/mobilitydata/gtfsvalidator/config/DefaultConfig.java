@@ -53,7 +53,6 @@ public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
-    private final DistanceCalculationUtils distanceCalculationUtils = new GeodeticUtils();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -280,6 +279,6 @@ public class DefaultConfig {
     }
 
     public ValidateShapeDistTraveled validateShapeDistTraveled() {
-        return new ValidateShapeDistTraveled(gtfsDataRepository, resultRepo, distanceCalculationUtils, logger);
+        return new ValidateShapeDistTraveled(gtfsDataRepository, resultRepo, GeodeticUtils.getInstance(), logger);
     }
 }

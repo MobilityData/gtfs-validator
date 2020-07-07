@@ -34,6 +34,19 @@ import java.util.Map;
  * two {@code ShapePoint}.
  */
 public class GeodeticUtils implements DistanceCalculationUtils {
+    private static GeodeticUtils DISTANCE_CALCULATION_UTILS = null;
+
+    private GeodeticUtils(){}
+
+    /**
+     * Implement singleton pattern
+     */
+    public static GeodeticUtils getInstance() {
+        if (DISTANCE_CALCULATION_UTILS == null) {
+            DISTANCE_CALCULATION_UTILS = new GeodeticUtils();
+        }
+        return DISTANCE_CALCULATION_UTILS;
+    }
 
     /**
      * Return the distance between two points given there lat/lon positions in the specified unit. The distance is
