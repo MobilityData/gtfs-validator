@@ -721,8 +721,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return an immutable map representing all records from stop_times.txt. Elements of this map are mapped by
-     * "trip_id" and ordered by ascending by stop_sequence
+     * Return an immutable map representing all records from stop_times.txt. The key values for the returned map are
+     * trip_id and the value is another map, which keys are stop_sequence and values are {@link StopTime}. Note that
+     * those are ordered by ascending stop_sequence.
      *
      * @return  an immutable map representing all records from stop_times.txt
      */

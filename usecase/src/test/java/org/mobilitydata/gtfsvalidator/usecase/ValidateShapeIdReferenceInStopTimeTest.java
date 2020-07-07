@@ -42,7 +42,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
     // suppress warning regarding ignored result of method since it is not necessary here.
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void stopTimeWithNullShapeDistTravelledShouldNotGenerateNotice() {
+    void stopTimeWithNullShapeDistTraveledShouldNotGenerateNotice() {
         final StopTime mockStopTime = mock(StopTime.class);
         when(mockStopTime.getTripId()).thenReturn("trip id");
         when(mockStopTime.getStopSequence()).thenReturn(2);
@@ -64,9 +64,8 @@ class ValidateShapeIdReferenceInStopTimeTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - `shape_id` must be provided and valid when" +
-                        " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
+        verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
+                "Invalid `shape_id`" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))
@@ -74,13 +73,14 @@ class ValidateShapeIdReferenceInStopTimeTest {
 
         verify(mockStopTime, times(1)).getShapeDistTraveled();
 
-        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockStopTime);
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockStopTime);
     }
 
     // suppress warning regarding ignored result of method since it is not necessary here.
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void stopTimeWithNonNullShapeDistTravelledPlusInvalidTripIdShouldNotGenerateNotice() {
+    void stopTimeWithNonNullShapeDistTraveledPlusInvalidTripIdShouldNotGenerateNotice() {
         final StopTime mockStopTime = mock(StopTime.class);
         when(mockStopTime.getTripId()).thenReturn("trip id");
         when(mockStopTime.getStopSequence()).thenReturn(2);
@@ -103,9 +103,8 @@ class ValidateShapeIdReferenceInStopTimeTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - `shape_id` must be provided and valid when" +
-                        " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
+        verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
+                "Invalid `shape_id`" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))
@@ -114,13 +113,14 @@ class ValidateShapeIdReferenceInStopTimeTest {
 
         verify(mockStopTime, times(1)).getShapeDistTraveled();
 
-        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockStopTime);
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockStopTime);
     }
 
     // suppress warning regarding ignored result of method since it is not necessary here.
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void stopTimeWithNonNullShapeDistTravelledPlusValidTripIdAndNullShapeIdShouldGenerateNotice() {
+    void stopTimeWithNonNullShapeDistTraveledPlusValidTripIdAndNullShapeIdShouldGenerateNotice() {
         final StopTime mockStopTime = mock(StopTime.class);
         when(mockStopTime.getTripId()).thenReturn("trip id");
         when(mockStopTime.getStopSequence()).thenReturn(2);
@@ -147,9 +147,8 @@ class ValidateShapeIdReferenceInStopTimeTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - `shape_id` must be provided and valid when" +
-                        " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
+        verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
+                "Invalid `shape_id`" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))
@@ -176,7 +175,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
     // suppress warning regarding ignored result of method since it is not necessary here.
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void stopTimeWithNonNullShapeDistTravelledPlusValidTripIdAndInvalidShapeIdShouldGenerateNotice() {
+    void stopTimeWithNonNullShapeDistTraveledPlusValidTripIdAndInvalidShapeIdShouldGenerateNotice() {
         final StopTime mockStopTime = mock(StopTime.class);
         when(mockStopTime.getTripId()).thenReturn("trip id");
         when(mockStopTime.getStopSequence()).thenReturn(2);
@@ -187,14 +186,12 @@ class ValidateShapeIdReferenceInStopTimeTest {
         mockStopTimeCollection.put("trip id", innerMap);
 
         final Trip mockTrip = mock(Trip.class);
-        when(mockTrip.getShapeId()).thenReturn(null);
         when(mockTrip.getTripId()).thenReturn("trip id");
         when(mockTrip.getShapeId()).thenReturn("non existing shape id");
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getStopTimeAll()).thenReturn(mockStopTimeCollection);
         when(mockDataRepo.getStopTimeByTripId("trip id")).thenReturn(innerMap);
-        when(mockDataRepo.getTripById("trip id")).thenReturn(null);
         when(mockDataRepo.getTripById("trip id")).thenReturn(mockTrip);
         when(mockDataRepo.getShapeById("non existing shape id")).thenReturn(null);
 
@@ -206,9 +203,8 @@ class ValidateShapeIdReferenceInStopTimeTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - `shape_id` must be provided and valid when" +
-                        " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
+        verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
+                "Invalid `shape_id`" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))
@@ -240,7 +236,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
     // suppress warning regarding ignored result of method since it is not necessary here.
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void stopTimeWithNonNullShapeDistTravelledPlusValidTripIdAndNullAndValidShapeIdShouldNotGenerateNotice() {
+    void stopTimeWithNonNullShapeDistTraveledPlusValidTripIdAndAndValidShapeIdShouldNotGenerateNotice() {
         final StopTime mockStopTime = mock(StopTime.class);
         when(mockStopTime.getTripId()).thenReturn("trip id");
         when(mockStopTime.getStopSequence()).thenReturn(2);
@@ -251,9 +247,8 @@ class ValidateShapeIdReferenceInStopTimeTest {
         mockStopTimeCollection.put("trip id", innerMap);
 
         final Trip mockTrip = mock(Trip.class);
-        when(mockTrip.getShapeId()).thenReturn(null);
         when(mockTrip.getTripId()).thenReturn("trip id");
-        when(mockTrip.getShapeId()).thenReturn("non existing shape id");
+        when(mockTrip.getShapeId()).thenReturn("shape id");
 
         final ShapePoint mockShapePoint = mock(ShapePoint.class);
         final TreeMap<Integer, ShapePoint> mockShapePointCollection = new TreeMap<>();
@@ -263,7 +258,6 @@ class ValidateShapeIdReferenceInStopTimeTest {
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getStopTimeAll()).thenReturn(mockStopTimeCollection);
         when(mockDataRepo.getStopTimeByTripId("trip id")).thenReturn(innerMap);
-        when(mockDataRepo.getTripById("trip id")).thenReturn(null);
         when(mockDataRepo.getTripById("trip id")).thenReturn(mockTrip);
         when(mockDataRepo.getShapeById("shape id")).thenReturn(mockShapePointCollection);
 
@@ -275,19 +269,19 @@ class ValidateShapeIdReferenceInStopTimeTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule 'E034 - `shape_id` must be provided and valid when" +
-                        " stop_times.shape_dist_travelled is provided'" + System.lineSeparator()));
+        verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
+                "Invalid `shape_id`" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))
                 .getStopTimeByTripId(ArgumentMatchers.eq("trip id"));
         verify(mockDataRepo, times(1)).getTripById("trip id");
-        verify(mockDataRepo, times(1)).getShapeById("non existing shape id");
+        verify(mockDataRepo, times(1)).getShapeById("shape id");
 
         verify(mockStopTime, times(1)).getShapeDistTraveled();
         verify(mockTrip, times(1)).getShapeId();
 
-        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockStopTime, mockTrip);
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockStopTime, mockTrip);
     }
 }

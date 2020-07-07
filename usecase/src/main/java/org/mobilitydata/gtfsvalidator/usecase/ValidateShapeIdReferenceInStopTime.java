@@ -58,12 +58,11 @@ public class ValidateShapeIdReferenceInStopTime {
      * {@code ValidationResultRepository} provided in the constructor.
      * Each time a record from `stop_times.txt` that has a non-null value for field `shape_dist_travelled` refers to a
      * record from `trips.txt` that itself does not refer to any record from `shapes.txt` a
-     * {@code MissingRequiredValueNotice} is generated and added to th {@code ValidationResultRepository} in the
+     * {@code MissingRequiredValueNotice} is generated and added to the {@code ValidationResultRepository} in the
      * constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E034 - `shape_id` must be provided and valid when stop_times.shape_dist_travelled" +
-                " is provided'" + System.lineSeparator());
+        logger.info("Validating rule 'E034 - Invalid `shape_id`" + System.lineSeparator());
 
         final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripId = dataRepo.getStopTimeAll();
         stopTimePerTripId.forEach(
@@ -72,6 +71,7 @@ public class ValidateShapeIdReferenceInStopTime {
                             if (stopTime.getShapeDistTraveled() != null) {
                                 final Trip trip = dataRepo.getTripById(tripId);
                                 if (trip != null) {
+                                    // cross references to trips.txt are checked in E035
                                     final String shapeId = trip.getShapeId();
                                     if (shapeId == null) {
                                         resultRepo.addNotice(new MissingRequiredValueNotice("trips.txt",
