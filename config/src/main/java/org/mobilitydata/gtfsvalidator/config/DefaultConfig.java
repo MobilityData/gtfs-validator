@@ -56,6 +56,7 @@ public class DefaultConfig {
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
     private final TimeUtils timeUtils = TimeConversionUtils.getInstance();
+    private final DistanceCalculationUtils geodeticUtils = GeodeticUtils.getInstance();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -283,6 +284,6 @@ public class DefaultConfig {
     }
 
     public ValidateShapeDistTraveled validateShapeDistTraveled() {
-        return new ValidateShapeDistTraveled(gtfsDataRepository, resultRepo, timeUtils, logger);
+        return new ValidateShapeDistTraveled(gtfsDataRepository, resultRepo, geodeticUtils, logger);
     }
 }
