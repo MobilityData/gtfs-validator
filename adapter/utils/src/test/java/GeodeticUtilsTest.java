@@ -53,7 +53,7 @@ class GeodeticUtilsTest {
                 new GeodeticUtils().distanceBetweenTwoPoints(POINTE_A_PITRE_LATITUDE,POINTE_A_PITRE_LONGITUDE,
                         MONTREAL_LATITUDE, MONTREAL_LONGITUDE, DistanceUnit.KILOMETER);
         // see https://www.movable-type.co.uk/scripts/latlong.html
-        assertTrue(3438-.5 <= distance && distance <= 3438+.5); // unit is kilometers
+        assertEquals(3438, distance, .5); // unit is kilometers
     }
 
     @Test

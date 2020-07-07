@@ -27,12 +27,13 @@ public interface DistanceCalculationUtils {
     int KILOMETER_TO_METER_CONVERSION_FACTOR = 1000; // conversion factor from kilometers to meters
 
     /**
-     * Return the distance between two points given there lat/lon positions in the specified unit. Note that points of
-     * origin and destination can be swapped.
+     * Return the distance between two points given there lat/lon positions in the specified unit. The distance is
+     * computed following the haversine formula. See https://locationtech.github.io/spatial4j/apidocs/org/locationtech/spatial4j/context/SpatialContext.html
+     * Note that points of origin and destination can be swapped.
      *
      * @param originLatitude        latitude of the origin point
-     * @param destinationLatitude   latitude of the destination point
      * @param originLongitude       longitude of the origin point
+     * @param destinationLatitude   latitude of the destination point
      * @param destinationLongitude  longitude of the destination point
      * @param distanceUnit          unit of the desired result of computation
      * @return the distance between two points given there lat/lon positions in the specified unit

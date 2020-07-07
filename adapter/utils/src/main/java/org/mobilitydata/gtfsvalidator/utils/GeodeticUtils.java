@@ -36,8 +36,9 @@ import java.util.Map;
 public class GeodeticUtils implements DistanceCalculationUtils {
 
     /**
-     * Return the distance between two points given there lat/lon positions in the specified unit. Note that points of
-     * origin and destination can be swapped.
+     * Return the distance between two points given there lat/lon positions in the specified unit. The distance is
+     * computed following the haversine formula. See https://locationtech.github.io/spatial4j/apidocs/org/locationtech/spatial4j/context/SpatialContext.html
+     * Note that points of origin and destination can be swapped.
      *
      * @param originLatitude        latitude of the origin point
      * @param originLongitude       longitude of the origin point
@@ -49,8 +50,8 @@ public class GeodeticUtils implements DistanceCalculationUtils {
     @Override
     public double distanceBetweenTwoPoints(final float originLatitude, final float originLongitude,
                                            final float destinationLatitude, final float destinationLongitude,
-                                                  final DistanceUnit distanceUnit) {
-        final ShapeFactory shapeFactory= getShapeFactory();
+                                           final DistanceUnit distanceUnit) {
+        final ShapeFactory shapeFactory = getShapeFactory();
         final DistanceCalculator distanceCalculator = getDistanceCalculator();
 
         final Point origin = shapeFactory.pointXY(originLongitude, originLatitude);
@@ -58,16 +59,16 @@ public class GeodeticUtils implements DistanceCalculationUtils {
         // implementation uses harvesine formula which determines the great-circle distance between two points on a
         // sphere given their longitudes and latitudes. Note that the elevation of both points is not taken into
         // consideration.
-        final double distance = DistanceUtils.DEG_TO_KM*distanceCalculator.distance(origin, destination);
+        final double distance = DistanceUtils.DEG_TO_KM * distanceCalculator.distance(origin, destination);
         if (distanceUnit == DistanceUnit.KILOMETER) {
                 return distance;
         } else {
-                return distance* KILOMETER_TO_METER_CONVERSION_FACTOR;
+                return distance * KILOMETER_TO_METER_CONVERSION_FACTOR;
         }
     }
 
     /**
-     * private method returning a {@code ShapeFactory}
+     * Method returning a {@code ShapeFactory}
      * @return a {@link ShapeFactory}
      */
     private static ShapeFactory getShapeFactory() {
@@ -75,7 +76,7 @@ public class GeodeticUtils implements DistanceCalculationUtils {
     }
 
     /**
-     * private method returning a {@code DistanceCalculator}
+     * Method returning a {@code DistanceCalculator}
      * @return a {@link DistanceCalculator}
      */
     private static DistanceCalculator getDistanceCalculator() {
