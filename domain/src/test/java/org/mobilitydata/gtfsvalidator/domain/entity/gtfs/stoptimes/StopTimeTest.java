@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FloatFieldValueOutOfRangeNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombinationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
@@ -434,9 +434,9 @@ class StopTimeTest {
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
         // we do not need to cast check
         //noinspection unchecked
-        final List<IllegalFieldValueCombination> noticeCollection =
-                (List<IllegalFieldValueCombination>) buildResult.getData();
-        final IllegalFieldValueCombination notice = noticeCollection.get(0);
+        final List<IllegalFieldValueCombinationNotice> noticeCollection =
+                (List<IllegalFieldValueCombinationNotice>) buildResult.getData();
+        final IllegalFieldValueCombinationNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("arrival_time", notice.getNoticeSpecific(KEY_FIELD_NAME));
@@ -472,9 +472,9 @@ class StopTimeTest {
         // suppressed lint regarding cast. The test is designed so that .getData() returns a list of notices, therefore
         // we do not need to cast check
         //noinspection unchecked
-        final List<IllegalFieldValueCombination> noticeCollection =
-                (List<IllegalFieldValueCombination>) buildResult.getData();
-        final IllegalFieldValueCombination notice = noticeCollection.get(0);
+        final List<IllegalFieldValueCombinationNotice> noticeCollection =
+                (List<IllegalFieldValueCombinationNotice>) buildResult.getData();
+        final IllegalFieldValueCombinationNotice notice = noticeCollection.get(0);
 
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("departure_time", notice.getNoticeSpecific(KEY_FIELD_NAME));

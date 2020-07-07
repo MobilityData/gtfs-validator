@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombinationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
@@ -142,9 +142,9 @@ class AttributionTest {
         //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
         // there is no need for cast check
         //noinspection unchecked
-        final List<IllegalFieldValueCombination> noticeCollection =
-                (List<IllegalFieldValueCombination>) entityBuildResult.getData();
-        final IllegalFieldValueCombination notice = noticeCollection.get(0);
+        final List<IllegalFieldValueCombinationNotice> noticeCollection =
+                (List<IllegalFieldValueCombinationNotice>) entityBuildResult.getData();
+        final IllegalFieldValueCombinationNotice notice = noticeCollection.get(0);
 
         assertEquals("attributions.txt", notice.getFilename());
         assertEquals("is_producer", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
