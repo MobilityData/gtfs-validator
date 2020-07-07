@@ -40,6 +40,8 @@ public class GeodeticUtils implements DistanceCalculationUtils {
 
     /**
      * Implement singleton pattern
+     *
+     * @return a unique instance of {@code GeodeticUtils}
      */
     public static GeodeticUtils getInstance() {
         if (DISTANCE_CALCULATION_UTILS == null) {
