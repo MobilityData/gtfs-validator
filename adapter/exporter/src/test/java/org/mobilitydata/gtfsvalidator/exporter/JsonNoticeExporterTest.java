@@ -383,7 +383,7 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        IllegalFieldValueCombination toExport = new IllegalFieldValueCombination(FILENAME, "field_name",
+        IllegalFieldValueCombinationNotice toExport = new IllegalFieldValueCombinationNotice(FILENAME, "field_name",
                 "conflicting_field_name", "entity_id");
         underTest.export(toExport);
 

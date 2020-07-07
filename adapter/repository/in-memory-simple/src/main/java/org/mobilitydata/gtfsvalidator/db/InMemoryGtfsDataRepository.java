@@ -25,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
@@ -110,6 +111,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // - trip_id
     // - stop_sequence
     private final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripIdStopSequence = new HashMap<>();
+
+    // Map containing Translation entities. Entities are mapped on the value found in column table_name, field_value and
+    // language of GTFS file translations.txt.
+    private final Map<String, Map<String, Map<String, Translation>>> translationPerTableName = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -498,7 +503,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * if this requirement is not met, returns null.
      *
      * @param newFareRule the internal representation of a row from fare_rules.txt to be added to the repository.
-     * @return Return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt
+     * @return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt
      * is respected, if this requirement is not met, returns null.
      */
     @Override
@@ -713,5 +718,65 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Map<Integer, StopTime> getStopTimeByTripId(final String tripId) {
         return Collections.unmodifiableMap(stopTimePerTripIdStopSequence.get(tripId));
+    }
+
+    /**
+     * Add a {@code Translation} representing a row from translations.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
+     * respected. If this requirement is not met, returns null.
+     *
+     * @param newTranslationTable  the internal representation of a row from translations.txt to be added to the
+     *                             repository
+     * @return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
+     * respected. If this requirement is not met, returns null,
+     * @throws IllegalArgumentException if the argument is null
+     */
+    @Override
+    public Translation addTranslation(final Translation newTranslationTable) throws IllegalArgumentException {
+        if (newTranslationTable != null) {
+            final String tableName = newTranslationTable.getTableName().toString().toLowerCase();
+            final String fieldName = newTranslationTable.getFieldName();
+            final String language = newTranslationTable.getLanguage();
+            if (translationPerTableName.containsKey(tableName)) {
+                if (translationPerTableName.get(tableName).containsKey(fieldName)) {
+                    if (translationPerTableName.get(tableName).get(fieldName).containsKey(language)) {
+                        return null;
+                    } else {
+                        translationPerTableName.get(tableName).get(fieldName).put(language, newTranslationTable);
+                    }
+                } else {
+                    final Map<String, Translation> firstLevelMap= new TreeMap<>();
+                    final Map<String, Map<String, Translation>> secondLevelMap = new TreeMap<>();
+                    secondLevelMap.put(language, firstLevelMap);
+                    translationPerTableName.put(fieldName, secondLevelMap);
+                }
+            } else {
+                final Map<String, Translation> firstLevelMap = new TreeMap<>();
+                firstLevelMap.put(language, newTranslationTable);
+                final Map<String, Map<String, Translation>> secondLevelMap = new TreeMap<>();
+                secondLevelMap.put(fieldName, firstLevelMap);
+                translationPerTableName.put(tableName, secondLevelMap);
+            }
+            return newTranslationTable;
+        } else {
+            throw new IllegalArgumentException("Cannot add null Translation to data repository");
+        }
+    }
+
+    /**
+     * Return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
+     * provided as parameter
+     *
+     * @param tableName   the name of the table to retrieve translations from
+     * @param fieldName  the name of the field to be translated
+     * @param language    the language of translation
+     * @return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
+     * provided as parameter
+     */
+    @Override
+    public Translation getTranslationByTableNameFieldValueLanguage(final String tableName,
+                                                                   final String fieldName,
+                                                                   final String language) {
+        return translationPerTableName.get(tableName).get(fieldName).get(language);
     }
 }
