@@ -91,5 +91,5 @@ public interface NoticeExporter {
 
     void export(InvalidAgencyIdNotice invalidAgencyIdNotice) throws IOException;
 
-    void export(final NonExistingAgencyId nonExistingAgencyId) throws IOException;
+    void export(final AgencyIdNotFoundNotice agencyIdNotFoundNotice) throws IOException;
 }

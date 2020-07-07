@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.NonExistingAgencyId;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.AgencyIdNotFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -47,13 +47,13 @@ public class ValidateRouteAgencyId {
                     resultRepo.addNotice(new MissingAgencyIdNotice("routes.txt", routeId));
                 } else {
                     if (dataRepo.getAgencyById(agencyId) == null) {
-                        resultRepo.addNotice(new NonExistingAgencyId("routes.txt", "agency_id",
+                        resultRepo.addNotice(new AgencyIdNotFoundNotice("routes.txt", "agency_id",
                                 routeId));
                     }
                 }
             } else {
                 if (agencyId != null && dataRepo.getAgencyById(agencyId) == null) {
-                    resultRepo.addNotice(new NonExistingAgencyId("routes.txt", "agency_id", routeId));
+                    resultRepo.addNotice(new AgencyIdNotFoundNotice("routes.txt", "agency_id", routeId));
                 }
             }
         });

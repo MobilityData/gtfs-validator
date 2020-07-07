@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.NonExistingAgencyId;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.AgencyIdNotFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
@@ -111,11 +111,11 @@ class ValidateRouteAgencyIdTest {
         verify(mockRoute, times(1)).getRouteId();
         verify(mockRoute, times(1)).getAgencyId();
 
-        final ArgumentCaptor<NonExistingAgencyId> captor = ArgumentCaptor.forClass(NonExistingAgencyId.class);
+        final ArgumentCaptor<AgencyIdNotFoundNotice> captor = ArgumentCaptor.forClass(AgencyIdNotFoundNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final List<NonExistingAgencyId> noticeList = captor.getAllValues();
+        final List<AgencyIdNotFoundNotice> noticeList = captor.getAllValues();
 
         assertEquals("routes.txt", noticeList.get(0).getFilename());
         assertEquals("agency_id", noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
@@ -157,11 +157,11 @@ class ValidateRouteAgencyIdTest {
         verify(mockRoute, times(1)).getRouteId();
         verify(mockRoute, times(1)).getAgencyId();
 
-        final ArgumentCaptor<NonExistingAgencyId> captor = ArgumentCaptor.forClass(NonExistingAgencyId.class);
+        final ArgumentCaptor<AgencyIdNotFoundNotice> captor = ArgumentCaptor.forClass(AgencyIdNotFoundNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final List<NonExistingAgencyId> noticeList = captor.getAllValues();
+        final List<AgencyIdNotFoundNotice> noticeList = captor.getAllValues();
 
         assertEquals("routes.txt", noticeList.get(0).getFilename());
         assertEquals("agency_id", noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));

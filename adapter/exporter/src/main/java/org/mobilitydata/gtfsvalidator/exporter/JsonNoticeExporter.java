@@ -248,7 +248,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final NonExistingAgencyId toExport) throws IOException {
+    public void export(final AgencyIdNotFoundNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

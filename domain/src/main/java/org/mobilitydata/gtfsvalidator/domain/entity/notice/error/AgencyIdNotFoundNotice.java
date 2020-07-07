@@ -21,13 +21,13 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class NonExistingAgencyId extends ErrorNotice {
-    public NonExistingAgencyId(final String filename, final String fieldName, final String entityId) {
+public class AgencyIdNotFoundNotice extends ErrorNotice {
+    public AgencyIdNotFoundNotice(final String filename, final String fieldName, final String entityId) {
         super(filename,
                 E_035,
-                "GTFS `routes.agency_id` does not exist in GTFS data",
-                "Field `routes.agency_id` with id: `" + entityId+ "` does not refer to any record" +
-                        " from `agency.txt`",
+                "GTFS `agency_id` does not exist in GTFS data",
+                "Field: `"+ fieldName + "` for entity from file : `"+ filename + "` with id: `" + entityId+
+                        "` does not refer to any record from `agency.txt`",
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }

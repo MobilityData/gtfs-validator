@@ -583,7 +583,7 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportInvalidAgencyIdNoticeShouldWriteObject() throws IOException {
+    void exportAgencyIdNotFoundNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -600,7 +600,7 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        final NonExistingAgencyId toExport = new NonExistingAgencyId("filename", "field name",
+        final AgencyIdNotFoundNotice toExport = new AgencyIdNotFoundNotice("filename", "field name",
                 "entity id");
         underTest.export(toExport);
 
