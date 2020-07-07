@@ -66,13 +66,13 @@ public class TimeConversionUtilsTest {
     }
 
     @Test
-    void callConvertHHMMSSToIntFromNoonOfDayOfServiceOnNullValueShouldReturnNull() {
+    void convertHHMMSSToIntFromNoonOfDayOfServiceOnNullValueShouldReturnNull() {
         // check that null value returns null when calling method convertHHMMSSToIntFromNoonOfDayOfService
         assertNull(new TimeConversionUtils().convertHHMMSSToIntFromNoonOfDayOfService(null));
     }
 
     @Test
-    void callConvertHHMMSSToIntFromNoonOfDayOfServiceOnMalformedValueShouldReturnNull() {
+    void convertHHMMSSToIntFromNoonOfDayOfServiceOnMalformedValueShouldReturnNull() {
         // check that malformed time return null when calling method
         // new TimeConversionUtils().convertHHMMSSToIntFromNoonOfDayOfService
         String malformedTimeAsString = "1344";
@@ -86,13 +86,13 @@ public class TimeConversionUtilsTest {
     }
 
     @Test
-    void callConvertHHMMSSToIntFromNoonOfDayOfServiceOnEmptyValueShouldReturnNull() {
+    void convertHHMMSSToIntFromNoonOfDayOfServiceOnEmptyValueShouldReturnNull() {
         final String emptyString = "";
         assertNull(new TimeConversionUtils().convertHHMMSSToIntFromNoonOfDayOfService(emptyString));
     }
 
     @Test
-    void callConvertHHMMSSToIntFromNoonOfDayOfServiceOnBlankValueShouldReturnNull() {
+    void convertHHMMSSToIntFromNoonOfDayOfServiceOnBlankValueShouldReturnNull() {
         final String blankString = "    ";
         assertNull(new TimeConversionUtils().convertHHMMSSToIntFromNoonOfDayOfService(blankString));
     }
@@ -144,7 +144,7 @@ public class TimeConversionUtilsTest {
     }
 
     @Test
-    void callConvertIntegerToHMMSSOnNullValueShouldReturnNull() {
+    void convertIntegerToHMMSSOnNullValueShouldReturnNull() {
         assertNull(new TimeConversionUtils().convertIntegerToHMMSS(null));
     }
 
