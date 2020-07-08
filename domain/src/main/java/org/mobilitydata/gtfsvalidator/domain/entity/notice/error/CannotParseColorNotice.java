@@ -21,14 +21,14 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class InvalidColorNotice extends ErrorNotice {
+public class CannotParseColorNotice extends ErrorNotice {
 
-    public InvalidColorNotice(String filename, String fieldName, String entityId, String colorValue) {
+    public CannotParseColorNotice(String filename, String fieldName, int lineNumber, String colorValue) {
         super(filename, E_014,
                 "Invalid color",
                 "Invalid color:`" + colorValue + "` in field:`" + fieldName
-                        + "` for entity with id:`" + entityId + "`",
-                entityId);
+                        + "` at row:`" + lineNumber + "`",
+                null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COLOR_VALUE, colorValue);
     }

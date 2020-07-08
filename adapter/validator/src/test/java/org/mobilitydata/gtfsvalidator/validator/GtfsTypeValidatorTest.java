@@ -301,8 +301,8 @@ class GtfsTypeValidatorTest {
 
         assertEquals(1, result.size());
         Notice notice = new ArrayList<>(result).get(0);
-        assertThat(notice, instanceOf(InvalidColorNotice.class));
-        assertEquals("ERROR", ((InvalidColorNotice) notice).getLevel());
+        assertThat(notice, instanceOf(CannotParseColorNotice.class));
+        assertEquals("ERROR", ((CannotParseColorNotice) notice).getLevel());
         assertEquals(14, notice.getCode());
         assertEquals("Invalid color", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());

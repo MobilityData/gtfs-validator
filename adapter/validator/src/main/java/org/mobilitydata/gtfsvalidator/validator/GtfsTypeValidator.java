@@ -133,17 +133,6 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                         }
                         break;
                     }
-                    case COLOR: {  //Color
-                        if (!colorValidator.isValid((String) value)) {
-                            toReturn.add(new InvalidColorNotice(
-                                    toValidate.getRawFileInfo().getFilename(),
-                                    columnSpecProto.getName(),
-                                    toValidate.getEntityId(),
-                                    (String) value
-                            ));
-                        }
-                        break;
-                    }
                     case TIMEZONE: {
                         //noinspection RedundantCast
                         if (!timezoneSet.contains((String) value)) {

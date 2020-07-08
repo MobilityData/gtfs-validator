@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseColorNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseDateNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseFloatNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseIntegerNotice;
@@ -128,6 +129,17 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                                         rawField
                                 )
                         );
+                    }
+                } else if (columnSpecProto.getType().getType() ==
+                        GtfsSpecificationProto.ColumnInputType.InputType.COLOR) {
+
+                    if (!colorValidator.isValid(rawField)) {
+                        toReturn.add(new CannotParseColorNotice(
+                                fileSchema.getFilename(),
+                                columnSpecProto.getName(),
+                                toValidate.getIndex(),
+                                rawField
+                        ));
                     }
                 }
             }
