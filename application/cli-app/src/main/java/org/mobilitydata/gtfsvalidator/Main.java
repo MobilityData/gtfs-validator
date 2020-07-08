@@ -175,6 +175,8 @@ public class Main {
                 config.validateCalendarEndDateBeforeStartDate().execute();
                 config.validateAgencyIdRequirement().execute();
                 config.validateAgenciesHaveSameAgencyTimezone().execute();
+                config.validateTripRouteId().execute();
+                config.validateRouteAgencyId().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

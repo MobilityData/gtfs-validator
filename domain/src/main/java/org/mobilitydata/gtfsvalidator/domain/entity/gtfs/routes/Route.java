@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
@@ -276,7 +277,7 @@ public class Route extends GtfsEntity {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() throws IllegalArgumentException {
-            if (routeId == null || routeType == null) {
+            if (routeId == null || routeType == null || agencyId.isBlank()) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
                             routeId));
@@ -288,6 +289,10 @@ public class Route extends GtfsEntity {
                 if (!RouteType.isEnumValueValid(originalRouteTypeInteger)) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
                             routeId, originalRouteTypeInteger));
+                }
+                if (agencyId.isBlank()) {
+                    noticeCollection.add(
+                            new InvalidAgencyIdNotice("routes.txt", "agency_id", routeId));
                 }
                 return new EntityBuildResult(noticeCollection);
             } else {

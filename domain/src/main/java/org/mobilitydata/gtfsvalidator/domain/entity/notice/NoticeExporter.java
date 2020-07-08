@@ -90,4 +90,8 @@ public interface NoticeExporter {
     void export(InconsistentAgencyTimezoneNotice inconsistentAgencyTimezoneNotice) throws IOException;
 
     void export(InvalidAgencyIdNotice invalidAgencyIdNotice) throws IOException;
+
+    void export(final RouteIdNotFoundNotice routeIdNotFoundNotice) throws IOException;
+
+    void export(final AgencyIdNotFoundNotice agencyIdNotFoundNotice) throws IOException;
 }

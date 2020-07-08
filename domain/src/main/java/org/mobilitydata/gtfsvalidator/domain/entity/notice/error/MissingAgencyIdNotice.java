@@ -22,22 +22,29 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class MissingAgencyIdNotice extends ErrorNotice {
-    private final String fieldName;
 
+    public MissingAgencyIdNotice(final String filename, final String entityId) {
+        super(filename, E_029,
+                "Missing `agency_id` value",
+                "File `agency.txt` counts more than one record. Missing value for field: `agency_id` in " +
+                        "GTFS file: `" + filename + "`, for entity with id: `" + entityId + "`.", entityId);
+    }
+
+    /**
+     * Additional constructor to be used in use case "ValidateAgencyIdRequirement"
+     *
+     * @param agencyName `agency_name` of the record missing value for field `agency_id`
+     */
     public MissingAgencyIdNotice(final String agencyName) {
         super("agency.txt", E_029,
                 "Missing `agency_id` value",
-                "File `agency.txt` count more than one record. Missing value for field: `agency_id`"
-                        + " marked as required for agency with name: `" + agencyName + "`", null);
-        this.fieldName = "agency_id";
+                "File `agency.txt` counts more than one record. Missing value for field: `agency_id` in " +
+                        "GTFS file: `agency.txt`, for entity with `agency_name`: `" + agencyName + "`.", null);
+        putNoticeSpecific(KEY_AGENCY_NAME, agencyName);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 }
