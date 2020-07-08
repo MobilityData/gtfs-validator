@@ -1203,13 +1203,13 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new MissingAgencyIdNotice("agency name"));
+        underTest.export(new MissingAgencyIdNotice("filename", "entity id"));
 
         verify(mockBuilder, times(1)).clear();
-        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("agency.txt"));
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("agency_id"));
+        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("entity id"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -1250,7 +1250,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportInvalidAgencyIdNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportAgencyIdNotFoundShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -1265,15 +1265,43 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new InvalidAgencyIdNotice("   "));
+        underTest.export(new InvalidAgencyIdNotice("filename", "field name", "entity id" ));
 
         verify(mockBuilder, times(1)).clear();
-        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("agency.txt"));
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("agency_id"));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("field name"));
         verify(mockBuilder, times(1))
-                .setEntityValue(ArgumentMatchers.eq("   "));
+                .setEntityValue(ArgumentMatchers.eq("entity id"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+    @Test
+    void exportNonExistingAgencyIdShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new AgencyIdNotFoundNotice("filename", "field name", "entity id"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("field name"));
+        verify(mockBuilder, times(1))
+                .setEntityValue(ArgumentMatchers.eq("entity id"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

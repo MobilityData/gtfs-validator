@@ -283,4 +283,8 @@ public class DefaultConfig {
     public ValidateTripRouteId validateTripRouteId() {
         return new ValidateTripRouteId(gtfsDataRepository, resultRepo, logger);
     }
+
+    public ValidateRouteAgencyId validateRouteAgencyId() {
+        return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
+    }
 }

@@ -158,7 +158,7 @@ class AgencyTest {
         final InvalidAgencyIdNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_id", notice.getFieldName());
+        assertEquals("agency_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(BLANK_STRING_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }

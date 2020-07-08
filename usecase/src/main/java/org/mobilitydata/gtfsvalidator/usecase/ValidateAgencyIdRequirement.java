@@ -17,12 +17,9 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
-import java.util.Collection;
 
 /**
  * Use case to validate that a agency_id is present when GTFS file agency.txt counts more than one record.
@@ -58,7 +55,8 @@ public class ValidateAgencyIdRequirement {
             dataRepo.getAgencyAll().stream()
                     .filter(agency -> agency.getAgencyId() == null)
                     .forEach(invalidAgency -> resultRepo
-                            .addNotice(new MissingAgencyIdNotice(invalidAgency.getAgencyName())));
+                            .addNotice(
+                                    new MissingAgencyIdNotice(invalidAgency.getAgencyName())));
         }
     }
 }
