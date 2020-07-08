@@ -304,7 +304,7 @@ class JsonNoticeExporterTest {
         CannotParseColorNotice toExport = new CannotParseColorNotice(
                 FILENAME,
                 "field_name",
-                "entity_id",
+                0,
                 "#zz"
         );
         underTest.export(toExport);
