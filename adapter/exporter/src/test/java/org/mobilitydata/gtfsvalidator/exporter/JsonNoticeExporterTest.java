@@ -608,12 +608,12 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportNonExistingShapeIdNoticeShouldWriteObject() throws IOException {
+    void exportShapeIdNotfoundNoticeShouldWriteObject() throws IOException {
         final JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        final NonExistingShapeNotice toExport =
-                new NonExistingShapeNotice("filename", "field name",
+        final ShapeIdNotFoundNotice toExport =
+                new ShapeIdNotFoundNotice("filename", "field name",
                         "composite key first part",
                         "composite key second part",
                         "composite key first value",

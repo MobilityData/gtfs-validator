@@ -21,10 +21,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class NonExistingShapeNotice extends ErrorNotice {
-    public NonExistingShapeNotice(final String filename, final String fieldName, final String compositeKeyFirstPart,
-                                  final String compositeKeySecondPart, final Object compositeKeyFirstValue,
-                                  final Object compositeKeySecondValue, final String shapeId) {
+public class ShapeIdNotFoundNotice extends ErrorNotice {
+    public ShapeIdNotFoundNotice(final String filename, final String fieldName, final String compositeKeyFirstPart,
+                                 final String compositeKeySecondPart, final Object compositeKeyFirstValue,
+                                 final Object compositeKeySecondValue, final String shapeId) {
         super(filename,
                 E_034,
                 "GTFS shape_id does not exist in GTFS data",

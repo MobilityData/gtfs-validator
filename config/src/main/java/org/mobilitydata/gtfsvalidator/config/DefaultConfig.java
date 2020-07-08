@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.config;
 
 import com.google.common.io.Resources;
+import org.mobilitydata.gtfsvalidator.usecase.crossvalidationusecase.stoptimesshapestrips.ShapeStopTimeTripCrossValidator;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.db.*;
@@ -284,7 +285,7 @@ public class DefaultConfig {
         return new ValidateTripRouteId(gtfsDataRepository, resultRepo, logger);
     }
 
-    public ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime() {
-        return new ValidateShapeIdReferenceInStopTime(gtfsDataRepository, resultRepo, logger);
+    public ShapeStopTimeTripCrossValidator shapeStopTimeTripCrossValidator() {
+        return new ShapeStopTimeTripCrossValidator(gtfsDataRepository, resultRepo, logger);
     }
 }

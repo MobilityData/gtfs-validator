@@ -1311,7 +1311,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportNonExistingShapeIdNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportShapeIdNotFoundNoticeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -1326,7 +1326,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new NonExistingShapeNotice("filename", "field name",
+        underTest.export(new ShapeIdNotFoundNotice("filename", "field name",
                         "composite key first part",
                         "composite key second part",
                         "composite key first value",
