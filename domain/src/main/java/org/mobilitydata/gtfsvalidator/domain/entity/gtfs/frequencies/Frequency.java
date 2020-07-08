@@ -156,33 +156,38 @@ public class Frequency extends GtfsEntity {
                     headwaySecs < 0 || exactTimes == null) {
 
                 if (tripId == null) {
-                    noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt",
-                            "trip_id", tripId));
+                    noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt", "trip_id",
+                            "trip_id", "start_time", tripId, startTime));
                 }
 
                 if (startTime == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt",
-                            "start_time", tripId));
+                            "start_time", "trip_id",
+                            "start_time", tripId, startTime));
                 }
 
                 if (endTime == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt",
-                            "end_time", tripId));
+                            "end_time", "trip_id",
+                            "start_time", tripId, startTime));
                 }
 
                 if (headwaySecs == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("frequencies.txt",
-                            "headway_secs", tripId));
+                            "headway_secs", "trip_id",
+                            "start_time", tripId, startTime));
                 } else if (headwaySecs < 0) {
                     noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("frequencies.txt",
-                            "headway_secs", tripId, 0, Integer.MAX_VALUE, headwaySecs));
+                            "headway_secs", 0, Integer.MAX_VALUE, headwaySecs,
+                            "trip_id", "start_time", tripId, startTime));
                 }
 
                 // the following statement is true when ExactTimes.isEnumValueValid(originalExactTimes)
                 // returns false
                 if (exactTimes == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("frequencies.txt",
-                            "exact_times", tripId, originalExactTimes));
+                            "exact_times", originalExactTimes, "trip_id",
+                            "start_time", tripId, startTime));
                 }
                 return new EntityBuildResult<>(noticeCollection);
             }

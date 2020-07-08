@@ -24,8 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumV
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 
@@ -70,6 +69,10 @@ class FrequencyTest {
         assertEquals("frequencies.txt", notice.getFilename());
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("start_time", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertNull(notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(VALID_START_TIME, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -93,7 +96,11 @@ class FrequencyTest {
 
         assertEquals("frequencies.txt", notice.getFilename());
         assertEquals("start_time", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("start_time", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(STRING_TEST, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertNull(notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -117,7 +124,11 @@ class FrequencyTest {
 
         assertEquals("frequencies.txt", notice.getFilename());
         assertEquals("end_time", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("start_time", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(STRING_TEST, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(VALID_START_TIME, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -141,7 +152,11 @@ class FrequencyTest {
 
         assertEquals("frequencies.txt", notice.getFilename());
         assertEquals("headway_secs", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("start_time", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(STRING_TEST, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(VALID_START_TIME, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
@@ -165,7 +180,11 @@ class FrequencyTest {
 
         assertEquals("frequencies.txt", notice.getFilename());
         assertEquals("headway_secs", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("start_time", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(STRING_TEST, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(VALID_START_TIME, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(0, notice.getNoticeSpecific(KEY_RANGE_MIN));
         assertEquals(Integer.MAX_VALUE, notice.getNoticeSpecific(KEY_RANGE_MAX));
         assertEquals(-1800, notice.getNoticeSpecific(KEY_ACTUAL_VALUE));
@@ -192,7 +211,11 @@ class FrequencyTest {
 
         assertEquals("frequencies.txt", notice.getFilename());
         assertEquals("exact_times", notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(STRING_TEST, notice.getEntityId());
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("start_time", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(STRING_TEST, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals(VALID_START_TIME, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals(2, notice.getNoticeSpecific(KEY_ENUM_VALUE));
         assertEquals(1, noticeCollection.size());
     }
