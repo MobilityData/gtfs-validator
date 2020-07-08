@@ -249,6 +249,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return tripPerId.get(tripId);
     }
 
+    /**
+     * Return an immutable collection of Trip objects representing all the rows from trips.txt
+     *
+     * @return an immutable collection of Trip objects representing all the rows from trips.txt
+     */
+    @Override
+    public Collection<Trip> getTripAll() {
+        return Collections.unmodifiableCollection(tripPerId.values());
+    }
+
 
     /**
      * Add a CalendarDate representing a row from calendar_dates.txt to this. Return the entity added to the repository

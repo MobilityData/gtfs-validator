@@ -541,6 +541,18 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final RouteIdNotFoundNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getEntityId())
+                .setEntityValue(KEY_UNKNOWN_ROUTE_ID)
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_UNKNOWN_ROUTE_ID)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
     public void export(final NonExistingShapeNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
