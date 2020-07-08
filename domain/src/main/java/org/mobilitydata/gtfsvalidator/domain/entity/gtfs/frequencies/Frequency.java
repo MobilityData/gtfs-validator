@@ -151,7 +151,6 @@ public class Frequency extends GtfsEntity {
         }
 
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
             if (tripId == null || startTime == null || endTime == null || headwaySecs == null ||
                     headwaySecs < 0 || exactTimes == null) {
 
