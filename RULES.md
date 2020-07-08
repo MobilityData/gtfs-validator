@@ -30,7 +30,12 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E026](#E026) | Invalid route type | 
 | [E027](#E027) | Missing route short name and long name | 
 | [E028](#E028) | Route long name equals short name | 
+| [E029](#E029) | Missing field `agency_id` for file `agency.txt` with more than 1 record | 
+| [E030](#E030) | Inconsistent field `agency_timezone` | 
+| [E031](#E031) | Invalid `agency_id` | 
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
+| [E033](#E033) | `route_id` not found |
+| [E035](#E035) | `agency_id` not found |
 
 ### Table of Warnings
 
@@ -106,6 +111,24 @@ A Route color and a Route text color should be contrasting. Minimum Contrast Rat
 
 ### E028 - Route long name equals short name
 
+<a name="E029"/>
+
+### E029 - Missing `agency_id` for file `agency.txt` with more than 1 record
+
+All records of file `agency.txt` should have a non-null value for field [agency_id](https://gtfs.org/reference/static/#agencytxt) when this file counts more than one record.
+
+<a name="E030"/>
+
+### E030 - Inconsistent field `agency_timezone` 
+
+All records of file `agency.txt` should have the same value for field `agency_timezone` [agency_id](https://gtfs.org/reference/static/#agencytxt) when this file counts more than one record.
+
+<a name="E031"/>
+
+### E031 - Invalid `agency_id` 
+
+When provided field `agency_id` should not be blank.
+
 <a name="E032"/>
 
 ### E032 - `calendar.txt` `end_date` is before `start_date`
@@ -114,6 +137,18 @@ In `calendar.txt`, the `end_date` of a service record must not be earlier than t
 
 #### References:
 * [calendar.txt specification](https://gtfs.org/reference/static/#calendartxt)
+
+<a name="E033"/>
+
+### E033 - `route_id` not found
+
+Value of field `route_id` should exist in GTFS data.
+
+<a name="E035"/>
+
+### E035 - `agency_id` not found
+
+Value of field `agency_id` should exist in GTFS data.
 
 # Warnings
 

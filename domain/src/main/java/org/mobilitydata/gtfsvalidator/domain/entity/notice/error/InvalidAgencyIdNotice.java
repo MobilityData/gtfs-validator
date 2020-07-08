@@ -21,18 +21,15 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class IllegalFieldValueCombination extends ErrorNotice {
+public class InvalidAgencyIdNotice extends ErrorNotice {
 
-    public IllegalFieldValueCombination(final String filename, final String fieldName,
-                                        final String conflictingFieldName, final String entityId) {
-        super(filename, E_019,
-                "Conflicting field values",
-                "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
-                        + "`" + entityId, entityId);
+    public InvalidAgencyIdNotice(final String filename, final String fieldName, final String entityId) {
+        super(filename, E_031,
+                "Invalid blank string",
+                "File `" + filename + "` has a blank value for field: `" + fieldName + "` for entity with " +
+                        "id: `" + entityId + "`.", entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
-        putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
     }
-
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {

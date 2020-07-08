@@ -67,6 +67,7 @@ public class ProcessParsedAttribution {
         final String attributionPhone = (String) validatedAttributionEntity.get("attribution_phone");
 
         final EntityBuildResult<?> attribution = builder.attributionId(attributionId)
+                .clear()
                 .agencyId(agencyId)
                 .routeId(routeId)
                 .tripId(tripId)

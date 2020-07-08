@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombinationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
@@ -162,11 +162,11 @@ public class Attribution extends GtfsEntity {
         private String routeId;
         private String tripId;
         private String organizationName;
-        private boolean isProducer;
+        private Boolean isProducer;
         private Integer originalIsProducerInteger;
-        private boolean isAuthority;
+        private Boolean isAuthority;
         private Integer originalIsAuthorityInteger;
-        private boolean isOperator;
+        private Boolean isOperator;
         private Integer originalIsOperatorInteger;
         private String attributionUrl;
         private String attributionEmail;
@@ -332,9 +332,9 @@ public class Attribution extends GtfsEntity {
                     ((isAuthority == isProducer) && (isAuthority == isOperator) &&
                             (originalIsProducerInteger == null || originalIsProducerInteger == 0))
             ) {
-                final String entityId = attributionId + "; " + agencyId + "; " + routeId + "; " + tripId + "; " +
-                        organizationName + "; " + isProducer + "; " + isOperator + "; " + isAuthority + "; " +
-                        attributionUrl + "; " + attributionEmail + "; " + attributionPhone;
+                final String entityId = getAttributionMappingKey(attributionId, agencyId, routeId, tripId,
+                        organizationName, isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
+                        attributionPhone);
 
                 if (organizationName == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("attributions.txt",
@@ -359,7 +359,7 @@ public class Attribution extends GtfsEntity {
                 if ((isAuthority == isProducer) && (isAuthority == isOperator) &&
                         (originalIsProducerInteger == null || originalIsProducerInteger == 0)) {
                     noticeCollection.add(
-                            new IllegalFieldValueCombination("attributions.txt", "is_producer",
+                            new IllegalFieldValueCombinationNotice("attributions.txt", "is_producer",
                                     "is_authority; is_operator",
                                     entityId));
                 }
@@ -370,6 +370,29 @@ public class Attribution extends GtfsEntity {
                         attributionPhone));
             }
         }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public AttributionBuilder clear() {
+            attributionId = null;
+            agencyId = null;
+            routeId = null;
+            tripId = null;
+            organizationName = null;
+            isProducer = null;
+            originalIsProducerInteger = null;
+            isAuthority = null;
+            originalIsAuthorityInteger = null;
+            isOperator = null;
+            originalIsOperatorInteger = null;
+            attributionUrl = null;
+            attributionEmail = null;
+            attributionPhone = null;
+            noticeCollection.clear();
+            return this;
+        }
     }
 
     /**
@@ -379,8 +402,8 @@ public class Attribution extends GtfsEntity {
      */
     public static String getAttributionMappingKey(final String attributionId, final String agencyId,
                                                   final String routeId, final String tripId,
-                                                  final String organizationName, final boolean isProducer,
-                                                  final boolean isOperator, final boolean isAuthority,
+                                                  final String organizationName, final Boolean isProducer,
+                                                  final Boolean isOperator, final Boolean isAuthority,
                                                   final String attributionUrl, final String attributionEmail,
                                                   final String attributionPhone) {
         return attributionId+agencyId+routeId+tripId+organizationName+isProducer+isOperator+isAuthority+attributionUrl+

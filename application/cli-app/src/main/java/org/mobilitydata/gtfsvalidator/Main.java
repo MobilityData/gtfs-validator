@@ -74,6 +74,9 @@ public class Main {
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
                 final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
                 final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
+                final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
+                final ProcessParsedTranslation processParsedTranslation = config.processParsedTranslation();
+                final ProcessParsedStopTime processParsedStopTime = config.processParsedStopTime();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -141,6 +144,18 @@ public class Main {
                                     processParsedFareRule.execute(parsedEntity);
                                     break;
                                 }
+                                case "shapes.txt": {
+                                    processParsedShapePoint.execute(parsedEntity);
+                                    break;
+                                }
+                                case "translations.txt" :{
+                                    processParsedTranslation.execute(parsedEntity);
+                                    break;
+                                }
+                                case "stop_times.txt" :{
+                                    processParsedStopTime.execute(parsedEntity);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -153,6 +168,10 @@ public class Main {
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
                 config.validateCalendarEndDateBeforeStartDate().execute();
+                config.validateAgencyIdRequirement().execute();
+                config.validateAgenciesHaveSameAgencyTimezone().execute();
+                config.validateTripRouteId().execute();
+                config.validateRouteAgencyId().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

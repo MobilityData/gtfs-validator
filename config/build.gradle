@@ -31,7 +31,8 @@ dependencies {
     implementation(
             project(':usecase'),
             project(':domain'),
-            project(':adapter:repository:in-memory-simple')
+            project(':adapter:repository:in-memory-simple'),
+            project(':adapter:utils')
     )
     implementation 'com.google.guava:guava:28.1-jre'
 

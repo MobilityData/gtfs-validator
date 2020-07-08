@@ -163,7 +163,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final IllegalFieldValueCombination toExport) throws IOException {
+    public void export(final IllegalFieldValueCombinationNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
@@ -229,6 +229,31 @@ public class JsonNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(CalendarEndDateBeforeStartDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingAgencyIdNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final InconsistentAgencyTimezoneNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final InvalidAgencyIdNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final RouteIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final AgencyIdNotFoundNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

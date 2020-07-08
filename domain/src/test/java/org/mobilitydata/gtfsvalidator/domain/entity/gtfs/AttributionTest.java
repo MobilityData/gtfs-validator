@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombination;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IllegalFieldValueCombinationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
@@ -37,7 +37,7 @@ class AttributionTest {
         final EntityBuildResult<?> entityBuildResult = underTest.organizationName(null)
                 .isProducer(1)
                 .build();
-        final String entityId = "null; null; null; null; null; true; false; false; null; null; null";
+        final String entityId = "nullnullnullnullnulltruenullnullnullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //noinspection unchecked to avoid lint
         final List<MissingRequiredValueNotice> noticeCollection =
@@ -58,7 +58,7 @@ class AttributionTest {
                 .isProducer(4)
                 .isAuthority(1)
                 .build();
-        final String entityId = "null; null; null; null; organization name; false; false; true; null; null; null";
+        final String entityId = "nullnullnullnullorganization namefalsenulltruenullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
         // there is no need for cast check
@@ -84,7 +84,7 @@ class AttributionTest {
                 .isProducer(1)
                 .isOperator(4)
                 .build();
-        final String entityId = "null; null; null; null; organization name; true; false; false; null; null; null";
+        final String entityId = "nullnullnullnullorganization nametruefalsenullnullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
         // there is no need for cast check
@@ -110,7 +110,7 @@ class AttributionTest {
                 .isProducer(1)
                 .isAuthority(4)
                 .build();
-        final String entityId = "null; null; null; null; organization name; true; false; false; null; null; null";
+        final String entityId = "nullnullnullnullorganization nametruenullfalsenullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
         // there is no need for cast check
@@ -137,14 +137,14 @@ class AttributionTest {
                 .isAuthority(0)
                 .isOperator(0)
                 .build();
-        final String entityId = "null; null; null; null; organization name; false; false; false; null; null; null";
+        final String entityId = "nullnullnullnullorganization namefalsefalsefalsenullnullnull";
         assertTrue(entityBuildResult.getData() instanceof List);
         //  Warning suppressed since this test is designed so that method .getData() returns a list of notices. Thereby,
         // there is no need for cast check
         //noinspection unchecked
-        final List<IllegalFieldValueCombination> noticeCollection =
-                (List<IllegalFieldValueCombination>) entityBuildResult.getData();
-        final IllegalFieldValueCombination notice = noticeCollection.get(0);
+        final List<IllegalFieldValueCombinationNotice> noticeCollection =
+                (List<IllegalFieldValueCombinationNotice>) entityBuildResult.getData();
+        final IllegalFieldValueCombinationNotice notice = noticeCollection.get(0);
 
         assertEquals("attributions.txt", notice.getFilename());
         assertEquals("is_producer", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
