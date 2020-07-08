@@ -508,6 +508,17 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
+     * Return an immutable collection of {@link FareAttribute} objects representing all the rows from fare_attributes.txt
+     *
+     * @return a immutable collection of {@link FareAttribute} objects representing all the rows from fare_attributes.txt
+     */
+    @Override
+    public Map<String, FareAttribute> getFareAttributeAll() {
+        return Collections.unmodifiableMap(fareAttributePerFareId);
+    }
+
+
+    /**
      * Add a FareRule representing a row from fare_rules.txt to this {@link GtfsDataRepository}.
      * Return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt is respected,
      * if this requirement is not met, returns null.

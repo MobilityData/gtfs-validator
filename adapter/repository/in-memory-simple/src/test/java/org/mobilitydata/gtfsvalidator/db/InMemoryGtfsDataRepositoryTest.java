@@ -445,6 +445,23 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void callGetFareAttributeAllShouldReturnCollectionOfFareAttributes() {
+        final FareAttribute mockFareAttribute00 = mock(FareAttribute.class);
+        when(mockFareAttribute00.getFareId()).thenReturn("fare id0");
+        final FareAttribute mockFareAttribute01 = mock(FareAttribute.class);
+        when(mockFareAttribute01.getFareId()).thenReturn("fare id1");
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addFareAttribute(mockFareAttribute00);
+        underTest.addFareAttribute(mockFareAttribute01);
+
+        final Map<String, FareAttribute> toCheck = underTest.getFareAttributeAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey(mockFareAttribute00.getFareId()));
+        assertTrue(toCheck.containsKey(mockFareAttribute00.getFareId()));
+    }
+
+    @Test
     void addNullFareRuleShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         final Exception exception = assertThrows(IllegalArgumentException.class,
