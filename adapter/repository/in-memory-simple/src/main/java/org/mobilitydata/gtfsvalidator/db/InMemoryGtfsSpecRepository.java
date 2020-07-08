@@ -193,7 +193,6 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                     new UrlValidator(VALID_URL_SCHEMES),
                     new Bcp47Validator(),
                     EmailValidator.getInstance(),
-                    new RegexValidator(VALID_COLOR_REGEX_PATTERN),
                     new RegexValidator(VALID_TIME_REGEXP_PATTERN),
                     // Uses IANA timezone database shipped with JDK
                     // to update without updating JDK see

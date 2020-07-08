@@ -63,7 +63,6 @@ class GtfsTypeValidatorTest {
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
                 mock(RegexValidator.class),
-                mock(RegexValidator.class),
                 Collections.emptySet()
         );
 
@@ -104,7 +103,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -160,7 +158,6 @@ class GtfsTypeValidatorTest {
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
                 mock(RegexValidator.class),
-                mock(RegexValidator.class),
                 Collections.emptySet()
         );
 
@@ -201,7 +198,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -252,7 +248,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mockTimeValidator,
                 Collections.emptySet()
         );
@@ -288,7 +283,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mockTimeValidator,
                 Collections.emptySet()
         );
@@ -334,7 +328,6 @@ class GtfsTypeValidatorTest {
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
                 mock(RegexValidator.class),
-                mock(RegexValidator.class),
                 Collections.emptySet()
         );
 
@@ -370,7 +363,6 @@ class GtfsTypeValidatorTest {
                 mockUrlValidator,
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -417,7 +409,6 @@ class GtfsTypeValidatorTest {
                 mock(Bcp47Validator.class),
                 mockEmailValidator,
                 mock(RegexValidator.class),
-                mock(RegexValidator.class),
                 Collections.emptySet()
         );
 
@@ -453,7 +444,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mockEmailValidator,
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -500,7 +490,6 @@ class GtfsTypeValidatorTest {
                 mocklangValidator,
                 mock(EmailValidator.class),
                 mock(RegexValidator.class),
-                mock(RegexValidator.class),
                 Collections.emptySet()
         );
 
@@ -536,7 +525,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mocklangValidator,
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -580,7 +568,6 @@ class GtfsTypeValidatorTest {
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
                 mock(RegexValidator.class),
-                mock(RegexValidator.class),
                 Set.of("America/Montreal")
         );
 
@@ -611,7 +598,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -653,7 +639,6 @@ class GtfsTypeValidatorTest {
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
                 mock(RegexValidator.class),
-                mock(RegexValidator.class),
                 Collections.emptySet()
         );
 
@@ -684,7 +669,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -726,7 +710,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -830,7 +813,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -954,7 +936,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );
@@ -1157,7 +1138,6 @@ class GtfsTypeValidatorTest {
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
                 mock(RegexValidator.class),
-                mock(RegexValidator.class),
                 Collections.emptySet()
         );
 
@@ -1286,7 +1266,6 @@ class GtfsTypeValidatorTest {
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
                 mock(RegexValidator.class),
-                mock(RegexValidator.class),
                 Collections.emptySet()
         );
 
@@ -1326,7 +1305,6 @@ class GtfsTypeValidatorTest {
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
-                mock(RegexValidator.class),
                 mock(RegexValidator.class),
                 Collections.emptySet()
         );

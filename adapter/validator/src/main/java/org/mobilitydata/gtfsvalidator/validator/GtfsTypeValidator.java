@@ -41,7 +41,6 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
     private final UrlValidator urlValidator;
     private final Bcp47Validator langValidator;
     private final EmailValidator emailValidator;
-    private final RegexValidator colorValidator;
     private final RegexValidator timeValidator;
     private final Set<String> timezoneSet;
 
@@ -61,7 +60,6 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                              @NotNull UrlValidator urlValidator,
                              @NotNull Bcp47Validator langValidator,
                              @NotNull EmailValidator emailValidator,
-                             @NotNull RegexValidator colorValidator,
                              @NotNull RegexValidator timeValidator,
                              @NotNull Set<String> timezoneSet) {
         this.fileSchema = fileSchema;
@@ -70,7 +68,6 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
         this.urlValidator = urlValidator;
         this.langValidator = langValidator;
         this.emailValidator = emailValidator;
-        this.colorValidator = colorValidator;
         this.timeValidator = timeValidator;
         this.timezoneSet = timezoneSet;
     }
@@ -97,6 +94,7 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                 switch (columnSpecProto.getType().getType()) {
                     case INPUT_TYPE_UNSPECIFIED: // Text is default and does not require validation
                     case TEXT:
+                    case COLOR:
                     case DATE: //no special validation
                         break;
                     case FLOAT: {
