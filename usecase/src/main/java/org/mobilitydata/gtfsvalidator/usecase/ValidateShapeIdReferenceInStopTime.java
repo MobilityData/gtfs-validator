@@ -62,7 +62,7 @@ public class ValidateShapeIdReferenceInStopTime {
      * constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E034 - Invalid `shape_id`" + System.lineSeparator());
+        logger.info("Validating rule 'E034 - `shape_id` not found" + System.lineSeparator());
 
         final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripId = dataRepo.getStopTimeAll();
         stopTimePerTripId.forEach(

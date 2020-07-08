@@ -65,7 +65,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
-                "Invalid `shape_id`" + System.lineSeparator()));
+                "`shape_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))
@@ -104,7 +104,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
-                "Invalid `shape_id`" + System.lineSeparator()));
+                "`shape_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))
@@ -148,7 +148,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
-                "Invalid `shape_id`" + System.lineSeparator()));
+                "`shape_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))
@@ -204,7 +204,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
-                "Invalid `shape_id`" + System.lineSeparator()));
+                "`shape_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))
@@ -270,7 +270,7 @@ class ValidateShapeIdReferenceInStopTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq("Validating rule 'E034 - "+
-                "Invalid `shape_id`" + System.lineSeparator()));
+                "`shape_id` not found" + System.lineSeparator()));
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1))

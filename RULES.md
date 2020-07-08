@@ -35,7 +35,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E031](#E031) | Invalid `agency_id` | 
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
 | [E032](#E033) | `route_id` not found |
-| [E034](#E034) | Invalid `shape_id` |
+| [E034](#E034) | `shape_id` not found` |
 
 ### Table of Warnings
 
@@ -144,7 +144,7 @@ In `calendar.txt`, the `end_date` of a service record must not be earlier than t
 
 Value of field `route_id` should exist in GTFS data.
 
-### E034 - Invalid `shape_id`
+### E034 - `shape_id` not found
 
 In `stop_times.txt` all records having a non-null value for field `shape_dist_traveled` must refer to a record from 
 `trips.txt` that itself refers to an existing and valid record of `shapes.txt`.
