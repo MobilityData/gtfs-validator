@@ -280,6 +280,10 @@ public class DefaultConfig {
         return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateTripRouteId validateTripRouteId() {
+        return new ValidateTripRouteId(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ValidateRouteAgencyId validateRouteAgencyId() {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
