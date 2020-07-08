@@ -34,6 +34,8 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E030](#E030) | Inconsistent field `agency_timezone` | 
 | [E031](#E031) | Invalid `agency_id` | 
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
+| [E033](#E033) | `route_id` not found |
+| [E035](#E035) | `agency_id` not found |
 
 ### Table of Warnings
 
@@ -136,6 +138,18 @@ In `calendar.txt`, the `end_date` of a service record must not be earlier than t
 
 #### References:
 * [calendar.txt specification](https://gtfs.org/reference/static/#calendartxt)
+
+<a name="E033"/>
+
+### E033 - `route_id` not found
+
+Value of field `route_id` should exist in GTFS data.
+
+<a name="E035"/>
+
+### E035 - `agency_id` not found
+
+Value of field `agency_id` should exist in GTFS data.
 
 # Warnings
 

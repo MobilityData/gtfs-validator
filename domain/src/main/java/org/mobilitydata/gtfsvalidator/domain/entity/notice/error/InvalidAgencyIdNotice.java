@@ -22,18 +22,13 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class InvalidAgencyIdNotice extends ErrorNotice {
-    private String fieldName;
 
-    public InvalidAgencyIdNotice(final String entityId) {
-        super("agency.txt", E_031,
+    public InvalidAgencyIdNotice(final String filename, final String fieldName, final String entityId) {
+        super(filename, E_031,
                 "Invalid blank string",
-                "Field `agency_id` of file `agency.txt` is blank",
-                entityId);
-        this.fieldName = "agency_id";
-    }
-
-    public String getFieldName() {
-        return fieldName;
+                "File `" + filename + "` has a blank value for field: `" + fieldName + "` for entity with " +
+                        "id: `" + entityId + "`.", entityId);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
 
     @Override
