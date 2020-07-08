@@ -55,7 +55,8 @@ public class ValidateAgencyIdRequirement {
             dataRepo.getAgencyAll().stream()
                     .filter(agency -> agency.getAgencyId() == null)
                     .forEach(invalidAgency -> resultRepo
-                            .addNotice(new MissingAgencyIdNotice(invalidAgency.getAgencyName())));
+                            .addNotice(
+                                    new MissingAgencyIdNotice(invalidAgency.getAgencyName())));
         }
     }
 }

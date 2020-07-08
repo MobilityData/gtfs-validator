@@ -510,8 +510,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     public void export(final MissingAgencyIdNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
+                .setEntityId(toExport.getEntityId())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setValue(toExport.getFieldName())
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -534,7 +534,18 @@ public class ProtobufNoticeExporter implements NoticeExporter {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .setValue(toExport.getFieldName())
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setEntityValue(String.valueOf(toExport.getEntityId()))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final AgencyIdNotFoundNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
                 .setEntityValue(String.valueOf(toExport.getEntityId()))
                 .build()
                 .writeTo(streamGenerator.getStream());

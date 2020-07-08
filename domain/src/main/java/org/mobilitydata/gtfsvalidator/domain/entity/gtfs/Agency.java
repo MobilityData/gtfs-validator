@@ -234,7 +234,8 @@ public class Agency extends GtfsEntity {
             if (agencyName == null || agencyUrl == null || agencyTimezone == null ||
                     (agencyId!=null && agencyId.isBlank())) {
                 if (agencyId!=null && agencyId.isBlank()) {
-                    noticeCollection.add(new InvalidAgencyIdNotice(agencyId));
+                    noticeCollection.add(new InvalidAgencyIdNotice("agency.txt", "agency_id",
+                            agencyId));
                 }
                 if (agencyName == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("agency.txt", "agency_name",

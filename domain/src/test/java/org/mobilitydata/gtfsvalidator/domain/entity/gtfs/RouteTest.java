@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
@@ -110,5 +111,32 @@ class RouteTest {
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof Route);
+    }
+
+    @Test
+    void createRouteWithBlankAgencyIdShouldGenerateNotice() {
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
+                .agencyId("   ")
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(1)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<InvalidAgencyIdNotice> noticeCollection =
+                (List<InvalidAgencyIdNotice>) entityBuildResult.getData();
+
+        final InvalidAgencyIdNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals("agency_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
     }
 }

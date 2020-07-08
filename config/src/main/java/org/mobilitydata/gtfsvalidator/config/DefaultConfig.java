@@ -285,6 +285,10 @@ public class DefaultConfig {
         return new ValidateTripRouteId(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateRouteAgencyId validateRouteAgencyId() {
+        return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ShapeStopTimeTripCrossValidator shapeStopTimeTripCrossValidator() {
         return new ShapeStopTimeTripCrossValidator(gtfsDataRepository, resultRepo, logger);
     }
