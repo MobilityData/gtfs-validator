@@ -472,6 +472,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
+     * Returns an unmodifiable  collection of {@link FeedInfo} entities
+     *
+     * @return an unmodifiable  collection of {@link FeedInfo} entities
+     */
+    @Override
+    public Map<String, FeedInfo> getFeedInfoAll() {
+        return Collections.unmodifiableMap(feedInfoPerFeedPublisherName);
+    }
+
+    /**
      * Add an FareAttribute representing a row from fare_attributes.txt to this {@code GtfsDataRepository}.
      * Return the entity added to the repository if the uniqueness constraint of agency based on fare_id is respected,
      * if this requirement is not met, returns null.
@@ -788,17 +798,5 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                                                    final String fieldName,
                                                                    final String language) {
         return translationPerTableName.get(tableName).get(fieldName).get(language);
-    }
-}
-
-
-    /**
-     * Returns the collection of {@link FeedInfo} entities
-     *
-     * @return the collection of {@link FeedInfo} entities
-     */
-    @Override
-    public Collection<FeedInfo> getFeedInfoAll() {
-        return feedInfoPerFeedPublisherName.values();
     }
 }

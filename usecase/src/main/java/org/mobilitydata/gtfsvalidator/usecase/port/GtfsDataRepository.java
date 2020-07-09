@@ -71,7 +71,7 @@ public interface GtfsDataRepository {
 
     FeedInfo addFeedInfo(final FeedInfo newFeedInfo) throws IllegalArgumentException;
 
-    Collection<FeedInfo> getFeedInfoAll();
+    Map<String, FeedInfo> getFeedInfoAll();
 
     FeedInfo getFeedInfoByFeedPublisherName(final String feedInfoPublisherName);
 
