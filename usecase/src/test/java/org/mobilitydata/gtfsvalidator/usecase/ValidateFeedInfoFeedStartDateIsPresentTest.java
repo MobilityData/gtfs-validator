@@ -19,31 +19,36 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MissingFeedStartDateNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ValidateFeedInfoFeedStartDateIsPresentTest {
 
+    // suppressed warning regarding ignored result of method since it is not necessary here
     @Test
-    void feedInfoWithNullFeedEndDateAndNonNullFeedStartDateShouldNotGenerateNotice() {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    void feedInfoWithNullFeedEndDateAndNonNullFeedStartDateShouldGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        final LocalDateTime mockDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getFeedPublisherName()).thenReturn("entity id");
-        when(mockFeedInfo.getStartDate()).thenReturn(mockDate);
+        final LocalDate mockDate = mock(LocalDate.class);
+        when(mockFeedInfo.getFeedPublisherUrl()).thenReturn("feed publisher url");
+        when(mockFeedInfo.getFeedLang()).thenReturn("feed lang");
+        when(mockFeedInfo.getFeedStartDate()).thenReturn(mockDate);
         when(mockFeedInfo.getFeedEndDate()).thenReturn(null);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
-        mockFeedInfoCollection.add(mockFeedInfo);
+        final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
+        mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
+
         when(mockDataRepo.getFeedInfoAll()).thenReturn(mockFeedInfoCollection);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
@@ -58,40 +63,52 @@ class ValidateFeedInfoFeedStartDateIsPresentTest {
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
 
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getStartDate();
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
+        verify(mockFeedInfo, times(1)).getFeedStartDate();
         verify(mockFeedInfo, times(1)).getFeedEndDate();
 
         final ArgumentCaptor<MissingFeedStartDateNotice> captor =
                 ArgumentCaptor.forClass(MissingFeedStartDateNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getFeedPublisherName();
+        verify(mockFeedInfo, times(1)).getFeedStartDate();
+        verify(mockFeedInfo, times(1)).getFeedEndDate();
+        verify(mockFeedInfo, times(1)).getFeedPublisherUrl();
+        verify(mockFeedInfo, times(1)).getFeedLang();
 
         final List<MissingFeedStartDateNotice> noticeList = captor.getAllValues();
 
         assertEquals("feed_info.txt", noticeList.get(0).getFilename());
-        assertEquals("feed_start_date", noticeList.get(0).getFieldName());
-        assertEquals("entity id", noticeList.get(0).getEntityId());
+        assertEquals("feed_start_date", noticeList.get(0).getNoticeSpecific(Notice.KEY_FIELD_NAME));
+        assertEquals("feed_publisher_name", noticeList.get(0).getNoticeSpecific(
+                Notice.KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("feed_publisher_url", noticeList.get(0).getNoticeSpecific(
+                Notice.KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals("feed_lang", noticeList.get(0).getNoticeSpecific(
+                Notice.KEY_COMPOSITE_KEY_THIRD_PART));
+        assertEquals("feed publisher name", noticeList.get(0).getNoticeSpecific(
+                Notice.KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals("feed publisher url", noticeList.get(0).getNoticeSpecific(
+                Notice.KEY_COMPOSITE_KEY_SECOND_VALUE));
+        assertEquals("feed lang", noticeList.get(0).getNoticeSpecific(
+                Notice.KEY_COMPOSITE_KEY_THIRD_VALUE));
+
 
         verifyNoMoreInteractions(mockDataRepo, mockDate, mockFeedInfo, mockLogger, mockResultRepo);
     }
 
+    // suppressed warning regarding ignored result of method since it is not necessary here
     @Test
-    void feedInfoWithNonNullFeedEndDateAndNonNullFeedStartDateShouldNoteGenerateNotice() {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    void feedInfoWithNonNullFeedEndDateAndNonNullFeedStartDateShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        final LocalDateTime mockDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getFeedPublisherName()).thenReturn("entity id");
-        when(mockFeedInfo.getStartDate()).thenReturn(mockDate);
+        final LocalDate mockDate = mock(LocalDate.class);
+        when(mockFeedInfo.getFeedPublisherName()).thenReturn("feed publisher name");
+        when(mockFeedInfo.getFeedStartDate()).thenReturn(mockDate);
         when(mockFeedInfo.getFeedEndDate()).thenReturn(mockDate);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
-        mockFeedInfoCollection.add(mockFeedInfo);
+        final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
+        mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
+
         when(mockDataRepo.getFeedInfoAll()).thenReturn(mockFeedInfoCollection);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
@@ -105,25 +122,25 @@ class ValidateFeedInfoFeedStartDateIsPresentTest {
                 " provided if `feed_end_date` is provided" + System.lineSeparator());
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getStartDate();
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
+        verify(mockFeedInfo, times(1)).getFeedStartDate();
         verify(mockFeedInfo, times(1)).getFeedEndDate();
 
-        verifyNoMoreInteractions(mockDataRepo, mockDate, mockFeedInfo, mockLogger, mockResultRepo);
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockDataRepo, mockDate, mockFeedInfo, mockLogger);
     }
 
+    // suppressed warning regarding ignored result of method since it is not necessary here
     @Test
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     void feedInfoWithoutValueForDateFieldsShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        when(mockFeedInfo.getFeedPublisherName()).thenReturn("entity id");
-        when(mockFeedInfo.getStartDate()).thenReturn(null);
+        when(mockFeedInfo.getFeedPublisherName()).thenReturn("feed publisher name");
+        when(mockFeedInfo.getFeedStartDate()).thenReturn(null);
         when(mockFeedInfo.getFeedEndDate()).thenReturn(null);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
-        mockFeedInfoCollection.add(mockFeedInfo);
+        final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
+        mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
+
         when(mockDataRepo.getFeedInfoAll()).thenReturn(mockFeedInfoCollection);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
@@ -133,14 +150,13 @@ class ValidateFeedInfoFeedStartDateIsPresentTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule W011 - `feed_start_date` should be"+
+        verify(mockLogger, times(1)).info("Validating rule W011 - `feed_start_date` should be" +
                 " provided if `feed_end_date` is provided" + System.lineSeparator());
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getStartDate();
+        verify(mockFeedInfo, times(1)).getFeedStartDate();
 
-        verifyNoMoreInteractions(mockDataRepo, mockFeedInfo, mockLogger, mockResultRepo);
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockDataRepo, mockFeedInfo, mockLogger);
     }
 }

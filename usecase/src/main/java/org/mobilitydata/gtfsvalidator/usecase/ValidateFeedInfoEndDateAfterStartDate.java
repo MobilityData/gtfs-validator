@@ -22,6 +22,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FeedInfoStartDa
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.time.LocalDate;
+
 /**
  * Use case to validate that `feed_end_date` date does not precede the `feed_start_date` date if both are fields are
  * provided. This use case is triggered after completing the {@code GtfsDataRepository} provided in the constructor with
@@ -54,14 +56,27 @@ public class ValidateFeedInfoEndDateAfterStartDate {
      * `feed_start_date`.
      */
     public void execute() {
-        logger.info("Validating rule 'E032 - `feed_start_date` and `feed_end_date` out of order" +
+        logger.info("Validating rule 'E037 - `feed_start_date` and `feed_end_date` out of order" +
                 System.lineSeparator());
-        dataRepo.getFeedInfoAll().stream()
-                .filter(feedInfo -> feedInfo.getStartDate() != null && feedInfo.getFeedEndDate() != null)
-                .filter(feedInfo -> feedInfo.getStartDate().isBefore(feedInfo.getFeedEndDate()))
-                .forEach(invalidFeedInfo ->
-                        resultRepo.addNotice(
-                                new FeedInfoStartDateAfterEndDateNotice(invalidFeedInfo.getStartDate().toString(),
-                                invalidFeedInfo.getFeedEndDate().toString(), invalidFeedInfo.getFeedPublisherName())));
+        dataRepo.getFeedInfoAll().forEach((feedPublisherName, feedInfo) -> {
+            final LocalDate feedStartDate = feedInfo.getFeedStartDate();
+            final LocalDate feedEndDate = feedInfo.getFeedEndDate();
+            if (feedStartDate != null && feedEndDate != null) {
+                if (feedStartDate.isBefore(feedEndDate)) {
+                    resultRepo.addNotice(
+                            new FeedInfoStartDateAfterEndDateNotice(
+                                    "feed_info.txt",
+                                    feedStartDate.toString(),
+                                    feedEndDate.toString(),
+                                    "feed_publisher_name",
+                                    "feed_publisher_url",
+                                    "feed_lang",
+                                    feedPublisherName,
+                                    feedInfo.getFeedPublisherUrl(),
+                                    feedInfo.getFeedLang())
+                    );
+                }
+            }
+        });
     }
 }

@@ -19,32 +19,35 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FeedInfoStartDateAfterEndDateNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ValidateFeedInfoEndDateAfterStartDateTest {
 
+    // suppressed warning regarding ignored result of method since it is not necessary here
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void feedInfoWithStartDateBeforeEndDateShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        final LocalDateTime mockStartDate = mock(LocalDateTime.class);
-        final LocalDateTime mockEndDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getStartDate()).thenReturn(mockStartDate);
+        final LocalDate mockStartDate = mock(LocalDate.class);
+        final LocalDate mockEndDate = mock(LocalDate.class);
+        when(mockFeedInfo.getFeedStartDate()).thenReturn(mockStartDate);
         when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
         when(mockStartDate.isBefore(mockEndDate)).thenReturn(false);
 
-        final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
-        mockFeedInfoCollection.add(mockFeedInfo);
+        final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
+        mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getFeedInfoAll()).thenReturn(mockFeedInfoCollection);
@@ -55,60 +58,55 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
                 new ValidateFeedInfoEndDateAfterStartDate(mockDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E032 - `feed_start_date`" +
-        " and `feed_end_date` out of order" + System.lineSeparator());
-
-        verify(mockDataRepo, times(1)).getFeedInfoAll();
-
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(2)).getFeedEndDate();
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(2)).getStartDate();
-
-        verify(mockStartDate, times(1)).isBefore(mockEndDate);
-
-        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockFeedInfo, mockStartDate, mockEndDate);
-    }
-
-    @Test
-    void feedInfoWithStartDateAfterEndDateShouldGenerateNotice() {
-        final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        final LocalDateTime mockStartDate = mock(LocalDateTime.class);
-        when(mockStartDate.toString()).thenReturn("start date");
-        final LocalDateTime mockEndDate = mock(LocalDateTime.class);
-        when(mockEndDate.toString()).thenReturn("end date");
-        when(mockFeedInfo.getStartDate()).thenReturn(mockStartDate);
-        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
-        when(mockStartDate.isBefore(mockEndDate)).thenReturn(true);
-
-        final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
-        mockFeedInfoCollection.add(mockFeedInfo);
-
-        final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getFeedInfoAll()).thenReturn(mockFeedInfoCollection);
-        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final Logger mockLogger = mock(Logger.class);
-
-        final ValidateFeedInfoEndDateAfterStartDate underTest =
-                new ValidateFeedInfoEndDateAfterStartDate(mockDataRepo, mockResultRepo, mockLogger);
-
-        underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E032 - `feed_start_date`" +
+        verify(mockLogger, times(1)).info("Validating rule 'E037 - `feed_start_date`" +
                 " and `feed_end_date` out of order" + System.lineSeparator());
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
 
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(3)).getFeedEndDate();
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(3)).getStartDate();
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getFeedPublisherName();
+        verify(mockFeedInfo, times(1)).getFeedEndDate();
+        verify(mockFeedInfo, times(1)).getFeedStartDate();
+
+        verify(mockStartDate, times(1)).isBefore(mockEndDate);
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockFeedInfo, mockStartDate, mockEndDate);
+    }
+
+    // suppressed warning regarding ignored result of method since it is not necessary here
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @Test
+    void feedInfoWithStartDateAfterEndDateShouldGenerateNotice() {
+        final FeedInfo mockFeedInfo = mock(FeedInfo.class);
+        final LocalDate mockStartDate = mock(LocalDate.class);
+        when(mockStartDate.toString()).thenReturn("start date");
+        final LocalDate mockEndDate = mock(LocalDate.class);
+        when(mockEndDate.toString()).thenReturn("end date");
+        when(mockFeedInfo.getFeedStartDate()).thenReturn(mockStartDate);
+        when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
+        when(mockFeedInfo.getFeedPublisherUrl()).thenReturn("feed publisher url");
+        when(mockFeedInfo.getFeedLang()).thenReturn("feed lang");
+        when(mockStartDate.isBefore(mockEndDate)).thenReturn(true);
+
+        final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
+        mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
+
+        final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        when(mockDataRepo.getFeedInfoAll()).thenReturn(mockFeedInfoCollection);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Logger mockLogger = mock(Logger.class);
+
+        final ValidateFeedInfoEndDateAfterStartDate underTest =
+                new ValidateFeedInfoEndDateAfterStartDate(mockDataRepo, mockResultRepo, mockLogger);
+
+        underTest.execute();
+        verify(mockLogger, times(1)).info("Validating rule 'E037 - `feed_start_date`" +
+                " and `feed_end_date` out of order" + System.lineSeparator());
+
+        verify(mockDataRepo, times(1)).getFeedInfoAll();
+
+        verify(mockFeedInfo, times(1)).getFeedEndDate();
+        verify(mockFeedInfo, times(1)).getFeedStartDate();
+        verify(mockFeedInfo, times(1)).getFeedPublisherUrl();
+        verify(mockFeedInfo, times(1)).getFeedLang();
 
         verify(mockStartDate, times(1)).isBefore(mockEndDate);
 
@@ -120,21 +118,28 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         final List<FeedInfoStartDateAfterEndDateNotice> noticeList = captor.getAllValues();
 
         assertEquals("feed_info.txt", noticeList.get(0).getFilename());
-        assertEquals("start date", noticeList.get(0).getStartDate());
-        assertEquals("end date", noticeList.get(0).getEndDate());
-        assertEquals("no id", noticeList.get(0).getEntityId());
+        assertEquals("start date", noticeList.get(0).getNoticeSpecific(Notice.KEY_FEED_INFO_START_DATE));
+        assertEquals("end date", noticeList.get(0).getNoticeSpecific(Notice.KEY_FEED_INFO_END_DATE));
+        assertEquals("feed_publisher_name", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("feed_publisher_url", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals("feed_lang", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_THIRD_PART));
+        assertEquals("feed publisher name", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals("feed publisher url", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_VALUE));
+        assertEquals("feed lang", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_THIRD_VALUE));
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockFeedInfo, mockStartDate, mockEndDate);
     }
 
+    // suppressed warning regarding ignored result of method since it is not necessary here
     @Test
-    void feedInfoWithEndDateButWithoutStartDateShouldNotGenerateFeedInfoStartDateAfterEndDateNotice() {
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    void feedInfoWithEndDateAndNullStartDateShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        final LocalDateTime mockEndDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getStartDate()).thenReturn(null);
+        final LocalDate mockEndDate = mock(LocalDate.class);
+        when(mockFeedInfo.getFeedStartDate()).thenReturn(null);
         when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
 
-        final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
-        mockFeedInfoCollection.add(mockFeedInfo);
+        final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
+        mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getFeedInfoAll()).thenReturn(mockFeedInfoCollection);
@@ -145,27 +150,29 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
                 new ValidateFeedInfoEndDateAfterStartDate(mockDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E032 - `feed_start_date`" +
+        verify(mockLogger, times(1)).info("Validating rule 'E037 - `feed_start_date`" +
                 " and `feed_end_date` out of order" + System.lineSeparator());
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
 
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getStartDate();
+        verify(mockFeedInfo, times(1)).getFeedStartDate();
+        verify(mockFeedInfo, times(1)).getFeedEndDate();
 
-        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockFeedInfo, mockEndDate);
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockFeedInfo, mockEndDate);
     }
 
+    // suppressed warning regarding ignored result of method since it is not necessary here
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void feedInfoWithStartButWithoutEndDateShouldNotGenerateFeedInfoStartDateAfterEndDateNotice(){
+    void feedInfoWithStartButWithoutEndDateShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
-        final LocalDateTime mockStartDate = mock(LocalDateTime.class);
-        when(mockFeedInfo.getStartDate()).thenReturn(mockStartDate);
+        final LocalDate mockStartDate = mock(LocalDate.class);
+        when(mockFeedInfo.getFeedStartDate()).thenReturn(mockStartDate);
         when(mockFeedInfo.getFeedEndDate()).thenReturn(null);
 
-        final Collection<FeedInfo> mockFeedInfoCollection = new ArrayList<>();
-        mockFeedInfoCollection.add(mockFeedInfo);
+        final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
+        mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getFeedInfoAll()).thenReturn(mockFeedInfoCollection);
@@ -176,16 +183,12 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
                 new ValidateFeedInfoEndDateAfterStartDate(mockDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E032 - `feed_start_date`" +
+        verify(mockLogger, times(1)).info("Validating rule 'E037 - `feed_start_date`" +
                 " and `feed_end_date` out of order" + System.lineSeparator());
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
 
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
-        verify(mockFeedInfo, times(1)).getStartDate();
-        // suppressed warning regarding ignored result of method since it is not necessary here
-        //noinspection ResultOfMethodCallIgnored
+        verify(mockFeedInfo, times(1)).getFeedStartDate();
         verify(mockFeedInfo, times(1)).getFeedEndDate();
 
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockFeedInfo, mockStartDate);

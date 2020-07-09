@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.FeedInfoExpir
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * Use case to validate that GTFS feed covers at least the next 30 days of service.
@@ -57,16 +57,28 @@ public class ValidateFeedCoversTheNext30ServiceDays {
     public void execute() {
         logger.info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'"
                 + System.lineSeparator());
-        final LocalDateTime currentDate = LocalDateTime.now();
-        final LocalDateTime currentDateAsYYYYMMDDHHMM = LocalDateTime.of(
-                currentDate.getYear(), currentDate.getMonthValue(), currentDate.getDayOfMonth(), 0, 0);
+        final LocalDate currentDate = LocalDate.now();
 
-        dataRepo.getFeedInfoAll().stream()
-                .filter(feedInfo -> feedInfo.getFeedEndDate() != null)
-                .filter(feedInfo -> feedInfo.getFeedEndDate().isAfter(currentDateAsYYYYMMDDHHMM.plusDays(7)) &&
-                        feedInfo.getFeedEndDate().isBefore(currentDateAsYYYYMMDDHHMM.plusDays(30)))
-                .forEach(invalidFeedInfo -> resultRepo.addNotice(
-                        new FeedInfoExpiresInLessThan30DaysNotice(currentDateAsYYYYMMDDHHMM.toString(),
-                                invalidFeedInfo.getFeedEndDate().toString(), invalidFeedInfo.getFeedPublisherName())));
+        dataRepo.getFeedInfoAll().forEach((feedPublisherName, feedInfo) -> {
+            final LocalDate feedEndDate = feedInfo.getFeedEndDate();
+            if (feedEndDate != null) {
+                if (feedEndDate.isAfter(currentDate.plusDays(7)) &&
+                        feedEndDate.isBefore(currentDate.plusDays(30))) {
+                    resultRepo.addNotice(
+                            new FeedInfoExpiresInLessThan30DaysNotice(
+                                    "feed_info.txt",
+                                    currentDate.toString(),
+                                    feedEndDate.toString(),
+                                    "feed_end_date",
+                                    "feed_publisher_name",
+                                    "feed_publisher_url",
+                                    "feed_lang",
+                                    feedPublisherName,
+                                    feedInfo.getFeedPublisherUrl(),
+                                    feedInfo.getFeedLang())
+                    );
+                }
+            }
+        });
     }
 }

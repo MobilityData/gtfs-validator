@@ -47,10 +47,22 @@ public class ValidateFeedInfoFeedEndDateIsPresent {
     public void execute() {
         logger.info("Validating rule W010 - `feed_end_date` should be provided if `feed_start_date` is provided"
                 + System.lineSeparator());
+
         dataRepo.getFeedInfoAll()
-                .forEach(feedInfo -> {
-                    if (feedInfo.getStartDate() != null && feedInfo.getFeedEndDate() == null) {
-                        resultRepo.addNotice(new MissingFeedEndDateNotice(feedInfo.getFeedPublisherName()));
+                .forEach((feedPublisherName, feedInfo) -> {
+                    if (feedInfo.getFeedStartDate() != null && feedInfo.getFeedEndDate() == null) {
+                        resultRepo.addNotice(
+                                new MissingFeedEndDateNotice(
+                                        "feed_info.txt",
+                                        "feed_end_date",
+                                        "feed_publisher_name",
+                                        "feed_publisher_url",
+                                        "feed_lang",
+                                        feedPublisherName,
+                                        feedInfo.getFeedPublisherUrl(),
+                                        feedInfo.getFeedLang()
+                                )
+                        );
                     }
                 });
     }
