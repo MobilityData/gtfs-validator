@@ -36,6 +36,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
 | [E033](#E033) | `route_id` not found |
 | [E035](#E035) | `agency_id` not found |
+| [E036](#E036) | `service_id` not found |
 
 ### Table of Warnings
 
@@ -149,6 +150,12 @@ Value of field `route_id` should exist in GTFS data.
 ### E035 - `agency_id` not found
 
 Value of field `agency_id` should exist in GTFS data.
+
+<a name="E036"/>
+
+### E036 - `service_id` not found
+
+Value of field `service_id` should exist in GTFS data.
 
 # Warnings
 
