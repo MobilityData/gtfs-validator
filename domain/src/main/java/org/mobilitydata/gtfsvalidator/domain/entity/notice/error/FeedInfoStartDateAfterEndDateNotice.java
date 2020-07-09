@@ -33,7 +33,7 @@ public class FeedInfoStartDateAfterEndDateNotice extends ErrorNotice {
                                                final String compositeKeyThirdValue) {
         super("feed_info.txt",
                 E_037,
-                "Fields `feed_start_date` af `feed_end_date` out of order",
+                "Fields `feed_start_date` and `feed_end_date` out of order",
                 "`feed_end_date`: `" + startDateAsString + "` precedes `feed_start_date`: `" +
                         endDateAsString + "` in file `" + filename +
                         "` for entity with composite id:" +
