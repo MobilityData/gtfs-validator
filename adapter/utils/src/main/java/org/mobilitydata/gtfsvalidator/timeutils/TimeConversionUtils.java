@@ -34,7 +34,8 @@ public class TimeConversionUtils implements TimeUtils {
     final static Pattern pattern = Pattern.compile("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]");
     private static TimeConversionUtils TIME_CONVERSION_UTILS = null;
 
-    private TimeConversionUtils(){}
+    private TimeConversionUtils() {
+    }
 
     /**
      * Implement singleton pattern
@@ -52,9 +53,10 @@ public class TimeConversionUtils implements TimeUtils {
      * This method converts a time formatted as HH:MM:SS to a number of seconds elapsed since noon.
      * The time is measured from "noon minus 12h" of the service day (effectively midnight except for days on which
      * daylight savings time changes occur).
-     * @param timeAsString   the time formatted as HH:MM:SS to convert as  a number of seconds elapsed since noon of day
-     *                       of service.
-     * @return  the number of seconds elapsed since noon of day of service. The time is measured from "noon minus 12h"
+     *
+     * @param timeAsString the time formatted as HH:MM:SS to convert as  a number of seconds elapsed since noon of day
+     *                     of service.
+     * @return the number of seconds elapsed since noon of day of service. The time is measured from "noon minus 12h"
      * of the service day (effectively midnight except for days on which daylight savings time changes occur).
      */
     public Integer convertHHMMSSToIntFromNoonOfDayOfService(final String timeAsString) {
@@ -79,9 +81,9 @@ public class TimeConversionUtils implements TimeUtils {
     /**
      * This method converts a number of seconds elapsed since noon of say of service to a string formatted as HH:MM:SS.
      *
-     * @param elapsedDurationSinceNoon  the number of seconds elapsed since noon of say of service to be converted as a
-     *                                  string formatted as HH:MM:SS.
-     * @return  the human readable string representation of the number of seconds elapsed since noon of day of service.
+     * @param elapsedDurationSinceNoon the number of seconds elapsed since noon of say of service to be converted as a
+     *                                 string formatted as HH:MM:SS.
+     * @return the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */
     public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoon) {

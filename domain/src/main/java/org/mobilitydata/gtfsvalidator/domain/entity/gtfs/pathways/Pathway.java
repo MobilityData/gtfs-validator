@@ -60,22 +60,22 @@ public class Pathway extends GtfsEntity {
     private final String reversedSignpostedAs;
 
     /**
-     * @param pathwayId             the pathway_id field contains an ID that uniquely identifies the pathway
-     * @param fromStopId            location at which the pathway begins
-     * @param toStopId              location at which the pathway ends
-     * @param pathwayMode           type of pathway between the specified (@param fromStopId, @param toStopId) pair
-     * @param isBidirectional       indicates in which direction the pathway can be used
-     * @param length                horizontal length in meters of the pathway from the origin location (defined in
-     *                              fromStopId) to the destination location (defined in toStopId)
-     * @param traversalTime         average time in seconds needed to walk through the pathway from the origin location
-     *                              (defined in @param fromStopId) to the destination location (defined
-     *                              toStopId)
-     * @param stairCount            number of stairs of the pathway
-     * @param maxSlope              maximum slope ratio of the pathway
-     * @param minWidth              minimum width of the pathway in meters
-     * @param signpostedAs          string of text from physical signage visible to transit riders
-     * @param reversedSignpostedAs  same than the @param signPostedAs field, but when the pathways is used backward,
-     *                              i.e. from the @param toStopId to the @param fromStopId
+     * @param pathwayId            the pathway_id field contains an ID that uniquely identifies the pathway
+     * @param fromStopId           location at which the pathway begins
+     * @param toStopId             location at which the pathway ends
+     * @param pathwayMode          type of pathway between the specified (@param fromStopId, @param toStopId) pair
+     * @param isBidirectional      indicates in which direction the pathway can be used
+     * @param length               horizontal length in meters of the pathway from the origin location (defined in
+     *                             fromStopId) to the destination location (defined in toStopId)
+     * @param traversalTime        average time in seconds needed to walk through the pathway from the origin location
+     *                             (defined in @param fromStopId) to the destination location (defined
+     *                             toStopId)
+     * @param stairCount           number of stairs of the pathway
+     * @param maxSlope             maximum slope ratio of the pathway
+     * @param minWidth             minimum width of the pathway in meters
+     * @param signpostedAs         string of text from physical signage visible to transit riders
+     * @param reversedSignpostedAs same than the @param signPostedAs field, but when the pathways is used backward,
+     *                             i.e. from the @param toStopId to the @param fromStopId
      */
     private Pathway(@NotNull final String pathwayId,
                     @NotNull final String fromStopId,
@@ -289,7 +289,7 @@ public class Pathway extends GtfsEntity {
         /**
          * Sets field minWidth value and returns this
          *
-         * @param minWidth  minimum width of the pathway in meters
+         * @param minWidth minimum width of the pathway in meters
          * @return builder for future object creation
          */
         public PathwayBuilder minWidth(@Nullable final Float minWidth) {
@@ -397,6 +397,7 @@ public class Pathway extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public PathwayBuilder clear() {
