@@ -171,6 +171,7 @@ public class Main {
                 config.validateAgencyIdRequirement().execute();
                 config.validateAgenciesHaveSameAgencyTimezone().execute();
                 config.validateTripRouteId().execute();
+                config.validateTripServiceId().execute();
                 config.validateRouteAgencyId().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
