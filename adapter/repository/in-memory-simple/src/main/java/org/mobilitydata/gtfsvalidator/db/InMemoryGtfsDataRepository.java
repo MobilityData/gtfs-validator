@@ -300,6 +300,15 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
+     * Return an immutable collection of {@code CalendarDate} objects representing all the rows from calendar_dates.txt
+     *
+     * @return a immutable collection of {@code CalendarDate} objects representing all the rows from calendar_dates.txt
+     */
+    public Map<String, CalendarDate> getCalendarDateAll() {
+        return Collections.unmodifiableMap(calendarDatePerServiceIdAndDate);
+    }
+
+    /**
      * Add a Level representing a row from levels.txt to this {@link GtfsDataRepository}. Return the entity added to the
      * repository if the uniqueness constraint of route based on level_id is respected, if this requirement is not met,
      * returns null.

@@ -49,6 +49,8 @@ public interface GtfsDataRepository {
 
     CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDate date);
 
+    Map<String, CalendarDate> getCalendarDateAll();
+
     Level addLevel(final Level newLevel) throws IllegalArgumentException;
 
     Level getLevelById(final String levelId);
