@@ -22,21 +22,34 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 import java.io.IOException;
 
 public class MissingFeedEndDateNotice extends WarningNotice {
-    final private String fieldName;
+    public MissingFeedEndDateNotice(final String fileName,
+                                    final String fieldName,
+                                    final String compositeKeyFirstPart,
+                                    final String compositeKeySecondPart,
+                                    final String compositeKeyThirdPart,
+                                    final String compositeKeyFirstValue,
+                                    final String compositeKeySecondValue,
+                                    final String compositeKeyThirdValue) {
+        super("feed_info.txt",
+                W_010,
+                "Missing `" + fieldName + "`",
+                "Missing `" + fieldName + "` in file: `" + fileName + "` with composite id: `" +
+                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "` -- " +
+                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "` -- " +
+                        "`" + compositeKeyThirdPart + "`: `" + compositeKeyThirdValue + "`.",
+                null);
 
-    public MissingFeedEndDateNotice(final String entityId) {
-        super("feed_info.txt", W_010, "Missing `feed_end_date`",
-                "Entity with `feed_publisher_name`: " + entityId + " should provide non null value for field" +
-                        "`feed_end_date` since a value for field `feed_start_date` is provided", entityId);
-        this.fieldName = "feed_end_date";
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART, compositeKeyThirdPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE, compositeKeyThirdValue);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getFieldName(){
-        return fieldName;
     }
 }

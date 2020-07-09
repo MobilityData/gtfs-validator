@@ -58,6 +58,9 @@ public abstract class Notice {
     public static final String KEY_COMPOSITE_KEY_FIFTH_VALUE = "compositeKeyFifthValue";
     public static final String KEY_UNKNOWN_ROUTE_ID = "unknownRouteId";
     public static final String KEY_AGENCY_NAME = "agencyName";
+    public static final String KEY_FEED_INFO_START_DATE = "feedInfoStartDate";
+    public static final String KEY_FEED_INFO_END_DATE = "feedInfoEndDate";
+    public static final String KEY_CURRENT_DATE = "currentDate";
 
     private final String filename;
     private final int code;

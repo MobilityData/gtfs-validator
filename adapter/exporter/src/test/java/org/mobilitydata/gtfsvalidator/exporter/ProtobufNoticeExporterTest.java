@@ -1355,8 +1355,15 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(
-                new FeedInfoStartDateAfterEndDateNotice("start date", "end date",
-                        "entity id"));
+                new FeedInfoStartDateAfterEndDateNotice("feed_info.txt",
+                        "start date",
+                        "end date",
+                        "feed_publisher_name",
+                        "feed_publisher_url",
+                        "feed_lang",
+                        "feed publisher name",
+                        "feed publisher url",
+                        "feed lang"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(
@@ -1366,12 +1373,23 @@ class ProtobufNoticeExporterTest {
                         GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FEED_INFO_START_AND_END_DATE_OUT_OF_ORDER));
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).setEntityId(
-                ArgumentMatchers.eq("entity id"));
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("feed_publisher_name"));
+        verify(mockBuilder, times(1)).setCsvKeyName(
+                ArgumentMatchers.eq("feed_publisher_url"));
+        verify(mockBuilder, times(1)).setAltEntityName(
+                ArgumentMatchers.eq("feed_lang"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(
+                ArgumentMatchers.eq("feed publisher name"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(
+                ArgumentMatchers.eq("feed publisher url"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("feed lang"));
         verify(mockBuilder, times(1)).setEntityValue(
                 ArgumentMatchers.eq("start date"));
         verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("end date"));
+
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -1393,8 +1411,16 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(
-                new FeedInfoExpiresInLessThan7DaysNotice("current date", "end date",
-                        "entity id"));
+                new FeedInfoExpiresInLessThan7DaysNotice("feed_info.txt",
+                        "current date",
+                        "end date",
+                        "feed_end_date",
+                        "feed_publisher_name",
+                        "feed_publisher_url",
+                        "feed_lang",
+                        "feed publisher name",
+                        "feed publisher url",
+                        "feed lang"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(
@@ -1406,12 +1432,22 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setEntityId(
                 ArgumentMatchers.eq("feed_end_date"));
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("feed_publisher_name"));
+        verify(mockBuilder, times(1)).setCsvKeyName(
+                ArgumentMatchers.eq("feed_publisher_url"));
         verify(mockBuilder, times(1)).setAltEntityName(
-                ArgumentMatchers.eq("entity id"));
+                ArgumentMatchers.eq("feed_lang"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(
+                ArgumentMatchers.eq("feed publisher name"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(
+                ArgumentMatchers.eq("feed publisher url"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("feed lang"));
         verify(mockBuilder, times(1)).setEntityValue(
-                ArgumentMatchers.eq("end date"));
-        verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("current date"));
+        verify(mockBuilder, times(1)).setAltEntityValue(
+                ArgumentMatchers.eq("end date"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -1433,8 +1469,16 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(
-                new FeedInfoExpiresInLessThan30DaysNotice("current date", "end date",
-                        "entity id"));
+                new FeedInfoExpiresInLessThan30DaysNotice("feed_info.txt",
+                        "current date",
+                        "end date",
+                        "feed_end_date",
+                        "feed_publisher_name",
+                        "feed_publisher_url",
+                        "feed_lang",
+                        "feed publisher name",
+                        "feed publisher url",
+                        "feed lang"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(
@@ -1446,12 +1490,22 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
         verify(mockBuilder, times(1)).setEntityId(
                 ArgumentMatchers.eq("feed_end_date"));
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("feed_publisher_name"));
+        verify(mockBuilder, times(1)).setCsvKeyName(
+                ArgumentMatchers.eq("feed_publisher_url"));
         verify(mockBuilder, times(1)).setAltEntityName(
-                ArgumentMatchers.eq("entity id"));
+                ArgumentMatchers.eq("feed_lang"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(
+                ArgumentMatchers.eq("feed publisher name"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(
+                ArgumentMatchers.eq("feed publisher url"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("feed lang"));
         verify(mockBuilder, times(1)).setEntityValue(
-                ArgumentMatchers.eq("end date"));
-        verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("current date"));
+        verify(mockBuilder, times(1)).setAltEntityValue(
+                ArgumentMatchers.eq("end date"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -1473,7 +1527,14 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(
-                new MissingFeedEndDateNotice("entity id"));
+                new MissingFeedEndDateNotice("feed_info.txt",
+                        "feed_end_date",
+                        "feed_publisher_name",
+                        "feed_publisher_url",
+                        "feed_lang",
+                        "feed publisher name",
+                        "feed publisher url",
+                        "feed lang"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(
@@ -1481,9 +1542,19 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
         verify(mockBuilder, times(1)).setEntityId(
-                ArgumentMatchers.eq("entity id"));
-        verify(mockBuilder, times(1)).setAltEntityName(
                 ArgumentMatchers.eq("feed_end_date"));
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("feed_publisher_name"));
+        verify(mockBuilder, times(1)).setCsvKeyName(
+                ArgumentMatchers.eq("feed_publisher_url"));
+        verify(mockBuilder, times(1)).setAltEntityName(
+                ArgumentMatchers.eq("feed_lang"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(
+                ArgumentMatchers.eq("feed publisher name"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(
+                ArgumentMatchers.eq("feed publisher url"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("feed lang"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -1506,7 +1577,14 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(
-                new MissingFeedStartDateNotice("entity id"));
+                new MissingFeedStartDateNotice("feed_info.txt",
+                        "feed_start_date",
+                        "feed_publisher_name",
+                        "feed_publisher_url",
+                        "feed_lang",
+                        "feed publisher name",
+                        "feed publisher url",
+                        "feed lang"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(
@@ -1514,9 +1592,19 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
         verify(mockBuilder, times(1)).setEntityId(
-                ArgumentMatchers.eq("entity id"));
-        verify(mockBuilder, times(1)).setAltEntityName(
                 ArgumentMatchers.eq("feed_start_date"));
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("feed_publisher_name"));
+        verify(mockBuilder, times(1)).setCsvKeyName(
+                ArgumentMatchers.eq("feed_publisher_url"));
+        verify(mockBuilder, times(1)).setAltEntityName(
+                ArgumentMatchers.eq("feed_lang"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(
+                ArgumentMatchers.eq("feed publisher name"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(
+                ArgumentMatchers.eq("feed publisher url"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("feed lang"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

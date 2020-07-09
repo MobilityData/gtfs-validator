@@ -22,35 +22,41 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class FeedInfoExpiresInLessThan7DaysNotice extends ErrorNotice {
-    private final String currentDate;
-    private final String feedEndDate;
-    private final String fieldName;
-
-    public FeedInfoExpiresInLessThan7DaysNotice(final String currentDate,
-                                                final String feedEndDate,
-                                                final String entityId) {
-        super("feed_info.txt", E_033, "Feed expiration date too close",
+    public FeedInfoExpiresInLessThan7DaysNotice(final String fileName,
+                                                final String currentDateAsString,
+                                                final String feedEndDateAsString,
+                                                final String fieldName,
+                                                final String compositeKeyFirstPart,
+                                                final String compositeKeySecondPart,
+                                                final String compositeKeyThirdPart,
+                                                final String compositeKeyFirstValue,
+                                                final String compositeKeySecondValue,
+                                                final String compositeKeyThirdValue) {
+        super(fileName,
+                E_038,
+                "Feed expiration date too close",
                 "GTFS dataset should be valid for at least the next 7 days. Current date is: " +
-                        currentDate + "Feed expires: "+ feedEndDate, entityId);
-        this.currentDate = currentDate;
-        this.feedEndDate = feedEndDate;
-        this.fieldName = "feed_end_date";
+                        currentDateAsString + "Feed expires: `" + feedEndDateAsString + "`." +
+                        " in field `" + fieldName + "` of file: `" + fileName + "`" +
+                        "for entity with composite id: " +
+                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "` -- " +
+                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "` -- " +
+                        "`" + compositeKeyThirdPart + "`: `" + compositeKeyThirdValue + "`.",
+                null);
+
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART, compositeKeyThirdPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE, compositeKeyThirdValue);
+        putNoticeSpecific(KEY_CURRENT_DATE, currentDateAsString);
+        putNoticeSpecific(KEY_FEED_INFO_END_DATE, feedEndDateAsString);
+        putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
 
     @Override
     public void export(NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getCurrentDate() {
-        return currentDate;
-    }
-
-    public String getFeedEndDate() {
-        return feedEndDate;
-    }
-
-    public String getFieldName() {
-        return fieldName;
     }
 }

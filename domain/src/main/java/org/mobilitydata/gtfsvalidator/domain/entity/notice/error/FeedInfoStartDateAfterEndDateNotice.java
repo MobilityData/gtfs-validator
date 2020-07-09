@@ -22,32 +22,38 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import java.io.IOException;
 
 public class FeedInfoStartDateAfterEndDateNotice extends ErrorNotice {
-    final private String startDate;
-    final private String endDate;
-
-    public FeedInfoStartDateAfterEndDateNotice(final String startDateAsString,
+    public FeedInfoStartDateAfterEndDateNotice(final String filename,
+                                               final String startDateAsString,
                                                final String endDateAsString,
-                                               final String entityId ) {
+                                               final String compositeKeyFirstPart,
+                                               final String compositeKeySecondPart,
+                                               final String compositeKeyThirdPart,
+                                               final String compositeKeyFirstValue,
+                                               final String compositeKeySecondValue,
+                                               final String compositeKeyThirdValue) {
         super("feed_info.txt",
-                E_032,
+                E_037,
                 "Fields `feed_start_date` af `feed_end_date` out of order",
-                "`The feed_end_date` date must not precede the `feed_start_date` date if both are given. " +
-                        "Record with `feed_publisher_name`: " + entityId + " `feed_end_date` is: " + endDateAsString
-                        + "`feed_start_date` is: " + startDateAsString, entityId);
-        this.startDate = startDateAsString;
-        this.endDate = endDateAsString;
+                "`feed_end_date`: `" + startDateAsString + "` precedes `feed_start_date`: `" +
+                        endDateAsString + "` in file `" + filename +
+                        "` for entity with composite id:" +
+                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "` -- " +
+                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "` -- " +
+                        "`" + compositeKeyThirdPart + "`: `" + compositeKeyThirdValue + "`.",
+                null);
+
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART, compositeKeyThirdPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE, compositeKeyThirdValue);
+        putNoticeSpecific(KEY_FEED_INFO_START_DATE, startDateAsString);
+        putNoticeSpecific(KEY_FEED_INFO_END_DATE, endDateAsString);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
     }
 }
