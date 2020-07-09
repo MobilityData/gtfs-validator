@@ -57,7 +57,7 @@ public interface NoticeExporter {
 
     void export(DuplicatedEntityNotice toExport) throws IOException;
 
-    void export(IllegalFieldValueCombination toExport) throws IOException;
+    void export(IllegalFieldValueCombinationNotice toExport) throws IOException;
 
     void export(UnexpectedEnumValueNotice toExport) throws IOException;
 
@@ -82,6 +82,18 @@ public interface NoticeExporter {
     void export(RouteLongNameEqualsShortNameNotice toExport) throws IOException;
 
     void export(RouteLongNameContainsShortNameNotice toExport) throws IOException;
+
+    void export(CalendarEndDateBeforeStartDateNotice toExport) throws IOException;
+
+    void export(MissingAgencyIdNotice toExport) throws IOException;
+
+    void export(InconsistentAgencyTimezoneNotice inconsistentAgencyTimezoneNotice) throws IOException;
+
+    void export(InvalidAgencyIdNotice invalidAgencyIdNotice) throws IOException;
+
+    void export(final RouteIdNotFoundNotice routeIdNotFoundNotice) throws IOException;
+
+    void export(final AgencyIdNotFoundNotice agencyIdNotFoundNotice) throws IOException;
 
     void export(FeedInfoStartDateAfterEndDateNotice toExport) throws IOException;
 

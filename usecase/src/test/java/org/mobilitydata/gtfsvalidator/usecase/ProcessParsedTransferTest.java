@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedTransferTest {
@@ -70,6 +71,7 @@ class ProcessParsedTransferTest {
         verify(mockParsedTransfer, times(1))
                 .get(ArgumentMatchers.eq("min_transfer_time"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fromStopId(ArgumentMatchers.eq("stop id 0"));
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq("stop id 1"));
         verify(mockBuilder, times(1)).transferType(ArgumentMatchers.eq(1));
@@ -115,6 +117,7 @@ class ProcessParsedTransferTest {
         verify(mockParsedTransfer, times(1))
                 .get(ArgumentMatchers.eq("min_transfer_time"));
 
+        verify(mockBuilder, times(1)).clear();
         // parameter of method .fromStopId is annotated as non null, for the purpose of this test, we suppress the
         // warning resulting form passing null value to method.
         //noinspection ConstantConditions
@@ -180,6 +183,7 @@ class ProcessParsedTransferTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedTransfer, times(1)).getEntityId();
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fromStopId(ArgumentMatchers.eq("stop id 0"));
         verify(mockBuilder, times(1)).toStopId(ArgumentMatchers.eq("stop id 1"));
         verify(mockBuilder, times(1)).transferType(ArgumentMatchers.eq(1));
@@ -198,7 +202,7 @@ class ProcessParsedTransferTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("transfers.txt", noticeList.get(0).getFilename());
-        assertEquals("from_stop_id;to_stop_id", noticeList.get(0).getFieldName());
+        assertEquals("from_stop_id;to_stop_id", noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedTransfer, mockResultRepo, mockGtfsDataRepo, mockTransfer, mockBuilder,

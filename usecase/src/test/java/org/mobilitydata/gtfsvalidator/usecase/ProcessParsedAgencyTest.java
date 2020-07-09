@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 // some fields are annotated as `@NonNull` but test require these fields to be null. Therefore annotation
@@ -84,6 +85,7 @@ class ProcessParsedAgencyTest {
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).agencyId(anyString());
         verify(mockBuilder, times(1)).agencyName(anyString());
         verify(mockBuilder, times(1)).agencyUrl(anyString());
@@ -108,7 +110,7 @@ class ProcessParsedAgencyTest {
         final List<Notice> noticeCollection = new ArrayList<>();
         final MissingRequiredValueNotice mockNotice = mock(MissingRequiredValueNotice.class);
         when(mockNotice.getFilename()).thenReturn(FILENAME);
-        when(mockNotice.getFieldName()).thenReturn(AGENCY_NAME);
+        when(mockNotice.getNoticeSpecific(ArgumentMatchers.eq(KEY_FIELD_NAME))).thenReturn(AGENCY_NAME);
         when(mockNotice.getEntityId()).thenReturn(ENTITY_ID);
 
         @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
@@ -142,6 +144,7 @@ class ProcessParsedAgencyTest {
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_FARE_URL));
         verify(mockParsedAgency, times(1)).get(ArgumentMatchers.eq(AGENCY_EMAIL));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).agencyId(AGENCY_ID);
         verify(mockBuilder, times(1)).agencyName(AGENCY_NAME);
         verify(mockBuilder, times(1)).agencyUrl(AGENCY_URL);
@@ -209,6 +212,7 @@ class ProcessParsedAgencyTest {
 
         verify(mockGtfsDataRepo, times(1)).addAgency(ArgumentMatchers.isA(Agency.class));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).agencyId(anyString());
         verify(mockBuilder, times(1)).agencyName(anyString());
         verify(mockBuilder, times(1)).agencyUrl(anyString());
@@ -230,7 +234,7 @@ class ProcessParsedAgencyTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals(FILENAME, noticeList.get(0).getFilename());
-        assertEquals(AGENCY_ID, noticeList.get(0).getFieldName());
+        assertEquals(AGENCY_ID, noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(ENTITY_ID, noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedAgency, mockResultRepo, mockGtfsDataRepo, mockAgency, mockBuilder,

@@ -281,8 +281,6 @@ public class Trip extends GtfsEntity {
          * GTFS specification are met. Otherwise, method returns a collection of notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             if (routeId == null || serviceId == null || tripId == null ||
                     !DirectionId.isEnumValueValid(originalDirectionIdInteger) ||
                     !WheelchairAccessibleStatus.isEnumValueValid(originalWheelchairAccessibleStatusInteger) ||
@@ -317,6 +315,28 @@ public class Trip extends GtfsEntity {
                 return new EntityBuildResult<>(new Trip(routeId, serviceId, tripId, tripHeadsign, tripShortName,
                         directionId, blockId, shapeId, wheelchairAccessibleStatus, bikesAllowedStatus));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public TripBuilder clear() {
+            routeId = null;
+            serviceId = null;
+            tripId = null;
+            tripHeadsign = null;
+            tripShortName = null;
+            directionId = null;
+            blockId = null;
+            shapeId = null;
+            wheelchairAccessibleStatus = null;
+            bikesAllowedStatus = null;
+            originalWheelchairAccessibleStatusInteger = null;
+            originalBikesAllowedStatusInteger = null;
+            originalDirectionIdInteger = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }

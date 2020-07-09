@@ -17,21 +17,20 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Level;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 /**
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
@@ -73,6 +72,50 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // file.
     private final Map<String, Map<String, Transfer>> transferPerStopPair = new HashMap<>();
 
+    // Map containing FareRule entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file fare_rules.txt:
+    // - fare_id
+    // - route_id
+    // - origin_id
+    // - destination_id
+    // - contains_id
+    // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
+    private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
+
+    // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
+    // pathways.txt
+    private final Map<String, Pathway> pathwayPerId = new HashMap<>();
+
+    // Map containing Attribution entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file attributions.txt:
+    // - attribution_id
+    // - agency_id
+    // - route_id
+    // - trip_id
+    // - organization_name
+    // - is_producer
+    // - is_operator
+    // - is_authority
+    // - attribution_url
+    // - attribution_email
+    // - attribution_phone
+    // Example of key after composition: attribution_idagency_idroute_idtrip_idorganization_nameis_produceris_operatoris_authorityattribution_urlattribution_emailattribution_phone
+    private final Map<String, Attribution> attributionCollection = new HashMap<>();
+
+    // Map containing Shape Entities. A shape is a actually a collection of ShapePoint.
+    // Entities are mapped on the values found in column shape_id  and shape_pt_sequence of GTFS file shapes.txt
+    private final Map<String, Map<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
+
+    // Map containing StopTime entities. Entities are mapped on a composite key made of the values found in the columns
+    // of GTFS file stop_times.txt:
+    // - trip_id
+    // - stop_sequence
+    private final Map<String, TreeMap<Integer, StopTime>> stopTimePerTripIdStopSequence = new HashMap<>();
+
+    // Map containing Translation entities. Entities are mapped on the value found in column table_name, field_value and
+    // language of GTFS file translations.txt.
+    private final Map<String, Map<String, Map<String, Translation>>> translationPerTableName = new HashMap<>();
+
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
      * uniqueness constraint of agency based on agency_id is respected, if this requirement is not met, returns null.
@@ -105,6 +148,26 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Agency getAgencyById(final String agencyId) {
         return agencyPerId.get(agencyId);
+    }
+
+    /**
+     * Return an immutable collection of Agency objects representing all the rows from agency.txt
+     *
+     * @return a immutable collection of Agency objects representing all the rows from agency.txt
+     */
+    @Override
+    public Collection<Agency> getAgencyAll() {
+        return Collections.unmodifiableCollection(agencyPerId.values());
+    }
+
+    /**
+     * Return the number of {@link Agency} contained in this {@link GtfsDataRepository}
+     *
+     * @return the number of {@link Agency} contained in this {@link GtfsDataRepository}
+     */
+    @Override
+    public int getAgencyCount() {
+        return agencyPerId.size();
     }
 
     /**
@@ -186,6 +249,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return tripPerId.get(tripId);
     }
 
+    /**
+     * Return an immutable collection of Trip objects representing all the rows from trips.txt
+     *
+     * @return an immutable collection of Trip objects representing all the rows from trips.txt
+     */
+    @Override
+    public Collection<Trip> getTripAll() {
+        return Collections.unmodifiableCollection(tripPerId.values());
+    }
+
 
     /**
      * Add a CalendarDate representing a row from calendar_dates.txt to this. Return the entity added to the repository
@@ -222,7 +295,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * parameter
      */
     @Override
-    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDateTime date) {
+    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDate date) {
         return calendarDatePerServiceIdAndDate.get(serviceId + date.toString());
     }
 
@@ -295,6 +368,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Calendar getCalendarByServiceId(final String serviceId) {
         return calendarPerServiceId.get(serviceId);
+    }
+
+    /**
+     * Return a collection of Calendar objects representing all the rows from calendar.txt
+     *
+     * @return a collection of Calendar objects representing all the rows from calendar.txt
+     */
+    @Override
+    public Collection<Calendar> getCalendarAll() {
+        return calendarPerServiceId.values();
     }
 
     /**
@@ -381,7 +464,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the FeedInfo representing a row from feed_info.txt related to the name provided as parameter
      *
      * @param feedPublisherName the key from feed_info.txt related to the FeedInfo to be returned
-     * @return the eedInfo representing a row from feed_info.txt related to the name provided as parameter
+     * @return the feedInfo representing a row from feed_info.txt related to the name provided as parameter
      */
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
@@ -423,6 +506,291 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public FareAttribute getFareAttributeById(final String fareId) {
         return fareAttributePerFareId.get(fareId);
     }
+
+    /**
+     * Add a FareRule representing a row from fare_rules.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newFareRule the internal representation of a row from fare_rules.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint on rows from fare_rules.txt
+     * is respected, if this requirement is not met, returns null.
+     */
+    @Override
+    public FareRule addFareRule(final FareRule newFareRule) throws IllegalArgumentException {
+        if (newFareRule != null) {
+            final String key = newFareRule.getFareRuleMappingKey();
+            if (fareRuleCollection.containsKey(key)) {
+                return null;
+            } else {
+                fareRuleCollection.put(key, newFareRule);
+                return newFareRule;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null FareRule to data repository");
+        }
+    }
+
+    /**
+     * Return the FareRule representing a row from fare_rules.txt related to the id provided as parameter
+     *
+     * @param fareId        1st part of the composite key: identifies a fare class
+     * @param routeId       2nd part of the composite key: identifies a route associated with the fare class
+     * @param originId      3rd part of the composite key: identifies an origin zone
+     * @param destinationId 4th part of the composite key: identifies a destination zone
+     * @param containsId    5th part ot the composite key: identifies the zones that a rider will enter while using a
+     *                      given fare class
+     * @return the FareRule representing a row from fare_rules.txt related to the id provided as parameter
+     */
+    @Override
+    public FareRule getFareRule(final String fareId, final String routeId, final String originId,
+                                final String destinationId, final String containsId) {
+        return fareRuleCollection.get(FareRule.getFareRuleMappingKey(fareId, routeId, originId, destinationId,
+                containsId));
+    }
+
+    /**
+     * Add a Pathway representing a row from pathways.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint of route based on pathway_id is respected,
+     * if this requirement is not met, returns null.
+     *
+     * @param newPathway the internal representation of a row from routes.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of route based on pathway_id is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException {
+        if (newPathway != null) {
+            final String pathwayId = newPathway.getPathwayId();
+            if (pathwayPerId.containsKey(pathwayId)) {
+                return null;
+            } else {
+                pathwayPerId.put(pathwayId, newPathway);
+                return newPathway;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null pathway to data repository");
+        }
+    }
+
+    /**
+     * Return the Pathway representing a row from pathways.txt related to the id provided as parameter
+     *
+     * @param pathwayId the key from pathways.txt related to the Pathway to be returned
+     * @return the Pathway representing a row from pathways.txt related to the id provided as parameter
+     */
+    @Override
+    public Pathway getPathwayById(final String pathwayId) {
+        return pathwayPerId.get(pathwayId);
+    }
+
+    /**
+     * Add an Attribution representing a row from attributions.txt to this. Return the entity added to the repository if
+     * the uniqueness constraint of rows f attributions.txt is respected, if this requirement is not met, returns null.
+     *
+     * @param newAttribution the internal representation of a row from attributions.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of rows f attributions.txt is respected,
+     * if this requirement is not met, returns null.
+     */
+    @Override
+    public Attribution addAttribution(final Attribution newAttribution) throws IllegalArgumentException {
+        if (newAttribution != null) {
+            final String key = newAttribution.getAttributionMappingKey();
+            if (attributionCollection.containsKey(key)) {
+                return null;
+            } else {
+                attributionCollection.put(key, newAttribution);
+                return newAttribution;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null attribution to data repository");
+        }
+    }
+
+    /**
+     * Return the Attribution representing a row from attributions.txt related to the composite key provided as
+     * parameter
+     *
+     * @param attributionId    identifies an attribution for the dataset or a subset of it
+     * @param agencyId         agency to which the attribution applies
+     * @param routeId          route to which the attribution applies
+     * @param tripId           trip to which the attribution applies
+     * @param organizationName name of the organization that the dataset is attributed to
+     * @param isProducer       the role of the organization if producer
+     * @param isOperator       the role of the organization if operator
+     * @param isAuthority      the role of the organization if authority
+     * @param attributionUrl   URL of the organization
+     * @param attributionEmail email of the organization
+     * @param attributionPhone phone number of the organization
+     * @return the Attribution representing a row from attributions.txt related to the composite key provided as
+     * parameter
+     */
+    @Override
+    public Attribution getAttribution(final String attributionId, final String agencyId, final String routeId,
+                                      final String tripId, final String organizationName, final boolean isProducer,
+                                      final boolean isOperator, final boolean isAuthority, final String attributionUrl,
+                                      final String attributionEmail, final String attributionPhone) {
+        return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId,agencyId,routeId,tripId ,
+                organizationName,isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
+                attributionPhone));
+    }
+
+    /**
+     * Add a {@link ShapePoint} to a shape. A shape is a list of{@link ShapePoint} whereas a {@link ShapePoint}
+     * represents a row from shapes.txt. Return the entity added to the repository if the entity was
+     * successfully added, and returns null if the provided newShapePoint already exists in the repository. This method
+     * adds the {@link ShapePoint} to this {@link GtfsDataRepository} while maintaining the order according to the
+     * value of this {@link ShapePoint} shape_pt_sequence.
+     *
+     * @param newShapePoint the internal representation of a row from shapes.txt to be added to the repository.
+     * @return Return the entity added to the repository if the entity was successfully added, and returns null if the
+     * provided newShapePoint already exists in the repository.  This method adds the {@link ShapePoint} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link ShapePoint}
+     * shape_pt_sequence.
+     * @throws IllegalArgumentException if the shape point passed as argument is null
+     */
+    @Override
+    public ShapePoint addShapePoint(final ShapePoint newShapePoint) throws IllegalArgumentException {
+        if (newShapePoint != null) {
+            final String shapeId = newShapePoint.getShapeId();
+            if (shapePerIdShapePtSequence.containsKey(shapeId)) {
+                if (!shapePerIdShapePtSequence.get(shapeId).containsKey(newShapePoint.getShapePtSequence())) {
+                    shapePerIdShapePtSequence.get(shapeId).put(newShapePoint.getShapePtSequence(), newShapePoint);
+                } else {
+                    return null;
+                }
+            } else {
+                final Map<Integer, ShapePoint> innerMap = new TreeMap<>();
+                innerMap.put(newShapePoint.getShapePtSequence(), newShapePoint);
+                shapePerIdShapePtSequence.put(shapeId, innerMap);
+            }
+            return newShapePoint;
+        } else {
+            throw new IllegalArgumentException("Cannot add null shape point to data repository");
+        }
+    }
+
+    /**
+     * Return an immutable map of shape points from shapes.txt related to the id provided as parameter; which represents
+     * a shape object. The returned map is ordered by shape_pt_sequence.
+     *
+     * @param shapeId the key from shapes.txt related to the Route to be returned
+     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * represents a shape object. The returned map is ordered by shape_pt_sequence.
+     */
+    @Override
+    public Map<Integer, ShapePoint> getShapeById(final String shapeId) {
+        return Collections.unmodifiableMap(shapePerIdShapePtSequence.get(shapeId));
+    }
+
+    /**
+     * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt is respected,
+     * if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     *
+     * @param newStopTime the internal representation of a row from stop_times.txt to be added to the repository.
+     * @return Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt
+     * is respected, if this requirement is not met, returns null. This method adds the {@link StopTime} to this
+     * {@link GtfsDataRepository} while maintaining the order according to the value of this {@link StopTime}
+     * stop_sequence.
+     */
+    @Override
+    public StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException {
+        if(newStopTime!=null) {
+            final String tripId  = newStopTime.getTripId();
+            final Integer stopSequence  = newStopTime.getStopSequence();
+            if (stopTimePerTripIdStopSequence.containsKey(tripId)) {
+                if (!stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
+                    stopTimePerTripIdStopSequence.get(tripId).put(stopSequence, newStopTime);
+                } else {
+                    return null;
+                }
+            } else {
+                final TreeMap<Integer, StopTime> innerMap = new TreeMap<>();
+                innerMap.put(stopSequence, newStopTime);
+                stopTimePerTripIdStopSequence.put(tripId, innerMap);
+            }
+            return newStopTime;
+        } else {
+            throw new IllegalArgumentException("Cannot add null StopTime to data repository");
+        }
+    }
+
+    /**
+     * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
+     * The returned map is ordered by stop_sequence
+     *
+     * @param tripId  identifies a trip
+     * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
+     */
+    @Override
+    public Map<Integer, StopTime> getStopTimeByTripId(final String tripId) {
+        return Collections.unmodifiableMap(stopTimePerTripIdStopSequence.get(tripId));
+    }
+
+    /**
+     * Add a {@code Translation} representing a row from translations.txt to this {@link GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
+     * respected. If this requirement is not met, returns null.
+     *
+     * @param newTranslationTable  the internal representation of a row from translations.txt to be added to the
+     *                             repository
+     * @return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
+     * respected. If this requirement is not met, returns null,
+     * @throws IllegalArgumentException if the argument is null
+     */
+    @Override
+    public Translation addTranslation(final Translation newTranslationTable) throws IllegalArgumentException {
+        if (newTranslationTable != null) {
+            final String tableName = newTranslationTable.getTableName().toString().toLowerCase();
+            final String fieldName = newTranslationTable.getFieldName();
+            final String language = newTranslationTable.getLanguage();
+            if (translationPerTableName.containsKey(tableName)) {
+                if (translationPerTableName.get(tableName).containsKey(fieldName)) {
+                    if (translationPerTableName.get(tableName).get(fieldName).containsKey(language)) {
+                        return null;
+                    } else {
+                        translationPerTableName.get(tableName).get(fieldName).put(language, newTranslationTable);
+                    }
+                } else {
+                    final Map<String, Translation> firstLevelMap= new TreeMap<>();
+                    final Map<String, Map<String, Translation>> secondLevelMap = new TreeMap<>();
+                    secondLevelMap.put(language, firstLevelMap);
+                    translationPerTableName.put(fieldName, secondLevelMap);
+                }
+            } else {
+                final Map<String, Translation> firstLevelMap = new TreeMap<>();
+                firstLevelMap.put(language, newTranslationTable);
+                final Map<String, Map<String, Translation>> secondLevelMap = new TreeMap<>();
+                secondLevelMap.put(fieldName, firstLevelMap);
+                translationPerTableName.put(tableName, secondLevelMap);
+            }
+            return newTranslationTable;
+        } else {
+            throw new IllegalArgumentException("Cannot add null Translation to data repository");
+        }
+    }
+
+    /**
+     * Return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
+     * provided as parameter
+     *
+     * @param tableName   the name of the table to retrieve translations from
+     * @param fieldName  the name of the field to be translated
+     * @param language    the language of translation
+     * @return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
+     * provided as parameter
+     */
+    @Override
+    public Translation getTranslationByTableNameFieldValueLanguage(final String tableName,
+                                                                   final String fieldName,
+                                                                   final String language) {
+        return translationPerTableName.get(tableName).get(fieldName).get(language);
+    }
+}
+
 
     /**
      * Returns the collection of {@link FeedInfo} entities

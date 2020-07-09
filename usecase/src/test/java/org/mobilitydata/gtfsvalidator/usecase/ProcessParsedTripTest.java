@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedTripTest {
@@ -69,6 +70,7 @@ class ProcessParsedTripTest {
                 .get(ArgumentMatchers.eq("wheelchair_accessible"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("bikes_allowed"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).routeId("route_id");
         verify(mockBuilder, times(1)).serviceId("service_id");
         verify(mockBuilder, times(1)).tripId("trip_id");
@@ -133,6 +135,7 @@ class ProcessParsedTripTest {
                 .get(ArgumentMatchers.eq("wheelchair_accessible"));
         verify(mockParsedTrip, times(1)).get(ArgumentMatchers.eq("bikes_allowed"));
 
+        verify(mockBuilder, times(1)).clear();
         // parameter of method .routeId() is annotated as non null, removing this warning for the purpose of the test
         //noinspection ConstantConditions
         verify(mockBuilder, times(1)).routeId(null);
@@ -197,6 +200,7 @@ class ProcessParsedTripTest {
 
         verify(mockGtfsDataRepo, times(1)).addTrip(ArgumentMatchers.isA(Trip.class));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).routeId("route_id");
         verify(mockBuilder, times(1)).serviceId("service_id");
         verify(mockBuilder, times(1)).tripId("trip_id");
@@ -220,7 +224,7 @@ class ProcessParsedTripTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("trips.txt", noticeList.get(0).getFilename());
-        assertEquals("trip_id", noticeList.get(0).getFieldName());
+        assertEquals("trip_id", noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedTrip, mockTrip);

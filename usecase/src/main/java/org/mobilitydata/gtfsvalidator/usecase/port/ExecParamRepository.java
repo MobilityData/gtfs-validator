@@ -33,8 +33,17 @@ public interface ExecParamRepository {
     String OUTPUT_KEY = "output";
     String PROTO_KEY = "proto";
     String URL_KEY = "url";
-    String ZIP_KEY = "zipinput";
+    String INPUT_KEY = "input";
     String EXCLUSION_KEY = "exclude";
+    String PATHWAY_MIN_LENGTH_KEY = "pathway_min_length";
+    String PATHWAY_MAX_LENGTH_KEY = "pathway_max_length";
+    String PATHWAY_MIN_TRAVERSAL_TIME_KEY = "pathway_min_traversal_time";
+    String PATHWAY_MAX_TRAVERSAL_TIME_KEY = "pathway_max_traversal_time";
+    String PATHWAY_MIN_STAIR_COUNT_KEY = "pathway_min_stair_count";
+    String PATHWAY_MAX_STAIR_COUNT_KEY = "pathway_max_stair_count";
+    String PATHWAY_MAX_SLOPE_KEY = "pathway_max_slope";
+    String PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY = "pathway_min_width_lower_bound";
+    String PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY = "pathway_min_width_upper_bound";
 
     ExecParam getExecParamByKey(final String optionName);
 

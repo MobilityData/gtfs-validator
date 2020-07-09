@@ -71,6 +71,12 @@ public class Main {
                 final ProcessParsedTransfer processParsedTransfer = config.processParsedTransfer();
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
+                final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
+                final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
+                final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
+                final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
+                final ProcessParsedTranslation processParsedTranslation = config.processParsedTranslation();
+                final ProcessParsedStopTime processParsedStopTime = config.processParsedStopTime();
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
@@ -106,6 +112,10 @@ public class Main {
                                     processParsedLevel.execute(parsedEntity);
                                     break;
                                 }
+                                case "attributions.txt": {
+                                    processParsedAttribution.execute(parsedEntity);
+                                    break;
+                                }
                                 case "calendar.txt": {
                                     processParsedCalendar.execute(parsedEntity);
                                     break;
@@ -122,8 +132,28 @@ public class Main {
                                     processParsedFeedInfo.execute(parsedEntity);
                                     break;
                                 }
+                                case "pathways.txt": {
+                                    processParsedPathway.execute(parsedEntity);
+                                    break;
+                                }
                                 case "fare_attributes.txt": {
                                     processParsedFareAttribute.execute(parsedEntity);
+                                    break;
+                                }
+                                case "fare_rules.txt": {
+                                    processParsedFareRule.execute(parsedEntity);
+                                    break;
+                                }
+                                case "shapes.txt": {
+                                    processParsedShapePoint.execute(parsedEntity);
+                                    break;
+                                }
+                                case "translations.txt" :{
+                                    processParsedTranslation.execute(parsedEntity);
+                                    break;
+                                }
+                                case "stop_times.txt" :{
+                                    processParsedStopTime.execute(parsedEntity);
                                     break;
                                 }
                             }
@@ -137,6 +167,11 @@ public class Main {
                 config.validateRouteTypeIsInOptions().execute();
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
+                config.validateCalendarEndDateBeforeStartDate().execute();
+                config.validateAgencyIdRequirement().execute();
+                config.validateAgenciesHaveSameAgencyTimezone().execute();
+                config.validateTripRouteId().execute();
+                config.validateRouteAgencyId().execute();
                 config.validateFeedInfoEndDateAfterStartDate().execute();
                 config.validateFeedCoversTheNext7ServiceDays().execute();
                 config.validateFeedCoversTheNext30ServiceDays().execute();
@@ -148,12 +183,11 @@ public class Main {
                 config.exportResultAsFile().execute();
             }
         } catch (IOException e) {
-            if (e.getMessage().contains("execution-parameters.json")) {
-                config.printHelp().execute();
-            } else {
-                logger.error("An exception occurred: " + e);
-            }
+            logger.error("An exception occurred: " + e);
         }
-        logger.info("Took " + TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startTime) + "ms");
+        final long duration = System.nanoTime() - startTime;
+        logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
+                TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
+                TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
     }
 }

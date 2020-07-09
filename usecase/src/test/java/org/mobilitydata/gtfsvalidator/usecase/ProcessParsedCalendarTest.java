@@ -29,11 +29,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedCalendarTest {
@@ -71,8 +72,8 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get(FRIDAY)).thenReturn(0);
         when(mockParsedCalendar.get(SATURDAY)).thenReturn(0);
         when(mockParsedCalendar.get(SUNDAY)).thenReturn(0);
-        when(mockParsedCalendar.get(START_DATE)).thenReturn(LocalDateTime.now());
-        when(mockParsedCalendar.get(END_DATE)).thenReturn(LocalDateTime.now());
+        when(mockParsedCalendar.get(START_DATE)).thenReturn(LocalDate.now());
+        when(mockParsedCalendar.get(END_DATE)).thenReturn(LocalDate.now());
 
         when(mockGtfsDataRepo.addCalendar(mockCalendar)).thenReturn(mockCalendar);
 
@@ -91,6 +92,7 @@ class ProcessParsedCalendarTest {
         verify(mockParsedCalendar, times(1)).get(START_DATE);
         verify(mockParsedCalendar, times(1)).get(END_DATE);
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).monday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).tuesday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).wednesday(ArgumentMatchers.eq(0));
@@ -99,8 +101,8 @@ class ProcessParsedCalendarTest {
         verify(mockBuilder, times(1)).saturday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).sunday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).serviceId(SERVICE_ID);
-        verify(mockBuilder, times(1)).startDate(ArgumentMatchers.isA(LocalDateTime.class));
-        verify(mockBuilder, times(1)).endDate(ArgumentMatchers.isA(LocalDateTime.class));
+        verify(mockBuilder, times(1)).startDate(ArgumentMatchers.isA(LocalDate.class));
+        verify(mockBuilder, times(1)).endDate(ArgumentMatchers.isA(LocalDate.class));
 
         final InOrder inOrder = inOrder(mockBuilder, mockGtfsDataRepo);
 
@@ -140,8 +142,8 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get(FRIDAY)).thenReturn(0);
         when(mockParsedCalendar.get(SATURDAY)).thenReturn(0);
         when(mockParsedCalendar.get(SUNDAY)).thenReturn(0);
-        when(mockParsedCalendar.get(START_DATE)).thenReturn(LocalDateTime.now());
-        when(mockParsedCalendar.get(END_DATE)).thenReturn(LocalDateTime.now());
+        when(mockParsedCalendar.get(START_DATE)).thenReturn(LocalDate.now());
+        when(mockParsedCalendar.get(END_DATE)).thenReturn(LocalDate.now());
 
         underTest.execute(mockParsedCalendar);
 
@@ -156,6 +158,7 @@ class ProcessParsedCalendarTest {
         verify(mockParsedCalendar, times(1)).get(START_DATE);
         verify(mockParsedCalendar, times(1)).get(END_DATE);
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).monday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).tuesday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).wednesday(ArgumentMatchers.eq(0));
@@ -165,8 +168,8 @@ class ProcessParsedCalendarTest {
         verify(mockBuilder, times(1)).sunday(ArgumentMatchers.eq(0));
         //noinspection ConstantConditions
         verify(mockBuilder, times(1)).serviceId(null);
-        verify(mockBuilder, times(1)).startDate(ArgumentMatchers.isA(LocalDateTime.class));
-        verify(mockBuilder, times(1)).endDate(ArgumentMatchers.isA(LocalDateTime.class));
+        verify(mockBuilder, times(1)).startDate(ArgumentMatchers.isA(LocalDate.class));
+        verify(mockBuilder, times(1)).endDate(ArgumentMatchers.isA(LocalDate.class));
         verify(mockBuilder, times(1)).build();
 
         verify(mockResultRepo, times(1)).addNotice(isA(Notice.class));
@@ -201,8 +204,8 @@ class ProcessParsedCalendarTest {
         when(mockParsedCalendar.get(FRIDAY)).thenReturn(0);
         when(mockParsedCalendar.get(SATURDAY)).thenReturn(0);
         when(mockParsedCalendar.get(SUNDAY)).thenReturn(0);
-        when(mockParsedCalendar.get(START_DATE)).thenReturn(LocalDateTime.now());
-        when(mockParsedCalendar.get(END_DATE)).thenReturn(LocalDateTime.now());
+        when(mockParsedCalendar.get(START_DATE)).thenReturn(LocalDate.now());
+        when(mockParsedCalendar.get(END_DATE)).thenReturn(LocalDate.now());
 
         underTest.execute(mockParsedCalendar);
 
@@ -221,6 +224,7 @@ class ProcessParsedCalendarTest {
 
         verify(mockGtfsDataRepo, times(1)).addCalendar(ArgumentMatchers.eq(mockCalendar));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).monday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).tuesday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).wednesday(ArgumentMatchers.eq(0));
@@ -229,8 +233,8 @@ class ProcessParsedCalendarTest {
         verify(mockBuilder, times(1)).saturday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).sunday(ArgumentMatchers.eq(0));
         verify(mockBuilder, times(1)).serviceId(SERVICE_ID);
-        verify(mockBuilder, times(1)).startDate(ArgumentMatchers.isA(LocalDateTime.class));
-        verify(mockBuilder, times(1)).endDate(ArgumentMatchers.isA(LocalDateTime.class));
+        verify(mockBuilder, times(1)).startDate(ArgumentMatchers.isA(LocalDate.class));
+        verify(mockBuilder, times(1)).endDate(ArgumentMatchers.isA(LocalDate.class));
         verify(mockBuilder, times(1)).build();
 
         verify(mockGtfsDataRepo, times(1)).addCalendar(mockCalendar);
@@ -242,7 +246,7 @@ class ProcessParsedCalendarTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("calendar.txt", noticeList.get(0).getFilename());
-        assertEquals(SERVICE_ID, noticeList.get(0).getFieldName());
+        assertEquals(SERVICE_ID, noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedCalendar, mockCalendar);

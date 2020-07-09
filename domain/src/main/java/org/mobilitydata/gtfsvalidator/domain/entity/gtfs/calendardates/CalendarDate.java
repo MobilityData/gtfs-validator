@@ -23,7 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class CalendarDate extends GtfsEntity {
     @NotNull
     private final String serviceId;
     @NotNull
-    private final LocalDateTime date;
+    private final LocalDate date;
     @NotNull
     final ExceptionType exceptionType;
 
@@ -45,7 +45,7 @@ public class CalendarDate extends GtfsEntity {
      * @param exceptionType indicates whether service is available on the date specified in the date field
      */
     private CalendarDate(@NotNull String serviceId,
-                         @NotNull LocalDateTime date,
+                         @NotNull LocalDate date,
                          @NotNull ExceptionType exceptionType) {
         this.serviceId = serviceId;
         this.date = date;
@@ -58,7 +58,7 @@ public class CalendarDate extends GtfsEntity {
     }
 
     @NotNull
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -73,7 +73,7 @@ public class CalendarDate extends GtfsEntity {
      */
     public static class CalendarDateBuilder {
         private String serviceId;
-        private LocalDateTime date;
+        private LocalDate date;
         private ExceptionType exceptionType;
         private Integer originalExceptionTypeInteger;
         private final List<Notice> noticeCollection = new ArrayList<>();
@@ -95,7 +95,7 @@ public class CalendarDate extends GtfsEntity {
          * @param date date when service exception occurs
          * @return builder for future object creation
          */
-        public CalendarDateBuilder date(@NotNull final LocalDateTime date) {
+        public CalendarDateBuilder date(@NotNull final LocalDate date) {
             this.date = date;
             return this;
         }
@@ -120,7 +120,6 @@ public class CalendarDate extends GtfsEntity {
          * official GTFS specification are met. Otherwise, method returns a collection of notices describing the issues.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
             if (serviceId == null || date == null || exceptionType == null) {
                 if (serviceId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("calendar_dates.txt",
@@ -143,6 +142,19 @@ public class CalendarDate extends GtfsEntity {
             } else {
                 return new EntityBuildResult<>(new CalendarDate(serviceId, date, exceptionType));
             }
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public CalendarDateBuilder clear() {
+            serviceId = null;
+            date = null;
+            exceptionType = null;
+            originalExceptionTypeInteger = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 

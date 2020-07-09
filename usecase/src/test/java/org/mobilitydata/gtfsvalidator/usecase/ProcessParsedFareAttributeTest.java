@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedFareAttributeTest {
@@ -88,6 +89,7 @@ class ProcessParsedFareAttributeTest {
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFER_DURATION));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
         verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
         verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
@@ -151,6 +153,7 @@ class ProcessParsedFareAttributeTest {
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(AGENCY_ID));
         verify(mockParsedFareAttribute, times(1)).get(ArgumentMatchers.eq(TRANSFER_DURATION));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
         verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
@@ -215,6 +218,7 @@ class ProcessParsedFareAttributeTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedFareAttribute, times(1)).getEntityId();
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).fareId(ArgumentMatchers.eq(STRING_TEST));
         verify(mockBuilder, times(1)).price(ArgumentMatchers.eq(VALID_PRICE_FLOAT));
         verify(mockBuilder, times(1)).currencyType(ArgumentMatchers.eq(STRING_TEST));
@@ -240,7 +244,7 @@ class ProcessParsedFareAttributeTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("fare_attributes.txt", noticeList.get(0).getFilename());
-        assertEquals(FARE_ID, noticeList.get(0).getFieldName());
+        assertEquals(FARE_ID, noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockParsedFareAttribute, mockGtfsDataRepo, mockBuilder, mockResultRepo);

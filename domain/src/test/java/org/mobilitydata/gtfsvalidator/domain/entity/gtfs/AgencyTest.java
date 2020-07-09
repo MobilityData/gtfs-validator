@@ -17,15 +17,18 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
 class AgencyTest {
     private static final String STRING_TEST_VALUE = "test_value";
+    private static final String BLANK_STRING_VALUE = "   ";
 
     // Field agencyName is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
@@ -51,7 +54,7 @@ class AgencyTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_name", notice.getFieldName());
+        assertEquals("agency_name", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -80,7 +83,7 @@ class AgencyTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_url", notice.getFieldName());
+        assertEquals("agency_url", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -109,7 +112,7 @@ class AgencyTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("agency.txt", notice.getFilename());
-        assertEquals("agency_timezone", notice.getFieldName());
+        assertEquals("agency_timezone", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -130,5 +133,33 @@ class AgencyTest {
         final EntityBuildResult<?> entityBuildResult = underTest.build();
 
         assertTrue(entityBuildResult.getData() instanceof Agency);
+    }
+
+    @Test
+    void createAgencyWithBlankAgencyIdShouldGenerateInvalidAgencyIdNotice() {
+        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.agencyId(BLANK_STRING_VALUE)
+                .agencyName(STRING_TEST_VALUE)
+                .agencyUrl(STRING_TEST_VALUE)
+                .agencyTimezone(STRING_TEST_VALUE)
+                .agencyLang(STRING_TEST_VALUE)
+                .agencyPhone(STRING_TEST_VALUE)
+                .agencyFareUrl(STRING_TEST_VALUE)
+                .agencyEmail(STRING_TEST_VALUE)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        // suppressed warning since cast check is not useful here: the test is designed so that method .getData()
+        // returns a list of notices.
+        //noinspection unchecked
+        final List<InvalidAgencyIdNotice> noticeCollection =
+                (List<InvalidAgencyIdNotice>) entityBuildResult.getData();
+        final InvalidAgencyIdNotice notice = noticeCollection.get(0);
+
+        assertEquals("agency.txt", notice.getFilename());
+        assertEquals("agency_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals(BLANK_STRING_VALUE, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
     }
 }

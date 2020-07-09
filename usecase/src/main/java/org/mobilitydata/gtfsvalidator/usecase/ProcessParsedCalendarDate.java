@@ -24,7 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntit
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -56,10 +56,11 @@ public class ProcessParsedCalendarDate {
      */
     public void execute(final ParsedEntity validatedParsedRoute) {
         final String serviceId = (String) validatedParsedRoute.get("service_id");
-        final LocalDateTime date = (LocalDateTime) validatedParsedRoute.get("date");
+        final LocalDate date = (LocalDate) validatedParsedRoute.get("date");
         final Integer exceptionType = (Integer) validatedParsedRoute.get("exception_type");
 
-        builder.serviceId(serviceId)
+        builder.clear()
+                .serviceId(serviceId)
                 .date(date)
                 .exceptionType(exceptionType);
 

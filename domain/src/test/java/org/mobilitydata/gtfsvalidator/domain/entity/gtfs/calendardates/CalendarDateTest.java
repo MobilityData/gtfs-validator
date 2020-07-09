@@ -21,11 +21,13 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_ENUM_VALUE;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
 class CalendarDateTest {
 
@@ -33,7 +35,7 @@ class CalendarDateTest {
     void createCalendarDateWithValidValueShouldNotGenerateNotice() {
         final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
-                .date(LocalDateTime.now())
+                .date(LocalDate.now())
                 .exceptionType(1)
                 .build();
         assertTrue(entityBuildResult.getData() instanceof CalendarDate);
@@ -47,7 +49,7 @@ class CalendarDateTest {
 
         //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId(null)
-                .date(LocalDateTime.now())
+                .date(LocalDate.now())
                 .exceptionType(1)
                 .build();
 
@@ -60,7 +62,7 @@ class CalendarDateTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("calendar_dates.txt", notice.getFilename());
-        assertEquals("service_id", notice.getFieldName());
+        assertEquals("service_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -87,7 +89,7 @@ class CalendarDateTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("calendar_dates.txt", notice.getFilename());
-        assertEquals("date", notice.getFieldName());
+        assertEquals("date", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("service_id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -100,7 +102,7 @@ class CalendarDateTest {
 
         //noinspection ConstantConditions
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
-                .date(LocalDateTime.now())
+                .date(LocalDate.now())
                 .exceptionType(null)
                 .build();
 
@@ -114,7 +116,7 @@ class CalendarDateTest {
         final MissingRequiredValueNotice notice = noticeCollection.get(0);
 
         assertEquals("calendar_dates.txt", notice.getFilename());
-        assertEquals("exception_type", notice.getFieldName());
+        assertEquals("exception_type", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("service_id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
@@ -124,7 +126,7 @@ class CalendarDateTest {
         final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
-                .date(LocalDateTime.now())
+                .date(LocalDate.now())
                 .exceptionType(5)
                 .build();
 
@@ -138,16 +140,16 @@ class CalendarDateTest {
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
 
         assertEquals("calendar_dates.txt", notice.getFilename());
-        assertEquals("exception_type", notice.getFieldName());
+        assertEquals("exception_type", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("service_id", notice.getEntityId());
-        assertEquals("5", notice.getEnumValue());
+        assertEquals(5, notice.getNoticeSpecific(KEY_ENUM_VALUE));
         assertEquals(1, noticeCollection.size());
     }
 
     @Test
     void getCalendarDateKeyShouldReturnConcatenatedStringFieldValues() {
         final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
-        final LocalDateTime date = LocalDateTime.now();
+        final LocalDate date = LocalDate.now();
         final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
                 .date(date)
                 .exceptionType(2)

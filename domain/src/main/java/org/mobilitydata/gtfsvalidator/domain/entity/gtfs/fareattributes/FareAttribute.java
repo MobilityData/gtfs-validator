@@ -201,7 +201,7 @@ public class FareAttribute extends GtfsEntity {
          * @param transferDuration length of time in seconds before a transfer expires
          * @return builder for future object creation
          */
-        public FareAttributeBuilder transferDuration(final int transferDuration) {
+        public FareAttributeBuilder transferDuration(final Integer transferDuration) {
             this.transferDuration = transferDuration;
             return this;
         }
@@ -215,8 +215,6 @@ public class FareAttribute extends GtfsEntity {
          * official GTFS specification are met. Otherwise, method returns a collection pf notices specifying the issues.
          */
         public EntityBuildResult<?> build() {
-            noticeCollection.clear();
-
             if (price == null || price < 0 || fareId == null || currencyType == null ||
                     !PaymentMethod.isEnumValueValid(originalPaymentMethodInteger) ||
                     !Transfers.isEnumValueValid(originalTransferInteger) ||
@@ -267,6 +265,24 @@ public class FareAttribute extends GtfsEntity {
             }
             return new EntityBuildResult<>(new FareAttribute(fareId, price, currencyType, paymentMethod, transfers,
                     agencyId, transferDuration));
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         * @return builder with all fields set to null;
+         */
+        public FareAttributeBuilder clear() {
+            fareId = null;
+            price = null;
+            currencyType = null;
+            paymentMethod = null;
+            transfers = null;
+            agencyId = null;
+            transferDuration = null;
+            originalPaymentMethodInteger = null;
+            originalTransferInteger = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 }

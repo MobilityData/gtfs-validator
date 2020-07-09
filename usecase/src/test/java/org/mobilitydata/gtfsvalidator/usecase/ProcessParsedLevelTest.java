@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedLevelTest {
@@ -67,6 +68,7 @@ class ProcessParsedLevelTest {
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_index"));
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_name"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).levelId("level id");
         verify(mockBuilder, times(1)).levelIndex(2.0f);
         verify(mockBuilder, times(1)).levelName("level name");
@@ -115,6 +117,7 @@ class ProcessParsedLevelTest {
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_index"));
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_name"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).levelId(ArgumentMatchers.eq("level id"));
         verify(mockBuilder, times(1)).levelIndex(ArgumentMatchers.eq(2.0f));
         verify(mockBuilder, times(1)).levelName(ArgumentMatchers.eq("level name"));
@@ -161,6 +164,7 @@ class ProcessParsedLevelTest {
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_index"));
         verify(mockParsedLevel, times(1)).get(ArgumentMatchers.eq("level_name"));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).levelId(ArgumentMatchers.eq("level id"));
         verify(mockBuilder, times(1)).levelIndex(ArgumentMatchers.eq(2.0f));
         verify(mockBuilder, times(1)).levelName(ArgumentMatchers.eq("level name"));
@@ -184,7 +188,7 @@ class ProcessParsedLevelTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("levels.txt", noticeList.get(0).getFilename());
-        assertEquals("level_id", noticeList.get(0).getFieldName());
+        assertEquals("level_id", noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("entity id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedLevel, mockLevel,

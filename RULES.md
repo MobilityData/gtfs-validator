@@ -30,8 +30,14 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E026](#E026) | Invalid route type | 
 | [E027](#E027) | Missing route short name and long name | 
 | [E028](#E028) | Route long name equals short name | 
-| [E028](#E032) | `feed_start_date` after `feed_end_date` | 
-| [E028](#E033) | Dataset should be valid for at least the next 7 days | 
+| [E029](#E029) | Missing field `agency_id` for file `agency.txt` with more than 1 record | 
+| [E030](#E030) | Inconsistent field `agency_timezone` | 
+| [E031](#E031) | Invalid `agency_id` | 
+| [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
+| [E033](#E033) | `route_id` not found |
+| [E035](#E035) | `agency_id` not found |
+| [E037](#E037) | `feed_start_date` after `feed_end_date` | 
+| [E038](#E038) | Dataset should be valid for at least the next 7 days | 
 
 ### Table of Warnings
 
@@ -110,18 +116,57 @@ A Route color and a Route text color should be contrasting. Minimum Contrast Rat
 
 ### E028 - Route long name equals short name
 
+<a name="E029"/>
+
+### E029 - Missing `agency_id` for file `agency.txt` with more than 1 record
+
+All records of file `agency.txt` should have a non-null value for field [agency_id](https://gtfs.org/reference/static/#agencytxt) when this file counts more than one record.
+
+<a name="E030"/>
+
+### E030 - Inconsistent field `agency_timezone` 
+
+All records of file `agency.txt` should have the same value for field `agency_timezone` [agency_id](https://gtfs.org/reference/static/#agencytxt) when this file counts more than one record.
+
+<a name="E031"/>
+
+### E031 - Invalid `agency_id` 
+
+When provided field `agency_id` should not be blank.
+
 <a name="E032"/>
 
-### E028 - `feed_start_date` after `feed_end_date`
+### E032 - `calendar.txt` `end_date` is before `start_date`
+
+In `calendar.txt`, the `end_date` of a service record must not be earlier than the `start_date`.
+
+#### References:
+* [calendar.txt specification](https://gtfs.org/reference/static/#calendartxt)
+
+<a name="E033"/>
+
+### E033 - `route_id` not found
+
+Value of field `route_id` should exist in GTFS data.
+
+<a name="E035"/>
+
+### E035 - `agency_id` not found
+
+Value of field `agency_id` should exist in GTFS data.
+
+<a name="E037"/>
+
+### E037 - `feed_start_date` after `feed_end_date`
 
 The `feed_end_date` date must not precede the `feed_start_date` date if both are given. 
 
 #### References:
 * [feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
 
-<a name="E033"/>
+<a name="E038"/>
 
-### E033 - Dataset should be valid for at least the next 7 days
+### E038 - Dataset should be valid for at least the next 7 days
 
 At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
 

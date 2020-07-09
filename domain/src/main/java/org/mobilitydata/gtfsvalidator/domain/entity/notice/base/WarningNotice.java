@@ -17,23 +17,41 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 
 public abstract class WarningNotice extends Notice {
+    private static final String level = "WARNING";
 
-    protected static final String W_001 = "W001";
-    protected static final String W_002 = "W002";
-    protected static final String W_003 = "W003";
-    protected static final String W_004 = "W004";
-    protected static final String W_005 = "W005";
-    protected static final String W_006 = "W006";
-    protected static final String W_007 = "W007";
-    protected static final String W_008 = "W008";
-    protected static final String W_009 = "W009";
-    protected static final String W_010 = "W010";
-    protected static final String W_011 = "W011";
+    protected static final int W_001 = 1;
+    protected static final int W_002 = 2;
+    protected static final int W_003 = 3;
+    protected static final int W_004 = 4;
+    protected static final int W_005 = 5;
+    protected static final int W_006 = 6;
+    protected static final int W_007 = 7;
+    protected static final int W_008 = 8;
+    protected static final int W_009 = 9;
+    protected static final int W_010 = 10;
+    protected static final int W_011 = 11;
 
     public WarningNotice(final String filename,
-                         final String noticeId,
+                         final int code,
                          final String title,
-                         final String description, String entityId) {
-        super(filename, noticeId, title, description, entityId);
+                         final String description,
+                         final String entityId) {
+        super(filename, code, title, description, entityId);
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    @Override
+    public String toString() {
+        return "\nNotice{" +
+                "filename='" + getFilename() + '\'' +
+                ", level='" + getLevel() + '\'' +
+                ", code='" + getCode() + '\'' +
+                ", title='" + getTitle() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", noticeSpecific='" + getNoticeSpecificAll() + '\'' +
+                '}';
     }
 }

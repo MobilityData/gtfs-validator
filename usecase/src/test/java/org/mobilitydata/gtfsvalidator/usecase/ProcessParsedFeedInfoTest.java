@@ -29,11 +29,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedFeedInfoTest {
@@ -45,8 +46,8 @@ class ProcessParsedFeedInfoTest {
     private static final String FEED_VERSION = "feed_version";
     private static final String FEED_CONTACT_EMAIL = "feed_contact_email";
     private static final String FEED_CONTACT_URL = "feed_contact_url";
-    private static final LocalDateTime START_DATE = LocalDateTime.now();
-    private static final LocalDateTime END_DATE = LocalDateTime.now();
+    private static final LocalDate START_DATE = LocalDate.now();
+    private static final LocalDate END_DATE = LocalDate.now();
 
     @Test
     void validatedParsedFeedInfoShouldCreateEntityAndToBeAddedToGtfsDataRepo() {
@@ -90,6 +91,7 @@ class ProcessParsedFeedInfoTest {
         verify(mockParsedFeedInfo, times(1)).get(ArgumentMatchers.eq(FEED_CONTACT_EMAIL));
         verify(mockParsedFeedInfo, times(1)).get(ArgumentMatchers.eq(FEED_CONTACT_URL));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1))
                 .feedPublisherName(ArgumentMatchers.eq(FEED_PUBLISHER_NAME));
         verify(mockBuilder, times(1)).feedPublisherUrl(ArgumentMatchers.eq(FEED_PUBLISHER_URL));
@@ -155,6 +157,7 @@ class ProcessParsedFeedInfoTest {
         verify(mockParsedFeedInfo, times(1)).get(ArgumentMatchers.eq(FEED_CONTACT_EMAIL));
         verify(mockParsedFeedInfo, times(1)).get(ArgumentMatchers.eq(FEED_CONTACT_URL));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1))
                 .feedPublisherName(ArgumentMatchers.eq(FEED_PUBLISHER_NAME));
         verify(mockBuilder, times(1)).feedPublisherUrl(ArgumentMatchers.eq(FEED_PUBLISHER_URL));
@@ -218,6 +221,7 @@ class ProcessParsedFeedInfoTest {
 
         verify(mockGtfsDataRepo, times(1)).addFeedInfo(ArgumentMatchers.eq(mockFeedInfo));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1))
                 .feedPublisherName(ArgumentMatchers.eq(FEED_PUBLISHER_NAME));
         verify(mockBuilder, times(1)).feedPublisherUrl(ArgumentMatchers.eq(FEED_PUBLISHER_URL));
@@ -245,7 +249,7 @@ class ProcessParsedFeedInfoTest {
         final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
 
         assertEquals("feed_info.txt", noticeList.get(0).getFilename());
-        assertEquals(FEED_PUBLISHER_NAME, noticeList.get(0).getFieldName());
+        assertEquals(FEED_PUBLISHER_NAME, noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedFeedInfo, mockFeedInfo,
