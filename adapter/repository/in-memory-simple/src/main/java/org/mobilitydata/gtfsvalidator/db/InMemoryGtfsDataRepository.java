@@ -248,13 +248,13 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return an immutable collection of Trip objects representing all the rows from trips.txt
+     * Return an immutable map of Trip objects representing all the rows from trips.txt. Entities are mapped on trip_id
      *
-     * @return an immutable collection of Trip objects representing all the rows from trips.txt
+     * @return an immutable map of Trip objects representing all the rows from trips.txt. Entities are mapped on trip_id
      */
     @Override
-    public Collection<Trip> getTripAll() {
-        return Collections.unmodifiableCollection(tripPerId.values());
+    public Map<String, Trip> getTripAll() {
+        return Collections.unmodifiableMap(tripPerId);
     }
 
 

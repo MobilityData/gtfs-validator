@@ -26,7 +26,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentMatchers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -44,7 +46,10 @@ class ValidateTripRouteIdTest {
         when(mockTrip01.getRouteId()).thenReturn("route id 01");
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getTripAll()).thenReturn(new ArrayList<>(List.of(mockTrip00, mockTrip01)));
+        final Map<String, Trip> mockTripCollection = new HashMap<>();
+        mockTripCollection.put("trip id 00", mockTrip00);
+        mockTripCollection.put("trip id 01", mockTrip01);
+        when(mockDataRepo.getTripAll()).thenReturn(mockTripCollection);
         when(mockDataRepo.getRouteAll()).thenReturn(new ArrayList<>());
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -60,9 +65,7 @@ class ValidateTripRouteIdTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();
 
-        verify(mockTrip00, times(1)).getTripId();
         verify(mockTrip00, times(2)).getRouteId();
-        verify(mockTrip01, times(1)).getTripId();
         verify(mockTrip01, times(2)).getRouteId();
         verify(mockResultRepo, times(2)).addNotice(any(RouteIdNotFoundNotice.class));
 
@@ -88,7 +91,10 @@ class ValidateTripRouteIdTest {
         when(mockRoute01.getRouteId()).thenReturn("route id 01");
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getTripAll()).thenReturn(new ArrayList<>(List.of(mockTrip00, mockTrip01)));
+        final Map<String, Trip> mockTripCollection = new HashMap<>();
+        mockTripCollection.put("trip id 00", mockTrip00);
+        mockTripCollection.put("trip id 01", mockTrip01);
+        when(mockDataRepo.getTripAll()).thenReturn(mockTripCollection);
         when(mockDataRepo.getRouteAll()).thenReturn(new ArrayList<>(List.of(mockRoute00, mockRoute01)));
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
