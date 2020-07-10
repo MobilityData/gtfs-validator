@@ -307,9 +307,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return an immutable collection of {@code CalendarDate} objects representing all the rows from calendar_dates.txt
+     * Return an immutable collection of {@code CalendarDate} objects representing all the rows from calendar_dates.txt.
+     * Entities are mapped on service_id and date in a nested map.
      *
-     * @return a immutable collection of {@code CalendarDate} objects representing all the rows from calendar_dates.txt
+     * @return a immutable collection of {@code CalendarDate} objects representing all the rows from calendar_dates.txt.
+     * Entities are mapped on service_id and date in a nested map.
      */
     public Map<String, Map<String, CalendarDate>> getCalendarDateAll() {
         return Collections.unmodifiableMap(calendarDatePerServiceIdAndDate);
