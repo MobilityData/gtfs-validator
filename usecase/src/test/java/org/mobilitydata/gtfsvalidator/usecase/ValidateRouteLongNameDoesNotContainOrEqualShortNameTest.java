@@ -52,7 +52,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         verify(mockRoute, times(1)).getRouteLongName();
         verifyNoInteractions(mockResultRepo);
         verify(mockLogger, times(1)).info("Validating rule 'E028 - Route long name equals " +
-                "short name'"+System.lineSeparator());
+                "short name'" + System.lineSeparator());
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
@@ -79,7 +79,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         verify(mockRoute, times(1)).getRouteLongName();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockLogger, times(1)).info("Validating rule 'E028 - Route long name equals " +
-                "short name'"+System.lineSeparator());
+                "short name'" + System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -107,7 +107,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         verify(mockRoute, times(2)).getRouteLongName();
         verify(mockRoute, times(2)).getRouteShortName();
         verify(mockLogger, times(1)).info("Validating rule 'E028 - Route long name equals " +
-                "short name'"+System.lineSeparator());
+                "short name'" + System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -137,7 +137,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(RouteLongNameContainsShortNameNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E028 - Route long name equals " +
-                "short name'"+System.lineSeparator());
+                "short name'" + System.lineSeparator());
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
@@ -166,7 +166,7 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(RouteLongNameEqualsShortNameNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E028 - Route long name equals " +
-                "short name'"+System.lineSeparator());
+                "short name'" + System.lineSeparator());
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }

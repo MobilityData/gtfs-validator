@@ -42,7 +42,7 @@ class ParseSingleRowForFileTest {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
         when(mockProvider.hasNext()).thenReturn(true, true, true, false);
-        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey", "testValue"), 0);
         when(mockProvider.getNext()).thenReturn(testRawEntity);
 
         GtfsSpecRepository.RawEntityParser mockParser = mock(GtfsSpecRepository.RawEntityParser.class);
@@ -85,7 +85,7 @@ class ParseSingleRowForFileTest {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
         when(mockProvider.hasNext()).thenReturn(true);
-        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey", "testValue"), 0);
         when(mockProvider.getNext()).thenReturn(testRawEntity);
 
         GtfsSpecRepository.RawEntityParser mockParser = mock(GtfsSpecRepository.RawEntityParser.class);

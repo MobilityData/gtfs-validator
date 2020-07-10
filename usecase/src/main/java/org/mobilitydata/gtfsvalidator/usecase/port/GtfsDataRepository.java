@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
@@ -28,7 +27,9 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
@@ -114,7 +115,7 @@ public interface GtfsDataRepository {
      * a shape object. The returned map is ordered by shape_pt_sequence.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * @return an immutable map of shape points from shapes.txt related to the id provided as parameter; which
      * represents a shape object. The returned map is ordered by shape_pt_sequence.
      */
     Map<Integer, ShapePoint> getShapeById(final String shapeId);
@@ -138,8 +139,8 @@ public interface GtfsDataRepository {
      * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
      * The returned map is ordered by stop_sequence
      *
-     * @param tripId  identifies a trip
-     * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
+     * @param tripId identifies a trip
+     * @return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     Map<Integer, StopTime> getStopTimeByTripId(final String tripId);
 
@@ -147,7 +148,7 @@ public interface GtfsDataRepository {
      * Return an immutable map representing all records from stop_times.txt. Elements of this map are mapped by
      * "trip_id" and ordered by ascending by stop_sequence
      *
-     * @return  an immutable map representing all records from stop_times.txt
+     * @return an immutable map representing all records from stop_times.txt
      */
     Map<String, TreeMap<Integer, StopTime>> getStopTimeAll();
 

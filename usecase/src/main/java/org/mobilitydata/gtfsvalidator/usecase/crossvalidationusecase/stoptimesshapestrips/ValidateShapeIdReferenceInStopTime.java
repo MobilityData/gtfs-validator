@@ -23,7 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequired
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ShapeIdNotFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * Use case to validate that in `stop_times.txt` all records having a non-null value for field `shape_dist_travelled`
@@ -34,7 +34,7 @@ public class ValidateShapeIdReferenceInStopTime {
                         final StopTime stopTime,
                         final Map<Integer, ShapePoint> shape,
                         final Trip trip) {
-        if(stopTime != null) {
+        if (stopTime != null) {
             if (stopTime.getShapeDistTraveled() != null) {
                 if (trip != null) {
                     final String tripId = trip.getTripId();

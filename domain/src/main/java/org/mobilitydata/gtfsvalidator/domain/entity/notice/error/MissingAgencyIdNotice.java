@@ -32,7 +32,8 @@ public class MissingAgencyIdNotice extends ErrorNotice {
 
     /**
      * Additional constructor to be used in use case "ValidateAgencyIdRequirement"
-     * @param agencyName  `agency_name` of the record missing value for field `agency_id`
+     *
+     * @param agencyName `agency_name` of the record missing value for field `agency_id`
      */
     public MissingAgencyIdNotice(final String agencyName) {
         super("agency.txt", E_029,

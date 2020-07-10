@@ -27,7 +27,7 @@ public class MissingRouteLongNameNotice extends WarningNotice {
         super(filename, W_007,
                 "Empty `route_long_name`",
                 "Empty `route_long_name` for route with `route_id`:`" + entityId + "` in file:`" + filename
-                + "`",
+                        + "`",
                 entityId);
     }
 

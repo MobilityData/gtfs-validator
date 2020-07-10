@@ -60,7 +60,7 @@ public enum Timepoint {
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
     static public boolean isEnumValid(final Integer value) {
-        if (value==null) {
+        if (value == null) {
             return true;
         }
         return Stream.of(Timepoint.values())

@@ -28,9 +28,9 @@ public class ShapeIdNotFoundNotice extends ErrorNotice {
         super(filename,
                 E_034,
                 "GTFS shape_id does not exist in GTFS data",
-                "GTFS file `" + filename + "` (with composite key: `"+compositeKeyFirstPart + "`: " +
-                        "`"+compositeKeySecondPart + "` -- `"+ compositeKeyFirstValue + "`: `"
-                        +compositeKeySecondValue+"`) includes GTFS shape_id: `" + shapeId +
+                "GTFS file `" + filename + "` (with composite key: `" + compositeKeyFirstPart + "`: " +
+                        "`" + compositeKeySecondPart + "` -- `" + compositeKeyFirstValue + "`: `"
+                        + compositeKeySecondValue + "`) includes GTFS shape_id: `" + shapeId +
                         "` " + " which does not exist in GTFS data", null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);

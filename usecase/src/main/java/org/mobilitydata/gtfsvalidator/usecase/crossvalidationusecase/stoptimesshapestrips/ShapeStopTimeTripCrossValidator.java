@@ -58,9 +58,9 @@ public class ShapeStopTimeTripCrossValidator {
 
         dataRepo.getStopTimeAll().forEach((tripId, stopTimeCollection) -> stopTimeCollection.
                 forEach((stopSequence, stopTime) -> {
-            final Trip trip = dataRepo.getTripById(tripId);
-            final Map<Integer, ShapePoint> shape = dataRepo.getShapeById(trip == null ? null : trip.getShapeId());
-            validateShapeIdReferenceInStopTime.execute(resultRepo, stopTime, shape, trip);
-        }));
+                    final Trip trip = dataRepo.getTripById(tripId);
+                    final Map<Integer, ShapePoint> shape = dataRepo.getShapeById(trip == null ? null : trip.getShapeId());
+                    validateShapeIdReferenceInStopTime.execute(resultRepo, stopTime, shape, trip);
+                }));
     }
 }

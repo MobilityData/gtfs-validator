@@ -1265,7 +1265,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new InvalidAgencyIdNotice("filename", "field name", "entity id" ));
+        underTest.export(new InvalidAgencyIdNotice("filename", "field name", "entity id"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
@@ -1277,6 +1277,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
+
     @Test
     void exportNonExistingAgencyIdShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
@@ -1355,10 +1356,10 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(new ShapeIdNotFoundNotice("filename", "field name",
-                        "composite key first part",
-                        "composite key second part",
-                        "composite key first value",
-                        "composite key second value", "shape id"));
+                "composite key first part",
+                "composite key second part",
+                "composite key first value",
+                "composite key second value", "shape id"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));

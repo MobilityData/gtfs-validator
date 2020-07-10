@@ -289,8 +289,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     /**
      * Return the CalendarDate representing a row from calendar_dates.txt related to the id provided as parameter
      *
-     * @param serviceId  first part of the composite key used to map rows from calendar_dates.txt
-     * @param date       second part of the composite key used to map rows from calendar_dates.txt
+     * @param serviceId first part of the composite key used to map rows from calendar_dates.txt
+     * @param date      second part of the composite key used to map rows from calendar_dates.txt
      * @return the CalendarDate representing a row from calendar_dates.txt related to the composite key provided as
      * parameter
      */
@@ -424,7 +424,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      *                   containing {@param fromStopId} in the from_stop_id column of transfers.txt GTFS file. This
      *                   method will not return any records where {@param fromStopId} is in the to_stop_id column of the
      *                   same pre-mentioned GTFS file.
-     *
      * @param toStopId   second part of the composite key: identifies a stop or station where a connection between
      *                   routes ends. Querying on {@param toStopId}, the method will will only return records
      *                   containing {@param toStopId} in the to_stop_id column of transfers.txt GTFS file. This
@@ -630,8 +629,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                       final String tripId, final String organizationName, final boolean isProducer,
                                       final boolean isOperator, final boolean isAuthority, final String attributionUrl,
                                       final String attributionEmail, final String attributionPhone) {
-        return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId,agencyId,routeId,tripId ,
-                organizationName,isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
+        return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId, agencyId, routeId, tripId,
+                organizationName, isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
                 attributionPhone));
     }
 
@@ -675,7 +674,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * a shape object. The returned map is ordered by shape_pt_sequence.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * @return an immutable map of shape points from shapes.txt related to the id provided as parameter; which
      * represents a shape object. The returned map is ordered by shape_pt_sequence.
      */
     @Override
@@ -698,9 +697,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException {
-        if(newStopTime!=null) {
-            final String tripId  = newStopTime.getTripId();
-            final Integer stopSequence  = newStopTime.getStopSequence();
+        if (newStopTime != null) {
+            final String tripId = newStopTime.getTripId();
+            final Integer stopSequence = newStopTime.getStopSequence();
             if (stopTimePerTripIdStopSequence.containsKey(tripId)) {
                 if (!stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
                     stopTimePerTripIdStopSequence.get(tripId).put(stopSequence, newStopTime);
@@ -722,8 +721,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
      * The returned map is ordered by stop_sequence
      *
-     * @param tripId  identifies a trip
-     * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
+     * @param tripId identifies a trip
+     * @return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     @Override
     public Map<Integer, StopTime> getStopTimeByTripId(final String tripId) {
@@ -735,7 +734,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * trip_id and the value is another map, which keys are stop_sequence and values are {@link StopTime}. Note that
      * those are ordered by ascending stop_sequence.
      *
-     * @return  an immutable map representing all records from stop_times.txt
+     * @return an immutable map representing all records from stop_times.txt
      */
     public Map<String, TreeMap<Integer, StopTime>> getStopTimeAll() {
         return Collections.unmodifiableMap(stopTimePerTripIdStopSequence);
@@ -746,8 +745,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
      * respected. If this requirement is not met, returns null.
      *
-     * @param newTranslationTable  the internal representation of a row from translations.txt to be added to the
-     *                             repository
+     * @param newTranslationTable the internal representation of a row from translations.txt to be added to the
+     *                            repository
      * @return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
      * respected. If this requirement is not met, returns null,
      * @throws IllegalArgumentException if the argument is null
@@ -766,7 +765,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                         translationPerTableName.get(tableName).get(fieldName).put(language, newTranslationTable);
                     }
                 } else {
-                    final Map<String, Translation> firstLevelMap= new TreeMap<>();
+                    final Map<String, Translation> firstLevelMap = new TreeMap<>();
                     final Map<String, Map<String, Translation>> secondLevelMap = new TreeMap<>();
                     secondLevelMap.put(language, firstLevelMap);
                     translationPerTableName.put(fieldName, secondLevelMap);
@@ -788,9 +787,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
      * provided as parameter
      *
-     * @param tableName   the name of the table to retrieve translations from
-     * @param fieldName  the name of the field to be translated
-     * @param language    the language of translation
+     * @param tableName the name of the table to retrieve translations from
+     * @param fieldName the name of the field to be translated
+     * @param language  the language of translation
      * @return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
      * provided as parameter
      */

@@ -148,11 +148,11 @@ public class Main {
                                     processParsedShapePoint.execute(parsedEntity);
                                     break;
                                 }
-                                case "translations.txt" :{
+                                case "translations.txt": {
                                     processParsedTranslation.execute(parsedEntity);
                                     break;
                                 }
-                                case "stop_times.txt" :{
+                                case "stop_times.txt": {
                                     processParsedStopTime.execute(parsedEntity);
                                     break;
                                 }
