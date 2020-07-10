@@ -64,7 +64,7 @@ public interface GtfsDataRepository {
 
     Trip getTripById(final String tripId);
 
-    Collection<Trip> getTripAll();
+    Map<String, Trip> getTripAll();
 
     Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 

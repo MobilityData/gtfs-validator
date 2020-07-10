@@ -308,7 +308,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void addTripShouldReturnSameEntityAndCallToGetTripByIdShouldReturnRelatedTrip() {
+    void addTripShouldReturnSameEntityAndCallToGetTripByIdShouldReturnRelatedTrip() {
         final Trip mockTrip00 = mock(Trip.class);
         final Trip mockTrip01 = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -321,6 +321,24 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(mockTrip00, underTest.getTripById("trip id00"));
         assertEquals(mockTrip01, underTest.getTripById("trip id01"));
     }
+
+    @Test
+    void getTripAllShouldReturnTripCollection() {
+        final Trip mockTrip00 = mock(Trip.class);
+        final Trip mockTrip01 = mock(Trip.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTrip00.getTripId()).thenReturn("trip id00");
+        when(mockTrip01.getTripId()).thenReturn("trip id01");
+
+        underTest.addTrip(mockTrip00);
+        underTest.addTrip(mockTrip01);
+
+        final Map<String, Trip> toCheck = underTest.getTripAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey("trip id00"));
+        assertTrue(toCheck.containsKey("trip id01"));
+    }
+
 
     @Test
     void addSameTransferTwiceShouldReturnNull() {
