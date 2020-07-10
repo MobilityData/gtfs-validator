@@ -174,6 +174,7 @@ public class FareRule extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public FareRuleBuilder clear() {
@@ -194,10 +195,10 @@ public class FareRule extends GtfsEntity {
      */
     public static String getFareRuleMappingKey(final String fareId, final String routeId, final String originId,
                                                final String destinationId, final String containsId) {
-        return fareId+routeId+originId+destinationId+containsId;
+        return fareId + routeId + originId + destinationId + containsId;
     }
 
-    public String getFareRuleMappingKey(){
+    public String getFareRuleMappingKey() {
         return getFareRuleMappingKey(getFareId(), getRouteId(), getOriginId(), getDestinationId(), getContainsId());
     }
 }

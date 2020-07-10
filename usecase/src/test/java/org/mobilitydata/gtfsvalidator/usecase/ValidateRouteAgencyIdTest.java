@@ -20,8 +20,8 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.AgencyIdNotFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
@@ -30,7 +30,7 @@ import org.mockito.ArgumentMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
@@ -103,7 +103,7 @@ class ValidateRouteAgencyIdTest {
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockDataRepo, times(1)).getAgencyById(ArgumentMatchers.eq("non existing "+
+        verify(mockDataRepo, times(1)).getAgencyById(ArgumentMatchers.eq("non existing " +
                 "agency id"));
 
         verify(mockRoute, times(1)).getRouteId();
@@ -148,7 +148,7 @@ class ValidateRouteAgencyIdTest {
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockDataRepo, times(1)).getAgencyById(ArgumentMatchers.eq("non existing "+
+        verify(mockDataRepo, times(1)).getAgencyById(ArgumentMatchers.eq("non existing " +
                 "agency id"));
 
         verify(mockRoute, times(1)).getRouteId();

@@ -26,7 +26,7 @@ public class AgencyIdNotFoundNotice extends ErrorNotice {
         super(filename,
                 E_035,
                 "GTFS `agency_id` does not exist in GTFS data",
-                "Field: `"+ fieldName + "` for entity from file : `"+ filename + "` with id: `" + entityId+
+                "Field: `" + fieldName + "` for entity from file : `" + filename + "` with id: `" + entityId +
                         "` does not refer to any record from `agency.txt`",
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
