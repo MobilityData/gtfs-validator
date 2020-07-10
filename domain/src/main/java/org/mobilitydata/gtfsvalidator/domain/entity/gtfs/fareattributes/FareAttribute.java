@@ -61,12 +61,12 @@ public class FareAttribute extends GtfsEntity {
      * @param transferDuration length of time in seconds before a transfer expires
      */
     private FareAttribute(@NotNull final String fareId,
-                         @NotNull final Float price,
-                         @NotNull final String currencyType,
-                         @NotNull final PaymentMethod paymentMethod,
-                         @NotNull final Transfers transfers,
-                         @Nullable final String agencyId,
-                         @Nullable final Integer transferDuration) {
+                          @NotNull final Float price,
+                          @NotNull final String currencyType,
+                          @NotNull final PaymentMethod paymentMethod,
+                          @NotNull final Transfers transfers,
+                          @Nullable final String agencyId,
+                          @Nullable final Integer transferDuration) {
         this.fareId = fareId;
         this.price = price;
         this.currencyType = currencyType;
@@ -269,6 +269,7 @@ public class FareAttribute extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public FareAttributeBuilder clear() {

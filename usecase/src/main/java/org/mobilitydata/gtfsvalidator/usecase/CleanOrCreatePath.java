@@ -35,7 +35,6 @@ public class CleanOrCreatePath {
     private final ExecParamRepository execParamRepo;
 
     /**
-     * @param toCleanOrCreate an path specifying the target location
      * @param execParamRepo a repository containing execution parameters
      */
     public CleanOrCreatePath(final ExecParamRepository execParamRepo) {

@@ -292,7 +292,7 @@ public class Route extends GtfsEntity {
                 }
                 if (agencyId.isBlank()) {
                     noticeCollection.add(
-                            new InvalidAgencyIdNotice( "routes.txt", "agency_id", routeId));
+                            new InvalidAgencyIdNotice("routes.txt", "agency_id", routeId));
                 }
                 return new EntityBuildResult(noticeCollection);
             } else {
@@ -303,6 +303,7 @@ public class Route extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public RouteBuilder clear() {
