@@ -158,13 +158,4 @@ public class CalendarDate extends GtfsEntity {
             return this;
         }
     }
-
-    /**
-     * Returns a composite key for this {@link CalendarDate}
-     *
-     * @return a composite key for this {@link CalendarDate}
-     */
-    public String getCalendarDateMappingKey() {
-        return getServiceId() + getDate().toString();
-    }
 }
