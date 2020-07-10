@@ -19,14 +19,18 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.usecase.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * This holds information about a GTFS specification and provides methods to execute the validation process.
+ */
 public interface GtfsSpecRepository {
-
     List<String> getRequiredFilenameList();
 
     List<String> getOptionalFilenameList();
@@ -35,21 +39,27 @@ public interface GtfsSpecRepository {
 
     List<String> getOptionalHeadersForFile(final RawFileInfo fileInfo);
 
-    RawEntityParser getParserForFile(RawFileInfo file);
+    RawEntityParser getParserForFile(final RawFileInfo file);
 
-    ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file);
+    ParsedEntityTypeValidator getValidatorForFile(final RawFileInfo file);
+
+    RelationshipDescriptor getGtfsRelationshipDescriptor();
 
     interface RawEntityParser {
-        Collection<ErrorNotice> validateNumericTypes(RawEntity toValidate);
+        Collection<ErrorNotice> validateNonStringTypes(final RawEntity toValidate);
 
-        ParsedEntity parse(RawEntity toParse);
+        ParsedEntity parse(final RawEntity toParse);
     }
 
     interface ParsedEntityTypeValidator {
-        //TODO: explore if more abstractions should be introduced
-        //ie: abstract schema definition through domain entities (column, field)
-        //have use case inspect abstracted schema and call validateColor, validateLatitude, validateUrl, ...
-        //on GtfsTypeValidator interface
-        Collection<Notice> validate(ParsedEntity toValidate);
+        // TODO: explore if more abstractions should be introduced
+        // ie: abstract schema definition through domain entities (column, field)
+        // have use case inspect abstracted schema and call validateColor, validateLatitude, validateUrl, ...
+        // on GtfsTypeValidator interface
+        Collection<Notice> validate(final ParsedEntity toValidate);
+    }
+
+    interface RelationshipDescriptorParser {
+        RelationshipDescriptor parse(final String gtfsSchemaAsString) throws IOException;
     }
 }

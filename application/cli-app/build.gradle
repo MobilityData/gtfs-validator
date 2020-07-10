@@ -13,13 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.gradle.internal.logging.text.StyledTextOutputFactory
+import org.gradle.internal.logging.text.StyledTextOutput
 
 plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java'
 }
 
 group 'org.mobilitydata'
-version '1.0.0-SNAPSHOT'
+version '1.2.1-SNAPSHOT'
+
+jar {
+    // Add the manifest within the JAR, using gtfs-validator as the title
+    manifest {
+        attributes('Implementation-Title': rootProject.name,
+                'Implementation-Version': project.version,
+                'Main-Class': 'org.mobilitydata.gtfsvalidator.Main',
+                'Multi-Release': 'true')
+    }
+}
+
+shadowJar {
+    minimize {
+        exclude(dependency('org.apache.logging.log4j:log4j-core'))
+        exclude(dependency('com.fasterxml.jackson.core:jackson-databind'))
+    }
+    // Change the JAR name from cli-app to gtfs-validator
+    archiveBaseName = rootProject.name
+    // Remove "-all" from the end of the JAR file name
+    archiveClassifier = null
+    // Add "v" to version to match previous releases
+    archiveVersion = "v" + project.version
+}
 
 sourceCompatibility = JavaVersion.VERSION_11
 
@@ -38,4 +64,10 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.12.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.12.1'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// Print success message with location of compiled JAR with dependencies
+def out = services.get(StyledTextOutputFactory).create("output")
+tasks.shadowJar.doLast {
+    out.style(StyledTextOutput.Style.SuccessHeader).println "Successfully built the gtfs-validator command-line app: " + archivePath
 }

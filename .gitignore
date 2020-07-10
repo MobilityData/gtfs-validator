@@ -3,6 +3,9 @@
 
 target/
 out/
+output/
+input/
+input.zip
 **/target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -24,3 +27,5 @@ build/
 
 ### Gradle Patch ###
 **/build/
+
+execution-parameters.json

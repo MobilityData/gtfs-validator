@@ -16,40 +16,81 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
-import com.google.common.io.Resources;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.TextFormat;
-import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsSpecificationProto;
+import org.apache.commons.validator.routines.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.relationship_descriptor.RelationshipDescriptor;
 import org.mobilitydata.gtfsvalidator.parser.GtfsEntityParser;
+import org.mobilitydata.gtfsvalidator.parser.GtfsRelationshipParser;
+import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
+import org.mobilitydata.gtfsvalidator.validator.Bcp47Validator;
 import org.mobilitydata.gtfsvalidator.validator.GtfsTypeValidator;
+import org.moblitydata.gtfsvalidator.tree.GtfsNodeMaker;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This holds information about the GTFS specification from a {@link GtfsSpecificationProto.CsvSpecProtos}. Provides
+ * methods to get information about what is defined in the official specification.
+ * This is created  when creating a new default configuration.
+ */
 public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
 
     private final GtfsSpecificationProto.CsvSpecProtos inMemoryGTFSSpec;
     private final Map<String, ParsedEntityTypeValidator> validatorByFilenameCache = new HashMap<>();
+    private final RelationshipDescriptor inMemoryGtfsRelationshipDescriptor;
 
-    public InMemoryGtfsSpecRepository(final String specResourceName) throws IOException {
-        //noinspection UnstableApiUsage
-        inMemoryGTFSSpec = TextFormat.parse(Resources.toString(Resources.getResource(specResourceName), StandardCharsets.UTF_8),
-                GtfsSpecificationProto.CsvSpecProtos.class);
+    private static final String[] VALID_URL_SCHEMES = {"http", "https"};
+    private static final String VALID_COLOR_REGEX_PATTERN = "[0-9a-fA-F]{6}";
+    private static final String VALID_TIME_REGEXP_PATTERN = "([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]";
+
+    /**
+     * @param specProtobufString the string representation of the GTFS protobuf
+     * @param gtfsSchemaAsString the string representation of the GTFS file dependency
+     */
+    public InMemoryGtfsSpecRepository(final String specProtobufString, final String gtfsSchemaAsString) {
+        GtfsSpecificationProto.CsvSpecProtos GtfsSpec;
+        try {
+            GtfsSpec = TextFormat.parse(specProtobufString, GtfsSpecificationProto.CsvSpecProtos.class);
+        } catch (IOException e) {
+            GtfsSpec = null;
+            e.printStackTrace();
+        }
+        RelationshipDescriptor relationshipDescriptor;
+        try {
+            relationshipDescriptor = new GtfsRelationshipParser(new ObjectMapper().readerFor(GtfsNodeMaker.class))
+                    .parse(gtfsSchemaAsString);
+        } catch (IOException e) {
+            relationshipDescriptor = null;
+            e.printStackTrace();
+        }
+        inMemoryGTFSSpec = GtfsSpec;
+        inMemoryGtfsRelationshipDescriptor = relationshipDescriptor;
     }
 
+    /**
+     * Returns the list of the files marked as required in the GTFS schema
+     *
+     * @return the list of the files marked as required in the GTFS schema
+     */
     @Override
     public List<String> getRequiredFilenameList() {
         return inMemoryGTFSSpec.getCsvspecList().stream()
-                .filter(GtfsSpecificationProto.CsvSpecProto::getRequired).map(GtfsSpecificationProto.CsvSpecProto::getFilename)
+                .filter(GtfsSpecificationProto.CsvSpecProto::getRequired)
+                .map(GtfsSpecificationProto.CsvSpecProto::getFilename)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns the list of the files marked as optional in the GTFS schema
+     *
+     * @return the list of the files marked as optional in the GTFS schema
+     */
     @Override
     public List<String> getOptionalFilenameList() {
         return inMemoryGTFSSpec.getCsvspecList().stream()
@@ -58,6 +99,12 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns the list of the headers marked as required for a given file
+     *
+     * @param fileInfo information about the file to process: location and expected content
+     * @return the list of the headers marked as required for file to analyze
+     */
     @Override
     public List<String> getRequiredHeadersForFile(RawFileInfo fileInfo) {
         GtfsSpecificationProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
@@ -72,6 +119,12 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
         }
     }
 
+    /**
+     * Returns the list of the headers marked as optional for a given GTFS CSV file
+     *
+     * @param fileInfo information about the file to process: location and expected content
+     * @return the list of the headers marked as optional for file associated to {@code fileInfo}
+     */
     @Override
     public List<String> getOptionalHeadersForFile(RawFileInfo fileInfo) {
         GtfsSpecificationProto.CsvSpecProto specForFile = getSpecForFile(fileInfo);
@@ -86,6 +139,12 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
         }
     }
 
+    /**
+     * Returns the schema for a given GTFS CSV file
+     *
+     * @param fileInfo information about the file to process: location and expected content
+     * @return the schema corresponding to the file associated to {@param fileInfo}
+     */
     private GtfsSpecificationProto.CsvSpecProto getSpecForFile(RawFileInfo fileInfo) {
         return inMemoryGTFSSpec.getCsvspecList().stream()
                 .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
@@ -93,30 +152,60 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                 .orElse(null);
     }
 
-
+    /**
+     * Returns the parser for raw data associated to a given GTFS CSV file
+     *
+     * @param file information about the file to process: location and expected content
+     * @return the parser for raw data associated to the file associated to {@code file}
+     */
     @Override
     public RawEntityParser getParserForFile(RawFileInfo file) {
         return new GtfsEntityParser(
-                inMemoryGTFSSpec.getCsvspecList().stream()
+                Objects.requireNonNull(inMemoryGTFSSpec.getCsvspecList().stream()
                         .filter(spec -> file.getFilename().equals(spec.getFilename()))
                         .findAny()
-                        .orElse(null),
-                file);
+                        .orElse(null)),
+                file,
+                FloatValidator.getInstance(),
+                IntegerValidator.getInstance(),
+                DateValidator.getInstance());
     }
 
+    /**
+     * Returns the type validator associated to a given GTFS CSV file
+     *
+     * @param file information about the file to process: location and expected content
+     * @return the type validator associated to file associated to {@code file}
+     */
     @Override
     public ParsedEntityTypeValidator getValidatorForFile(RawFileInfo file) {
         ParsedEntityTypeValidator toReturn = validatorByFilenameCache.get(file.getFilename());
 
         if (toReturn == null) {
             toReturn = new GtfsTypeValidator(
-                    inMemoryGTFSSpec.getCsvspecList().stream()
+                    Objects.requireNonNull(inMemoryGTFSSpec.getCsvspecList().stream()
                             .filter(spec -> file.getFilename().equals(spec.getFilename()))
                             .findAny()
-                            .orElse(null));
+                            .orElse(null)),
+                    FloatValidator.getInstance(),
+                    IntegerValidator.getInstance(),
+                    new UrlValidator(VALID_URL_SCHEMES),
+                    new Bcp47Validator(),
+                    EmailValidator.getInstance(),
+                    new RegexValidator(VALID_COLOR_REGEX_PATTERN),
+                    new RegexValidator(VALID_TIME_REGEXP_PATTERN),
+                    // Uses IANA timezone database shipped with JDK
+                    // to update without updating JDK see
+                    // https://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html
+                    ZoneId.getAvailableZoneIds());
             validatorByFilenameCache.put(file.getFilename(), toReturn);
         }
 
         return toReturn;
+    }
+
+    @Override
+    public RelationshipDescriptor getGtfsRelationshipDescriptor() {
+        return inMemoryGtfsRelationshipDescriptor;
     }
 }

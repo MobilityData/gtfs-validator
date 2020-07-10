@@ -1,4 +1,6 @@
-# Copyright (C) 2019 Google Inc.
+#
+# Original work Copyright (C) 2019 Google Inc.
+# Modified work Copyright (c) 2020. MobilityData IO.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,6 +24,7 @@
 # For each column, it defines the data type to represent it after reading
 # (by default, a string), its permissible values (by default, any),
 # and its optional nullvalue regexp (if not given, there are no null values).
+#
 
 ###############################################################################
 ## FEED_INFO
@@ -31,7 +34,7 @@ csvspec: {
   name: "feed_info"
   filename: "feed_info.txt"
   required: false
-  # This file contains one row with values about this feed as a whole.
+  # Dataset metadata, including publisher, version, and expiration information.
 
   column: {
     field_number: 2
@@ -52,7 +55,7 @@ csvspec: {
     name: "feed_lang"
     required: true
     value_required: true
-    # The language code for an agency's primary language, or empty.
+    # The language code for an agency's primary language.
     # This is the preferred alternative to the older agency_lang common to
     # all agencies; see there for history and further details.
   }
@@ -61,7 +64,7 @@ csvspec: {
     field_number: 5
     name: "feed_start_date"
     required: false
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
     # The first date for which the service described in this feed
     # is complete and authoritative.
   }
@@ -70,7 +73,7 @@ csvspec: {
     field_number: 6
     name: "feed_end_date"
     required: false
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
     # The last date for which the service described in this feed
     # is complete and authoritative.
   }
@@ -82,11 +85,18 @@ csvspec: {
     # A string identifying this particular feed version.
   }
 
-  # Defines the language that should be used when the data consumer doesn’t know
-  # the language of the rider. It will often be "en" (English).
+  # Email address for communication regarding the GTFS dataset and data publishing practices.
   column: {
     field_number: 8
-    name: "default_lang"
+    name: "feed_contact_email"
+    required: false
+  }
+
+  # URL for contact information, a web-form, support desk, or other tools for communication regarding the
+  # GTFS dataset and data publishing practices.
+  column: {
+    field_number: 9
+    name: "feed_contact_url"
     required: false
   }
 }
@@ -99,7 +109,7 @@ csvspec: {
 csvspec: {
   name: "agency"
   filename: "agency.txt"
-  required: false
+  required: true
   # This file contains information about one or more transit agencies
   # that are to be displayed as operators of transit services.
 
@@ -114,7 +124,9 @@ csvspec: {
   column: {
     field_number: 3
     name: "agency_url"
-    required: false
+    required: true
+    value_required: true
+    type: { type: URL }
     # The URL to be displayed for an agency.
   }
 
@@ -122,6 +134,7 @@ csvspec: {
     field_number: 4
     name: "agency_fare_url"
     required: false
+    type: { type: URL }
     # The URL of a web page that allows a rider to learn more about
     # the agency's fare structure, and/or to purchase tickets or other
     # fare instruments online.
@@ -132,6 +145,7 @@ csvspec: {
     name: "agency_timezone"
     required: true
     value_required: true
+    type: { type: TIMEZONE }
     # The timezone used in an agency's schedules, in zoneinfo format.
     # Example: America/New_York, see http://en.wikipedia.org/wiki/Zoneinfo
     #
@@ -147,6 +161,7 @@ csvspec: {
     name: "agency_id"
     required: false
     uniquevalues: true
+    type: { type: ID }
     # A unique key into this table.
     # For feeds with a single agency, this field is optional.
   }
@@ -155,6 +170,7 @@ csvspec: {
     field_number: 7
     name: "agency_lang"
     required: false
+    type: { type: LANGUAGE_CODE }
     # The language code for an agency's primary language (e.g., "en"), or empty.
     #
     # The GTFS spec (revised 2010-01-11) wants a two-letter ISO 639-1 code here;
@@ -177,6 +193,7 @@ csvspec: {
     field_number: 8
     name: "agency_phone"
     required: false
+    type: { type: PHONE_NUMBER }
     # The phone number to be shown for an agency, formatted as customary
     # in the agency's service area and potentially including dialable text
     # in vanity numbers like "503-238-RIDE".
@@ -186,6 +203,7 @@ csvspec: {
     field_number: 10
     name: "agency_email"
     required: false
+    type: { type: EMAIL }
     # This field contains a single valid email address actively monitored by
     # the agency’s customer service department.  This email address will be
     # considered a direct contact point where transit riders can reach a
@@ -229,7 +247,7 @@ csvspec: {
   column: {
     field_number: 3
     name: "stop_name"
-    required: true
+    required: false
     # value_required: false
     # The name of a stop/station/entrance.
   }
@@ -254,10 +272,10 @@ csvspec: {
   column: {
     field_number: 5
     name: "stop_lat"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: -90.0
     floatmax: 90.0
-    required: true
+    required: false
     cache: {
       cache_numbers: true
     }
@@ -270,10 +288,10 @@ csvspec: {
   column: {
     field_number: 6
     name: "stop_lon"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: -180.0
     floatmax: 180.0
-    required: true
+    required: false
     cache: {
       cache_numbers: true
     }
@@ -306,7 +324,7 @@ csvspec: {
     field_number: 11
     name: "location_type"
     required: false
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 4
     namedvalue: {
@@ -341,10 +359,10 @@ csvspec: {
       keyname: "stop_id"
     }
     # The station to which a stop/entrance belongs.
-    # The location referenced must have location_type 1 (station).
-    # If a stop is given without parent_station, a parent station is created.
-    # If an entrance is given without a parent_station, this is an error.
-    # A station cannot belong to a parent station.
+    # Required for locations which are entrances (location_type=2), generic nodes (location_type=3) or
+    # boarding areas (location_type=4).
+    # Optional for stops/platforms (location_type=0).
+    # Forbidden for stations (location_type=1).
   }
 
   column: {
@@ -364,7 +382,7 @@ csvspec: {
     field_number: 14
     name: "wheelchair_boarding"
     required: false
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 2
     namedvalue: {
@@ -421,7 +439,7 @@ csvspec: {
 csvspec: {
   name: "routes"
   filename: "routes.txt"
-  required: false  # required unless the feed is stops only.
+  required: true  # required unless the feed is stops only.
   # This file contains information about a transit organization's routes.
 
   column: {
@@ -436,7 +454,7 @@ csvspec: {
   column: {
     field_number: 3
     name: "route_short_name"
-    required: true
+    required: false
     # The short name of a route.  This will often be a short, abstract
     # identifier like "32", "100X", or "Green" that riders use, but which
     # doesn't give any indication of what places the route serves.  This
@@ -446,7 +464,7 @@ csvspec: {
   column: {
     field_number: 4
     name: "route_long_name"
-    required: true
+    required: false
     # The full name of a route.  This name is generally more descriptive
     # than the route_short_name and will often include the route's destination
     # or stops.
@@ -467,7 +485,9 @@ csvspec: {
     required: true
     value_required: true
     matchregexp: "[0-9]|1[0-2]|[1-9][0-9]{2}|1[0-9]{3}"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
+    intmin: 0
+    intmax: 7
     # The type of vehicle running on this route.
     # The toplevel proto (CsvSpecProtos) defines constants with descriptive
     # names for the permissible values of this field (see at the bottom of this
@@ -504,7 +524,7 @@ csvspec: {
     name: "route_color"
     required: false
     matchregexp: "[0-9a-fA-F]{6}"
-    type: { type: INT_HEX }
+    type: { type: COLOR }
     # The color assigned to a route, if any, as six-place hexadecimal number.
     # The first, middle, and last two places define the red, green, and blue
     # sRGB color component, respectively, as an integer between 0 and 255.
@@ -516,7 +536,7 @@ csvspec: {
     name: "route_text_color"
     required: false
     matchregexp: "[0-9a-fA-F]{6}"
-    type: { type: INT_HEX }
+    type: { type: COLOR }
     # Color to be used for text drawn on a background of route_color,
     # as a six-place hexadecimal number.  The default is 000000 (black).
     # This field is ignored if no route_color is given.
@@ -525,9 +545,10 @@ csvspec: {
   column: {
     field_number: 13
     name: "route_sort_order"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
+    intmax: 100000
     # The route_sort_order field can be used to order the routes in a way which
     # is ideal for presentation to customers. Routes with smaller
     # route_sort_order values should be displayed before routes with larger
@@ -577,21 +598,21 @@ csvspec: {
     name: "start_date"
     required: true
     value_required: true
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
   }
   column: {
     field_number: 4
     name: "end_date"
     required: true
     value_required: true
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
   }
   column: {
     field_number: 5
     name: "monday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -600,7 +621,7 @@ csvspec: {
     name: "tuesday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -609,7 +630,7 @@ csvspec: {
     name: "wednesday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -618,7 +639,7 @@ csvspec: {
     name: "thursday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -627,7 +648,7 @@ csvspec: {
     name: "friday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -636,7 +657,7 @@ csvspec: {
     name: "saturday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -645,7 +666,7 @@ csvspec: {
     name: "sunday"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
   }
@@ -678,7 +699,7 @@ csvspec: {
     name: "date"
     required: true
     value_required: true
-    type: { type: DATE_YYYYMMDD }
+    type: { type: DATE }
     # The date to be included or excluded.
   }
 
@@ -687,7 +708,7 @@ csvspec: {
     name: "exception_type"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 1
     intmax: 2
     namedvalue: {
@@ -720,7 +741,7 @@ csvspec: {
 csvspec: {
   name: "trips"
   filename: "trips.txt"
-  required: false  # required unless the feed is stops only.
+  required: true
   # This file contains information about trips.
   # In the Transit context, the word trip means a scheduled trip
   # of a transit vehicle advertised to passengers as a contiguous journey
@@ -740,6 +761,15 @@ csvspec: {
     field_number: 2
     name: "service_id"
     required: true
+    value_required: true
+    supersetkey: {
+      csvname: "calendar"
+      keyname: "service_id"
+    }
+    supersetkey: {
+      csvname: "calendar_dates"
+      keyname: "service_id"
+    }
     cache: {
       cache_keys: true
     }
@@ -802,9 +832,9 @@ csvspec: {
     required: false
     intmin: 0
     intmax: 1
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     # An optional binary value that can be used by an agency to group
-    # trips for the same route into seperate directions of travel.
+    # trips for the same route into separate directions of travel.
   }
 
   column: {
@@ -818,7 +848,7 @@ csvspec: {
   column: {
     field_number: 12
     name: "bikes_allowed"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 2
@@ -831,7 +861,7 @@ csvspec: {
     field_number: 13
     name: "wheelchair_accessible"
     required: false
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 2
     namedvalue: {
@@ -853,18 +883,6 @@ csvspec: {
       intvalue: 2
     }
   }
-
-  column: {
-    field_number: 15
-    name: "exceptional"
-    type: { type: INT_DEC }
-    intmin: 0
-    intmax: 1
-    required: false
-  }
-  # Specifies whether this trip should be taken into account for labelling a
-  # stop.
-  # Semantics 0=not exceptional(default) 1=exceptional
 }
 
 
@@ -875,7 +893,7 @@ csvspec: {
 csvspec: {
   name: "stop_times"
   filename: "stop_times.txt"
-  required: false  # required unless the feed is stops only.
+  required: true
   # This file enumerates the stops on trips and gives arrival/departure times.
   # More precisely, the pair (trip_id, stop_sequence) is a unique key into
   # this table, and sorting all rows of a given trip_id in order of ascending
@@ -945,7 +963,9 @@ csvspec: {
     name: "stop_sequence"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
+    intmin: 0
+    intmax: 2147483647
     cache: {
       cache_numbers: true
     }
@@ -967,8 +987,9 @@ csvspec: {
   column: {
     field_number: 5
     name: "arrival_time"
-    required: true
-    type: { type: TIME_HHCMMCSS }
+    required: false
+    matchregexp: "([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]"
+    type: { type: TIME }
     cache: {
       cache_numbers: true
     }
@@ -976,8 +997,8 @@ csvspec: {
   column: {
     field_number: 6
     name: "departure_time"
-    required: true
-    type: { type: TIME_HHCMMCSS }
+    required: false
+    type: { type: TIME }
     cache: {
       cache_numbers: true
     }
@@ -996,7 +1017,7 @@ csvspec: {
   column: {
     field_number: 7
     name: "timepoint"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 1
@@ -1010,7 +1031,7 @@ csvspec: {
   column: {
     field_number: 8
     name: "drop_off_type"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 3
@@ -1018,26 +1039,10 @@ csvspec: {
   column: {
     field_number: 9
     name: "pickup_type"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 3
-  }
-  namedvalue: {
-    name: "boarding_type_always"
-    intvalue: 0
-  }
-  namedvalue: {
-    name: "boarding_type_none"
-    intvalue: 1
-  }
-  namedvalue: {
-    name: "boarding_type_must_phone"
-    intvalue: 2
-  }
-  namedvalue: {
-    name: "boarding_type_on_request"
-    intvalue: 3
   }
 
   # If a trip has a shape, it can (but need not) specify the parameter
@@ -1048,8 +1053,10 @@ csvspec: {
   column: {
     field_number: 10
     name: "shape_dist_traveled"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: false
+    floatmin: 0
+    floatmax: 2147483647
     cache: {
       cache_numbers: true
     }
@@ -1103,7 +1110,7 @@ csvspec: {
   column: {
     field_number: 2
     name: "agency_id"
-    required: false  # often required, see below
+    required: false
     supersetkey: {
       csvname: "agency"
       keyname: "agency_id"
@@ -1129,8 +1136,9 @@ csvspec: {
     name: "price"
     required: true
     value_required: true
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     floatmin: 0.0
+    floatmax:  100.0
   }
   column: {
     field_number: 5
@@ -1145,7 +1153,7 @@ csvspec: {
     name: "payment_method"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
     # When and how to pay.
@@ -1163,7 +1171,8 @@ csvspec: {
     field_number: 7
     name: "transfers"
     required: true
-    type: { type: INT_DEC }
+    value_required: true
+    type: { type: INTEGER }
     intmin: 0
     # The maximum number of transfers (excluding block transfers)
     # that are possible with this fare; unlimited if empty.
@@ -1175,9 +1184,10 @@ csvspec: {
   column: {
     field_number: 8
     name: "transfer_duration"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
+    intmax: 7200
     # The maximum duration (in seconds) for a journey with this fare,
     # including the transfer/waiting time between trips, if any.
     # The name derives from the use in fare systems that have a standard
@@ -1310,7 +1320,9 @@ csvspec: {
     name: "shape_pt_sequence"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
+    intmin: 0
+    intmax: 5500000
     # The values of shape_pt_sequence must be non-negative integers.
     # Per shape_id, the values of shape_pt_sequence must be unique.
     # This field is used to define the order of points on each shape
@@ -1320,16 +1332,19 @@ csvspec: {
   column: {
     field_number: 4
     name: "shape_dist_traveled"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
     required: false
-    # Optionally, the "userdist" parameter value of this vertex (see above).
+    floatmin: 0
+    floatmax: 2147483647
   }
   column: {
     field_number: 5
     name: "shape_pt_lat"
     required: true
     value_required: true
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
+    floatmin: -90.0
+    floatmax: 90.0
     # WGS 84 latitude of this vertex.
   }
   column: {
@@ -1337,7 +1352,9 @@ csvspec: {
     name: "shape_pt_lon"
     required: true
     value_required: true
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
+    floatmin: -180.0
+    floatmax: 180.0
     # WGS 84 longitude of this vertex.
   }
 }
@@ -1374,7 +1391,7 @@ csvspec: {
     name: "start_time"
     required: true
     value_required: true
-    type: { type: TIME_HHCMMCSS }
+    type: { type: TIME }
     # Start of time interval (included).
   }
   column: {
@@ -1382,7 +1399,7 @@ csvspec: {
     name: "end_time"
     required: true
     value_required: true
-    type: { type: TIME_HHCMMCSS }
+    type: { type: TIME }
     # End of time interval (excluded, unless start_time = end_time).
   }
 
@@ -1391,14 +1408,16 @@ csvspec: {
     name: "headway_secs"
     required: true
     value_required: true
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
+    intmin: 0
+    intmax: 3600
     # The distance in time between two successive trips.
   }
 
   column: {
     field_number: 6
     name: "exact_times"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
     intmin: 0
     intmax: 1
@@ -1418,27 +1437,12 @@ csvspec: {
   required: false
   # This file contains translations for text and URLs presented to the user.
 
-  # Each row in this table means:
-  # In language "lang", the phrase "trans_id" translates to "translation".
-  column: {
-    field_number: 2
-    name: "trans_id"
-    required: false
-  }
-
   # Translated value.
   column: {
     field_number: 3
     name: "translation"
     required: true
     value_required: true
-  }
-
-  # Must not be empty or "und" (the undefined language).
-  column: {
-    field_number: 4
-    name: "lang"
-    required: false
   }
 
   # Defines the table that contains the field to be translated. Allowed values
@@ -1449,7 +1453,8 @@ csvspec: {
   column: {
     field_number: 5
     name: "table_name"
-    required: false
+    required: true
+    value_required: true
   }
 
   # Name of the field to be translated. Fields with type Text can be translated,
@@ -1470,7 +1475,8 @@ csvspec: {
   column: {
     field_number: 7
     name: "language"
-    required: false
+    required: true
+    value_required: true
   }
 
   # Defines the record that corresponds to the field to be translated. The value
@@ -1540,59 +1546,13 @@ csvspec: {
     }
     # The destination location of the transfer.
   }
-  column: {
-    field_number: 4
-    name: "from_route_id"
-    required: false
-    supersetkey: {
-      csvname: "routes"
-      keyname: "route_id"
-    }
-    # If non-null, this transfer applies only to trips of this route
-    # at the source.
-    # Currently (2011-07-14), this field is not part of the public GTFS spec.
-  }
-  column: {
-    field_number: 5
-    name: "to_route_id"
-    required: false
-    supersetkey: {
-      csvname: "routes"
-      keyname: "route_id"
-    }
-    # If non-null, this transfer applies only to trips of this route
-    # at the destination.
-    # Currently (2011-07-14), this field is not part of the public GTFS spec.
-  }
-  column: {
-    field_number: 6
-    name: "from_trip_id"
-    required: false
-    supersetkey: {
-      csvname: "trips"
-      keyname: "trip_id"
-    }
-    # If non-null, this transfer applies only to the specified trip at the
-    # source.
-    # Currently (2011-07-14), this field is not part of the public GTFS spec.
-  }
-  column: {
-    field_number: 7
-    name: "to_trip_id"
-    required: false
-    supersetkey: {
-      csvname: "trips"
-      keyname: "trip_id"
-    }
-    # If non-null, this transfer applies only to the specified trip at the
-    # destination.
-    # Currently (2011-07-14), this field is not part of the public GTFS spec.
-  }
+
   column: {
     field_number: 8
     name: "transfer_type"
     required: true
-    type: { type: INT_DEC }
+    value_required: true
+    type: { type: INTEGER }
     intmin: 0
     intmax: 3
     # NOTE: By the public GTFS spec, the column is required,
@@ -1626,8 +1586,10 @@ csvspec: {
   column: {
     field_number: 9
     name: "min_transfer_time"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
+    intmin: 0
+    intmax: 900
     # A transfer is possible if times between the stops is at least this many
     # seconds.  This field must be set for transfer_type=2 and empty for
     # all other values of transfer_type.
@@ -1639,11 +1601,6 @@ csvspec: {
     name: "from_to_stop_id"
     columnname: "from_stop_id"
     columnname: "to_stop_id"
-  }
-  key: {
-    name: "from_to_route_id"
-    columnname: "from_route_id"
-    columnname: "to_route_id"
   }
 }
 
@@ -1672,14 +1629,10 @@ csvspec: {
     field_number: 9
     name: "pathway_mode"
     required: false
-    type: { type: INT_DEC }
-    intmin: 0
+    type: { type: INTEGER }
+    intmin: 1
     intmax: 7
     # The mode of pathway.
-    namedvalue: {
-      name: "unknown"
-      intvalue: 0
-    }
     namedvalue: {
       name: "walkway"
       intvalue: 1
@@ -1738,8 +1691,9 @@ csvspec: {
   column: {
     field_number: 15
     name: "is_bidirectional"
-    required: false
-    type: { type: INT_DEC }
+    required: true
+    value_required: true
+    type: { type: INTEGER }
     intmin: 0
     intmax: 1
     namedvalue: {
@@ -1761,7 +1715,9 @@ csvspec: {
   column: {
     field_number: 17
     name: "length"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
+    floatmin: 0
+    floatmax: 500
     required: false
   }
 
@@ -1769,8 +1725,10 @@ csvspec: {
   column: {
     field_number: 5
     name: "traversal_time"
-    type: { type: INT_DEC }
+    type: { type: INTEGER }
     required: false
+    intmin: 0
+    intmax: 500
     namedvalue: {
       # Impossible.
       name: "disallowed"
@@ -1789,7 +1747,9 @@ csvspec: {
   column: {
     field_number: 11
     name: "stair_count"
-    type: { type: INT_DEC }
+    intmin: -500
+    intmax: 500
+    type: { type: INTEGER }
     required: false
   }
 
@@ -1804,7 +1764,9 @@ csvspec: {
   column: {
     field_number: 10
     name: "max_slope"
-    type: { type: FLOAT_STD }
+    floatmin: -28.0
+    floatmax: 28.0
+    type: { type: FLOAT }
     required: false
   }
 
@@ -1814,7 +1776,9 @@ csvspec: {
   column: {
     field_number: 19
     name: "min_width"
-    type: { type: FLOAT_STD }
+    intmin: 0
+    intmax: 15
+    type: { type: FLOAT }
     required: false
   }
 
@@ -1863,7 +1827,9 @@ csvspec: {
   column: {
     field_number: 3
     name: "level_index"
-    type: { type: FLOAT_STD }
+    type: { type: FLOAT }
+    floatmin: -10.0
+    floatmax: 10.0
     required: true
     value_required: true
   }
@@ -1877,6 +1843,150 @@ csvspec: {
     required: false
   }
 }
+
+
+###############################################################################
+## ATTRIBUTIONS
+###############################################################################
+
+# The file defines the attributions applied to the dataset.
+
+csvspec: {
+  name: "attributions"
+  filename: "attributions.txt"
+  required: false
+
+  # Identifies an attribution for the dataset or a subset of it.
+  column: {
+    field_number: 2
+    name: "attribution_id"
+    required: false
+  }
+
+  # Agency to which the attribution applies.
+  column: {
+    field_number: 3
+    name: "agency_id"
+    required: false
+    supersetkey: {
+      csvname: "agency"
+      keyname: "agency_id"
+    }
+  }
+
+  # Functions in the same way as agency_id except the attribution applies to a route. Multiple attributions
+  # can apply to the same route.
+  column: {
+    field_number: 4
+    name: "route_id"
+    required: false
+    supersetkey: {
+      csvname: "route"
+      keyname: "route_id"
+    }
+  }
+
+  # Functions in the same way as agency_id except the attribution applies to a route. Multiple attributions
+  # can apply to the same route.
+  column: {
+    field_number: 5
+    name: "trip_id"
+    required: false
+    supersetkey: {
+      csvname: "trip"
+      keyname: "trip_id"
+    }
+  }
+
+  # Name of the organization that the dataset is attributed to.
+  column: {
+    field_number: 6
+    name: "organization_name"
+    required: true
+    value_required: true
+  }
+
+  # The role of the organization
+  column: {
+    field_number: 7
+    name: "is_producer"
+    required: false
+    type: { type: INTEGER }
+    intmin: 0
+    intmax: 1
+    namedvalue: {
+      # Impossible.
+      name: "has_this_role"
+      intvalue: 0
+    }
+    namedvalue: {
+      # Unknown.
+      name: "does_not_have_this_role"
+      intvalue: 1
+    }
+  }
+
+  # The role of the organization
+  column: {
+    field_number: 8
+    name: "is_authority"
+    required: false
+    type: { type: INTEGER }
+    intmin: 0
+    intmax: 1
+    namedvalue: {
+      # Impossible.
+      name: "has_this_role"
+      intvalue: 0
+    }
+    namedvalue: {
+      # Unknown.
+      name: "does_not_have_this_role"
+      intvalue: 1
+    }
+  }
+  # The role of the organization
+  column: {
+    field_number: 9
+    name: "is_operator"
+    required: false
+    type: { type: INTEGER }
+    intmin: 0
+    intmax: 1
+    namedvalue: {
+      # Impossible.
+      name: "has_this_role"
+      intvalue: 0
+    }
+    namedvalue: {
+      # Unknown.
+      name: "does_not_have_this_role"
+      intvalue: 1
+    }
+  }
+
+  # URL of the organization.
+  column: {
+    field_number: 10
+    name: "attribution_url"
+    required: false
+  }
+
+  # Email of the organization.
+  column: {
+    field_number: 11
+    name: "attribution_email"
+    required: false
+  }
+
+  # Phone number of the organization.
+  column: {
+    field_number: 12
+    name: "attribution_phone"
+    required: false
+  }
+}
+
 
 ###############################################################################
 ## Non-table-specific information

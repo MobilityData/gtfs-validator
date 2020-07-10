@@ -16,16 +16,29 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
+/**
+ * Contains information regarding a file location and expected content (file name)
+ */
 public class RawFileInfo {
 
     private final String filename;
     private final String path;
 
+    /**
+     * @param filename the name of the file
+     * @param path     a relative path to access a file
+     */
     private RawFileInfo(final String filename, final String path) {
         this.filename = filename;
         this.path = path;
     }
 
+    /**
+     * Returns a builder for this. This can be built either from the filename or from
+     * the path.
+     *
+     * @return a builder for this
+     */
     public static RawFileInfoBuilder builder() {
         return new RawFileInfoBuilder();
     }
@@ -47,6 +60,11 @@ public class RawFileInfo {
             return this;
         }
 
+        /**
+         * Build and return a new instance
+         *
+         * @return a new instance
+         */
         public RawFileInfo build() {
             return new RawFileInfo(filename, path);
         }
