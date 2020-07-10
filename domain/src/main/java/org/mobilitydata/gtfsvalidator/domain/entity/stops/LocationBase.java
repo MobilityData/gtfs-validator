@@ -18,11 +18,16 @@ package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class for all entities defined in stops.txt
  */
-public abstract class LocationBase {
+public abstract class LocationBase extends GtfsEntity {
 
     @NotNull
     public String getStopId() {
@@ -103,14 +108,35 @@ public abstract class LocationBase {
         protected String zoneId;
         protected String stopUrl;
         protected String stopTimezone;
+        protected final List<Notice> noticeCollection = new ArrayList<>();
+
+        public LocationBaseBuilder stopId(@NotNull final String stopId) {
+            this.stopId = stopId;
+            return this;
+        }
 
         public LocationBaseBuilder stopCode(@Nullable String code) {
             this.stopCode = code;
             return this;
         }
 
+        public LocationBaseBuilder stopName(@NotNull final String stopName) {
+            this.stopName = stopName;
+            return this;
+        }
+
         public LocationBaseBuilder stopDesc(@Nullable String description) {
             this.stopDesc = description;
+            return this;
+        }
+
+        public LocationBaseBuilder stopLat(@NotNull final Float stopLat) {
+            this.stopLat = stopLat;
+            return this;
+        }
+
+        public LocationBaseBuilder stopLon(@NotNull final Float stopLon) {
+            this.stopLon = stopLon;
             return this;
         }
 
@@ -127,6 +153,19 @@ public abstract class LocationBase {
         public LocationBaseBuilder stopTimezone(@Nullable String timezone) {
             this.stopTimezone = timezone;
             return this;
+        }
+
+        protected void clearBase() {
+            stopId = null;
+            stopCode = null;
+            stopName = null;
+            stopDesc = null;
+            stopLat = null;
+            stopLon = null;
+            zoneId = null;
+            stopUrl = null;
+            stopTimezone = null;
+            noticeCollection.clear();
         }
     }
 }

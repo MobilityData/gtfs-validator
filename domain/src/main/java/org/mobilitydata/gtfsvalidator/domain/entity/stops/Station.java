@@ -31,7 +31,7 @@ public class Station extends LocationBase {
     }
 
     public void setWheelchairBoarding(WheelchairBoarding toSet) {
-        this.wheelchairBoarding = Objects.requireNonNullElse(toSet, WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING);
+        this.wheelchairBoarding = Objects.requireNonNullElse(toSet, WheelchairBoarding.INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING);
     }
 
     public String getLevelId() {
@@ -59,7 +59,7 @@ public class Station extends LocationBase {
 
     public static class StationBuilder extends LocationBaseBuilder {
 
-        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
+        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING;
         private String levelId;
 
         public StationBuilder(@NotNull String stopId,
@@ -73,7 +73,7 @@ public class Station extends LocationBase {
         }
 
         public StationBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
-            this.wheelchairBoarding = Objects.requireNonNullElse(wheelchairBoarding, WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING);
+            this.wheelchairBoarding = Objects.requireNonNullElse(wheelchairBoarding, WheelchairBoarding.INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING);
             return this;
         }
 

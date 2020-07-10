@@ -17,11 +17,14 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 /*
@@ -60,18 +63,21 @@ public class ProcessParsedStop {
     }
 
     private final GtfsSpecRepository specRepo;
-    private final ValidationResultRepository resultRepo;
+    private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsRepo;
+    private final Entrance.EntranceBuilder entranceBuilder;
 
     public ProcessParsedStop(final GtfsSpecRepository specRepo,
                              final ValidationResultRepository resultRepo,
-                             final GtfsDataRepository gtfsRepo) {
+                             final GtfsDataRepository gtfsRepo,
+                             final Entrance.EntranceBuilder entranceBuilder) {
         this.specRepo = specRepo;
-        this.resultRepo = resultRepo;
+        this.resultRepository = resultRepo;
         this.gtfsRepo = gtfsRepo;
+        this.entranceBuilder = entranceBuilder;
     }
 
-    public void execute(final ParsedEntity validatedStopEntity) {
+    public LocationBase execute(final ParsedEntity validatedStopEntity) {
 
         Integer locationType = (Integer) validatedStopEntity.get("location_type");
         String stopId = validatedStopEntity.getEntityId();
@@ -87,6 +93,8 @@ public class ProcessParsedStop {
         Integer wheelchairBoarding = (Integer) validatedStopEntity.get("wheelchair_boarding");
         String levelId = (String) validatedStopEntity.get("level_id");
         String platformCode = (String) validatedStopEntity.get("platform_code");
+
+        LocationBase toReturn = null;
 
         switch (LocationType.fromInt(locationType)) {
             case STOP_OR_PLATFORM: {
@@ -122,16 +130,29 @@ public class ProcessParsedStop {
                 break;
             }
             case ENTRANCE: {
-                Entrance.EntranceBuilder builder = new Entrance.EntranceBuilder(
-                        stopId, stopName, stopLat, stopLon, parentStation);
-
-                builder.wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
+                entranceBuilder.clear()
+                        .parentStation(parentStation)
+                        .wheelchairBoarding(wheelchairBoarding)
+                        .stopId(stopId)
+                        .stopName(stopName)
+                        .stopLat(stopLat)
+                        .stopLon(stopLon)
                         .stopCode(stopCode)
                         .stopDesc(stopDesc)
                         .zoneId(zoneId)
                         .stopUrl(stopUrl)
                         .stopTimezone(stopTimezone);
-                //TODO: ready to be built and added to gtfsDataRepo
+
+                final EntityBuildResult<?> unfinalizedStop = entranceBuilder.build();
+
+                if (!unfinalizedStop.isSuccess()) {
+                    // at this step it is certain that calling getData method will return a list of notices, therefore there is
+                    // no need for cast check
+                    //noinspection unchecked
+                    ((List<Notice>) unfinalizedStop.getData()).forEach(resultRepository::addNotice);
+                } else {
+                    toReturn = (LocationBase) unfinalizedStop.getData();
+                }
                 //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
                 break;
             }
@@ -168,5 +189,7 @@ public class ProcessParsedStop {
                 break;
             }
         }
+
+        return toReturn;
     }
 }

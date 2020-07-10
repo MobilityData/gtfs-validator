@@ -35,7 +35,7 @@ public class StopOrPlatform extends LocationBase {
     }
 
     public void setWheelchairBoarding(WheelchairBoarding toSet) {
-        this.wheelchairBoarding = Objects.requireNonNullElse(toSet, WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING);
+        this.wheelchairBoarding = Objects.requireNonNullElse(toSet, WheelchairBoarding.INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING);
     }
 
     public String getPlatformCode() {
@@ -67,7 +67,7 @@ public class StopOrPlatform extends LocationBase {
     public static class StopOrPlatformBuilder extends LocationBaseBuilder {
 
         private String parentStation;
-        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
+        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING;
         private String platformCode;
 
         public StopOrPlatformBuilder(@NotNull String stopId,
@@ -86,7 +86,7 @@ public class StopOrPlatform extends LocationBase {
         }
 
         public StopOrPlatformBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
-            this.wheelchairBoarding = Objects.requireNonNullElse(wheelchairBoarding, WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING);
+            this.wheelchairBoarding = Objects.requireNonNullElse(wheelchairBoarding, WheelchairBoarding.INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING);
             return this;
         }
 
