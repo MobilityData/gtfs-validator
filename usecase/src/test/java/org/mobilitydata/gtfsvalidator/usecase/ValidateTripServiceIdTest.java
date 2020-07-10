@@ -26,7 +26,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
@@ -45,8 +47,12 @@ class ValidateTripServiceIdTest {
         when(mockTrip.getServiceId()).thenReturn("service id");
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
 
-        final Collection<Calendar> mockCalendarCollection = new ArrayList<>(List.of(mockCalendar));
-        final Collection<Trip> mockTripCollection = new ArrayList<>(List.of(mockTrip));
+        final Map<String, Calendar> mockCalendarCollection = new HashMap<>();
+        mockCalendarCollection.put("service id", mockCalendar);
+
+        final Map<String, Trip> mockTripCollection = new HashMap<>();
+        mockTripCollection.put("trip id", mockTrip);
+
         final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
         final Map<String, CalendarDate> innerMap = new HashMap<>();
         innerMap.put("date", mockCalendarDate);
@@ -72,7 +78,6 @@ class ValidateTripServiceIdTest {
         verify(mockDataRepo, times(1)).getTripAll();
 
         verify(mockTrip, times(1)).getServiceId();
-        verify(mockCalendar, times(1)).getServiceId();
 
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockCalendar, mockCalendarDate, mockTrip, mockDataRepo, mockLogger);
@@ -88,8 +93,12 @@ class ValidateTripServiceIdTest {
         when(mockTrip.getServiceId()).thenReturn("service id");
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
 
-        final Collection<Calendar> mockCalendarCollection = new ArrayList<>(List.of(mockCalendar));
-        final Collection<Trip> mockTripCollection = new ArrayList<>(List.of(mockTrip));
+        final Map<String, Calendar> mockCalendarCollection = new HashMap<>();
+        mockCalendarCollection.put("other service id", mockCalendar);
+
+        final Map<String, Trip> mockTripCollection = new HashMap<>();
+        mockTripCollection.put("trip id", mockTrip);
+
         final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
         final Map<String, CalendarDate> innerMap = new HashMap<>();
         innerMap.put("date", mockCalendarDate);
@@ -115,7 +124,6 @@ class ValidateTripServiceIdTest {
         verify(mockDataRepo, times(1)).getTripAll();
 
         verify(mockTrip, times(1)).getServiceId();
-        verify(mockCalendar, times(1)).getServiceId();
 
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockCalendar, mockCalendarDate, mockTrip, mockDataRepo, mockLogger);
@@ -131,10 +139,14 @@ class ValidateTripServiceIdTest {
         when(mockTrip.getServiceId()).thenReturn("service id");
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
 
-        final Collection<Calendar> mockCalendarCollection = new ArrayList<>(List.of(mockCalendar));
+        final Map<String, Calendar> mockCalendarCollection = new HashMap<>();
+        mockCalendarCollection.put("service id", mockCalendar);
+
         final Map<String, CalendarDate> innerMap = new HashMap<>();
         innerMap.put("date", mockCalendarDate);
-        final Collection<Trip> mockTripCollection = new ArrayList<>(List.of(mockTrip));
+        final Map<String, Trip> mockTripCollection = new HashMap<>();
+        mockTripCollection.put("trip id", mockTrip);
+
         final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
         mockCalendarDateCollection.put("service id", innerMap);
 
@@ -159,7 +171,6 @@ class ValidateTripServiceIdTest {
         verify(mockDataRepo, times(1)).getTripAll();
 
         verify(mockTrip, times(1)).getServiceId();
-        verify(mockCalendar, times(1)).getServiceId();
 
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockCalendar, mockCalendarDate, mockTrip, mockDataRepo, mockLogger);
@@ -172,12 +183,14 @@ class ValidateTripServiceIdTest {
         final Calendar mockCalendar = mock(Calendar.class);
         when(mockCalendar.getServiceId()).thenReturn("service id");
         final Trip mockTrip = mock(Trip.class);
-        when(mockTrip.getTripId()).thenReturn("trip id");
         when(mockTrip.getServiceId()).thenReturn("not found service id");
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
 
-        final Collection<Calendar> mockCalendarCollection = new ArrayList<>(List.of(mockCalendar));
-        final Collection<Trip> mockTripCollection = new ArrayList<>(List.of(mockTrip));
+        final Map<String, Calendar> mockCalendarCollection = new HashMap<>();
+        mockCalendarCollection.put("service id", mockCalendar);
+
+        final Map<String, Trip> mockTripCollection = new HashMap<>();
+        mockTripCollection.put("trip id", mockTrip);
 
         final Map<String, CalendarDate> innerMap = new HashMap<>();
         innerMap.put("date", mockCalendarDate);
@@ -204,8 +217,6 @@ class ValidateTripServiceIdTest {
         verify(mockDataRepo, times(1)).getTripAll();
 
         verify(mockTrip, times(1)).getServiceId();
-        verify(mockTrip, times(1)).getTripId();
-        verify(mockCalendar, times(1)).getServiceId();
 
         final ArgumentCaptor<ServiceIdNotFoundNotice> captor = ArgumentCaptor.forClass(ServiceIdNotFoundNotice.class);
 

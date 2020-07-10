@@ -18,12 +18,12 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ServiceIdNotFoundNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * Use case for E036 to validate that all records of `trips.txt` refer to an existing {@code Calendar} or
@@ -55,18 +55,19 @@ public class ValidateTripServiceId {
     public void execute() {
         logger.info("Validating rule E036 - `service_id` not found" + System.lineSeparator());
 
-        final Collection<Calendar> calendarCollection = dataRepo.getCalendarAll();
-        final Set<String> calendarDatesKeyCollection = dataRepo.getCalendarDateAll().keySet();
-        dataRepo.getTripAll().forEach(trip -> {
-            final String serviceId = trip.getServiceId();
-            if (calendarCollection.stream().noneMatch(calendar -> calendar.getServiceId().equals(serviceId)) &&
-                    calendarDatesKeyCollection.stream()
-                            .noneMatch(calendarDateKey -> calendarDateKey.startsWith(serviceId))) {
+        // calendar entities are mapped on service_id
+        final Map<String, Calendar> calendarCollection = dataRepo.getCalendarAll();
+        // CalendarDate entities are mapped on service_id and date in a nested map
+        final Map<String, Map<String, CalendarDate>> calendarDateCollection = dataRepo.getCalendarDateAll();
+        dataRepo.getTripAll().forEach((tripId, trip) -> {
+            final String tripServiceId = trip.getServiceId();
+            if (!calendarCollection.containsKey(tripServiceId) &&
+                    !calendarDateCollection.containsKey(tripServiceId)) {
                 resultRepo.addNotice(
                         new ServiceIdNotFoundNotice("trips.txt",
-                                trip.getTripId(),
+                                tripId,
                                 "service_id",
-                                serviceId)
+                                tripServiceId)
                 );
             }
         });
