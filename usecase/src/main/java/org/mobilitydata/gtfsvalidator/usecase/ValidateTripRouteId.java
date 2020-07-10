@@ -56,11 +56,11 @@ public class ValidateTripRouteId {
         final Set<String> routeIdCollection = new HashSet<>();
         dataRepo.getRouteAll().forEach(route -> routeIdCollection.add(route.getRouteId()));
         dataRepo.getTripAll()
-                .forEach(trip -> {
+                .forEach((tripId, trip) -> {
                     if (!routeIdCollection.contains(trip.getRouteId())) {
                         resultRepo.addNotice(
                                 new RouteIdNotFoundNotice("trips.txt",
-                                        trip.getTripId(),
+                                        tripId,
                                         trip.getRouteId(),
                                         "route_id")
                         );
