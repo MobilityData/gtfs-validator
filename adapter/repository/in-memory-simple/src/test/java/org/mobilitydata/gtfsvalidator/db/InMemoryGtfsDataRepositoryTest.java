@@ -291,6 +291,24 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void getCalendarAllShouldReturnCalendarCollection() {
+        final Calendar mockCalendar00 = mock(Calendar.class);
+        final Calendar mockCalendar01 = mock(Calendar.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        when(mockCalendar00.getServiceId()).thenReturn("service id00");
+        when(mockCalendar01.getServiceId()).thenReturn("service id01");
+
+        underTest.addCalendar(mockCalendar00);
+        underTest.addCalendar(mockCalendar01);
+
+        final Map<String, Calendar> toCheck = underTest.getCalendarAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey("service id00"));
+        assertTrue(toCheck.containsKey("service id01"));
+    }
+
+    @Test
     public void addSameTripTwiceShouldReturnNull() {
         final Trip mockTrip = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();

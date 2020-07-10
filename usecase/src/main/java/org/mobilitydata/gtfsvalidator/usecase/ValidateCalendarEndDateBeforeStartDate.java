@@ -17,12 +17,11 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CalendarEndDateBeforeStartDateNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.Collection;
+import java.time.LocalDate;
 
 /**
  * Use case for E032 to validate that a calendar.txt end_date must not be earlier than the start_date.
@@ -51,10 +50,14 @@ public class ValidateCalendarEndDateBeforeStartDate {
      */
     public void execute() {
         logger.info("Validating rule 'E032 - calendar.txt end_date is before start_date'" + System.lineSeparator());
-        Collection<Calendar> calendars = dataRepo.getCalendarAll();
-        calendars.stream()
-                .filter(calendar -> calendar.getEndDate().isBefore(calendar.getStartDate()))
-                .forEach(calendar -> resultRepo.addNotice(new CalendarEndDateBeforeStartDateNotice("calendar.txt",
-                        calendar.getServiceId(), calendar.getStartDate(), calendar.getEndDate())));
+
+        dataRepo.getCalendarAll().forEach((serviceId, calendar) -> {
+            final LocalDate calendarEndDate = calendar.getEndDate();
+            final LocalDate calendarStartDate = calendar.getStartDate();
+            if (calendarEndDate.isBefore(calendarStartDate)) {
+                resultRepo.addNotice(new CalendarEndDateBeforeStartDateNotice("calendar.txt", serviceId,
+                        calendarStartDate, calendarEndDate));
+            }
+        });
     }
 }

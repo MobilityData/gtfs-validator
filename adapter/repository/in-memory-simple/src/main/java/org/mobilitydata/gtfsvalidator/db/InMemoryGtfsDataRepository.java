@@ -371,13 +371,13 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return a collection of Calendar objects representing all the rows from calendar.txt
+     * Return an unmodifiable collection of Calendar objects representing all the rows from calendar.txt
      *
-     * @return a collection of Calendar objects representing all the rows from calendar.txt
+     * @return an unmodifiable collection of Calendar objects representing all the rows from calendar.txt
      */
     @Override
-    public Collection<Calendar> getCalendarAll() {
-        return calendarPerServiceId.values();
+    public Map<String, Calendar> getCalendarAll() {
+        return Collections.unmodifiableMap(calendarPerServiceId);
     }
 
     /**
