@@ -18,6 +18,8 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ContinuousDropOff;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ContinuousPickup;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
 

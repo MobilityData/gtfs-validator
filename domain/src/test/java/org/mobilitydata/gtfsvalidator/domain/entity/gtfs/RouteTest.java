@@ -32,6 +32,9 @@ import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KE
 class RouteTest {
     private static final String STRING_TEST_VALUE = "test_value";
     private static final int INT_TEST_VALUE = 0;
+    private static final int CONTINUOUS_PICKUP_VALUE = 0;
+    private static final int CONTINUOUS_DROP_OFF_VALUE = 0;
+
 
     // Field routeId is annotated as `@NonNull` but test require this field to be null. Therefore annotation
     // "@SuppressWarnings("ConstantConditions")" is used here to suppress lint.
@@ -50,6 +53,8 @@ class RouteTest {
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE)
+                .continuousPickup(CONTINUOUS_PICKUP_VALUE)
+                .continuousDropOff(CONTINUOUS_DROP_OFF_VALUE)
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
@@ -79,6 +84,8 @@ class RouteTest {
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE)
+                .continuousPickup(CONTINUOUS_PICKUP_VALUE)
+                .continuousDropOff(CONTINUOUS_DROP_OFF_VALUE)
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
@@ -108,6 +115,8 @@ class RouteTest {
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE)
+                .continuousPickup(CONTINUOUS_PICKUP_VALUE)
+                .continuousDropOff(CONTINUOUS_DROP_OFF_VALUE)
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof Route);
@@ -127,6 +136,8 @@ class RouteTest {
                 .routeColor(STRING_TEST_VALUE)
                 .routeTextColor(STRING_TEST_VALUE)
                 .routeSortOrder(INT_TEST_VALUE)
+                .continuousPickup(CONTINUOUS_PICKUP_VALUE)
+                .continuousDropOff(CONTINUOUS_DROP_OFF_VALUE)
                 .build();
 
         assertTrue(entityBuildResult.getData() instanceof List);
@@ -138,5 +149,67 @@ class RouteTest {
         assertEquals("routes.txt", notice.getFilename());
         assertEquals("agency_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+    }
+
+    @Test
+    public void createRouteWithInvalidContinuousPickupShouldGenerateUnexpectedEnumValueNotice() {
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(1)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE)
+                .continuousPickup(15)
+                .continuousDropOff(2)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals("continuous_pickup", notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals(15, notice.getNoticeSpecific(KEY_ENUM_VALUE));
+        assertEquals(1, noticeCollection.size());
+    }
+
+    @Test
+    public void createRouteWithInvalidContinuousDropOffShouldGenerateUnexpectedEnumValueNotice() {
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(1)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE)
+                .continuousPickup(2)
+                .continuousDropOff(15)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<UnexpectedEnumValueNotice> noticeCollection =
+                (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
+
+        final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals("continuous_drop_off", notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals(15, notice.getNoticeSpecific(KEY_ENUM_VALUE));
+        assertEquals(1, noticeCollection.size());
     }
 }

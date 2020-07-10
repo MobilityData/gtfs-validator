@@ -18,6 +18,8 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ContinuousDropOff;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ContinuousPickup;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
@@ -53,18 +55,26 @@ public class Route extends GtfsEntity {
     private final String routeTextColor;
     @Nullable
     private final Integer routeSortOrder;
+    @NotNull
+    private final ContinuousPickup continuousPickup;
+    @NotNull
+    private final ContinuousDropOff continuousDropOff;
 
     /**
-     * @param routeId        identifies a route
-     * @param agencyId       agency for the specified route
-     * @param routeShortName short name of a route
-     * @param routeLongName  full name of a route
-     * @param routeDesc      Description of a route that provides useful, quality information.
-     * @param routeType      Indicates the type of transportation used on a route
-     * @param routeUrl       URL of a web page about the particular route
-     * @param routeColor     Route color designation that matches public facing material.
-     * @param routeTextColor Legible color to use for text drawn against a background of route_color.
-     * @param routeSortOrder orders the routes in a way which is ideal for presentation to customers
+     * @param routeId           identifies a route
+     * @param agencyId          agency for the specified route
+     * @param routeShortName    short name of a route
+     * @param routeLongName     full name of a route
+     * @param routeDesc         Description of a route that provides useful, quality information.
+     * @param routeType         Indicates the type of transportation used on a route
+     * @param routeUrl          URL of a web page about the particular route
+     * @param routeColor        Route color designation that matches public facing material.
+     * @param routeTextColor    Legible color to use for text drawn against a background of route_color.
+     * @param routeSortOrder    orders the routes in a way which is ideal for presentation to customers
+     * @param continuousPickup  indicates that the rider can board the transit vehicle at any point along the
+     *                          vehicle’s travel path as described by shapes.txt on every trip of the {@link Route}
+     * @param continuousDropOff indicates that the rider can alight the transit vehicle at any point along the
+     *                          vehicle’s travel path as described by shapes.txt on every trip of the {@link Route}
      */
     private Route(@NotNull final String routeId,
                   @Nullable final String agencyId,
@@ -75,7 +85,9 @@ public class Route extends GtfsEntity {
                   @Nullable final String routeUrl,
                   @Nullable final String routeColor,
                   @Nullable final String routeTextColor,
-                  @Nullable final Integer routeSortOrder) {
+                  @Nullable final Integer routeSortOrder,
+                  @NotNull final ContinuousPickup continuousPickup,
+                  @NotNull final ContinuousDropOff continuousDropOff) {
         this.routeId = routeId;
         this.agencyId = agencyId;
         this.routeShortName = routeShortName;
@@ -86,6 +98,8 @@ public class Route extends GtfsEntity {
         this.routeColor = routeColor;
         this.routeTextColor = routeTextColor;
         this.routeSortOrder = routeSortOrder;
+        this.continuousPickup = continuousPickup;
+        this.continuousDropOff = continuousDropOff;
     }
 
     @NotNull
@@ -138,6 +152,16 @@ public class Route extends GtfsEntity {
         return routeSortOrder;
     }
 
+    @NotNull
+    public ContinuousPickup getContinuousPickup() {
+        return continuousPickup;
+    }
+
+    @NotNull
+    public ContinuousDropOff getContinuousDropOff() {
+        return continuousDropOff;
+    }
+
     /**
      * Builder class to create {@link Route} objects. Allows an unordered definition of the different attributes of
      * {@link Route}.
@@ -155,6 +179,10 @@ public class Route extends GtfsEntity {
         private String routeTextColor;
         private Integer routeSortOrder;
         private Integer originalRouteTypeInteger;
+        private ContinuousPickup continuousPickup;
+        private Integer originalContinuousPickupInteger;
+        private ContinuousDropOff continuousDropOff;
+        private Integer originalContinuousDropOffInteger;
         private final List<Notice> noticeCollection = new ArrayList<>();
 
         /**
@@ -263,9 +291,30 @@ public class Route extends GtfsEntity {
          * @param routeSortOrder orders the routes in a way which is ideal for presentation to customers
          * @return builder for future object creation
          */
-        @SuppressWarnings("UnusedReturnValue")
         public RouteBuilder routeSortOrder(@Nullable final Integer routeSortOrder) {
             this.routeSortOrder = routeSortOrder;
+            return this;
+        }
+
+        /**
+         * @param continuousPickup indicates that the rider can board the transit vehicle at any point along the
+         *                         vehicle’s travel path as described by shapes.txt on every trip of the {@link Route}
+         * @return builder for future object creation
+         */
+        public RouteBuilder continuousPickup(@Nullable final Integer continuousPickup) {
+            this.continuousPickup = ContinuousPickup.fromInt(continuousPickup);
+            this.originalContinuousPickupInteger = continuousPickup;
+            return this;
+        }
+
+        /**
+         * @param continuousDropOff indicates that the rider can alight the transit vehicle at any point along the
+         *                          vehicle’s travel path as described by shapes.txt on every trip of the {@link Route}
+         * @return builder for future object creation
+         */
+        public RouteBuilder continuousDropOff(@Nullable final Integer continuousDropOff) {
+            this.continuousDropOff = ContinuousDropOff.fromInt(continuousDropOff);
+            this.originalContinuousDropOffInteger = continuousDropOff;
             return this;
         }
 
@@ -277,7 +326,8 @@ public class Route extends GtfsEntity {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() throws IllegalArgumentException {
-            if (routeId == null || routeType == null || agencyId.isBlank()) {
+            if (routeId == null || routeType == null || agencyId.isBlank() || continuousDropOff == null ||
+                    continuousPickup == null) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
                             routeId));
@@ -294,10 +344,19 @@ public class Route extends GtfsEntity {
                     noticeCollection.add(
                             new InvalidAgencyIdNotice("routes.txt", "agency_id", routeId));
                 }
+                if (!ContinuousPickup.isEnumValid(originalContinuousPickupInteger)) {
+                    noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt",
+                            "continuous_pickup", routeId, originalContinuousPickupInteger));
+                }
+                if (!ContinuousDropOff.isEnumValid(originalContinuousDropOffInteger)) {
+                    noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt",
+                            "continuous_drop_off", routeId, originalContinuousDropOffInteger));
+                }
                 return new EntityBuildResult(noticeCollection);
             } else {
                 return new EntityBuildResult(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
-                        routeType, routeUrl, routeColor, routeTextColor, routeSortOrder));
+                        routeType, routeUrl, routeColor, routeTextColor, routeSortOrder, continuousPickup,
+                        continuousDropOff));
             }
         }
 
@@ -318,6 +377,10 @@ public class Route extends GtfsEntity {
             routeTextColor = null;
             routeSortOrder = null;
             originalRouteTypeInteger = null;
+            continuousPickup = null;
+            originalContinuousPickupInteger = null;
+            continuousDropOff = null;
+            originalContinuousDropOffInteger = null;
             noticeCollection.clear();
             return this;
         }
