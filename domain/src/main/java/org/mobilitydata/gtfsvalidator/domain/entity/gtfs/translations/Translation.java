@@ -129,7 +129,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field tableName and returns this
          *
-         * @param tableName  defines the table that contains the field to be translated
+         * @param tableName defines the table that contains the field to be translated
          * @return builder for future object creation
          */
         public TranslationBuilder tableName(@NotNull final String tableName) {
@@ -141,7 +141,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field fieldName and returns this
          *
-         * @param fieldName  name of the field to be translated
+         * @param fieldName name of the field to be translated
          * @return builder for future object creation
          */
         public TranslationBuilder fieldName(@NotNull final String fieldName) {
@@ -152,7 +152,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field language and returns this
          *
-         * @param language  language of translation
+         * @param language language of translation
          * @return builder for future object creation
          */
         public TranslationBuilder language(@NotNull final String language) {
@@ -163,7 +163,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field translation and returns this
          *
-         * @param translation  translated value
+         * @param translation translated value
          * @return builder for future object creation
          */
         public TranslationBuilder translation(@NotNull final String translation) {
@@ -174,7 +174,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field recordId and returns this
          *
-         * @param recordId  defines the record that corresponds to the field to be translated
+         * @param recordId defines the record that corresponds to the field to be translated
          * @return builder for future object creation
          */
         public TranslationBuilder recordId(@Nullable final String recordId) {
@@ -185,8 +185,8 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field recordSubId and returns this
          *
-         * @param recordSubId  helps the record that contains the field to be translated when the table doesn’t have a
-         *                     unique ID
+         * @param recordSubId helps the record that contains the field to be translated when the table doesn’t have a
+         *                    unique ID
          * @return builder for future object creation
          */
         public TranslationBuilder recordSubId(@Nullable final String recordSubId) {
@@ -197,8 +197,8 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field fieldValue and returns this
          *
-         * @param fieldValue  instead of defining which record should be translated by using record_id and
-         *                    record_sub_id, this field can be used to define the value which should be translated
+         * @param fieldValue instead of defining which record should be translated by using record_id and
+         *                   record_sub_id, this field can be used to define the value which should be translated
          * @return builder for future object creation
          */
         // suppressed warning: order of method calls triggers this warning.
@@ -314,6 +314,7 @@ public class Translation extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null
          */
         public TranslationBuilder clear() {

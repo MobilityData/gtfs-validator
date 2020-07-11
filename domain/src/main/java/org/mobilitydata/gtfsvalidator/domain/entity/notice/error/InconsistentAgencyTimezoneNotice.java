@@ -15,6 +15,7 @@
  */
 
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
+
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
