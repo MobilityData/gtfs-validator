@@ -124,6 +124,7 @@ public class Agency extends GtfsEntity {
      * {@link Agency}.
      */
     public static class AgencyBuilder {
+        public static final String DEFAULT_AGENCY_ID = "defaultAgencyId";
         private String agencyId;
         private String agencyName;
         private String agencyUrl;
@@ -168,13 +169,14 @@ public class Agency extends GtfsEntity {
         }
 
         /**
-         * Sets field agencyId value and returns this
+         * Sets field agencyId value and returns this. If field agency.agency_id is null, then a default value is
+         * allocated.
          *
          * @param agencyId identifies a transit brand which is often synonymous with a transit agency
          * @return builder for future object creation
          */
         public AgencyBuilder agencyId(@Nullable final String agencyId) {
-            this.agencyId = agencyId;
+            this.agencyId = agencyId != null ? agencyId : DEFAULT_AGENCY_ID;
             return this;
         }
 
@@ -262,7 +264,7 @@ public class Agency extends GtfsEntity {
          * @return builder with all fields set to null;
          */
         public AgencyBuilder clear() {
-            agencyId = null;
+            agencyId = DEFAULT_AGENCY_ID;
             agencyName = null;
             agencyUrl = null;
             agencyTimezone = null;
