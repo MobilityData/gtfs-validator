@@ -42,6 +42,8 @@ import java.util.stream.Collectors;
  * execution method. This repository supports the parsing of execution parameters from either a json file or via
  * Apache command line. This is created  when creating a new default configuration. Operations on this repository
  * are executed ihe main execution method and inside the relevant use cases.
+ * <p>
+ * Numeric ranges can be configured, see file https://github.com/MobilityData/gtfs-validator/blob/master/ADDING_NEW_RULES.md for detailed information.
  */
 public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> execParamCollection = new HashMap<>();
