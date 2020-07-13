@@ -194,13 +194,15 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return a collection of Route objects representing all the rows from routes.txt
+     * Return an unmodifiable map of Route objects representing all the rows from routes.txt. Entities are mapped on
+     * value of field route_id of file `routes.txt`.
      *
-     * @return a collection of Route objects representing all the rows from routes.txt
+     * @return an unmodifiable map of Route objects representing all the rows from routes.txt. Entities are mapped on
+     * value of field route_id of file `routes.txt`.
      */
     @Override
-    public Collection<Route> getRouteAll() {
-        return routePerId.values();
+    public Map<String, Route> getRouteAll() {
+        return Collections.unmodifiableMap(routePerId);
     }
 
     /**

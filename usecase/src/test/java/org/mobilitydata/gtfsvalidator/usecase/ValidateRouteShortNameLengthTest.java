@@ -23,7 +23,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteShortNam
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -34,8 +35,10 @@ public class ValidateRouteShortNameLengthTest {
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn(null);
 
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -62,8 +65,10 @@ public class ValidateRouteShortNameLengthTest {
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn("short_name");
 
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -90,8 +95,10 @@ public class ValidateRouteShortNameLengthTest {
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn("a_short_name");
 
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -118,8 +125,10 @@ public class ValidateRouteShortNameLengthTest {
         Route mockRoute = mock(Route.class);
         when(mockRoute.getRouteShortName()).thenReturn("a_very_long_name");
 
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -134,7 +143,6 @@ public class ValidateRouteShortNameLengthTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(2)).getRouteShortName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'W005 - Route short name " +
                 "too long'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(RouteShortNameTooLongNotice.class));

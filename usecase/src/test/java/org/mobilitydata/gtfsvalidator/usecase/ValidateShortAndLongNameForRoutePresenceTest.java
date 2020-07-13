@@ -25,7 +25,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MissingRouteS
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -40,7 +41,9 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         when(mockRoute.getRouteLongName()).thenReturn("long name");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -55,8 +58,8 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteShortName();
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verifyNoInteractions(mockResultRepo);
@@ -71,7 +74,9 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         when(mockRoute.getRouteLongName()).thenReturn(null);
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -88,7 +93,6 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
@@ -103,7 +107,9 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         when(mockRoute.getRouteLongName()).thenReturn(null);
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -120,7 +126,6 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
@@ -135,7 +140,9 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         when(mockRoute.getRouteLongName()).thenReturn("");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -152,7 +159,6 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
@@ -167,7 +173,9 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         when(mockRoute.getRouteLongName()).thenReturn(null);
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -184,7 +192,6 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteLongNameNotice.class));
@@ -199,7 +206,9 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         when(mockRoute.getRouteLongName()).thenReturn("");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -216,7 +225,6 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteLongNameNotice.class));
@@ -231,7 +239,9 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         when(mockRoute.getRouteLongName()).thenReturn("long name");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -248,7 +258,6 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteShortNameNotice.class));
@@ -263,7 +272,9 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         when(mockRoute.getRouteLongName()).thenReturn("long name");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -280,7 +291,6 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteShortNameNotice.class));

@@ -24,7 +24,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.RouteLongName
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -38,7 +39,9 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         when(mockRoute.getRouteLongName()).thenReturn(null);
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -64,7 +67,9 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         when(mockRoute.getRouteLongName()).thenReturn("This is a long name for route abc");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -92,7 +97,9 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         when(mockRoute.getRouteShortName()).thenReturn("xyz");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -120,7 +127,9 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         when(mockRoute.getRouteShortName()).thenReturn("xyz");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -134,7 +143,6 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(3)).getRouteLongName();
         verify(mockRoute, times(3)).getRouteShortName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(RouteLongNameContainsShortNameNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E028 - Route long name equals " +
                 "short name'" + System.lineSeparator());
@@ -149,7 +157,9 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         when(mockRoute.getRouteShortName()).thenReturn("xyz");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -163,7 +173,6 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortNameTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(3)).getRouteLongName();
         verify(mockRoute, times(3)).getRouteShortName();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(RouteLongNameEqualsShortNameNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E028 - Route long name equals " +
                 "short name'" + System.lineSeparator());

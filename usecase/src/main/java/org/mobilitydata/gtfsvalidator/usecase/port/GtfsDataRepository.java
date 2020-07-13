@@ -41,7 +41,7 @@ public interface GtfsDataRepository {
 
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
-    Collection<Route> getRouteAll();
+    Map<String, Route> getRouteAll();
 
     Route getRouteById(final String routeId);
 

@@ -24,7 +24,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidRouteTyp
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -37,7 +38,9 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
         when(mockRoute.getRouteType()).thenReturn(RouteType.SUBWAY);
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -65,7 +68,9 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
         when(mockRoute.getRouteType()).thenReturn(null);
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -80,7 +85,6 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteType();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(InvalidRouteTypeNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E026 - Invalid route type'" +
                 System.lineSeparator());

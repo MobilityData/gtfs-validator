@@ -23,7 +23,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteColorAndTe
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -38,7 +39,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn("000000");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -68,7 +72,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn(null);
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -98,7 +105,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn("000000");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         Logger mockLogger = mock(Logger.class);
 
@@ -128,7 +138,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn("ffffff");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         Logger mockLogger = mock(Logger.class);
 
@@ -144,7 +157,6 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(2)).getRouteColor();
         verify(mockRoute, times(2)).getRouteTextColor();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1))
                 .addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +
@@ -160,7 +172,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn("a6fe03");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         Logger mockLogger = mock(Logger.class);
 
@@ -176,7 +191,6 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(2)).getRouteColor();
         verify(mockRoute, times(2)).getRouteTextColor();
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1))
                 .addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +

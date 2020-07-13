@@ -39,8 +39,7 @@ public class ValidateRouteAgencyId {
         logger.info("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator());
 
         final int agencyCount = dataRepo.getAgencyCount();
-        dataRepo.getRouteAll().forEach(route -> {
-            final String routeId = route.getRouteId();
+        dataRepo.getRouteAll().forEach((routeId, route) -> {
             final String agencyId = route.getAgencyId();
             if (agencyCount > 1) {
                 if (agencyId == null) {

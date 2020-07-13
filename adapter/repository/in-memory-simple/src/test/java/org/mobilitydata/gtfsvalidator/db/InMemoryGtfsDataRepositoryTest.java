@@ -156,7 +156,8 @@ class InMemoryGtfsDataRepositoryTest {
 
         Collection<Route> mockRoutes = List.of(mockRoute00, mockRoute01);
 
-        assertTrue(underTest.getRouteAll().containsAll(mockRoutes));
+        assertTrue(underTest.getRouteAll().containsKey("route id0"));
+        assertTrue(underTest.getRouteAll().containsKey("route id1"));
     }
 
     @Test
