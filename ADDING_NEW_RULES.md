@@ -84,6 +84,342 @@ public class CannotParseDateNotice extends ErrorNotice {
 }
 ~~~
 
+### III - a. Configure numeric ranges
+
+Ranges for validation of numeric fields can be configured via command line arguments or within file `execution-parameter.json`.
+To do so, two classes have to be modified: [ExecParamRepository](https://github.com/MobilityData/gtfs-validator/blob/master/usecase/src/main/java/org/mobilitydata/gtfsvalidator/usecase/port/ExecParamRepository.java) and [InMemoryExecParamRepository](https://github.com/MobilityData/gtfs-validator/blob/master/adapter/repository/in-memory-simple/src/main/java/org/mobilitydata/gtfsvalidator/db/InMemoryExecParamRepository.java).
+
+1. Add a key in the form of a static String in [ExecParamRepository](https://github.com/MobilityData/gtfs-validator/blob/master/usecase/src/main/java/org/mobilitydata/gtfsvalidator/usecase/port/ExecParamRepository.java)
+
+Here an example:
+
+~~~
+public interface ExecParamRepository {
+    String HELP_KEY = "help";
+    String EXTRACT_KEY = "extract";
+    String OUTPUT_KEY = "output";
+    String PROTO_KEY = "proto";
+    String URL_KEY = "url";
+    String INPUT_KEY = "input";
+    String EXCLUSION_KEY = "exclude";
+    String TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN = "transferMinTransferTimeRangeMin";
+    String TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX = "transferMinTransferTimeRangeMax";
+
+    ExecParam getExecParamByKey(final String optionName);
+
+    Map<String, ExecParam> getExecParamCollection();
+
+    ExecParam addExecParam(final ExecParam newExecParam) throws IllegalArgumentException;
+
+    boolean hasExecParam(final String key);
+
+    boolean hasExecParamValue(final String key);
+
+    ExecParamParser getParser(final String parameterJsonString, final String[] args, final Logger logger);
+
+    String getExecParamValue(final String key) throws IllegalArgumentException;
+
+    Options getOptions();
+
+    boolean isEmpty();
+
+    interface ExecParamParser {
+
+        Map<String, ExecParam> parse() throws IOException;
+    }
+}
+~~~
+
+2. Add a command line option in [InMemoryExecParamRepository](https://github.com/MobilityData/gtfs-validator/blob/master/adapter/repository/in-memory-simple/src/main/java/org/mobilitydata/gtfsvalidator/db/InMemoryExecParamRepository.java)
+
+Here an example:
+~~~
+public class InMemoryExecParamRepository implements ExecParamRepository {
+    private final Map<String, ExecParam> execParamCollection = new HashMap<>();
+    private final Map<String, ExecParam> defaultValueCollection;
+    private final Logger logger;
+
+    public InMemoryExecParamRepository(final String defaultParameterJsonString, final Logger logger) {
+        this.defaultValueCollection = new JsonExecParamParser(defaultParameterJsonString,
+                new ObjectMapper().readerFor(ExecParam.class), logger).parse();
+        this.logger = logger;
+    }
+
+    @Override
+    public ExecParam getExecParamByKey(final String key) {
+        return execParamCollection.get(key);
+    }
+
+    @Override
+    public Map<String, ExecParam> getExecParamCollection() {
+        return Collections.unmodifiableMap(execParamCollection);
+    }
+
+    @Override
+    public ExecParam addExecParam(final ExecParam newExecParam) throws IllegalArgumentException {
+        if (defaultValueCollection.containsKey(newExecParam.getKey())) {
+            execParamCollection.put(newExecParam.getKey(), newExecParam);
+            return newExecParam;
+        } else {
+            throw new IllegalArgumentException("Execution parameter with key: " +
+                    newExecParam.getKey() + " found in configuration file is not handled");
+        }
+    }
+
+    @Override
+    public boolean hasExecParam(final String key) {
+        return execParamCollection.containsKey(key);
+    }
+
+    @Override
+    public boolean hasExecParamValue(final String key) {
+        return hasExecParam(key) && getExecParamByKey(key).getValue() != null;
+    }
+
+    @Override
+    public ExecParamParser getParser(final String parameterJsonString,
+                                     final String[] args,
+                                     final Logger logger) {
+        if (Strings.isNullOrEmpty(parameterJsonString) && args.length == 0) {
+            // true when json configuration file is not present and no arguments are provided
+            logger.info("No configuration file nor arguments provided" + System.lineSeparator());
+            return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
+        } else if (!Strings.isNullOrEmpty(parameterJsonString) || args.length == 0) {
+            // true when no arguments are provided or when json configuration is provided
+            logger.info("Retrieving execution parameters from execution-parameters.json file" + System.lineSeparator());
+            return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
+        } else {
+            // true when only arguments are provided
+            logger.info("Retrieving execution parameters from command-line" + System.lineSeparator());
+            return new ApacheExecParamParser(new DefaultParser(), getOptions(), args);
+        }
+    }
+
+    @Override
+    public String getExecParamValue(final String key) throws IllegalArgumentException {
+        final List<String> defaultValue = defaultValueCollection.get(key).getValue();
+
+        switch (key) {
+
+            case HELP_KEY:
+            case PROTO_KEY: {
+                if (hasExecParam(key)) {
+                    return hasExecParam(key) ? String.valueOf(true) : defaultValue.get(0);
+                } else {
+                    return defaultValue.get(0);
+                }
+            }
+
+            case EXTRACT_KEY:
+            case OUTPUT_KEY: {
+                return hasExecParamValue(key) && hasExecParamValue(key)
+                        ? getExecParamByKey(key).getValue().get(0)
+                        : System.getProperty("user.dir") + File.separator + defaultValue.get(0);
+            }
+
+            case URL_KEY: {
+                return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getValue().get(0) : defaultValue.get(0);
+            }
+
+            case INPUT_KEY: {
+                String zipInputPath = hasExecParamValue(INPUT_KEY)
+                        ? getExecParamByKey(INPUT_KEY).getValue().get(0)
+                        : System.getProperty("user.dir");
+
+                if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(INPUT_KEY)) {
+                    logger.info("--url and relative path to zip file(--zip option) not provided. Trying to " +
+                            "find zip in: " + zipInputPath + System.lineSeparator());
+                    List<String> zipList;
+                    try {
+                        zipList = Files.walk(Paths.get(zipInputPath))
+                                .map(Path::toString)
+                                .filter(f -> f.endsWith(".zip"))
+                                .collect(Collectors.toUnmodifiableList());
+                    } catch (IOException e) {
+                        zipList = Collections.emptyList();
+                    }
+
+                    if (zipList.isEmpty()) {
+                        logger.error("no zip file found - exiting" + System.lineSeparator());
+                        System.exit(0);
+                    } else if (zipList.size() > 1) {
+                        logger.error("multiple zip files found - exiting" + System.lineSeparator());
+                        System.exit(0);
+                    } else {
+                        logger.info("zip file found: " + zipList.get(0) + System.lineSeparator());
+                        zipInputPath = zipList.get(0);
+                    }
+                } else if (!hasExecParamValue(INPUT_KEY)) {
+                    zipInputPath += File.separator + "input.zip";
+                }
+                return zipInputPath;
+            }
+
+            case EXCLUSION_KEY: {
+                return hasExecParamValue(EXCLUSION_KEY) ? getExecParamByKey(EXCLUSION_KEY).getValue().toString() : null;
+            }
+
+            case TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN :
+            case TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX : {
+                return hasExecParamValue(key) ? getExecParamByKey(key).getValue().toString() : defaultValue.get(0);
+            }
+        }
+        throw new IllegalArgumentException("Requested key is not handled");
+    }
+
+    /**
+     * This method returns the collection of available {@code Option} as {@code Options}. This method is used to print
+     * help when {@link ExecParam} with key HELP_KEY="help" is present in the repository.
+     *
+     * @return the collection of available {@code Option} as {@code Options} when {@link ExecParam} with key
+     * HELP_KEY="help" is present in the repository.
+     */
+    @Override
+    public Options getOptions() {
+        final Options options = new Options();
+        options.addOption(String.valueOf(URL_KEY.charAt(0)), URL_KEY, true,
+                "URL to GTFS zipped archive");
+        options.addOption(String.valueOf(INPUT_KEY.charAt(0)), INPUT_KEY, true,
+                "if --url is used, where to place " +
+                        "the downloaded archive. Otherwise, relative path pointing to a valid GTFS zipped archive on disk");
+        options.addOption(String.valueOf(EXTRACT_KEY.charAt(0)), EXTRACT_KEY, true,
+                "Relative path where to extract the zip content");
+        options.addOption(String.valueOf(OUTPUT_KEY.charAt(0)), OUTPUT_KEY, true,
+                "Relative path where to place output files");
+        options.addOption(String.valueOf(HELP_KEY.charAt(0)), HELP_KEY, false, "Print this message");
+        options.addOption(String.valueOf(PROTO_KEY.charAt(0)), PROTO_KEY, false,
+                "Export validation results as proto");
+
+        // define options related to GTFS file `pathways.txt`
+        options.addOption(String.valueOf(EXCLUSION_KEY.charAt(1)), EXCLUSION_KEY, true,
+                "Exclude files from semantic GTFS validation");
+        options.addOption(TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN, TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN, true,
+                "Minimum allowed value for field min_transfer_time of file transfers.txt");
+        options.addOption(TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX, TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX, true,
+                "Maximum allowed value for field min_transfer_time of file transfers.txt");
+
+        // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
+        // Other commands only take 1 argument
+        options.getOptions().forEach(option -> {
+            switch (option.getLongOpt()) {
+                case ExecParamRepository.PROTO_KEY:
+                case ExecParamRepository.HELP_KEY: {
+                    option.setArgs(0);
+                    break;
+                }
+                default: {
+                    option.setArgs(1);
+                }
+            }
+        });
+        return options;
+    }
+
+    /**
+     * This method returns true if the repository is empty, else false
+     *
+     * @return true if the repository is empty, else false
+     */
+    @Override
+    public boolean isEmpty() {
+        return execParamCollection.isEmpty();
+    }
+~~~
+
+3. Define default values for said ranges in [default-execution-parameters.json](https://github.com/MobilityData/gtfs-validator/blob/master/config/src/main/resources/default-execution-parameters.json).
+
+Here an example:
+
+```
+{
+  "help": false,
+  "extract": "input",
+  "output": "output",
+  "proto": false,
+  "url": null,
+  "input": null,
+  "exclude": null,
+  "transferMinTransferTimeRangeMin": 0,
+  "transferMinTransferTimeRangeMax": 86400
+}
+```
+
+4. Configure method `getExecParamValue` of [InMemoryExecParamRepository](https://github.com/MobilityData/gtfs-validator/blob/master/adapter/repository/in-memory-simple/src/main/java/org/mobilitydata/gtfsvalidator/db/InMemoryExecParamRepository.java) class to retrieve value of newly added option
+
+~~~
+    @Override
+    public String getExecParamValue(final String key) throws IllegalArgumentException {
+        final List<String> defaultValue = defaultValueCollection.get(key).getValue();
+
+        switch (key) {
+
+            case HELP_KEY:
+            case PROTO_KEY: {
+                if (hasExecParam(key)) {
+                    return hasExecParam(key) ? String.valueOf(true) : defaultValue.get(0);
+                } else {
+                    return defaultValue.get(0);
+                }
+            }
+
+            case EXTRACT_KEY:
+            case OUTPUT_KEY: {
+                return hasExecParamValue(key) && hasExecParamValue(key)
+                        ? getExecParamByKey(key).getValue().get(0)
+                        : System.getProperty("user.dir") + File.separator + defaultValue.get(0);
+            }
+
+            case URL_KEY: {
+                return hasExecParamValue(key) ? getExecParamByKey(URL_KEY).getValue().get(0) : defaultValue.get(0);
+            }
+
+            case INPUT_KEY: {
+                String zipInputPath = hasExecParamValue(INPUT_KEY)
+                        ? getExecParamByKey(INPUT_KEY).getValue().get(0)
+                        : System.getProperty("user.dir");
+
+                if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(INPUT_KEY)) {
+                    logger.info("--url and relative path to zip file(--zip option) not provided. Trying to " +
+                            "find zip in: " + zipInputPath + System.lineSeparator());
+                    List<String> zipList;
+                    try {
+                        zipList = Files.walk(Paths.get(zipInputPath))
+                                .map(Path::toString)
+                                .filter(f -> f.endsWith(".zip"))
+                                .collect(Collectors.toUnmodifiableList());
+                    } catch (IOException e) {
+                        zipList = Collections.emptyList();
+                    }
+
+                    if (zipList.isEmpty()) {
+                        logger.error("no zip file found - exiting" + System.lineSeparator());
+                        System.exit(0);
+                    } else if (zipList.size() > 1) {
+                        logger.error("multiple zip files found - exiting" + System.lineSeparator());
+                        System.exit(0);
+                    } else {
+                        logger.info("zip file found: " + zipList.get(0) + System.lineSeparator());
+                        zipInputPath = zipList.get(0);
+                    }
+                } else if (!hasExecParamValue(INPUT_KEY)) {
+                    zipInputPath += File.separator + "input.zip";
+                }
+                return zipInputPath;
+            }
+
+            case EXCLUSION_KEY: {
+                return hasExecParamValue(EXCLUSION_KEY) ? getExecParamByKey(EXCLUSION_KEY).getValue().toString() : null;
+            }
+
+            case TRANSFER_MIN_TRANSFER_TIME_RANGE_MIN :
+            case TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX : {
+                return hasExecParamValue(key) ? getExecParamByKey(key).getValue().toString() : defaultValue.get(0);
+            }
+        }
+        throw new IllegalArgumentException("Requested key is not handled");
+    }
+~~~
+
 ### IV. Implement your new rule exportation code
 
 1. Add a new definition at the bottom of the [`NoticeExporter` interface](https://github.com/MobilityData/gtfs-validator/blob/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/domain/entity/notice/NoticeExporter.java)
