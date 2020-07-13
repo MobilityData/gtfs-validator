@@ -183,4 +183,5 @@ class ValidateRouteColorAndTextContrastTest {
                 " contrast'");
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
+
 }

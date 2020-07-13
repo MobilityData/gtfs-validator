@@ -51,6 +51,7 @@ public class ValidateRouteColorAndTextContrast {
      */
     public void execute() {
         logger.info("Validating rule 'E025 - Insufficient route color contrast'");
+
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
