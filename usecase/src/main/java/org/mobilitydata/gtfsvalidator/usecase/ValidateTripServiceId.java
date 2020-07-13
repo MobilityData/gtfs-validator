@@ -35,14 +35,14 @@ public class ValidateTripServiceId {
     private final Logger logger;
 
     /**
-     * @param dataRepo   a repository storing the data of a GTFS dataset
-     * @param resultRepo a repository storing information about the validation process
-     * @param logger     a logger to log information about the validation process
+     * @param gtfsDataRepo a repository storing the data of a GTFS dataset
+     * @param resultRepo   a repository storing information about the validation process
+     * @param logger       a logger to log information about the validation process
      */
-    public ValidateTripServiceId(final GtfsDataRepository dataRepo,
+    public ValidateTripServiceId(final GtfsDataRepository gtfsDataRepo,
                                  final ValidationResultRepository resultRepo,
                                  final Logger logger) {
-        this.dataRepo = dataRepo;
+        this.dataRepo = gtfsDataRepo;
         this.resultRepo = resultRepo;
         this.logger = logger;
     }
@@ -61,8 +61,11 @@ public class ValidateTripServiceId {
         final Map<String, Map<String, CalendarDate>> calendarDateCollection = dataRepo.getCalendarDateAll();
         dataRepo.getTripAll().forEach((tripId, trip) -> {
             final String tripServiceId = trip.getServiceId();
-            if (!calendarCollection.containsKey(tripServiceId) &&
-                    !calendarDateCollection.containsKey(tripServiceId)) {
+            if (calendarCollection.containsKey(tripServiceId)) {
+                return;
+            } else if (calendarDateCollection.containsKey(tripServiceId)) {
+                return;
+            } else {
                 resultRepo.addNotice(
                         new ServiceIdNotFoundNotice("trips.txt",
                                 tripId,
