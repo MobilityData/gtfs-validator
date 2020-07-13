@@ -253,8 +253,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     /**
      * Return an immutable map of Trip objects representing all the rows from trips.txt. Entities are mapped on trip_id
+     * of file `trips.txt`.
      *
      * @return an immutable map of Trip objects representing all the rows from trips.txt. Entities are mapped on trip_id
+     * of file `trips.txt`
      */
     @Override
     public Map<String, Trip> getTripAll() {
