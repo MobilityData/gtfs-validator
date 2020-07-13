@@ -133,7 +133,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final InvalidColorNotice toExport) throws IOException {
+    public void export(final CannotParseColorNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
