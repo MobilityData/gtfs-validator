@@ -407,8 +407,8 @@ public class Attribution extends GtfsEntity {
                                                   final Boolean isOperator, final Boolean isAuthority,
                                                   final String attributionUrl, final String attributionEmail,
                                                   final String attributionPhone) {
-        return attributionId + agencyId + routeId + tripId + organizationName + isProducer + isOperator + isAuthority + attributionUrl +
-                attributionEmail + attributionPhone;
+        return attributionId + agencyId + routeId + tripId + organizationName + isProducer + isOperator + isAuthority +
+                attributionUrl + attributionEmail + attributionPhone;
     }
 
     /**
