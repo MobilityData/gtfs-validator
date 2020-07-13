@@ -36,6 +36,9 @@ public class ValidateShapeIdReferenceInStopTime {
                         final Trip trip) {
         if (stopTime != null) {
             if (stopTime.getShapeDistTraveled() != null) {
+                // if trip is null, then a TripIdNotFoundNotice is generated
+                // todo: implement use cross to execute cross validation of files `stop_times.txt` nd `trips.txt` on
+                // field `stop_times.trips_id`
                 if (trip != null) {
                     final String tripId = trip.getTripId();
                     final String shapeId = trip.getShapeId();
