@@ -43,7 +43,6 @@ import java.util.stream.Collectors;
  * Apache command line. This is created  when creating a new default configuration. Operations on this repository
  * are executed ihe main execution method and inside the relevant use cases.
  * <p>
- * Numeric ranges can be configured, see file https://github.com/MobilityData/gtfs-validator/blob/master/ADDING_NEW_RULES.md for detailed information.
  */
 public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> execParamCollection = new HashMap<>();
@@ -251,6 +250,8 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     /**
      * This method returns the collection of available {@code Option} as {@code Options}. This method is used to print
      * help when {@link ExecParam} with key HELP_KEY="help" is present in the repository.
+     * Numeric ranges can be configured, see file
+     * https://github.com/MobilityData/gtfs-validator/blob/master/ADDING_NEW_RULES.md for detailed information.
      *
      * @return the collection of available {@code Option} as {@code Options} when {@link ExecParam} with key
      * HELP_KEY="help" is present in the repository.
