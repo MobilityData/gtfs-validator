@@ -50,7 +50,7 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E024 - Same name and description for route'"+System.lineSeparator());
+        logger.info("Validating rule 'E024 - Same name and description for route'" + System.lineSeparator());
         Collection<Route> routes = dataRepo.getRouteAll();
         routes.stream()
                 .filter(route -> !(isValidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName())))

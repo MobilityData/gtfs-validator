@@ -37,38 +37,49 @@ import java.util.List;
  * object.
  */
 public class StopTime extends GtfsEntity implements Comparable<StopTime> {
-    @NotNull private final String tripId;
-    @Nullable private final Integer arrivalTime;
-    @Nullable private final Integer departureTime;
-    @NotNull private final String stopId;
-    @NotNull private final Integer stopSequence;
-    @Nullable private final String stopHeadsign;
-    @NotNull private final PickupType pickupType;
-    @NotNull private final DropOffType dropOffType;
-    @NotNull private final ContinuousPickup continuousPickup;
-    @NotNull private final ContinuousDropOff continuousDropOff;
-    @Nullable private final Float shapeDistTraveled;
-    @NotNull private final Timepoint timePoint;
+    @NotNull
+    private final String tripId;
+    @Nullable
+    private final Integer arrivalTime;
+    @Nullable
+    private final Integer departureTime;
+    @NotNull
+    private final String stopId;
+    @NotNull
+    private final Integer stopSequence;
+    @Nullable
+    private final String stopHeadsign;
+    @NotNull
+    private final PickupType pickupType;
+    @NotNull
+    private final DropOffType dropOffType;
+    @NotNull
+    private final ContinuousPickup continuousPickup;
+    @NotNull
+    private final ContinuousDropOff continuousDropOff;
+    @Nullable
+    private final Float shapeDistTraveled;
+    @NotNull
+    private final Timepoint timePoint;
 
     /**
-     *
-     * @param tripId             identifies a trip
-     * @param arrivalTime        arrival time at a specific stop for a specific trip on a route
-     * @param departureTime      departure time at a specific stop for a specific trip on a route
-     * @param stopId             identifies the serviced stop
-     * @param stopSequence       order of stops for a particular trip
-     * @param stopHeadsign       text that appears on signage identifying the trip's destination to riders
-     * @param pickupType         indicates pickup method
-     * @param dropOffType        indicates drop off method.
-     * @param continuousPickup   indicates that the rider can board the transit vehicle at any point along the
-     *                           vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
-     *                           next {@link StopTime} in the trip’s stop_sequence
-     * @param continuousDropOff  indicates that the rider can alight the transit vehicle at any point along the
-     *                           vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
-     *                           next {@link StopTime} in the trip’s stop_sequence
-     * @param shapeDistTraveled  actual distance traveled along the associated shape
-     * @param timepoint          indicates if arrival and departure times for a stop are strictly adhered to by the
-     *                           vehicle or if they are instead approximate and/or interpolated times
+     * @param tripId            identifies a trip
+     * @param arrivalTime       arrival time at a specific stop for a specific trip on a route
+     * @param departureTime     departure time at a specific stop for a specific trip on a route
+     * @param stopId            identifies the serviced stop
+     * @param stopSequence      order of stops for a particular trip
+     * @param stopHeadsign      text that appears on signage identifying the trip's destination to riders
+     * @param pickupType        indicates pickup method
+     * @param dropOffType       indicates drop off method.
+     * @param continuousPickup  indicates that the rider can board the transit vehicle at any point along the
+     *                          vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
+     *                          next {@link StopTime} in the trip’s stop_sequence
+     * @param continuousDropOff indicates that the rider can alight the transit vehicle at any point along the
+     *                          vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
+     *                          next {@link StopTime} in the trip’s stop_sequence
+     * @param shapeDistTraveled actual distance traveled along the associated shape
+     * @param timepoint         indicates if arrival and departure times for a stop are strictly adhered to by the
+     *                          vehicle or if they are instead approximate and/or interpolated times
      */
     private StopTime(@NotNull String tripId,
                      @Nullable Integer arrivalTime,
@@ -301,9 +312,9 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
         /**
          * Sets field continuousPickup value and returns this
          *
-         * @param continuousPickup  indicates that the rider can board the transit vehicle at any point along the
-         *                          vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
-         *                          next {@link StopTime} in the trip’s stop_sequence
+         * @param continuousPickup indicates that the rider can board the transit vehicle at any point along the
+         *                         vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
+         *                         next {@link StopTime} in the trip’s stop_sequence
          * @return builder for future object creation
          */
         public StopTimeBuilder continuousPickup(@Nullable final Integer continuousPickup) {
@@ -313,9 +324,9 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
         }
 
         /**
-         * @param continuousDropOff  indicates that the rider can alight the transit vehicle at any point along the
-         *                           vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
-         *                           next {@link StopTime} in the trip’s stop_sequence
+         * @param continuousDropOff indicates that the rider can alight the transit vehicle at any point along the
+         *                          vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
+         *                          next {@link StopTime} in the trip’s stop_sequence
          * @return builder for future object creation
          */
         public StopTimeBuilder continuousDropOff(@Nullable final Integer continuousDropOff) {
@@ -387,12 +398,12 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
                 }
                 if (stopSequence == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stop_times.txt",
-                            "stop_sequence","trip_id",
+                            "stop_sequence", "trip_id",
                             "stop_sequence", tripId, stopSequence));
                 }
                 if (pickupType == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("stop_times.txt", "pickup_type",
-                            originalPickupType,"trip_id", "stop_sequence",
+                            originalPickupType, "trip_id", "stop_sequence",
                             tripId, stopSequence));
                 }
                 if (dropOffType == null) {
@@ -410,14 +421,14 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
                             "continuous_drop_off", originalContinuousDropOff, "trip_id",
                             "stop_sequence", tripId, stopSequence));
                 }
-                if (shapeDistTraveled != null && shapeDistTraveled < 0){
+                if (shapeDistTraveled != null && shapeDistTraveled < 0) {
                     noticeCollection.add(new FloatFieldValueOutOfRangeNotice("stop_times.txt",
                             "shape_dist_traveled", 0, Float.MAX_VALUE, shapeDistTraveled,
                             "trip_id", "stop_sequence", tripId, stopSequence));
                 }
                 if (timepoint == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("stop_times.txt", "timepoint",
-                           originalTimepoint, "trip_id", "stop_sequence",
+                            originalTimepoint, "trip_id", "stop_sequence",
                             tripId, stopSequence));
                 }
                 return new EntityBuildResult<>(noticeCollection);
@@ -430,6 +441,7 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public StopTimeBuilder clear() {
@@ -461,7 +473,7 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
      * @return the key corresponding to this {@link StopTime}
      */
     public static String getStopTimeMappingKey(final String tripId, final Integer stopSequence) {
-        return tripId+stopSequence;
+        return tripId + stopSequence;
     }
 
     public String getStopTimeMappingKey() {

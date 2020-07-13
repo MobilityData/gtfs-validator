@@ -154,7 +154,7 @@ class ProcessParsedTranslationTest {
     }
 
     @Test
-    void duplicateTranslationShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo () {
+    void duplicateTranslationShouldGenerateNoticeAndNotBeAddedToGtfsDataRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Translation.TranslationBuilder mockBuilder = mock(Translation.TranslationBuilder.class, RETURNS_SELF);

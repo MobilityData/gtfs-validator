@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
@@ -30,11 +31,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -618,7 +615,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void addShapePointWithSameDataShouldReturnNull () {
+    void addShapePointWithSameDataShouldReturnNull() {
         final ShapePoint firstShapePoint = mock(ShapePoint.class);
         when(firstShapePoint.getShapeId()).thenReturn("test id00");
         when(firstShapePoint.getShapePtLat()).thenReturn(50f);
@@ -726,7 +723,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void addStopTimeWithSameDataShouldReturnNull () {
+    void addStopTimeWithSameDataShouldReturnNull() {
         final StopTime firstStopTime = mock(StopTime.class);
         when(firstStopTime.getTripId()).thenReturn("trip id");
         when(firstStopTime.getStopSequence()).thenReturn(3);
@@ -742,7 +739,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getStopTimeByTripIdAndAddStopTimeShouldReturnSameEntity(){
+    void getStopTimeByTripIdAndAddStopTimeShouldReturnSameEntity() {
         final StopTime mockStopTime00 = mock(StopTime.class);
         when(mockStopTime00.getTripId()).thenReturn("trip id00");
         when(mockStopTime00.getStopSequence()).thenReturn(3);

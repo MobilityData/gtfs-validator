@@ -40,12 +40,12 @@ public class ExportResultAsFile {
     public void execute() throws IOException {
 
         if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY))) {
-            logger.info("-p provided, exporting results as proto"+System.lineSeparator());
+            logger.info("-p provided, exporting results as proto" + System.lineSeparator());
         } else {
-            logger.info("Results are exported as JSON by default"+System.lineSeparator());
+            logger.info("Results are exported as JSON by default" + System.lineSeparator());
         }
 
-        logger.info("Exporting validation repo content:" + resultRepo.getAll()+System.lineSeparator());
+        logger.info("Exporting validation repo content:" + resultRepo.getAll() + System.lineSeparator());
 
         final String outputPath = execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY);
         final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));

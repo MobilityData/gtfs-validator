@@ -218,6 +218,6 @@ class AttributionTest {
                 .build();
 
         assertEquals("attribution idagency idroute idtrip idorganization namefalsetruefalseurlemailphone",
-                ((Attribution)entityBuildResult.getData()).getAttributionMappingKey());
+                ((Attribution) entityBuildResult.getData()).getAttributionMappingKey());
     }
 }

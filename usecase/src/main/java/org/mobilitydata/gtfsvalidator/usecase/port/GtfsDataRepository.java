@@ -116,7 +116,7 @@ public interface GtfsDataRepository {
      * a shape object. The returned map is ordered by shape_pt_sequence.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * @return an immutable map of shape points from shapes.txt related to the id provided as parameter; which
      * represents a shape object. The returned map is ordered by shape_pt_sequence.
      */
     Map<Integer, ShapePoint> getShapeById(final String shapeId);
@@ -140,8 +140,8 @@ public interface GtfsDataRepository {
      * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
      * The returned map is ordered by stop_sequence
      *
-     * @param tripId  identifies a trip
-     * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
+     * @param tripId identifies a trip
+     * @return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     Map<Integer, StopTime> getStopTimeByTripId(final String tripId);
 

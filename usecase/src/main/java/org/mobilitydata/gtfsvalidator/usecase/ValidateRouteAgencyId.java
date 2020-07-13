@@ -17,8 +17,8 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.AgencyIdNotFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
