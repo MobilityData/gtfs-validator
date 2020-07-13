@@ -27,7 +27,7 @@ public class ShapeIdNotFoundNotice extends ErrorNotice {
                                  final Object compositeKeySecondValue, final String shapeId) {
         super(filename,
                 E_034,
-                "GTFS shape_id does not exist in GTFS data",
+                "Value of field `shape_id` should exist in GTFS `shapes.txt` data",
                 "GTFS file `" + filename + "` (with composite key: `" + compositeKeyFirstPart + "`: " +
                         "`" + compositeKeySecondPart + "` -- `" + compositeKeyFirstValue + "`: `"
                         + compositeKeySecondValue + "`) includes GTFS shape_id: `" + shapeId +

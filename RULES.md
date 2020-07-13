@@ -147,7 +147,7 @@ Value of field `route_id` should exist in GTFS data.
 
 ### E034 - `shape_id` not found
 
-Value of field `shape_id` should exist in GTFS data.
+Value of field `shape_id` should exist in GTFS `shapes.txt` data.
 
 <a name="E035"/>
 
