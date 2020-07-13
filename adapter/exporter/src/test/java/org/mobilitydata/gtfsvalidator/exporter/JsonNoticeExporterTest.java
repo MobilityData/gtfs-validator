@@ -301,10 +301,10 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        InvalidColorNotice toExport = new InvalidColorNotice(
+        CannotParseColorNotice toExport = new CannotParseColorNotice(
                 FILENAME,
                 "field_name",
-                "entity_id",
+                0,
                 "#zz"
         );
         underTest.export(toExport);
