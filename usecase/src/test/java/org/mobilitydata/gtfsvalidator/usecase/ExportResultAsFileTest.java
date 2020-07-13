@@ -59,7 +59,7 @@ class ExportResultAsFileTest {
         verify(mockExecParamRepo, times(2)).getExecParamValue(mockExecParamRepo.PROTO_KEY);
 
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("Results are exported as JSON by default"+System.lineSeparator()));
+                .info(ArgumentMatchers.eq("Results are exported as JSON by default" + System.lineSeparator()));
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll() +
                         System.lineSeparator()));

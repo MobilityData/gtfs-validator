@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 class ValidateAgencyIdRequirementTest {
 
     @Test
-    void agencyCollectionWithOneRecordShouldNotGenerateNotice(){
+    void agencyCollectionWithOneRecordShouldNotGenerateNotice() {
         final Agency mockAgency = mock(Agency.class);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getAgencyAll()).thenReturn(new ArrayList<>(List.of(mockAgency)));
@@ -55,7 +55,7 @@ class ValidateAgencyIdRequirementTest {
     }
 
     @Test
-    void agencyCollectionWithMultipleRecordWithIdShouldNotGenerateNotice(){
+    void agencyCollectionWithMultipleRecordWithIdShouldNotGenerateNotice() {
         final Agency mockAgency00 = mock(Agency.class);
         when(mockAgency00.getAgencyId()).thenReturn("agency id 00");
         final Agency mockAgency01 = mock(Agency.class);
@@ -89,7 +89,7 @@ class ValidateAgencyIdRequirementTest {
     }
 
     @Test
-    void agencyCollectionWithMultipleRecordWithoutIdShouldGenerateNotices(){
+    void agencyCollectionWithMultipleRecordWithoutIdShouldGenerateNotices() {
         final Agency mockAgency00 = mock(Agency.class);
         when(mockAgency00.getAgencyId()).thenReturn(null);
         final Agency mockAgency01 = mock(Agency.class);
