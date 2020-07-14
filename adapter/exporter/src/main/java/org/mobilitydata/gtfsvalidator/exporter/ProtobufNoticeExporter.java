@@ -571,7 +571,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setEntityId(toExport.getEntityId())
                 .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
                 .setEntityValue(KEY_UNKNOWN_SERVICE_ID)
-                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_UNKNOWN_SERVICE_ID)))
+                .setAltEntityValue(String.valueOf(String.valueOf(toExport.getNoticeSpecific(KEY_UNKNOWN_SERVICE_ID))))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
