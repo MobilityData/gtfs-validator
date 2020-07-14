@@ -19,12 +19,15 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ParentStationInvalidLocationTypeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StationWithParentStationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
-import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /*
@@ -62,134 +65,217 @@ public class ProcessParsedStop {
         }
     }
 
-    private final GtfsSpecRepository specRepo;
     private final ValidationResultRepository resultRepository;
     private final GtfsDataRepository gtfsRepo;
+    private final StopOrPlatform.StopOrPlatformBuilder stopOrPlatformBuilder;
+    private final Station.StationBuilder stationBuilder;
     private final Entrance.EntranceBuilder entranceBuilder;
+    private final GenericNode.GenericNodeBuilder genericNodeBuilder;
+    private final BoardingArea.BoardingAreaBuilder boardingAreaBuilder;
 
-    public ProcessParsedStop(final GtfsSpecRepository specRepo,
-                             final ValidationResultRepository resultRepo,
+    public ProcessParsedStop(final ValidationResultRepository resultRepo,
                              final GtfsDataRepository gtfsRepo,
-                             final Entrance.EntranceBuilder entranceBuilder) {
-        this.specRepo = specRepo;
+                             final Station.StationBuilder stationBuilder,
+                             final StopOrPlatform.StopOrPlatformBuilder stopOrPlatformBuilder,
+                             final Entrance.EntranceBuilder entranceBuilder,
+                             final GenericNode.GenericNodeBuilder genericNodeBuilder,
+                             final BoardingArea.BoardingAreaBuilder boardingAreaBuilder) {
         this.resultRepository = resultRepo;
         this.gtfsRepo = gtfsRepo;
+        this.stopOrPlatformBuilder = stopOrPlatformBuilder;
+        this.stationBuilder = stationBuilder;
         this.entranceBuilder = entranceBuilder;
+        this.genericNodeBuilder = genericNodeBuilder;
+        this.boardingAreaBuilder = boardingAreaBuilder;
     }
 
-    public LocationBase execute(final ParsedEntity validatedStopEntity) {
+    public void execute(final Map<String, ParsedEntity> parsedEntityByStopId) {
+        parsedEntityByStopId.values().forEach(stop -> {
+            Integer locationType = (Integer) stop.get("location_type");
+            String stopId = stop.getEntityId();
+            String stopName = (String) stop.get("stop_name");
+            Float stopLat = (Float) stop.get("stop_lat");
+            Float stopLon = (Float) stop.get("stop_lon");
+            String stopCode = (String) stop.get("stop_code");
+            String stopDesc = (String) stop.get("stop_desc");
+            String zoneId = (String) stop.get("zone_id");
+            String stopUrl = (String) stop.get("stop_url");
+            String parentStation = (String) stop.get("parent_station");
+            String stopTimezone = (String) stop.get("stop_timezone");
+            Integer wheelchairBoarding = (Integer) stop.get("wheelchair_boarding");
+            String levelId = (String) stop.get("level_id");
+            String platformCode = (String) stop.get("platform_code");
 
-        Integer locationType = (Integer) validatedStopEntity.get("location_type");
-        String stopId = validatedStopEntity.getEntityId();
-        String stopName = (String) validatedStopEntity.get("stop_name");
-        Float stopLat = (Float) validatedStopEntity.get("stop_lat");
-        Float stopLon = (Float) validatedStopEntity.get("stop_lon");
-        String stopCode = (String) validatedStopEntity.get("stop_code");
-        String stopDesc = (String) validatedStopEntity.get("stop_desc");
-        String zoneId = (String) validatedStopEntity.get("zone_id");
-        String stopUrl = (String) validatedStopEntity.get("stop_url");
-        String parentStation = (String) validatedStopEntity.get("parent_station");
-        String stopTimezone = (String) validatedStopEntity.get("stop_timezone");
-        Integer wheelchairBoarding = (Integer) validatedStopEntity.get("wheelchair_boarding");
-        String levelId = (String) validatedStopEntity.get("level_id");
-        String platformCode = (String) validatedStopEntity.get("platform_code");
+            EntityBuildResult<?> stopEntityBuildResult = null;
 
-        LocationBase toReturn = null;
+            switch (LocationType.fromInt(locationType)) {
+                case STOP_OR_PLATFORM: {
+                    if (parentStation != null) {
+                        ParsedEntity parent = parsedEntityByStopId.get(parentStation);
+                        Integer parentLocationType = (Integer) parent.get("location_type");
 
-        switch (LocationType.fromInt(locationType)) {
-            case STOP_OR_PLATFORM: {
-                StopOrPlatform.StopOrPlatformBuilder builder = new StopOrPlatform.StopOrPlatformBuilder(
-                        stopId, stopName, stopLat, stopLon);
+                        if (LocationType.fromInt(parentLocationType) != LocationType.STATION) {
+                            resultRepository.addNotice(
+                                    new ParentStationInvalidLocationTypeNotice(
+                                            stopId, locationType, parentStation, 1,
+                                            parentLocationType
+                                    )
+                            );
+                        }
 
-                builder.parentStation(parentStation)
-                        .wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
-                        .platformCode(platformCode)
-                        .stopCode(stopCode)
-                        .stopDesc(stopDesc)
-                        .zoneId(zoneId)
-                        .stopUrl(stopUrl)
-                        .stopTimezone(stopTimezone);
+                        if (WheelchairBoarding.fromInt(wheelchairBoarding) ==
+                                WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING) {
+                            wheelchairBoarding = (Integer) parent.get("wheelchair_boarding");
+                        }
+                    }
 
-                //TODO: ready to be built and added to gtfsDataRepo
-                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
-                break;
-            }
-            case STATION: {
-                Station.StationBuilder builder = new Station.StationBuilder(
-                        stopId, stopName, stopLat, stopLon);
+                    stopOrPlatformBuilder.clear()
+                            .parentStation(parentStation)
+                            .wheelchairBoarding(wheelchairBoarding)
+                            .platformCode(platformCode)
+                            .stopId(stopId)
+                            .stopName(stopName)
+                            .stopLat(stopLat)
+                            .stopLon(stopLon)
+                            .stopCode(stopCode)
+                            .stopDesc(stopDesc)
+                            .zoneId(zoneId)
+                            .stopUrl(stopUrl)
+                            .stopTimezone(stopTimezone);
 
-                builder.wheelchairBoarding(WheelchairBoarding.fromInt(wheelchairBoarding))
-                        .levelId(levelId)
-                        .stopCode(stopCode)
-                        .stopDesc(stopDesc)
-                        .zoneId(zoneId)
-                        .stopUrl(stopUrl)
-                        .stopTimezone(stopTimezone);
-                //TODO: ready to be built and added to gtfsDataRepo
-                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
-                break;
-            }
-            case ENTRANCE: {
-                entranceBuilder.clear()
-                        .parentStation(parentStation)
-                        .wheelchairBoarding(wheelchairBoarding)
-                        .stopId(stopId)
-                        .stopName(stopName)
-                        .stopLat(stopLat)
-                        .stopLon(stopLon)
-                        .stopCode(stopCode)
-                        .stopDesc(stopDesc)
-                        .zoneId(zoneId)
-                        .stopUrl(stopUrl)
-                        .stopTimezone(stopTimezone);
-
-                final EntityBuildResult<?> unfinalizedStop = entranceBuilder.build();
-
-                if (!unfinalizedStop.isSuccess()) {
-                    // at this step it is certain that calling getData method will return a list of notices, therefore there is
-                    // no need for cast check
-                    //noinspection unchecked
-                    ((List<Notice>) unfinalizedStop.getData()).forEach(resultRepository::addNotice);
-                } else {
-                    toReturn = (LocationBase) unfinalizedStop.getData();
+                    stopEntityBuildResult = stopOrPlatformBuilder.build();
+                    break;
                 }
-                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
-                break;
-            }
-            case GENERIC_NODE: {
-                GenericNode.GenericNodeBuilder builder = new GenericNode.GenericNodeBuilder(
-                        stopId, parentStation);
+                case STATION: {
+                    if (parentStation != null) {
+                        resultRepository.addNotice(
+                                new StationWithParentStationNotice(stopId, 1, parentStation)
+                        );
+                    }
 
-                builder.stopName(stopName)
-                        .stopLat(stopLat)
-                        .stopLon(stopLon)
-                        .stopCode(stopCode)
-                        .stopDesc(stopDesc)
-                        .zoneId(zoneId)
-                        .stopUrl(stopUrl)
-                        .stopTimezone(stopTimezone);
-                //TODO: ready to be built and added to gtfsDataRepo
-                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
-                break;
-            }
-            case BOARDING_AREA: {
-                BoardingArea.BoardingAreaBuilder builder = new BoardingArea.BoardingAreaBuilder(
-                        stopId, parentStation);
+                    stationBuilder.clear()
+                            .wheelchairBoarding(wheelchairBoarding)
+                            .levelId(levelId)
+                            .stopId(stopId)
+                            .stopName(stopName)
+                            .stopLat(stopLat)
+                            .stopLon(stopLon)
+                            .stopCode(stopCode)
+                            .stopDesc(stopDesc)
+                            .zoneId(zoneId)
+                            .stopUrl(stopUrl)
+                            .stopTimezone(stopTimezone);
 
-                builder.stopName(stopName)
-                        .stopLat(stopLat)
-                        .stopLon(stopLon)
-                        .stopCode(stopCode)
-                        .stopDesc(stopDesc)
-                        .zoneId(zoneId)
-                        .stopUrl(stopUrl)
-                        .stopTimezone(stopTimezone);
-                //TODO: ready to be built and added to gtfsDataRepo
-                //TODO: wheelchair value in a subsequent use case (FinalizeStopEntity)
-                break;
-            }
-        }
+                    stopEntityBuildResult = stationBuilder.build();
+                    break;
+                }
+                case ENTRANCE: {
+                    if (parentStation != null) {
+                        ParsedEntity parent = parsedEntityByStopId.get(parentStation);
+                        Integer parentLocationType = (Integer) parent.get("location_type");
 
-        return toReturn;
+                        if (LocationType.fromInt(parentLocationType) != LocationType.STATION) {
+                            resultRepository.addNotice(
+                                    new ParentStationInvalidLocationTypeNotice(
+                                            stopId, locationType, parentStation, 1,
+                                            parentLocationType
+                                    )
+                            );
+                        }
+
+                        if (WheelchairBoarding.fromInt(wheelchairBoarding) ==
+                                WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING) {
+                            wheelchairBoarding = (Integer) parent.get("wheelchair_boarding");
+                        }
+                    }
+
+                    entranceBuilder.clear()
+                            .parentStation(parentStation)
+                            .wheelchairBoarding(wheelchairBoarding)
+                            .stopId(stopId)
+                            .stopName(stopName)
+                            .stopLat(stopLat)
+                            .stopLon(stopLon)
+                            .stopCode(stopCode)
+                            .stopDesc(stopDesc)
+                            .zoneId(zoneId)
+                            .stopUrl(stopUrl)
+                            .stopTimezone(stopTimezone);
+
+                    stopEntityBuildResult = entranceBuilder.build();
+                    break;
+                }
+                case GENERIC_NODE: {
+                    if (parentStation != null) {
+                        ParsedEntity parent = parsedEntityByStopId.get(parentStation);
+                        Integer parentLocationType = (Integer) parent.get("location_type");
+
+                        if (LocationType.fromInt(parentLocationType) != LocationType.STATION) {
+                            resultRepository.addNotice(
+                                    new ParentStationInvalidLocationTypeNotice(
+                                            stopId, locationType, parentStation, 1,
+                                            parentLocationType
+                                    )
+                            );
+                        }
+                    }
+
+                    genericNodeBuilder.clear()
+                            .parentStation(parentStation)
+                            .stopId(stopId)
+                            .stopName(stopName)
+                            .stopLat(stopLat)
+                            .stopLon(stopLon)
+                            .stopCode(stopCode)
+                            .stopDesc(stopDesc)
+                            .zoneId(zoneId)
+                            .stopUrl(stopUrl)
+                            .stopTimezone(stopTimezone);
+
+                    stopEntityBuildResult = genericNodeBuilder.build();
+                    break;
+                }
+                case BOARDING_AREA: {
+                    if (parentStation != null) {
+                        ParsedEntity parent = parsedEntityByStopId.get(parentStation);
+                        Integer parentLocationType = (Integer) parent.get("location_type");
+
+                        if (LocationType.fromInt(parentLocationType) != LocationType.STOP_OR_PLATFORM) {
+                            resultRepository.addNotice(
+                                    new ParentStationInvalidLocationTypeNotice(
+                                            stopId, locationType, parentStation, 0,
+                                            parentLocationType
+                                    )
+                            );
+                        }
+                    }
+
+                    boardingAreaBuilder.clear()
+                            .parentStation(parentStation)
+                            .stopId(stopId)
+                            .stopName(stopName)
+                            .stopLat(stopLat)
+                            .stopLon(stopLon)
+                            .stopCode(stopCode)
+                            .stopDesc(stopDesc)
+                            .zoneId(zoneId)
+                            .stopUrl(stopUrl)
+                            .stopTimezone(stopTimezone);
+
+                    stopEntityBuildResult = boardingAreaBuilder.build();
+                    break;
+                }
+            }
+
+            if (stopEntityBuildResult.isSuccess()) {
+                if (gtfsRepo.addStop((LocationBase) stopEntityBuildResult.getData()) == null) {
+                    resultRepository.addNotice(new DuplicatedEntityNotice("stops.txt",
+                            "stop_id", stopId));
+                }
+            } else {
+                //noinspection unchecked
+                ((List<Notice>) stopEntityBuildResult.getData()).forEach(resultRepository::addNotice);
+            }
+        });
     }
 }

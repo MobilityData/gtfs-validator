@@ -16,13 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 
 public enum WheelchairBoarding {
-    INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING(0),
+    UNKNOWN_WHEELCHAIR_BOARDING(0),
     WHEELCHAIR_ACCESSIBLE(1),
-    NOT_WHEELCHAIR_ACCESSIBLE(2);
+    NOT_WHEELCHAIR_ACCESSIBLE(2),
+    INVALID_VALUE(Integer.MAX_VALUE);
 
     private final int value;
 
@@ -32,27 +32,11 @@ public enum WheelchairBoarding {
 
     static public WheelchairBoarding fromInt(Integer fromValue) {
         if (fromValue == null) {
-            return INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING;
+            return UNKNOWN_WHEELCHAIR_BOARDING;
         }
         return Stream.of(WheelchairBoarding.values())
                 .filter(enumItem -> enumItem.value == fromValue)
                 .findAny()
-                .orElse(INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING);
-    }
-
-    /**
-     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
-     *
-     * @param value the integer to associate with this enum values
-     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
-     */
-    static public boolean isEnumValueValid(final Integer value) {
-        if (value == null) {
-            return true;
-        }
-        return Stream.of(WheelchairBoarding.values())
-                .filter(enumItem -> Objects.equals(enumItem.value, value))
-                .findAny()
-                .orElse(null) != null;
+                .orElse(INVALID_VALUE);
     }
 }

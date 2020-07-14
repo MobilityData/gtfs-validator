@@ -557,8 +557,30 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityId(toExport.getEntityId())
-                .setEntityValue(KEY_UNKNOWN_ROUTE_ID)
+                .setEntityValue((String) toExport.getNoticeSpecific(KEY_UNKNOWN_ROUTE_ID))
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_UNKNOWN_ROUTE_ID)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final StationWithParentStationNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getEntityId())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_STATION_WITH_PARENT_STATION)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final ParentStationInvalidLocationTypeNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getEntityId())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_PARENT_STATION_WITH_WRONG_LOCATION_TYPE)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

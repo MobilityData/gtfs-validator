@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
@@ -115,6 +116,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Map containing Translation entities. Entities are mapped on the value found in column table_name, field_value and
     // language of GTFS file translations.txt.
     private final Map<String, Map<String, Map<String, Translation>>> translationPerTableName = new HashMap<>();
+
+    // Map containing Stop entities. Entities are mapped on the value found in column stop_id of GTFS file stops.txt
+    private final Map<String, LocationBase> stopPerId = new HashMap<>();
 
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
@@ -787,5 +791,51 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                                                    final String fieldName,
                                                                    final String language) {
         return translationPerTableName.get(tableName).get(fieldName).get(language);
+    }
+
+    /**
+     * Add a stop representing a row from stops.txt to this {@link GtfsDataRepository}. Return the entity added to the
+     * repository if the uniqueness constraint of stop based on stop_id is respected, if this requirement is not met,
+     * returns null.
+     *
+     * @param newStop the internal representation of a row from stops.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of stop based on stop_id is
+     * respected, if this requirement is not met returns null.
+     */
+    @Override
+    public LocationBase addStop(final LocationBase newStop) throws IllegalArgumentException {
+        if (newStop != null) {
+            final String stopId = newStop.getStopId();
+            if (stopPerId.containsKey(stopId)) {
+                return null;
+            } else {
+                stopPerId.put(stopId, newStop);
+                return newStop;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null stop to data repository");
+        }
+    }
+
+    /**
+     * Return an immutable collection of LocationBase objects representing all the rows from stops.txt
+     *
+     * @return an immutable collection of LocationBase objects representing all the rows from stops.txt
+     */
+    @Override
+    public Collection<LocationBase> getStopAll() {
+        return Collections.unmodifiableCollection(stopPerId.values());
+    }
+
+    /**
+     * Return the LocationBase representing a row from stops.txt related to the id provided as parameter
+     *
+     * @param stopId the key from stops.txt related to the LocationBase to be returned
+     * @return the LocationBase representing a row from stops.txt related to the id provided as parameter.
+     * Null if the id couldn't be found.
+     */
+    @Override
+    public LocationBase getStopById(final String stopId) {
+        return stopPerId.get(stopId);
     }
 }

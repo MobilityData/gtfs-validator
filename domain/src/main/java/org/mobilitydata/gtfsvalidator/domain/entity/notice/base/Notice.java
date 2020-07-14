@@ -58,6 +58,10 @@ public abstract class Notice {
     public static final String KEY_COMPOSITE_KEY_FIFTH_VALUE = "compositeKeyFifthValue";
     public static final String KEY_UNKNOWN_ROUTE_ID = "unknownRouteId";
     public static final String KEY_AGENCY_NAME = "agencyName";
+    public static final String KEY_CHILD_LOCATION_TYPE = "childLocationType";
+    public static final String KEY_PARENT_ID = "parentId";
+    public static final String KEY_EXPECTED_PARENT_LOCATION_TYPE = "expectedParentLocationType";
+    public static final String KEY_ACTUAL_PARENT_LOCATION_TYPE = "actualParentLocationType";
 
     private final String filename;
     private final int code;

@@ -256,4 +256,14 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final AgencyIdNotFoundNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final StationWithParentStationNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ParentStationInvalidLocationTypeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

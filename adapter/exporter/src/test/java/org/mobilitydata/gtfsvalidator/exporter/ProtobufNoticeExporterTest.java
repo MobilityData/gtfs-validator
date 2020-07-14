@@ -27,7 +27,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.time.LocalDate;
 
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_ROUTE_ID;
 import static org.mockito.Mockito.*;
 
 class ProtobufNoticeExporterTest {
@@ -1332,7 +1331,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("entity id"));
         verify(mockBuilder, times(1))
-                .setEntityValue(ArgumentMatchers.eq(KEY_UNKNOWN_ROUTE_ID));
+                .setEntityValue(ArgumentMatchers.eq("route id"));
         verify(mockBuilder, times(1))
                 .setAltEntityValue(ArgumentMatchers.eq("route id"));
         verify(mockBuilder, times(1)).build();

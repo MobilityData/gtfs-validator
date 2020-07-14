@@ -94,4 +94,9 @@ public interface NoticeExporter {
     void export(final RouteIdNotFoundNotice routeIdNotFoundNotice) throws IOException;
 
     void export(final AgencyIdNotFoundNotice agencyIdNotFoundNotice) throws IOException;
+
+    void export(final StationWithParentStationNotice stationWithParentStationNotice) throws IOException;
+
+    void export(final ParentStationInvalidLocationTypeNotice parentStationInvalidLocationTypeNotice)
+            throws IOException;
 }

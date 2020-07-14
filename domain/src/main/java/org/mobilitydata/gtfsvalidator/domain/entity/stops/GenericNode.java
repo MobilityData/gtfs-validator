@@ -18,59 +18,63 @@ package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
 /**
  * Model class for an entity defined in stops.txt with location_type = 3
  */
 public class GenericNode extends LocationBase {
 
-    public String getParentStation() {
-        return parentStation;
-    }
-
+    @NotNull
     private final String parentStation;
 
-    private GenericNode(@NotNull String stopId,
-                        @Nullable String stopCode,
-                        @Nullable String stopName,
-                        @Nullable String stopDesc,
-                        @Nullable Float stopLat,
-                        @Nullable Float stopLon,
-                        @Nullable String zoneId,
-                        @Nullable String stopUrl,
-                        @NotNull String parentStation,
-                        @Nullable String stopTimezone) {
+    private GenericNode(@NotNull final String stopId,
+                        @Nullable final String stopCode,
+                        @Nullable final String stopName,
+                        @Nullable final String stopDesc,
+                        @Nullable final Float stopLat,
+                        @Nullable final Float stopLon,
+                        @Nullable final String zoneId,
+                        @Nullable final String stopUrl,
+                        @NotNull final String parentStation,
+                        @Nullable final String stopTimezone) {
         super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone);
         this.parentStation = parentStation;
+    }
+
+    public @NotNull String getParentStation() {
+        return parentStation;
     }
 
     public static class GenericNodeBuilder extends LocationBaseBuilder {
 
         private String parentStation;
 
-        public GenericNodeBuilder(@NotNull String stopId, @NotNull String parentStation) {
-            this.stopId = stopId;
+        public GenericNodeBuilder parentStation(final String parentStation) {
             this.parentStation = parentStation;
-        }
-
-        public GenericNodeBuilder stopName(@Nullable String stopName) {
-            this.stopName = stopName;
             return this;
         }
 
-        public GenericNodeBuilder stopLat(@Nullable Float stopLat) {
-            this.stopLat = stopLat;
-            return this;
+        public EntityBuildResult<?> build() {
+            if (stopId == null || parentStation == null) {
+                if (stopId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_id", null));
+                }
+                if (parentStation == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "parent_station", stopId));
+                }
+                return new EntityBuildResult<>(noticeCollection);
+            } else {
+                return new EntityBuildResult<>(new GenericNode(stopId, stopCode, stopName, stopDesc, stopLat, stopLon,
+                        zoneId, stopUrl, parentStation, stopTimezone));
+            }
         }
 
-        public GenericNodeBuilder stopLon(@Nullable Float stopLon) {
-            this.stopLon = stopLon;
+        public GenericNodeBuilder clear() {
+            super.clearBase();
+            parentStation = null;
             return this;
-        }
-
-        public GenericNode build() {
-            return new GenericNode(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl,
-                    parentStation, stopTimezone);
         }
     }
 }

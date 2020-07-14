@@ -18,59 +18,63 @@ package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
 /**
  * Model class for an entity defined in stops.txt with location_type = 4
  */
 public class BoardingArea extends LocationBase {
 
-    public String getParentStation() {
-        return parentStation;
-    }
-
+    @NotNull
     private final String parentStation;
 
-    private BoardingArea(@NotNull String stopId,
-                         @Nullable String stopCode,
-                         @Nullable String stopName,
-                         @Nullable String stopDesc,
-                         @Nullable Float stopLat,
-                         @Nullable Float stopLon,
-                         @Nullable String zoneId,
-                         @Nullable String stopUrl,
-                         @NotNull String parentStation,
-                         @Nullable String stopTimezone) {
+    private BoardingArea(@NotNull final String stopId,
+                         @Nullable final String stopCode,
+                         @Nullable final String stopName,
+                         @Nullable final String stopDesc,
+                         @Nullable final Float stopLat,
+                         @Nullable final Float stopLon,
+                         @Nullable final String zoneId,
+                         @Nullable final String stopUrl,
+                         @NotNull final String parentStation,
+                         @Nullable final String stopTimezone) {
         super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone);
         this.parentStation = parentStation;
+    }
+
+    public @NotNull String getParentStation() {
+        return parentStation;
     }
 
     public static class BoardingAreaBuilder extends LocationBaseBuilder {
 
         private String parentStation;
 
-        public BoardingAreaBuilder(@NotNull String id, @NotNull String parentStation) {
-            this.stopId = id;
+        public BoardingAreaBuilder parentStation(final String parentStation) {
             this.parentStation = parentStation;
-        }
-
-        public BoardingAreaBuilder stopName(@Nullable String stopName) {
-            this.stopName = stopName;
             return this;
         }
 
-        public BoardingAreaBuilder stopLat(@Nullable Float stopLat) {
-            this.stopLat = stopLat;
-            return this;
+        public EntityBuildResult<?> build() {
+            if (stopId == null || parentStation == null) {
+                if (stopId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_id", null));
+                }
+                if (parentStation == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "parent_station", stopId));
+                }
+                return new EntityBuildResult<>(noticeCollection);
+            } else {
+                return new EntityBuildResult<>(new BoardingArea(stopId, stopCode, stopName, stopDesc, stopLat, stopLon,
+                        zoneId, stopUrl, parentStation, stopTimezone));
+            }
         }
 
-        public BoardingAreaBuilder stopLon(@Nullable Float stopLon) {
-            this.stopLon = stopLon;
+        public BoardingAreaBuilder clear() {
+            super.clearBase();
+            parentStation = null;
             return this;
-        }
-
-        public BoardingArea build() {
-            return new BoardingArea(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl,
-                    parentStation, stopTimezone);
         }
     }
 }

@@ -18,73 +18,96 @@ package org.mobilitydata.gtfsvalidator.domain.entity.stops;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
-import java.util.Objects;
+import static org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding.INVALID_VALUE;
+import static org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
 
 /**
  * Model class for an entity defined in stops.txt with location_type = 1
  */
 public class Station extends LocationBase {
 
-    public WheelchairBoarding getWheelchairBoarding() {
-        return wheelchairBoarding;
-    }
-
-    public void setWheelchairBoarding(WheelchairBoarding toSet) {
-        this.wheelchairBoarding = Objects.requireNonNullElse(toSet, WheelchairBoarding.INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING);
-    }
-
-    public String getLevelId() {
-        return levelId;
-    }
-
-    private WheelchairBoarding wheelchairBoarding;
+    @NotNull
+    private final WheelchairBoarding wheelchairBoarding;
+    @Nullable
     private final String levelId;
 
-    private Station(@NotNull String stopId,
-                    @Nullable String stopCode,
-                    @NotNull String stopName,
-                    @Nullable String stopDesc,
-                    @NotNull Float stopLat,
-                    @NotNull Float stopLon,
-                    @Nullable String zoneId,
-                    @Nullable String stopUrl,
-                    @Nullable String stopTimezone,
-                    @Nullable WheelchairBoarding wheelchairBoarding,
-                    @Nullable String levelId) {
+    private Station(@NotNull final String stopId,
+                    @Nullable final String stopCode,
+                    @NotNull final String stopName,
+                    @Nullable final String stopDesc,
+                    @NotNull final Float stopLat,
+                    @NotNull final Float stopLon,
+                    @Nullable final String zoneId,
+                    @Nullable final String stopUrl,
+                    @Nullable final String stopTimezone,
+                    @NotNull final WheelchairBoarding wheelchairBoarding,
+                    @Nullable final String levelId) {
         super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone);
         this.wheelchairBoarding = wheelchairBoarding;
         this.levelId = levelId;
     }
 
+    public @NotNull WheelchairBoarding getWheelchairBoarding() {
+        return wheelchairBoarding;
+    }
+
+    public @Nullable String getLevelId() {
+        return levelId;
+    }
+
     public static class StationBuilder extends LocationBaseBuilder {
 
-        private WheelchairBoarding wheelchairBoarding = WheelchairBoarding.INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING;
         private String levelId;
+        private WheelchairBoarding wheelchairBoarding = INVALID_VALUE;
+        private Integer originalWheelchairBoarding = Integer.MAX_VALUE; // required to distinguish optional field not set
 
-        public StationBuilder(@NotNull String stopId,
-                              @NotNull String stopName,
-                              @NotNull Float stopLat,
-                              @NotNull Float stopLon) {
-            this.stopId = stopId;
-            this.stopName = stopName;
-            this.stopLat = stopLat;
-            this.stopLon = stopLon;
-        }
-
-        public StationBuilder wheelchairBoarding(@Nullable WheelchairBoarding wheelchairBoarding) {
-            this.wheelchairBoarding = Objects.requireNonNullElse(wheelchairBoarding, WheelchairBoarding.INHERIT_OR_UNKNOWN_WHEELCHAIR_BOARDING);
-            return this;
-        }
-
-        public StationBuilder levelId(@Nullable String levelId) {
+        public StationBuilder levelId(@Nullable final String levelId) {
             this.levelId = levelId;
             return this;
         }
 
-        public Station build() {
-            return new Station(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone,
-                    wheelchairBoarding, levelId);
+        public StationBuilder wheelchairBoarding(@Nullable final Integer wheelchairBoarding) {
+            this.wheelchairBoarding = WheelchairBoarding.fromInt(wheelchairBoarding);
+            this.originalWheelchairBoarding = wheelchairBoarding;
+            return this;
+        }
+
+        public EntityBuildResult<?> build() {
+            if (stopId == null || stopName == null || stopLat == null || stopLon == null) {
+                if (stopId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_id", null));
+                }
+                if (stopName == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_name", stopId));
+                }
+                if (stopLat == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_lat", stopId));
+                }
+                if (stopLon == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_lon", stopId));
+                }
+                if (wheelchairBoarding == INVALID_VALUE) {
+                    noticeCollection.add(new UnexpectedEnumValueNotice("stops.txt",
+                            "wheelchair_boarding", stopId, originalWheelchairBoarding));
+                }
+
+                return new EntityBuildResult<>(noticeCollection);
+            } else {
+                return new EntityBuildResult<>(new Station(stopId, stopCode, stopName, stopDesc, stopLat, stopLon,
+                        zoneId, stopUrl, stopTimezone, wheelchairBoarding, levelId));
+            }
+        }
+
+        public StationBuilder clear() {
+            super.clearBase();
+            levelId = null;
+            wheelchairBoarding = UNKNOWN_WHEELCHAIR_BOARDING;
+            originalWheelchairBoarding = Integer.MAX_VALUE;
+            return this;
         }
     }
 }
