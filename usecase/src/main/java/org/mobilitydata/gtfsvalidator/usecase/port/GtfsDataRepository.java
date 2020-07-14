@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 
@@ -46,8 +45,6 @@ public interface GtfsDataRepository {
     Route getRouteById(final String routeId);
 
     CalendarDate addCalendarDate(final CalendarDate newCalendarDate) throws IllegalArgumentException;
-
-    CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDate date);
 
     Map<String, Map<String, CalendarDate>> getCalendarDateAll();
 

@@ -29,7 +29,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -51,8 +50,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // calendar.txt.
     private final Map<String, Calendar> calendarPerServiceId = new HashMap<>();
 
-    // CalendarDate entities container. Entities are mapped on the values found in column service_id and date of GTFS
-    // file calendar_dates.txt
+    // CalendarDate entities container. The key for the outer map is the calendar_dates.txt service_id, with the key for
+    // the inner map being the calendar_dates.txt date field
     private final Map<String, Map<String, CalendarDate>> calendarDatePerServiceIdAndDate = new HashMap<>();
 
     // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
@@ -291,19 +290,6 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         } else {
             throw new IllegalArgumentException("Cannot add null calendar date to data repository");
         }
-    }
-
-    /**
-     * Return the CalendarDate representing a row from calendar_dates.txt related to the id provided as parameter
-     *
-     * @param serviceId first part of the composite key used to map rows from calendar_dates.txt
-     * @param date      second part of the composite key used to map rows from calendar_dates.txt
-     * @return the CalendarDate representing a row from calendar_dates.txt related to the composite key provided as
-     * parameter
-     */
-    @Override
-    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDate date) {
-        return calendarDatePerServiceIdAndDate.get(serviceId).get(date.toString());
     }
 
     /**
