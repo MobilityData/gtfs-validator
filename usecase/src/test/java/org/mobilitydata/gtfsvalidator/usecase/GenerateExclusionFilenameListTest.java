@@ -34,15 +34,16 @@ import static org.mockito.Mockito.*;
 /**
  * This class is aimed at testing the filename list to exclude resulting from the algorithm. To do so, a simplified .
  * graph is used as proof of concept. It is represented as follows:
- * <p>
- * level0_file                         Root
- * /           \
- * /             \
- * /               \
- * level1_first_child     level1_second_child          Depth: 1
- * |
- * |
- * level2_only_child                                   Depth: 2
+ *
+ *                                         level0_file                         Root
+ *                                        /           \
+ *                                       /             \
+ *                                      /               \
+ *                        level1_first_child     level1_second_child          Depth: 1
+ *                                  |
+ *                                  |
+ *                        level2_only_child                                   Depth: 2
+ *
  */
 class GenerateExclusionFilenameListTest {
 
