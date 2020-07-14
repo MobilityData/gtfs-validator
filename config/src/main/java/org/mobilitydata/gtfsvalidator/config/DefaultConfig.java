@@ -268,10 +268,6 @@ public class DefaultConfig {
         return new GenerateFilenameListToProcess(logger);
     }
 
-    public ValidateAgencyIdRequirement validateAgencyIdRequirement() {
-        return new ValidateAgencyIdRequirement(gtfsDataRepository, resultRepo, logger);
-    }
-
     public ValidateAgenciesHaveSameAgencyTimezone validateAgenciesHaveSameAgencyTimezone() {
         return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
     }

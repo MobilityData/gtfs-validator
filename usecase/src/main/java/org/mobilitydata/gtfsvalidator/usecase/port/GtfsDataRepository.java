@@ -27,17 +27,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Map;
 
 public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
+    Agency addAgency(final Agency newAgency, final Agency.AgencyBuilder builder) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
 
     int getAgencyCount();
 
-    Collection<Agency> getAgencyAll();
+    Map<String, Agency> getAgencyAll();
 
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 

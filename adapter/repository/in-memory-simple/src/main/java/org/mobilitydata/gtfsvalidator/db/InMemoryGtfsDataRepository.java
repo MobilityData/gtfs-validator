@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
@@ -30,7 +29,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
@@ -125,17 +127,40 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * respected, if this requirement is not met returns null.
      */
     @Override
-    public Agency addAgency(@NotNull final Agency newAgency) throws IllegalArgumentException {
+    public Agency addAgency(@NotNull final Agency newAgency, final Agency.AgencyBuilder builder)
+            throws IllegalArgumentException {
+        // todo: implement early fail when adding agency with agency_id already in data repository
         //noinspection ConstantConditions
-        if (newAgency != null) {
-            if (agencyPerId.containsKey(newAgency.getAgencyId())) {
-                return null;
-            } else {
-                agencyPerId.put(newAgency.getAgencyId(), newAgency);
-                return newAgency;
-            }
-        } else {
+        if (newAgency == null) {
             throw new IllegalArgumentException("Cannot add null agency to data repository");
+        } else {
+            final String agencyId = newAgency.getAgencyId();
+            if (agencyId == null) {
+                if (getAgencyCount() > 1) {
+                    final Agency replacementAgency = (Agency) builder
+                            .clear()
+                            .agencyId(Agency.AgencyBuilder.DEFAULT_AGENCY_ID)
+                            .agencyEmail(newAgency.getAgencyEmail())
+                            .agencyFareUrl(newAgency.getAgencyUrl())
+                            .agencyLang(newAgency.getAgencyLang())
+                            .agencyName(newAgency.getAgencyName())
+                            .agencyPhone(newAgency.getAgencyPhone())
+                            .agencyUrl(newAgency.getAgencyUrl())
+                            .build()
+                            .getData();
+                    return addAgency(replacementAgency, builder);
+                } else {
+                    agencyPerId.put(agencyId, newAgency);
+                    return newAgency;
+                }
+            } else {
+                if (agencyPerId.containsKey(agencyId)) {
+                    return null;
+                } else {
+                    agencyPerId.put(agencyId, newAgency);
+                    return newAgency;
+                }
+            }
         }
     }
 
@@ -151,13 +176,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return an immutable collection of Agency objects representing all the rows from agency.txt
+     * Return an immutable map of Agency objects representing all the rows from agency.txt. Entities are mapped on field
+     * `agency_id` of file `agency.txt`. Note that if a record from `
      *
-     * @return a immutable collection of Agency objects representing all the rows from agency.txt
+     * @return a immutable map of Agency objects representing all the rows from agency.txt
      */
     @Override
-    public Collection<Agency> getAgencyAll() {
-        return Collections.unmodifiableCollection(agencyPerId.values());
+    public Map<String, Agency> getAgencyAll() {
+        return Collections.unmodifiableMap(agencyPerId);
     }
 
     /**
