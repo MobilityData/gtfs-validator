@@ -162,23 +162,4 @@ class AgencyTest {
         assertEquals(BLANK_STRING_VALUE, notice.getEntityId());
         assertEquals(1, noticeCollection.size());
     }
-
-    @Test
-    void createAgencyWithNullAgencyIdShouldAllocateDefaultValueAndShouldNotGenerateNotice() {
-        final Agency.AgencyBuilder underTest = new Agency.AgencyBuilder();
-
-        underTest.agencyId(null);
-        underTest.agencyName(STRING_TEST_VALUE);
-        underTest.agencyUrl(STRING_TEST_VALUE);
-        underTest.agencyTimezone(STRING_TEST_VALUE);
-        underTest.agencyLang(STRING_TEST_VALUE);
-        underTest.agencyPhone(STRING_TEST_VALUE);
-        underTest.agencyFareUrl(STRING_TEST_VALUE);
-        underTest.agencyEmail(STRING_TEST_VALUE);
-
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
-
-        final Agency toCheck = (Agency) entityBuildResult.getData();
-        assertEquals("defaultAgencyId", toCheck.getAgencyId());
-    }
 }

@@ -169,14 +169,13 @@ public class Agency extends GtfsEntity {
         }
 
         /**
-         * Sets field agencyId value and returns this. If field agency.agency_id is null, then a default value is
-         * allocated.
+         * Sets field agencyId value and returns this
          *
          * @param agencyId identifies a transit brand which is often synonymous with a transit agency
          * @return builder for future object creation
          */
         public AgencyBuilder agencyId(@Nullable final String agencyId) {
-            this.agencyId = agencyId != null ? agencyId : DEFAULT_AGENCY_ID;
+            this.agencyId = agencyId;
             return this;
         }
 
