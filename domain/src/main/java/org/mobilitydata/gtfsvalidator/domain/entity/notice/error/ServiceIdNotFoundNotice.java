@@ -26,7 +26,7 @@ public class ServiceIdNotFoundNotice extends ErrorNotice {
                                    final String serviceId) {
         super(filename,
                 E_036,
-                "GTFS `service_id` does not exist in GTFS data",
+                "Value of field `service_id` should exist in GTFS `calendar.txt` or `calendar_dates.txt`",
                 "Field: `" + fieldName + "` for entity from file : `" + filename + "` with id: `" + entityId +
                         "` does not refer to any record from `calendar.txt` or `calendar_dates.txt`",
                 entityId);

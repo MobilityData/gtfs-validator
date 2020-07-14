@@ -143,19 +143,19 @@ In `calendar.txt`, the `end_date` of a service record must not be earlier than t
 
 ### E033 - `route_id` not found
 
-Value of field `route_id` should exist in GTFS data.
+Value of field `route_id` should exist in GTFS `routes.txt`.
 
 <a name="E035"/>
 
 ### E035 - `agency_id` not found
 
-Value of field `agency_id` should exist in GTFS data.
+Value of field `agency_id` should exist in GTFS `agency.txt`.
 
 <a name="E036"/>
 
 ### E036 - `service_id` not found
 
-Value of field `service_id` should exist in GTFS data.
+Value of field `service_id` should exist in GTFS `calendar.txt` or `calendar_dates.txt`.
 
 # Warnings
 
