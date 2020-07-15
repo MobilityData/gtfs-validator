@@ -96,4 +96,6 @@ public interface NoticeExporter {
     void export(final AgencyIdNotFoundNotice agencyIdNotFoundNotice) throws IOException;
 
     void export(final ShapeIdNotFoundNotice shapeIdNotFoundNotice) throws IOException;
+
+    void export(final TripIdNotFoundNotice tripIdNotFoundNotice) throws IOException;
 }
