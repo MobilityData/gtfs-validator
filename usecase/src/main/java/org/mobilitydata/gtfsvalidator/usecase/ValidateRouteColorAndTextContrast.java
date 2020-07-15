@@ -48,12 +48,15 @@ public class ValidateRouteColorAndTextContrast {
      */
     public void execute() {
         logger.info("Validating rule 'E025 - Insufficient route color contrast'" + System.lineSeparator());
-        dataRepo.getRouteAll().forEach((routeId, route) -> {
-            if (!areContrasting(route.getRouteColor(), route.getRouteTextColor())) {
-                resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("routes.txt",
-                        routeId, contrast(route.getRouteColor(), route.getRouteTextColor())));
-            }
-        });
+        dataRepo.getRouteAll().values().stream()
+                .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
+                .forEach(route -> resultRepo.addNotice(
+                        new RouteColorAndTextInsufficientContrastNotice("routes.txt",
+                                route.getRouteId(),
+                                contrast(route.getRouteColor(),
+                                        route.getRouteTextColor())
+                        )
+                ));
     }
 
     /**

@@ -50,15 +50,15 @@ public class ValidateRouteLongNameDoesNotContainOrEqualShortName {
      */
     public void execute() {
         logger.info("Validating rule 'E028 - Route long name equals short name'" + System.lineSeparator());
-        dataRepo.getRouteAll().forEach((routeId, route) -> {
-            if (route.getRouteLongName() != null && route.getRouteShortName() != null &&
-                    route.getRouteLongName().contains(route.getRouteShortName())) {
-                if (route.getRouteLongName().equals(route.getRouteShortName())) {
-                    resultRepo.addNotice(new RouteLongNameEqualsShortNameNotice("routes.txt", routeId));
-                } else {
-                    resultRepo.addNotice(new RouteLongNameContainsShortNameNotice("routes.txt", routeId));
-                }
-            }
-        });
+        dataRepo.getRouteAll().values().stream()
+                .filter(route -> route.getRouteLongName() != null && route.getRouteShortName() != null &&
+                        route.getRouteLongName().contains(route.getRouteShortName()))
+                .forEach(route -> {
+                    if (route.getRouteLongName().equals(route.getRouteShortName())) {
+                        resultRepo.addNotice(new RouteLongNameEqualsShortNameNotice("routes.txt", route.getRouteId()));
+                    } else {
+                        resultRepo.addNotice(new RouteLongNameContainsShortNameNotice("routes.txt", route.getRouteId()));
+                    }
+                });
     }
 }

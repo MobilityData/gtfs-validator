@@ -51,17 +51,17 @@ public class ValidateShortAndLongNameForRoutePresence {
      */
     public void execute() {
         logger.info("Validating rule 'E027 - Missing route short name and long name'" + System.lineSeparator());
-        dataRepo.getRouteAll().forEach((routeId, route) -> {
-            if (!(isPresentName(route.getRouteLongName()) && isPresentName(route.getRouteShortName()))) {
-                if (!isPresentName(route.getRouteLongName()) && !isPresentName(route.getRouteShortName())) {
-                    resultRepo.addNotice(new MissingShortAndLongNameForRouteNotice("routes.txt", routeId));
-                } else if (!isPresentName(route.getRouteLongName())) {
-                    resultRepo.addNotice(new MissingRouteLongNameNotice("routes.txt", routeId));
-                } else {
-                    resultRepo.addNotice(new MissingRouteShortNameNotice("routes.txt", routeId));
-                }
-            }
-        });
+        dataRepo.getRouteAll().values().stream()
+                .filter(route -> !(isPresentName(route.getRouteLongName()) && isPresentName(route.getRouteShortName())))
+                .forEach(route -> {
+                    if (!isPresentName(route.getRouteLongName()) && !isPresentName(route.getRouteShortName())) {
+                        resultRepo.addNotice(new MissingShortAndLongNameForRouteNotice("routes.txt", route.getRouteId()));
+                    } else if (!isPresentName(route.getRouteLongName())) {
+                        resultRepo.addNotice(new MissingRouteLongNameNotice("routes.txt", route.getRouteId()));
+                    } else {
+                        resultRepo.addNotice(new MissingRouteShortNameNotice("routes.txt", route.getRouteId()));
+                    }
+                });
     }
 
     /**

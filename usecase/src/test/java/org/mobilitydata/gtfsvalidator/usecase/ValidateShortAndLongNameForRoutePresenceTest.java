@@ -93,6 +93,8 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteId();
+
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
@@ -126,6 +128,8 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteId();
+
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
@@ -159,6 +163,8 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(2)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteId();
+
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingShortAndLongNameForRouteNotice.class));
@@ -192,6 +198,8 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteId();
+
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteLongNameNotice.class));
@@ -225,6 +233,7 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteLongNameNotice.class));
@@ -258,6 +267,8 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteId();
+
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteShortNameNotice.class));
@@ -291,6 +302,8 @@ public class ValidateShortAndLongNameForRoutePresenceTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(3)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteId();
+
         verify(mockLogger, times(1)).info("Validating rule 'E027 - Missing route short name " +
                 "and long name'" + System.lineSeparator());
         verify(mockResultRepo, times(1)).addNotice(any(MissingRouteShortNameNotice.class));

@@ -85,6 +85,7 @@ public class ValidateRouteTypeIsInTypeOptionsTest {
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteType();
+        verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1)).addNotice(any(InvalidRouteTypeNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E026 - Invalid route type'" +
                 System.lineSeparator());

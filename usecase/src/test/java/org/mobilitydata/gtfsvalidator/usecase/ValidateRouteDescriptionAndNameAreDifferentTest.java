@@ -133,6 +133,7 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteDesc();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1))
                 .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +
@@ -169,6 +170,7 @@ class ValidateRouteDescriptionAndNameAreDifferentTest {
         verify(mockRoute, times(1)).getRouteDesc();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteLongName();
+        verify(mockRoute, times(1)).getRouteId();
         verify(mockResultRepo, times(1))
                 .addNotice(any(SameNameAndDescriptionForRouteNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E024 - Same name and" +

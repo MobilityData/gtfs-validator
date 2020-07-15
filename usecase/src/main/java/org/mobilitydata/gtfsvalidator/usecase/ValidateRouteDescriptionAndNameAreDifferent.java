@@ -48,11 +48,15 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
      */
     public void execute() {
         logger.info("Validating rule 'E024 - Same name and description for route'" + System.lineSeparator());
-        dataRepo.getRouteAll().forEach((routeId, route) -> {
-            if (!(isValidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName()))) {
-                resultRepo.addNotice(new SameNameAndDescriptionForRouteNotice("routes.txt", routeId));
-            }
-        });
+        dataRepo.getRouteAll().values().stream()
+                .filter(route -> !(isValidRouteDesc(route.getRouteDesc(),
+                        route.getRouteShortName(),
+                        route.getRouteLongName())))
+                .forEach(route -> resultRepo.addNotice(
+                        new SameNameAndDescriptionForRouteNotice(
+                                "routes.txt",
+                                route.getRouteId()))
+                );
     }
 
     /**

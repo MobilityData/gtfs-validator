@@ -65,6 +65,7 @@ class ValidateRouteAgencyIdTest {
         verify(mockDataRepo, times(1)).getRouteAll();
 
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         final ArgumentCaptor<MissingAgencyIdNotice> captor = ArgumentCaptor.forClass(MissingAgencyIdNotice.class);
 
@@ -110,6 +111,7 @@ class ValidateRouteAgencyIdTest {
                 "agency id"));
 
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         final ArgumentCaptor<AgencyIdNotFoundNotice> captor = ArgumentCaptor.forClass(AgencyIdNotFoundNotice.class);
 
@@ -156,6 +158,7 @@ class ValidateRouteAgencyIdTest {
                 "agency id"));
 
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         final ArgumentCaptor<AgencyIdNotFoundNotice> captor = ArgumentCaptor.forClass(AgencyIdNotFoundNotice.class);
 
@@ -198,6 +201,7 @@ class ValidateRouteAgencyIdTest {
         verify(mockDataRepo, times(1)).getRouteAll();
 
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         verifyNoMoreInteractions(mockDataRepo, mockResultRepo, mockLogger, mockRoute);
     }
@@ -235,6 +239,7 @@ class ValidateRouteAgencyIdTest {
                 .getAgencyById(ArgumentMatchers.eq("existing agency id"));
 
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         verifyNoMoreInteractions(mockDataRepo, mockResultRepo, mockLogger, mockRoute);
     }
@@ -272,6 +277,7 @@ class ValidateRouteAgencyIdTest {
                 .getAgencyById(ArgumentMatchers.eq("existing agency id"));
 
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         verifyNoMoreInteractions(mockDataRepo, mockResultRepo, mockLogger, mockRoute);
     }

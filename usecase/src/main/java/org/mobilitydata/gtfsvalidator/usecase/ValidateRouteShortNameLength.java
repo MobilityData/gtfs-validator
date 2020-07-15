@@ -48,12 +48,10 @@ public class ValidateRouteShortNameLength {
      */
     public void execute() {
         logger.info("Validating rule 'W005 - Route short name too long'" + System.lineSeparator());
-        dataRepo.getRouteAll().forEach((routeId, route) -> {
-            if (!(isValidRouteShortName(route.getRouteShortName()))) {
-                resultRepo.addNotice(new RouteShortNameTooLongNotice("routes.txt", routeId,
-                        String.valueOf(route.getRouteShortName().length())));
-            }
-        });
+        dataRepo.getRouteAll().values().stream()
+                .filter(route -> !(isValidRouteShortName(route.getRouteShortName())))
+                .forEach(route -> resultRepo.addNotice(new RouteShortNameTooLongNotice("routes.txt",
+                        route.getRouteId(), String.valueOf(route.getRouteShortName().length()))));
     }
 
     /**

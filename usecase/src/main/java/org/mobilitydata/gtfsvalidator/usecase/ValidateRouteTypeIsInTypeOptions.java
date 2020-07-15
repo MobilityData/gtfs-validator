@@ -49,10 +49,10 @@ public class ValidateRouteTypeIsInTypeOptions {
      */
     public void execute() {
         logger.info("Validating rule 'E026 - Invalid route type'" + System.lineSeparator());
-        dataRepo.getRouteAll().forEach((routeId, route) -> {
-            if (route.getRouteType() == null) {
-                resultRepo.addNotice(new InvalidRouteTypeNotice("routes.txt", routeId));
-            }
-        });
+        dataRepo.getRouteAll().values().stream()
+                .filter(route -> route.getRouteType() == null)
+                .forEach(route -> resultRepo.addNotice(new InvalidRouteTypeNotice("routes.txt",
+                        route.getRouteId()))
+                );
     }
 }
