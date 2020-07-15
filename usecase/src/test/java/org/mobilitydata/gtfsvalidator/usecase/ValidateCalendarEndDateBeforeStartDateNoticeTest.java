@@ -135,8 +135,9 @@ class ValidateCalendarEndDateBeforeStartDateNoticeTest {
         underTest.execute();
 
         verify(mockDataRepo, times(1)).getCalendarAll();
-        verify(mockCalendar, times(1)).getStartDate();
-        verify(mockCalendar, times(1)).getEndDate();
+        verify(mockCalendar, times(2)).getStartDate();
+        verify(mockCalendar, times(2)).getEndDate();
+        verify(mockCalendar, times(1)).getServiceId();
         verify(mockResultRepo, times(1))
                 .addNotice(any(CalendarEndDateBeforeStartDateNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E032 - calendar.txt end_date is " +

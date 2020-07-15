@@ -63,8 +63,10 @@ class ValidateTripRouteIdTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();
 
-        verify(mockTrip00, times(1)).getRouteId();
-        verify(mockTrip01, times(1)).getRouteId();
+        verify(mockTrip00, times(1)).getTripId();
+        verify(mockTrip00, times(2)).getRouteId();
+        verify(mockTrip01, times(1)).getTripId();
+        verify(mockTrip01, times(2)).getRouteId();
         verify(mockResultRepo, times(2)).addNotice(any(RouteIdNotFoundNotice.class));
 
         verifyNoMoreInteractions(mockTrip00, mockTrip01, mockDataRepo, mockResultRepo, mockLogger);
@@ -116,7 +118,7 @@ class ValidateTripRouteIdTest {
         verify(mockTrip00, times(1)).getRouteId();
         verify(mockTrip01, times(1)).getRouteId();
 
-        verifyNoMoreInteractions(mockTrip00, mockTrip01, mockRoute00, mockRoute01, mockDataRepo, mockResultRepo,
-                mockLogger);
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockTrip00, mockTrip01, mockRoute00, mockRoute01, mockDataRepo, mockLogger);
     }
 }
