@@ -121,6 +121,15 @@ public interface GtfsDataRepository {
     Map<Integer, ShapePoint> getShapeById(final String shapeId);
 
     /**
+     * Return an immutable map representing all records from shapes.txt. The key values for the returned map are
+     * shape_id and the value is another map, which keys are shape_pt_sequence and values are {@link ShapePoint}.
+     * Note that those are ordered by ascending shape_pt_sequence.
+     *
+     * @return an immutable map representing all records from shapes.txt
+     */
+    Map<String, Map<Integer, ShapePoint>> getShapeAll();
+
+    /**
      * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
      * Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt is respected,
      * if this requirement is not met, returns null. This method adds the {@link StopTime} to this

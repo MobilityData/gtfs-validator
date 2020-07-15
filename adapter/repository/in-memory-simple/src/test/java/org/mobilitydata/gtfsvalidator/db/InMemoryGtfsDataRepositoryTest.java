@@ -687,6 +687,28 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void getShapeAllShouldReturnShapeCollection() {
+        final ShapePoint mockShapePoint00 = mock(ShapePoint.class);
+        when(mockShapePoint00.getShapeId()).thenReturn("test id00");
+        when(mockShapePoint00.getShapePtSequence()).thenReturn(4);
+
+        final ShapePoint mockShapePoint01 = mock(ShapePoint.class);
+        when(mockShapePoint01.getShapeId()).thenReturn("test id01");
+        when(mockShapePoint01.getShapePtSequence()).thenReturn(8);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShapePoint(mockShapePoint00);
+        underTest.addShapePoint(mockShapePoint01);
+
+        final Map<String, Map<Integer, ShapePoint>> toCheck = underTest.getShapeAll();
+
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey(mockShapePoint00.getShapeId()));
+        assertTrue(toCheck.containsKey(mockShapePoint01.getShapeId()));
+    }
+
+    @Test
     void addNullStopTimeShouldThrowException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         final Exception exception = assertThrows(IllegalArgumentException.class,
