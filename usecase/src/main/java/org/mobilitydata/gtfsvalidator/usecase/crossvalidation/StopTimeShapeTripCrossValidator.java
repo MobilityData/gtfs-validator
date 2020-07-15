@@ -50,9 +50,9 @@ public class StopTimeShapeTripCrossValidator {
     }
 
     /**
-     * Instantiates and executes validation of rule E034
+     * Instantiates and executes validation of rule E034: checks this rule for every record of stop_times.txt.
      */
-    private void checkE034() {
+    public void checkE034() {
         final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime =
                 new ValidateShapeIdReferenceInStopTime();
 
@@ -61,6 +61,7 @@ public class StopTimeShapeTripCrossValidator {
                     final Trip trip = dataRepo.getTripById(stopTime.getTripId());
                     final Map<Integer, ShapePoint> shape = dataRepo.getShapeById(trip == null ? null : trip.getShapeId());
                     validateShapeIdReferenceInStopTime.execute(resultRepo, stopTime, shape, trip);
-                }));
+                })
+        );
     }
 }

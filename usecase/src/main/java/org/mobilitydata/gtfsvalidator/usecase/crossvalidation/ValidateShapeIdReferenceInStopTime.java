@@ -37,20 +37,20 @@ public class ValidateShapeIdReferenceInStopTime {
         if (stopTime != null) {
             if (stopTime.getShapeDistTraveled() != null) {
                 // if trip is null, then a TripIdNotFoundNotice is generated
-                // todo: implement use cross to execute cross validation of files `stop_times.txt` nd `trips.txt` on
+                // todo: implement use case to execute cross validation of files `stop_times.txt` and `trips.txt` on
                 // field `stop_times.trips_id`
                 if (trip != null) {
                     final String tripId = trip.getTripId();
-                    final String shapeId = trip.getShapeId();
+                    final String tripShapeId = trip.getShapeId();
                     final Integer stopSequence = stopTime.getStopSequence();
-                    if (shapeId == null) {
+                    if (tripShapeId == null) {
                         resultRepo.addNotice(new MissingRequiredValueNotice("trips.txt", "shape_id",
                                 tripId));
                     } else {
                         if (shape == null) {
                             resultRepo.addNotice(new ShapeIdNotFoundNotice("stop_times.txt", "shape_id",
                                     "trip_id", "stop_sequence", tripId,
-                                    stopSequence, shapeId));
+                                    stopSequence, tripShapeId));
                         }
                     }
                 }
