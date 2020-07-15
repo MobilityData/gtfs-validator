@@ -55,16 +55,13 @@ public class ValidateTripRouteId {
         logger.info("Validating rule E033 - `route_id` not found" + System.lineSeparator());
         final Set<String> routeIdCollection = new HashSet<>();
         dataRepo.getRouteAll().forEach(route -> routeIdCollection.add(route.getRouteId()));
-        dataRepo.getTripAll()
-                .forEach((tripId, trip) -> {
-                    if (!routeIdCollection.contains(trip.getRouteId())) {
-                        resultRepo.addNotice(
-                                new RouteIdNotFoundNotice("trips.txt",
-                                        tripId,
-                                        trip.getRouteId(),
-                                        "route_id")
-                        );
-                    }
-                });
+        dataRepo.getTripAll().values().stream()
+                .filter(trip -> !routeIdCollection.contains(trip.getRouteId()))
+                .forEach(trip -> resultRepo.addNotice(
+                        new RouteIdNotFoundNotice("trips.txt",
+                                trip.getTripId(),
+                                trip.getRouteId(),
+                                "route_id")
+                ));
     }
 }
