@@ -59,20 +59,14 @@ public class ValidateTripServiceId {
         final Map<String, Calendar> calendarCollection = dataRepo.getCalendarAll();
         // CalendarDate entities are mapped on service_id and date in a nested map
         final Map<String, Map<String, CalendarDate>> calendarDateCollection = dataRepo.getCalendarDateAll();
-        dataRepo.getTripAll().forEach((tripId, trip) -> {
-            final String tripServiceId = trip.getServiceId();
-            if (calendarCollection.containsKey(tripServiceId)) {
-                return;
-            } else if (calendarDateCollection.containsKey(tripServiceId)) {
-                return;
-            } else {
-                resultRepo.addNotice(
+        dataRepo.getTripAll().values().stream()
+                .filter(trip -> !calendarCollection.containsKey(trip.getServiceId()) &&
+                        !calendarDateCollection.containsKey(trip.getServiceId()))
+                .forEach(trip -> resultRepo.addNotice(
                         new ServiceIdNotFoundNotice("trips.txt",
-                                tripId,
+                                trip.getTripId(),
                                 "service_id",
-                                tripServiceId)
-                );
-            }
-        });
+                                trip.getServiceId())
+                ));
     }
 }

@@ -123,7 +123,7 @@ class ValidateTripServiceIdTest {
         verify(mockDataRepo, times(1)).getCalendarDateAll();
         verify(mockDataRepo, times(1)).getTripAll();
 
-        verify(mockTrip, times(1)).getServiceId();
+        verify(mockTrip, times(2)).getServiceId();
 
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockCalendar, mockCalendarDate, mockTrip, mockDataRepo, mockLogger);
@@ -183,6 +183,7 @@ class ValidateTripServiceIdTest {
         final Calendar mockCalendar = mock(Calendar.class);
         when(mockCalendar.getServiceId()).thenReturn("service id");
         final Trip mockTrip = mock(Trip.class);
+        when(mockTrip.getTripId()).thenReturn("trip id");
         when(mockTrip.getServiceId()).thenReturn("not found service id");
         final CalendarDate mockCalendarDate = mock(CalendarDate.class);
 
@@ -216,7 +217,8 @@ class ValidateTripServiceIdTest {
         verify(mockDataRepo, times(1)).getCalendarDateAll();
         verify(mockDataRepo, times(1)).getTripAll();
 
-        verify(mockTrip, times(1)).getServiceId();
+        verify(mockTrip, times(1)).getTripId();
+        verify(mockTrip, times(3)).getServiceId();
 
         final ArgumentCaptor<ServiceIdNotFoundNotice> captor = ArgumentCaptor.forClass(ServiceIdNotFoundNotice.class);
 
