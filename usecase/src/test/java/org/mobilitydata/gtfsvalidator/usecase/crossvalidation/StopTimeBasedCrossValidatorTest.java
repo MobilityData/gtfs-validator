@@ -33,7 +33,7 @@ import java.util.TreeMap;
 
 import static org.mockito.Mockito.*;
 
-class StopTimeCrossValidatorTest {
+class StopTimeBasedCrossValidatorTest {
 
     @Test
     void allUseCasesShouldBeCalled() {
@@ -63,8 +63,8 @@ class StopTimeCrossValidatorTest {
         final ValidateStopTimeTripId mockE037 = mock(ValidateStopTimeTripId.class);
 
 
-        final StopTimeCrossValidator underTest =
-                spy(new StopTimeCrossValidator(mockDataRepo, mockResultRepo, mockLogger, mockE034, mockE037));
+        final StopTimeBasedCrossValidator underTest =
+                spy(new StopTimeBasedCrossValidator(mockDataRepo, mockResultRepo, mockLogger, mockE034, mockE037));
 
         underTest.execute();
 

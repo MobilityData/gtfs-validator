@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeConversionUtils;
 import org.mobilitydata.gtfsvalidator.usecase.*;
-import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.StopTimeCrossValidator;
+import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.StopTimeBasedCrossValidator;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
@@ -285,8 +285,8 @@ public class DefaultConfig {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
 
-    public StopTimeCrossValidator StopTimeShapeTripCrossValidator() {
-        return new StopTimeCrossValidator(gtfsDataRepository, resultRepo, logger,
+    public StopTimeBasedCrossValidator stopTimeBasedCrossValidator() {
+        return new StopTimeBasedCrossValidator(gtfsDataRepository, resultRepo, logger,
                 new ValidateShapeIdReferenceInStopTime(),
                 new ValidateStopTimeTripId());
     }

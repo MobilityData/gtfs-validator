@@ -31,18 +31,18 @@ import java.util.Map;
  * E034 - `shape_id` not found
  * E037 - `trip_id` not found
  */
-public class StopTimeCrossValidator {
+public class StopTimeBasedCrossValidator {
     private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository dataRepo;
     private final Logger logger;
     private final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime;
     private final ValidateStopTimeTripId validateStopTimeTripId;
 
-    public StopTimeCrossValidator(final GtfsDataRepository dataRepo,
-                                  final ValidationResultRepository resultRepo,
-                                  final Logger logger,
-                                  final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime,
-                                  final ValidateStopTimeTripId validateStopTimeTripId
+    public StopTimeBasedCrossValidator(final GtfsDataRepository dataRepo,
+                                       final ValidationResultRepository resultRepo,
+                                       final Logger logger,
+                                       final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime,
+                                       final ValidateStopTimeTripId validateStopTimeTripId
     ) {
         this.resultRepo = resultRepo;
         this.dataRepo = dataRepo;
