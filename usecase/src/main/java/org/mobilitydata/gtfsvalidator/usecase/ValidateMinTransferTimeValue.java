@@ -71,18 +71,19 @@ public class ValidateMinTransferTimeValue {
         final int minTransferTimeRangeMax =
                 Integer.parseInt(
                         execParamRepo.getExecParamValue(ExecParamRepository.TRANSFER_MIN_TRANSFER_TIME_RANGE_MAX));
-        dataRepo.getTransferAll()
-                .forEach((fromStopId, transferCollection) -> transferCollection.forEach((toStopId, transfer) ->  {
-                    if (transfer.getMinTransferTime() != null &&
-                            (transfer.getMinTransferTime() < minTransferTimeRangeMin ||
-                                    transfer.getMinTransferTime() > minTransferTimeRangeMax)) {
-                        resultRepo.addNotice(
-                                new SuspiciousMinTransferTimeNotice(minTransferTimeRangeMin, minTransferTimeRangeMax,
-                                        transfer.getMinTransferTime(), "from_stop_id",
-                                        "to_stop_id", transfer.getFromStopId(),
-                                        transfer.getToStopId()));
-                    }
-                }));
-
+        dataRepo.getTransferAll().values()
+                .forEach(transferCollection ->
+                        transferCollection.values().stream()
+                                .filter(transfer -> transfer.getMinTransferTime() != null &&
+                                        (transfer.getMinTransferTime() < minTransferTimeRangeMin ||
+                                                transfer.getMinTransferTime() > minTransferTimeRangeMax))
+                                .forEach(transfer -> resultRepo.addNotice(
+                                        new SuspiciousMinTransferTimeNotice(minTransferTimeRangeMin,
+                                                minTransferTimeRangeMax,
+                                                transfer.getMinTransferTime(), "from_stop_id",
+                                                "to_stop_id",
+                                                transfer.getFromStopId(),
+                                                transfer.getToStopId()))
+                                ));
     }
 }
