@@ -18,7 +18,8 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ExactTimesTest {
 
@@ -45,30 +46,5 @@ class ExactTimesTest {
     @Test
     void createExactTimesFromInvalidNegativeIntegerValueMinus1ShouldReturnNull() {
         assertNull(ExactTimes.fromInt(-1));
-    }
-
-    @Test
-    void validNullValueShouldReturnTrue() {
-        assertTrue(ExactTimes.isEnumValueValid(null));
-    }
-
-    @Test
-    void validValue0ShouldReturnTrue() {
-        assertTrue(ExactTimes.isEnumValueValid(0));
-    }
-
-    @Test
-    void validValue1ShouldReturnTrue() {
-        assertTrue(ExactTimes.isEnumValueValid(1));
-    }
-
-    @Test
-    void invalidValue2ShouldReturnFalse() {
-        assertFalse(ExactTimes.isEnumValueValid(2));
-    }
-
-    @Test
-    void invalidValueMinus1ShouldReturnFalse() {
-        assertFalse(ExactTimes.isEnumValueValid(-1));
     }
 }

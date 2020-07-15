@@ -221,7 +221,7 @@ class FrequencyTest {
     }
 
     @Test
-    void createFrequencyWithNullTransfersShouldNotGenerateNotice() {
+    void createFrequencyWithNullExactTimesShouldNotGenerateNotice() {
         final Frequency.FrequencyBuilder underTest = new Frequency.FrequencyBuilder();
 
         underTest.tripId(STRING_TEST)
@@ -244,7 +244,7 @@ class FrequencyTest {
                 .build()
                 .getData();
 
-        assertEquals("trip id" + 0,
+        assertEquals("trip id" + "0",
                 frequency.getFrequencyMappingKey());
     }
 }

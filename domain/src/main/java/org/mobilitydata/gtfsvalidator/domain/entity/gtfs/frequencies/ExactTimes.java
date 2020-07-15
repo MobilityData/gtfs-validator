@@ -48,18 +48,4 @@ public enum ExactTimes {
             return null;
         }
     }
-
-    /**
-     * Returns true if the integer passed as parameter is expected for this enum, otherwise returns false
-     *
-     * @param value the integer to associate with this enum values
-     * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
-     */
-    static public boolean isEnumValueValid(final Integer value) {
-        if (value == null) {
-            return true;
-        }
-        return (value == 0 || value == 1);
-    }
 }
-

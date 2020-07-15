@@ -87,6 +87,7 @@ class ProcessParsedFrequencyTest {
         verify(mockParsedFrequency, times(1)).get(ArgumentMatchers.eq(HEADWAY_SECS));
         verify(mockParsedFrequency, times(1)).get(ArgumentMatchers.eq(EXACT_TIMES));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).tripId(TRIP_ID);
         verify(mockBuilder, times(1)).startTime(0);
         verify(mockBuilder, times(1)).endTime(3600);
@@ -139,6 +140,7 @@ class ProcessParsedFrequencyTest {
         verify(mockParsedFrequency, times(1)).get(ArgumentMatchers.eq(HEADWAY_SECS));
         verify(mockParsedFrequency, times(1)).get(ArgumentMatchers.eq(EXACT_TIMES));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).tripId(TRIP_ID);
         verify(mockBuilder, times(1)).startTime(0);
         verify(mockBuilder, times(1)).endTime(3600);
@@ -203,6 +205,7 @@ class ProcessParsedFrequencyTest {
         verify(mockParsedFrequency, times(1)).get(ArgumentMatchers.eq(HEADWAY_SECS));
         verify(mockParsedFrequency, times(1)).get(ArgumentMatchers.eq(EXACT_TIMES));
 
+        verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).tripId(TRIP_ID);
         verify(mockBuilder, times(1)).startTime(0);
         verify(mockBuilder, times(1)).endTime(3600);

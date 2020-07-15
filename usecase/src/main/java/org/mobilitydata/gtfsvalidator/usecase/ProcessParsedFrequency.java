@@ -53,8 +53,8 @@ public class ProcessParsedFrequency {
      * This use case extracts values from a {@code ParsedEntity} and creates a {@code Frequency} object if the
      * requirements from the official GTFS specification are met. When these requirements are not met, related notices
      * generated in {@code Frequency.FrequencyBuilder} are added to the result repository provided in the
-     * constructor. This use case also adds a {@code EntityMustBeUniqueNotice} to said repository if the uniqueness
-     * constraint on fare attribute entities is not respected.
+     * constructor. This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness
+     * constraint on frequency entities is not respected.
      *
      * @param validatedFrequency entity to be processed and added to the GTFS data repository
      */
@@ -67,7 +67,8 @@ public class ProcessParsedFrequency {
         final Integer headwaySecs = (Integer) validatedFrequency.get("headway_secs");
         final Integer exactTimes = (Integer) validatedFrequency.get("exact_times");
 
-        builder.tripId(tripId)
+        builder.clear()
+                .tripId(tripId)
                 .startTime(startTime)
                 .endTime(endTime)
                 .headwaySecs(headwaySecs)

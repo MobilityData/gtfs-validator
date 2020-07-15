@@ -181,8 +181,6 @@ public class Frequency extends GtfsEntity {
                             "trip_id", "start_time", tripId, startTime));
                 }
 
-                // the following statement is true when ExactTimes.isEnumValueValid(originalExactTimes)
-                // returns false
                 if (exactTimes == null) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("frequencies.txt",
                             "exact_times", originalExactTimes, "trip_id",
@@ -191,6 +189,22 @@ public class Frequency extends GtfsEntity {
                 return new EntityBuildResult<>(noticeCollection);
             }
             return new EntityBuildResult<>(new Frequency(tripId, startTime, endTime, headwaySecs, exactTimes));
+        }
+
+        /**
+         * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
+         * @return builder with all fields set to null;
+         */
+        public FrequencyBuilder clear() {
+            tripId = null;
+            startTime = null;
+            endTime = null;
+            headwaySecs = null;
+            exactTimes = null;
+            originalExactTimes = null;
+            noticeCollection.clear();
+            return this;
         }
     }
 

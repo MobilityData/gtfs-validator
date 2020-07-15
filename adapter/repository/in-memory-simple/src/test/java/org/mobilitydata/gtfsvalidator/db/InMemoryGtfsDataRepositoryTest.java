@@ -490,14 +490,18 @@ class InMemoryGtfsDataRepositoryTest {
 
     @Test
     void addSameFrequencyTwiceShouldReturnNull() {
-        final Frequency mockFrequency = mock(Frequency.class);
+        final Frequency mockFrequency00 = mock(Frequency.class);
+        final Frequency mockFrequency01 = mock(Frequency.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
-        when(mockFrequency.getTripId()).thenReturn("trip id");
-        when(mockFrequency.getStartTime()).thenReturn(0);
+        when(mockFrequency00.getTripId()).thenReturn("trip id");
+        when(mockFrequency00.getStartTime()).thenReturn(0);
+        when(mockFrequency01.getTripId()).thenReturn("trip id");
+        when(mockFrequency01.getStartTime()).thenReturn(0);
 
-        underTest.addFrequency(mockFrequency);
+        underTest.addFrequency(mockFrequency00);
 
-        assertNull(underTest.addFrequency(mockFrequency));
+        assertNull(underTest.addFrequency(mockFrequency00));
+        assertNull(underTest.addFrequency(mockFrequency01));
     }
 
     @Test
