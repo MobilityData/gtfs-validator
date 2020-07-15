@@ -172,7 +172,7 @@ public class Main {
                 config.validateAgenciesHaveSameAgencyTimezone().execute();
                 config.validateTripRouteId().execute();
                 config.validateRouteAgencyId().execute();
-                config.shapeStopTimeTripCrossValidator().execute();
+                config.StopTimeShapeTripCrossValidator().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

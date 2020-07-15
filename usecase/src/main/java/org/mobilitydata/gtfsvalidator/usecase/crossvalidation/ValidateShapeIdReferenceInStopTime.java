@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.crossvalidationusecase.stoptimesshapestrips;
+package org.mobilitydata.gtfsvalidator.usecase.crossvalidation;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;

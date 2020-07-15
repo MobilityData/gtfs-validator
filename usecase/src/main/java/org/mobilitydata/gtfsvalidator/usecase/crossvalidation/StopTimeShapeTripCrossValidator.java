@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.crossvalidationusecase.stoptimesshapestrips;
+package org.mobilitydata.gtfsvalidator.usecase.crossvalidation;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
@@ -28,12 +28,12 @@ import java.util.Map;
  * Use case to execute cross validation for GTFS files `shapes.txt`, `stop_times.txt` and `trips.txt`
  * E034 - `shape_id` not found
  */
-public class ShapeStopTimeTripCrossValidator {
+public class StopTimeShapeTripCrossValidator {
     private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository dataRepo;
     private final Logger logger;
 
-    public ShapeStopTimeTripCrossValidator(final GtfsDataRepository dataRepo,
+    public StopTimeShapeTripCrossValidator(final GtfsDataRepository dataRepo,
                                            final ValidationResultRepository resultRepo,
                                            final Logger logger) {
         this.resultRepo = resultRepo;
@@ -56,9 +56,9 @@ public class ShapeStopTimeTripCrossValidator {
         final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime =
                 new ValidateShapeIdReferenceInStopTime();
 
-        dataRepo.getStopTimeAll().forEach((tripId, stopTimeCollection) -> stopTimeCollection.
-                forEach((stopSequence, stopTime) -> {
-                    final Trip trip = dataRepo.getTripById(tripId);
+        dataRepo.getStopTimeAll().values().forEach(stopTimeCollection ->
+                stopTimeCollection.values().forEach(stopTime -> {
+                    final Trip trip = dataRepo.getTripById(stopTime.getTripId());
                     final Map<Integer, ShapePoint> shape = dataRepo.getShapeById(trip == null ? null : trip.getShapeId());
                     validateShapeIdReferenceInStopTime.execute(resultRepo, stopTime, shape, trip);
                 }));

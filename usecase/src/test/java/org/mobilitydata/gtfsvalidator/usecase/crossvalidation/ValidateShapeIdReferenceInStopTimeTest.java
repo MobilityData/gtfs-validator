@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.stoptimesshapestrips;
+package org.mobilitydata.gtfsvalidator.usecase.crossvalidation;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
@@ -22,7 +22,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ShapeIdNotFoundNotice;
-import org.mobilitydata.gtfsvalidator.usecase.crossvalidationusecase.stoptimesshapestrips.ValidateShapeIdReferenceInStopTime;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 

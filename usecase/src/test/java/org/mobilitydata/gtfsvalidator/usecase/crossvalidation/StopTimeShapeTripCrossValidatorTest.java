@@ -14,13 +14,12 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.stoptimesshapestrips;
+package org.mobilitydata.gtfsvalidator.usecase.crossvalidation;
 
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
-import org.mobilitydata.gtfsvalidator.usecase.crossvalidationusecase.stoptimesshapestrips.ShapeStopTimeTripCrossValidator;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentMatchers;
@@ -31,7 +30,7 @@ import java.util.TreeMap;
 
 import static org.mockito.Mockito.*;
 
-class ShapeStopTimeTripCrossValidatorTest {
+class StopTimeShapeTripCrossValidatorTest {
 
     // suppress warning regarding ignored result of method since it is not necessary here.
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -56,8 +55,8 @@ class ShapeStopTimeTripCrossValidatorTest {
         when(mockDataRepo.getShapeById("shape id")).thenReturn(mockShape);
         final Logger mockLogger = mock(Logger.class);
 
-        final ShapeStopTimeTripCrossValidator underTest =
-                new ShapeStopTimeTripCrossValidator(mockDataRepo, mockResultRepo, mockLogger);
+        final StopTimeShapeTripCrossValidator underTest =
+                new StopTimeShapeTripCrossValidator(mockDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
 
