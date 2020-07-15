@@ -373,6 +373,7 @@ public class Attribution extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public AttributionBuilder clear() {
@@ -406,8 +407,8 @@ public class Attribution extends GtfsEntity {
                                                   final Boolean isOperator, final Boolean isAuthority,
                                                   final String attributionUrl, final String attributionEmail,
                                                   final String attributionPhone) {
-        return attributionId + agencyId + routeId + tripId + organizationName + isProducer + isOperator + isAuthority + attributionUrl +
-                attributionEmail + attributionPhone;
+        return attributionId + agencyId + routeId + tripId + organizationName + isProducer + isOperator + isAuthority +
+                attributionUrl + attributionEmail + attributionPhone;
     }
 
     /**

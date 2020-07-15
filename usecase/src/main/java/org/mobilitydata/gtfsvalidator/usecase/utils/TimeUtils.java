@@ -32,8 +32,8 @@ public interface TimeUtils {
     /**
      * This method converts a number of seconds elapsed since noon of say of service to a string formatted as HH:MM:SS.
      *
-     * @param elapsedDurationSinceNoon  the number of seconds elapsed since noon of say of service to be converted as a
-     *                                  string formatted as HH:MM:SS.
+     * @param elapsedDurationSinceNoon the number of seconds elapsed since noon of say of service to be converted as a
+     *                                 string formatted as HH:MM:SS.
      * @return the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */

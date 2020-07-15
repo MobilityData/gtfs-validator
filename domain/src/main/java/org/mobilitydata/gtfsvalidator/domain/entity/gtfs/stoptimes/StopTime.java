@@ -312,9 +312,9 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
         /**
          * Sets field continuousPickup value and returns this
          *
-         * @param continuousPickup  indicates that the rider can board the transit vehicle at any point along the
-         *                          vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
-         *                          next {@link StopTime} in the trip’s stop_sequence
+         * @param continuousPickup indicates that the rider can board the transit vehicle at any point along the
+         *                         vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
+         *                         next {@link StopTime} in the trip’s stop_sequence
          * @return builder for future object creation
          */
         public StopTimeBuilder continuousPickup(@Nullable final Integer continuousPickup) {
@@ -324,9 +324,9 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
         }
 
         /**
-         * @param continuousDropOff  indicates that the rider can alight the transit vehicle at any point along the
-         *                           vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
-         *                           next {@link StopTime} in the trip’s stop_sequence
+         * @param continuousDropOff indicates that the rider can alight the transit vehicle at any point along the
+         *                          vehicle’s travel path as described by shapes.txt, from this {@link StopTime} to the
+         *                          next {@link StopTime} in the trip’s stop_sequence
          * @return builder for future object creation
          */
         public StopTimeBuilder continuousDropOff(@Nullable final Integer continuousDropOff) {
@@ -441,6 +441,7 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public StopTimeBuilder clear() {
@@ -472,7 +473,7 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
      * @return the key corresponding to this {@link StopTime}
      */
     public static String getStopTimeMappingKey(final String tripId, final Integer stopSequence) {
-        return tripId+stopSequence;
+        return tripId + stopSequence;
     }
 
     public String getStopTimeMappingKey() {
