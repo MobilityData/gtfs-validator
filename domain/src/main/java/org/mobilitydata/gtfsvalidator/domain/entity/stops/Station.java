@@ -22,6 +22,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
+import java.util.List;
+
 import static org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding.INVALID_VALUE;
 import static org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
 
@@ -45,8 +47,9 @@ public class Station extends LocationBase {
                     @Nullable final String stopUrl,
                     @Nullable final String stopTimezone,
                     @NotNull final WheelchairBoarding wheelchairBoarding,
-                    @Nullable final String levelId) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone);
+                    @Nullable final String levelId,
+                    @Nullable final List<String> children) {
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, children);
         this.wheelchairBoarding = wheelchairBoarding;
         this.levelId = levelId;
     }
@@ -98,7 +101,7 @@ public class Station extends LocationBase {
                 return new EntityBuildResult<>(noticeCollection);
             } else {
                 return new EntityBuildResult<>(new Station(stopId, stopCode, stopName, stopDesc, stopLat, stopLon,
-                        zoneId, stopUrl, stopTimezone, wheelchairBoarding, levelId));
+                        zoneId, stopUrl, stopTimezone, wheelchairBoarding, levelId, childrenIdList));
             }
         }
 

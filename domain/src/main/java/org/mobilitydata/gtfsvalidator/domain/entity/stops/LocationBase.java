@@ -29,6 +29,40 @@ import java.util.List;
  */
 public abstract class LocationBase extends GtfsEntity {
 
+    private @NotNull
+    final String stopId;
+    private final String stopCode;
+    private final String stopName;
+    private final String stopDesc;
+    private final Float stopLat;
+    private final Float stopLon;
+    private final String zoneId;
+    private final String stopUrl;
+    private final String stopTimezone;
+    private final List<String> childrenList;
+
+    protected LocationBase(@NotNull String stopId,
+                           String stopCode,
+                           String stopName,
+                           String stopDesc,
+                           Float stopLat,
+                           Float stopLon,
+                           String zoneId,
+                           String stopUrl,
+                           String stopTimezone,
+                           List<String> childrenList) {
+        this.stopId = stopId;
+        this.stopCode = stopCode;
+        this.stopName = stopName;
+        this.stopDesc = stopDesc;
+        this.stopLat = stopLat;
+        this.stopLon = stopLon;
+        this.zoneId = zoneId;
+        this.stopUrl = stopUrl;
+        this.stopTimezone = stopTimezone;
+        this.childrenList = childrenList;
+    }
+
     @NotNull
     public String getStopId() {
         return stopId;
@@ -66,36 +100,8 @@ public abstract class LocationBase extends GtfsEntity {
         return stopTimezone;
     }
 
-
-    private @NotNull
-    final String stopId;
-    private final String stopCode;
-    private final String stopName;
-    private final String stopDesc;
-    private final Float stopLat;
-    private final Float stopLon;
-    private final String zoneId;
-    private final String stopUrl;
-    private final String stopTimezone;
-
-    protected LocationBase(@NotNull String stopId,
-                           String stopCode,
-                           String stopName,
-                           String stopDesc,
-                           Float stopLat,
-                           Float stopLon,
-                           String zoneId,
-                           String stopUrl,
-                           String stopTimezone) {
-        this.stopId = stopId;
-        this.stopCode = stopCode;
-        this.stopName = stopName;
-        this.stopDesc = stopDesc;
-        this.stopLat = stopLat;
-        this.stopLon = stopLon;
-        this.zoneId = zoneId;
-        this.stopUrl = stopUrl;
-        this.stopTimezone = stopTimezone;
+    public List<String> getChildren() {
+        return childrenList;
     }
 
     public static abstract class LocationBaseBuilder {
@@ -108,6 +114,7 @@ public abstract class LocationBase extends GtfsEntity {
         protected String zoneId;
         protected String stopUrl;
         protected String stopTimezone;
+        protected List<String> childrenIdList = new ArrayList<>();
         protected final List<Notice> noticeCollection = new ArrayList<>();
 
         public LocationBaseBuilder stopId(@NotNull final String stopId) {
@@ -155,6 +162,11 @@ public abstract class LocationBase extends GtfsEntity {
             return this;
         }
 
+        public LocationBaseBuilder childrenList(@Nullable List<String> children) {
+            this.childrenIdList = children;
+            return this;
+        }
+
         protected void clearBase() {
             stopId = null;
             stopCode = null;
@@ -165,6 +177,7 @@ public abstract class LocationBase extends GtfsEntity {
             zoneId = null;
             stopUrl = null;
             stopTimezone = null;
+            childrenIdList = null;
             noticeCollection.clear();
         }
     }

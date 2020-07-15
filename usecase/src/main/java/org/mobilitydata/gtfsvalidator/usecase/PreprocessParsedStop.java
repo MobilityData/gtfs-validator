@@ -26,7 +26,7 @@ import java.util.Set;
 /*
  * This use case returns null is the passed entity has a null id, or the entity otherwise
  * Further processing of stops.txt related entities is required to validate
- * parent stations <-> child stops relationships. See ProcessParsedStop
+ * parent stations <-> child stops relationships. See ProcessParsedStopAll
  */
 public class PreprocessParsedStop {
 

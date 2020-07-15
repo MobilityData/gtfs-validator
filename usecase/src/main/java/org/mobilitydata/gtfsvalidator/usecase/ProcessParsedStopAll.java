@@ -26,6 +26,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -34,7 +36,7 @@ import java.util.stream.Stream;
  * This use case turns a parsed entity to a concrete class depending on the 'type' field
  * Further processing stop.txt related entities is required to validate parent stations <--> child stops relationships
  */
-public class ProcessParsedStop {
+public class ProcessParsedStopAll {
 
     /**
      * This enum matches types that can be found in the location_type field of stops.txt
@@ -73,13 +75,13 @@ public class ProcessParsedStop {
     private final GenericNode.GenericNodeBuilder genericNodeBuilder;
     private final BoardingArea.BoardingAreaBuilder boardingAreaBuilder;
 
-    public ProcessParsedStop(final ValidationResultRepository resultRepo,
-                             final GtfsDataRepository gtfsRepo,
-                             final Station.StationBuilder stationBuilder,
-                             final StopOrPlatform.StopOrPlatformBuilder stopOrPlatformBuilder,
-                             final Entrance.EntranceBuilder entranceBuilder,
-                             final GenericNode.GenericNodeBuilder genericNodeBuilder,
-                             final BoardingArea.BoardingAreaBuilder boardingAreaBuilder) {
+    public ProcessParsedStopAll(final ValidationResultRepository resultRepo,
+                                final GtfsDataRepository gtfsRepo,
+                                final StopOrPlatform.StopOrPlatformBuilder stopOrPlatformBuilder,
+                                final Station.StationBuilder stationBuilder,
+                                final Entrance.EntranceBuilder entranceBuilder,
+                                final GenericNode.GenericNodeBuilder genericNodeBuilder,
+                                final BoardingArea.BoardingAreaBuilder boardingAreaBuilder) {
         this.resultRepository = resultRepo;
         this.gtfsRepo = gtfsRepo;
         this.stopOrPlatformBuilder = stopOrPlatformBuilder;
@@ -90,6 +92,22 @@ public class ProcessParsedStop {
     }
 
     public void execute(final Map<String, ParsedEntity> parsedEntityByStopId) {
+        Map<String, List<String>> childrenPerStationId = new HashMap<>();
+
+        parsedEntityByStopId.values().forEach(stop -> {
+            String childId = stop.getEntityId();
+            String parentId = (String) stop.get("parent_station");
+            if (parentId != null) {
+                if (childrenPerStationId.containsKey(parentId)) {
+                    childrenPerStationId.get(parentId).add(childId);
+                } else {
+                    List<String> childrenList = new ArrayList<>();
+                    childrenList.add(childId);
+                    childrenPerStationId.put(parentId, childrenList);
+                }
+            }
+        });
+
         parsedEntityByStopId.values().forEach(stop -> {
             Integer locationType = (Integer) stop.get("location_type");
             String stopId = stop.getEntityId();
@@ -141,7 +159,8 @@ public class ProcessParsedStop {
                             .stopDesc(stopDesc)
                             .zoneId(zoneId)
                             .stopUrl(stopUrl)
-                            .stopTimezone(stopTimezone);
+                            .stopTimezone(stopTimezone)
+                            .childrenList(childrenPerStationId.get(stopId));
 
                     stopEntityBuildResult = stopOrPlatformBuilder.build();
                     break;
@@ -164,7 +183,8 @@ public class ProcessParsedStop {
                             .stopDesc(stopDesc)
                             .zoneId(zoneId)
                             .stopUrl(stopUrl)
-                            .stopTimezone(stopTimezone);
+                            .stopTimezone(stopTimezone)
+                            .childrenList(childrenPerStationId.get(stopId));
 
                     stopEntityBuildResult = stationBuilder.build();
                     break;
@@ -200,7 +220,8 @@ public class ProcessParsedStop {
                             .stopDesc(stopDesc)
                             .zoneId(zoneId)
                             .stopUrl(stopUrl)
-                            .stopTimezone(stopTimezone);
+                            .stopTimezone(stopTimezone)
+                            .childrenList(childrenPerStationId.get(stopId));
 
                     stopEntityBuildResult = entranceBuilder.build();
                     break;
@@ -230,7 +251,8 @@ public class ProcessParsedStop {
                             .stopDesc(stopDesc)
                             .zoneId(zoneId)
                             .stopUrl(stopUrl)
-                            .stopTimezone(stopTimezone);
+                            .stopTimezone(stopTimezone)
+                            .childrenList(childrenPerStationId.get(stopId));
 
                     stopEntityBuildResult = genericNodeBuilder.build();
                     break;
@@ -260,7 +282,8 @@ public class ProcessParsedStop {
                             .stopDesc(stopDesc)
                             .zoneId(zoneId)
                             .stopUrl(stopUrl)
-                            .stopTimezone(stopTimezone);
+                            .stopTimezone(stopTimezone)
+                            .childrenList(childrenPerStationId.get(stopId));
 
                     stopEntityBuildResult = boardingAreaBuilder.build();
                     break;

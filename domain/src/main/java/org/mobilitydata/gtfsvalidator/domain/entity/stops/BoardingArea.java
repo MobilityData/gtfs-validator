@@ -21,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
+import java.util.List;
+
 /**
  * Model class for an entity defined in stops.txt with location_type = 4
  */
@@ -38,8 +40,9 @@ public class BoardingArea extends LocationBase {
                          @Nullable final String zoneId,
                          @Nullable final String stopUrl,
                          @NotNull final String parentStation,
-                         @Nullable final String stopTimezone) {
-        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone);
+                         @Nullable final String stopTimezone,
+                         @Nullable final List<String> children) {
+        super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, children);
         this.parentStation = parentStation;
     }
 
@@ -67,7 +70,7 @@ public class BoardingArea extends LocationBase {
                 return new EntityBuildResult<>(noticeCollection);
             } else {
                 return new EntityBuildResult<>(new BoardingArea(stopId, stopCode, stopName, stopDesc, stopLat, stopLon,
-                        zoneId, stopUrl, parentStation, stopTimezone));
+                        zoneId, stopUrl, parentStation, stopTimezone, childrenIdList));
             }
         }
 
