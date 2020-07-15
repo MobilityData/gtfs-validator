@@ -38,6 +38,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E034](#E034) | `shape_id` not found in GTFS `shapes.txt` |
 | [E035](#E035) | `agency_id` not found in GTFS `agency.txt` |
 | [E037](#E037) | `trip_id` not found in GTFS `trips.txt` |
+| [E038](#E038) | All shapes should be used in `trips.txt` |
 
 ### Table of Warnings
 
@@ -161,6 +162,12 @@ Value of field `agency_id` should exist in GTFS `agency.txt`.
 ### E037 - `trip_id` not found in GTFS `trips.txt`
 
 Value of field `trip_id` should exist in GTFS `trips.txt`.
+
+<a name="E038"/>
+
+### E038 - All shapes should be used in `trips.txt` 
+
+All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 
 # Warnings
 
