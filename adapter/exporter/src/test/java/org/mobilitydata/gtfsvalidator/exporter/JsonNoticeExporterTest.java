@@ -639,7 +639,7 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportTripIdNotfoundNoticeShouldWriteObject() throws IOException {
+    void exportTripIdNotFoundNoticeShouldWriteObject() throws IOException {
         final JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
@@ -651,6 +651,20 @@ class JsonNoticeExporterTest {
                         "composite key first value",
                         "composite key second value",
                         "trip id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportNotUsedShapeNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final ShapeNotUsedNotice toExport = new ShapeNotUsedNotice(
+                "entity id",
+                "field name");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
