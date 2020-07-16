@@ -36,7 +36,7 @@ import static org.mockito.Mockito.*;
 class StopTimeBasedCrossValidatorTest {
 
     @Test
-    void allUseCasesShouldBeCalled() {
+    void allStopTimeCrossValidationUseCasesShouldBeCalled() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
 
