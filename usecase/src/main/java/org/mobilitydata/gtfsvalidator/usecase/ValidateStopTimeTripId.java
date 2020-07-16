@@ -31,8 +31,8 @@ public class ValidateStopTimeTripId {
      */
     public void execute(final ValidationResultRepository resultRepo,
                         final StopTime stopTime,
-                        final Map<String, Trip> tripIdCollection) {
-        if (!tripIdCollection.containsKey(stopTime.getTripId())) {
+                        final Map<String, Trip> tripCollection) {
+        if (!tripCollection.containsKey(stopTime.getTripId())) {
             resultRepo.addNotice(new TripIdNotFoundNotice("stop_times.txt",
                     "trip_id",
                     "trip_id",
