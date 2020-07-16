@@ -662,10 +662,7 @@ public final class GtfsSpecificationProto {
         }
 
         @java.lang.Override
-        public Builder newBuilderForType() {
-            return newBuilder();
-        }
-
+        public Builder newBuilderForType() { return newBuilder(); }
         public static Builder newBuilder() {
             return DEFAULT_INSTANCE.toBuilder();
         }
@@ -1941,7 +1938,7 @@ public final class GtfsSpecificationProto {
                 return this;
             }
 
-            private boolean restrictnulltosingleforeignkey_;
+            private boolean restrictnulltosingleforeignkey_ ;
             /**
              * <pre>
              * If true, a null value in one of the key columns in this table is
@@ -2141,28 +2138,24 @@ public final class GtfsSpecificationProto {
          * <code>optional string enumtype = 4;</code>
          */
         java.lang.String getEnumtype();
-
         /**
          * <code>optional string enumtype = 4;</code>
          */
         com.google.protobuf.ByteString
         getEnumtypeBytes();
     }
-
     /**
      * Protobuf type {@code csvspec.NamedValueProto}
      */
-    public static final class NamedValueProto extends
+    public  static final class NamedValueProto extends
             com.google.protobuf.GeneratedMessageV3 implements
             // @@protoc_insertion_point(message_implements:csvspec.NamedValueProto)
             NamedValueProtoOrBuilder {
         private static final long serialVersionUID = 0L;
-
         // Use NamedValueProto.newBuilder() to construct.
         private NamedValueProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
             super(builder);
         }
-
         private NamedValueProto() {
             name_ = "";
             stringvalue_ = "";
@@ -3219,8 +3212,7 @@ public final class GtfsSpecificationProto {
             return DEFAULT_INSTANCE;
         }
 
-        @java.lang.Deprecated
-        public static final com.google.protobuf.Parser<NamedValueProto>
+        @java.lang.Deprecated public static final com.google.protobuf.Parser<NamedValueProto>
                 PARSER = new com.google.protobuf.AbstractParser<NamedValueProto>() {
             @java.lang.Override
             public NamedValueProto parsePartialFrom(
@@ -3290,22 +3282,20 @@ public final class GtfsSpecificationProto {
          */
         boolean getCacheKeys();
     }
-
     /**
      * <pre>
      * Column value caching configuration.  Caching, when enabled, can speed up
      * processing for large CVS files, at the expense of higher memory
      * requirements.
      * </pre>
-     * <p>
+     *
      * Protobuf type {@code csvspec.ColumnCacheProto}
      */
-    public static final class ColumnCacheProto extends
+    public  static final class ColumnCacheProto extends
             com.google.protobuf.GeneratedMessageV3 implements
             // @@protoc_insertion_point(message_implements:csvspec.ColumnCacheProto)
             ColumnCacheProtoOrBuilder {
         private static final long serialVersionUID = 0L;
-
         // Use ColumnCacheProto.newBuilder() to construct.
         private ColumnCacheProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
             super(builder);
@@ -3764,7 +3754,7 @@ public final class GtfsSpecificationProto {
             @java.lang.Override
             public Builder mergeFrom(com.google.protobuf.Message other) {
                 if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto) {
-                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto) other);
+                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto)other);
                 } else {
                     super.mergeFrom(other);
                     return this;
@@ -3772,8 +3762,7 @@ public final class GtfsSpecificationProto {
             }
 
             public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto other) {
-                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance())
-                    return this;
+                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance()) return this;
                 if (other.hasCacheNumbers()) {
                     setCacheNumbers(other.getCacheNumbers());
                 }
@@ -3944,8 +3933,7 @@ public final class GtfsSpecificationProto {
             return DEFAULT_INSTANCE;
         }
 
-        @java.lang.Deprecated
-        public static final com.google.protobuf.Parser<ColumnCacheProto>
+        @java.lang.Deprecated public static final com.google.protobuf.Parser<ColumnCacheProto>
                 PARSER = new com.google.protobuf.AbstractParser<ColumnCacheProto>() {
             @java.lang.Override
             public ColumnCacheProto parsePartialFrom(
@@ -4400,21 +4388,18 @@ public final class GtfsSpecificationProto {
          */
         int getFieldNumber();
     }
-
     /**
      * Protobuf type {@code csvspec.ColumnSpecProto}
      */
-    public static final class ColumnSpecProto extends
+    public  static final class ColumnSpecProto extends
             com.google.protobuf.GeneratedMessageV3 implements
             // @@protoc_insertion_point(message_implements:csvspec.ColumnSpecProto)
             ColumnSpecProtoOrBuilder {
         private static final long serialVersionUID = 0L;
-
         // Use ColumnSpecProto.newBuilder() to construct.
         private ColumnSpecProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
             super(builder);
         }
-
         private ColumnSpecProto() {
             name_ = "";
             originalname_ = "";
@@ -5698,10 +5683,7 @@ public final class GtfsSpecificationProto {
         }
 
         @java.lang.Override
-        public Builder newBuilderForType() {
-            return newBuilder();
-        }
-
+        public Builder newBuilderForType() { return newBuilder(); }
         public static Builder newBuilder() {
             return DEFAULT_INSTANCE.toBuilder();
         }
@@ -5973,7 +5955,7 @@ public final class GtfsSpecificationProto {
             @java.lang.Override
             public Builder mergeFrom(com.google.protobuf.Message other) {
                 if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto) {
-                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto) other);
+                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto)other);
                 } else {
                     super.mergeFrom(other);
                     return this;
@@ -5981,8 +5963,7 @@ public final class GtfsSpecificationProto {
             }
 
             public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto other) {
-                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.getDefaultInstance())
-                    return this;
+                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.getDefaultInstance()) return this;
                 if (other.hasName()) {
                     bitField0_ |= 0x00000001;
                     name_ = other.name_;
@@ -7707,8 +7688,7 @@ public final class GtfsSpecificationProto {
             public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder getSupersetkeyOrBuilder(
                     int index) {
                 if (supersetkeyBuilder_ == null) {
-                    return supersetkey_.get(index);
-                } else {
+                    return supersetkey_.get(index);  } else {
                     return supersetkeyBuilder_.getMessageOrBuilder(index);
                 }
             }
@@ -8021,8 +8001,7 @@ public final class GtfsSpecificationProto {
             return DEFAULT_INSTANCE;
         }
 
-        @java.lang.Deprecated
-        public static final com.google.protobuf.Parser<ColumnSpecProto>
+        @java.lang.Deprecated public static final com.google.protobuf.Parser<ColumnSpecProto>
                 PARSER = new com.google.protobuf.AbstractParser<ColumnSpecProto>() {
             @java.lang.Override
             public ColumnSpecProto parsePartialFrom(
@@ -8945,7 +8924,7 @@ public final class GtfsSpecificationProto {
             @java.lang.Override
             public Builder mergeFrom(com.google.protobuf.Message other) {
                 if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto) {
-                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto) other);
+                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto)other);
                 } else {
                     super.mergeFrom(other);
                     return this;
@@ -8953,8 +8932,7 @@ public final class GtfsSpecificationProto {
             }
 
             public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto other) {
-                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.getDefaultInstance())
-                    return this;
+                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.getDefaultInstance()) return this;
                 if (other.hasName()) {
                     bitField0_ |= 0x00000001;
                     name_ = other.name_;
@@ -9675,8 +9653,7 @@ public final class GtfsSpecificationProto {
             public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder getSupersetkeyOrBuilder(
                     int index) {
                 if (supersetkeyBuilder_ == null) {
-                    return supersetkey_.get(index);
-                } else {
+                    return supersetkey_.get(index);  } else {
                     return supersetkeyBuilder_.getMessageOrBuilder(index);
                 }
             }
@@ -9781,8 +9758,7 @@ public final class GtfsSpecificationProto {
             return DEFAULT_INSTANCE;
         }
 
-        @java.lang.Deprecated
-        public static final com.google.protobuf.Parser<KeySpecProto>
+        @java.lang.Deprecated public static final com.google.protobuf.Parser<KeySpecProto>
                 PARSER = new com.google.protobuf.AbstractParser<KeySpecProto>() {
             @java.lang.Override
             public KeySpecProto parsePartialFrom(
@@ -16744,10 +16720,7 @@ public final class GtfsSpecificationProto {
         }
 
         @java.lang.Override
-        public Builder newBuilderForType() {
-            return newBuilder();
-        }
-
+        public Builder newBuilderForType() { return newBuilder(); }
         public static Builder newBuilder() {
             return DEFAULT_INSTANCE.toBuilder();
         }
@@ -17887,7 +17860,7 @@ public final class GtfsSpecificationProto {
             @java.lang.Override
             public Builder mergeFrom(com.google.protobuf.Message other) {
                 if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto) {
-                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto) other);
+                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto)other);
                 } else {
                     super.mergeFrom(other);
                     return this;
@@ -17895,8 +17868,7 @@ public final class GtfsSpecificationProto {
             }
 
             public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto other) {
-                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.getDefaultInstance())
-                    return this;
+                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.getDefaultInstance()) return this;
                 if (other.hasStartline()) {
                     setStartline(other.getStartline());
                 }
@@ -18058,8 +18030,7 @@ public final class GtfsSpecificationProto {
             return DEFAULT_INSTANCE;
         }
 
-        @java.lang.Deprecated
-        public static final com.google.protobuf.Parser<CsvErrorLinesProto>
+        @java.lang.Deprecated public static final com.google.protobuf.Parser<CsvErrorLinesProto>
                 PARSER = new com.google.protobuf.AbstractParser<CsvErrorLinesProto>() {
             @java.lang.Override
             public CsvErrorLinesProto parsePartialFrom(
@@ -18337,11 +18308,10 @@ public final class GtfsSpecificationProto {
          */
         int getRow(int index);
     }
-
     /**
      * Protobuf type {@code csvspec.CsvErrorLocationProto}
      */
-    public static final class CsvErrorLocationProto extends
+    public  static final class CsvErrorLocationProto extends
             com.google.protobuf.GeneratedMessageV3 implements
             // @@protoc_insertion_point(message_implements:csvspec.CsvErrorLocationProto)
             CsvErrorLocationProtoOrBuilder {
@@ -19151,10 +19121,7 @@ public final class GtfsSpecificationProto {
         }
 
         @java.lang.Override
-        public Builder newBuilderForType() {
-            return newBuilder();
-        }
-
+        public Builder newBuilderForType() { return newBuilder(); }
         public static Builder newBuilder() {
             return DEFAULT_INSTANCE.toBuilder();
         }
@@ -19349,7 +19316,7 @@ public final class GtfsSpecificationProto {
             @java.lang.Override
             public Builder mergeFrom(com.google.protobuf.Message other) {
                 if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto) {
-                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto) other);
+                    return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto)other);
                 } else {
                     super.mergeFrom(other);
                     return this;
@@ -19357,8 +19324,7 @@ public final class GtfsSpecificationProto {
             }
 
             public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto other) {
-                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance())
-                    return this;
+                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance()) return this;
                 if (other.hasCsvname()) {
                     bitField0_ |= 0x00000001;
                     csvname_ = other.csvname_;
@@ -20528,8 +20494,7 @@ public final class GtfsSpecificationProto {
             public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProtoOrBuilder getLinerangeOrBuilder(
                     int index) {
                 if (linerangeBuilder_ == null) {
-                    return linerange_.get(index);
-                } else {
+                    return linerange_.get(index);  } else {
                     return linerangeBuilder_.getMessageOrBuilder(index);
                 }
             }
@@ -20740,8 +20705,7 @@ public final class GtfsSpecificationProto {
             return DEFAULT_INSTANCE;
         }
 
-        @java.lang.Deprecated
-        public static final com.google.protobuf.Parser<CsvErrorLocationProto>
+        @java.lang.Deprecated public static final com.google.protobuf.Parser<CsvErrorLocationProto>
                 PARSER = new com.google.protobuf.AbstractParser<CsvErrorLocationProto>() {
             @java.lang.Override
             public CsvErrorLocationProto parsePartialFrom(
@@ -20845,21 +20809,18 @@ public final class GtfsSpecificationProto {
          */
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder getOtherlocationOrBuilder();
     }
-
     /**
      * Protobuf type {@code csvspec.CsvErrorProto}
      */
-    public static final class CsvErrorProto extends
+    public  static final class CsvErrorProto extends
             com.google.protobuf.GeneratedMessageV3 implements
             // @@protoc_insertion_point(message_implements:csvspec.CsvErrorProto)
             CsvErrorProtoOrBuilder {
         private static final long serialVersionUID = 0L;
-
         // Use CsvErrorProto.newBuilder() to construct.
         private CsvErrorProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
             super(builder);
         }
-
         private CsvErrorProto() {
             errortype_ = 10;
         }
@@ -22778,10 +22739,7 @@ public final class GtfsSpecificationProto {
         }
 
         @java.lang.Override
-        public Builder newBuilderForType() {
-            return newBuilder();
-        }
-
+        public Builder newBuilderForType() { return newBuilder(); }
         public static Builder newBuilder() {
             return DEFAULT_INSTANCE.toBuilder();
         }
@@ -22938,8 +22896,7 @@ public final class GtfsSpecificationProto {
             }
 
             public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos other) {
-                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.getDefaultInstance())
-                    return this;
+                if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.getDefaultInstance()) return this;
                 if (errorBuilder_ == null) {
                     if (!other.error_.isEmpty()) {
                         if (error_.isEmpty()) {
@@ -23281,8 +23238,7 @@ public final class GtfsSpecificationProto {
             return DEFAULT_INSTANCE;
         }
 
-        @java.lang.Deprecated
-        public static final com.google.protobuf.Parser<CsvErrorProtos>
+        @java.lang.Deprecated public static final com.google.protobuf.Parser<CsvErrorProtos>
                 PARSER = new com.google.protobuf.AbstractParser<CsvErrorProtos>() {
             @java.lang.Override
             public CsvErrorProtos parsePartialFrom(
@@ -23379,8 +23335,7 @@ public final class GtfsSpecificationProto {
     getDescriptor() {
         return descriptor;
     }
-
-    private static com.google.protobuf.Descriptors.FileDescriptor
+    private static  com.google.protobuf.Descriptors.FileDescriptor
             descriptor;
     static {
         java.lang.String[] descriptorData = {
@@ -23466,86 +23421,86 @@ public final class GtfsSpecificationProto {
         };
         descriptor = com.google.protobuf.Descriptors.FileDescriptor
                 .internalBuildGeneratedFileFrom(descriptorData,
-                        new com.google.protobuf.Descriptors.FileDescriptor[]{
+                        new com.google.protobuf.Descriptors.FileDescriptor[] {
                         });
         internal_static_csvspec_ColumnInputType_descriptor =
                 getDescriptor().getMessageTypes().get(0);
         internal_static_csvspec_ColumnInputType_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_ColumnInputType_descriptor,
-                new java.lang.String[]{"Type",});
+                new java.lang.String[] { "Type", });
         internal_static_csvspec_SupersetKeySpecProto_descriptor =
                 getDescriptor().getMessageTypes().get(1);
         internal_static_csvspec_SupersetKeySpecProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_SupersetKeySpecProto_descriptor,
-                new java.lang.String[]{"Csvname", "Keyname", "Restrictnulltosingleforeignkey",});
+                new java.lang.String[] { "Csvname", "Keyname", "Restrictnulltosingleforeignkey", });
         internal_static_csvspec_NamedValueProto_descriptor =
                 getDescriptor().getMessageTypes().get(2);
         internal_static_csvspec_NamedValueProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_NamedValueProto_descriptor,
-                new java.lang.String[]{"Name", "Intvalue", "Stringvalue", "Enumtype",});
+                new java.lang.String[] { "Name", "Intvalue", "Stringvalue", "Enumtype", });
         internal_static_csvspec_ColumnCacheProto_descriptor =
                 getDescriptor().getMessageTypes().get(3);
         internal_static_csvspec_ColumnCacheProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_ColumnCacheProto_descriptor,
-                new java.lang.String[]{"CacheNumbers", "CacheKeys",});
+                new java.lang.String[] { "CacheNumbers", "CacheKeys", });
         internal_static_csvspec_ColumnSpecProto_descriptor =
                 getDescriptor().getMessageTypes().get(4);
         internal_static_csvspec_ColumnSpecProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_ColumnSpecProto_descriptor,
-                new java.lang.String[]{"Name", "Originalname", "Number", "Inheritfields", "Required", "Nullvalue", "ValueRequired", "Type", "Intmin", "Intmax", "Floatmin", "Floatmax", "Namedvalue", "Matchregexp", "Uniquevalues", "Supersetkey", "Cache", "FieldNumber",});
+                new java.lang.String[] { "Name", "Originalname", "Number", "Inheritfields", "Required", "Nullvalue", "ValueRequired", "Type", "Intmin", "Intmax", "Floatmin", "Floatmax", "Namedvalue", "Matchregexp", "Uniquevalues", "Supersetkey", "Cache", "FieldNumber", });
         internal_static_csvspec_KeySpecProto_descriptor =
                 getDescriptor().getMessageTypes().get(5);
         internal_static_csvspec_KeySpecProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_KeySpecProto_descriptor,
-                new java.lang.String[]{"Name", "Columnname", "Uniquevalues", "Supersetkey",});
+                new java.lang.String[] { "Name", "Columnname", "Uniquevalues", "Supersetkey", });
         internal_static_csvspec_CsvSpecProto_descriptor =
                 getDescriptor().getMessageTypes().get(6);
         internal_static_csvspec_CsvSpecProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_CsvSpecProto_descriptor,
-                new java.lang.String[]{"Name", "Filename", "Inheritfields", "Inheritinputcolumns", "Inheritkeys", "Required", "Hasheader", "Encoding", "Column", "Key", "Resortkey", "Requiresortedonkey", "Namedvalue", "StripProtectedWhitespaceFromValues", "ColumnCache",});
+                new java.lang.String[] { "Name", "Filename", "Inheritfields", "Inheritinputcolumns", "Inheritkeys", "Required", "Hasheader", "Encoding", "Column", "Key", "Resortkey", "Requiresortedonkey", "Namedvalue", "StripProtectedWhitespaceFromValues", "ColumnCache", });
         internal_static_csvspec_CsvSpecProtos_descriptor =
                 getDescriptor().getMessageTypes().get(7);
         internal_static_csvspec_CsvSpecProtos_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_CsvSpecProtos_descriptor,
-                new java.lang.String[]{"Templatefile", "Csvspec", "Namedvalue", "StripProtectedWhitespaceFromValues", "ColumnCache",});
+                new java.lang.String[] { "Templatefile", "Csvspec", "Namedvalue", "StripProtectedWhitespaceFromValues", "ColumnCache", });
         internal_static_csvspec_CsvErrorColumnProto_descriptor =
                 getDescriptor().getMessageTypes().get(8);
         internal_static_csvspec_CsvErrorColumnProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_CsvErrorColumnProto_descriptor,
-                new java.lang.String[]{"Index", "Type", "Originalname", "Colspec",});
+                new java.lang.String[] { "Index", "Type", "Originalname", "Colspec", });
         internal_static_csvspec_CsvErrorLinesProto_descriptor =
                 getDescriptor().getMessageTypes().get(9);
         internal_static_csvspec_CsvErrorLinesProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_CsvErrorLinesProto_descriptor,
-                new java.lang.String[]{"Startline", "Endline",});
+                new java.lang.String[] { "Startline", "Endline", });
         internal_static_csvspec_CsvErrorLocationProto_descriptor =
                 getDescriptor().getMessageTypes().get(10);
         internal_static_csvspec_CsvErrorLocationProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_CsvErrorLocationProto_descriptor,
-                new java.lang.String[]{"Csvname", "Csvfilename", "Keyname", "Column", "Linenumber", "Linerange", "Row",});
+                new java.lang.String[] { "Csvname", "Csvfilename", "Keyname", "Column", "Linenumber", "Linerange", "Row", });
         internal_static_csvspec_CsvErrorProto_descriptor =
                 getDescriptor().getMessageTypes().get(11);
         internal_static_csvspec_CsvErrorProto_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_CsvErrorProto_descriptor,
-                new java.lang.String[]{"Errortype", "Location", "Otherlocation",});
+                new java.lang.String[] { "Errortype", "Location", "Otherlocation", });
         internal_static_csvspec_CsvErrorProtos_descriptor =
                 getDescriptor().getMessageTypes().get(12);
         internal_static_csvspec_CsvErrorProtos_fieldAccessorTable = new
                 com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
                 internal_static_csvspec_CsvErrorProtos_descriptor,
-                new java.lang.String[]{"Error", });
+                new java.lang.String[] { "Error", });
     }
 
     // @@protoc_insertion_point(outer_class_scope)
