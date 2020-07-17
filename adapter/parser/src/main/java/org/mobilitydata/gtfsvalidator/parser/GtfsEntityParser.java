@@ -20,11 +20,13 @@ import com.google.common.base.Strings;
 import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.FloatValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
+import org.apache.commons.validator.routines.RegexValidator;
 import org.jetbrains.annotations.NotNull;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseColorNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseDateNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseFloatNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseIntegerNotice;
@@ -44,6 +46,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
     private final FloatValidator floatValidator;
     private final IntegerValidator integerValidator;
     private final DateValidator dateValidator;
+    private final RegexValidator colorValidator;
 
     private static final String DATE_PATTERN = "yyyyMMdd";
 
@@ -51,7 +54,8 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                             @NotNull RawFileInfo rawFileInfo,
                             @NotNull FloatValidator floatValidator,
                             @NotNull IntegerValidator integerValidator,
-                            @NotNull DateValidator dateValidator) {
+                            @NotNull DateValidator dateValidator,
+                            @NotNull RegexValidator colorValidator) {
         this.fileSchema = fileSchema;
         this.rawFileInfo = rawFileInfo;
         this.floatValidator = floatValidator;
@@ -61,6 +65,7 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
             throw new IllegalArgumentException("Date validator must be strict");
         }
         this.dateValidator = dateValidator;
+        this.colorValidator = colorValidator;
     }
 
     /**
@@ -125,6 +130,17 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                                 )
                         );
                     }
+                } else if (columnSpecProto.getType().getType() ==
+                        GtfsSpecificationProto.ColumnInputType.InputType.COLOR) {
+
+                    if (!colorValidator.isValid(rawField)) {
+                        toReturn.add(new CannotParseColorNotice(
+                                fileSchema.getFilename(),
+                                columnSpecProto.getName(),
+                                toValidate.getIndex(),
+                                rawField
+                        ));
+                    }
                 }
             }
         });
@@ -183,6 +199,13 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                                         dateValidator.validate(rawField, DATE_PATTERN, Locale.US).toInstant(),
                                         ZoneId.of("America/Montreal") //FIXME: retrieve timezone from agency.txt
                                 ));
+                    }
+
+                } else if (columnSpecProto.getType().getType() ==
+                        GtfsSpecificationProto.ColumnInputType.InputType.COLOR) {
+
+                    if (colorValidator.isValid(rawField)) {
+                        contentByHeaderMap.put(columnSpecProto.getName(), rawField);
                     }
 
                 } else {

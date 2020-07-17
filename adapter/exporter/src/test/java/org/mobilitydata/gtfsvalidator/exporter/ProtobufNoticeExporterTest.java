@@ -592,7 +592,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new InvalidColorNotice(FILENAME, "field_name", "entity_id", "#zz")
+        underTest.export(new CannotParseColorNotice(FILENAME, "field_name", 0, "#zz")
         );
 
         verify(mockBuilder, times(1)).clear();
