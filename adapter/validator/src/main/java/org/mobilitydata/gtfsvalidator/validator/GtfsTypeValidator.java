@@ -99,42 +99,9 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                     case INPUT_TYPE_UNSPECIFIED: // Text is default and does not require validation
                     case TEXT:
                     case COLOR:
-                    case DATE: // no special validation
+                    case DATE:
+                    case FLOAT: // no special validation
                         break;
-                    case INTEGER:{
-                        if (!integerValidator.isInRange(
-                                (Integer) value,
-                                Integer.MIN_VALUE,
-                                Integer.MAX_VALUE)) {
-
-                            toReturn.add(new IntegerFieldValueOutOfRangeNotice(
-                                    toValidate.getRawFileInfo().getFilename(),
-                                    columnSpecProto.getName(),
-                                    toValidate.getEntityId(),
-                                    Integer.MIN_VALUE,
-                                    Integer.MAX_VALUE,
-                                    (Integer) value)
-                            );
-                        }
-                        break;
-                    }
-                    case FLOAT: {
-                        if (!floatValidator.isInRange(
-                                (Float) value,
-                                Float.MIN_VALUE,
-                                Float.MAX_VALUE)) {
-
-                            toReturn.add(new FloatFieldValueOutOfRangeNotice(
-                                    toValidate.getRawFileInfo().getFilename(),
-                                    columnSpecProto.getName(),
-                                    toValidate.getEntityId(),
-                                    Float.MIN_VALUE,
-                                    Float.MAX_VALUE,
-                                    (Float) value)
-                            );
-                        }
-                        break;
-                    }
                     case LATITUDE: {
                         if (!floatValidator.isInRange(
                                 (Float) value,
@@ -203,9 +170,9 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                         }
                         break;
                     }
-                    case NON_NULL_INTEGER: {
+                    case NON_NULL_INTEGER: { // a null integer is an integer with value=0
                         if ((Integer) value == 0) {
-                            toReturn.add(new IntegerEqualZeroNotice(
+                            toReturn.add(new NullIntegerValueNotice(
                                     toValidate.getRawFileInfo().getFilename(),
                                     columnSpecProto.getName(),
                                     toValidate.getEntityId())

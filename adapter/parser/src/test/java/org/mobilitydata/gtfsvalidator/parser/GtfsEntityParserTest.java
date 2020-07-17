@@ -85,7 +85,7 @@ class GtfsEntityParserTest {
     }
 
     @Test
-    void validIntegerValidationShouldGenerateNothing() {
+    void validNonNullIntegerValidationShouldGenerateNothing() {
 
         IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
         when(mockIntegerValidator.isValid(ArgumentMatchers.eq("1"),
@@ -96,7 +96,47 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getName()).thenReturn("integer_type");
 
         GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
-        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.INTEGER);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NULL_INTEGER);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mockIntegerValidator,
+                mockDateValidator,
+                mock(RegexValidator.class)
+        );
+
+        Collection<ErrorNotice> result = underTest.validateNonStringTypes(new RawEntity(
+                Map.of("integer_type", "1"),
+                0
+        ));
+
+        assertEquals(0, result.size());
+
+        verify(mockIntegerValidator, times(1)).isValid(ArgumentMatchers.eq("1"),
+                (Locale) ArgumentMatchers.any());
+    }
+
+    @Test
+    void validNonNegativeIntegerValidationShouldGenerateNothing() {
+
+        IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
+        when(mockIntegerValidator.isValid(ArgumentMatchers.eq("1"),
+                (Locale) ArgumentMatchers.any())).thenReturn(true);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("integer_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_INTEGER);
 
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
@@ -357,7 +397,7 @@ class GtfsEntityParserTest {
     }
 
     @Test
-    void invalidIntegerValidationShouldGenerateError() {
+    void invalidNonNullIntegerValidationShouldGenerateError() {
 
         IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
 
@@ -367,7 +407,55 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getName()).thenReturn("integer_type");
 
         GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
-        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.INTEGER);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NULL_INTEGER);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mockIntegerValidator,
+                mockDateValidator,
+                mock(RegexValidator.class)
+        );
+
+        ArrayList<ErrorNotice> result = (ArrayList<ErrorNotice>) underTest.validateNonStringTypes(new RawEntity(
+                Map.of("integer_type", "abc"),
+                0
+        ));
+
+        assertEquals(1, result.size());
+
+        ErrorNotice notice = result.get(0);
+        assertThat(notice, instanceOf(CannotParseIntegerNotice.class));
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(5, notice.getCode());
+        assertEquals("Invalid integer value", notice.getTitle());
+        assertEquals("test_filename.tst", notice.getFilename());
+        assertEquals("Value: 'abc' of field: integer_type with type integer can't be parsed in file: " +
+                "test_filename.tst at row: 0", notice.getDescription());
+
+        verify(mockIntegerValidator, times(1)).isValid(ArgumentMatchers.eq("abc"),
+                (Locale) ArgumentMatchers.any());
+    }
+
+    @Test
+    void invalidNonNegativeIntegerValidationShouldGenerateError() {
+
+        IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        when(mockFileSpec.getFilename()).thenReturn("test_filename.tst");
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("integer_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_INTEGER);
 
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
@@ -822,7 +910,7 @@ class GtfsEntityParserTest {
     }
 
     @Test
-    void validIntegerShouldParse() {
+    void validNonNullIntegerShouldParse() {
 
         IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
         when(mockIntegerValidator.isValid(ArgumentMatchers.eq("1"),
@@ -835,7 +923,52 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getName()).thenReturn("integer_type");
 
         GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
-        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.INTEGER);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NULL_INTEGER);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mockIntegerValidator,
+                mockDateValidator,
+                mock(RegexValidator.class)
+        );
+
+        ParsedEntity result = underTest.parse(new RawEntity(
+                Map.of("integer_type", "1"),
+                0
+        ));
+
+        assertEquals(1, result.get("integer_type"));
+
+        verify(mockIntegerValidator, times(1)).isValid(ArgumentMatchers.eq("1"),
+                (Locale) ArgumentMatchers.any());
+
+        verify(mockIntegerValidator, times(1)).validate(ArgumentMatchers.eq("1"),
+                (Locale) ArgumentMatchers.any());
+    }
+
+    @Test
+    void validNonNegativeIntegerShouldParse() {
+
+        IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
+        when(mockIntegerValidator.isValid(ArgumentMatchers.eq("1"),
+                (Locale) ArgumentMatchers.any())).thenReturn(true);
+        when(mockIntegerValidator.validate(ArgumentMatchers.eq("1"),
+                (Locale) ArgumentMatchers.any())).thenReturn(1);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("integer_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_INTEGER);
 
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
@@ -901,7 +1034,7 @@ class GtfsEntityParserTest {
     }
 
     @Test
-    void invalidIntegerShouldParseToNull() {
+    void invalidNonNullIntegerShouldParseToNull() {
 
         IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
 
@@ -911,7 +1044,43 @@ class GtfsEntityParserTest {
         when(mockColumnSpec.getName()).thenReturn("integer_type");
 
         GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
-        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.INTEGER);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NULL_INTEGER);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        DateValidator mockDateValidator = mock(DateValidator.class);
+        when(mockDateValidator.isStrict()).thenReturn(true);
+
+        GtfsEntityParser underTest = new GtfsEntityParser(
+                mockFileSpec,
+                new RawFileInfo.RawFileInfoBuilder().build(),
+                mock(FloatValidator.class),
+                mockIntegerValidator,
+                mockDateValidator,
+                mock(RegexValidator.class)
+        );
+
+        ParsedEntity result = underTest.parse(new RawEntity(
+                Map.of("integer_type", "abc"),
+                0
+        ));
+
+        assertNull(result.get("integer_type"));
+    }
+
+    @Test
+    void invalidNonNegativeIntegerShouldParseToNull() {
+
+        IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        when(mockFileSpec.getFilename()).thenReturn("test_filename.tst");
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("integer_type");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_INTEGER);
 
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));

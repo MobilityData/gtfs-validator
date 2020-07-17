@@ -622,11 +622,11 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportIntegerEqualZeroNoticeShouldWriteObject() throws IOException {
+    void exportNullIntegerValueNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        final IntegerEqualZeroNotice toExport = new IntegerEqualZeroNotice("filename", "entity id",
+        final NullIntegerValueNotice toExport = new NullIntegerValueNotice("filename", "entity id",
                 "route id");
         underTest.export(toExport);
 

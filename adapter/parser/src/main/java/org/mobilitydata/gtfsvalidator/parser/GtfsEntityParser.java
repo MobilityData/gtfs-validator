@@ -110,8 +110,6 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                         );
                     }
                 } else if (columnSpecProto.getType().getType() ==
-                        GtfsSpecificationProto.ColumnInputType.InputType.INTEGER ||
-                        columnSpecProto.getType().getType() ==
                                 GtfsSpecificationProto.ColumnInputType.InputType.NON_NULL_INTEGER ||
                         columnSpecProto.getType().getType() ==
                                 GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_INTEGER) {
@@ -194,8 +192,6 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                     }
 
                 } else if (columnSpecProto.getType().getType() ==
-                        GtfsSpecificationProto.ColumnInputType.InputType.INTEGER ||
-                        columnSpecProto.getType().getType() ==
                                 GtfsSpecificationProto.ColumnInputType.InputType.NON_NULL_INTEGER ||
                         columnSpecProto.getType().getType() ==
                                 GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_INTEGER) {

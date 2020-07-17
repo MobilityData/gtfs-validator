@@ -258,7 +258,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final IntegerEqualZeroNotice toExport) throws IOException {
+    public void export(final NullIntegerValueNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

@@ -588,9 +588,7 @@ csvspec: {
     name: "saturday"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
+    type: { type: NON_NEGATIVE_INTEGER }
   }
   column: {
     field_number: 11

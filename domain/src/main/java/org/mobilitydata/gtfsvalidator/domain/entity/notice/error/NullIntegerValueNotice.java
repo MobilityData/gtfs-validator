@@ -21,8 +21,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class IntegerEqualZeroNotice extends ErrorNotice {
-    public IntegerEqualZeroNotice(final String filename,
+/**
+ * Notice class generated when encountering a null integer value for field `pathways.stair_count` of GTFS `pathways.txt`
+ */
+public class NullIntegerValueNotice extends ErrorNotice {
+    public NullIntegerValueNotice(final String filename,
                                   final String fieldName,
                                   final String entityId) {
         super(filename,

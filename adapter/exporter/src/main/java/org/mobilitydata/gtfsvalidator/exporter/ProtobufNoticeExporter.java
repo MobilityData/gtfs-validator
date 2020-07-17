@@ -564,7 +564,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final IntegerEqualZeroNotice toExport) throws IOException {
+    public void export(final NullIntegerValueNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
