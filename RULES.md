@@ -36,6 +36,8 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
 | [E033](#E033) | `route_id` not found |
 | [E035](#E035) | `agency_id` not found |
+| [E036](#E035) | Stop with invalid parent `location_type` |
+| [E037](#E035) | Stop with `location_type` of 2 (Station) defines a parent |
 
 ### Table of Warnings
 
@@ -149,6 +151,18 @@ Value of field `route_id` should exist in GTFS data.
 ### E035 - `agency_id` not found
 
 Value of field `agency_id` should exist in GTFS data.
+
+<a name="E036"/>
+
+### E036 - Stop with invalid parent `location_type`
+
+Value of field `location_type` of parent found in field `parent_station` in invalid.
+
+<a name="E037"/>
+
+### E037 - Stop with `location_type` of 2 (Station) defines a parent
+
+Value of field `parent_station` must be null when `location_type` is 2
 
 # Warnings
 
