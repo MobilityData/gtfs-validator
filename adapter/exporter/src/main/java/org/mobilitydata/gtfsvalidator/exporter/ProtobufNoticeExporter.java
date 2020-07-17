@@ -563,6 +563,17 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final IntegerEqualZeroNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getEntityId())
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();
