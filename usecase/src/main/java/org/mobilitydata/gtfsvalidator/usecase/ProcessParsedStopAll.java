@@ -50,7 +50,7 @@ public class ProcessParsedStopAll {
         GENERIC_NODE(3),
         BOARDING_AREA(4);
 
-        private int value;
+        private final int value;
 
         LocationType(int value) {
             this.value = value;
@@ -95,8 +95,8 @@ public class ProcessParsedStopAll {
         Map<String, List<String>> childrenPerStationId = new HashMap<>();
 
         parsedEntityByStopId.values().forEach(stop -> {
-            String childId = stop.getEntityId();
-            String parentId = (String) stop.get("parent_station");
+            final String childId = stop.getEntityId();
+            final String parentId = (String) stop.get("parent_station");
             if (parentId != null) {
                 if (childrenPerStationId.containsKey(parentId)) {
                     childrenPerStationId.get(parentId).add(childId);

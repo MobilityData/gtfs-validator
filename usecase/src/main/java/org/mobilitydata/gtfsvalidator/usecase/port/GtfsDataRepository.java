@@ -154,5 +154,5 @@ public interface GtfsDataRepository {
 
     LocationBase getStopById(final String stopId);
 
-    Collection<LocationBase> getStopAll();
+    Map<String, LocationBase> getStopAll();
 }

@@ -818,13 +818,13 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return an immutable collection of LocationBase objects representing all the rows from stops.txt
+     * Return an immutable map of LocationBase objects representing all the rows from stops.txt,
      *
      * @return an immutable collection of LocationBase objects representing all the rows from stops.txt
      */
     @Override
-    public Collection<LocationBase> getStopAll() {
-        return Collections.unmodifiableCollection(stopPerId.values());
+    public Map<String, LocationBase> getStopAll() {
+        return Collections.unmodifiableMap(stopPerId);
     }
 
     /**

@@ -80,7 +80,8 @@ public class Station extends LocationBase {
         }
 
         public EntityBuildResult<?> build() {
-            if (stopId == null || stopName == null || stopLat == null || stopLon == null) {
+            if (stopId == null || stopName == null || stopLat == null || stopLon == null
+                    || wheelchairBoarding == INVALID_VALUE) {
                 if (stopId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_id", null));
                 }

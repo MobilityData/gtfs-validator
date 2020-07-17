@@ -38,19 +38,19 @@ public class StopOrPlatform extends LocationBase {
     @Nullable
     private final String platformCode;
 
-    private StopOrPlatform(@NotNull String stopId,
-                           @Nullable String stopCode,
-                           @NotNull String stopName,
-                           @Nullable String stopDesc,
-                           @NotNull Float stopLat,
-                           @NotNull Float stopLon,
-                           @Nullable String zoneId,
-                           @Nullable String stopUrl,
-                           @Nullable String parentStation,
-                           @Nullable String stopTimezone,
-                           @NotNull WheelchairBoarding wheelchairBoarding,
-                           @Nullable String platformCode,
-                           @Nullable List<String> children) {
+    private StopOrPlatform(@NotNull final String stopId,
+                           @Nullable final String stopCode,
+                           @NotNull final String stopName,
+                           @Nullable final String stopDesc,
+                           @NotNull final Float stopLat,
+                           @NotNull final Float stopLon,
+                           @Nullable final String zoneId,
+                           @Nullable final String stopUrl,
+                           @Nullable final String parentStation,
+                           @Nullable final String stopTimezone,
+                           @NotNull final WheelchairBoarding wheelchairBoarding,
+                           @Nullable final String platformCode,
+                           @Nullable final List<String> children) {
         super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, children);
         this.parentStation = parentStation;
         this.wheelchairBoarding = wheelchairBoarding;
@@ -93,7 +93,8 @@ public class StopOrPlatform extends LocationBase {
         }
 
         public EntityBuildResult<?> build() {
-            if (stopId == null || stopName == null || stopLat == null || stopLon == null) {
+            if (stopId == null || stopName == null || stopLat == null || stopLon == null
+                    || wheelchairBoarding == INVALID_VALUE) {
                 if (stopId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_id", null));
                 }

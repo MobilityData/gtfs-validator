@@ -157,6 +157,8 @@ public class Main {
                                     break;
                                 }
                                 case "stops.txt": {
+                                    // rows from stops.txt refer each others
+                                    // building a map of all rows for further processing
                                     ParsedEntity preprocessedStop = preprocessParsedStop.execute(parsedEntity,
                                             preprocessedStopByStopId.keySet());
                                     if (preprocessedStop != null) {

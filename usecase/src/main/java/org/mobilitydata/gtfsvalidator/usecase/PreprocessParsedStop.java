@@ -38,7 +38,7 @@ public class PreprocessParsedStop {
 
 
     public ParsedEntity execute(final ParsedEntity parsedEntity, final Set<String> existingKeySet) {
-        String stopId = parsedEntity.getEntityId();
+        final String stopId = parsedEntity.getEntityId();
 
         if (stopId == null) {
             resultRepository.addNotice(
@@ -52,7 +52,6 @@ public class PreprocessParsedStop {
                     "stop_id", stopId));
             return null;
         }
-
         return parsedEntity;
     }
 }

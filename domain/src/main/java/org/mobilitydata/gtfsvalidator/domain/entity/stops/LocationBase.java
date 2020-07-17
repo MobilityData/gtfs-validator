@@ -41,16 +41,16 @@ public abstract class LocationBase extends GtfsEntity {
     private final String stopTimezone;
     private final List<String> childrenList;
 
-    protected LocationBase(@NotNull String stopId,
-                           String stopCode,
-                           String stopName,
-                           String stopDesc,
-                           Float stopLat,
-                           Float stopLon,
-                           String zoneId,
-                           String stopUrl,
-                           String stopTimezone,
-                           List<String> childrenList) {
+    protected LocationBase(@NotNull final String stopId,
+                           final String stopCode,
+                           final String stopName,
+                           final String stopDesc,
+                           final Float stopLat,
+                           final Float stopLon,
+                           final String zoneId,
+                           final String stopUrl,
+                           final String stopTimezone,
+                           final List<String> childrenList) {
         this.stopId = stopId;
         this.stopCode = stopCode;
         this.stopName = stopName;
@@ -114,7 +114,7 @@ public abstract class LocationBase extends GtfsEntity {
         protected String zoneId;
         protected String stopUrl;
         protected String stopTimezone;
-        protected List<String> childrenIdList = new ArrayList<>();
+        protected List<String> childrenIdList = null;
         protected final List<Notice> noticeCollection = new ArrayList<>();
 
         public LocationBaseBuilder stopId(@NotNull final String stopId) {
