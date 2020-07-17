@@ -265,9 +265,10 @@ public class DefaultConfig {
         return new PreprocessParsedStop(resultRepo);
     }
 
-    public ProcessParsedStopAll processParsedStopCollection() {
+    public ProcessParsedStopAll processParsedStopAll() {
         return new ProcessParsedStopAll(resultRepo, gtfsDataRepository,
-                new StopOrPlatform.StopOrPlatformBuilder(), new Station.StationBuilder(),
+                new StopOrPlatform.StopOrPlatformBuilder(),
+                new Station.StationBuilder(),
                 new Entrance.EntranceBuilder(),
                 new GenericNode.GenericNodeBuilder(),
                 new BoardingArea.BoardingAreaBuilder());

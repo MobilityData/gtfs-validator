@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Base class for all entities defined in stops.txt
+ * Base class for all entities defined in stops.txt. Can not be directly instantiated: user must use a Builder
+ * derived from {@link LocationBase.LocationBaseBuilder} to instantiate a daughter class.
  */
 public abstract class LocationBase extends GtfsEntity {
 

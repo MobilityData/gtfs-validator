@@ -32,9 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-/*
- * This use case turns a parsed entity to a concrete class depending on the 'type' field
- * Further processing stop.txt related entities is required to validate parent stations <--> child stops relationships
+/**
+ * This use case turns a parsed entity to a concrete class depending on the 'location_type' field
  */
 public class ProcessParsedStopAll {
 
@@ -91,9 +90,22 @@ public class ProcessParsedStopAll {
         this.boardingAreaBuilder = boardingAreaBuilder;
     }
 
+    /**
+     * Use case execution method to go transform each row from stops.txt to an internal representation.
+     * <p>
+     * This use case extracts values from a {@code ParsedEntity} and creates a {@code LocationBase} object if the
+     * requirements from the official GTFS specification are met.
+     * When these requirements are mot met, related notices generated in {@code LocationBase.LocationBaseBuilder}
+     * are added to the result repository provided to the constructor.
+     * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
+     * stop entities is not respected.
+     *
+     * @param parsedEntityByStopId a map of entities to be processed
+     */
     public void execute(final Map<String, ParsedEntity> parsedEntityByStopId) {
         Map<String, List<String>> childrenPerStationId = new HashMap<>();
 
+        // first we iterate through all to resolve children
         parsedEntityByStopId.values().forEach(stop -> {
             final String childId = stop.getEntityId();
             final String parentId = (String) stop.get("parent_station");
@@ -108,6 +120,7 @@ public class ProcessParsedStopAll {
             }
         });
 
+        // then we transform rows to the corresponding concrete types, base on 'location_type'
         parsedEntityByStopId.values().forEach(stop -> {
             Integer locationType = (Integer) stop.get("location_type");
             String stopId = stop.getEntityId();

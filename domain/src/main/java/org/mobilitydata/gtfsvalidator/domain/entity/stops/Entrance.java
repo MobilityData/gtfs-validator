@@ -28,7 +28,8 @@ import static org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoard
 import static org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
 
 /**
- * Model class for an entity defined in stops.txt with location_type = 2
+ * Model class for an entity defined in stops.txt with location_type = 2. Can't be constructed directly.
+ * Use {@link EntranceBuilder} to instantiate
  */
 public class Entrance extends LocationBase {
     @NotNull

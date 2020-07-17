@@ -24,7 +24,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequired
 import java.util.List;
 
 /**
- * Model class for an entity defined in stops.txt with location_type = 3
+ * Model class for an entity defined in stops.txt with location_type = 3. Can't be constructed directly.
+ * Use {@link GenericNodeBuilder} to instantiate
  */
 public class GenericNode extends LocationBase {
 

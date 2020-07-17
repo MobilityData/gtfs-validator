@@ -23,11 +23,10 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.Set;
 
-/*
- * This use case returns null is the passed entity has a null id, or the entity otherwise
- * Further processing of stops.txt related entities is required to validate
- * parent stations <-> child stops relationships. See ProcessParsedStopAll
- */
+/**
+ * This use case checks basic validity of rows from stops.txt
+ * Further processing of stops.txt related entities is done in {@link ProcessParsedStopAll}
+ **/
 public class PreprocessParsedStop {
 
     private final ValidationResultRepository resultRepository;
@@ -36,8 +35,20 @@ public class PreprocessParsedStop {
         this.resultRepository = resultRepo;
     }
 
-
-    public ParsedEntity execute(final ParsedEntity parsedEntity, final Set<String> existingKeySet) {
+    /**
+     * Use case execution method to check a stop row basic validity
+     * <p>
+     * This use case returns null if the passed entity has a null id or if the id is found in existingIdSet.
+     * Otherwise it returns the entity.
+     * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
+     * trip entities is not respected.
+     *
+     * @param parsedEntity  entity to be checked for basic validity
+     * @param existingIdSet a set of ids against which the non null entity id is checked
+     * @return null if the passed entity doesn't have an id or if its id was found in existingIdSet.
+     * Otherwise, the entity itself
+     */
+    public ParsedEntity execute(final ParsedEntity parsedEntity, final Set<String> existingIdSet) {
         final String stopId = parsedEntity.getEntityId();
 
         if (stopId == null) {
@@ -47,7 +58,7 @@ public class PreprocessParsedStop {
             return null;
         }
 
-        if (existingKeySet.contains(stopId)) {
+        if (existingIdSet.contains(stopId)) {
             resultRepository.addNotice(new DuplicatedEntityNotice("stops.txt",
                     "stop_id", stopId));
             return null;

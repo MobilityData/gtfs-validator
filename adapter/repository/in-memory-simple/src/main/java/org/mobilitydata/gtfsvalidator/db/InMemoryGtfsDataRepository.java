@@ -795,12 +795,13 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     /**
      * Add a stop representing a row from stops.txt to this {@link GtfsDataRepository}. Return the entity added to the
-     * repository if the uniqueness constraint of stop based on stop_id is respected, if this requirement is not met,
-     * returns null.
+     * repository if the uniqueness constraint of stop based on stop_id is respected. Otherwise returns null.
      *
-     * @param newStop the internal representation of a row from stops.txt to be added to the repository.
+     * @param newStop the internal representation. A daughter of {@link LocationBase}
+     *                of a row from stops.txt to be added to the repository.
      * @return the entity added to the repository if the uniqueness constraint of stop based on stop_id is
-     * respected, if this requirement is not met returns null.
+     * respected. Otherwise returns null.
+     * @throws IllegalArgumentException if the given parameter is null
      */
     @Override
     public LocationBase addStop(final LocationBase newStop) throws IllegalArgumentException {
@@ -820,7 +821,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     /**
      * Return an immutable map of LocationBase objects representing all the rows from stops.txt,
      *
-     * @return an immutable collection of LocationBase objects representing all the rows from stops.txt
+     * @return an immutable map of LocationBase objects representing all the rows from stops.txt
      */
     @Override
     public Map<String, LocationBase> getStopAll() {
@@ -828,7 +829,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the LocationBase representing a row from stops.txt related to the id provided as parameter
+     * Return the {@link LocationBase} representing a row from stops.txt related to the id provided as parameter
      *
      * @param stopId the key from stops.txt related to the LocationBase to be returned
      * @return the LocationBase representing a row from stops.txt related to the id provided as parameter.

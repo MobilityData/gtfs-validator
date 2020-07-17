@@ -28,7 +28,7 @@ public class StationWithParentStationNotice extends ErrorNotice {
         super("stops.txt", E_037,
                 "Non null `parent_station`",
                 "Stop with id:`" + childId + " is a station (location_type=1) with parent_id:`" +
-                        parentId + "`. This is forbidden. Expected null",
+                        parentId + "`. Stations cannot have parent stops. Expected null",
                 childId);
         putNoticeSpecific(KEY_PARENT_ID, parentId);
     }

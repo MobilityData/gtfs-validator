@@ -30,6 +30,16 @@ public enum WheelchairBoarding {
         this.value = value;
     }
 
+    /**
+     * Matches enum values to Integer value. Returns the enum item value matching the integer passed as parameter.
+     * Returns default value UNKNOWN_WHEELCHAIR_BOARDING if the integer passed as parameter is null. This method
+     * returns INVALID_VALUE if no enum item matches the integer passed as parameter.
+     * {@link WheelchairBoarding} enum item
+     *
+     * @param fromValue value to match to {@link WheelchairBoarding} enum items
+     * @return the default value UNKNOWN_WHEELCHAIR_BOARDING if the integer passed as parameter is null.
+     * This method returns INVALID_VALUE if no enum item matches the integer passed as parameter.
+     */
     static public WheelchairBoarding fromInt(Integer fromValue) {
         if (fromValue == null) {
             return UNKNOWN_WHEELCHAIR_BOARDING;
