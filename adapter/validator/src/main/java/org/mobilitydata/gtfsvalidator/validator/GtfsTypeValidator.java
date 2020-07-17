@@ -43,6 +43,10 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
     private final EmailValidator emailValidator;
     private final RegexValidator timeValidator;
     private final Set<String> timezoneSet;
+    private final static Float LATITUDE_MIN_VALUE = -90f;
+    private final static Float LATITUDE_MAX_VALUE = 90f;
+    private final static Float LONGITUDE_MIN_VALUE = -180f;
+    private final static Float LONGITUDE_MAX_VALUE = 180f;
 
     /**
      * Private class method determining if a character is printable.
@@ -95,39 +99,117 @@ public class GtfsTypeValidator implements GtfsSpecRepository.ParsedEntityTypeVal
                     case INPUT_TYPE_UNSPECIFIED: // Text is default and does not require validation
                     case TEXT:
                     case COLOR:
-                    case DATE: //no special validation
+                    case DATE: // no special validation
                         break;
-                    case FLOAT: {
-                        if (!floatValidator.isInRange(
-                                (Float) value,
-                                columnSpecProto.getFloatmin(),
-                                columnSpecProto.getFloatmax())) {
-
-                            toReturn.add(new FloatFieldValueOutOfRangeNotice(
-                                    toValidate.getRawFileInfo().getFilename(),
-                                    columnSpecProto.getName(),
-                                    toValidate.getEntityId(),
-                                    columnSpecProto.getFloatmin(),
-                                    columnSpecProto.getFloatmax(),
-                                    (Float) value
-                            ));
-                        }
-                        break;
-                    }
-                    case INTEGER: {
+                    case INTEGER:{
                         if (!integerValidator.isInRange(
                                 (Integer) value,
-                                columnSpecProto.getIntmin(),
-                                columnSpecProto.getIntmax())) {
+                                Integer.MIN_VALUE,
+                                Integer.MAX_VALUE)) {
 
                             toReturn.add(new IntegerFieldValueOutOfRangeNotice(
                                     toValidate.getRawFileInfo().getFilename(),
                                     columnSpecProto.getName(),
                                     toValidate.getEntityId(),
-                                    columnSpecProto.getIntmin(),
-                                    columnSpecProto.getIntmax(),
-                                    (Integer) value
-                            ));
+                                    Integer.MIN_VALUE,
+                                    Integer.MAX_VALUE,
+                                    (Integer) value)
+                            );
+                        }
+                        break;
+                    }
+                    case FLOAT: {
+                        if (!floatValidator.isInRange(
+                                (Float) value,
+                                Float.MIN_VALUE,
+                                Float.MAX_VALUE)) {
+
+                            toReturn.add(new FloatFieldValueOutOfRangeNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    Float.MIN_VALUE,
+                                    Float.MAX_VALUE,
+                                    (Float) value)
+                            );
+                        }
+                        break;
+                    }
+                    case LATITUDE: {
+                        if (!floatValidator.isInRange(
+                                (Float) value,
+                                LATITUDE_MIN_VALUE,
+                                LATITUDE_MAX_VALUE)) {
+
+                            toReturn.add(new FloatFieldValueOutOfRangeNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    LATITUDE_MIN_VALUE,
+                                    LATITUDE_MAX_VALUE,
+                                    (Float) value)
+                            );
+                        }
+                        break;
+                    }
+                    case LONGITUDE: {
+                        if (!floatValidator.isInRange(
+                                (Float) value,
+                                LONGITUDE_MIN_VALUE,
+                                LONGITUDE_MAX_VALUE)) {
+
+                            toReturn.add(new FloatFieldValueOutOfRangeNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    LONGITUDE_MIN_VALUE,
+                                    LONGITUDE_MAX_VALUE,
+                                    (Float) value)
+                            );
+                        }
+                        break;
+                    }
+                    case NON_NEGATIVE_FLOAT: {
+                        if (!floatValidator.isInRange(
+                                (Float) value,
+                                0,
+                                Float.MAX_VALUE)) {
+
+                            toReturn.add(new FloatFieldValueOutOfRangeNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    0,
+                                    Float.MAX_VALUE,
+                                    (Float) value)
+                            );
+                        }
+                        break;
+                    }
+                    case NON_NEGATIVE_INTEGER: {
+                        if (!integerValidator.isInRange(
+                                (Integer) value,
+                                0,
+                                Integer.MAX_VALUE)) {
+
+                            toReturn.add(new IntegerFieldValueOutOfRangeNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId(),
+                                    0,
+                                    Integer.MAX_VALUE,
+                                    (Integer) value)
+                            );
+                        }
+                        break;
+                    }
+                    case NON_NULL_INTEGER: {
+                        if ((Integer) value == 0) {
+                            toReturn.add(new IntegerEqualZeroNotice(
+                                    toValidate.getRawFileInfo().getFilename(),
+                                    columnSpecProto.getName(),
+                                    toValidate.getEntityId())
+                            );
                         }
                         break;
                     }

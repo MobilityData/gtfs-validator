@@ -41,8 +41,8 @@ class GtfsTypeValidatorTest {
     void simpleFloatDoNotGenerateNotice() {
         FloatValidator mockFloatValidator = mock(FloatValidator.class);
         when(mockFloatValidator.isInRange(ArgumentMatchers.eq(Float.valueOf(-5.0f)),
-                ArgumentMatchers.eq(-6.66f),
-                ArgumentMatchers.eq(66.6f))).thenReturn(true);
+                ArgumentMatchers.eq(Float.MIN_VALUE),
+                ArgumentMatchers.eq(Float.MAX_VALUE))).thenReturn(true);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
@@ -76,13 +76,13 @@ class GtfsTypeValidatorTest {
 
         verify(mockFloatValidator, times(1)).isInRange(
                 ArgumentMatchers.eq(Float.valueOf(-5.0f)),
-                ArgumentMatchers.eq(-6.66f),
-                ArgumentMatchers.eq(66.6f)
+                ArgumentMatchers.eq(Float.MIN_VALUE),
+                ArgumentMatchers.eq(Float.MAX_VALUE)
         );
     }
 
     @Test
-    void outOfRangeFloatGenerateNotice() {
+    void negativeFloatGenerateNotice() {
         FloatValidator mockFloatValidator = mock(FloatValidator.class);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
@@ -227,8 +227,8 @@ class GtfsTypeValidatorTest {
     void simpleIntegerDoNotGenerateNotice() {
         IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
         when(mockIntegerValidator.isInRange(ArgumentMatchers.eq(Integer.valueOf(5)),
-                ArgumentMatchers.eq(-6),
-                ArgumentMatchers.eq(66))).thenReturn(true);
+                ArgumentMatchers.eq(Integer.MIN_VALUE),
+                ArgumentMatchers.eq(Integer.MAX_VALUE))).thenReturn(true);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
@@ -262,8 +262,8 @@ class GtfsTypeValidatorTest {
 
         verify(mockIntegerValidator, times(1)).isInRange(
                 ArgumentMatchers.eq(Integer.valueOf(5)),
-                ArgumentMatchers.eq(-6),
-                ArgumentMatchers.eq(66)
+                ArgumentMatchers.eq(Integer.MIN_VALUE),
+                ArgumentMatchers.eq(Integer.MAX_VALUE)
         );
     }
 
