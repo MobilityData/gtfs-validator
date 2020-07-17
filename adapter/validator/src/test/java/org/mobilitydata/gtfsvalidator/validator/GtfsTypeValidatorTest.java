@@ -38,7 +38,7 @@ class GtfsTypeValidatorTest {
     public static final String TEST_FILE_TST = "test_file.tst";
 
     @Test
-    void inRangeFloatDoNotGenerateNotice() {
+    void simpleFloatDoNotGenerateNotice() {
         FloatValidator mockFloatValidator = mock(FloatValidator.class);
         when(mockFloatValidator.isInRange(ArgumentMatchers.eq(Float.valueOf(-5.0f)),
                 ArgumentMatchers.eq(-6.66f),
@@ -87,12 +87,10 @@ class GtfsTypeValidatorTest {
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
-        when(mockColumnSpec.getName()).thenReturn("float_with_range");
-        when(mockColumnSpec.getFloatmin()).thenReturn(-6.66f);
-        when(mockColumnSpec.getFloatmax()).thenReturn(66.6f);
+        when(mockColumnSpec.getName()).thenReturn("non_negative_float");
 
         GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
-        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.FLOAT);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_FLOAT);
 
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
@@ -109,7 +107,7 @@ class GtfsTypeValidatorTest {
 
         Collection<Notice> result = underTest.validate(new ParsedEntity(
                 TEST_ID,
-                Map.of("float_with_range", 66.7f),
+                Map.of("non_negative_float", -66.7f),
                 new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
         ));
 
@@ -121,19 +119,112 @@ class GtfsTypeValidatorTest {
         assertEquals(11, notice.getCode());
         assertEquals("Out of range float value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid value for field:`float_with_range` of entity with id:`test_id` -- " +
-                        "min:-6.66 max:66.6 actual:66.7",
+        assertEquals("Invalid value for field:`non_negative_float` of entity with id:`test_id` -- " +
+                        "min:0.0 max:" + Float.MAX_VALUE + " actual:-66.7",
                 notice.getDescription());
 
         verify(mockFloatValidator, times(1)).isInRange(
-                ArgumentMatchers.eq(Float.valueOf(66.7f)),
-                ArgumentMatchers.eq(-6.66f),
-                ArgumentMatchers.eq(66.6f)
+                ArgumentMatchers.eq(Float.valueOf(-66.7f)),
+                ArgumentMatchers.eq(0f),
+                ArgumentMatchers.eq(Float.MAX_VALUE)
         );
     }
 
     @Test
-    void inRangeIntegerDoNotGenerateNotice() {
+    void negativeIntegerGenerateNotice() {
+        IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("non_negative_integer");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_INTEGER);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mockIntegerValidator,
+                mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("non_negative_integer", -66),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(1, result.size());
+
+        Notice notice = new ArrayList<>(result).get(0);
+        assertThat(notice, instanceOf(IntegerFieldValueOutOfRangeNotice.class));
+        assertEquals("ERROR", ((IntegerFieldValueOutOfRangeNotice) notice).getLevel());
+        assertEquals(10, notice.getCode());
+        assertEquals("Out of range integer value", notice.getTitle());
+        assertEquals(TEST_FILE_TST, notice.getFilename());
+        assertEquals("Invalid value for field:`non_negative_integer` of entity with id:`test_id` -- " +
+                        "min:0 max:" + Integer.MAX_VALUE + " actual:-66",
+                notice.getDescription());
+
+        verify(mockIntegerValidator, times(1)).isInRange(
+                ArgumentMatchers.eq(Integer.valueOf(-66)),
+                ArgumentMatchers.eq(0),
+                ArgumentMatchers.eq(Integer.MAX_VALUE)
+        );
+    }
+
+    @Test
+    void zeroAsIntegerGenerateNotice() {
+        IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("non_zero_integer");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.NON_NULL_INTEGER);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mock(FloatValidator.class),
+                mockIntegerValidator,
+                mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("non_zero_integer", 0),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(1, result.size());
+
+        Notice notice = new ArrayList<>(result).get(0);
+        assertThat(notice, instanceOf(IntegerEqualZeroNotice.class));
+        assertEquals("ERROR", ((IntegerEqualZeroNotice) notice).getLevel());
+        assertEquals(40, notice.getCode());
+        assertEquals("Integer with value zero", notice.getTitle());
+        assertEquals(TEST_FILE_TST, notice.getFilename());
+        assertEquals("Zero as value for field: `non_zero_integer` of entity with id:`test_id`",
+                notice.getDescription());
+
+        verifyNoInteractions(mockIntegerValidator);
+    }
+
+    @Test
+    void simpleIntegerDoNotGenerateNotice() {
         IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
         when(mockIntegerValidator.isInRange(ArgumentMatchers.eq(Integer.valueOf(5)),
                 ArgumentMatchers.eq(-6),
@@ -177,24 +268,22 @@ class GtfsTypeValidatorTest {
     }
 
     @Test
-    void outOfRangeIntegerGenerateNotice() {
-        IntegerValidator mockIntegerValidator = mock(IntegerValidator.class);
+    void outOfRangeLatitudeGenerateNotice() {
+        FloatValidator mockFloatValidator = mock(FloatValidator.class);
 
         GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
         GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
-        when(mockColumnSpec.getName()).thenReturn("integer_with_range");
-        when(mockColumnSpec.getIntmin()).thenReturn(-6);
-        when(mockColumnSpec.getIntmax()).thenReturn(66);
+        when(mockColumnSpec.getName()).thenReturn("out_of_range_latitude");
 
         GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
-        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.INTEGER);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.LATITUDE);
 
         when(mockColumnSpec.getType()).thenReturn(mockInputType);
         when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
 
         GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
-                mock(FloatValidator.class),
-                mockIntegerValidator,
+                mockFloatValidator,
+                mock(IntegerValidator.class),
                 mock(UrlValidator.class),
                 mock(Bcp47Validator.class),
                 mock(EmailValidator.class),
@@ -204,26 +293,74 @@ class GtfsTypeValidatorTest {
 
         Collection<Notice> result = underTest.validate(new ParsedEntity(
                 TEST_ID,
-                Map.of("integer_with_range", 67),
+                Map.of("out_of_range_latitude", -100.0f),
                 new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
         ));
 
         assertEquals(1, result.size());
 
         Notice notice = new ArrayList<>(result).get(0);
-        assertThat(notice, instanceOf(IntegerFieldValueOutOfRangeNotice.class));
-        assertEquals("ERROR", ((IntegerFieldValueOutOfRangeNotice) notice).getLevel());
-        assertEquals(10, notice.getCode());
-        assertEquals("Out of range integer value", notice.getTitle());
+        assertThat(notice, instanceOf(FloatFieldValueOutOfRangeNotice.class));
+        assertEquals("ERROR", ((FloatFieldValueOutOfRangeNotice) notice).getLevel());
+        assertEquals(11, notice.getCode());
+        assertEquals("Out of range float value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid value for field:`integer_with_range` of entity with id:`test_id` -- " +
-                        "min:-6 max:66 actual:67",
+        assertEquals("Invalid value for field:`out_of_range_latitude` of entity with id:`test_id` -- " +
+                        "min:-90.0 max:90.0 actual:-100.0",
                 notice.getDescription());
 
-        verify(mockIntegerValidator, times(1)).isInRange(
-                ArgumentMatchers.eq(Integer.valueOf(67)),
-                ArgumentMatchers.eq(-6),
-                ArgumentMatchers.eq(66)
+        verify(mockFloatValidator, times(1)).isInRange(
+                ArgumentMatchers.eq(Float.valueOf(-100f)),
+                ArgumentMatchers.eq(Float.valueOf(-90f)),
+                ArgumentMatchers.eq(Float.valueOf(90f)));
+    }
+
+    @Test
+    void outOfRangeLongitudeGenerateNotice() {
+        FloatValidator mockFloatValidator = mock(FloatValidator.class);
+
+        GtfsSpecificationProto.CsvSpecProto mockFileSpec = mock(GtfsSpecificationProto.CsvSpecProto.class);
+        GtfsSpecificationProto.ColumnSpecProto mockColumnSpec = mock(GtfsSpecificationProto.ColumnSpecProto.class);
+        when(mockColumnSpec.getName()).thenReturn("out_of_range_longitude");
+
+        GtfsSpecificationProto.ColumnInputType mockInputType = mock(GtfsSpecificationProto.ColumnInputType.class);
+        when(mockInputType.getType()).thenReturn(GtfsSpecificationProto.ColumnInputType.InputType.LONGITUDE);
+
+        when(mockColumnSpec.getType()).thenReturn(mockInputType);
+        when(mockFileSpec.getColumnList()).thenReturn(List.of(mockColumnSpec));
+
+        GtfsTypeValidator underTest = new GtfsTypeValidator(mockFileSpec,
+                mockFloatValidator,
+                mock(IntegerValidator.class),
+                mock(UrlValidator.class),
+                mock(Bcp47Validator.class),
+                mock(EmailValidator.class),
+                mock(RegexValidator.class),
+                Collections.emptySet()
+        );
+
+        Collection<Notice> result = underTest.validate(new ParsedEntity(
+                TEST_ID,
+                Map.of("out_of_range_longitude", -200.0f),
+                new RawFileInfo.RawFileInfoBuilder().filename(TEST_FILE_TST).build()
+        ));
+
+        assertEquals(1, result.size());
+
+        Notice notice = new ArrayList<>(result).get(0);
+        assertThat(notice, instanceOf(FloatFieldValueOutOfRangeNotice.class));
+        assertEquals("ERROR", ((FloatFieldValueOutOfRangeNotice) notice).getLevel());
+        assertEquals(11, notice.getCode());
+        assertEquals("Out of range float value", notice.getTitle());
+        assertEquals(TEST_FILE_TST, notice.getFilename());
+        assertEquals("Invalid value for field:`out_of_range_longitude` of entity with id:`test_id` -- " +
+                        "min:-180.0 max:180.0 actual:-200.0",
+                notice.getDescription());
+
+        verify(mockFloatValidator, times(1)).isInRange(
+                ArgumentMatchers.eq(Float.valueOf(-200f)),
+                ArgumentMatchers.eq(Float.valueOf(-180f)),
+                ArgumentMatchers.eq(Float.valueOf(180f))
         );
     }
 

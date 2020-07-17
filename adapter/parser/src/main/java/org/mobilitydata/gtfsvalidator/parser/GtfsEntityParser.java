@@ -88,7 +88,13 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
             //Skip values that weren't provided
             if (!Strings.isNullOrEmpty(rawField)) {
 
-                if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT) {
+                if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT ||
+                        columnSpecProto.getType().getType() ==
+                                GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_FLOAT ||
+                        columnSpecProto.getType().getType() ==
+                                GtfsSpecificationProto.ColumnInputType.InputType.LATITUDE ||
+                        columnSpecProto.getType().getType() ==
+                                GtfsSpecificationProto.ColumnInputType.InputType.LONGITUDE) {
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
@@ -104,7 +110,11 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                         );
                     }
                 } else if (columnSpecProto.getType().getType() ==
-                        GtfsSpecificationProto.ColumnInputType.InputType.INTEGER) {
+                        GtfsSpecificationProto.ColumnInputType.InputType.INTEGER ||
+                        columnSpecProto.getType().getType() ==
+                                GtfsSpecificationProto.ColumnInputType.InputType.NON_NULL_INTEGER ||
+                        columnSpecProto.getType().getType() ==
+                                GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_INTEGER) {
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
@@ -168,7 +178,13 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
 
             if (!Strings.isNullOrEmpty(rawField)) {
 
-                if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT) {
+                if (columnSpecProto.getType().getType() == GtfsSpecificationProto.ColumnInputType.InputType.FLOAT ||
+                        columnSpecProto.getType().getType() ==
+                                GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_FLOAT ||
+                columnSpecProto.getType().getType() ==
+                        GtfsSpecificationProto.ColumnInputType.InputType.LATITUDE ||
+                        columnSpecProto.getType().getType() ==
+                                GtfsSpecificationProto.ColumnInputType.InputType.LONGITUDE) {
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
@@ -178,7 +194,11 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                     }
 
                 } else if (columnSpecProto.getType().getType() ==
-                        GtfsSpecificationProto.ColumnInputType.InputType.INTEGER) {
+                        GtfsSpecificationProto.ColumnInputType.InputType.INTEGER ||
+                        columnSpecProto.getType().getType() ==
+                                GtfsSpecificationProto.ColumnInputType.InputType.NON_NULL_INTEGER ||
+                        columnSpecProto.getType().getType() ==
+                                GtfsSpecificationProto.ColumnInputType.InputType.NON_NEGATIVE_INTEGER) {
 
                     //FIXME: retrieve locale from agency_lang in agency.txt and if that doesn't exist,
                     //from feed_lang in feed_info.txt before defaulting to Locale.US
