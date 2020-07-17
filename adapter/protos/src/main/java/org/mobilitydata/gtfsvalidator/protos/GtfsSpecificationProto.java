@@ -4,22 +4,19 @@
 package org.mobilitydata.gtfsvalidator.protos;
 
 public final class GtfsSpecificationProto {
-  private GtfsSpecificationProto() {
+  private GtfsSpecificationProto() {}
+  public static void registerAllExtensions(
+      com.google.protobuf.ExtensionRegistryLite registry) {
   }
 
   public static void registerAllExtensions(
-          com.google.protobuf.ExtensionRegistryLite registry) {
-  }
-
-  public static void registerAllExtensions(
-          com.google.protobuf.ExtensionRegistry registry) {
+      com.google.protobuf.ExtensionRegistry registry) {
     registerAllExtensions(
-            (com.google.protobuf.ExtensionRegistryLite) registry);
+        (com.google.protobuf.ExtensionRegistryLite) registry);
   }
-
   public interface ColumnInputTypeOrBuilder extends
-          // @@protoc_insertion_point(interface_extends:csvspec.ColumnInputType)
-          com.google.protobuf.MessageOrBuilder {
+      // @@protoc_insertion_point(interface_extends:csvspec.ColumnInputType)
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -28,9 +25,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required .csvspec.ColumnInputType.InputType type = 1;</code>
+     * @return Whether the type field is set.
      */
     boolean hasType();
-
     /**
      * <pre>
      * Wrapping the type in a message like this is just for exporting the enum to
@@ -38,6 +35,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required .csvspec.ColumnInputType.InputType type = 1;</code>
+     * @return The type.
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.InputType getType();
   }
@@ -56,17 +54,15 @@ public final class GtfsSpecificationProto {
    *
    * Protobuf type {@code csvspec.ColumnInputType}
    */
-  public static final class ColumnInputType extends
-          com.google.protobuf.GeneratedMessageV3 implements
-          // @@protoc_insertion_point(message_implements:csvspec.ColumnInputType)
-          ColumnInputTypeOrBuilder {
-    private static final long serialVersionUID = 0L;
-
+  public  static final class ColumnInputType extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:csvspec.ColumnInputType)
+      ColumnInputTypeOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use ColumnInputType.newBuilder() to construct.
     private ColumnInputType(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-
     private ColumnInputType() {
       type_ = 0;
     }
@@ -74,7 +70,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
-            UnusedPrivateParameter unused) {
+        UnusedPrivateParameter unused) {
       return new ColumnInputType();
     }
 
@@ -83,18 +79,17 @@ public final class GtfsSpecificationProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-
     private ColumnInputType(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-              com.google.protobuf.UnknownFieldSet.newBuilder();
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -105,7 +100,7 @@ public final class GtfsSpecificationProto {
               break;
             case 8: {
               int rawValue = input.readEnum();
-              @SuppressWarnings("deprecation")
+                @SuppressWarnings("deprecation")
               org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.InputType value = org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.InputType.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(1, rawValue);
@@ -117,7 +112,7 @@ public final class GtfsSpecificationProto {
             }
             default: {
               if (!parseUnknownField(
-                      input, unknownFields, extensionRegistry, tag)) {
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -128,35 +123,34 @@ public final class GtfsSpecificationProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-                e).setUnfinishedMessage(this);
+            e).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
-
     public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
+        getDescriptor() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_ColumnInputType_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_ColumnInputType_fieldAccessorTable
-              .ensureFieldAccessorsInitialized(
-                      org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.Builder.class);
+          .ensureFieldAccessorsInitialized(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.Builder.class);
     }
 
     /**
      * <pre>
      * See: https://gtfs.org/reference/static#field-types
      * </pre>
-     * <p>
+     *
      * Protobuf enum {@code csvspec.ColumnInputType.InputType}
      */
     public enum InputType
-            implements com.google.protobuf.ProtocolMessageEnum {
+        implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <code>INPUT_TYPE_UNSPECIFIED = 0;</code>
        */
@@ -228,7 +222,7 @@ public final class GtfsSpecificationProto {
       LANGUAGE_CODE(10),
       /**
        * <pre>
-       * WGS84 latitude in decimal degrees
+       *WGS84 latitude in decimal degrees
        * </pre>
        *
        * <code>LATITUDE = 11;</code>
@@ -236,7 +230,7 @@ public final class GtfsSpecificationProto {
       LATITUDE(11),
       /**
        * <pre>
-       * WGS84 longitude in decimal degrees
+       *WGS84 longitude in decimal degrees
        * </pre>
        *
        * <code>LONGITUDE = 12;</code>
@@ -252,7 +246,7 @@ public final class GtfsSpecificationProto {
       PHONE_NUMBER(14),
       /**
        * <pre>
-       * TZ timezone from the https://www.iana.org/time-zones
+       *TZ timezone from the https://www.iana.org/time-zones
        * </pre>
        *
        * <code>TIMEZONE = 15;</code>
@@ -260,12 +254,24 @@ public final class GtfsSpecificationProto {
       TIMEZONE(15),
       /**
        * <pre>
-       * https or https with special characters escaped
+       *https or https with special characters escaped
        * </pre>
        *
        * <code>URL = 16;</code>
        */
       URL(16),
+      /**
+       * <code>NON_NEGATIVE_INTEGER = 17;</code>
+       */
+      NON_NEGATIVE_INTEGER(17),
+      /**
+       * <code>NON_NEGATIVE_FLOAT = 18;</code>
+       */
+      NON_NEGATIVE_FLOAT(18),
+      /**
+       * <code>NON_NULL_INTEGER = 19;</code>
+       */
+      NON_NULL_INTEGER(19),
       ;
 
       /**
@@ -339,7 +345,7 @@ public final class GtfsSpecificationProto {
       public static final int LANGUAGE_CODE_VALUE = 10;
       /**
        * <pre>
-       * WGS84 latitude in decimal degrees
+       *WGS84 latitude in decimal degrees
        * </pre>
        *
        * <code>LATITUDE = 11;</code>
@@ -347,7 +353,7 @@ public final class GtfsSpecificationProto {
       public static final int LATITUDE_VALUE = 11;
       /**
        * <pre>
-       * WGS84 longitude in decimal degrees
+       *WGS84 longitude in decimal degrees
        * </pre>
        *
        * <code>LONGITUDE = 12;</code>
@@ -363,7 +369,7 @@ public final class GtfsSpecificationProto {
       public static final int PHONE_NUMBER_VALUE = 14;
       /**
        * <pre>
-       * TZ timezone from the https://www.iana.org/time-zones
+       *TZ timezone from the https://www.iana.org/time-zones
        * </pre>
        *
        * <code>TIMEZONE = 15;</code>
@@ -371,12 +377,24 @@ public final class GtfsSpecificationProto {
       public static final int TIMEZONE_VALUE = 15;
       /**
        * <pre>
-       * https or https with special characters escaped
+       *https or https with special characters escaped
        * </pre>
        *
        * <code>URL = 16;</code>
        */
       public static final int URL_VALUE = 16;
+      /**
+       * <code>NON_NEGATIVE_INTEGER = 17;</code>
+       */
+      public static final int NON_NEGATIVE_INTEGER_VALUE = 17;
+      /**
+       * <code>NON_NEGATIVE_FLOAT = 18;</code>
+       */
+      public static final int NON_NEGATIVE_FLOAT_VALUE = 18;
+      /**
+       * <code>NON_NULL_INTEGER = 19;</code>
+       */
+      public static final int NON_NULL_INTEGER_VALUE = 19;
 
 
       public final int getNumber() {
@@ -384,6 +402,8 @@ public final class GtfsSpecificationProto {
       }
 
       /**
+       * @param value The numeric wire value of the corresponding enum entry.
+       * @return The enum associated with the given numeric wire value.
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
@@ -391,59 +411,47 @@ public final class GtfsSpecificationProto {
         return forNumber(value);
       }
 
+      /**
+       * @param value The numeric wire value of the corresponding enum entry.
+       * @return The enum associated with the given numeric wire value.
+       */
       public static InputType forNumber(int value) {
         switch (value) {
-          case 0:
-            return INPUT_TYPE_UNSPECIFIED;
-          case 1:
-            return TEXT;
-          case 2:
-            return COLOR;
-          case 3:
-            return FLOAT;
-          case 4:
-            return DATE;
-          case 5:
-            return TIME;
-          case 6:
-            return CURRENCY_CODE;
-          case 7:
-            return EMAIL;
-          case 8:
-            return ENUM;
-          case 9:
-            return ID;
-          case 10:
-            return LANGUAGE_CODE;
-          case 11:
-            return LATITUDE;
-          case 12:
-            return LONGITUDE;
-          case 13:
-            return INTEGER;
-          case 14:
-            return PHONE_NUMBER;
-          case 15:
-            return TIMEZONE;
-          case 16:
-            return URL;
-          default:
-            return null;
+          case 0: return INPUT_TYPE_UNSPECIFIED;
+          case 1: return TEXT;
+          case 2: return COLOR;
+          case 3: return FLOAT;
+          case 4: return DATE;
+          case 5: return TIME;
+          case 6: return CURRENCY_CODE;
+          case 7: return EMAIL;
+          case 8: return ENUM;
+          case 9: return ID;
+          case 10: return LANGUAGE_CODE;
+          case 11: return LATITUDE;
+          case 12: return LONGITUDE;
+          case 13: return INTEGER;
+          case 14: return PHONE_NUMBER;
+          case 15: return TIMEZONE;
+          case 16: return URL;
+          case 17: return NON_NEGATIVE_INTEGER;
+          case 18: return NON_NEGATIVE_FLOAT;
+          case 19: return NON_NULL_INTEGER;
+          default: return null;
         }
       }
 
       public static com.google.protobuf.Internal.EnumLiteMap<InputType>
-      internalGetValueMap() {
+          internalGetValueMap() {
         return internalValueMap;
       }
-
       private static final com.google.protobuf.Internal.EnumLiteMap<
-              InputType> internalValueMap =
-              new com.google.protobuf.Internal.EnumLiteMap<InputType>() {
-                public InputType findValueByNumber(int number) {
-                  return InputType.forNumber(number);
-                }
-              };
+          InputType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<InputType>() {
+              public InputType findValueByNumber(int number) {
+                return InputType.forNumber(number);
+              }
+            };
 
       public final com.google.protobuf.Descriptors.EnumValueDescriptor
           getValueDescriptor() {
@@ -461,10 +469,10 @@ public final class GtfsSpecificationProto {
       private static final InputType[] VALUES = values();
 
       public static InputType valueOf(
-              com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-                  "EnumValueDescriptor is not for this type.");
+            "EnumValueDescriptor is not for this type.");
         }
         return VALUES[desc.getIndex()];
       }
@@ -481,7 +489,6 @@ public final class GtfsSpecificationProto {
     private int bitField0_;
     public static final int TYPE_FIELD_NUMBER = 1;
     private int type_;
-
     /**
      * <pre>
      * Wrapping the type in a message like this is just for exporting the enum to
@@ -489,6 +496,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required .csvspec.ColumnInputType.InputType type = 1;</code>
+     * @return Whether the type field is set.
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) != 0);
@@ -500,6 +508,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required .csvspec.ColumnInputType.InputType type = 1;</code>
+     * @return The type.
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.InputType getType() {
       @SuppressWarnings("deprecation")
@@ -524,7 +533,7 @@ public final class GtfsSpecificationProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
+                        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeEnum(1, type_);
       }
@@ -549,7 +558,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-        return true;
+       return true;
       }
       if (!(obj instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType)) {
         return super.equals(obj);
@@ -581,82 +590,71 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
+          .parseDelimitedWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
@@ -669,20 +667,18 @@ public final class GtfsSpecificationProto {
     public static Builder newBuilder(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-              ? new Builder() : new Builder().mergeFrom(this);
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
-
     /**
      * <pre>
      * A CsvSpecProto specifies what an input csv is expected to look like. It
@@ -695,24 +691,24 @@ public final class GtfsSpecificationProto {
      * A CsvErrorProto describes how an input csv fails to meet some requirements.
      * //////////////////////////////////////////////////////////////////////////////
      * </pre>
-     * <p>
+     *
      * Protobuf type {@code csvspec.ColumnInputType}
      */
     public static final class Builder extends
-            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:csvspec.ColumnInputType)
-            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputTypeOrBuilder {
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:csvspec.ColumnInputType)
+        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputTypeOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
+          getDescriptor() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_ColumnInputType_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
+          internalGetFieldAccessorTable() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_ColumnInputType_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                    org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.Builder.class);
+                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.Builder.class);
       }
 
       // Construct using org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.newBuilder()
@@ -721,17 +717,15 @@ public final class GtfsSpecificationProto {
       }
 
       private Builder(
-              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
-
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -742,7 +736,7 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-      getDescriptorForType() {
+          getDescriptorForType() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_ColumnInputType_descriptor;
       }
 
@@ -778,43 +772,38 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-
       @java.lang.Override
       public Builder setRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              int index, java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-
       @java.lang.Override
       public Builder addRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType) {
-          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType) other);
+          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType)other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -822,8 +811,7 @@ public final class GtfsSpecificationProto {
       }
 
       public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType other) {
-        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.getDefaultInstance())
-          return this;
+        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.getDefaultInstance()) return this;
         if (other.hasType()) {
           setType(other.getType());
         }
@@ -858,11 +846,9 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       private int bitField0_;
 
       private int type_ = 0;
-
       /**
        * <pre>
        * Wrapping the type in a message like this is just for exporting the enum to
@@ -870,11 +856,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required .csvspec.ColumnInputType.InputType type = 1;</code>
+       * @return Whether the type field is set.
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) != 0);
       }
-
       /**
        * <pre>
        * Wrapping the type in a message like this is just for exporting the enum to
@@ -882,13 +868,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required .csvspec.ColumnInputType.InputType type = 1;</code>
+       * @return The type.
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.InputType getType() {
         @SuppressWarnings("deprecation")
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.InputType result = org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.InputType.valueOf(type_);
         return result == null ? org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.InputType.INPUT_TYPE_UNSPECIFIED : result;
       }
-
       /**
        * <pre>
        * Wrapping the type in a message like this is just for exporting the enum to
@@ -896,6 +882,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required .csvspec.ColumnInputType.InputType type = 1;</code>
+       * @param value The type to set.
+       * @return This builder for chaining.
        */
       public Builder setType(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.InputType value) {
         if (value == null) {
@@ -906,7 +894,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * Wrapping the type in a message like this is just for exporting the enum to
@@ -914,6 +901,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required .csvspec.ColumnInputType.InputType type = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -921,16 +909,15 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       @java.lang.Override
       public final Builder setUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -940,7 +927,6 @@ public final class GtfsSpecificationProto {
 
     // @@protoc_insertion_point(class_scope:csvspec.ColumnInputType)
     private static final org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType DEFAULT_INSTANCE;
-
     static {
       DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType();
     }
@@ -949,14 +935,13 @@ public final class GtfsSpecificationProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated
-    public static final com.google.protobuf.Parser<ColumnInputType>
-            PARSER = new com.google.protobuf.AbstractParser<ColumnInputType>() {
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ColumnInputType>
+        PARSER = new com.google.protobuf.AbstractParser<ColumnInputType>() {
       @java.lang.Override
       public ColumnInputType parsePartialFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws com.google.protobuf.InvalidProtocolBufferException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
         return new ColumnInputType(input, extensionRegistry);
       }
     };
@@ -994,9 +979,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string csvname = 1;</code>
+     * @return Whether the csvname field is set.
      */
     boolean hasCsvname();
-
     /**
      * <pre>
      * This is used to define the keys of which the value tuples defined by the
@@ -1010,6 +995,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string csvname = 1;</code>
+     * @return The csvname.
      */
     java.lang.String getCsvname();
     /**
@@ -1025,25 +1011,27 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string csvname = 1;</code>
+     * @return The bytes for csvname.
      */
     com.google.protobuf.ByteString
-    getCsvnameBytes();
+        getCsvnameBytes();
 
     /**
      * <code>required string keyname = 2;</code>
+     * @return Whether the keyname field is set.
      */
     boolean hasKeyname();
-
     /**
      * <code>required string keyname = 2;</code>
+     * @return The keyname.
      */
     java.lang.String getKeyname();
-
     /**
      * <code>required string keyname = 2;</code>
+     * @return The bytes for keyname.
      */
     com.google.protobuf.ByteString
-    getKeynameBytes();
+        getKeynameBytes();
 
     /**
      * <pre>
@@ -1053,9 +1041,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool restrictnulltosingleforeignkey = 3 [default = false];</code>
+     * @return Whether the restrictnulltosingleforeignkey field is set.
      */
     boolean hasRestrictnulltosingleforeignkey();
-
     /**
      * <pre>
      * If true, a null value in one of the key columns in this table is
@@ -1064,19 +1052,18 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool restrictnulltosingleforeignkey = 3 [default = false];</code>
+     * @return The restrictnulltosingleforeignkey.
      */
     boolean getRestrictnulltosingleforeignkey();
   }
-
   /**
    * Protobuf type {@code csvspec.SupersetKeySpecProto}
    */
-  public static final class SupersetKeySpecProto extends
-          com.google.protobuf.GeneratedMessageV3 implements
-          // @@protoc_insertion_point(message_implements:csvspec.SupersetKeySpecProto)
-          SupersetKeySpecProtoOrBuilder {
-    private static final long serialVersionUID = 0L;
-
+  public  static final class SupersetKeySpecProto extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:csvspec.SupersetKeySpecProto)
+      SupersetKeySpecProtoOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use SupersetKeySpecProto.newBuilder() to construct.
     private SupersetKeySpecProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -1108,7 +1095,7 @@ public final class GtfsSpecificationProto {
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-              com.google.protobuf.UnknownFieldSet.newBuilder();
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -1136,7 +1123,7 @@ public final class GtfsSpecificationProto {
             }
             default: {
               if (!parseUnknownField(
-                      input, unknownFields, extensionRegistry, tag)) {
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -1182,6 +1169,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string csvname = 1;</code>
+     * @return Whether the csvname field is set.
      */
     public boolean hasCsvname() {
       return ((bitField0_ & 0x00000001) != 0);
@@ -1199,14 +1187,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string csvname = 1;</code>
+     * @return The csvname.
      */
     public java.lang.String getCsvname() {
       java.lang.Object ref = csvname_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
           csvname_ = s;
@@ -1227,14 +1216,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string csvname = 1;</code>
+     * @return The bytes for csvname.
      */
     public com.google.protobuf.ByteString
-    getCsvnameBytes() {
+        getCsvnameBytes() {
       java.lang.Object ref = csvname_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                        (java.lang.String) ref);
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         csvname_ = b;
         return b;
       } else {
@@ -1246,12 +1236,14 @@ public final class GtfsSpecificationProto {
     private volatile java.lang.Object keyname_;
     /**
      * <code>required string keyname = 2;</code>
+     * @return Whether the keyname field is set.
      */
     public boolean hasKeyname() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>required string keyname = 2;</code>
+     * @return The keyname.
      */
     public java.lang.String getKeyname() {
       java.lang.Object ref = keyname_;
@@ -1269,6 +1261,7 @@ public final class GtfsSpecificationProto {
     }
     /**
      * <code>required string keyname = 2;</code>
+     * @return The bytes for keyname.
      */
     public com.google.protobuf.ByteString
         getKeynameBytes() {
@@ -1294,11 +1287,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool restrictnulltosingleforeignkey = 3 [default = false];</code>
+     * @return Whether the restrictnulltosingleforeignkey field is set.
      */
     public boolean hasRestrictnulltosingleforeignkey() {
       return ((bitField0_ & 0x00000004) != 0);
     }
-
     /**
      * <pre>
      * If true, a null value in one of the key columns in this table is
@@ -1307,6 +1300,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool restrictnulltosingleforeignkey = 3 [default = false];</code>
+     * @return The restrictnulltosingleforeignkey.
      */
     public boolean getRestrictnulltosingleforeignkey() {
       return restrictnulltosingleforeignkey_;
@@ -1380,17 +1374,17 @@ public final class GtfsSpecificationProto {
       if (hasCsvname() != other.hasCsvname()) return false;
       if (hasCsvname()) {
         if (!getCsvname()
-                .equals(other.getCsvname())) return false;
+            .equals(other.getCsvname())) return false;
       }
       if (hasKeyname() != other.hasKeyname()) return false;
       if (hasKeyname()) {
         if (!getKeyname()
-                .equals(other.getKeyname())) return false;
+            .equals(other.getKeyname())) return false;
       }
       if (hasRestrictnulltosingleforeignkey() != other.hasRestrictnulltosingleforeignkey()) return false;
       if (hasRestrictnulltosingleforeignkey()) {
         if (getRestrictnulltosingleforeignkey()
-                != other.getRestrictnulltosingleforeignkey()) return false;
+            != other.getRestrictnulltosingleforeignkey()) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -1414,7 +1408,7 @@ public final class GtfsSpecificationProto {
       if (hasRestrictnulltosingleforeignkey()) {
         hash = (37 * hash) + RESTRICTNULLTOSINGLEFOREIGNKEY_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getRestrictnulltosingleforeignkey());
+            getRestrictnulltosingleforeignkey());
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1422,117 +1416,100 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
+          .parseDelimitedWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() {
-      return newBuilder();
-    }
-
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-
     public static Builder newBuilder(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-              ? new Builder() : new Builder().mergeFrom(this);
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
-
     /**
      * Protobuf type {@code csvspec.SupersetKeySpecProto}
      */
     public static final class Builder extends
-            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:csvspec.SupersetKeySpecProto)
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
@@ -1544,8 +1521,8 @@ public final class GtfsSpecificationProto {
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_SupersetKeySpecProto_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder.class);
+            .ensureFieldAccessorsInitialized(
+                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder.class);
       }
 
       // Construct using org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.newBuilder()
@@ -1554,17 +1531,15 @@ public final class GtfsSpecificationProto {
       }
 
       private Builder(
-              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
-
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -1579,7 +1554,7 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-      getDescriptorForType() {
+          getDescriptorForType() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_SupersetKeySpecProto_descriptor;
       }
 
@@ -1623,33 +1598,28 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-
       @java.lang.Override
       public Builder setRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              int index, java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-
       @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
@@ -1659,7 +1629,7 @@ public final class GtfsSpecificationProto {
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto) {
-          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto) other);
+          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto)other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -1667,8 +1637,7 @@ public final class GtfsSpecificationProto {
       }
 
       public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto other) {
-        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.getDefaultInstance())
-          return this;
+        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.getDefaultInstance()) return this;
         if (other.hasCsvname()) {
           bitField0_ |= 0x00000001;
           csvname_ = other.csvname_;
@@ -1732,6 +1701,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string csvname = 1;</code>
+       * @return Whether the csvname field is set.
        */
       public boolean hasCsvname() {
         return ((bitField0_ & 0x00000001) != 0);
@@ -1749,12 +1719,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string csvname = 1;</code>
+       * @return The csvname.
        */
       public java.lang.String getCsvname() {
         java.lang.Object ref = csvname_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             csvname_ = s;
@@ -1777,6 +1748,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string csvname = 1;</code>
+       * @return The bytes for csvname.
        */
       public com.google.protobuf.ByteString
           getCsvnameBytes() {
@@ -1804,6 +1776,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string csvname = 1;</code>
+       * @param value The csvname to set.
+       * @return This builder for chaining.
        */
       public Builder setCsvname(
           java.lang.String value) {
@@ -1828,6 +1802,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string csvname = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearCsvname() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -1848,35 +1823,37 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string csvname = 1;</code>
+       * @param value The bytes for csvname to set.
+       * @return This builder for chaining.
        */
       public Builder setCsvnameBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         csvname_ = value;
         onChanged();
         return this;
       }
 
       private java.lang.Object keyname_ = "";
-
       /**
        * <code>required string keyname = 2;</code>
+       * @return Whether the keyname field is set.
        */
       public boolean hasKeyname() {
         return ((bitField0_ & 0x00000002) != 0);
       }
-
       /**
        * <code>required string keyname = 2;</code>
+       * @return The keyname.
        */
       public java.lang.String getKeyname() {
         java.lang.Object ref = keyname_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             keyname_ = s;
@@ -1888,6 +1865,7 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>required string keyname = 2;</code>
+       * @return The bytes for keyname.
        */
       public com.google.protobuf.ByteString
           getKeynameBytes() {
@@ -1904,6 +1882,8 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>required string keyname = 2;</code>
+       * @param value The keyname to set.
+       * @return This builder for chaining.
        */
       public Builder setKeyname(
           java.lang.String value) {
@@ -1917,6 +1897,7 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>required string keyname = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeyname() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -1926,6 +1907,8 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>required string keyname = 2;</code>
+       * @param value The bytes for keyname to set.
+       * @return This builder for chaining.
        */
       public Builder setKeynameBytes(
           com.google.protobuf.ByteString value) {
@@ -1947,6 +1930,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool restrictnulltosingleforeignkey = 3 [default = false];</code>
+       * @return Whether the restrictnulltosingleforeignkey field is set.
        */
       public boolean hasRestrictnulltosingleforeignkey() {
         return ((bitField0_ & 0x00000004) != 0);
@@ -1959,11 +1943,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool restrictnulltosingleforeignkey = 3 [default = false];</code>
+       * @return The restrictnulltosingleforeignkey.
        */
       public boolean getRestrictnulltosingleforeignkey() {
         return restrictnulltosingleforeignkey_;
       }
-
       /**
        * <pre>
        * If true, a null value in one of the key columns in this table is
@@ -1972,6 +1956,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool restrictnulltosingleforeignkey = 3 [default = false];</code>
+       * @param value The restrictnulltosingleforeignkey to set.
+       * @return This builder for chaining.
        */
       public Builder setRestrictnulltosingleforeignkey(boolean value) {
         bitField0_ |= 0x00000004;
@@ -1979,7 +1965,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * If true, a null value in one of the key columns in this table is
@@ -1988,6 +1973,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool restrictnulltosingleforeignkey = 3 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearRestrictnulltosingleforeignkey() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -1995,16 +1981,15 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       @java.lang.Override
       public final Builder setUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -2014,7 +1999,6 @@ public final class GtfsSpecificationProto {
 
     // @@protoc_insertion_point(class_scope:csvspec.SupersetKeySpecProto)
     private static final org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto DEFAULT_INSTANCE;
-
     static {
       DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto();
     }
@@ -2023,14 +2007,13 @@ public final class GtfsSpecificationProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated
-    public static final com.google.protobuf.Parser<SupersetKeySpecProto>
-            PARSER = new com.google.protobuf.AbstractParser<SupersetKeySpecProto>() {
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<SupersetKeySpecProto>
+        PARSER = new com.google.protobuf.AbstractParser<SupersetKeySpecProto>() {
       @java.lang.Override
       public SupersetKeySpecProto parsePartialFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws com.google.protobuf.InvalidProtocolBufferException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
         return new SupersetKeySpecProto(input, extensionRegistry);
       }
     };
@@ -2068,9 +2051,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return Whether the name field is set.
      */
     boolean hasName();
-
     /**
      * <pre>
      * This message attaches a name to a specific constant value within various
@@ -2084,9 +2067,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The name.
      */
     java.lang.String getName();
-
     /**
      * <pre>
      * This message attaches a name to a specific constant value within various
@@ -2100,46 +2083,52 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The bytes for name.
      */
     com.google.protobuf.ByteString
-    getNameBytes();
+        getNameBytes();
 
     /**
      * <code>optional int64 intvalue = 2;</code>
+     * @return Whether the intvalue field is set.
      */
     boolean hasIntvalue();
-
     /**
      * <code>optional int64 intvalue = 2;</code>
+     * @return The intvalue.
      */
     long getIntvalue();
 
     /**
      * <code>optional string stringvalue = 3;</code>
+     * @return Whether the stringvalue field is set.
      */
     boolean hasStringvalue();
-
     /**
      * <code>optional string stringvalue = 3;</code>
+     * @return The stringvalue.
      */
     java.lang.String getStringvalue();
-
     /**
      * <code>optional string stringvalue = 3;</code>
+     * @return The bytes for stringvalue.
      */
     com.google.protobuf.ByteString
         getStringvalueBytes();
 
     /**
      * <code>optional string enumtype = 4;</code>
+     * @return Whether the enumtype field is set.
      */
     boolean hasEnumtype();
     /**
      * <code>optional string enumtype = 4;</code>
+     * @return The enumtype.
      */
     java.lang.String getEnumtype();
     /**
      * <code>optional string enumtype = 4;</code>
+     * @return The bytes for enumtype.
      */
     com.google.protobuf.ByteString
         getEnumtypeBytes();
@@ -2218,7 +2207,7 @@ public final class GtfsSpecificationProto {
             }
             default: {
               if (!parseUnknownField(
-                      input, unknownFields, extensionRegistry, tag)) {
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -2264,6 +2253,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return Whether the name field is set.
      */
     public boolean hasName() {
       return ((bitField0_ & 0x00000001) != 0);
@@ -2281,6 +2271,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The name.
      */
     public java.lang.String getName() {
       java.lang.Object ref = name_;
@@ -2309,14 +2300,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
         getNameBytes() {
       java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                        (java.lang.String) ref);
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         name_ = b;
         return b;
       } else {
@@ -2328,12 +2320,14 @@ public final class GtfsSpecificationProto {
     private long intvalue_;
     /**
      * <code>optional int64 intvalue = 2;</code>
+     * @return Whether the intvalue field is set.
      */
     public boolean hasIntvalue() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>optional int64 intvalue = 2;</code>
+     * @return The intvalue.
      */
     public long getIntvalue() {
       return intvalue_;
@@ -2343,20 +2337,22 @@ public final class GtfsSpecificationProto {
     private volatile java.lang.Object stringvalue_;
     /**
      * <code>optional string stringvalue = 3;</code>
+     * @return Whether the stringvalue field is set.
      */
     public boolean hasStringvalue() {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      * <code>optional string stringvalue = 3;</code>
+     * @return The stringvalue.
      */
     public java.lang.String getStringvalue() {
       java.lang.Object ref = stringvalue_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
           stringvalue_ = s;
@@ -2366,14 +2362,15 @@ public final class GtfsSpecificationProto {
     }
     /**
      * <code>optional string stringvalue = 3;</code>
+     * @return The bytes for stringvalue.
      */
     public com.google.protobuf.ByteString
         getStringvalueBytes() {
       java.lang.Object ref = stringvalue_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                        (java.lang.String) ref);
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         stringvalue_ = b;
         return b;
       } else {
@@ -2385,12 +2382,14 @@ public final class GtfsSpecificationProto {
     private volatile java.lang.Object enumtype_;
     /**
      * <code>optional string enumtype = 4;</code>
+     * @return Whether the enumtype field is set.
      */
     public boolean hasEnumtype() {
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
      * <code>optional string enumtype = 4;</code>
+     * @return The enumtype.
      */
     public java.lang.String getEnumtype() {
       java.lang.Object ref = enumtype_;
@@ -2408,6 +2407,7 @@ public final class GtfsSpecificationProto {
     }
     /**
      * <code>optional string enumtype = 4;</code>
+     * @return The bytes for enumtype.
      */
     public com.google.protobuf.ByteString
         getEnumtypeBytes() {
@@ -2498,17 +2498,17 @@ public final class GtfsSpecificationProto {
       if (hasIntvalue() != other.hasIntvalue()) return false;
       if (hasIntvalue()) {
         if (getIntvalue()
-                != other.getIntvalue()) return false;
+            != other.getIntvalue()) return false;
       }
       if (hasStringvalue() != other.hasStringvalue()) return false;
       if (hasStringvalue()) {
         if (!getStringvalue()
-                .equals(other.getStringvalue())) return false;
+            .equals(other.getStringvalue())) return false;
       }
       if (hasEnumtype() != other.hasEnumtype()) return false;
       if (hasEnumtype()) {
         if (!getEnumtype()
-                .equals(other.getEnumtype())) return false;
+            .equals(other.getEnumtype())) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -2528,7 +2528,7 @@ public final class GtfsSpecificationProto {
       if (hasIntvalue()) {
         hash = (37 * hash) + INTVALUE_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-                getIntvalue());
+            getIntvalue());
       }
       if (hasStringvalue()) {
         hash = (37 * hash) + STRINGVALUE_FIELD_NUMBER;
@@ -2544,108 +2544,92 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
+          .parseDelimitedWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() {
-      return newBuilder();
-    }
-
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-
     public static Builder newBuilder(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-              ? new Builder() : new Builder().mergeFrom(this);
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -2665,8 +2649,8 @@ public final class GtfsSpecificationProto {
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_NamedValueProto_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder.class);
+            .ensureFieldAccessorsInitialized(
+                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder.class);
       }
 
       // Construct using org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.newBuilder()
@@ -2675,17 +2659,15 @@ public final class GtfsSpecificationProto {
       }
 
       private Builder(
-              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
-
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -2702,7 +2684,7 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-      getDescriptorForType() {
+          getDescriptorForType() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_NamedValueProto_descriptor;
       }
 
@@ -2750,30 +2732,26 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-
       @java.lang.Override
       public Builder setRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              int index, java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
       @java.lang.Override
@@ -2785,7 +2763,7 @@ public final class GtfsSpecificationProto {
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto) {
-          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto) other);
+          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto)other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -2793,8 +2771,7 @@ public final class GtfsSpecificationProto {
       }
 
       public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto other) {
-        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.getDefaultInstance())
-          return this;
+        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.getDefaultInstance()) return this;
         if (other.hasName()) {
           bitField0_ |= 0x00000001;
           name_ = other.name_;
@@ -2860,6 +2837,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return Whether the name field is set.
        */
       public boolean hasName() {
         return ((bitField0_ & 0x00000001) != 0);
@@ -2877,12 +2855,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return The name.
        */
       public java.lang.String getName() {
         java.lang.Object ref = name_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             name_ = s;
@@ -2905,6 +2884,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return The bytes for name.
        */
       public com.google.protobuf.ByteString
           getNameBytes() {
@@ -2932,6 +2912,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @param value The name to set.
+       * @return This builder for chaining.
        */
       public Builder setName(
           java.lang.String value) {
@@ -2956,6 +2938,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearName() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -2976,6 +2959,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @param value The bytes for name to set.
+       * @return This builder for chaining.
        */
       public Builder setNameBytes(
           com.google.protobuf.ByteString value) {
@@ -2988,24 +2973,25 @@ public final class GtfsSpecificationProto {
         return this;
       }
 
-      private long intvalue_;
-
+      private long intvalue_ ;
       /**
        * <code>optional int64 intvalue = 2;</code>
+       * @return Whether the intvalue field is set.
        */
       public boolean hasIntvalue() {
         return ((bitField0_ & 0x00000002) != 0);
       }
-
       /**
        * <code>optional int64 intvalue = 2;</code>
+       * @return The intvalue.
        */
       public long getIntvalue() {
         return intvalue_;
       }
-
       /**
        * <code>optional int64 intvalue = 2;</code>
+       * @param value The intvalue to set.
+       * @return This builder for chaining.
        */
       public Builder setIntvalue(long value) {
         bitField0_ |= 0x00000002;
@@ -3013,9 +2999,9 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <code>optional int64 intvalue = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearIntvalue() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -3025,16 +3011,16 @@ public final class GtfsSpecificationProto {
       }
 
       private java.lang.Object stringvalue_ = "";
-
       /**
        * <code>optional string stringvalue = 3;</code>
+       * @return Whether the stringvalue field is set.
        */
       public boolean hasStringvalue() {
         return ((bitField0_ & 0x00000004) != 0);
       }
-
       /**
        * <code>optional string stringvalue = 3;</code>
+       * @return The stringvalue.
        */
       public java.lang.String getStringvalue() {
         java.lang.Object ref = stringvalue_;
@@ -3050,12 +3036,12 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <code>optional string stringvalue = 3;</code>
+       * @return The bytes for stringvalue.
        */
       public com.google.protobuf.ByteString
-      getStringvalueBytes() {
+          getStringvalueBytes() {
         java.lang.Object ref = stringvalue_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
@@ -3069,20 +3055,22 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>optional string stringvalue = 3;</code>
+       * @param value The stringvalue to set.
+       * @return This builder for chaining.
        */
       public Builder setStringvalue(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
+    throw new NullPointerException();
   }
   bitField0_ |= 0x00000004;
         stringvalue_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <code>optional string stringvalue = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearStringvalue() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -3090,32 +3078,33 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <code>optional string stringvalue = 3;</code>
+       * @param value The bytes for stringvalue to set.
+       * @return This builder for chaining.
        */
       public Builder setStringvalueBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000004;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         stringvalue_ = value;
         onChanged();
         return this;
       }
 
       private java.lang.Object enumtype_ = "";
-
       /**
        * <code>optional string enumtype = 4;</code>
+       * @return Whether the enumtype field is set.
        */
       public boolean hasEnumtype() {
         return ((bitField0_ & 0x00000008) != 0);
       }
-
       /**
        * <code>optional string enumtype = 4;</code>
+       * @return The enumtype.
        */
       public java.lang.String getEnumtype() {
         java.lang.Object ref = enumtype_;
@@ -3131,17 +3120,17 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <code>optional string enumtype = 4;</code>
+       * @return The bytes for enumtype.
        */
       public com.google.protobuf.ByteString
-      getEnumtypeBytes() {
+          getEnumtypeBytes() {
         java.lang.Object ref = enumtype_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
           enumtype_ = b;
           return b;
         } else {
@@ -3150,20 +3139,22 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>optional string enumtype = 4;</code>
+       * @param value The enumtype to set.
+       * @return This builder for chaining.
        */
       public Builder setEnumtype(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
+    throw new NullPointerException();
+  }
   bitField0_ |= 0x00000008;
         enumtype_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <code>optional string enumtype = 4;</code>
+       * @return This builder for chaining.
        */
       public Builder clearEnumtype() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -3171,24 +3162,24 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <code>optional string enumtype = 4;</code>
+       * @param value The bytes for enumtype to set.
+       * @return This builder for chaining.
        */
       public Builder setEnumtypeBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000008;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
         enumtype_ = value;
         onChanged();
         return this;
       }
-
       @java.lang.Override
       public final Builder setUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
@@ -3240,8 +3231,8 @@ public final class GtfsSpecificationProto {
   }
 
   public interface ColumnCacheProtoOrBuilder extends
-          // @@protoc_insertion_point(interface_extends:csvspec.ColumnCacheProto)
-          com.google.protobuf.MessageOrBuilder {
+      // @@protoc_insertion_point(interface_extends:csvspec.ColumnCacheProto)
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -3250,9 +3241,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool cache_numbers = 1 [default = false];</code>
+     * @return Whether the cacheNumbers field is set.
      */
     boolean hasCacheNumbers();
-
     /**
      * <pre>
      * When enabled, numeric values for columns with INT or FLOAT types will be
@@ -3260,6 +3251,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool cache_numbers = 1 [default = false];</code>
+     * @return The cacheNumbers.
      */
     boolean getCacheNumbers();
 
@@ -3270,6 +3262,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool cache_keys = 2 [default = false];</code>
+     * @return Whether the cacheKeys field is set.
      */
     boolean hasCacheKeys();
     /**
@@ -3279,6 +3272,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool cache_keys = 2 [default = false];</code>
+     * @return The cacheKeys.
      */
     boolean getCacheKeys();
   }
@@ -3300,7 +3294,6 @@ public final class GtfsSpecificationProto {
     private ColumnCacheProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-
     private ColumnCacheProto() {
     }
 
@@ -3316,7 +3309,6 @@ public final class GtfsSpecificationProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-
     private ColumnCacheProto(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3388,6 +3380,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool cache_numbers = 1 [default = false];</code>
+     * @return Whether the cacheNumbers field is set.
      */
     public boolean hasCacheNumbers() {
       return ((bitField0_ & 0x00000001) != 0);
@@ -3399,6 +3392,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool cache_numbers = 1 [default = false];</code>
+     * @return The cacheNumbers.
      */
     public boolean getCacheNumbers() {
       return cacheNumbers_;
@@ -3413,11 +3407,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool cache_keys = 2 [default = false];</code>
+     * @return Whether the cacheKeys field is set.
      */
     public boolean hasCacheKeys() {
       return ((bitField0_ & 0x00000002) != 0);
     }
-
     /**
      * <pre>
      * When enabled, single-column key values will be cached, saving repeated key
@@ -3425,13 +3419,13 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool cache_keys = 2 [default = false];</code>
+     * @return The cacheKeys.
      */
     public boolean getCacheKeys() {
       return cacheKeys_;
     }
 
     private byte memoizedIsInitialized = -1;
-
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -3444,7 +3438,7 @@ public final class GtfsSpecificationProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
+                        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeBool(1, cacheNumbers_);
       }
@@ -3466,7 +3460,7 @@ public final class GtfsSpecificationProto {
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeBoolSize(2, cacheKeys_);
+          .computeBoolSize(2, cacheKeys_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3476,7 +3470,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-        return true;
+       return true;
       }
       if (!(obj instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto)) {
         return super.equals(obj);
@@ -3486,12 +3480,12 @@ public final class GtfsSpecificationProto {
       if (hasCacheNumbers() != other.hasCacheNumbers()) return false;
       if (hasCacheNumbers()) {
         if (getCacheNumbers()
-                != other.getCacheNumbers()) return false;
+            != other.getCacheNumbers()) return false;
       }
       if (hasCacheKeys() != other.hasCacheKeys()) return false;
       if (hasCacheKeys()) {
         if (getCacheKeys()
-                != other.getCacheKeys()) return false;
+            != other.getCacheKeys()) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -3507,12 +3501,12 @@ public final class GtfsSpecificationProto {
       if (hasCacheNumbers()) {
         hash = (37 * hash) + CACHE_NUMBERS_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getCacheNumbers());
+            getCacheNumbers());
       }
       if (hasCacheKeys()) {
         hash = (37 * hash) + CACHE_KEYS_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getCacheKeys());
+            getCacheKeys());
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -3520,108 +3514,92 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
+          .parseDelimitedWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() {
-      return newBuilder();
-    }
-
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-
     public static Builder newBuilder(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-              ? new Builder() : new Builder().mergeFrom(this);
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -3635,8 +3613,8 @@ public final class GtfsSpecificationProto {
      * Protobuf type {@code csvspec.ColumnCacheProto}
      */
     public static final class Builder extends
-            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:csvspec.ColumnCacheProto)
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:csvspec.ColumnCacheProto)
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
@@ -3645,10 +3623,10 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
+          internalGetFieldAccessorTable() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_ColumnCacheProto_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder.class);
+            .ensureFieldAccessorsInitialized(
+                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder.class);
       }
 
       // Construct using org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.newBuilder()
@@ -3657,17 +3635,15 @@ public final class GtfsSpecificationProto {
       }
 
       private Builder(
-              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
-
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -3680,7 +3656,7 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-      getDescriptorForType() {
+          getDescriptorForType() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_ColumnCacheProto_descriptor;
       }
 
@@ -3720,23 +3696,20 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
       @java.lang.Override
@@ -3747,8 +3720,8 @@ public final class GtfsSpecificationProto {
       }
       @java.lang.Override
       public Builder addRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
       @java.lang.Override
@@ -3807,6 +3780,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool cache_numbers = 1 [default = false];</code>
+       * @return Whether the cacheNumbers field is set.
        */
       public boolean hasCacheNumbers() {
         return ((bitField0_ & 0x00000001) != 0);
@@ -3818,6 +3792,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool cache_numbers = 1 [default = false];</code>
+       * @return The cacheNumbers.
        */
       public boolean getCacheNumbers() {
         return cacheNumbers_;
@@ -3829,6 +3804,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool cache_numbers = 1 [default = false];</code>
+       * @param value The cacheNumbers to set.
+       * @return This builder for chaining.
        */
       public Builder setCacheNumbers(boolean value) {
         bitField0_ |= 0x00000001;
@@ -3843,6 +3820,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool cache_numbers = 1 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearCacheNumbers() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -3851,8 +3829,7 @@ public final class GtfsSpecificationProto {
         return this;
       }
 
-      private boolean cacheKeys_;
-
+      private boolean cacheKeys_ ;
       /**
        * <pre>
        * When enabled, single-column key values will be cached, saving repeated key
@@ -3860,11 +3837,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool cache_keys = 2 [default = false];</code>
+       * @return Whether the cacheKeys field is set.
        */
       public boolean hasCacheKeys() {
         return ((bitField0_ & 0x00000002) != 0);
       }
-
       /**
        * <pre>
        * When enabled, single-column key values will be cached, saving repeated key
@@ -3872,11 +3849,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool cache_keys = 2 [default = false];</code>
+       * @return The cacheKeys.
        */
       public boolean getCacheKeys() {
         return cacheKeys_;
       }
-
       /**
        * <pre>
        * When enabled, single-column key values will be cached, saving repeated key
@@ -3884,6 +3861,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool cache_keys = 2 [default = false];</code>
+       * @param value The cacheKeys to set.
+       * @return This builder for chaining.
        */
       public Builder setCacheKeys(boolean value) {
         bitField0_ |= 0x00000002;
@@ -3891,7 +3870,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * When enabled, single-column key values will be cached, saving repeated key
@@ -3899,6 +3877,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool cache_keys = 2 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearCacheKeys() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -3906,7 +3885,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -3915,7 +3893,7 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -3976,6 +3954,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return Whether the name field is set.
      */
     boolean hasName();
     /**
@@ -3990,6 +3969,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The name.
      */
     java.lang.String getName();
     /**
@@ -4004,30 +3984,36 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The bytes for name.
      */
     com.google.protobuf.ByteString
         getNameBytes();
 
     /**
      * <code>optional string originalname = 2;</code>
+     * @return Whether the originalname field is set.
      */
     boolean hasOriginalname();
     /**
      * <code>optional string originalname = 2;</code>
+     * @return The originalname.
      */
     java.lang.String getOriginalname();
     /**
      * <code>optional string originalname = 2;</code>
+     * @return The bytes for originalname.
      */
     com.google.protobuf.ByteString
         getOriginalnameBytes();
 
     /**
      * <code>optional int32 number = 3;</code>
+     * @return Whether the number field is set.
      */
     boolean hasNumber();
     /**
      * <code>optional int32 number = 3;</code>
+     * @return The number.
      */
     int getNumber();
 
@@ -4039,6 +4025,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool inheritfields = 15 [default = false];</code>
+     * @return Whether the inheritfields field is set.
      */
     boolean hasInheritfields();
     /**
@@ -4049,6 +4036,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool inheritfields = 15 [default = false];</code>
+     * @return The inheritfields.
      */
     boolean getInheritfields();
 
@@ -4061,6 +4049,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool required = 4 [default = true];</code>
+     * @return Whether the required field is set.
      */
     boolean hasRequired();
     /**
@@ -4072,6 +4061,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool required = 4 [default = true];</code>
+     * @return The required.
      */
     boolean getRequired();
 
@@ -4084,6 +4074,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string nullvalue = 5 [default = ""];</code>
+     * @return Whether the nullvalue field is set.
      */
     boolean hasNullvalue();
     /**
@@ -4095,9 +4086,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string nullvalue = 5 [default = ""];</code>
+     * @return The nullvalue.
      */
     java.lang.String getNullvalue();
-
     /**
      * <pre>
      * If specified, all cells in the column that matches this regexp are
@@ -4107,9 +4098,10 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string nullvalue = 5 [default = ""];</code>
+     * @return The bytes for nullvalue.
      */
     com.google.protobuf.ByteString
-    getNullvalueBytes();
+        getNullvalueBytes();
 
     /**
      * <pre>
@@ -4119,6 +4111,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool value_required = 17 [default = false];</code>
+     * @return Whether the valueRequired field is set.
      */
     boolean hasValueRequired();
     /**
@@ -4129,6 +4122,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool value_required = 17 [default = false];</code>
+     * @return The valueRequired.
      */
     boolean getValueRequired();
 
@@ -4139,6 +4133,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnInputType type = 6;</code>
+     * @return Whether the type field is set.
      */
     boolean hasType();
     /**
@@ -4148,9 +4143,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnInputType type = 6;</code>
+     * @return The type.
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType getType();
-
     /**
      * <pre>
      * The input type of the column. See enum definition for detailed requirements
@@ -4167,25 +4162,27 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional int32 intmin = 7;</code>
+     * @return Whether the intmin field is set.
      */
     boolean hasIntmin();
-
     /**
      * <pre>
      * Specifies max/min values (inclusive) for integer types.
      * </pre>
      *
      * <code>optional int32 intmin = 7;</code>
+     * @return The intmin.
      */
     int getIntmin();
 
     /**
      * <code>optional int32 intmax = 8;</code>
+     * @return Whether the intmax field is set.
      */
     boolean hasIntmax();
-
     /**
      * <code>optional int32 intmax = 8;</code>
+     * @return The intmax.
      */
     int getIntmax();
 
@@ -4195,25 +4192,27 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional float floatmin = 13;</code>
+     * @return Whether the floatmin field is set.
      */
     boolean hasFloatmin();
-
     /**
      * <pre>
      * Specifies max/min values for float types.
      * </pre>
      *
      * <code>optional float floatmin = 13;</code>
+     * @return The floatmin.
      */
     float getFloatmin();
 
     /**
      * <code>optional float floatmax = 14;</code>
+     * @return Whether the floatmax field is set.
      */
     boolean hasFloatmax();
-
     /**
      * <code>optional float floatmax = 14;</code>
+     * @return The floatmax.
      */
     float getFloatmax();
 
@@ -4224,9 +4223,8 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
      */
-    java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto>
-    getNamedvalueList();
-
+    java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto> 
+        getNamedvalueList();
     /**
      * <pre>
      * Specifies names for certain values in this column, see message definition.
@@ -4250,9 +4248,8 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
      */
-    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>
-    getNamedvalueOrBuilderList();
-
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> 
+        getNamedvalueOrBuilderList();
     /**
      * <pre>
      * Specifies names for certain values in this column, see message definition.
@@ -4261,7 +4258,7 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder getNamedvalueOrBuilder(
-            int index);
+        int index);
 
     /**
      * <pre>
@@ -4269,24 +4266,25 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string matchregexp = 9;</code>
+     * @return Whether the matchregexp field is set.
      */
     boolean hasMatchregexp();
-
     /**
      * <pre>
      * If specified, all (non-null) values of this column must match this regexp.
      * </pre>
      *
      * <code>optional string matchregexp = 9;</code>
+     * @return The matchregexp.
      */
     java.lang.String getMatchregexp();
-
     /**
      * <pre>
      * If specified, all (non-null) values of this column must match this regexp.
      * </pre>
      *
      * <code>optional string matchregexp = 9;</code>
+     * @return The bytes for matchregexp.
      */
     com.google.protobuf.ByteString
         getMatchregexpBytes();
@@ -4298,9 +4296,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool uniquevalues = 10 [default = false];</code>
+     * @return Whether the uniquevalues field is set.
      */
     boolean hasUniquevalues();
-
     /**
      * <pre>
      * These fields are syntactic sugar for testing properties of the key
@@ -4308,15 +4306,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool uniquevalues = 10 [default = false];</code>
+     * @return The uniquevalues.
      */
     boolean getUniquevalues();
 
     /**
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
      */
-    java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto>
-    getSupersetkeyList();
-
+    java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto> 
+        getSupersetkeyList();
     /**
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
      */
@@ -4328,14 +4326,13 @@ public final class GtfsSpecificationProto {
     /**
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
      */
-    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder>
-    getSupersetkeyOrBuilderList();
-
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> 
+        getSupersetkeyOrBuilderList();
     /**
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder getSupersetkeyOrBuilder(
-            int index);
+        int index);
 
     /**
      * <pre>
@@ -4345,9 +4342,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto cache = 12;</code>
+     * @return Whether the cache field is set.
      */
     boolean hasCache();
-
     /**
      * <pre>
      * Defines the value caching strategy for this column.  This can be useful
@@ -4356,6 +4353,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto cache = 12;</code>
+     * @return The cache.
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto getCache();
     /**
@@ -4376,6 +4374,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional int32 field_number = 18;</code>
+     * @return Whether the fieldNumber field is set.
      */
     boolean hasFieldNumber();
     /**
@@ -4385,6 +4384,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional int32 field_number = 18;</code>
+     * @return The fieldNumber.
      */
     int getFieldNumber();
   }
@@ -4413,7 +4413,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
-            UnusedPrivateParameter unused) {
+        UnusedPrivateParameter unused) {
       return new ColumnSpecProto();
     }
 
@@ -4422,9 +4422,8 @@ public final class GtfsSpecificationProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-
     private ColumnSpecProto(
-            com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
@@ -4547,7 +4546,7 @@ public final class GtfsSpecificationProto {
                 mutable_bitField0_ |= 0x00001000;
               }
               namedvalue_.add(
-                      input.readMessage(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.PARSER, extensionRegistry));
+                  input.readMessage(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.PARSER, extensionRegistry));
               break;
             }
             case 136: {
@@ -4601,7 +4600,6 @@ public final class GtfsSpecificationProto {
     private int bitField0_;
     public static final int NAME_FIELD_NUMBER = 1;
     private volatile java.lang.Object name_;
-
     /**
      * <pre>
      * This is the name to be used for this column. This field can be used in two
@@ -4614,6 +4612,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return Whether the name field is set.
      */
     public boolean hasName() {
       return ((bitField0_ & 0x00000001) != 0);
@@ -4630,6 +4629,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The name.
      */
     public java.lang.String getName() {
       java.lang.Object ref = name_;
@@ -4657,6 +4657,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
         getNameBytes() {
@@ -4676,12 +4677,14 @@ public final class GtfsSpecificationProto {
     private volatile java.lang.Object originalname_;
     /**
      * <code>optional string originalname = 2;</code>
+     * @return Whether the originalname field is set.
      */
     public boolean hasOriginalname() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>optional string originalname = 2;</code>
+     * @return The originalname.
      */
     public java.lang.String getOriginalname() {
       java.lang.Object ref = originalname_;
@@ -4699,6 +4702,7 @@ public final class GtfsSpecificationProto {
     }
     /**
      * <code>optional string originalname = 2;</code>
+     * @return The bytes for originalname.
      */
     public com.google.protobuf.ByteString
         getOriginalnameBytes() {
@@ -4718,12 +4722,14 @@ public final class GtfsSpecificationProto {
     private int number_;
     /**
      * <code>optional int32 number = 3;</code>
+     * @return Whether the number field is set.
      */
     public boolean hasNumber() {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
      * <code>optional int32 number = 3;</code>
+     * @return The number.
      */
     public int getNumber() {
       return number_;
@@ -4739,6 +4745,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool inheritfields = 15 [default = false];</code>
+     * @return Whether the inheritfields field is set.
      */
     public boolean hasInheritfields() {
       return ((bitField0_ & 0x00000008) != 0);
@@ -4751,6 +4758,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool inheritfields = 15 [default = false];</code>
+     * @return The inheritfields.
      */
     public boolean getInheritfields() {
       return inheritfields_;
@@ -4767,6 +4775,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool required = 4 [default = true];</code>
+     * @return Whether the required field is set.
      */
     public boolean hasRequired() {
       return ((bitField0_ & 0x00000010) != 0);
@@ -4780,6 +4789,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool required = 4 [default = true];</code>
+     * @return The required.
      */
     public boolean getRequired() {
       return required_;
@@ -4787,7 +4797,6 @@ public final class GtfsSpecificationProto {
 
     public static final int NULLVALUE_FIELD_NUMBER = 5;
     private volatile java.lang.Object nullvalue_;
-
     /**
      * <pre>
      * If specified, all cells in the column that matches this regexp are
@@ -4797,6 +4806,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string nullvalue = 5 [default = ""];</code>
+     * @return Whether the nullvalue field is set.
      */
     public boolean hasNullvalue() {
       return ((bitField0_ & 0x00000020) != 0);
@@ -4810,14 +4820,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string nullvalue = 5 [default = ""];</code>
+     * @return The nullvalue.
      */
     public java.lang.String getNullvalue() {
       java.lang.Object ref = nullvalue_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
           nullvalue_ = s;
@@ -4834,14 +4845,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string nullvalue = 5 [default = ""];</code>
+     * @return The bytes for nullvalue.
      */
     public com.google.protobuf.ByteString
-    getNullvalueBytes() {
+        getNullvalueBytes() {
       java.lang.Object ref = nullvalue_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                        (java.lang.String) ref);
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         nullvalue_ = b;
         return b;
       } else {
@@ -4851,7 +4863,6 @@ public final class GtfsSpecificationProto {
 
     public static final int VALUE_REQUIRED_FIELD_NUMBER = 17;
     private boolean valueRequired_;
-
     /**
      * <pre>
      * This determines what will happen if a row value of this column is null
@@ -4860,6 +4871,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool value_required = 17 [default = false];</code>
+     * @return Whether the valueRequired field is set.
      */
     public boolean hasValueRequired() {
       return ((bitField0_ & 0x00000040) != 0);
@@ -4872,6 +4884,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool value_required = 17 [default = false];</code>
+     * @return The valueRequired.
      */
     public boolean getValueRequired() {
       return valueRequired_;
@@ -4886,6 +4899,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnInputType type = 6;</code>
+     * @return Whether the type field is set.
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000080) != 0);
@@ -4897,6 +4911,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnInputType type = 6;</code>
+     * @return The type.
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType getType() {
       return type_ == null ? org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.getDefaultInstance() : type_;
@@ -4915,24 +4930,24 @@ public final class GtfsSpecificationProto {
 
     public static final int INTMIN_FIELD_NUMBER = 7;
     private int intmin_;
-
     /**
      * <pre>
      * Specifies max/min values (inclusive) for integer types.
      * </pre>
      *
      * <code>optional int32 intmin = 7;</code>
+     * @return Whether the intmin field is set.
      */
     public boolean hasIntmin() {
       return ((bitField0_ & 0x00000100) != 0);
     }
-
     /**
      * <pre>
      * Specifies max/min values (inclusive) for integer types.
      * </pre>
      *
      * <code>optional int32 intmin = 7;</code>
+     * @return The intmin.
      */
     public int getIntmin() {
       return intmin_;
@@ -4940,16 +4955,16 @@ public final class GtfsSpecificationProto {
 
     public static final int INTMAX_FIELD_NUMBER = 8;
     private int intmax_;
-
     /**
      * <code>optional int32 intmax = 8;</code>
+     * @return Whether the intmax field is set.
      */
     public boolean hasIntmax() {
       return ((bitField0_ & 0x00000200) != 0);
     }
-
     /**
      * <code>optional int32 intmax = 8;</code>
+     * @return The intmax.
      */
     public int getIntmax() {
       return intmax_;
@@ -4957,24 +4972,24 @@ public final class GtfsSpecificationProto {
 
     public static final int FLOATMIN_FIELD_NUMBER = 13;
     private float floatmin_;
-
     /**
      * <pre>
      * Specifies max/min values for float types.
      * </pre>
      *
      * <code>optional float floatmin = 13;</code>
+     * @return Whether the floatmin field is set.
      */
     public boolean hasFloatmin() {
       return ((bitField0_ & 0x00000400) != 0);
     }
-
     /**
      * <pre>
      * Specifies max/min values for float types.
      * </pre>
      *
      * <code>optional float floatmin = 13;</code>
+     * @return The floatmin.
      */
     public float getFloatmin() {
       return floatmin_;
@@ -4982,16 +4997,16 @@ public final class GtfsSpecificationProto {
 
     public static final int FLOATMAX_FIELD_NUMBER = 14;
     private float floatmax_;
-
     /**
      * <code>optional float floatmax = 14;</code>
+     * @return Whether the floatmax field is set.
      */
     public boolean hasFloatmax() {
       return ((bitField0_ & 0x00000800) != 0);
     }
-
     /**
      * <code>optional float floatmax = 14;</code>
+     * @return The floatmax.
      */
     public float getFloatmax() {
       return floatmax_;
@@ -5016,11 +5031,10 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
      */
-    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>
-    getNamedvalueOrBuilderList() {
+    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> 
+        getNamedvalueOrBuilderList() {
       return namedvalue_;
     }
-
     /**
      * <pre>
      * Specifies names for certain values in this column, see message definition.
@@ -5031,7 +5045,6 @@ public final class GtfsSpecificationProto {
     public int getNamedvalueCount() {
       return namedvalue_.size();
     }
-
     /**
      * <pre>
      * Specifies names for certain values in this column, see message definition.
@@ -5062,25 +5075,26 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string matchregexp = 9;</code>
+     * @return Whether the matchregexp field is set.
      */
     public boolean hasMatchregexp() {
       return ((bitField0_ & 0x00001000) != 0);
     }
-
     /**
      * <pre>
      * If specified, all (non-null) values of this column must match this regexp.
      * </pre>
      *
      * <code>optional string matchregexp = 9;</code>
+     * @return The matchregexp.
      */
     public java.lang.String getMatchregexp() {
       java.lang.Object ref = matchregexp_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
           matchregexp_ = s;
@@ -5088,21 +5102,21 @@ public final class GtfsSpecificationProto {
         return s;
       }
     }
-
     /**
      * <pre>
      * If specified, all (non-null) values of this column must match this regexp.
      * </pre>
      *
      * <code>optional string matchregexp = 9;</code>
+     * @return The bytes for matchregexp.
      */
     public com.google.protobuf.ByteString
-    getMatchregexpBytes() {
+        getMatchregexpBytes() {
       java.lang.Object ref = matchregexp_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                        (java.lang.String) ref);
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         matchregexp_ = b;
         return b;
       } else {
@@ -5112,7 +5126,6 @@ public final class GtfsSpecificationProto {
 
     public static final int UNIQUEVALUES_FIELD_NUMBER = 10;
     private boolean uniquevalues_;
-
     /**
      * <pre>
      * These fields are syntactic sugar for testing properties of the key
@@ -5120,6 +5133,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool uniquevalues = 10 [default = false];</code>
+     * @return Whether the uniquevalues field is set.
      */
     public boolean hasUniquevalues() {
       return ((bitField0_ & 0x00002000) != 0);
@@ -5131,6 +5145,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool uniquevalues = 10 [default = false];</code>
+     * @return The uniquevalues.
      */
     public boolean getUniquevalues() {
       return uniquevalues_;
@@ -5138,29 +5153,25 @@ public final class GtfsSpecificationProto {
 
     public static final int SUPERSETKEY_FIELD_NUMBER = 11;
     private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto> supersetkey_;
-
     /**
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
      */
     public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto> getSupersetkeyList() {
       return supersetkey_;
     }
-
     /**
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
      */
-    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder>
-    getSupersetkeyOrBuilderList() {
+    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> 
+        getSupersetkeyOrBuilderList() {
       return supersetkey_;
     }
-
     /**
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
      */
     public int getSupersetkeyCount() {
       return supersetkey_.size();
     }
-
     /**
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
      */
@@ -5185,6 +5196,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto cache = 12;</code>
+     * @return Whether the cache field is set.
      */
     public boolean hasCache() {
       return ((bitField0_ & 0x00004000) != 0);
@@ -5197,6 +5209,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto cache = 12;</code>
+     * @return The cache.
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto getCache() {
       return cache_ == null ? org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance() : cache_;
@@ -5223,6 +5236,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional int32 field_number = 18;</code>
+     * @return Whether the fieldNumber field is set.
      */
     public boolean hasFieldNumber() {
       return ((bitField0_ & 0x00008000) != 0);
@@ -5234,6 +5248,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional int32 field_number = 18;</code>
+     * @return The fieldNumber.
      */
     public int getFieldNumber() {
       return fieldNumber_;
@@ -5357,11 +5372,11 @@ public final class GtfsSpecificationProto {
       }
       if (((bitField0_ & 0x00000080) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(6, getType());
+          .computeMessageSize(6, getType());
       }
       if (((bitField0_ & 0x00000100) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeInt32Size(7, intmin_);
+          .computeInt32Size(7, intmin_);
       }
       if (((bitField0_ & 0x00000200) != 0)) {
         size += com.google.protobuf.CodedOutputStream
@@ -5380,7 +5395,7 @@ public final class GtfsSpecificationProto {
       }
       if (((bitField0_ & 0x00004000) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(12, getCache());
+          .computeMessageSize(12, getCache());
       }
       if (((bitField0_ & 0x00000400) != 0)) {
         size += com.google.protobuf.CodedOutputStream
@@ -5396,7 +5411,7 @@ public final class GtfsSpecificationProto {
       }
       for (int i = 0; i < namedvalue_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(16, namedvalue_.get(i));
+          .computeMessageSize(16, namedvalue_.get(i));
       }
       if (((bitField0_ & 0x00000040) != 0)) {
         size += com.google.protobuf.CodedOutputStream
@@ -5429,12 +5444,12 @@ public final class GtfsSpecificationProto {
       if (hasOriginalname() != other.hasOriginalname()) return false;
       if (hasOriginalname()) {
         if (!getOriginalname()
-                .equals(other.getOriginalname())) return false;
+            .equals(other.getOriginalname())) return false;
       }
       if (hasNumber() != other.hasNumber()) return false;
       if (hasNumber()) {
         if (getNumber()
-                != other.getNumber()) return false;
+            != other.getNumber()) return false;
       }
       if (hasInheritfields() != other.hasInheritfields()) return false;
       if (hasInheritfields()) {
@@ -5500,12 +5515,12 @@ public final class GtfsSpecificationProto {
       if (hasCache() != other.hasCache()) return false;
       if (hasCache()) {
         if (!getCache()
-                .equals(other.getCache())) return false;
+            .equals(other.getCache())) return false;
       }
       if (hasFieldNumber() != other.hasFieldNumber()) return false;
       if (hasFieldNumber()) {
         if (getFieldNumber()
-                != other.getFieldNumber()) return false;
+            != other.getFieldNumber()) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -5533,12 +5548,12 @@ public final class GtfsSpecificationProto {
       if (hasInheritfields()) {
         hash = (37 * hash) + INHERITFIELDS_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getInheritfields());
+            getInheritfields());
       }
       if (hasRequired()) {
         hash = (37 * hash) + REQUIRED_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getRequired());
+            getRequired());
       }
       if (hasNullvalue()) {
         hash = (37 * hash) + NULLVALUE_FIELD_NUMBER;
@@ -5547,7 +5562,7 @@ public final class GtfsSpecificationProto {
       if (hasValueRequired()) {
         hash = (37 * hash) + VALUE_REQUIRED_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getValueRequired());
+            getValueRequired());
       }
       if (hasType()) {
         hash = (37 * hash) + TYPE_FIELD_NUMBER;
@@ -5564,12 +5579,12 @@ public final class GtfsSpecificationProto {
       if (hasFloatmin()) {
         hash = (37 * hash) + FLOATMIN_FIELD_NUMBER;
         hash = (53 * hash) + java.lang.Float.floatToIntBits(
-                getFloatmin());
+            getFloatmin());
       }
       if (hasFloatmax()) {
         hash = (37 * hash) + FLOATMAX_FIELD_NUMBER;
         hash = (53 * hash) + java.lang.Float.floatToIntBits(
-                getFloatmax());
+            getFloatmax());
       }
       if (getNamedvalueCount() > 0) {
         hash = (37 * hash) + NAMEDVALUE_FIELD_NUMBER;
@@ -5582,7 +5597,7 @@ public final class GtfsSpecificationProto {
       if (hasUniquevalues()) {
         hash = (37 * hash) + UNIQUEVALUES_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getUniquevalues());
+            getUniquevalues());
       }
       if (getSupersetkeyCount() > 0) {
         hash = (37 * hash) + SUPERSETKEY_FIELD_NUMBER;
@@ -5602,81 +5617,70 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
+          .parseDelimitedWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
@@ -5741,7 +5745,6 @@ public final class GtfsSpecificationProto {
           getCacheFieldBuilder();
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -6102,9 +6105,9 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public Builder mergeFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws java.io.IOException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
@@ -6133,11 +6136,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return Whether the name field is set.
        */
       public boolean hasName() {
         return ((bitField0_ & 0x00000001) != 0);
       }
-
       /**
        * <pre>
        * This is the name to be used for this column. This field can be used in two
@@ -6150,6 +6153,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return The name.
        */
       public java.lang.String getName() {
         java.lang.Object ref = name_;
@@ -6177,21 +6181,21 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return The bytes for name.
        */
       public com.google.protobuf.ByteString
-      getNameBytes() {
+          getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
           name_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
-
       /**
        * <pre>
        * This is the name to be used for this column. This field can be used in two
@@ -6204,13 +6208,15 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @param value The name to set.
+       * @return This builder for chaining.
        */
       public Builder setName(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         name_ = value;
         onChanged();
         return this;
@@ -6227,6 +6233,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearName() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -6234,7 +6241,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * This is the name to be used for this column. This field can be used in two
@@ -6247,6 +6253,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @param value The bytes for name to set.
+       * @return This builder for chaining.
        */
       public Builder setNameBytes(
           com.google.protobuf.ByteString value) {
@@ -6262,12 +6270,14 @@ public final class GtfsSpecificationProto {
       private java.lang.Object originalname_ = "";
       /**
        * <code>optional string originalname = 2;</code>
+       * @return Whether the originalname field is set.
        */
       public boolean hasOriginalname() {
         return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>optional string originalname = 2;</code>
+       * @return The originalname.
        */
       public java.lang.String getOriginalname() {
         java.lang.Object ref = originalname_;
@@ -6285,6 +6295,7 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>optional string originalname = 2;</code>
+       * @return The bytes for originalname.
        */
       public com.google.protobuf.ByteString
           getOriginalnameBytes() {
@@ -6301,6 +6312,8 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>optional string originalname = 2;</code>
+       * @param value The originalname to set.
+       * @return This builder for chaining.
        */
       public Builder setOriginalname(
           java.lang.String value) {
@@ -6314,6 +6327,7 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>optional string originalname = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOriginalname() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -6323,6 +6337,8 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>optional string originalname = 2;</code>
+       * @param value The bytes for originalname to set.
+       * @return This builder for chaining.
        */
       public Builder setOriginalnameBytes(
           com.google.protobuf.ByteString value) {
@@ -6338,18 +6354,22 @@ public final class GtfsSpecificationProto {
       private int number_ ;
       /**
        * <code>optional int32 number = 3;</code>
+       * @return Whether the number field is set.
        */
       public boolean hasNumber() {
         return ((bitField0_ & 0x00000004) != 0);
       }
       /**
        * <code>optional int32 number = 3;</code>
+       * @return The number.
        */
       public int getNumber() {
         return number_;
       }
       /**
        * <code>optional int32 number = 3;</code>
+       * @param value The number to set.
+       * @return This builder for chaining.
        */
       public Builder setNumber(int value) {
         bitField0_ |= 0x00000004;
@@ -6359,6 +6379,7 @@ public final class GtfsSpecificationProto {
       }
       /**
        * <code>optional int32 number = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearNumber() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -6376,6 +6397,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool inheritfields = 15 [default = false];</code>
+       * @return Whether the inheritfields field is set.
        */
       public boolean hasInheritfields() {
         return ((bitField0_ & 0x00000008) != 0);
@@ -6388,6 +6410,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool inheritfields = 15 [default = false];</code>
+       * @return The inheritfields.
        */
       public boolean getInheritfields() {
         return inheritfields_;
@@ -6400,6 +6423,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool inheritfields = 15 [default = false];</code>
+       * @param value The inheritfields to set.
+       * @return This builder for chaining.
        */
       public Builder setInheritfields(boolean value) {
         bitField0_ |= 0x00000008;
@@ -6415,6 +6440,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool inheritfields = 15 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearInheritfields() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -6433,6 +6459,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool required = 4 [default = true];</code>
+       * @return Whether the required field is set.
        */
       public boolean hasRequired() {
         return ((bitField0_ & 0x00000010) != 0);
@@ -6446,11 +6473,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool required = 4 [default = true];</code>
+       * @return The required.
        */
       public boolean getRequired() {
         return required_;
       }
-
       /**
        * <pre>
        * This determines what will happen if this column is missing in the input
@@ -6460,6 +6487,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool required = 4 [default = true];</code>
+       * @param value The required to set.
+       * @return This builder for chaining.
        */
       public Builder setRequired(boolean value) {
         bitField0_ |= 0x00000010;
@@ -6467,7 +6496,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * This determines what will happen if this column is missing in the input
@@ -6477,6 +6505,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool required = 4 [default = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearRequired() {
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -6495,6 +6524,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string nullvalue = 5 [default = ""];</code>
+       * @return Whether the nullvalue field is set.
        */
       public boolean hasNullvalue() {
         return ((bitField0_ & 0x00000020) != 0);
@@ -6508,6 +6538,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string nullvalue = 5 [default = ""];</code>
+       * @return The nullvalue.
        */
       public java.lang.String getNullvalue() {
         java.lang.Object ref = nullvalue_;
@@ -6532,6 +6563,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string nullvalue = 5 [default = ""];</code>
+       * @return The bytes for nullvalue.
        */
       public com.google.protobuf.ByteString
           getNullvalueBytes() {
@@ -6555,6 +6587,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string nullvalue = 5 [default = ""];</code>
+       * @param value The nullvalue to set.
+       * @return This builder for chaining.
        */
       public Builder setNullvalue(
           java.lang.String value) {
@@ -6575,6 +6609,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string nullvalue = 5 [default = ""];</code>
+       * @return This builder for chaining.
        */
       public Builder clearNullvalue() {
         bitField0_ = (bitField0_ & ~0x00000020);
@@ -6591,13 +6626,15 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string nullvalue = 5 [default = ""];</code>
+       * @param value The bytes for nullvalue to set.
+       * @return This builder for chaining.
        */
       public Builder setNullvalueBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000020;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
         nullvalue_ = value;
         onChanged();
         return this;
@@ -6612,11 +6649,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool value_required = 17 [default = false];</code>
+       * @return Whether the valueRequired field is set.
        */
       public boolean hasValueRequired() {
         return ((bitField0_ & 0x00000040) != 0);
       }
-
       /**
        * <pre>
        * This determines what will happen if a row value of this column is null
@@ -6625,11 +6662,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool value_required = 17 [default = false];</code>
+       * @return The valueRequired.
        */
       public boolean getValueRequired() {
         return valueRequired_;
       }
-
       /**
        * <pre>
        * This determines what will happen if a row value of this column is null
@@ -6638,6 +6675,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool value_required = 17 [default = false];</code>
+       * @param value The valueRequired to set.
+       * @return This builder for chaining.
        */
       public Builder setValueRequired(boolean value) {
         bitField0_ |= 0x00000040;
@@ -6645,7 +6684,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * This determines what will happen if a row value of this column is null
@@ -6654,6 +6692,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool value_required = 17 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearValueRequired() {
         bitField0_ = (bitField0_ & ~0x00000040);
@@ -6664,8 +6703,7 @@ public final class GtfsSpecificationProto {
 
       private org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType type_;
       private com.google.protobuf.SingleFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputTypeOrBuilder> typeBuilder_;
-
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputTypeOrBuilder> typeBuilder_;
       /**
        * <pre>
        * The input type of the column. See enum definition for detailed requirements
@@ -6673,11 +6711,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.ColumnInputType type = 6;</code>
+       * @return Whether the type field is set.
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000080) != 0);
       }
-
       /**
        * <pre>
        * The input type of the column. See enum definition for detailed requirements
@@ -6685,6 +6723,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.ColumnInputType type = 6;</code>
+       * @return The type.
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType getType() {
         if (typeBuilder_ == null) {
@@ -6714,7 +6753,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000080;
         return this;
       }
-
       /**
        * <pre>
        * The input type of the column. See enum definition for detailed requirements
@@ -6724,7 +6762,7 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.ColumnInputType type = 6;</code>
        */
       public Builder setType(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.Builder builderForValue) {
         if (typeBuilder_ == null) {
           type_ = builderForValue.build();
           onChanged();
@@ -6734,7 +6772,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000080;
         return this;
       }
-
       /**
        * <pre>
        * The input type of the column. See enum definition for detailed requirements
@@ -6746,10 +6783,10 @@ public final class GtfsSpecificationProto {
       public Builder mergeType(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType value) {
         if (typeBuilder_ == null) {
           if (((bitField0_ & 0x00000080) != 0) &&
-                  type_ != null &&
-                  type_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.getDefaultInstance()) {
+              type_ != null &&
+              type_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.getDefaultInstance()) {
             type_ =
-                    org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.newBuilder(type_).mergeFrom(value).buildPartial();
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnInputType.newBuilder(type_).mergeFrom(value).buildPartial();
           } else {
             type_ = value;
           }
@@ -6760,7 +6797,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000080;
         return this;
       }
-
       /**
        * <pre>
        * The input type of the column. See enum definition for detailed requirements
@@ -6837,6 +6873,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional int32 intmin = 7;</code>
+       * @return Whether the intmin field is set.
        */
       public boolean hasIntmin() {
         return ((bitField0_ & 0x00000100) != 0);
@@ -6847,6 +6884,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional int32 intmin = 7;</code>
+       * @return The intmin.
        */
       public int getIntmin() {
         return intmin_;
@@ -6857,6 +6895,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional int32 intmin = 7;</code>
+       * @param value The intmin to set.
+       * @return This builder for chaining.
        */
       public Builder setIntmin(int value) {
         bitField0_ |= 0x00000100;
@@ -6870,6 +6910,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional int32 intmin = 7;</code>
+       * @return This builder for chaining.
        */
       public Builder clearIntmin() {
         bitField0_ = (bitField0_ & ~0x00000100);
@@ -6878,24 +6919,25 @@ public final class GtfsSpecificationProto {
         return this;
       }
 
-      private int intmax_;
-
+      private int intmax_ ;
       /**
        * <code>optional int32 intmax = 8;</code>
+       * @return Whether the intmax field is set.
        */
       public boolean hasIntmax() {
         return ((bitField0_ & 0x00000200) != 0);
       }
-
       /**
        * <code>optional int32 intmax = 8;</code>
+       * @return The intmax.
        */
       public int getIntmax() {
         return intmax_;
       }
-
       /**
        * <code>optional int32 intmax = 8;</code>
+       * @param value The intmax to set.
+       * @return This builder for chaining.
        */
       public Builder setIntmax(int value) {
         bitField0_ |= 0x00000200;
@@ -6903,9 +6945,9 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <code>optional int32 intmax = 8;</code>
+       * @return This builder for chaining.
        */
       public Builder clearIntmax() {
         bitField0_ = (bitField0_ & ~0x00000200);
@@ -6914,36 +6956,37 @@ public final class GtfsSpecificationProto {
         return this;
       }
 
-      private float floatmin_;
-
+      private float floatmin_ ;
       /**
        * <pre>
        * Specifies max/min values for float types.
        * </pre>
        *
        * <code>optional float floatmin = 13;</code>
+       * @return Whether the floatmin field is set.
        */
       public boolean hasFloatmin() {
         return ((bitField0_ & 0x00000400) != 0);
       }
-
       /**
        * <pre>
        * Specifies max/min values for float types.
        * </pre>
        *
        * <code>optional float floatmin = 13;</code>
+       * @return The floatmin.
        */
       public float getFloatmin() {
         return floatmin_;
       }
-
       /**
        * <pre>
        * Specifies max/min values for float types.
        * </pre>
        *
        * <code>optional float floatmin = 13;</code>
+       * @param value The floatmin to set.
+       * @return This builder for chaining.
        */
       public Builder setFloatmin(float value) {
         bitField0_ |= 0x00000400;
@@ -6957,6 +7000,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional float floatmin = 13;</code>
+       * @return This builder for chaining.
        */
       public Builder clearFloatmin() {
         bitField0_ = (bitField0_ & ~0x00000400);
@@ -6965,24 +7009,25 @@ public final class GtfsSpecificationProto {
         return this;
       }
 
-      private float floatmax_;
-
+      private float floatmax_ ;
       /**
        * <code>optional float floatmax = 14;</code>
+       * @return Whether the floatmax field is set.
        */
       public boolean hasFloatmax() {
         return ((bitField0_ & 0x00000800) != 0);
       }
-
       /**
        * <code>optional float floatmax = 14;</code>
+       * @return The floatmax.
        */
       public float getFloatmax() {
         return floatmax_;
       }
-
       /**
        * <code>optional float floatmax = 14;</code>
+       * @param value The floatmax to set.
+       * @return This builder for chaining.
        */
       public Builder setFloatmax(float value) {
         bitField0_ |= 0x00000800;
@@ -6990,9 +7035,9 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <code>optional float floatmax = 14;</code>
+       * @return This builder for chaining.
        */
       public Builder clearFloatmax() {
         bitField0_ = (bitField0_ & ~0x00000800);
@@ -7002,17 +7047,16 @@ public final class GtfsSpecificationProto {
       }
 
       private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto> namedvalue_ =
-              java.util.Collections.emptyList();
-
+        java.util.Collections.emptyList();
       private void ensureNamedvalueIsMutable() {
         if (!((bitField0_ & 0x00001000) != 0)) {
           namedvalue_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto>(namedvalue_);
           bitField0_ |= 0x00001000;
-        }
+         }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> namedvalueBuilder_;
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> namedvalueBuilder_;
 
       /**
        * <pre>
@@ -7028,7 +7072,6 @@ public final class GtfsSpecificationProto {
           return namedvalueBuilder_.getMessageList();
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7043,7 +7086,6 @@ public final class GtfsSpecificationProto {
           return namedvalueBuilder_.getCount();
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7058,7 +7100,6 @@ public final class GtfsSpecificationProto {
           return namedvalueBuilder_.getMessage(index);
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7067,7 +7108,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public Builder setNamedvalue(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto value) {
         if (namedvalueBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -7080,7 +7121,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7089,7 +7129,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public Builder setNamedvalue(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
         if (namedvalueBuilder_ == null) {
           ensureNamedvalueIsMutable();
           namedvalue_.set(index, builderForValue.build());
@@ -7099,7 +7139,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7149,7 +7188,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public Builder addNamedvalue(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
         if (namedvalueBuilder_ == null) {
           ensureNamedvalueIsMutable();
           namedvalue_.add(builderForValue.build());
@@ -7159,7 +7198,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7168,7 +7206,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public Builder addNamedvalue(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
         if (namedvalueBuilder_ == null) {
           ensureNamedvalueIsMutable();
           namedvalue_.add(index, builderForValue.build());
@@ -7178,7 +7216,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7187,18 +7224,17 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public Builder addAllNamedvalue(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto> values) {
         if (namedvalueBuilder_ == null) {
           ensureNamedvalueIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, namedvalue_);
+              values, namedvalue_);
           onChanged();
         } else {
           namedvalueBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7216,7 +7252,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7234,7 +7269,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7243,10 +7277,9 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder getNamedvalueBuilder(
-              int index) {
+          int index) {
         return getNamedvalueFieldBuilder().getBuilder(index);
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7255,14 +7288,12 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder getNamedvalueOrBuilder(
-              int index) {
+          int index) {
         if (namedvalueBuilder_ == null) {
-          return namedvalue_.get(index);
-        } else {
+          return namedvalue_.get(index);  } else {
           return namedvalueBuilder_.getMessageOrBuilder(index);
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7301,7 +7332,6 @@ public final class GtfsSpecificationProto {
         return getNamedvalueFieldBuilder().addBuilder(
             index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * Specifies names for certain values in this column, see message definition.
@@ -7309,16 +7339,16 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
-      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder>
-      getNamedvalueBuilderList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder> 
+           getNamedvalueBuilderList() {
         return getNamedvalueFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilderV3<
-          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>
-      getNamedvalueFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> 
+          getNamedvalueFieldBuilder() {
         if (namedvalueBuilder_ == null) {
           namedvalueBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>(
                   namedvalue_,
                   ((bitField0_ & 0x00001000) != 0),
                   getParentForChildren(),
@@ -7335,6 +7365,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string matchregexp = 9;</code>
+       * @return Whether the matchregexp field is set.
        */
       public boolean hasMatchregexp() {
         return ((bitField0_ & 0x00002000) != 0);
@@ -7345,6 +7376,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string matchregexp = 9;</code>
+       * @return The matchregexp.
        */
       public java.lang.String getMatchregexp() {
         java.lang.Object ref = matchregexp_;
@@ -7366,45 +7398,47 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string matchregexp = 9;</code>
+       * @return The bytes for matchregexp.
        */
       public com.google.protobuf.ByteString
-      getMatchregexpBytes() {
+          getMatchregexpBytes() {
         java.lang.Object ref = matchregexp_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
           matchregexp_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
-
       /**
        * <pre>
        * If specified, all (non-null) values of this column must match this regexp.
        * </pre>
        *
        * <code>optional string matchregexp = 9;</code>
+       * @param value The matchregexp to set.
+       * @return This builder for chaining.
        */
       public Builder setMatchregexp(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00002000;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00002000;
         matchregexp_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * If specified, all (non-null) values of this column must match this regexp.
        * </pre>
        *
        * <code>optional string matchregexp = 9;</code>
+       * @return This builder for chaining.
        */
       public Builder clearMatchregexp() {
         bitField0_ = (bitField0_ & ~0x00002000);
@@ -7412,27 +7446,27 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * If specified, all (non-null) values of this column must match this regexp.
        * </pre>
        *
        * <code>optional string matchregexp = 9;</code>
+       * @param value The bytes for matchregexp to set.
+       * @return This builder for chaining.
        */
       public Builder setMatchregexpBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00002000;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00002000;
         matchregexp_ = value;
         onChanged();
         return this;
       }
 
-      private boolean uniquevalues_;
-
+      private boolean uniquevalues_ ;
       /**
        * <pre>
        * These fields are syntactic sugar for testing properties of the key
@@ -7440,11 +7474,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool uniquevalues = 10 [default = false];</code>
+       * @return Whether the uniquevalues field is set.
        */
       public boolean hasUniquevalues() {
         return ((bitField0_ & 0x00004000) != 0);
       }
-
       /**
        * <pre>
        * These fields are syntactic sugar for testing properties of the key
@@ -7452,11 +7486,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool uniquevalues = 10 [default = false];</code>
+       * @return The uniquevalues.
        */
       public boolean getUniquevalues() {
         return uniquevalues_;
       }
-
       /**
        * <pre>
        * These fields are syntactic sugar for testing properties of the key
@@ -7464,6 +7498,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool uniquevalues = 10 [default = false];</code>
+       * @param value The uniquevalues to set.
+       * @return This builder for chaining.
        */
       public Builder setUniquevalues(boolean value) {
         bitField0_ |= 0x00004000;
@@ -7471,7 +7507,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * These fields are syntactic sugar for testing properties of the key
@@ -7479,6 +7514,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool uniquevalues = 10 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearUniquevalues() {
         bitField0_ = (bitField0_ & ~0x00004000);
@@ -7488,17 +7524,16 @@ public final class GtfsSpecificationProto {
       }
 
       private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto> supersetkey_ =
-              java.util.Collections.emptyList();
-
+        java.util.Collections.emptyList();
       private void ensureSupersetkeyIsMutable() {
         if (!((bitField0_ & 0x00008000) != 0)) {
           supersetkey_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto>(supersetkey_);
           bitField0_ |= 0x00008000;
-        }
+         }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> supersetkeyBuilder_;
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> supersetkeyBuilder_;
 
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
@@ -7510,7 +7545,6 @@ public final class GtfsSpecificationProto {
           return supersetkeyBuilder_.getMessageList();
         }
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
@@ -7521,7 +7555,6 @@ public final class GtfsSpecificationProto {
           return supersetkeyBuilder_.getCount();
         }
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
@@ -7532,12 +7565,11 @@ public final class GtfsSpecificationProto {
           return supersetkeyBuilder_.getMessage(index);
         }
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
       public Builder setSupersetkey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto value) {
         if (supersetkeyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -7550,12 +7582,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
       public Builder setSupersetkey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
         if (supersetkeyBuilder_ == null) {
           ensureSupersetkeyIsMutable();
           supersetkey_.set(index, builderForValue.build());
@@ -7565,7 +7596,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
@@ -7582,12 +7612,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
       public Builder addSupersetkey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto value) {
         if (supersetkeyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -7600,12 +7629,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
       public Builder addSupersetkey(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
         if (supersetkeyBuilder_ == null) {
           ensureSupersetkeyIsMutable();
           supersetkey_.add(builderForValue.build());
@@ -7615,12 +7643,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
       public Builder addSupersetkey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
         if (supersetkeyBuilder_ == null) {
           ensureSupersetkeyIsMutable();
           supersetkey_.add(index, builderForValue.build());
@@ -7630,23 +7657,21 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
       public Builder addAllSupersetkey(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto> values) {
         if (supersetkeyBuilder_ == null) {
           ensureSupersetkeyIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, supersetkey_);
+              values, supersetkey_);
           onChanged();
         } else {
           supersetkeyBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
@@ -7660,7 +7685,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
@@ -7674,12 +7698,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder getSupersetkeyBuilder(
-              int index) {
+          int index) {
         return getSupersetkeyFieldBuilder().getBuilder(index);
       }
       /**
@@ -7692,50 +7715,45 @@ public final class GtfsSpecificationProto {
           return supersetkeyBuilder_.getMessageOrBuilder(index);
         }
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
-      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder>
-      getSupersetkeyOrBuilderList() {
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> 
+           getSupersetkeyOrBuilderList() {
         if (supersetkeyBuilder_ != null) {
           return supersetkeyBuilder_.getMessageOrBuilderList();
         } else {
           return java.util.Collections.unmodifiableList(supersetkey_);
         }
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder addSupersetkeyBuilder() {
         return getSupersetkeyFieldBuilder().addBuilder(
-                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.getDefaultInstance());
+            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.getDefaultInstance());
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder addSupersetkeyBuilder(
-              int index) {
+          int index) {
         return getSupersetkeyFieldBuilder().addBuilder(
-                index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.getDefaultInstance());
+            index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.getDefaultInstance());
       }
-
       /**
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 11;</code>
        */
-      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder>
-      getSupersetkeyBuilderList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder> 
+           getSupersetkeyBuilderList() {
         return getSupersetkeyFieldBuilder().getBuilderList();
       }
-
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder>
-      getSupersetkeyFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> 
+          getSupersetkeyFieldBuilder() {
         if (supersetkeyBuilder_ == null) {
           supersetkeyBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder>(
                   supersetkey_,
                   ((bitField0_ & 0x00008000) != 0),
                   getParentForChildren(),
@@ -7747,7 +7765,7 @@ public final class GtfsSpecificationProto {
 
       private org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto cache_;
       private com.google.protobuf.SingleFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder> cacheBuilder_;
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder> cacheBuilder_;
       /**
        * <pre>
        * Defines the value caching strategy for this column.  This can be useful
@@ -7756,6 +7774,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.ColumnCacheProto cache = 12;</code>
+       * @return Whether the cache field is set.
        */
       public boolean hasCache() {
         return ((bitField0_ & 0x00010000) != 0);
@@ -7768,6 +7787,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.ColumnCacheProto cache = 12;</code>
+       * @return The cache.
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto getCache() {
         if (cacheBuilder_ == null) {
@@ -7776,7 +7796,6 @@ public final class GtfsSpecificationProto {
           return cacheBuilder_.getMessage();
         }
       }
-
       /**
        * <pre>
        * Defines the value caching strategy for this column.  This can be useful
@@ -7799,7 +7818,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00010000;
         return this;
       }
-
       /**
        * <pre>
        * Defines the value caching strategy for this column.  This can be useful
@@ -7810,7 +7828,7 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.ColumnCacheProto cache = 12;</code>
        */
       public Builder setCache(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder builderForValue) {
         if (cacheBuilder_ == null) {
           cache_ = builderForValue.build();
           onChanged();
@@ -7820,7 +7838,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00010000;
         return this;
       }
-
       /**
        * <pre>
        * Defines the value caching strategy for this column.  This can be useful
@@ -7833,8 +7850,8 @@ public final class GtfsSpecificationProto {
       public Builder mergeCache(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto value) {
         if (cacheBuilder_ == null) {
           if (((bitField0_ & 0x00010000) != 0) &&
-                  cache_ != null &&
-                  cache_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance()) {
+              cache_ != null &&
+              cache_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance()) {
             cache_ =
               org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.newBuilder(cache_).mergeFrom(value).buildPartial();
           } else {
@@ -7880,7 +7897,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return getCacheFieldBuilder().getBuilder();
       }
-
       /**
        * <pre>
        * Defines the value caching strategy for this column.  This can be useful
@@ -7895,10 +7911,9 @@ public final class GtfsSpecificationProto {
           return cacheBuilder_.getMessageOrBuilder();
         } else {
           return cache_ == null ?
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance() : cache_;
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance() : cache_;
         }
       }
-
       /**
        * <pre>
        * Defines the value caching strategy for this column.  This can be useful
@@ -7909,11 +7924,11 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.ColumnCacheProto cache = 12;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder>
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder> 
           getCacheFieldBuilder() {
         if (cacheBuilder_ == null) {
           cacheBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder>(
                   getCache(),
                   getParentForChildren(),
                   isClean());
@@ -7930,6 +7945,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional int32 field_number = 18;</code>
+       * @return Whether the fieldNumber field is set.
        */
       public boolean hasFieldNumber() {
         return ((bitField0_ & 0x00020000) != 0);
@@ -7941,6 +7957,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional int32 field_number = 18;</code>
+       * @return The fieldNumber.
        */
       public int getFieldNumber() {
         return fieldNumber_;
@@ -7952,6 +7969,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional int32 field_number = 18;</code>
+       * @param value The fieldNumber to set.
+       * @return This builder for chaining.
        */
       public Builder setFieldNumber(int value) {
         bitField0_ |= 0x00020000;
@@ -7959,7 +7978,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * Field number for if the spec containing this column is converted to a
@@ -7967,6 +7985,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional int32 field_number = 18;</code>
+       * @return This builder for chaining.
        */
       public Builder clearFieldNumber() {
         bitField0_ = (bitField0_ & ~0x00020000);
@@ -7974,16 +7993,15 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       @java.lang.Override
       public final Builder setUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -8002,12 +8020,12 @@ public final class GtfsSpecificationProto {
     }
 
     @java.lang.Deprecated public static final com.google.protobuf.Parser<ColumnSpecProto>
-            PARSER = new com.google.protobuf.AbstractParser<ColumnSpecProto>() {
+        PARSER = new com.google.protobuf.AbstractParser<ColumnSpecProto>() {
       @java.lang.Override
       public ColumnSpecProto parsePartialFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws com.google.protobuf.InvalidProtocolBufferException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
         return new ColumnSpecProto(input, extensionRegistry);
       }
     };
@@ -8043,9 +8061,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return Whether the name field is set.
      */
     boolean hasName();
-
     /**
      * <pre>
      * The name of this key. Note that each column by default has a 1-column key
@@ -8057,9 +8075,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The name.
      */
     java.lang.String getName();
-
     /**
      * <pre>
      * The name of this key. Note that each column by default has a 1-column key
@@ -8071,9 +8089,10 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The bytes for name.
      */
     com.google.protobuf.ByteString
-    getNameBytes();
+        getNameBytes();
 
     /**
      * <pre>
@@ -8083,10 +8102,10 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string columnname = 2;</code>
+     * @return A list containing the columnname.
      */
     java.util.List<java.lang.String>
-    getColumnnameList();
-
+        getColumnnameList();
     /**
      * <pre>
      * The tuple of columns that form this key. There must be at least one column.
@@ -8095,9 +8114,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string columnname = 2;</code>
+     * @return The count of columnname.
      */
     int getColumnnameCount();
-
     /**
      * <pre>
      * The tuple of columns that form this key. There must be at least one column.
@@ -8106,9 +8125,10 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string columnname = 2;</code>
+     * @param index The index of the element to return.
+     * @return The columnname at the given index.
      */
     java.lang.String getColumnname(int index);
-
     /**
      * <pre>
      * The tuple of columns that form this key. There must be at least one column.
@@ -8117,6 +8137,8 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string columnname = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the columnname at the given index.
      */
     com.google.protobuf.ByteString
         getColumnnameBytes(int index);
@@ -8128,6 +8150,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool uniquevalues = 3 [default = false];</code>
+     * @return Whether the uniquevalues field is set.
      */
     boolean hasUniquevalues();
     /**
@@ -8137,6 +8160,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool uniquevalues = 3 [default = false];</code>
+     * @return The uniquevalues.
      */
     boolean getUniquevalues();
 
@@ -8163,7 +8187,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto getSupersetkey(int index);
-
     /**
      * <pre>
      * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -8175,7 +8198,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
      */
     int getSupersetkeyCount();
-
     /**
      * <pre>
      * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -8186,9 +8208,8 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
      */
-    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder>
-    getSupersetkeyOrBuilderList();
-
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> 
+        getSupersetkeyOrBuilderList();
     /**
      * <pre>
      * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -8200,18 +8221,16 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder getSupersetkeyOrBuilder(
-            int index);
+        int index);
   }
-
   /**
    * Protobuf type {@code csvspec.KeySpecProto}
    */
-  public static final class KeySpecProto extends
-          com.google.protobuf.GeneratedMessageV3 implements
-          // @@protoc_insertion_point(message_implements:csvspec.KeySpecProto)
-          KeySpecProtoOrBuilder {
-    private static final long serialVersionUID = 0L;
-
+  public  static final class KeySpecProto extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:csvspec.KeySpecProto)
+      KeySpecProtoOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use KeySpecProto.newBuilder() to construct.
     private KeySpecProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -8279,12 +8298,12 @@ public final class GtfsSpecificationProto {
                 mutable_bitField0_ |= 0x00000008;
               }
               supersetkey_.add(
-                      input.readMessage(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.PARSER, extensionRegistry));
+                  input.readMessage(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.PARSER, extensionRegistry));
               break;
             }
             default: {
               if (!parseUnknownField(
-                      input, unknownFields, extensionRegistry, tag)) {
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -8295,7 +8314,7 @@ public final class GtfsSpecificationProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-                e).setUnfinishedMessage(this);
+            e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000002) != 0)) {
           columnname_ = columnname_.getUnmodifiableView();
@@ -8307,9 +8326,8 @@ public final class GtfsSpecificationProto {
         makeExtensionsImmutable();
       }
     }
-
     public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
+        getDescriptor() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_KeySpecProto_descriptor;
     }
 
@@ -8324,7 +8342,6 @@ public final class GtfsSpecificationProto {
     private int bitField0_;
     public static final int NAME_FIELD_NUMBER = 1;
     private volatile java.lang.Object name_;
-
     /**
      * <pre>
      * The name of this key. Note that each column by default has a 1-column key
@@ -8336,6 +8353,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return Whether the name field is set.
      */
     public boolean hasName() {
       return ((bitField0_ & 0x00000001) != 0);
@@ -8351,14 +8369,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The name.
      */
     public java.lang.String getName() {
       java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
           name_ = s;
@@ -8366,7 +8385,6 @@ public final class GtfsSpecificationProto {
         return s;
       }
     }
-
     /**
      * <pre>
      * The name of this key. Note that each column by default has a 1-column key
@@ -8378,14 +8396,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
-    getNameBytes() {
+        getNameBytes() {
       java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                        (java.lang.String) ref);
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         name_ = b;
         return b;
       } else {
@@ -8395,7 +8414,6 @@ public final class GtfsSpecificationProto {
 
     public static final int COLUMNNAME_FIELD_NUMBER = 2;
     private com.google.protobuf.LazyStringList columnname_;
-
     /**
      * <pre>
      * The tuple of columns that form this key. There must be at least one column.
@@ -8404,12 +8422,12 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string columnname = 2;</code>
+     * @return A list containing the columnname.
      */
     public com.google.protobuf.ProtocolStringList
-    getColumnnameList() {
+        getColumnnameList() {
       return columnname_;
     }
-
     /**
      * <pre>
      * The tuple of columns that form this key. There must be at least one column.
@@ -8418,11 +8436,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string columnname = 2;</code>
+     * @return The count of columnname.
      */
     public int getColumnnameCount() {
       return columnname_.size();
     }
-
     /**
      * <pre>
      * The tuple of columns that form this key. There must be at least one column.
@@ -8431,11 +8449,12 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string columnname = 2;</code>
+     * @param index The index of the element to return.
+     * @return The columnname at the given index.
      */
     public java.lang.String getColumnname(int index) {
       return columnname_.get(index);
     }
-
     /**
      * <pre>
      * The tuple of columns that form this key. There must be at least one column.
@@ -8444,6 +8463,8 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string columnname = 2;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the columnname at the given index.
      */
     public com.google.protobuf.ByteString
         getColumnnameBytes(int index) {
@@ -8459,11 +8480,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool uniquevalues = 3 [default = false];</code>
+     * @return Whether the uniquevalues field is set.
      */
     public boolean hasUniquevalues() {
       return ((bitField0_ & 0x00000002) != 0);
     }
-
     /**
      * <pre>
      * If true, all value tuples defined by this table and key must be distinct.
@@ -8471,6 +8492,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool uniquevalues = 3 [default = false];</code>
+     * @return The uniquevalues.
      */
     public boolean getUniquevalues() {
       return uniquevalues_;
@@ -8501,11 +8523,10 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
      */
-    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder>
-    getSupersetkeyOrBuilderList() {
+    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> 
+        getSupersetkeyOrBuilderList() {
       return supersetkey_;
     }
-
     /**
      * <pre>
      * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -8519,7 +8540,6 @@ public final class GtfsSpecificationProto {
     public int getSupersetkeyCount() {
       return supersetkey_.size();
     }
-
     /**
      * <pre>
      * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -8544,12 +8564,11 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder getSupersetkeyOrBuilder(
-            int index) {
+        int index) {
       return supersetkey_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
-
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -8572,7 +8591,7 @@ public final class GtfsSpecificationProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
+                        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
       }
@@ -8607,11 +8626,11 @@ public final class GtfsSpecificationProto {
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeBoolSize(3, uniquevalues_);
+          .computeBoolSize(3, uniquevalues_);
       }
       for (int i = 0; i < supersetkey_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(4, supersetkey_.get(i));
+          .computeMessageSize(4, supersetkey_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -8621,7 +8640,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-        return true;
+       return true;
       }
       if (!(obj instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto)) {
         return super.equals(obj);
@@ -8631,17 +8650,17 @@ public final class GtfsSpecificationProto {
       if (hasName() != other.hasName()) return false;
       if (hasName()) {
         if (!getName()
-                .equals(other.getName())) return false;
+            .equals(other.getName())) return false;
       }
       if (!getColumnnameList()
-              .equals(other.getColumnnameList())) return false;
+          .equals(other.getColumnnameList())) return false;
       if (hasUniquevalues() != other.hasUniquevalues()) return false;
       if (hasUniquevalues()) {
         if (getUniquevalues()
-                != other.getUniquevalues()) return false;
+            != other.getUniquevalues()) return false;
       }
       if (!getSupersetkeyList()
-              .equals(other.getSupersetkeyList())) return false;
+          .equals(other.getSupersetkeyList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -8664,7 +8683,7 @@ public final class GtfsSpecificationProto {
       if (hasUniquevalues()) {
         hash = (37 * hash) + UNIQUEVALUES_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getUniquevalues());
+            getUniquevalues());
       }
       if (getSupersetkeyCount() > 0) {
         hash = (37 * hash) + SUPERSETKEY_FIELD_NUMBER;
@@ -8676,47 +8695,41 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
-            byte[] data,
+        java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
         java.io.InputStream input,
@@ -8728,45 +8741,37 @@ public final class GtfsSpecificationProto {
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
+          .parseDelimitedWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() {
-      return newBuilder();
-    }
-
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-
     public static Builder newBuilder(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
@@ -8787,16 +8792,16 @@ public final class GtfsSpecificationProto {
         // @@protoc_insertion_point(builder_implements:csvspec.KeySpecProto)
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
+          getDescriptor() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_KeySpecProto_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
+          internalGetFieldAccessorTable() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_KeySpecProto_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder.class);
+            .ensureFieldAccessorsInitialized(
+                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder.class);
       }
 
       // Construct using org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.newBuilder()
@@ -8809,14 +8814,12 @@ public final class GtfsSpecificationProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
-
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getSupersetkeyFieldBuilder();
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -8837,7 +8840,7 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-      getDescriptorForType() {
+          getDescriptorForType() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_KeySpecProto_descriptor;
       }
 
@@ -8891,17 +8894,15 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
       @java.lang.Override
@@ -8969,8 +8970,8 @@ public final class GtfsSpecificationProto {
               supersetkeyBuilder_ = null;
               supersetkey_ = other.supersetkey_;
               bitField0_ = (bitField0_ & ~0x00000008);
-              supersetkeyBuilder_ =
-                      com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+              supersetkeyBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                    getSupersetkeyFieldBuilder() : null;
             } else {
               supersetkeyBuilder_.addAllMessages(other.supersetkey_);
@@ -8997,8 +8998,8 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public Builder mergeFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto parsedMessage = null;
         try {
@@ -9027,11 +9028,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return Whether the name field is set.
        */
       public boolean hasName() {
         return ((bitField0_ & 0x00000001) != 0);
       }
-
       /**
        * <pre>
        * The name of this key. Note that each column by default has a 1-column key
@@ -9043,12 +9044,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return The name.
        */
       public java.lang.String getName() {
         java.lang.Object ref = name_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             name_ = s;
@@ -9058,7 +9060,6 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <pre>
        * The name of this key. Note that each column by default has a 1-column key
@@ -9070,6 +9071,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return The bytes for name.
        */
       public com.google.protobuf.ByteString
           getNameBytes() {
@@ -9095,18 +9097,19 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @param value The name to set.
+       * @return This builder for chaining.
        */
       public Builder setName(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         name_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The name of this key. Note that each column by default has a 1-column key
@@ -9118,6 +9121,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearName() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -9125,7 +9129,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The name of this key. Note that each column by default has a 1-column key
@@ -9137,13 +9140,15 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @param value The bytes for name to set.
+       * @return This builder for chaining.
        */
       public Builder setNameBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         name_ = value;
         onChanged();
         return this;
@@ -9164,12 +9169,12 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string columnname = 2;</code>
+       * @return A list containing the columnname.
        */
       public com.google.protobuf.ProtocolStringList
-      getColumnnameList() {
+          getColumnnameList() {
         return columnname_.getUnmodifiableView();
       }
-
       /**
        * <pre>
        * The tuple of columns that form this key. There must be at least one column.
@@ -9178,6 +9183,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string columnname = 2;</code>
+       * @return The count of columnname.
        */
       public int getColumnnameCount() {
         return columnname_.size();
@@ -9190,6 +9196,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string columnname = 2;</code>
+       * @param index The index of the element to return.
+       * @return The columnname at the given index.
        */
       public java.lang.String getColumnname(int index) {
         return columnname_.get(index);
@@ -9202,6 +9210,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string columnname = 2;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the columnname at the given index.
        */
       public com.google.protobuf.ByteString
           getColumnnameBytes(int index) {
@@ -9215,18 +9225,20 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string columnname = 2;</code>
+       * @param index The index to set the value at.
+       * @param value The columnname to set.
+       * @return This builder for chaining.
        */
       public Builder setColumnname(
-              int index, java.lang.String value) {
+          int index, java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureColumnnameIsMutable();
+    throw new NullPointerException();
+  }
+  ensureColumnnameIsMutable();
         columnname_.set(index, value);
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The tuple of columns that form this key. There must be at least one column.
@@ -9235,18 +9247,19 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string columnname = 2;</code>
+       * @param value The columnname to add.
+       * @return This builder for chaining.
        */
       public Builder addColumnname(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureColumnnameIsMutable();
+    throw new NullPointerException();
+  }
+  ensureColumnnameIsMutable();
         columnname_.add(value);
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The tuple of columns that form this key. There must be at least one column.
@@ -9255,16 +9268,17 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string columnname = 2;</code>
+       * @param values The columnname to add.
+       * @return This builder for chaining.
        */
       public Builder addAllColumnname(
-              java.lang.Iterable<java.lang.String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureColumnnameIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                values, columnname_);
+            values, columnname_);
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The tuple of columns that form this key. There must be at least one column.
@@ -9273,6 +9287,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string columnname = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearColumnname() {
         columnname_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -9288,20 +9303,21 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string columnname = 2;</code>
+       * @param value The bytes of the columnname to add.
+       * @return This builder for chaining.
        */
       public Builder addColumnnameBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureColumnnameIsMutable();
+    throw new NullPointerException();
+  }
+  ensureColumnnameIsMutable();
         columnname_.add(value);
         onChanged();
         return this;
       }
 
-      private boolean uniquevalues_;
-
+      private boolean uniquevalues_ ;
       /**
        * <pre>
        * If true, all value tuples defined by this table and key must be distinct.
@@ -9309,11 +9325,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool uniquevalues = 3 [default = false];</code>
+       * @return Whether the uniquevalues field is set.
        */
       public boolean hasUniquevalues() {
         return ((bitField0_ & 0x00000004) != 0);
       }
-
       /**
        * <pre>
        * If true, all value tuples defined by this table and key must be distinct.
@@ -9321,11 +9337,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool uniquevalues = 3 [default = false];</code>
+       * @return The uniquevalues.
        */
       public boolean getUniquevalues() {
         return uniquevalues_;
       }
-
       /**
        * <pre>
        * If true, all value tuples defined by this table and key must be distinct.
@@ -9333,6 +9349,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool uniquevalues = 3 [default = false];</code>
+       * @param value The uniquevalues to set.
+       * @return This builder for chaining.
        */
       public Builder setUniquevalues(boolean value) {
         bitField0_ |= 0x00000004;
@@ -9340,7 +9358,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * If true, all value tuples defined by this table and key must be distinct.
@@ -9348,6 +9365,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool uniquevalues = 3 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearUniquevalues() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -9357,17 +9375,16 @@ public final class GtfsSpecificationProto {
       }
 
       private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto> supersetkey_ =
-              java.util.Collections.emptyList();
-
+        java.util.Collections.emptyList();
       private void ensureSupersetkeyIsMutable() {
         if (!((bitField0_ & 0x00000008) != 0)) {
           supersetkey_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto>(supersetkey_);
           bitField0_ |= 0x00000008;
-        }
+         }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> supersetkeyBuilder_;
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> supersetkeyBuilder_;
 
       /**
        * <pre>
@@ -9386,7 +9403,6 @@ public final class GtfsSpecificationProto {
           return supersetkeyBuilder_.getMessageList();
         }
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9404,7 +9420,6 @@ public final class GtfsSpecificationProto {
           return supersetkeyBuilder_.getCount();
         }
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9422,7 +9437,6 @@ public final class GtfsSpecificationProto {
           return supersetkeyBuilder_.getMessage(index);
         }
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9434,7 +9448,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
        */
       public Builder setSupersetkey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto value) {
         if (supersetkeyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9447,7 +9461,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9459,7 +9472,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
        */
       public Builder setSupersetkey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
         if (supersetkeyBuilder_ == null) {
           ensureSupersetkeyIsMutable();
           supersetkey_.set(index, builderForValue.build());
@@ -9503,7 +9516,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
        */
       public Builder addSupersetkey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto value) {
         if (supersetkeyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9516,7 +9529,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9528,7 +9540,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
        */
       public Builder addSupersetkey(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
         if (supersetkeyBuilder_ == null) {
           ensureSupersetkeyIsMutable();
           supersetkey_.add(builderForValue.build());
@@ -9538,7 +9550,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9550,7 +9561,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
        */
       public Builder addSupersetkey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto.Builder builderForValue) {
         if (supersetkeyBuilder_ == null) {
           ensureSupersetkeyIsMutable();
           supersetkey_.add(index, builderForValue.build());
@@ -9560,7 +9571,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9572,18 +9582,17 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
        */
       public Builder addAllSupersetkey(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProto> values) {
         if (supersetkeyBuilder_ == null) {
           ensureSupersetkeyIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, supersetkey_);
+              values, supersetkey_);
           onChanged();
         } else {
           supersetkeyBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9604,7 +9613,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9625,7 +9633,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The set of value tuples defined by the KeySpecProto must be a subset of
@@ -9651,7 +9658,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder getSupersetkeyOrBuilder(
-              int index) {
+          int index) {
         if (supersetkeyBuilder_ == null) {
           return supersetkey_.get(index);  } else {
           return supersetkeyBuilder_.getMessageOrBuilder(index);
@@ -9667,8 +9674,8 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.SupersetKeySpecProto supersetkey = 4;</code>
        */
-      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder>
-      getSupersetkeyOrBuilderList() {
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.SupersetKeySpecProtoOrBuilder> 
+           getSupersetkeyOrBuilderList() {
         if (supersetkeyBuilder_ != null) {
           return supersetkeyBuilder_.getMessageOrBuilderList();
         } else {
@@ -9795,6 +9802,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return Whether the name field is set.
      */
     boolean hasName();
     /**
@@ -9803,6 +9811,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The name.
      */
     java.lang.String getName();
     /**
@@ -9811,6 +9820,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The bytes for name.
      */
     com.google.protobuf.ByteString
         getNameBytes();
@@ -9824,6 +9834,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string filename = 2;</code>
+     * @return Whether the filename field is set.
      */
     boolean hasFilename();
     /**
@@ -9835,6 +9846,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string filename = 2;</code>
+     * @return The filename.
      */
     java.lang.String getFilename();
     /**
@@ -9846,9 +9858,10 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string filename = 2;</code>
+     * @return The bytes for filename.
      */
     com.google.protobuf.ByteString
-    getFilenameBytes();
+        getFilenameBytes();
 
     /**
      * <pre>
@@ -9869,9 +9882,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool inheritfields = 12 [default = false];</code>
+     * @return Whether the inheritfields field is set.
      */
     boolean hasInheritfields();
-
     /**
      * <pre>
      * If a template is used for this spec, and that template contains a csv spec
@@ -9891,26 +9904,29 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool inheritfields = 12 [default = false];</code>
+     * @return The inheritfields.
      */
     boolean getInheritfields();
 
     /**
      * <code>optional bool inheritinputcolumns = 13 [default = false];</code>
+     * @return Whether the inheritinputcolumns field is set.
      */
     boolean hasInheritinputcolumns();
-
     /**
      * <code>optional bool inheritinputcolumns = 13 [default = false];</code>
+     * @return The inheritinputcolumns.
      */
     boolean getInheritinputcolumns();
 
     /**
      * <code>optional bool inheritkeys = 15 [default = false];</code>
+     * @return Whether the inheritkeys field is set.
      */
     boolean hasInheritkeys();
-
     /**
      * <code>optional bool inheritkeys = 15 [default = false];</code>
+     * @return The inheritkeys.
      */
     boolean getInheritkeys();
 
@@ -9923,6 +9939,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool required = 3 [default = true];</code>
+     * @return Whether the required field is set.
      */
     boolean hasRequired();
     /**
@@ -9934,6 +9951,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool required = 3 [default = true];</code>
+     * @return The required.
      */
     boolean getRequired();
 
@@ -9944,9 +9962,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool hasheader = 4 [default = true];</code>
+     * @return Whether the hasheader field is set.
      */
     boolean hasHasheader();
-
     /**
      * <pre>
      * If this is true, the first row of the input file will be interpreted as
@@ -9954,6 +9972,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool hasheader = 4 [default = true];</code>
+     * @return The hasheader.
      */
     boolean getHasheader();
 
@@ -9963,15 +9982,16 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+     * @return Whether the encoding field is set.
      */
     boolean hasEncoding();
-
     /**
      * <pre>
      * The character encoding of the document.
      * </pre>
      *
      * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+     * @return The encoding.
      */
     java.lang.String getEncoding();
     /**
@@ -9980,6 +10000,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+     * @return The bytes for encoding.
      */
     com.google.protobuf.ByteString
         getEncodingBytes();
@@ -10003,7 +10024,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto getColumn(int index);
-
     /**
      * <pre>
      * The subset of columns to be used from this table. Existence of the given
@@ -10013,7 +10033,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
      */
     int getColumnCount();
-
     /**
      * <pre>
      * The subset of columns to be used from this table. Existence of the given
@@ -10022,9 +10041,8 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
      */
-    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder>
-    getColumnOrBuilderList();
-
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder> 
+        getColumnOrBuilderList();
     /**
      * <pre>
      * The subset of columns to be used from this table. Existence of the given
@@ -10034,7 +10052,7 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder getColumnOrBuilder(
-            int index);
+        int index);
 
     /**
      * <pre>
@@ -10064,7 +10082,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.KeySpecProto key = 7;</code>
      */
     int getKeyCount();
-
     /**
      * <pre>
      * The keys of this table. A key is a tuple of one or more columns from the
@@ -10073,9 +10090,8 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.KeySpecProto key = 7;</code>
      */
-    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder>
-    getKeyOrBuilderList();
-
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder> 
+        getKeyOrBuilderList();
     /**
      * <pre>
      * The keys of this table. A key is a tuple of one or more columns from the
@@ -10085,7 +10101,7 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.KeySpecProto key = 7;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder getKeyOrBuilder(
-            int index);
+        int index);
 
     /**
      * <pre>
@@ -10094,9 +10110,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string resortkey = 8;</code>
+     * @return Whether the resortkey field is set.
      */
     boolean hasResortkey();
-
     /**
      * <pre>
      * The table rows will be re-sorted on this key. The first column of the key
@@ -10104,9 +10120,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string resortkey = 8;</code>
+     * @return The resortkey.
      */
     java.lang.String getResortkey();
-
     /**
      * <pre>
      * The table rows will be re-sorted on this key. The first column of the key
@@ -10114,6 +10130,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string resortkey = 8;</code>
+     * @return The bytes for resortkey.
      */
     com.google.protobuf.ByteString
         getResortkeyBytes();
@@ -10126,10 +10143,10 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string requiresortedonkey = 9;</code>
+     * @return A list containing the requiresortedonkey.
      */
     java.util.List<java.lang.String>
-    getRequiresortedonkeyList();
-
+        getRequiresortedonkeyList();
     /**
      * <pre>
      * The table rows will be required to be sorted on these keys. Note: If there
@@ -10138,9 +10155,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string requiresortedonkey = 9;</code>
+     * @return The count of requiresortedonkey.
      */
     int getRequiresortedonkeyCount();
-
     /**
      * <pre>
      * The table rows will be required to be sorted on these keys. Note: If there
@@ -10149,6 +10166,8 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string requiresortedonkey = 9;</code>
+     * @param index The index of the element to return.
+     * @return The requiresortedonkey at the given index.
      */
     java.lang.String getRequiresortedonkey(int index);
     /**
@@ -10159,6 +10178,8 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string requiresortedonkey = 9;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the requiresortedonkey at the given index.
      */
     com.google.protobuf.ByteString
         getRequiresortedonkeyBytes(int index);
@@ -10180,7 +10201,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto getNamedvalue(int index);
-
     /**
      * <pre>
      * Specifies names for certain values for columns of this csv spec.
@@ -10189,7 +10209,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
      */
     int getNamedvalueCount();
-
     /**
      * <pre>
      * Specifies names for certain values for columns of this csv spec.
@@ -10199,7 +10218,6 @@ public final class GtfsSpecificationProto {
      */
     java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> 
         getNamedvalueOrBuilderList();
-
     /**
      * <pre>
      * Specifies names for certain values for columns of this csv spec.
@@ -10216,6 +10234,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool strip_protected_whitespace_from_values = 18;</code>
+     * @return Whether the stripProtectedWhitespaceFromValues field is set.
      */
     boolean hasStripProtectedWhitespaceFromValues();
     /**
@@ -10224,6 +10243,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool strip_protected_whitespace_from_values = 18;</code>
+     * @return The stripProtectedWhitespaceFromValues.
      */
     boolean getStripProtectedWhitespaceFromValues();
 
@@ -10234,6 +10254,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto column_cache = 19;</code>
+     * @return Whether the columnCache field is set.
      */
     boolean hasColumnCache();
     /**
@@ -10243,6 +10264,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto column_cache = 19;</code>
+     * @return The columnCache.
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto getColumnCache();
     /**
@@ -10258,12 +10280,11 @@ public final class GtfsSpecificationProto {
   /**
    * Protobuf type {@code csvspec.CsvSpecProto}
    */
-  public static final class CsvSpecProto extends
-          com.google.protobuf.GeneratedMessageV3 implements
+  public  static final class CsvSpecProto extends
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:csvspec.CsvSpecProto)
       CsvSpecProtoOrBuilder {
   private static final long serialVersionUID = 0L;
-
     // Use CsvSpecProto.newBuilder() to construct.
     private CsvSpecProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
@@ -10468,6 +10489,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return Whether the name field is set.
      */
     public boolean hasName() {
       return ((bitField0_ & 0x00000001) != 0);
@@ -10478,6 +10500,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The name.
      */
     public java.lang.String getName() {
       java.lang.Object ref = name_;
@@ -10499,6 +10522,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required string name = 1;</code>
+     * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
         getNameBytes() {
@@ -10525,6 +10549,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string filename = 2;</code>
+     * @return Whether the filename field is set.
      */
     public boolean hasFilename() {
       return ((bitField0_ & 0x00000002) != 0);
@@ -10538,6 +10563,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string filename = 2;</code>
+     * @return The filename.
      */
     public java.lang.String getFilename() {
       java.lang.Object ref = filename_;
@@ -10562,6 +10588,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string filename = 2;</code>
+     * @return The bytes for filename.
      */
     public com.google.protobuf.ByteString
         getFilenameBytes() {
@@ -10598,11 +10625,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool inheritfields = 12 [default = false];</code>
+     * @return Whether the inheritfields field is set.
      */
     public boolean hasInheritfields() {
       return ((bitField0_ & 0x00000004) != 0);
     }
-
     /**
      * <pre>
      * If a template is used for this spec, and that template contains a csv spec
@@ -10622,6 +10649,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool inheritfields = 12 [default = false];</code>
+     * @return The inheritfields.
      */
     public boolean getInheritfields() {
       return inheritfields_;
@@ -10629,16 +10657,16 @@ public final class GtfsSpecificationProto {
 
     public static final int INHERITINPUTCOLUMNS_FIELD_NUMBER = 13;
     private boolean inheritinputcolumns_;
-
     /**
      * <code>optional bool inheritinputcolumns = 13 [default = false];</code>
+     * @return Whether the inheritinputcolumns field is set.
      */
     public boolean hasInheritinputcolumns() {
       return ((bitField0_ & 0x00000008) != 0);
     }
-
     /**
      * <code>optional bool inheritinputcolumns = 13 [default = false];</code>
+     * @return The inheritinputcolumns.
      */
     public boolean getInheritinputcolumns() {
       return inheritinputcolumns_;
@@ -10646,16 +10674,16 @@ public final class GtfsSpecificationProto {
 
     public static final int INHERITKEYS_FIELD_NUMBER = 15;
     private boolean inheritkeys_;
-
     /**
      * <code>optional bool inheritkeys = 15 [default = false];</code>
+     * @return Whether the inheritkeys field is set.
      */
     public boolean hasInheritkeys() {
       return ((bitField0_ & 0x00000010) != 0);
     }
-
     /**
      * <code>optional bool inheritkeys = 15 [default = false];</code>
+     * @return The inheritkeys.
      */
     public boolean getInheritkeys() {
       return inheritkeys_;
@@ -10663,7 +10691,6 @@ public final class GtfsSpecificationProto {
 
     public static final int REQUIRED_FIELD_NUMBER = 3;
     private boolean required_;
-
     /**
      * <pre>
      * This determines what will happen if this csv is missing in the input
@@ -10673,11 +10700,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool required = 3 [default = true];</code>
+     * @return Whether the required field is set.
      */
     public boolean hasRequired() {
       return ((bitField0_ & 0x00000020) != 0);
     }
-
     /**
      * <pre>
      * This determines what will happen if this csv is missing in the input
@@ -10687,6 +10714,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool required = 3 [default = true];</code>
+     * @return The required.
      */
     public boolean getRequired() {
       return required_;
@@ -10694,7 +10722,6 @@ public final class GtfsSpecificationProto {
 
     public static final int HASHEADER_FIELD_NUMBER = 4;
     private boolean hasheader_;
-
     /**
      * <pre>
      * If this is true, the first row of the input file will be interpreted as
@@ -10702,11 +10729,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool hasheader = 4 [default = true];</code>
+     * @return Whether the hasheader field is set.
      */
     public boolean hasHasheader() {
       return ((bitField0_ & 0x00000040) != 0);
     }
-
     /**
      * <pre>
      * If this is true, the first row of the input file will be interpreted as
@@ -10714,6 +10741,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool hasheader = 4 [default = true];</code>
+     * @return The hasheader.
      */
     public boolean getHasheader() {
       return hasheader_;
@@ -10727,6 +10755,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+     * @return Whether the encoding field is set.
      */
     public boolean hasEncoding() {
       return ((bitField0_ & 0x00000080) != 0);
@@ -10737,6 +10766,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+     * @return The encoding.
      */
     public java.lang.String getEncoding() {
       java.lang.Object ref = encoding_;
@@ -10758,14 +10788,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+     * @return The bytes for encoding.
      */
     public com.google.protobuf.ByteString
-    getEncodingBytes() {
+        getEncodingBytes() {
       java.lang.Object ref = encoding_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                        (java.lang.String) ref);
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         encoding_ = b;
         return b;
       } else {
@@ -10820,7 +10851,6 @@ public final class GtfsSpecificationProto {
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto getColumn(int index) {
       return column_.get(index);
     }
-
     /**
      * <pre>
      * The subset of columns to be used from this table. Existence of the given
@@ -10830,13 +10860,12 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder getColumnOrBuilder(
-            int index) {
+        int index) {
       return column_.get(index);
     }
 
     public static final int KEY_FIELD_NUMBER = 7;
     private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto> key_;
-
     /**
      * <pre>
      * The keys of this table. A key is a tuple of one or more columns from the
@@ -10848,7 +10877,6 @@ public final class GtfsSpecificationProto {
     public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto> getKeyList() {
       return key_;
     }
-
     /**
      * <pre>
      * The keys of this table. A key is a tuple of one or more columns from the
@@ -10857,11 +10885,10 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.KeySpecProto key = 7;</code>
      */
-    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder>
-    getKeyOrBuilderList() {
+    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder> 
+        getKeyOrBuilderList() {
       return key_;
     }
-
     /**
      * <pre>
      * The keys of this table. A key is a tuple of one or more columns from the
@@ -10873,7 +10900,6 @@ public final class GtfsSpecificationProto {
     public int getKeyCount() {
       return key_.size();
     }
-
     /**
      * <pre>
      * The keys of this table. A key is a tuple of one or more columns from the
@@ -10885,7 +10911,6 @@ public final class GtfsSpecificationProto {
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto getKey(int index) {
       return key_.get(index);
     }
-
     /**
      * <pre>
      * The keys of this table. A key is a tuple of one or more columns from the
@@ -10908,11 +10933,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string resortkey = 8;</code>
+     * @return Whether the resortkey field is set.
      */
     public boolean hasResortkey() {
       return ((bitField0_ & 0x00000100) != 0);
     }
-
     /**
      * <pre>
      * The table rows will be re-sorted on this key. The first column of the key
@@ -10920,6 +10945,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string resortkey = 8;</code>
+     * @return The resortkey.
      */
     public java.lang.String getResortkey() {
       java.lang.Object ref = resortkey_;
@@ -10935,7 +10961,6 @@ public final class GtfsSpecificationProto {
         return s;
       }
     }
-
     /**
      * <pre>
      * The table rows will be re-sorted on this key. The first column of the key
@@ -10943,14 +10968,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string resortkey = 8;</code>
+     * @return The bytes for resortkey.
      */
     public com.google.protobuf.ByteString
-    getResortkeyBytes() {
+        getResortkeyBytes() {
       java.lang.Object ref = resortkey_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
-                com.google.protobuf.ByteString.copyFromUtf8(
-                        (java.lang.String) ref);
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         resortkey_ = b;
         return b;
       } else {
@@ -10960,7 +10986,6 @@ public final class GtfsSpecificationProto {
 
     public static final int REQUIRESORTEDONKEY_FIELD_NUMBER = 9;
     private com.google.protobuf.LazyStringList requiresortedonkey_;
-
     /**
      * <pre>
      * The table rows will be required to be sorted on these keys. Note: If there
@@ -10969,6 +10994,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string requiresortedonkey = 9;</code>
+     * @return A list containing the requiresortedonkey.
      */
     public com.google.protobuf.ProtocolStringList
         getRequiresortedonkeyList() {
@@ -10982,6 +11008,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string requiresortedonkey = 9;</code>
+     * @return The count of requiresortedonkey.
      */
     public int getRequiresortedonkeyCount() {
       return requiresortedonkey_.size();
@@ -10994,6 +11021,8 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string requiresortedonkey = 9;</code>
+     * @param index The index of the element to return.
+     * @return The requiresortedonkey at the given index.
      */
     public java.lang.String getRequiresortedonkey(int index) {
       return requiresortedonkey_.get(index);
@@ -11006,6 +11035,8 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated string requiresortedonkey = 9;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the requiresortedonkey at the given index.
      */
     public com.google.protobuf.ByteString
         getRequiresortedonkeyBytes(int index) {
@@ -11063,7 +11094,7 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder getNamedvalueOrBuilder(
-            int index) {
+        int index) {
       return namedvalue_.get(index);
     }
 
@@ -11075,6 +11106,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool strip_protected_whitespace_from_values = 18;</code>
+     * @return Whether the stripProtectedWhitespaceFromValues field is set.
      */
     public boolean hasStripProtectedWhitespaceFromValues() {
       return ((bitField0_ & 0x00000200) != 0);
@@ -11085,6 +11117,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool strip_protected_whitespace_from_values = 18;</code>
+     * @return The stripProtectedWhitespaceFromValues.
      */
     public boolean getStripProtectedWhitespaceFromValues() {
       return stripProtectedWhitespaceFromValues_;
@@ -11099,6 +11132,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto column_cache = 19;</code>
+     * @return Whether the columnCache field is set.
      */
     public boolean hasColumnCache() {
       return ((bitField0_ & 0x00000400) != 0);
@@ -11110,6 +11144,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto column_cache = 19;</code>
+     * @return The columnCache.
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto getColumnCache() {
       return columnCache_ == null ? org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance() : columnCache_;
@@ -11127,7 +11162,6 @@ public final class GtfsSpecificationProto {
     }
 
     private byte memoizedIsInitialized = -1;
-
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -11225,22 +11259,22 @@ public final class GtfsSpecificationProto {
       }
       if (((bitField0_ & 0x00000020) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeBoolSize(3, required_);
+          .computeBoolSize(3, required_);
       }
       if (((bitField0_ & 0x00000040) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeBoolSize(4, hasheader_);
+          .computeBoolSize(4, hasheader_);
       }
       if (((bitField0_ & 0x00000080) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, encoding_);
       }
       for (int i = 0; i < column_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(6, column_.get(i));
+          .computeMessageSize(6, column_.get(i));
       }
       for (int i = 0; i < key_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(7, key_.get(i));
+          .computeMessageSize(7, key_.get(i));
       }
       if (((bitField0_ & 0x00000100) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, resortkey_);
@@ -11275,7 +11309,7 @@ public final class GtfsSpecificationProto {
       }
       if (((bitField0_ & 0x00000400) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(19, getColumnCache());
+          .computeMessageSize(19, getColumnCache());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -11285,7 +11319,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-        return true;
+       return true;
       }
       if (!(obj instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto)) {
         return super.equals(obj);
@@ -11295,65 +11329,65 @@ public final class GtfsSpecificationProto {
       if (hasName() != other.hasName()) return false;
       if (hasName()) {
         if (!getName()
-                .equals(other.getName())) return false;
+            .equals(other.getName())) return false;
       }
       if (hasFilename() != other.hasFilename()) return false;
       if (hasFilename()) {
         if (!getFilename()
-                .equals(other.getFilename())) return false;
+            .equals(other.getFilename())) return false;
       }
       if (hasInheritfields() != other.hasInheritfields()) return false;
       if (hasInheritfields()) {
         if (getInheritfields()
-                != other.getInheritfields()) return false;
+            != other.getInheritfields()) return false;
       }
       if (hasInheritinputcolumns() != other.hasInheritinputcolumns()) return false;
       if (hasInheritinputcolumns()) {
         if (getInheritinputcolumns()
-                != other.getInheritinputcolumns()) return false;
+            != other.getInheritinputcolumns()) return false;
       }
       if (hasInheritkeys() != other.hasInheritkeys()) return false;
       if (hasInheritkeys()) {
         if (getInheritkeys()
-                != other.getInheritkeys()) return false;
+            != other.getInheritkeys()) return false;
       }
       if (hasRequired() != other.hasRequired()) return false;
       if (hasRequired()) {
         if (getRequired()
-                != other.getRequired()) return false;
+            != other.getRequired()) return false;
       }
       if (hasHasheader() != other.hasHasheader()) return false;
       if (hasHasheader()) {
         if (getHasheader()
-                != other.getHasheader()) return false;
+            != other.getHasheader()) return false;
       }
       if (hasEncoding() != other.hasEncoding()) return false;
       if (hasEncoding()) {
         if (!getEncoding()
-                .equals(other.getEncoding())) return false;
+            .equals(other.getEncoding())) return false;
       }
       if (!getColumnList()
-              .equals(other.getColumnList())) return false;
+          .equals(other.getColumnList())) return false;
       if (!getKeyList()
-              .equals(other.getKeyList())) return false;
+          .equals(other.getKeyList())) return false;
       if (hasResortkey() != other.hasResortkey()) return false;
       if (hasResortkey()) {
         if (!getResortkey()
-                .equals(other.getResortkey())) return false;
+            .equals(other.getResortkey())) return false;
       }
       if (!getRequiresortedonkeyList()
-              .equals(other.getRequiresortedonkeyList())) return false;
+          .equals(other.getRequiresortedonkeyList())) return false;
       if (!getNamedvalueList()
-              .equals(other.getNamedvalueList())) return false;
+          .equals(other.getNamedvalueList())) return false;
       if (hasStripProtectedWhitespaceFromValues() != other.hasStripProtectedWhitespaceFromValues()) return false;
       if (hasStripProtectedWhitespaceFromValues()) {
         if (getStripProtectedWhitespaceFromValues()
-                != other.getStripProtectedWhitespaceFromValues()) return false;
+            != other.getStripProtectedWhitespaceFromValues()) return false;
       }
       if (hasColumnCache() != other.hasColumnCache()) return false;
       if (hasColumnCache()) {
         if (!getColumnCache()
-                .equals(other.getColumnCache())) return false;
+            .equals(other.getColumnCache())) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -11377,22 +11411,22 @@ public final class GtfsSpecificationProto {
       if (hasInheritfields()) {
         hash = (37 * hash) + INHERITFIELDS_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getInheritfields());
+            getInheritfields());
       }
       if (hasInheritinputcolumns()) {
         hash = (37 * hash) + INHERITINPUTCOLUMNS_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getInheritinputcolumns());
+            getInheritinputcolumns());
       }
       if (hasInheritkeys()) {
         hash = (37 * hash) + INHERITKEYS_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getInheritkeys());
+            getInheritkeys());
       }
       if (hasRequired()) {
         hash = (37 * hash) + REQUIRED_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getRequired());
+            getRequired());
       }
       if (hasHasheader()) {
         hash = (37 * hash) + HASHEADER_FIELD_NUMBER;
@@ -11426,7 +11460,7 @@ public final class GtfsSpecificationProto {
       if (hasStripProtectedWhitespaceFromValues()) {
         hash = (37 * hash) + STRIP_PROTECTED_WHITESPACE_FROM_VALUES_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getStripProtectedWhitespaceFromValues());
+            getStripProtectedWhitespaceFromValues());
       }
       if (hasColumnCache()) {
         hash = (37 * hash) + COLUMN_CACHE_FIELD_NUMBER;
@@ -11479,43 +11513,36 @@ public final class GtfsSpecificationProto {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
+          .parseDelimitedWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() {
-      return newBuilder();
-    }
-
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
@@ -11627,7 +11654,7 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-      getDescriptorForType() {
+          getDescriptorForType() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvSpecProto_descriptor;
       }
 
@@ -11739,7 +11766,6 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
@@ -11771,7 +11797,7 @@ public final class GtfsSpecificationProto {
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto) {
-          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto) other);
+          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto)other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -11779,8 +11805,7 @@ public final class GtfsSpecificationProto {
       }
 
       public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto other) {
-        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.getDefaultInstance())
-          return this;
+        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.getDefaultInstance()) return this;
         if (other.hasName()) {
           bitField0_ |= 0x00000001;
           name_ = other.name_;
@@ -11829,9 +11854,9 @@ public final class GtfsSpecificationProto {
               columnBuilder_ = null;
               column_ = other.column_;
               bitField0_ = (bitField0_ & ~0x00000100);
-              columnBuilder_ =
-                      com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                              getColumnFieldBuilder() : null;
+              columnBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getColumnFieldBuilder() : null;
             } else {
               columnBuilder_.addAllMessages(other.column_);
             }
@@ -11965,6 +11990,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return Whether the name field is set.
        */
       public boolean hasName() {
         return ((bitField0_ & 0x00000001) != 0);
@@ -11975,6 +12001,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return The name.
        */
       public java.lang.String getName() {
         java.lang.Object ref = name_;
@@ -11996,6 +12023,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return The bytes for name.
        */
       public com.google.protobuf.ByteString
           getNameBytes() {
@@ -12016,6 +12044,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @param value The name to set.
+       * @return This builder for chaining.
        */
       public Builder setName(
           java.lang.String value) {
@@ -12033,6 +12063,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearName() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -12046,6 +12077,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required string name = 1;</code>
+       * @param value The bytes for name to set.
+       * @return This builder for chaining.
        */
       public Builder setNameBytes(
           com.google.protobuf.ByteString value) {
@@ -12068,6 +12101,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string filename = 2;</code>
+       * @return Whether the filename field is set.
        */
       public boolean hasFilename() {
         return ((bitField0_ & 0x00000002) != 0);
@@ -12081,6 +12115,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string filename = 2;</code>
+       * @return The filename.
        */
       public java.lang.String getFilename() {
         java.lang.Object ref = filename_;
@@ -12105,6 +12140,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string filename = 2;</code>
+       * @return The bytes for filename.
        */
       public com.google.protobuf.ByteString
           getFilenameBytes() {
@@ -12128,6 +12164,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string filename = 2;</code>
+       * @param value The filename to set.
+       * @return This builder for chaining.
        */
       public Builder setFilename(
           java.lang.String value) {
@@ -12148,6 +12186,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string filename = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearFilename() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -12164,6 +12203,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string filename = 2;</code>
+       * @param value The bytes for filename to set.
+       * @return This builder for chaining.
        */
       public Builder setFilenameBytes(
           com.google.protobuf.ByteString value) {
@@ -12196,6 +12237,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool inheritfields = 12 [default = false];</code>
+       * @return Whether the inheritfields field is set.
        */
       public boolean hasInheritfields() {
         return ((bitField0_ & 0x00000004) != 0);
@@ -12219,6 +12261,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool inheritfields = 12 [default = false];</code>
+       * @return The inheritfields.
        */
       public boolean getInheritfields() {
         return inheritfields_;
@@ -12242,6 +12285,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool inheritfields = 12 [default = false];</code>
+       * @param value The inheritfields to set.
+       * @return This builder for chaining.
        */
       public Builder setInheritfields(boolean value) {
         bitField0_ |= 0x00000004;
@@ -12268,6 +12313,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool inheritfields = 12 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearInheritfields() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -12279,19 +12325,22 @@ public final class GtfsSpecificationProto {
       private boolean inheritinputcolumns_ ;
       /**
        * <code>optional bool inheritinputcolumns = 13 [default = false];</code>
+       * @return Whether the inheritinputcolumns field is set.
        */
       public boolean hasInheritinputcolumns() {
         return ((bitField0_ & 0x00000008) != 0);
       }
       /**
        * <code>optional bool inheritinputcolumns = 13 [default = false];</code>
+       * @return The inheritinputcolumns.
        */
       public boolean getInheritinputcolumns() {
         return inheritinputcolumns_;
       }
-
       /**
        * <code>optional bool inheritinputcolumns = 13 [default = false];</code>
+       * @param value The inheritinputcolumns to set.
+       * @return This builder for chaining.
        */
       public Builder setInheritinputcolumns(boolean value) {
         bitField0_ |= 0x00000008;
@@ -12299,9 +12348,9 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <code>optional bool inheritinputcolumns = 13 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearInheritinputcolumns() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -12310,24 +12359,25 @@ public final class GtfsSpecificationProto {
         return this;
       }
 
-      private boolean inheritkeys_;
-
+      private boolean inheritkeys_ ;
       /**
        * <code>optional bool inheritkeys = 15 [default = false];</code>
+       * @return Whether the inheritkeys field is set.
        */
       public boolean hasInheritkeys() {
         return ((bitField0_ & 0x00000010) != 0);
       }
-
       /**
        * <code>optional bool inheritkeys = 15 [default = false];</code>
+       * @return The inheritkeys.
        */
       public boolean getInheritkeys() {
         return inheritkeys_;
       }
-
       /**
        * <code>optional bool inheritkeys = 15 [default = false];</code>
+       * @param value The inheritkeys to set.
+       * @return This builder for chaining.
        */
       public Builder setInheritkeys(boolean value) {
         bitField0_ |= 0x00000010;
@@ -12335,9 +12385,9 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <code>optional bool inheritkeys = 15 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearInheritkeys() {
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -12356,11 +12406,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool required = 3 [default = true];</code>
+       * @return Whether the required field is set.
        */
       public boolean hasRequired() {
         return ((bitField0_ & 0x00000020) != 0);
       }
-
       /**
        * <pre>
        * This determines what will happen if this csv is missing in the input
@@ -12370,11 +12420,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool required = 3 [default = true];</code>
+       * @return The required.
        */
       public boolean getRequired() {
         return required_;
       }
-
       /**
        * <pre>
        * This determines what will happen if this csv is missing in the input
@@ -12384,6 +12434,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool required = 3 [default = true];</code>
+       * @param value The required to set.
+       * @return This builder for chaining.
        */
       public Builder setRequired(boolean value) {
         bitField0_ |= 0x00000020;
@@ -12391,7 +12443,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * This determines what will happen if this csv is missing in the input
@@ -12401,6 +12452,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool required = 3 [default = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearRequired() {
         bitField0_ = (bitField0_ & ~0x00000020);
@@ -12417,11 +12469,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool hasheader = 4 [default = true];</code>
+       * @return Whether the hasheader field is set.
        */
       public boolean hasHasheader() {
         return ((bitField0_ & 0x00000040) != 0);
       }
-
       /**
        * <pre>
        * If this is true, the first row of the input file will be interpreted as
@@ -12429,11 +12481,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool hasheader = 4 [default = true];</code>
+       * @return The hasheader.
        */
       public boolean getHasheader() {
         return hasheader_;
       }
-
       /**
        * <pre>
        * If this is true, the first row of the input file will be interpreted as
@@ -12441,6 +12493,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool hasheader = 4 [default = true];</code>
+       * @param value The hasheader to set.
+       * @return This builder for chaining.
        */
       public Builder setHasheader(boolean value) {
         bitField0_ |= 0x00000040;
@@ -12448,7 +12502,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * If this is true, the first row of the input file will be interpreted as
@@ -12456,6 +12509,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool hasheader = 4 [default = true];</code>
+       * @return This builder for chaining.
        */
       public Builder clearHasheader() {
         bitField0_ = (bitField0_ & ~0x00000040);
@@ -12465,30 +12519,30 @@ public final class GtfsSpecificationProto {
       }
 
       private java.lang.Object encoding_ = "UTF-8";
-
       /**
        * <pre>
        * The character encoding of the document.
        * </pre>
        *
        * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+       * @return Whether the encoding field is set.
        */
       public boolean hasEncoding() {
         return ((bitField0_ & 0x00000080) != 0);
       }
-
       /**
        * <pre>
        * The character encoding of the document.
        * </pre>
        *
        * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+       * @return The encoding.
        */
       public java.lang.String getEncoding() {
         java.lang.Object ref = encoding_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             encoding_ = s;
@@ -12498,52 +12552,53 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <pre>
        * The character encoding of the document.
        * </pre>
        *
        * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+       * @return The bytes for encoding.
        */
       public com.google.protobuf.ByteString
-      getEncodingBytes() {
+          getEncodingBytes() {
         java.lang.Object ref = encoding_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
           encoding_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
-
       /**
        * <pre>
        * The character encoding of the document.
        * </pre>
        *
        * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+       * @param value The encoding to set.
+       * @return This builder for chaining.
        */
       public Builder setEncoding(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000080;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
         encoding_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The character encoding of the document.
        * </pre>
        *
        * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+       * @return This builder for chaining.
        */
       public Builder clearEncoding() {
         bitField0_ = (bitField0_ & ~0x00000080);
@@ -12551,37 +12606,37 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The character encoding of the document.
        * </pre>
        *
        * <code>optional string encoding = 5 [default = "UTF-8"];</code>
+       * @param value The bytes for encoding to set.
+       * @return This builder for chaining.
        */
       public Builder setEncodingBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000080;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
         encoding_ = value;
         onChanged();
         return this;
       }
 
       private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto> column_ =
-              java.util.Collections.emptyList();
-
+        java.util.Collections.emptyList();
       private void ensureColumnIsMutable() {
         if (!((bitField0_ & 0x00000100) != 0)) {
           column_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto>(column_);
           bitField0_ |= 0x00000100;
-        }
+         }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder> columnBuilder_;
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder> columnBuilder_;
 
       /**
        * <pre>
@@ -12628,7 +12683,6 @@ public final class GtfsSpecificationProto {
           return columnBuilder_.getMessage(index);
         }
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12638,7 +12692,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
       public Builder setColumn(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto value) {
         if (columnBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -12651,7 +12705,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12661,7 +12714,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
       public Builder setColumn(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder builderForValue) {
         if (columnBuilder_ == null) {
           ensureColumnIsMutable();
           column_.set(index, builderForValue.build());
@@ -12671,7 +12724,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12693,7 +12745,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12703,7 +12754,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
       public Builder addColumn(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto value) {
         if (columnBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -12716,7 +12767,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12726,7 +12776,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
       public Builder addColumn(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder builderForValue) {
         if (columnBuilder_ == null) {
           ensureColumnIsMutable();
           column_.add(builderForValue.build());
@@ -12736,7 +12786,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12746,7 +12795,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
       public Builder addColumn(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder builderForValue) {
         if (columnBuilder_ == null) {
           ensureColumnIsMutable();
           column_.add(index, builderForValue.build());
@@ -12756,7 +12805,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12766,18 +12814,17 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
       public Builder addAllColumn(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto> values) {
         if (columnBuilder_ == null) {
           ensureColumnIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, column_);
+              values, column_);
           onChanged();
         } else {
           columnBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12796,7 +12843,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12815,7 +12861,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12825,10 +12870,9 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder getColumnBuilder(
-              int index) {
+          int index) {
         return getColumnFieldBuilder().getBuilder(index);
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12838,14 +12882,12 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder getColumnOrBuilder(
-              int index) {
+          int index) {
         if (columnBuilder_ == null) {
-          return column_.get(index);
-        } else {
+          return column_.get(index);  } else {
           return columnBuilder_.getMessageOrBuilder(index);
         }
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12854,15 +12896,14 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
-      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder>
-      getColumnOrBuilderList() {
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder> 
+           getColumnOrBuilderList() {
         if (columnBuilder_ != null) {
           return columnBuilder_.getMessageOrBuilderList();
         } else {
           return java.util.Collections.unmodifiableList(column_);
         }
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12873,9 +12914,8 @@ public final class GtfsSpecificationProto {
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder addColumnBuilder() {
         return getColumnFieldBuilder().addBuilder(
-                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.getDefaultInstance());
+            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12885,11 +12925,10 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder addColumnBuilder(
-              int index) {
+          int index) {
         return getColumnFieldBuilder().addBuilder(
-                index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.getDefaultInstance());
+            index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * The subset of columns to be used from this table. Existence of the given
@@ -12898,17 +12937,16 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.ColumnSpecProto column = 6;</code>
        */
-      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder>
-      getColumnBuilderList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder> 
+           getColumnBuilderList() {
         return getColumnFieldBuilder().getBuilderList();
       }
-
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder>
-      getColumnFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder> 
+          getColumnFieldBuilder() {
         if (columnBuilder_ == null) {
           columnBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder>(
                   column_,
                   ((bitField0_ & 0x00000100) != 0),
                   getParentForChildren(),
@@ -12945,7 +12983,6 @@ public final class GtfsSpecificationProto {
           return keyBuilder_.getMessageList();
         }
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -12961,7 +12998,6 @@ public final class GtfsSpecificationProto {
           return keyBuilder_.getCount();
         }
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -12977,7 +13013,6 @@ public final class GtfsSpecificationProto {
           return keyBuilder_.getMessage(index);
         }
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -12987,7 +13022,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.KeySpecProto key = 7;</code>
        */
       public Builder setKey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto value) {
         if (keyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -13000,7 +13035,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -13010,7 +13044,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.KeySpecProto key = 7;</code>
        */
       public Builder setKey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder builderForValue) {
         if (keyBuilder_ == null) {
           ensureKeyIsMutable();
           key_.set(index, builderForValue.build());
@@ -13020,7 +13054,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -13042,7 +13075,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -13052,7 +13084,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.KeySpecProto key = 7;</code>
        */
       public Builder addKey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto value) {
         if (keyBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -13093,7 +13125,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.KeySpecProto key = 7;</code>
        */
       public Builder addKey(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder builderForValue) {
         if (keyBuilder_ == null) {
           ensureKeyIsMutable();
           key_.add(index, builderForValue.build());
@@ -13103,7 +13135,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -13113,11 +13144,11 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.KeySpecProto key = 7;</code>
        */
       public Builder addAllKey(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto> values) {
         if (keyBuilder_ == null) {
           ensureKeyIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, key_);
+              values, key_);
           onChanged();
         } else {
           keyBuilder_.addAllMessages(values);
@@ -13142,7 +13173,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -13170,10 +13200,9 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.KeySpecProto key = 7;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder getKeyBuilder(
-              int index) {
+          int index) {
         return getKeyFieldBuilder().getBuilder(index);
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -13183,10 +13212,9 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.KeySpecProto key = 7;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder getKeyOrBuilder(
-              int index) {
+          int index) {
         if (keyBuilder_ == null) {
-          return key_.get(index);
-        } else {
+          return key_.get(index);  } else {
           return keyBuilder_.getMessageOrBuilder(index);
         }
       }
@@ -13206,7 +13234,6 @@ public final class GtfsSpecificationProto {
           return java.util.Collections.unmodifiableList(key_);
         }
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -13217,9 +13244,8 @@ public final class GtfsSpecificationProto {
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder addKeyBuilder() {
         return getKeyFieldBuilder().addBuilder(
-                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.getDefaultInstance());
+            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -13229,11 +13255,10 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.KeySpecProto key = 7;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder addKeyBuilder(
-              int index) {
+          int index) {
         return getKeyFieldBuilder().addBuilder(
-                index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.getDefaultInstance());
+            index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * The keys of this table. A key is a tuple of one or more columns from the
@@ -13242,17 +13267,16 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.KeySpecProto key = 7;</code>
        */
-      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder>
-      getKeyBuilderList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder> 
+           getKeyBuilderList() {
         return getKeyFieldBuilder().getBuilderList();
       }
-
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder>
-      getKeyFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder> 
+          getKeyFieldBuilder() {
         if (keyBuilder_ == null) {
           keyBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.KeySpecProtoOrBuilder>(
                   key_,
                   ((bitField0_ & 0x00000200) != 0),
                   getParentForChildren(),
@@ -13270,6 +13294,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string resortkey = 8;</code>
+       * @return Whether the resortkey field is set.
        */
       public boolean hasResortkey() {
         return ((bitField0_ & 0x00000400) != 0);
@@ -13281,12 +13306,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string resortkey = 8;</code>
+       * @return The resortkey.
        */
       public java.lang.String getResortkey() {
         java.lang.Object ref = resortkey_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             resortkey_ = s;
@@ -13296,7 +13322,6 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <pre>
        * The table rows will be re-sorted on this key. The first column of the key
@@ -13304,21 +13329,21 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string resortkey = 8;</code>
+       * @return The bytes for resortkey.
        */
       public com.google.protobuf.ByteString
-      getResortkeyBytes() {
+          getResortkeyBytes() {
         java.lang.Object ref = resortkey_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
           resortkey_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
-
       /**
        * <pre>
        * The table rows will be re-sorted on this key. The first column of the key
@@ -13326,18 +13351,19 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string resortkey = 8;</code>
+       * @param value The resortkey to set.
+       * @return This builder for chaining.
        */
       public Builder setResortkey(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000400;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000400;
         resortkey_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The table rows will be re-sorted on this key. The first column of the key
@@ -13345,6 +13371,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string resortkey = 8;</code>
+       * @return This builder for chaining.
        */
       public Builder clearResortkey() {
         bitField0_ = (bitField0_ & ~0x00000400);
@@ -13352,7 +13379,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The table rows will be re-sorted on this key. The first column of the key
@@ -13360,27 +13386,27 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string resortkey = 8;</code>
+       * @param value The bytes for resortkey to set.
+       * @return This builder for chaining.
        */
       public Builder setResortkeyBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000400;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000400;
         resortkey_ = value;
         onChanged();
         return this;
       }
 
       private com.google.protobuf.LazyStringList requiresortedonkey_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-
       private void ensureRequiresortedonkeyIsMutable() {
         if (!((bitField0_ & 0x00000800) != 0)) {
           requiresortedonkey_ = new com.google.protobuf.LazyStringArrayList(requiresortedonkey_);
           bitField0_ |= 0x00000800;
-        }
+         }
       }
-
       /**
        * <pre>
        * The table rows will be required to be sorted on these keys. Note: If there
@@ -13389,12 +13415,12 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string requiresortedonkey = 9;</code>
+       * @return A list containing the requiresortedonkey.
        */
       public com.google.protobuf.ProtocolStringList
-      getRequiresortedonkeyList() {
+          getRequiresortedonkeyList() {
         return requiresortedonkey_.getUnmodifiableView();
       }
-
       /**
        * <pre>
        * The table rows will be required to be sorted on these keys. Note: If there
@@ -13403,11 +13429,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string requiresortedonkey = 9;</code>
+       * @return The count of requiresortedonkey.
        */
       public int getRequiresortedonkeyCount() {
         return requiresortedonkey_.size();
       }
-
       /**
        * <pre>
        * The table rows will be required to be sorted on these keys. Note: If there
@@ -13416,11 +13442,12 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string requiresortedonkey = 9;</code>
+       * @param index The index of the element to return.
+       * @return The requiresortedonkey at the given index.
        */
       public java.lang.String getRequiresortedonkey(int index) {
         return requiresortedonkey_.get(index);
       }
-
       /**
        * <pre>
        * The table rows will be required to be sorted on these keys. Note: If there
@@ -13429,12 +13456,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string requiresortedonkey = 9;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the requiresortedonkey at the given index.
        */
       public com.google.protobuf.ByteString
-      getRequiresortedonkeyBytes(int index) {
+          getRequiresortedonkeyBytes(int index) {
         return requiresortedonkey_.getByteString(index);
       }
-
       /**
        * <pre>
        * The table rows will be required to be sorted on these keys. Note: If there
@@ -13443,18 +13471,20 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string requiresortedonkey = 9;</code>
+       * @param index The index to set the value at.
+       * @param value The requiresortedonkey to set.
+       * @return This builder for chaining.
        */
       public Builder setRequiresortedonkey(
-              int index, java.lang.String value) {
+          int index, java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureRequiresortedonkeyIsMutable();
+    throw new NullPointerException();
+  }
+  ensureRequiresortedonkeyIsMutable();
         requiresortedonkey_.set(index, value);
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The table rows will be required to be sorted on these keys. Note: If there
@@ -13463,18 +13493,19 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string requiresortedonkey = 9;</code>
+       * @param value The requiresortedonkey to add.
+       * @return This builder for chaining.
        */
       public Builder addRequiresortedonkey(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureRequiresortedonkeyIsMutable();
+    throw new NullPointerException();
+  }
+  ensureRequiresortedonkeyIsMutable();
         requiresortedonkey_.add(value);
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The table rows will be required to be sorted on these keys. Note: If there
@@ -13483,16 +13514,17 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string requiresortedonkey = 9;</code>
+       * @param values The requiresortedonkey to add.
+       * @return This builder for chaining.
        */
       public Builder addAllRequiresortedonkey(
-              java.lang.Iterable<java.lang.String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureRequiresortedonkeyIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                values, requiresortedonkey_);
+            values, requiresortedonkey_);
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The table rows will be required to be sorted on these keys. Note: If there
@@ -13501,6 +13533,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string requiresortedonkey = 9;</code>
+       * @return This builder for chaining.
        */
       public Builder clearRequiresortedonkey() {
         requiresortedonkey_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -13516,6 +13549,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated string requiresortedonkey = 9;</code>
+       * @param value The bytes of the requiresortedonkey to add.
+       * @return This builder for chaining.
        */
       public Builder addRequiresortedonkeyBytes(
           com.google.protobuf.ByteString value) {
@@ -13529,17 +13564,16 @@ public final class GtfsSpecificationProto {
       }
 
       private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto> namedvalue_ =
-              java.util.Collections.emptyList();
-
+        java.util.Collections.emptyList();
       private void ensureNamedvalueIsMutable() {
         if (!((bitField0_ & 0x00001000) != 0)) {
           namedvalue_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto>(namedvalue_);
           bitField0_ |= 0x00001000;
-        }
+         }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> namedvalueBuilder_;
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> namedvalueBuilder_;
 
       /**
        * <pre>
@@ -13555,7 +13589,6 @@ public final class GtfsSpecificationProto {
           return namedvalueBuilder_.getMessageList();
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13570,7 +13603,6 @@ public final class GtfsSpecificationProto {
           return namedvalueBuilder_.getCount();
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13585,7 +13617,6 @@ public final class GtfsSpecificationProto {
           return namedvalueBuilder_.getMessage(index);
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13594,7 +13625,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public Builder setNamedvalue(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto value) {
         if (namedvalueBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -13607,7 +13638,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13616,7 +13646,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public Builder setNamedvalue(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
         if (namedvalueBuilder_ == null) {
           ensureNamedvalueIsMutable();
           namedvalue_.set(index, builderForValue.build());
@@ -13626,7 +13656,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13686,7 +13715,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13695,7 +13723,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public Builder addNamedvalue(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder builderForValue) {
         if (namedvalueBuilder_ == null) {
           ensureNamedvalueIsMutable();
           namedvalue_.add(index, builderForValue.build());
@@ -13705,7 +13733,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13714,18 +13741,17 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public Builder addAllNamedvalue(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto> values) {
         if (namedvalueBuilder_ == null) {
           ensureNamedvalueIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, namedvalue_);
+              values, namedvalue_);
           onChanged();
         } else {
           namedvalueBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13743,7 +13769,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13761,7 +13786,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13770,10 +13794,9 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder getNamedvalueBuilder(
-              int index) {
+          int index) {
         return getNamedvalueFieldBuilder().getBuilder(index);
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13782,14 +13805,12 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder getNamedvalueOrBuilder(
-              int index) {
+          int index) {
         if (namedvalueBuilder_ == null) {
-          return namedvalue_.get(index);
-        } else {
+          return namedvalue_.get(index);  } else {
           return namedvalueBuilder_.getMessageOrBuilder(index);
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13797,8 +13818,8 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
-      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>
-      getNamedvalueOrBuilderList() {
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> 
+           getNamedvalueOrBuilderList() {
         if (namedvalueBuilder_ != null) {
           return namedvalueBuilder_.getMessageOrBuilderList();
         } else {
@@ -13814,9 +13835,8 @@ public final class GtfsSpecificationProto {
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder addNamedvalueBuilder() {
         return getNamedvalueFieldBuilder().addBuilder(
-                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.getDefaultInstance());
+            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13825,11 +13845,10 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder addNamedvalueBuilder(
-              int index) {
+          int index) {
         return getNamedvalueFieldBuilder().addBuilder(
-                index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.getDefaultInstance());
+            index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * Specifies names for certain values for columns of this csv spec.
@@ -13837,17 +13856,16 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.NamedValueProto namedvalue = 16;</code>
        */
-      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder>
-      getNamedvalueBuilderList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder> 
+           getNamedvalueBuilderList() {
         return getNamedvalueFieldBuilder().getBuilderList();
       }
-
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>
-      getNamedvalueFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> 
+          getNamedvalueFieldBuilder() {
         if (namedvalueBuilder_ == null) {
           namedvalueBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>(
                   namedvalue_,
                   ((bitField0_ & 0x00001000) != 0),
                   getParentForChildren(),
@@ -13857,25 +13875,25 @@ public final class GtfsSpecificationProto {
         return namedvalueBuilder_;
       }
 
-      private boolean stripProtectedWhitespaceFromValues_;
-
+      private boolean stripProtectedWhitespaceFromValues_ ;
       /**
        * <pre>
        * If set, overrides behavior inherited from CsvSpecProtos.
        * </pre>
        *
        * <code>optional bool strip_protected_whitespace_from_values = 18;</code>
+       * @return Whether the stripProtectedWhitespaceFromValues field is set.
        */
       public boolean hasStripProtectedWhitespaceFromValues() {
         return ((bitField0_ & 0x00002000) != 0);
       }
-
       /**
        * <pre>
        * If set, overrides behavior inherited from CsvSpecProtos.
        * </pre>
        *
        * <code>optional bool strip_protected_whitespace_from_values = 18;</code>
+       * @return The stripProtectedWhitespaceFromValues.
        */
       public boolean getStripProtectedWhitespaceFromValues() {
         return stripProtectedWhitespaceFromValues_;
@@ -13886,6 +13904,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool strip_protected_whitespace_from_values = 18;</code>
+       * @param value The stripProtectedWhitespaceFromValues to set.
+       * @return This builder for chaining.
        */
       public Builder setStripProtectedWhitespaceFromValues(boolean value) {
         bitField0_ |= 0x00002000;
@@ -13893,13 +13913,13 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * If set, overrides behavior inherited from CsvSpecProtos.
        * </pre>
        *
        * <code>optional bool strip_protected_whitespace_from_values = 18;</code>
+       * @return This builder for chaining.
        */
       public Builder clearStripProtectedWhitespaceFromValues() {
         bitField0_ = (bitField0_ & ~0x00002000);
@@ -13910,8 +13930,7 @@ public final class GtfsSpecificationProto {
 
       private org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto columnCache_;
       private com.google.protobuf.SingleFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder> columnCacheBuilder_;
-
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder> columnCacheBuilder_;
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in this
@@ -13919,6 +13938,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.ColumnCacheProto column_cache = 19;</code>
+       * @return Whether the columnCache field is set.
        */
       public boolean hasColumnCache() {
         return ((bitField0_ & 0x00004000) != 0);
@@ -13930,6 +13950,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.ColumnCacheProto column_cache = 19;</code>
+       * @return The columnCache.
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto getColumnCache() {
         if (columnCacheBuilder_ == null) {
@@ -13938,7 +13959,6 @@ public final class GtfsSpecificationProto {
           return columnCacheBuilder_.getMessage();
         }
       }
-
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in this
@@ -13960,7 +13980,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00004000;
         return this;
       }
-
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in this
@@ -13970,7 +13989,7 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.ColumnCacheProto column_cache = 19;</code>
        */
       public Builder setColumnCache(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder builderForValue) {
         if (columnCacheBuilder_ == null) {
           columnCache_ = builderForValue.build();
           onChanged();
@@ -13980,7 +13999,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00004000;
         return this;
       }
-
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in this
@@ -13992,10 +14010,10 @@ public final class GtfsSpecificationProto {
       public Builder mergeColumnCache(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto value) {
         if (columnCacheBuilder_ == null) {
           if (((bitField0_ & 0x00004000) != 0) &&
-                  columnCache_ != null &&
-                  columnCache_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance()) {
+              columnCache_ != null &&
+              columnCache_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance()) {
             columnCache_ =
-                    org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.newBuilder(columnCache_).mergeFrom(value).buildPartial();
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.newBuilder(columnCache_).mergeFrom(value).buildPartial();
           } else {
             columnCache_ = value;
           }
@@ -14050,10 +14068,9 @@ public final class GtfsSpecificationProto {
           return columnCacheBuilder_.getMessageOrBuilder();
         } else {
           return columnCache_ == null ?
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance() : columnCache_;
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance() : columnCache_;
         }
       }
-
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in this
@@ -14063,11 +14080,11 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.ColumnCacheProto column_cache = 19;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder>
-      getColumnCacheFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder> 
+          getColumnCacheFieldBuilder() {
         if (columnCacheBuilder_ == null) {
           columnCacheBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder>(
                   getColumnCache(),
                   getParentForChildren(),
                   isClean());
@@ -14075,16 +14092,15 @@ public final class GtfsSpecificationProto {
         }
         return columnCacheBuilder_;
       }
-
       @java.lang.Override
       public final Builder setUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -14094,7 +14110,6 @@ public final class GtfsSpecificationProto {
 
     // @@protoc_insertion_point(class_scope:csvspec.CsvSpecProto)
     private static final org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto DEFAULT_INSTANCE;
-
     static {
       DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto();
     }
@@ -14103,14 +14118,13 @@ public final class GtfsSpecificationProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated
-    public static final com.google.protobuf.Parser<CsvSpecProto>
-            PARSER = new com.google.protobuf.AbstractParser<CsvSpecProto>() {
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<CsvSpecProto>
+        PARSER = new com.google.protobuf.AbstractParser<CsvSpecProto>() {
       @java.lang.Override
       public CsvSpecProto parsePartialFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws com.google.protobuf.InvalidProtocolBufferException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
         return new CsvSpecProto(input, extensionRegistry);
       }
     };
@@ -14132,8 +14146,8 @@ public final class GtfsSpecificationProto {
   }
 
   public interface CsvSpecProtosOrBuilder extends
-          // @@protoc_insertion_point(interface_extends:csvspec.CsvSpecProtos)
-          com.google.protobuf.MessageOrBuilder {
+      // @@protoc_insertion_point(interface_extends:csvspec.CsvSpecProtos)
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -14142,9 +14156,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string templatefile = 2;</code>
+     * @return Whether the templatefile field is set.
      */
     boolean hasTemplatefile();
-
     /**
      * <pre>
      * A template file to base this csv spec file on (see CsvSpecProto for
@@ -14152,9 +14166,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string templatefile = 2;</code>
+     * @return The templatefile.
      */
     java.lang.String getTemplatefile();
-
     /**
      * <pre>
      * A template file to base this csv spec file on (see CsvSpecProto for
@@ -14162,6 +14176,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string templatefile = 2;</code>
+     * @return The bytes for templatefile.
      */
     com.google.protobuf.ByteString
         getTemplatefileBytes();
@@ -14169,9 +14184,8 @@ public final class GtfsSpecificationProto {
     /**
      * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
      */
-    java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto>
-    getCsvspecList();
-
+    java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto> 
+        getCsvspecList();
     /**
      * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
      */
@@ -14180,18 +14194,16 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
      */
     int getCsvspecCount();
-
     /**
      * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
      */
-    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder>
-    getCsvspecOrBuilderList();
-
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder> 
+        getCsvspecOrBuilderList();
     /**
      * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder getCsvspecOrBuilder(
-            int index);
+        int index);
 
     /**
      * <pre>
@@ -14210,7 +14222,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.NamedValueProto namedvalue = 3;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto getNamedvalue(int index);
-
     /**
      * <pre>
      * Specifies names for certain values of columns of any of these csv specs.
@@ -14249,6 +14260,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool strip_protected_whitespace_from_values = 4 [default = false];</code>
+     * @return Whether the stripProtectedWhitespaceFromValues field is set.
      */
     boolean hasStripProtectedWhitespaceFromValues();
     /**
@@ -14262,6 +14274,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool strip_protected_whitespace_from_values = 4 [default = false];</code>
+     * @return The stripProtectedWhitespaceFromValues.
      */
     boolean getStripProtectedWhitespaceFromValues();
 
@@ -14272,9 +14285,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto column_cache = 5;</code>
+     * @return Whether the columnCache field is set.
      */
     boolean hasColumnCache();
-
     /**
      * <pre>
      * Define a default column-value caching strategy across all columns in all
@@ -14282,9 +14295,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto column_cache = 5;</code>
+     * @return The columnCache.
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto getColumnCache();
-
     /**
      * <pre>
      * Define a default column-value caching strategy across all columns in all
@@ -14295,21 +14308,18 @@ public final class GtfsSpecificationProto {
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProtoOrBuilder getColumnCacheOrBuilder();
   }
-
   /**
    * Protobuf type {@code csvspec.CsvSpecProtos}
    */
-  public static final class CsvSpecProtos extends
-          com.google.protobuf.GeneratedMessageV3 implements
-          // @@protoc_insertion_point(message_implements:csvspec.CsvSpecProtos)
-          CsvSpecProtosOrBuilder {
-    private static final long serialVersionUID = 0L;
-
+  public  static final class CsvSpecProtos extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:csvspec.CsvSpecProtos)
+      CsvSpecProtosOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use CsvSpecProtos.newBuilder() to construct.
     private CsvSpecProtos(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-
     private CsvSpecProtos() {
       templatefile_ = "";
       csvspec_ = java.util.Collections.emptyList();
@@ -14319,7 +14329,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
-            UnusedPrivateParameter unused) {
+        UnusedPrivateParameter unused) {
       return new CsvSpecProtos();
     }
 
@@ -14328,18 +14338,17 @@ public final class GtfsSpecificationProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-
     private CsvSpecProtos(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-              com.google.protobuf.UnknownFieldSet.newBuilder();
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -14403,7 +14412,7 @@ public final class GtfsSpecificationProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-                e).setUnfinishedMessage(this);
+            e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000002) != 0)) {
           csvspec_ = java.util.Collections.unmodifiableList(csvspec_);
@@ -14415,15 +14424,14 @@ public final class GtfsSpecificationProto {
         makeExtensionsImmutable();
       }
     }
-
     public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
+        getDescriptor() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvSpecProtos_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvSpecProtos_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos.Builder.class);
@@ -14439,11 +14447,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string templatefile = 2;</code>
+     * @return Whether the templatefile field is set.
      */
     public boolean hasTemplatefile() {
       return ((bitField0_ & 0x00000001) != 0);
     }
-
     /**
      * <pre>
      * A template file to base this csv spec file on (see CsvSpecProto for
@@ -14451,6 +14459,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string templatefile = 2;</code>
+     * @return The templatefile.
      */
     public java.lang.String getTemplatefile() {
       java.lang.Object ref = templatefile_;
@@ -14473,6 +14482,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string templatefile = 2;</code>
+     * @return The bytes for templatefile.
      */
     public com.google.protobuf.ByteString
         getTemplatefileBytes() {
@@ -14490,7 +14500,6 @@ public final class GtfsSpecificationProto {
 
     public static final int CSVSPEC_FIELD_NUMBER = 1;
     private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto> csvspec_;
-
     /**
      * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
      */
@@ -14500,11 +14509,10 @@ public final class GtfsSpecificationProto {
     /**
      * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
      */
-    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder>
-    getCsvspecOrBuilderList() {
+    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder> 
+        getCsvspecOrBuilderList() {
       return csvspec_;
     }
-
     /**
      * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
      */
@@ -14558,7 +14566,6 @@ public final class GtfsSpecificationProto {
     public int getNamedvalueCount() {
       return namedvalue_.size();
     }
-
     /**
      * <pre>
      * Specifies names for certain values of columns of any of these csv specs.
@@ -14577,13 +14584,12 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.NamedValueProto namedvalue = 3;</code>
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder getNamedvalueOrBuilder(
-            int index) {
+        int index) {
       return namedvalue_.get(index);
     }
 
     public static final int STRIP_PROTECTED_WHITESPACE_FROM_VALUES_FIELD_NUMBER = 4;
     private boolean stripProtectedWhitespaceFromValues_;
-
     /**
      * <pre>
      * If true, protected whitespace will be stripped from CSV values when they
@@ -14595,11 +14601,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool strip_protected_whitespace_from_values = 4 [default = false];</code>
+     * @return Whether the stripProtectedWhitespaceFromValues field is set.
      */
     public boolean hasStripProtectedWhitespaceFromValues() {
       return ((bitField0_ & 0x00000002) != 0);
     }
-
     /**
      * <pre>
      * If true, protected whitespace will be stripped from CSV values when they
@@ -14611,6 +14617,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional bool strip_protected_whitespace_from_values = 4 [default = false];</code>
+     * @return The stripProtectedWhitespaceFromValues.
      */
     public boolean getStripProtectedWhitespaceFromValues() {
       return stripProtectedWhitespaceFromValues_;
@@ -14618,7 +14625,6 @@ public final class GtfsSpecificationProto {
 
     public static final int COLUMN_CACHE_FIELD_NUMBER = 5;
     private org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto columnCache_;
-
     /**
      * <pre>
      * Define a default column-value caching strategy across all columns in all
@@ -14626,11 +14632,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto column_cache = 5;</code>
+     * @return Whether the columnCache field is set.
      */
     public boolean hasColumnCache() {
       return ((bitField0_ & 0x00000004) != 0);
     }
-
     /**
      * <pre>
      * Define a default column-value caching strategy across all columns in all
@@ -14638,11 +14644,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnCacheProto column_cache = 5;</code>
+     * @return The columnCache.
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto getColumnCache() {
       return columnCache_ == null ? org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance() : columnCache_;
     }
-
     /**
      * <pre>
      * Define a default column-value caching strategy across all columns in all
@@ -14656,7 +14662,6 @@ public final class GtfsSpecificationProto {
     }
 
     private byte memoizedIsInitialized = -1;
-
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -14681,7 +14686,7 @@ public final class GtfsSpecificationProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
+                        throws java.io.IOException {
       for (int i = 0; i < csvspec_.size(); i++) {
         output.writeMessage(1, csvspec_.get(i));
       }
@@ -14708,22 +14713,22 @@ public final class GtfsSpecificationProto {
       size = 0;
       for (int i = 0; i < csvspec_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(1, csvspec_.get(i));
+          .computeMessageSize(1, csvspec_.get(i));
       }
       if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, templatefile_);
       }
       for (int i = 0; i < namedvalue_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(3, namedvalue_.get(i));
+          .computeMessageSize(3, namedvalue_.get(i));
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeBoolSize(4, stripProtectedWhitespaceFromValues_);
+          .computeBoolSize(4, stripProtectedWhitespaceFromValues_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(5, getColumnCache());
+          .computeMessageSize(5, getColumnCache());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -14752,12 +14757,12 @@ public final class GtfsSpecificationProto {
       if (hasStripProtectedWhitespaceFromValues() != other.hasStripProtectedWhitespaceFromValues()) return false;
       if (hasStripProtectedWhitespaceFromValues()) {
         if (getStripProtectedWhitespaceFromValues()
-                != other.getStripProtectedWhitespaceFromValues()) return false;
+            != other.getStripProtectedWhitespaceFromValues()) return false;
       }
       if (hasColumnCache() != other.hasColumnCache()) return false;
       if (hasColumnCache()) {
         if (!getColumnCache()
-                .equals(other.getColumnCache())) return false;
+            .equals(other.getColumnCache())) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -14785,7 +14790,7 @@ public final class GtfsSpecificationProto {
       if (hasStripProtectedWhitespaceFromValues()) {
         hash = (37 * hash) + STRIP_PROTECTED_WHITESPACE_FROM_VALUES_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-                getStripProtectedWhitespaceFromValues());
+            getStripProtectedWhitespaceFromValues());
       }
       if (hasColumnCache()) {
         hash = (37 * hash) + COLUMN_CACHE_FIELD_NUMBER;
@@ -14815,67 +14820,59 @@ public final class GtfsSpecificationProto {
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseFrom(
-            com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() {
-      return newBuilder(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
@@ -14894,14 +14891,13 @@ public final class GtfsSpecificationProto {
       Builder builder = new Builder(parent);
       return builder;
     }
-
     /**
      * Protobuf type {@code csvspec.CsvSpecProtos}
      */
     public static final class Builder extends
-            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:csvspec.CsvSpecProtos)
-            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtosOrBuilder {
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:csvspec.CsvSpecProtos)
+        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtosOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvSpecProtos_descriptor;
@@ -14921,11 +14917,10 @@ public final class GtfsSpecificationProto {
       }
 
       private Builder(
-              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
-
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
@@ -14934,7 +14929,6 @@ public final class GtfsSpecificationProto {
           getColumnCacheFieldBuilder();
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -15031,44 +15025,38 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-
       @java.lang.Override
       public Builder setRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              int index, java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-
       @java.lang.Override
       public Builder addRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
-
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos) {
-          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos) other);
+          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos)other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -15076,8 +15064,7 @@ public final class GtfsSpecificationProto {
       }
 
       public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos other) {
-        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos.getDefaultInstance())
-          return this;
+        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos.getDefaultInstance()) return this;
         if (other.hasTemplatefile()) {
           bitField0_ |= 0x00000001;
           templatefile_ = other.templatefile_;
@@ -15101,9 +15088,9 @@ public final class GtfsSpecificationProto {
               csvspecBuilder_ = null;
               csvspec_ = other.csvspec_;
               bitField0_ = (bitField0_ & ~0x00000002);
-              csvspecBuilder_ =
-                      com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                              getCsvspecFieldBuilder() : null;
+              csvspecBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getCsvspecFieldBuilder() : null;
             } else {
               csvspecBuilder_.addAllMessages(other.csvspec_);
             }
@@ -15127,9 +15114,9 @@ public final class GtfsSpecificationProto {
               namedvalueBuilder_ = null;
               namedvalue_ = other.namedvalue_;
               bitField0_ = (bitField0_ & ~0x00000004);
-              namedvalueBuilder_ =
-                      com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                              getNamedvalueFieldBuilder() : null;
+              namedvalueBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getNamedvalueFieldBuilder() : null;
             } else {
               namedvalueBuilder_.addAllMessages(other.namedvalue_);
             }
@@ -15163,9 +15150,9 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public Builder mergeFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws java.io.IOException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
@@ -15189,6 +15176,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string templatefile = 2;</code>
+       * @return Whether the templatefile field is set.
        */
       public boolean hasTemplatefile() {
         return ((bitField0_ & 0x00000001) != 0);
@@ -15200,12 +15188,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string templatefile = 2;</code>
+       * @return The templatefile.
        */
       public java.lang.String getTemplatefile() {
         java.lang.Object ref = templatefile_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             templatefile_ = s;
@@ -15215,7 +15204,6 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <pre>
        * A template file to base this csv spec file on (see CsvSpecProto for
@@ -15223,21 +15211,21 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string templatefile = 2;</code>
+       * @return The bytes for templatefile.
        */
       public com.google.protobuf.ByteString
-      getTemplatefileBytes() {
+          getTemplatefileBytes() {
         java.lang.Object ref = templatefile_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
           templatefile_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
-
       /**
        * <pre>
        * A template file to base this csv spec file on (see CsvSpecProto for
@@ -15245,18 +15233,19 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string templatefile = 2;</code>
+       * @param value The templatefile to set.
+       * @return This builder for chaining.
        */
       public Builder setTemplatefile(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         templatefile_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * A template file to base this csv spec file on (see CsvSpecProto for
@@ -15264,6 +15253,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string templatefile = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearTemplatefile() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -15271,7 +15261,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * A template file to base this csv spec file on (see CsvSpecProto for
@@ -15279,30 +15268,31 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string templatefile = 2;</code>
+       * @param value The bytes for templatefile to set.
+       * @return This builder for chaining.
        */
       public Builder setTemplatefileBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         templatefile_ = value;
         onChanged();
         return this;
       }
 
       private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto> csvspec_ =
-              java.util.Collections.emptyList();
-
+        java.util.Collections.emptyList();
       private void ensureCsvspecIsMutable() {
         if (!((bitField0_ & 0x00000002) != 0)) {
           csvspec_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto>(csvspec_);
           bitField0_ |= 0x00000002;
-        }
+         }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder> csvspecBuilder_;
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder> csvspecBuilder_;
 
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
@@ -15314,7 +15304,6 @@ public final class GtfsSpecificationProto {
           return csvspecBuilder_.getMessageList();
         }
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
@@ -15325,7 +15314,6 @@ public final class GtfsSpecificationProto {
           return csvspecBuilder_.getCount();
         }
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
@@ -15336,7 +15324,6 @@ public final class GtfsSpecificationProto {
           return csvspecBuilder_.getMessage(index);
         }
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
@@ -15354,12 +15341,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
       public Builder setCsvspec(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder builderForValue) {
         if (csvspecBuilder_ == null) {
           ensureCsvspecIsMutable();
           csvspec_.set(index, builderForValue.build());
@@ -15369,7 +15355,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
@@ -15386,12 +15371,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
       public Builder addCsvspec(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto value) {
         if (csvspecBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -15404,12 +15388,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
       public Builder addCsvspec(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder builderForValue) {
         if (csvspecBuilder_ == null) {
           ensureCsvspecIsMutable();
           csvspec_.add(builderForValue.build());
@@ -15419,12 +15402,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
       public Builder addCsvspec(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder builderForValue) {
         if (csvspecBuilder_ == null) {
           ensureCsvspecIsMutable();
           csvspec_.add(index, builderForValue.build());
@@ -15434,23 +15416,21 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
       public Builder addAllCsvspec(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto> values) {
         if (csvspecBuilder_ == null) {
           ensureCsvspecIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, csvspec_);
+              values, csvspec_);
           onChanged();
         } else {
           csvspecBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
@@ -15464,7 +15444,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
@@ -15478,32 +15457,28 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder getCsvspecBuilder(
-              int index) {
+          int index) {
         return getCsvspecFieldBuilder().getBuilder(index);
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder getCsvspecOrBuilder(
-              int index) {
+          int index) {
         if (csvspecBuilder_ == null) {
-          return csvspec_.get(index);
-        } else {
+          return csvspec_.get(index);  } else {
           return csvspecBuilder_.getMessageOrBuilder(index);
         }
       }
-
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
-      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder>
-      getCsvspecOrBuilderList() {
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder> 
+           getCsvspecOrBuilderList() {
         if (csvspecBuilder_ != null) {
           return csvspecBuilder_.getMessageOrBuilderList();
         } else {
@@ -15528,17 +15503,16 @@ public final class GtfsSpecificationProto {
       /**
        * <code>repeated .csvspec.CsvSpecProto csvspec = 1;</code>
        */
-      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder>
-      getCsvspecBuilderList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder> 
+           getCsvspecBuilderList() {
         return getCsvspecFieldBuilder().getBuilderList();
       }
-
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder>
-      getCsvspecFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder> 
+          getCsvspecFieldBuilder() {
         if (csvspecBuilder_ == null) {
           csvspecBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtoOrBuilder>(
                   csvspec_,
                   ((bitField0_ & 0x00000002) != 0),
                   getParentForChildren(),
@@ -15549,17 +15523,16 @@ public final class GtfsSpecificationProto {
       }
 
       private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto> namedvalue_ =
-              java.util.Collections.emptyList();
-
+        java.util.Collections.emptyList();
       private void ensureNamedvalueIsMutable() {
         if (!((bitField0_ & 0x00000004) != 0)) {
           namedvalue_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto>(namedvalue_);
           bitField0_ |= 0x00000004;
-        }
+         }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> namedvalueBuilder_;
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> namedvalueBuilder_;
 
       /**
        * <pre>
@@ -15575,7 +15548,6 @@ public final class GtfsSpecificationProto {
           return namedvalueBuilder_.getMessageList();
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15590,7 +15562,6 @@ public final class GtfsSpecificationProto {
           return namedvalueBuilder_.getCount();
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15605,7 +15576,6 @@ public final class GtfsSpecificationProto {
           return namedvalueBuilder_.getMessage(index);
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15614,7 +15584,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 3;</code>
        */
       public Builder setNamedvalue(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto value) {
         if (namedvalueBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -15722,7 +15692,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15735,14 +15704,13 @@ public final class GtfsSpecificationProto {
         if (namedvalueBuilder_ == null) {
           ensureNamedvalueIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, namedvalue_);
+              values, namedvalue_);
           onChanged();
         } else {
           namedvalueBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15760,7 +15728,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15778,7 +15745,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15787,10 +15753,9 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 3;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder getNamedvalueBuilder(
-              int index) {
+          int index) {
         return getNamedvalueFieldBuilder().getBuilder(index);
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15799,14 +15764,12 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 3;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder getNamedvalueOrBuilder(
-              int index) {
+          int index) {
         if (namedvalueBuilder_ == null) {
-          return namedvalue_.get(index);
-        } else {
+          return namedvalue_.get(index);  } else {
           return namedvalueBuilder_.getMessageOrBuilder(index);
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15814,15 +15777,14 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.NamedValueProto namedvalue = 3;</code>
        */
-      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>
-      getNamedvalueOrBuilderList() {
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> 
+           getNamedvalueOrBuilderList() {
         if (namedvalueBuilder_ != null) {
           return namedvalueBuilder_.getMessageOrBuilderList();
         } else {
           return java.util.Collections.unmodifiableList(namedvalue_);
         }
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15842,11 +15804,10 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.NamedValueProto namedvalue = 3;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder addNamedvalueBuilder(
-              int index) {
+          int index) {
         return getNamedvalueFieldBuilder().addBuilder(
-                index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.getDefaultInstance());
+            index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * Specifies names for certain values of columns of any of these csv specs.
@@ -15854,17 +15815,16 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.NamedValueProto namedvalue = 3;</code>
        */
-      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder>
-      getNamedvalueBuilderList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder> 
+           getNamedvalueBuilderList() {
         return getNamedvalueFieldBuilder().getBuilderList();
       }
-
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>
-      getNamedvalueFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder> 
+          getNamedvalueFieldBuilder() {
         if (namedvalueBuilder_ == null) {
           namedvalueBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.NamedValueProtoOrBuilder>(
                   namedvalue_,
                   ((bitField0_ & 0x00000004) != 0),
                   getParentForChildren(),
@@ -15874,8 +15834,7 @@ public final class GtfsSpecificationProto {
         return namedvalueBuilder_;
       }
 
-      private boolean stripProtectedWhitespaceFromValues_;
-
+      private boolean stripProtectedWhitespaceFromValues_ ;
       /**
        * <pre>
        * If true, protected whitespace will be stripped from CSV values when they
@@ -15887,11 +15846,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool strip_protected_whitespace_from_values = 4 [default = false];</code>
+       * @return Whether the stripProtectedWhitespaceFromValues field is set.
        */
       public boolean hasStripProtectedWhitespaceFromValues() {
         return ((bitField0_ & 0x00000008) != 0);
       }
-
       /**
        * <pre>
        * If true, protected whitespace will be stripped from CSV values when they
@@ -15903,11 +15862,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool strip_protected_whitespace_from_values = 4 [default = false];</code>
+       * @return The stripProtectedWhitespaceFromValues.
        */
       public boolean getStripProtectedWhitespaceFromValues() {
         return stripProtectedWhitespaceFromValues_;
       }
-
       /**
        * <pre>
        * If true, protected whitespace will be stripped from CSV values when they
@@ -15919,6 +15878,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool strip_protected_whitespace_from_values = 4 [default = false];</code>
+       * @param value The stripProtectedWhitespaceFromValues to set.
+       * @return This builder for chaining.
        */
       public Builder setStripProtectedWhitespaceFromValues(boolean value) {
         bitField0_ |= 0x00000008;
@@ -15937,6 +15898,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional bool strip_protected_whitespace_from_values = 4 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearStripProtectedWhitespaceFromValues() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -15955,6 +15917,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.ColumnCacheProto column_cache = 5;</code>
+       * @return Whether the columnCache field is set.
        */
       public boolean hasColumnCache() {
         return ((bitField0_ & 0x00000010) != 0);
@@ -15966,6 +15929,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.ColumnCacheProto column_cache = 5;</code>
+       * @return The columnCache.
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto getColumnCache() {
         if (columnCacheBuilder_ == null) {
@@ -15974,7 +15938,6 @@ public final class GtfsSpecificationProto {
           return columnCacheBuilder_.getMessage();
         }
       }
-
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in all
@@ -15996,7 +15959,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000010;
         return this;
       }
-
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in all
@@ -16006,7 +15968,7 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.ColumnCacheProto column_cache = 5;</code>
        */
       public Builder setColumnCache(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.Builder builderForValue) {
         if (columnCacheBuilder_ == null) {
           columnCache_ = builderForValue.build();
           onChanged();
@@ -16016,7 +15978,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000010;
         return this;
       }
-
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in all
@@ -16042,7 +16003,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000010;
         return this;
       }
-
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in all
@@ -16074,7 +16034,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return getColumnCacheFieldBuilder().getBuilder();
       }
-
       /**
        * <pre>
        * Define a default column-value caching strategy across all columns in all
@@ -16088,7 +16047,7 @@ public final class GtfsSpecificationProto {
           return columnCacheBuilder_.getMessageOrBuilder();
         } else {
           return columnCache_ == null ?
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance() : columnCache_;
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnCacheProto.getDefaultInstance() : columnCache_;
         }
       }
       /**
@@ -16130,7 +16089,6 @@ public final class GtfsSpecificationProto {
 
     // @@protoc_insertion_point(class_scope:csvspec.CsvSpecProtos)
     private static final org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos DEFAULT_INSTANCE;
-
     static {
       DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvSpecProtos();
     }
@@ -16139,14 +16097,13 @@ public final class GtfsSpecificationProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated
-    public static final com.google.protobuf.Parser<CsvSpecProtos>
-            PARSER = new com.google.protobuf.AbstractParser<CsvSpecProtos>() {
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<CsvSpecProtos>
+        PARSER = new com.google.protobuf.AbstractParser<CsvSpecProtos>() {
       @java.lang.Override
       public CsvSpecProtos parsePartialFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws com.google.protobuf.InvalidProtocolBufferException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
         return new CsvSpecProtos(input, extensionRegistry);
       }
     };
@@ -16168,8 +16125,8 @@ public final class GtfsSpecificationProto {
   }
 
   public interface CsvErrorColumnProtoOrBuilder extends
-          // @@protoc_insertion_point(interface_extends:csvspec.CsvErrorColumnProto)
-          com.google.protobuf.MessageOrBuilder {
+      // @@protoc_insertion_point(interface_extends:csvspec.CsvErrorColumnProto)
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -16177,15 +16134,16 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional int32 index = 1;</code>
+     * @return Whether the index field is set.
      */
     boolean hasIndex();
-
     /**
      * <pre>
      * The index of the column.
      * </pre>
      *
      * <code>optional int32 index = 1;</code>
+     * @return The index.
      */
     int getIndex();
 
@@ -16195,15 +16153,16 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional int32 type = 2;</code>
+     * @return Whether the type field is set.
      */
     boolean hasType();
-
     /**
      * <pre>
      * The type of the column.
      * </pre>
      *
      * <code>optional int32 type = 2;</code>
+     * @return The type.
      */
     int getType();
 
@@ -16214,6 +16173,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string originalname = 3;</code>
+     * @return Whether the originalname field is set.
      */
     boolean hasOriginalname();
     /**
@@ -16223,6 +16183,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string originalname = 3;</code>
+     * @return The originalname.
      */
     java.lang.String getOriginalname();
     /**
@@ -16232,6 +16193,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string originalname = 3;</code>
+     * @return The bytes for originalname.
      */
     com.google.protobuf.ByteString
         getOriginalnameBytes();
@@ -16242,6 +16204,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnSpecProto colspec = 4;</code>
+     * @return Whether the colspec field is set.
      */
     boolean hasColspec();
     /**
@@ -16250,6 +16213,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.ColumnSpecProto colspec = 4;</code>
+     * @return The colspec.
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto getColspec();
     /**
@@ -16264,17 +16228,15 @@ public final class GtfsSpecificationProto {
   /**
    * Protobuf type {@code csvspec.CsvErrorColumnProto}
    */
-  public static final class CsvErrorColumnProto extends
-          com.google.protobuf.GeneratedMessageV3 implements
+  public  static final class CsvErrorColumnProto extends
+      com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:csvspec.CsvErrorColumnProto)
       CsvErrorColumnProtoOrBuilder {
   private static final long serialVersionUID = 0L;
-
     // Use CsvErrorColumnProto.newBuilder() to construct.
     private CsvErrorColumnProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-
     private CsvErrorColumnProto() {
       originalname_ = "";
     }
@@ -16282,7 +16244,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
-            UnusedPrivateParameter unused) {
+        UnusedPrivateParameter unused) {
       return new CsvErrorColumnProto();
     }
 
@@ -16301,7 +16263,7 @@ public final class GtfsSpecificationProto {
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-              com.google.protobuf.UnknownFieldSet.newBuilder();
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -16341,7 +16303,7 @@ public final class GtfsSpecificationProto {
             }
             default: {
               if (!parseUnknownField(
-                      input, unknownFields, extensionRegistry, tag)) {
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -16352,47 +16314,46 @@ public final class GtfsSpecificationProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-                e).setUnfinishedMessage(this);
+            e).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
-
     public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
+        getDescriptor() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorColumnProto_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorColumnProto_fieldAccessorTable
-              .ensureFieldAccessorsInitialized(
-                      org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder.class);
+          .ensureFieldAccessorsInitialized(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder.class);
     }
 
     private int bitField0_;
     public static final int INDEX_FIELD_NUMBER = 1;
     private int index_;
-
     /**
      * <pre>
      * The index of the column.
      * </pre>
      *
      * <code>optional int32 index = 1;</code>
+     * @return Whether the index field is set.
      */
     public boolean hasIndex() {
       return ((bitField0_ & 0x00000001) != 0);
     }
-
     /**
      * <pre>
      * The index of the column.
      * </pre>
      *
      * <code>optional int32 index = 1;</code>
+     * @return The index.
      */
     public int getIndex() {
       return index_;
@@ -16400,24 +16361,24 @@ public final class GtfsSpecificationProto {
 
     public static final int TYPE_FIELD_NUMBER = 2;
     private int type_;
-
     /**
      * <pre>
      * The type of the column.
      * </pre>
      *
      * <code>optional int32 type = 2;</code>
+     * @return Whether the type field is set.
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000002) != 0);
     }
-
     /**
      * <pre>
      * The type of the column.
      * </pre>
      *
      * <code>optional int32 type = 2;</code>
+     * @return The type.
      */
     public int getType() {
       return type_;
@@ -16425,7 +16386,6 @@ public final class GtfsSpecificationProto {
 
     public static final int ORIGINALNAME_FIELD_NUMBER = 3;
     private volatile java.lang.Object originalname_;
-
     /**
      * <pre>
      * The original name of the column. This may be empty, if the input file does
@@ -16433,11 +16393,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string originalname = 3;</code>
+     * @return Whether the originalname field is set.
      */
     public boolean hasOriginalname() {
       return ((bitField0_ & 0x00000004) != 0);
     }
-
     /**
      * <pre>
      * The original name of the column. This may be empty, if the input file does
@@ -16445,14 +16405,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string originalname = 3;</code>
+     * @return The originalname.
      */
     public java.lang.String getOriginalname() {
       java.lang.Object ref = originalname_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
           originalname_ = s;
@@ -16460,7 +16421,6 @@ public final class GtfsSpecificationProto {
         return s;
       }
     }
-
     /**
      * <pre>
      * The original name of the column. This may be empty, if the input file does
@@ -16468,9 +16428,10 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string originalname = 3;</code>
+     * @return The bytes for originalname.
      */
     public com.google.protobuf.ByteString
-    getOriginalnameBytes() {
+        getOriginalnameBytes() {
       java.lang.Object ref = originalname_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
@@ -16485,29 +16446,28 @@ public final class GtfsSpecificationProto {
 
     public static final int COLSPEC_FIELD_NUMBER = 4;
     private org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto colspec_;
-
     /**
      * <pre>
      * The original column spec for this column.
      * </pre>
      *
      * <code>optional .csvspec.ColumnSpecProto colspec = 4;</code>
+     * @return Whether the colspec field is set.
      */
     public boolean hasColspec() {
       return ((bitField0_ & 0x00000008) != 0);
     }
-
     /**
      * <pre>
      * The original column spec for this column.
      * </pre>
      *
      * <code>optional .csvspec.ColumnSpecProto colspec = 4;</code>
+     * @return The colspec.
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto getColspec() {
       return colspec_ == null ? org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.getDefaultInstance() : colspec_;
     }
-
     /**
      * <pre>
      * The original column spec for this column.
@@ -16520,7 +16480,6 @@ public final class GtfsSpecificationProto {
     }
 
     private byte memoizedIsInitialized = -1;
-
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -16563,18 +16522,18 @@ public final class GtfsSpecificationProto {
       size = 0;
       if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeInt32Size(1, index_);
+          .computeInt32Size(1, index_);
       }
       if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeInt32Size(2, type_);
+          .computeInt32Size(2, type_);
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, originalname_);
       }
       if (((bitField0_ & 0x00000008) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(4, getColspec());
+          .computeMessageSize(4, getColspec());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -16584,7 +16543,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-        return true;
+       return true;
       }
       if (!(obj instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto)) {
         return super.equals(obj);
@@ -16609,7 +16568,7 @@ public final class GtfsSpecificationProto {
       if (hasColspec() != other.hasColspec()) return false;
       if (hasColspec()) {
         if (!getColspec()
-                .equals(other.getColspec())) return false;
+            .equals(other.getColspec())) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -16644,26 +16603,23 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto parseFrom(
-            com.google.protobuf.ByteString data,
+        com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
@@ -16672,24 +16628,21 @@ public final class GtfsSpecificationProto {
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto parseFrom(
-            java.io.InputStream input,
+        java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
@@ -16765,7 +16718,7 @@ public final class GtfsSpecificationProto {
       }
 
       private Builder(
-              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -16775,7 +16728,6 @@ public final class GtfsSpecificationProto {
           getColspecFieldBuilder();
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -16848,44 +16800,38 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-
       @java.lang.Override
       public Builder setRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              int index, java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-
       @java.lang.Override
       public Builder addRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
-
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto) {
-          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto) other);
+          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto)other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -16893,8 +16839,7 @@ public final class GtfsSpecificationProto {
       }
 
       public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto other) {
-        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.getDefaultInstance())
-          return this;
+        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.getDefaultInstance()) return this;
         if (other.hasIndex()) {
           setIndex(other.getIndex());
         }
@@ -16926,9 +16871,9 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public Builder mergeFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws java.io.IOException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
@@ -16942,39 +16887,39 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       private int bitField0_;
 
-      private int index_;
-
+      private int index_ ;
       /**
        * <pre>
        * The index of the column.
        * </pre>
        *
        * <code>optional int32 index = 1;</code>
+       * @return Whether the index field is set.
        */
       public boolean hasIndex() {
         return ((bitField0_ & 0x00000001) != 0);
       }
-
       /**
        * <pre>
        * The index of the column.
        * </pre>
        *
        * <code>optional int32 index = 1;</code>
+       * @return The index.
        */
       public int getIndex() {
         return index_;
       }
-
       /**
        * <pre>
        * The index of the column.
        * </pre>
        *
        * <code>optional int32 index = 1;</code>
+       * @param value The index to set.
+       * @return This builder for chaining.
        */
       public Builder setIndex(int value) {
         bitField0_ |= 0x00000001;
@@ -16982,13 +16927,13 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The index of the column.
        * </pre>
        *
        * <code>optional int32 index = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearIndex() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -16997,25 +16942,25 @@ public final class GtfsSpecificationProto {
         return this;
       }
 
-      private int type_;
-
+      private int type_ ;
       /**
        * <pre>
        * The type of the column.
        * </pre>
        *
        * <code>optional int32 type = 2;</code>
+       * @return Whether the type field is set.
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000002) != 0);
       }
-
       /**
        * <pre>
        * The type of the column.
        * </pre>
        *
        * <code>optional int32 type = 2;</code>
+       * @return The type.
        */
       public int getType() {
         return type_;
@@ -17026,6 +16971,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional int32 type = 2;</code>
+       * @param value The type to set.
+       * @return This builder for chaining.
        */
       public Builder setType(int value) {
         bitField0_ |= 0x00000002;
@@ -17033,13 +16980,13 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The type of the column.
        * </pre>
        *
        * <code>optional int32 type = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -17049,7 +16996,6 @@ public final class GtfsSpecificationProto {
       }
 
       private java.lang.Object originalname_ = "";
-
       /**
        * <pre>
        * The original name of the column. This may be empty, if the input file does
@@ -17057,11 +17003,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string originalname = 3;</code>
+       * @return Whether the originalname field is set.
        */
       public boolean hasOriginalname() {
         return ((bitField0_ & 0x00000004) != 0);
       }
-
       /**
        * <pre>
        * The original name of the column. This may be empty, if the input file does
@@ -17069,12 +17015,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string originalname = 3;</code>
+       * @return The originalname.
        */
       public java.lang.String getOriginalname() {
         java.lang.Object ref = originalname_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             originalname_ = s;
@@ -17084,7 +17031,6 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <pre>
        * The original name of the column. This may be empty, if the input file does
@@ -17092,6 +17038,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string originalname = 3;</code>
+       * @return The bytes for originalname.
        */
       public com.google.protobuf.ByteString
           getOriginalnameBytes() {
@@ -17106,7 +17053,6 @@ public final class GtfsSpecificationProto {
           return (com.google.protobuf.ByteString) ref;
         }
       }
-
       /**
        * <pre>
        * The original name of the column. This may be empty, if the input file does
@@ -17114,18 +17060,19 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string originalname = 3;</code>
+       * @param value The originalname to set.
+       * @return This builder for chaining.
        */
       public Builder setOriginalname(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000004;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         originalname_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The original name of the column. This may be empty, if the input file does
@@ -17133,6 +17080,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string originalname = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOriginalname() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -17140,7 +17088,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The original name of the column. This may be empty, if the input file does
@@ -17148,13 +17095,15 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string originalname = 3;</code>
+       * @param value The bytes for originalname to set.
+       * @return This builder for chaining.
        */
       public Builder setOriginalnameBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000004;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         originalname_ = value;
         onChanged();
         return this;
@@ -17163,24 +17112,24 @@ public final class GtfsSpecificationProto {
       private org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto colspec_;
       private com.google.protobuf.SingleFieldBuilderV3<
           org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder> colspecBuilder_;
-
       /**
        * <pre>
        * The original column spec for this column.
        * </pre>
        *
        * <code>optional .csvspec.ColumnSpecProto colspec = 4;</code>
+       * @return Whether the colspec field is set.
        */
       public boolean hasColspec() {
         return ((bitField0_ & 0x00000008) != 0);
       }
-
       /**
        * <pre>
        * The original column spec for this column.
        * </pre>
        *
        * <code>optional .csvspec.ColumnSpecProto colspec = 4;</code>
+       * @return The colspec.
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto getColspec() {
         if (colspecBuilder_ == null) {
@@ -17189,7 +17138,6 @@ public final class GtfsSpecificationProto {
           return colspecBuilder_.getMessage();
         }
       }
-
       /**
        * <pre>
        * The original column spec for this column.
@@ -17252,7 +17200,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000008;
         return this;
       }
-
       /**
        * <pre>
        * The original column spec for this column.
@@ -17282,7 +17229,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return getColspecFieldBuilder().getBuilder();
       }
-
       /**
        * <pre>
        * The original column spec for this column.
@@ -17295,10 +17241,9 @@ public final class GtfsSpecificationProto {
           return colspecBuilder_.getMessageOrBuilder();
         } else {
           return colspec_ == null ?
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.getDefaultInstance() : colspec_;
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.getDefaultInstance() : colspec_;
         }
       }
-
       /**
        * <pre>
        * The original column spec for this column.
@@ -17307,11 +17252,11 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.ColumnSpecProto colspec = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder>
-      getColspecFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder> 
+          getColspecFieldBuilder() {
         if (colspecBuilder_ == null) {
           colspecBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.ColumnSpecProtoOrBuilder>(
                   getColspec(),
                   getParentForChildren(),
                   isClean());
@@ -17319,16 +17264,15 @@ public final class GtfsSpecificationProto {
         }
         return colspecBuilder_;
       }
-
       @java.lang.Override
       public final Builder setUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -17338,7 +17282,6 @@ public final class GtfsSpecificationProto {
 
     // @@protoc_insertion_point(class_scope:csvspec.CsvErrorColumnProto)
     private static final org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto DEFAULT_INSTANCE;
-
     static {
       DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto();
     }
@@ -17347,14 +17290,13 @@ public final class GtfsSpecificationProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated
-    public static final com.google.protobuf.Parser<CsvErrorColumnProto>
-            PARSER = new com.google.protobuf.AbstractParser<CsvErrorColumnProto>() {
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<CsvErrorColumnProto>
+        PARSER = new com.google.protobuf.AbstractParser<CsvErrorColumnProto>() {
       @java.lang.Override
       public CsvErrorColumnProto parsePartialFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws com.google.protobuf.InvalidProtocolBufferException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
         return new CsvErrorColumnProto(input, extensionRegistry);
       }
     };
@@ -17376,8 +17318,8 @@ public final class GtfsSpecificationProto {
   }
 
   public interface CsvErrorLinesProtoOrBuilder extends
-          // @@protoc_insertion_point(interface_extends:csvspec.CsvErrorLinesProto)
-          com.google.protobuf.MessageOrBuilder {
+      // @@protoc_insertion_point(interface_extends:csvspec.CsvErrorLinesProto)
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <pre>
@@ -17387,9 +17329,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required int32 startline = 1;</code>
+     * @return Whether the startline field is set.
      */
     boolean hasStartline();
-
     /**
      * <pre>
      * The interval is given from startline to endline, inclusive. A one line
@@ -17398,41 +17340,40 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required int32 startline = 1;</code>
+     * @return The startline.
      */
     int getStartline();
 
     /**
      * <code>optional int32 endline = 2;</code>
+     * @return Whether the endline field is set.
      */
     boolean hasEndline();
-
     /**
      * <code>optional int32 endline = 2;</code>
+     * @return The endline.
      */
     int getEndline();
   }
-
   /**
    * Protobuf type {@code csvspec.CsvErrorLinesProto}
    */
-  public static final class CsvErrorLinesProto extends
-          com.google.protobuf.GeneratedMessageV3 implements
-          // @@protoc_insertion_point(message_implements:csvspec.CsvErrorLinesProto)
-          CsvErrorLinesProtoOrBuilder {
-    private static final long serialVersionUID = 0L;
-
+  public  static final class CsvErrorLinesProto extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:csvspec.CsvErrorLinesProto)
+      CsvErrorLinesProtoOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use CsvErrorLinesProto.newBuilder() to construct.
     private CsvErrorLinesProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-
     private CsvErrorLinesProto() {
     }
 
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
-            UnusedPrivateParameter unused) {
+        UnusedPrivateParameter unused) {
       return new CsvErrorLinesProto();
     }
 
@@ -17441,18 +17382,17 @@ public final class GtfsSpecificationProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-
     private CsvErrorLinesProto(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-              com.google.protobuf.UnknownFieldSet.newBuilder();
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -17473,7 +17413,7 @@ public final class GtfsSpecificationProto {
             }
             default: {
               if (!parseUnknownField(
-                      input, unknownFields, extensionRegistry, tag)) {
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -17484,7 +17424,7 @@ public final class GtfsSpecificationProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-                e).setUnfinishedMessage(this);
+            e).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -17506,7 +17446,6 @@ public final class GtfsSpecificationProto {
     private int bitField0_;
     public static final int STARTLINE_FIELD_NUMBER = 1;
     private int startline_;
-
     /**
      * <pre>
      * The interval is given from startline to endline, inclusive. A one line
@@ -17515,11 +17454,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required int32 startline = 1;</code>
+     * @return Whether the startline field is set.
      */
     public boolean hasStartline() {
       return ((bitField0_ & 0x00000001) != 0);
     }
-
     /**
      * <pre>
      * The interval is given from startline to endline, inclusive. A one line
@@ -17528,6 +17467,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required int32 startline = 1;</code>
+     * @return The startline.
      */
     public int getStartline() {
       return startline_;
@@ -17535,23 +17475,22 @@ public final class GtfsSpecificationProto {
 
     public static final int ENDLINE_FIELD_NUMBER = 2;
     private int endline_;
-
     /**
      * <code>optional int32 endline = 2;</code>
+     * @return Whether the endline field is set.
      */
     public boolean hasEndline() {
       return ((bitField0_ & 0x00000002) != 0);
     }
-
     /**
      * <code>optional int32 endline = 2;</code>
+     * @return The endline.
      */
     public int getEndline() {
       return endline_;
     }
 
     private byte memoizedIsInitialized = -1;
-
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -17568,7 +17507,7 @@ public final class GtfsSpecificationProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
+                        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeInt32(1, startline_);
       }
@@ -17610,12 +17549,12 @@ public final class GtfsSpecificationProto {
       if (hasStartline() != other.hasStartline()) return false;
       if (hasStartline()) {
         if (getStartline()
-                != other.getStartline()) return false;
+            != other.getStartline()) return false;
       }
       if (hasEndline() != other.hasEndline()) return false;
       if (hasEndline()) {
         if (getEndline()
-                != other.getEndline()) return false;
+            != other.getEndline()) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -17642,15 +17581,14 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto parseFrom(
@@ -17684,7 +17622,7 @@ public final class GtfsSpecificationProto {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
@@ -17694,35 +17632,29 @@ public final class GtfsSpecificationProto {
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() {
-      return newBuilder();
-    }
-
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-
     public static Builder newBuilder(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
@@ -17746,7 +17678,7 @@ public final class GtfsSpecificationProto {
         // @@protoc_insertion_point(builder_implements:csvspec.CsvErrorLinesProto)
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
+          getDescriptor() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorLinesProto_descriptor;
       }
 
@@ -17825,26 +17757,22 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-
       @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
@@ -17890,9 +17818,9 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public Builder mergeFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws java.io.IOException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
@@ -17906,11 +17834,9 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       private int bitField0_;
 
-      private int startline_;
-
+      private int startline_ ;
       /**
        * <pre>
        * The interval is given from startline to endline, inclusive. A one line
@@ -17919,11 +17845,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required int32 startline = 1;</code>
+       * @return Whether the startline field is set.
        */
       public boolean hasStartline() {
         return ((bitField0_ & 0x00000001) != 0);
       }
-
       /**
        * <pre>
        * The interval is given from startline to endline, inclusive. A one line
@@ -17932,6 +17858,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required int32 startline = 1;</code>
+       * @return The startline.
        */
       public int getStartline() {
         return startline_;
@@ -17944,6 +17871,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required int32 startline = 1;</code>
+       * @param value The startline to set.
+       * @return This builder for chaining.
        */
       public Builder setStartline(int value) {
         bitField0_ |= 0x00000001;
@@ -17959,6 +17888,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>required int32 startline = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearStartline() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -17967,24 +17897,25 @@ public final class GtfsSpecificationProto {
         return this;
       }
 
-      private int endline_;
-
+      private int endline_ ;
       /**
        * <code>optional int32 endline = 2;</code>
+       * @return Whether the endline field is set.
        */
       public boolean hasEndline() {
         return ((bitField0_ & 0x00000002) != 0);
       }
-
       /**
        * <code>optional int32 endline = 2;</code>
+       * @return The endline.
        */
       public int getEndline() {
         return endline_;
       }
-
       /**
        * <code>optional int32 endline = 2;</code>
+       * @param value The endline to set.
+       * @return This builder for chaining.
        */
       public Builder setEndline(int value) {
         bitField0_ |= 0x00000002;
@@ -17992,9 +17923,9 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <code>optional int32 endline = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearEndline() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -18002,16 +17933,15 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       @java.lang.Override
       public final Builder setUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -18021,7 +17951,6 @@ public final class GtfsSpecificationProto {
 
     // @@protoc_insertion_point(class_scope:csvspec.CsvErrorLinesProto)
     private static final org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto DEFAULT_INSTANCE;
-
     static {
       DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto();
     }
@@ -18058,7 +17987,7 @@ public final class GtfsSpecificationProto {
   }
 
   public interface CsvErrorLocationProtoOrBuilder extends
-          // @@protoc_insertion_point(interface_extends:csvspec.CsvErrorLocationProto)
+      // @@protoc_insertion_point(interface_extends:csvspec.CsvErrorLocationProto)
       com.google.protobuf.MessageOrBuilder {
 
     /**
@@ -18067,6 +17996,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvname = 1;</code>
+     * @return Whether the csvname field is set.
      */
     boolean hasCsvname();
     /**
@@ -18075,6 +18005,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvname = 1;</code>
+     * @return The csvname.
      */
     java.lang.String getCsvname();
     /**
@@ -18083,6 +18014,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvname = 1;</code>
+     * @return The bytes for csvname.
      */
     com.google.protobuf.ByteString
         getCsvnameBytes();
@@ -18094,9 +18026,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvfilename = 2;</code>
+     * @return Whether the csvfilename field is set.
      */
     boolean hasCsvfilename();
-
     /**
      * <pre>
      * The filename of the csv table where the error is located. This is only
@@ -18104,9 +18036,9 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvfilename = 2;</code>
+     * @return The csvfilename.
      */
     java.lang.String getCsvfilename();
-
     /**
      * <pre>
      * The filename of the csv table where the error is located. This is only
@@ -18114,6 +18046,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvfilename = 2;</code>
+     * @return The bytes for csvfilename.
      */
     com.google.protobuf.ByteString
         getCsvfilenameBytes();
@@ -18125,6 +18058,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string keyname = 3;</code>
+     * @return Whether the keyname field is set.
      */
     boolean hasKeyname();
     /**
@@ -18134,6 +18068,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string keyname = 3;</code>
+     * @return The keyname.
      */
     java.lang.String getKeyname();
     /**
@@ -18143,6 +18078,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string keyname = 3;</code>
+     * @return The bytes for keyname.
      */
     com.google.protobuf.ByteString
         getKeynameBytes();
@@ -18164,7 +18100,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto getColumn(int index);
-
     /**
      * <pre>
      * The columns of the key.
@@ -18173,7 +18108,6 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
      */
     int getColumnCount();
-
     /**
      * <pre>
      * The columns of the key.
@@ -18181,9 +18115,8 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
      */
-    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder>
-    getColumnOrBuilderList();
-
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder> 
+        getColumnOrBuilderList();
     /**
      * <pre>
      * The columns of the key.
@@ -18192,7 +18125,7 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder getColumnOrBuilder(
-            int index);
+        int index);
 
     /**
      * <pre>
@@ -18203,6 +18136,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 linenumber = 5;</code>
+     * @return A list containing the linenumber.
      */
     java.util.List<java.lang.Integer> getLinenumberList();
     /**
@@ -18214,6 +18148,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 linenumber = 5;</code>
+     * @return The count of linenumber.
      */
     int getLinenumberCount();
     /**
@@ -18225,6 +18160,8 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 linenumber = 5;</code>
+     * @param index The index of the element to return.
+     * @return The linenumber at the given index.
      */
     int getLinenumber(int index);
 
@@ -18285,6 +18222,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 row = 7;</code>
+     * @return A list containing the row.
      */
     java.util.List<java.lang.Integer> getRowList();
     /**
@@ -18295,6 +18233,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 row = 7;</code>
+     * @return The count of row.
      */
     int getRowCount();
     /**
@@ -18305,6 +18244,8 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 row = 7;</code>
+     * @param index The index of the element to return.
+     * @return The row at the given index.
      */
     int getRow(int index);
   }
@@ -18315,13 +18256,11 @@ public final class GtfsSpecificationProto {
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:csvspec.CsvErrorLocationProto)
       CsvErrorLocationProtoOrBuilder {
-    private static final long serialVersionUID = 0L;
-
+  private static final long serialVersionUID = 0L;
     // Use CsvErrorLocationProto.newBuilder() to construct.
     private CsvErrorLocationProto(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-
     private CsvErrorLocationProto() {
       csvname_ = "";
       csvfilename_ = "";
@@ -18335,7 +18274,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
-            UnusedPrivateParameter unused) {
+        UnusedPrivateParameter unused) {
       return new CsvErrorLocationProto();
     }
 
@@ -18344,18 +18283,17 @@ public final class GtfsSpecificationProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-
     private CsvErrorLocationProto(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-              com.google.protobuf.UnknownFieldSet.newBuilder();
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -18388,7 +18326,7 @@ public final class GtfsSpecificationProto {
                 mutable_bitField0_ |= 0x00000008;
               }
               column_.add(
-                      input.readMessage(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.PARSER, extensionRegistry));
+                  input.readMessage(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.PARSER, extensionRegistry));
               break;
             }
             case 40: {
@@ -18444,7 +18382,7 @@ public final class GtfsSpecificationProto {
             }
             default: {
               if (!parseUnknownField(
-                      input, unknownFields, extensionRegistry, tag)) {
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -18455,7 +18393,7 @@ public final class GtfsSpecificationProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-                e).setUnfinishedMessage(this);
+            e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000008) != 0)) {
           column_ = java.util.Collections.unmodifiableList(column_);
@@ -18473,41 +18411,40 @@ public final class GtfsSpecificationProto {
         makeExtensionsImmutable();
       }
     }
-
     public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
+        getDescriptor() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorLocationProto_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorLocationProto_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder.class);
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder.class);
     }
 
     private int bitField0_;
     public static final int CSVNAME_FIELD_NUMBER = 1;
     private volatile java.lang.Object csvname_;
-
     /**
      * <pre>
      * The alias of the csv table where the error is located.
      * </pre>
      *
      * <code>optional string csvname = 1;</code>
+     * @return Whether the csvname field is set.
      */
     public boolean hasCsvname() {
       return ((bitField0_ & 0x00000001) != 0);
     }
-
     /**
      * <pre>
      * The alias of the csv table where the error is located.
      * </pre>
      *
      * <code>optional string csvname = 1;</code>
+     * @return The csvname.
      */
     public java.lang.String getCsvname() {
       java.lang.Object ref = csvname_;
@@ -18529,6 +18466,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvname = 1;</code>
+     * @return The bytes for csvname.
      */
     public com.google.protobuf.ByteString
         getCsvnameBytes() {
@@ -18546,7 +18484,6 @@ public final class GtfsSpecificationProto {
 
     public static final int CSVFILENAME_FIELD_NUMBER = 2;
     private volatile java.lang.Object csvfilename_;
-
     /**
      * <pre>
      * The filename of the csv table where the error is located. This is only
@@ -18554,11 +18491,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvfilename = 2;</code>
+     * @return Whether the csvfilename field is set.
      */
     public boolean hasCsvfilename() {
       return ((bitField0_ & 0x00000002) != 0);
     }
-
     /**
      * <pre>
      * The filename of the csv table where the error is located. This is only
@@ -18566,6 +18503,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvfilename = 2;</code>
+     * @return The csvfilename.
      */
     public java.lang.String getCsvfilename() {
       java.lang.Object ref = csvfilename_;
@@ -18588,6 +18526,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string csvfilename = 2;</code>
+     * @return The bytes for csvfilename.
      */
     public com.google.protobuf.ByteString
         getCsvfilenameBytes() {
@@ -18605,7 +18544,6 @@ public final class GtfsSpecificationProto {
 
     public static final int KEYNAME_FIELD_NUMBER = 3;
     private volatile java.lang.Object keyname_;
-
     /**
      * <pre>
      * The name given in the csvspec to the key (or column, since each column also
@@ -18613,6 +18551,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string keyname = 3;</code>
+     * @return Whether the keyname field is set.
      */
     public boolean hasKeyname() {
       return ((bitField0_ & 0x00000004) != 0);
@@ -18624,14 +18563,15 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string keyname = 3;</code>
+     * @return The keyname.
      */
     public java.lang.String getKeyname() {
       java.lang.Object ref = keyname_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
           keyname_ = s;
@@ -18646,6 +18586,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional string keyname = 3;</code>
+     * @return The bytes for keyname.
      */
     public com.google.protobuf.ByteString
         getKeynameBytes() {
@@ -18712,13 +18653,12 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder getColumnOrBuilder(
-            int index) {
+        int index) {
       return column_.get(index);
     }
 
     public static final int LINENUMBER_FIELD_NUMBER = 5;
     private com.google.protobuf.Internal.IntList linenumber_;
-
     /**
      * <pre>
      * A list of lines in the source csv file that all have this error. The first
@@ -18728,12 +18668,12 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 linenumber = 5;</code>
+     * @return A list containing the linenumber.
      */
     public java.util.List<java.lang.Integer>
-    getLinenumberList() {
+        getLinenumberList() {
       return linenumber_;
     }
-
     /**
      * <pre>
      * A list of lines in the source csv file that all have this error. The first
@@ -18743,11 +18683,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 linenumber = 5;</code>
+     * @return The count of linenumber.
      */
     public int getLinenumberCount() {
       return linenumber_.size();
     }
-
     /**
      * <pre>
      * A list of lines in the source csv file that all have this error. The first
@@ -18757,6 +18697,8 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 linenumber = 5;</code>
+     * @param index The index of the element to return.
+     * @return The linenumber at the given index.
      */
     public int getLinenumber(int index) {
       return linenumber_.getInt(index);
@@ -18764,7 +18706,6 @@ public final class GtfsSpecificationProto {
 
     public static final int LINERANGE_FIELD_NUMBER = 6;
     private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto> linerange_;
-
     /**
      * <pre>
      * A list of line ranges in the source csv that all have this error. The
@@ -18776,7 +18717,6 @@ public final class GtfsSpecificationProto {
     public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto> getLinerangeList() {
       return linerange_;
     }
-
     /**
      * <pre>
      * A list of line ranges in the source csv that all have this error. The
@@ -18785,11 +18725,10 @@ public final class GtfsSpecificationProto {
      *
      * <code>repeated .csvspec.CsvErrorLinesProto linerange = 6;</code>
      */
-    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProtoOrBuilder>
-    getLinerangeOrBuilderList() {
+    public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProtoOrBuilder> 
+        getLinerangeOrBuilderList() {
       return linerange_;
     }
-
     /**
      * <pre>
      * A list of line ranges in the source csv that all have this error. The
@@ -18801,7 +18740,6 @@ public final class GtfsSpecificationProto {
     public int getLinerangeCount() {
       return linerange_.size();
     }
-
     /**
      * <pre>
      * A list of line ranges in the source csv that all have this error. The
@@ -18813,7 +18751,6 @@ public final class GtfsSpecificationProto {
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto getLinerange(int index) {
       return linerange_.get(index);
     }
-
     /**
      * <pre>
      * A list of line ranges in the source csv that all have this error. The
@@ -18823,13 +18760,12 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.CsvErrorLinesProto linerange = 6;</code>
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProtoOrBuilder getLinerangeOrBuilder(
-            int index) {
+        int index) {
       return linerange_.get(index);
     }
 
     public static final int ROW_FIELD_NUMBER = 7;
     private com.google.protobuf.Internal.IntList row_;
-
     /**
      * <pre>
      * A list of rows in the source CsvParser data table that all have this
@@ -18838,12 +18774,12 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 row = 7;</code>
+     * @return A list containing the row.
      */
     public java.util.List<java.lang.Integer>
-    getRowList() {
+        getRowList() {
       return row_;
     }
-
     /**
      * <pre>
      * A list of rows in the source CsvParser data table that all have this
@@ -18852,11 +18788,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 row = 7;</code>
+     * @return The count of row.
      */
     public int getRowCount() {
       return row_.size();
     }
-
     /**
      * <pre>
      * A list of rows in the source CsvParser data table that all have this
@@ -18865,13 +18801,14 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>repeated int32 row = 7;</code>
+     * @param index The index of the element to return.
+     * @return The row at the given index.
      */
     public int getRow(int index) {
       return row_.getInt(index);
     }
 
     private byte memoizedIsInitialized = -1;
-
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -18896,7 +18833,7 @@ public final class GtfsSpecificationProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
+                        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, csvname_);
       }
@@ -18938,26 +18875,26 @@ public final class GtfsSpecificationProto {
       }
       for (int i = 0; i < column_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(4, column_.get(i));
+          .computeMessageSize(4, column_.get(i));
       }
       {
         int dataSize = 0;
         for (int i = 0; i < linenumber_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-                  .computeInt32SizeNoTag(linenumber_.getInt(i));
+            .computeInt32SizeNoTag(linenumber_.getInt(i));
         }
         size += dataSize;
         size += 1 * getLinenumberList().size();
       }
       for (int i = 0; i < linerange_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(6, linerange_.get(i));
+          .computeMessageSize(6, linerange_.get(i));
       }
       {
         int dataSize = 0;
         for (int i = 0; i < row_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-                  .computeInt32SizeNoTag(row_.getInt(i));
+            .computeInt32SizeNoTag(row_.getInt(i));
         }
         size += dataSize;
         size += 1 * getRowList().size();
@@ -18970,7 +18907,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-        return true;
+       return true;
       }
       if (!(obj instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto)) {
         return super.equals(obj);
@@ -19049,24 +18986,21 @@ public final class GtfsSpecificationProto {
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto parseFrom(byte[] data)
@@ -19079,13 +19013,11 @@ public final class GtfsSpecificationProto {
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -19103,14 +19035,13 @@ public final class GtfsSpecificationProto {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto parseFrom(
         com.google.protobuf.CodedInputStream input,
@@ -19136,18 +19067,17 @@ public final class GtfsSpecificationProto {
 
     @java.lang.Override
     protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
-
     /**
      * Protobuf type {@code csvspec.CsvErrorLocationProto}
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:csvspec.CsvErrorLocationProto)
-            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder {
+        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorLocationProto_descriptor;
@@ -19171,7 +19101,6 @@ public final class GtfsSpecificationProto {
         super(parent);
         maybeForceBuilderInitialization();
       }
-
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
@@ -19179,7 +19108,6 @@ public final class GtfsSpecificationProto {
           getLinerangeFieldBuilder();
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -19282,7 +19210,6 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
@@ -19296,21 +19223,19 @@ public final class GtfsSpecificationProto {
       }
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-
       @java.lang.Override
       public Builder setRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              int index, java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-
       @java.lang.Override
       public Builder addRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
       @java.lang.Override
@@ -19358,9 +19283,9 @@ public final class GtfsSpecificationProto {
               columnBuilder_ = null;
               column_ = other.column_;
               bitField0_ = (bitField0_ & ~0x00000008);
-              columnBuilder_ =
-                      com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                              getColumnFieldBuilder() : null;
+              columnBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getColumnFieldBuilder() : null;
             } else {
               columnBuilder_.addAllMessages(other.column_);
             }
@@ -19394,9 +19319,9 @@ public final class GtfsSpecificationProto {
               linerangeBuilder_ = null;
               linerange_ = other.linerange_;
               bitField0_ = (bitField0_ & ~0x00000020);
-              linerangeBuilder_ =
-                      com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                              getLinerangeFieldBuilder() : null;
+              linerangeBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getLinerangeFieldBuilder() : null;
             } else {
               linerangeBuilder_.addAllMessages(other.linerange_);
             }
@@ -19434,9 +19359,9 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public Builder mergeFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws java.io.IOException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
@@ -19450,34 +19375,33 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       private int bitField0_;
 
       private java.lang.Object csvname_ = "";
-
       /**
        * <pre>
        * The alias of the csv table where the error is located.
        * </pre>
        *
        * <code>optional string csvname = 1;</code>
+       * @return Whether the csvname field is set.
        */
       public boolean hasCsvname() {
         return ((bitField0_ & 0x00000001) != 0);
       }
-
       /**
        * <pre>
        * The alias of the csv table where the error is located.
        * </pre>
        *
        * <code>optional string csvname = 1;</code>
+       * @return The csvname.
        */
       public java.lang.String getCsvname() {
         java.lang.Object ref = csvname_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             csvname_ = s;
@@ -19487,52 +19411,53 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <pre>
        * The alias of the csv table where the error is located.
        * </pre>
        *
        * <code>optional string csvname = 1;</code>
+       * @return The bytes for csvname.
        */
       public com.google.protobuf.ByteString
-      getCsvnameBytes() {
+          getCsvnameBytes() {
         java.lang.Object ref = csvname_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
           csvname_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
-
       /**
        * <pre>
        * The alias of the csv table where the error is located.
        * </pre>
        *
        * <code>optional string csvname = 1;</code>
+       * @param value The csvname to set.
+       * @return This builder for chaining.
        */
       public Builder setCsvname(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         csvname_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The alias of the csv table where the error is located.
        * </pre>
        *
        * <code>optional string csvname = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearCsvname() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -19540,27 +19465,27 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The alias of the csv table where the error is located.
        * </pre>
        *
        * <code>optional string csvname = 1;</code>
+       * @param value The bytes for csvname to set.
+       * @return This builder for chaining.
        */
       public Builder setCsvnameBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000001;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         csvname_ = value;
         onChanged();
         return this;
       }
 
       private java.lang.Object csvfilename_ = "";
-
       /**
        * <pre>
        * The filename of the csv table where the error is located. This is only
@@ -19568,11 +19493,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string csvfilename = 2;</code>
+       * @return Whether the csvfilename field is set.
        */
       public boolean hasCsvfilename() {
         return ((bitField0_ & 0x00000002) != 0);
       }
-
       /**
        * <pre>
        * The filename of the csv table where the error is located. This is only
@@ -19580,12 +19505,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string csvfilename = 2;</code>
+       * @return The csvfilename.
        */
       public java.lang.String getCsvfilename() {
         java.lang.Object ref = csvfilename_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             csvfilename_ = s;
@@ -19595,7 +19521,6 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <pre>
        * The filename of the csv table where the error is located. This is only
@@ -19603,14 +19528,15 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string csvfilename = 2;</code>
+       * @return The bytes for csvfilename.
        */
       public com.google.protobuf.ByteString
-      getCsvfilenameBytes() {
+          getCsvfilenameBytes() {
         java.lang.Object ref = csvfilename_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
           csvfilename_ = b;
           return b;
         } else {
@@ -19624,6 +19550,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string csvfilename = 2;</code>
+       * @param value The csvfilename to set.
+       * @return This builder for chaining.
        */
       public Builder setCsvfilename(
           java.lang.String value) {
@@ -19642,6 +19570,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string csvfilename = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearCsvfilename() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -19649,7 +19578,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The filename of the csv table where the error is located. This is only
@@ -19657,20 +19585,21 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string csvfilename = 2;</code>
+       * @param value The bytes for csvfilename to set.
+       * @return This builder for chaining.
        */
       public Builder setCsvfilenameBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000002;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         csvfilename_ = value;
         onChanged();
         return this;
       }
 
       private java.lang.Object keyname_ = "";
-
       /**
        * <pre>
        * The name given in the csvspec to the key (or column, since each column also
@@ -19678,11 +19607,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string keyname = 3;</code>
+       * @return Whether the keyname field is set.
        */
       public boolean hasKeyname() {
         return ((bitField0_ & 0x00000004) != 0);
       }
-
       /**
        * <pre>
        * The name given in the csvspec to the key (or column, since each column also
@@ -19690,12 +19619,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string keyname = 3;</code>
+       * @return The keyname.
        */
       public java.lang.String getKeyname() {
         java.lang.Object ref = keyname_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
-                  (com.google.protobuf.ByteString) ref;
+              (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
             keyname_ = s;
@@ -19705,7 +19635,6 @@ public final class GtfsSpecificationProto {
           return (java.lang.String) ref;
         }
       }
-
       /**
        * <pre>
        * The name given in the csvspec to the key (or column, since each column also
@@ -19713,21 +19642,21 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string keyname = 3;</code>
+       * @return The bytes for keyname.
        */
       public com.google.protobuf.ByteString
-      getKeynameBytes() {
+          getKeynameBytes() {
         java.lang.Object ref = keyname_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
           keyname_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
-
       /**
        * <pre>
        * The name given in the csvspec to the key (or column, since each column also
@@ -19735,18 +19664,19 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string keyname = 3;</code>
+       * @param value The keyname to set.
+       * @return This builder for chaining.
        */
       public Builder setKeyname(
-              java.lang.String value) {
+          java.lang.String value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000004;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         keyname_ = value;
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The name given in the csvspec to the key (or column, since each column also
@@ -19754,6 +19684,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string keyname = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearKeyname() {
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -19768,26 +19699,27 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional string keyname = 3;</code>
+       * @param value The bytes for keyname to set.
+       * @return This builder for chaining.
        */
       public Builder setKeynameBytes(
-              com.google.protobuf.ByteString value) {
+          com.google.protobuf.ByteString value) {
         if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000004;
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         keyname_ = value;
         onChanged();
         return this;
       }
 
       private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto> column_ =
-              java.util.Collections.emptyList();
-
+        java.util.Collections.emptyList();
       private void ensureColumnIsMutable() {
         if (!((bitField0_ & 0x00000008) != 0)) {
           column_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto>(column_);
           bitField0_ |= 0x00000008;
-        }
+         }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
@@ -19807,7 +19739,6 @@ public final class GtfsSpecificationProto {
           return columnBuilder_.getMessageList();
         }
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -19822,7 +19753,6 @@ public final class GtfsSpecificationProto {
           return columnBuilder_.getCount();
         }
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -19845,7 +19775,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
       public Builder setColumn(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto value) {
         if (columnBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -19858,7 +19788,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -19867,7 +19796,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
       public Builder setColumn(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder builderForValue) {
         if (columnBuilder_ == null) {
           ensureColumnIsMutable();
           column_.set(index, builderForValue.build());
@@ -19877,7 +19806,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -19898,7 +19826,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -19907,7 +19834,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
       public Builder addColumn(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto value) {
         if (columnBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -19920,7 +19847,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -19929,7 +19855,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
       public Builder addColumn(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder builderForValue) {
         if (columnBuilder_ == null) {
           ensureColumnIsMutable();
           column_.add(builderForValue.build());
@@ -19947,7 +19873,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
       public Builder addColumn(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder builderForValue) {
         if (columnBuilder_ == null) {
           ensureColumnIsMutable();
           column_.add(index, builderForValue.build());
@@ -19957,7 +19883,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -19966,18 +19891,17 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
       public Builder addAllColumn(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto> values) {
         if (columnBuilder_ == null) {
           ensureColumnIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, column_);
+              values, column_);
           onChanged();
         } else {
           columnBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -19995,7 +19919,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -20013,7 +19936,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -20022,10 +19944,9 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder getColumnBuilder(
-              int index) {
+          int index) {
         return getColumnFieldBuilder().getBuilder(index);
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -20034,14 +19955,12 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder getColumnOrBuilder(
-              int index) {
+          int index) {
         if (columnBuilder_ == null) {
-          return column_.get(index);
-        } else {
+          return column_.get(index);  } else {
           return columnBuilder_.getMessageOrBuilder(index);
         }
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -20049,15 +19968,14 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
-      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder>
-      getColumnOrBuilderList() {
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder> 
+           getColumnOrBuilderList() {
         if (columnBuilder_ != null) {
           return columnBuilder_.getMessageOrBuilderList();
         } else {
           return java.util.Collections.unmodifiableList(column_);
         }
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -20067,9 +19985,8 @@ public final class GtfsSpecificationProto {
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder addColumnBuilder() {
         return getColumnFieldBuilder().addBuilder(
-                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.getDefaultInstance());
+            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -20078,11 +19995,10 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder addColumnBuilder(
-              int index) {
+          int index) {
         return getColumnFieldBuilder().addBuilder(
-                index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.getDefaultInstance());
+            index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * The columns of the key.
@@ -20090,17 +20006,16 @@ public final class GtfsSpecificationProto {
        *
        * <code>repeated .csvspec.CsvErrorColumnProto column = 4;</code>
        */
-      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder>
-      getColumnBuilderList() {
+      public java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder> 
+           getColumnBuilderList() {
         return getColumnFieldBuilder().getBuilderList();
       }
-
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder>
-      getColumnFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder> 
+          getColumnFieldBuilder() {
         if (columnBuilder_ == null) {
           columnBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorColumnProtoOrBuilder>(
                   column_,
                   ((bitField0_ & 0x00000008) != 0),
                   getParentForChildren(),
@@ -20126,13 +20041,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 linenumber = 5;</code>
+       * @return A list containing the linenumber.
        */
       public java.util.List<java.lang.Integer>
-      getLinenumberList() {
+          getLinenumberList() {
         return ((bitField0_ & 0x00000010) != 0) ?
-                java.util.Collections.unmodifiableList(linenumber_) : linenumber_;
+                 java.util.Collections.unmodifiableList(linenumber_) : linenumber_;
       }
-
       /**
        * <pre>
        * A list of lines in the source csv file that all have this error. The first
@@ -20142,11 +20057,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 linenumber = 5;</code>
+       * @return The count of linenumber.
        */
       public int getLinenumberCount() {
         return linenumber_.size();
       }
-
       /**
        * <pre>
        * A list of lines in the source csv file that all have this error. The first
@@ -20156,11 +20071,12 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 linenumber = 5;</code>
+       * @param index The index of the element to return.
+       * @return The linenumber at the given index.
        */
       public int getLinenumber(int index) {
         return linenumber_.getInt(index);
       }
-
       /**
        * <pre>
        * A list of lines in the source csv file that all have this error. The first
@@ -20170,15 +20086,17 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 linenumber = 5;</code>
+       * @param index The index to set the value at.
+       * @param value The linenumber to set.
+       * @return This builder for chaining.
        */
       public Builder setLinenumber(
-              int index, int value) {
+          int index, int value) {
         ensureLinenumberIsMutable();
         linenumber_.setInt(index, value);
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * A list of lines in the source csv file that all have this error. The first
@@ -20188,6 +20106,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 linenumber = 5;</code>
+       * @param value The linenumber to add.
+       * @return This builder for chaining.
        */
       public Builder addLinenumber(int value) {
         ensureLinenumberIsMutable();
@@ -20195,7 +20115,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * A list of lines in the source csv file that all have this error. The first
@@ -20205,16 +20124,17 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 linenumber = 5;</code>
+       * @param values The linenumber to add.
+       * @return This builder for chaining.
        */
       public Builder addAllLinenumber(
-              java.lang.Iterable<? extends java.lang.Integer> values) {
+          java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureLinenumberIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                values, linenumber_);
+            values, linenumber_);
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * A list of lines in the source csv file that all have this error. The first
@@ -20224,6 +20144,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 linenumber = 5;</code>
+       * @return This builder for chaining.
        */
       public Builder clearLinenumber() {
         linenumber_ = emptyIntList();
@@ -20233,17 +20154,16 @@ public final class GtfsSpecificationProto {
       }
 
       private java.util.List<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto> linerange_ =
-              java.util.Collections.emptyList();
-
+        java.util.Collections.emptyList();
       private void ensureLinerangeIsMutable() {
         if (!((bitField0_ & 0x00000020) != 0)) {
           linerange_ = new java.util.ArrayList<org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto>(linerange_);
           bitField0_ |= 0x00000020;
-        }
+         }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProtoOrBuilder> linerangeBuilder_;
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProtoOrBuilder> linerangeBuilder_;
 
       /**
        * <pre>
@@ -20352,7 +20272,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * A list of line ranges in the source csv that all have this error. The
@@ -20362,7 +20281,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorLinesProto linerange = 6;</code>
        */
       public Builder addLinerange(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto value) {
         if (linerangeBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -20403,7 +20322,7 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorLinesProto linerange = 6;</code>
        */
       public Builder addLinerange(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.Builder builderForValue) {
         if (linerangeBuilder_ == null) {
           ensureLinerangeIsMutable();
           linerange_.add(index, builderForValue.build());
@@ -20422,18 +20341,17 @@ public final class GtfsSpecificationProto {
        * <code>repeated .csvspec.CsvErrorLinesProto linerange = 6;</code>
        */
       public Builder addAllLinerange(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto> values) {
         if (linerangeBuilder_ == null) {
           ensureLinerangeIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, linerange_);
+              values, linerange_);
           onChanged();
         } else {
           linerangeBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <pre>
        * A list of line ranges in the source csv that all have this error. The
@@ -20452,7 +20370,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <pre>
        * A list of line ranges in the source csv that all have this error. The
@@ -20514,7 +20431,6 @@ public final class GtfsSpecificationProto {
           return java.util.Collections.unmodifiableList(linerange_);
         }
       }
-
       /**
        * <pre>
        * A list of line ranges in the source csv that all have this error. The
@@ -20525,7 +20441,7 @@ public final class GtfsSpecificationProto {
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.Builder addLinerangeBuilder() {
         return getLinerangeFieldBuilder().addBuilder(
-                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.getDefaultInstance());
+            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.getDefaultInstance());
       }
       /**
        * <pre>
@@ -20540,7 +20456,6 @@ public final class GtfsSpecificationProto {
         return getLinerangeFieldBuilder().addBuilder(
             index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.getDefaultInstance());
       }
-
       /**
        * <pre>
        * A list of line ranges in the source csv that all have this error. The
@@ -20558,7 +20473,7 @@ public final class GtfsSpecificationProto {
           getLinerangeFieldBuilder() {
         if (linerangeBuilder_ == null) {
           linerangeBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLinesProtoOrBuilder>(
                   linerange_,
                   ((bitField0_ & 0x00000020) != 0),
                   getParentForChildren(),
@@ -20569,14 +20484,12 @@ public final class GtfsSpecificationProto {
       }
 
       private com.google.protobuf.Internal.IntList row_ = emptyIntList();
-
       private void ensureRowIsMutable() {
         if (!((bitField0_ & 0x00000040) != 0)) {
           row_ = mutableCopy(row_);
           bitField0_ |= 0x00000040;
-        }
+         }
       }
-
       /**
        * <pre>
        * A list of rows in the source CsvParser data table that all have this
@@ -20585,13 +20498,13 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 row = 7;</code>
+       * @return A list containing the row.
        */
       public java.util.List<java.lang.Integer>
-      getRowList() {
+          getRowList() {
         return ((bitField0_ & 0x00000040) != 0) ?
-                java.util.Collections.unmodifiableList(row_) : row_;
+                 java.util.Collections.unmodifiableList(row_) : row_;
       }
-
       /**
        * <pre>
        * A list of rows in the source CsvParser data table that all have this
@@ -20600,6 +20513,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 row = 7;</code>
+       * @return The count of row.
        */
       public int getRowCount() {
         return row_.size();
@@ -20612,6 +20526,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 row = 7;</code>
+       * @param index The index of the element to return.
+       * @return The row at the given index.
        */
       public int getRow(int index) {
         return row_.getInt(index);
@@ -20624,6 +20540,9 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 row = 7;</code>
+       * @param index The index to set the value at.
+       * @param value The row to set.
+       * @return This builder for chaining.
        */
       public Builder setRow(
           int index, int value) {
@@ -20640,6 +20559,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 row = 7;</code>
+       * @param value The row to add.
+       * @return This builder for chaining.
        */
       public Builder addRow(int value) {
         ensureRowIsMutable();
@@ -20655,6 +20576,8 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 row = 7;</code>
+       * @param values The row to add.
+       * @return This builder for chaining.
        */
       public Builder addAllRow(
           java.lang.Iterable<? extends java.lang.Integer> values) {
@@ -20672,6 +20595,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>repeated int32 row = 7;</code>
+       * @return This builder for chaining.
        */
       public Builder clearRow() {
         row_ = emptyIntList();
@@ -20742,6 +20666,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required .csvspec.CsvErrorProto.ErrorType errortype = 1;</code>
+     * @return Whether the errortype field is set.
      */
     boolean hasErrortype();
     /**
@@ -20750,6 +20675,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>required .csvspec.CsvErrorProto.ErrorType errortype = 1;</code>
+     * @return The errortype.
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.ErrorType getErrortype();
 
@@ -20760,6 +20686,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.CsvErrorLocationProto location = 2;</code>
+     * @return Whether the location field is set.
      */
     boolean hasLocation();
     /**
@@ -20769,6 +20696,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.CsvErrorLocationProto location = 2;</code>
+     * @return The location.
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto getLocation();
     /**
@@ -20788,6 +20716,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.CsvErrorLocationProto otherlocation = 3;</code>
+     * @return Whether the otherlocation field is set.
      */
     boolean hasOtherlocation();
     /**
@@ -20797,6 +20726,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.CsvErrorLocationProto otherlocation = 3;</code>
+     * @return The otherlocation.
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto getOtherlocation();
     /**
@@ -20896,7 +20826,7 @@ public final class GtfsSpecificationProto {
             }
             default: {
               if (!parseUnknownField(
-                      input, unknownFields, extensionRegistry, tag)) {
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -20907,31 +20837,30 @@ public final class GtfsSpecificationProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-                e).setUnfinishedMessage(this);
+            e).setUnfinishedMessage(this);
       } finally {
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
     }
-
     public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
+        getDescriptor() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorProto_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorProto_fieldAccessorTable
-              .ensureFieldAccessorsInitialized(
-                      org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder.class);
+          .ensureFieldAccessorsInitialized(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder.class);
     }
 
     /**
      * Protobuf enum {@code csvspec.CsvErrorProto.ErrorType}
      */
     public enum ErrorType
-            implements com.google.protobuf.ProtocolMessageEnum {
+        implements com.google.protobuf.ProtocolMessageEnum {
       /**
        * <pre>
        * The table file is missing.
@@ -21320,6 +21249,8 @@ public final class GtfsSpecificationProto {
       }
 
       /**
+       * @param value The numeric wire value of the corresponding enum entry.
+       * @return The enum associated with the given numeric wire value.
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
@@ -21327,92 +21258,70 @@ public final class GtfsSpecificationProto {
         return forNumber(value);
       }
 
+      /**
+       * @param value The numeric wire value of the corresponding enum entry.
+       * @return The enum associated with the given numeric wire value.
+       */
       public static ErrorType forNumber(int value) {
         switch (value) {
-          case 10:
-            return MISSING_TABLE;
-          case 20:
-            return SPLITTING_ERROR;
-          case 21:
-            return CONTAINS_NULL_CHARACTER;
-          case 22:
-            return UTF8_CONVERSION_ERROR;
-          case 23:
-            return INVALID_UTF8;
-          case 24:
-            return DUPLICATE_COLUMN_NAME;
-          case 25:
-            return BAD_NUMBER_OF_VALUES;
-          case 26:
-            return FILE_CORRUPTED;
-          case 27:
-            return UNEXPECTED_LOCATION;
-          case 30:
-            return MISSING_COLUMN;
-          case 31:
-            return MISSING_KEY;
-          case 40:
-            return UNSORTED;
-          case 41:
-            return NON_CONTIGUOUS;
-          case 42:
-            return BAD_NUMBER_OF_ROWS;
-          case 50:
-            return VALUE_ERROR;
-          case 51:
-            return REGEXP_MISMATCH;
-          case 52:
-            return OUT_OF_RANGE;
-          case 53:
-            return MISSING_VALUE;
-          case 61:
-            return MISSING_KEY_DATA;
-          case 62:
-            return DUPLICATE_KEY_VALUE;
-          case 63:
-            return MISSING_KEY_TABLE;
-          case 64:
-            return FILE_TOO_LARGE;
-          default:
-            return null;
+          case 10: return MISSING_TABLE;
+          case 20: return SPLITTING_ERROR;
+          case 21: return CONTAINS_NULL_CHARACTER;
+          case 22: return UTF8_CONVERSION_ERROR;
+          case 23: return INVALID_UTF8;
+          case 24: return DUPLICATE_COLUMN_NAME;
+          case 25: return BAD_NUMBER_OF_VALUES;
+          case 26: return FILE_CORRUPTED;
+          case 27: return UNEXPECTED_LOCATION;
+          case 30: return MISSING_COLUMN;
+          case 31: return MISSING_KEY;
+          case 40: return UNSORTED;
+          case 41: return NON_CONTIGUOUS;
+          case 42: return BAD_NUMBER_OF_ROWS;
+          case 50: return VALUE_ERROR;
+          case 51: return REGEXP_MISMATCH;
+          case 52: return OUT_OF_RANGE;
+          case 53: return MISSING_VALUE;
+          case 61: return MISSING_KEY_DATA;
+          case 62: return DUPLICATE_KEY_VALUE;
+          case 63: return MISSING_KEY_TABLE;
+          case 64: return FILE_TOO_LARGE;
+          default: return null;
         }
       }
 
       public static com.google.protobuf.Internal.EnumLiteMap<ErrorType>
-      internalGetValueMap() {
+          internalGetValueMap() {
         return internalValueMap;
       }
-
       private static final com.google.protobuf.Internal.EnumLiteMap<
-              ErrorType> internalValueMap =
-              new com.google.protobuf.Internal.EnumLiteMap<ErrorType>() {
-                public ErrorType findValueByNumber(int number) {
-                  return ErrorType.forNumber(number);
-                }
-              };
+          ErrorType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<ErrorType>() {
+              public ErrorType findValueByNumber(int number) {
+                return ErrorType.forNumber(number);
+              }
+            };
 
       public final com.google.protobuf.Descriptors.EnumValueDescriptor
-      getValueDescriptor() {
+          getValueDescriptor() {
         return getDescriptor().getValues().get(ordinal());
       }
-
       public final com.google.protobuf.Descriptors.EnumDescriptor
-      getDescriptorForType() {
+          getDescriptorForType() {
         return getDescriptor();
       }
-
       public static final com.google.protobuf.Descriptors.EnumDescriptor
-      getDescriptor() {
+          getDescriptor() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.getDescriptor().getEnumTypes().get(0);
       }
 
       private static final ErrorType[] VALUES = values();
 
       public static ErrorType valueOf(
-              com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
         if (desc.getType() != getDescriptor()) {
           throw new java.lang.IllegalArgumentException(
-                  "EnumValueDescriptor is not for this type.");
+            "EnumValueDescriptor is not for this type.");
         }
         return VALUES[desc.getIndex()];
       }
@@ -21429,24 +21338,24 @@ public final class GtfsSpecificationProto {
     private int bitField0_;
     public static final int ERRORTYPE_FIELD_NUMBER = 1;
     private int errortype_;
-
     /**
      * <pre>
      * The type of the error.
      * </pre>
      *
      * <code>required .csvspec.CsvErrorProto.ErrorType errortype = 1;</code>
+     * @return Whether the errortype field is set.
      */
     public boolean hasErrortype() {
       return ((bitField0_ & 0x00000001) != 0);
     }
-
     /**
      * <pre>
      * The type of the error.
      * </pre>
      *
      * <code>required .csvspec.CsvErrorProto.ErrorType errortype = 1;</code>
+     * @return The errortype.
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.ErrorType getErrortype() {
       @SuppressWarnings("deprecation")
@@ -21463,11 +21372,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.CsvErrorLocationProto location = 2;</code>
+     * @return Whether the location field is set.
      */
     public boolean hasLocation() {
       return ((bitField0_ & 0x00000002) != 0);
     }
-
     /**
      * <pre>
      * The location of the error, or locations rather, since multiple linenumbers
@@ -21475,11 +21384,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.CsvErrorLocationProto location = 2;</code>
+     * @return The location.
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto getLocation() {
       return location_ == null ? org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance() : location_;
     }
-
     /**
      * <pre>
      * The location of the error, or locations rather, since multiple linenumbers
@@ -21494,7 +21403,6 @@ public final class GtfsSpecificationProto {
 
     public static final int OTHERLOCATION_FIELD_NUMBER = 3;
     private org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto otherlocation_;
-
     /**
      * <pre>
      * If this is a cross-reference error, the referred location may be specified
@@ -21502,6 +21410,7 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.CsvErrorLocationProto otherlocation = 3;</code>
+     * @return Whether the otherlocation field is set.
      */
     public boolean hasOtherlocation() {
       return ((bitField0_ & 0x00000004) != 0);
@@ -21513,11 +21422,11 @@ public final class GtfsSpecificationProto {
      * </pre>
      *
      * <code>optional .csvspec.CsvErrorLocationProto otherlocation = 3;</code>
+     * @return The otherlocation.
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto getOtherlocation() {
       return otherlocation_ == null ? org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance() : otherlocation_;
     }
-
     /**
      * <pre>
      * If this is a cross-reference error, the referred location may be specified
@@ -21531,7 +21440,6 @@ public final class GtfsSpecificationProto {
     }
 
     private byte memoizedIsInitialized = -1;
-
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -21560,7 +21468,7 @@ public final class GtfsSpecificationProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
+                        throws java.io.IOException {
       if (((bitField0_ & 0x00000001) != 0)) {
         output.writeEnum(1, errortype_);
       }
@@ -21589,7 +21497,7 @@ public final class GtfsSpecificationProto {
       }
       if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(3, getOtherlocation());
+          .computeMessageSize(3, getOtherlocation());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -21599,7 +21507,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-        return true;
+       return true;
       }
       if (!(obj instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto)) {
         return super.equals(obj);
@@ -21618,7 +21526,7 @@ public final class GtfsSpecificationProto {
       if (hasOtherlocation() != other.hasOtherlocation()) return false;
       if (hasOtherlocation()) {
         if (!getOtherlocation()
-                .equals(other.getOtherlocation())) return false;
+            .equals(other.getOtherlocation())) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -21649,11 +21557,10 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -21661,94 +21568,81 @@ public final class GtfsSpecificationProto {
       return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
-    }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseDelimitedFrom(
-            java.io.InputStream input,
+        java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseDelimitedWithIOException(PARSER, input);
     }
-
-    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
     @java.lang.Override
-    public Builder newBuilderForType() {
-      return newBuilder();
-    }
-
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-
     public static Builder newBuilder(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-              ? new Builder() : new Builder().mergeFrom(this);
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
@@ -21766,10 +21660,10 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
+          internalGetFieldAccessorTable() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorProto_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder.class);
+            .ensureFieldAccessorsInitialized(
+                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder.class);
       }
 
       // Construct using org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.newBuilder()
@@ -21778,11 +21672,10 @@ public final class GtfsSpecificationProto {
       }
 
       private Builder(
-              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
-
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
@@ -21790,7 +21683,6 @@ public final class GtfsSpecificationProto {
           getOtherlocationFieldBuilder();
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -21813,7 +21705,7 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-      getDescriptorForType() {
+          getDescriptorForType() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorProto_descriptor;
       }
 
@@ -21865,44 +21757,38 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
-
       @java.lang.Override
       public Builder setRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              int index, java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-
       @java.lang.Override
       public Builder addRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
-
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto) {
-          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto) other);
+          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto)other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -21910,8 +21796,7 @@ public final class GtfsSpecificationProto {
       }
 
       public Builder mergeFrom(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto other) {
-        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.getDefaultInstance())
-          return this;
+        if (other == org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.getDefaultInstance()) return this;
         if (other.hasErrortype()) {
           setErrortype(other.getErrortype());
         }
@@ -21962,41 +21847,41 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       private int bitField0_;
 
       private int errortype_ = 10;
-
       /**
        * <pre>
        * The type of the error.
        * </pre>
        *
        * <code>required .csvspec.CsvErrorProto.ErrorType errortype = 1;</code>
+       * @return Whether the errortype field is set.
        */
       public boolean hasErrortype() {
         return ((bitField0_ & 0x00000001) != 0);
       }
-
       /**
        * <pre>
        * The type of the error.
        * </pre>
        *
        * <code>required .csvspec.CsvErrorProto.ErrorType errortype = 1;</code>
+       * @return The errortype.
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.ErrorType getErrortype() {
         @SuppressWarnings("deprecation")
         org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.ErrorType result = org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.ErrorType.valueOf(errortype_);
         return result == null ? org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.ErrorType.MISSING_TABLE : result;
       }
-
       /**
        * <pre>
        * The type of the error.
        * </pre>
        *
        * <code>required .csvspec.CsvErrorProto.ErrorType errortype = 1;</code>
+       * @param value The errortype to set.
+       * @return This builder for chaining.
        */
       public Builder setErrortype(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.ErrorType value) {
         if (value == null) {
@@ -22007,13 +21892,13 @@ public final class GtfsSpecificationProto {
         onChanged();
         return this;
       }
-
       /**
        * <pre>
        * The type of the error.
        * </pre>
        *
        * <code>required .csvspec.CsvErrorProto.ErrorType errortype = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearErrortype() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -22024,8 +21909,7 @@ public final class GtfsSpecificationProto {
 
       private org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto location_;
       private com.google.protobuf.SingleFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder> locationBuilder_;
-
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder> locationBuilder_;
       /**
        * <pre>
        * The location of the error, or locations rather, since multiple linenumbers
@@ -22033,11 +21917,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.CsvErrorLocationProto location = 2;</code>
+       * @return Whether the location field is set.
        */
       public boolean hasLocation() {
         return ((bitField0_ & 0x00000002) != 0);
       }
-
       /**
        * <pre>
        * The location of the error, or locations rather, since multiple linenumbers
@@ -22045,6 +21929,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.CsvErrorLocationProto location = 2;</code>
+       * @return The location.
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto getLocation() {
         if (locationBuilder_ == null) {
@@ -22053,7 +21938,6 @@ public final class GtfsSpecificationProto {
           return locationBuilder_.getMessage();
         }
       }
-
       /**
        * <pre>
        * The location of the error, or locations rather, since multiple linenumbers
@@ -22075,7 +21959,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000002;
         return this;
       }
-
       /**
        * <pre>
        * The location of the error, or locations rather, since multiple linenumbers
@@ -22085,7 +21968,7 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.CsvErrorLocationProto location = 2;</code>
        */
       public Builder setLocation(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder builderForValue) {
         if (locationBuilder_ == null) {
           location_ = builderForValue.build();
           onChanged();
@@ -22095,7 +21978,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000002;
         return this;
       }
-
       /**
        * <pre>
        * The location of the error, or locations rather, since multiple linenumbers
@@ -22107,10 +21989,10 @@ public final class GtfsSpecificationProto {
       public Builder mergeLocation(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto value) {
         if (locationBuilder_ == null) {
           if (((bitField0_ & 0x00000002) != 0) &&
-                  location_ != null &&
-                  location_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance()) {
+              location_ != null &&
+              location_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance()) {
             location_ =
-                    org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.newBuilder(location_).mergeFrom(value).buildPartial();
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.newBuilder(location_).mergeFrom(value).buildPartial();
           } else {
             location_ = value;
           }
@@ -22121,7 +22003,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000002;
         return this;
       }
-
       /**
        * <pre>
        * The location of the error, or locations rather, since multiple linenumbers
@@ -22153,7 +22034,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return getLocationFieldBuilder().getBuilder();
       }
-
       /**
        * <pre>
        * The location of the error, or locations rather, since multiple linenumbers
@@ -22167,10 +22047,9 @@ public final class GtfsSpecificationProto {
           return locationBuilder_.getMessageOrBuilder();
         } else {
           return location_ == null ?
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance() : location_;
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance() : location_;
         }
       }
-
       /**
        * <pre>
        * The location of the error, or locations rather, since multiple linenumbers
@@ -22180,11 +22059,11 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.CsvErrorLocationProto location = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder>
-      getLocationFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder> 
+          getLocationFieldBuilder() {
         if (locationBuilder_ == null) {
           locationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder>(
                   getLocation(),
                   getParentForChildren(),
                   isClean());
@@ -22195,8 +22074,7 @@ public final class GtfsSpecificationProto {
 
       private org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto otherlocation_;
       private com.google.protobuf.SingleFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder> otherlocationBuilder_;
-
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder> otherlocationBuilder_;
       /**
        * <pre>
        * If this is a cross-reference error, the referred location may be specified
@@ -22204,11 +22082,11 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.CsvErrorLocationProto otherlocation = 3;</code>
+       * @return Whether the otherlocation field is set.
        */
       public boolean hasOtherlocation() {
         return ((bitField0_ & 0x00000004) != 0);
       }
-
       /**
        * <pre>
        * If this is a cross-reference error, the referred location may be specified
@@ -22216,6 +22094,7 @@ public final class GtfsSpecificationProto {
        * </pre>
        *
        * <code>optional .csvspec.CsvErrorLocationProto otherlocation = 3;</code>
+       * @return The otherlocation.
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto getOtherlocation() {
         if (otherlocationBuilder_ == null) {
@@ -22224,7 +22103,6 @@ public final class GtfsSpecificationProto {
           return otherlocationBuilder_.getMessage();
         }
       }
-
       /**
        * <pre>
        * If this is a cross-reference error, the referred location may be specified
@@ -22246,7 +22124,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000004;
         return this;
       }
-
       /**
        * <pre>
        * If this is a cross-reference error, the referred location may be specified
@@ -22256,7 +22133,7 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.CsvErrorLocationProto otherlocation = 3;</code>
        */
       public Builder setOtherlocation(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder builderForValue) {
         if (otherlocationBuilder_ == null) {
           otherlocation_ = builderForValue.build();
           onChanged();
@@ -22266,7 +22143,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000004;
         return this;
       }
-
       /**
        * <pre>
        * If this is a cross-reference error, the referred location may be specified
@@ -22278,10 +22154,10 @@ public final class GtfsSpecificationProto {
       public Builder mergeOtherlocation(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto value) {
         if (otherlocationBuilder_ == null) {
           if (((bitField0_ & 0x00000004) != 0) &&
-                  otherlocation_ != null &&
-                  otherlocation_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance()) {
+              otherlocation_ != null &&
+              otherlocation_ != org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance()) {
             otherlocation_ =
-                    org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.newBuilder(otherlocation_).mergeFrom(value).buildPartial();
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.newBuilder(otherlocation_).mergeFrom(value).buildPartial();
           } else {
             otherlocation_ = value;
           }
@@ -22292,7 +22168,6 @@ public final class GtfsSpecificationProto {
         bitField0_ |= 0x00000004;
         return this;
       }
-
       /**
        * <pre>
        * If this is a cross-reference error, the referred location may be specified
@@ -22311,7 +22186,6 @@ public final class GtfsSpecificationProto {
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
-
       /**
        * <pre>
        * If this is a cross-reference error, the referred location may be specified
@@ -22325,7 +22199,6 @@ public final class GtfsSpecificationProto {
         onChanged();
         return getOtherlocationFieldBuilder().getBuilder();
       }
-
       /**
        * <pre>
        * If this is a cross-reference error, the referred location may be specified
@@ -22339,10 +22212,9 @@ public final class GtfsSpecificationProto {
           return otherlocationBuilder_.getMessageOrBuilder();
         } else {
           return otherlocation_ == null ?
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance() : otherlocation_;
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.getDefaultInstance() : otherlocation_;
         }
       }
-
       /**
        * <pre>
        * If this is a cross-reference error, the referred location may be specified
@@ -22352,11 +22224,11 @@ public final class GtfsSpecificationProto {
        * <code>optional .csvspec.CsvErrorLocationProto otherlocation = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder>
-      getOtherlocationFieldBuilder() {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder> 
+          getOtherlocationFieldBuilder() {
         if (otherlocationBuilder_ == null) {
           otherlocationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder>(
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProto.Builder, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorLocationProtoOrBuilder>(
                   getOtherlocation(),
                   getParentForChildren(),
                   isClean());
@@ -22364,16 +22236,15 @@ public final class GtfsSpecificationProto {
         }
         return otherlocationBuilder_;
       }
-
       @java.lang.Override
       public final Builder setUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
       }
 
       @java.lang.Override
       public final Builder mergeUnknownFields(
-              final com.google.protobuf.UnknownFieldSet unknownFields) {
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
       }
 
@@ -22383,7 +22254,6 @@ public final class GtfsSpecificationProto {
 
     // @@protoc_insertion_point(class_scope:csvspec.CsvErrorProto)
     private static final org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto DEFAULT_INSTANCE;
-
     static {
       DEFAULT_INSTANCE = new org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto();
     }
@@ -22392,14 +22262,13 @@ public final class GtfsSpecificationProto {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated
-    public static final com.google.protobuf.Parser<CsvErrorProto>
-            PARSER = new com.google.protobuf.AbstractParser<CsvErrorProto>() {
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<CsvErrorProto>
+        PARSER = new com.google.protobuf.AbstractParser<CsvErrorProto>() {
       @java.lang.Override
       public CsvErrorProto parsePartialFrom(
-              com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws com.google.protobuf.InvalidProtocolBufferException {
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
         return new CsvErrorProto(input, extensionRegistry);
       }
     };
@@ -22421,8 +22290,8 @@ public final class GtfsSpecificationProto {
   }
 
   public interface CsvErrorProtosOrBuilder extends
-          // @@protoc_insertion_point(interface_extends:csvspec.CsvErrorProtos)
-          com.google.protobuf.MessageOrBuilder {
+      // @@protoc_insertion_point(interface_extends:csvspec.CsvErrorProtos)
+      com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
@@ -22437,34 +22306,29 @@ public final class GtfsSpecificationProto {
      * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
      */
     int getErrorCount();
-
     /**
      * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
      */
-    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtoOrBuilder>
-    getErrorOrBuilderList();
-
+    java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtoOrBuilder> 
+        getErrorOrBuilderList();
     /**
      * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
      */
     org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtoOrBuilder getErrorOrBuilder(
-            int index);
+        int index);
   }
-
   /**
    * Protobuf type {@code csvspec.CsvErrorProtos}
    */
-  public static final class CsvErrorProtos extends
-          com.google.protobuf.GeneratedMessageV3 implements
-          // @@protoc_insertion_point(message_implements:csvspec.CsvErrorProtos)
-          CsvErrorProtosOrBuilder {
-    private static final long serialVersionUID = 0L;
-
+  public  static final class CsvErrorProtos extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:csvspec.CsvErrorProtos)
+      CsvErrorProtosOrBuilder {
+  private static final long serialVersionUID = 0L;
     // Use CsvErrorProtos.newBuilder() to construct.
     private CsvErrorProtos(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
       super(builder);
     }
-
     private CsvErrorProtos() {
       error_ = java.util.Collections.emptyList();
     }
@@ -22472,7 +22336,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     @SuppressWarnings({"unused"})
     protected java.lang.Object newInstance(
-            UnusedPrivateParameter unused) {
+        UnusedPrivateParameter unused) {
       return new CsvErrorProtos();
     }
 
@@ -22481,18 +22345,17 @@ public final class GtfsSpecificationProto {
     getUnknownFields() {
       return this.unknownFields;
     }
-
     private CsvErrorProtos(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       this();
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-              com.google.protobuf.UnknownFieldSet.newBuilder();
+          com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
         boolean done = false;
         while (!done) {
@@ -22507,12 +22370,12 @@ public final class GtfsSpecificationProto {
                 mutable_bitField0_ |= 0x00000001;
               }
               error_.add(
-                      input.readMessage(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.PARSER, extensionRegistry));
+                  input.readMessage(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.PARSER, extensionRegistry));
               break;
             }
             default: {
               if (!parseUnknownField(
-                      input, unknownFields, extensionRegistry, tag)) {
+                  input, unknownFields, extensionRegistry, tag)) {
                 done = true;
               }
               break;
@@ -22523,7 +22386,7 @@ public final class GtfsSpecificationProto {
         throw e.setUnfinishedMessage(this);
       } catch (java.io.IOException e) {
         throw new com.google.protobuf.InvalidProtocolBufferException(
-                e).setUnfinishedMessage(this);
+            e).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) != 0)) {
           error_ = java.util.Collections.unmodifiableList(error_);
@@ -22532,18 +22395,17 @@ public final class GtfsSpecificationProto {
         makeExtensionsImmutable();
       }
     }
-
     public static final com.google.protobuf.Descriptors.Descriptor
-    getDescriptor() {
+        getDescriptor() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorProtos_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-    internalGetFieldAccessorTable() {
+        internalGetFieldAccessorTable() {
       return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorProtos_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-                  org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.Builder.class);
+              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.Builder.class);
     }
 
     public static final int ERROR_FIELD_NUMBER = 1;
@@ -22561,31 +22423,27 @@ public final class GtfsSpecificationProto {
         getErrorOrBuilderList() {
       return error_;
     }
-
     /**
      * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
      */
     public int getErrorCount() {
       return error_.size();
     }
-
     /**
      * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto getError(int index) {
       return error_.get(index);
     }
-
     /**
      * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
      */
     public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtoOrBuilder getErrorOrBuilder(
-            int index) {
+        int index) {
       return error_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
-
     @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -22604,7 +22462,7 @@ public final class GtfsSpecificationProto {
 
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
-            throws java.io.IOException {
+                        throws java.io.IOException {
       for (int i = 0; i < error_.size(); i++) {
         output.writeMessage(1, error_.get(i));
       }
@@ -22619,7 +22477,7 @@ public final class GtfsSpecificationProto {
       size = 0;
       for (int i = 0; i < error_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(1, error_.get(i));
+          .computeMessageSize(1, error_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -22629,7 +22487,7 @@ public final class GtfsSpecificationProto {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-        return true;
+       return true;
       }
       if (!(obj instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos)) {
         return super.equals(obj);
@@ -22637,7 +22495,7 @@ public final class GtfsSpecificationProto {
       org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos other = (org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos) obj;
 
       if (!getErrorList()
-              .equals(other.getErrorList())) return false;
+          .equals(other.getErrorList())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -22659,74 +22517,64 @@ public final class GtfsSpecificationProto {
     }
 
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseFrom(
-            java.nio.ByteBuffer data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseFrom(
-            java.nio.ByteBuffer data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseFrom(
-            com.google.protobuf.ByteString data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseFrom(
-            com.google.protobuf.ByteString data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseFrom(byte[] data)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseFrom(
-            byte[] data,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input);
+          .parseWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseWithIOException(PARSER, input, extensionRegistry);
+          .parseWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseDelimitedFrom(java.io.InputStream input)
-            throws java.io.IOException {
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input);
+          .parseDelimitedWithIOException(PARSER, input);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseDelimitedFrom(
-            java.io.InputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
-              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-
     public static org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos parseFrom(
-            com.google.protobuf.CodedInputStream input)
-            throws java.io.IOException {
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
@@ -22743,42 +22591,39 @@ public final class GtfsSpecificationProto {
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-
     public static Builder newBuilder(org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-
     @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
-              ? new Builder() : new Builder().mergeFrom(this);
+          ? new Builder() : new Builder().mergeFrom(this);
     }
 
     @java.lang.Override
     protected Builder newBuilderForType(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
-
     /**
      * Protobuf type {@code csvspec.CsvErrorProtos}
      */
     public static final class Builder extends
-            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-            // @@protoc_insertion_point(builder_implements:csvspec.CsvErrorProtos)
-            org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtosOrBuilder {
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:csvspec.CsvErrorProtos)
+        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtosOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
+          getDescriptor() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorProtos_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internalGetFieldAccessorTable() {
+          internalGetFieldAccessorTable() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorProtos_fieldAccessorTable
-                .ensureFieldAccessorsInitialized(
-                        org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.Builder.class);
+            .ensureFieldAccessorsInitialized(
+                org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.class, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.Builder.class);
       }
 
       // Construct using org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos.newBuilder()
@@ -22787,18 +22632,16 @@ public final class GtfsSpecificationProto {
       }
 
       private Builder(
-              com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
-
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getErrorFieldBuilder();
         }
       }
-
       @java.lang.Override
       public Builder clear() {
         super.clear();
@@ -22813,7 +22656,7 @@ public final class GtfsSpecificationProto {
 
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
-      getDescriptorForType() {
+          getDescriptorForType() {
         return org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.internal_static_csvspec_CsvErrorProtos_descriptor;
       }
 
@@ -22852,43 +22695,38 @@ public final class GtfsSpecificationProto {
       public Builder clone() {
         return super.clone();
       }
-
       @java.lang.Override
       public Builder setField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.setField(field, value);
       }
-
       @java.lang.Override
       public Builder clearField(
-              com.google.protobuf.Descriptors.FieldDescriptor field) {
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
         return super.clearField(field);
       }
-
       @java.lang.Override
       public Builder clearOneof(
-              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return super.clearOneof(oneof);
       }
       @java.lang.Override
       public Builder setRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              int index, java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
         return super.setRepeatedField(field, index, value);
       }
-
       @java.lang.Override
       public Builder addRepeatedField(
-              com.google.protobuf.Descriptors.FieldDescriptor field,
-              java.lang.Object value) {
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
         return super.addRepeatedField(field, value);
       }
-
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos) {
-          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos) other);
+          return mergeFrom((org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtos)other);
         } else {
           super.mergeFrom(other);
           return this;
@@ -22980,7 +22818,6 @@ public final class GtfsSpecificationProto {
           return errorBuilder_.getMessageList();
         }
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
@@ -22991,7 +22828,6 @@ public final class GtfsSpecificationProto {
           return errorBuilder_.getCount();
         }
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
@@ -23002,12 +22838,11 @@ public final class GtfsSpecificationProto {
           return errorBuilder_.getMessage(index);
         }
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
       public Builder setError(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto value) {
         if (errorBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -23020,12 +22855,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
       public Builder setError(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder builderForValue) {
         if (errorBuilder_ == null) {
           ensureErrorIsMutable();
           error_.set(index, builderForValue.build());
@@ -23035,7 +22869,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
@@ -23052,12 +22885,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
       public Builder addError(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto value) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto value) {
         if (errorBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -23070,12 +22902,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
       public Builder addError(
-              org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder builderForValue) {
+          org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder builderForValue) {
         if (errorBuilder_ == null) {
           ensureErrorIsMutable();
           error_.add(builderForValue.build());
@@ -23085,12 +22916,11 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
       public Builder addError(
-              int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder builderForValue) {
+          int index, org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder builderForValue) {
         if (errorBuilder_ == null) {
           ensureErrorIsMutable();
           error_.add(index, builderForValue.build());
@@ -23100,23 +22930,21 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
       public Builder addAllError(
-              java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto> values) {
+          java.lang.Iterable<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto> values) {
         if (errorBuilder_ == null) {
           ensureErrorIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-                  values, error_);
+              values, error_);
           onChanged();
         } else {
           errorBuilder_.addAllMessages(values);
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
@@ -23130,7 +22958,6 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
@@ -23144,32 +22971,28 @@ public final class GtfsSpecificationProto {
         }
         return this;
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProto.Builder getErrorBuilder(
-              int index) {
+          int index) {
         return getErrorFieldBuilder().getBuilder(index);
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
       public org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtoOrBuilder getErrorOrBuilder(
-              int index) {
+          int index) {
         if (errorBuilder_ == null) {
-          return error_.get(index);
-        } else {
+          return error_.get(index);  } else {
           return errorBuilder_.getMessageOrBuilder(index);
         }
       }
-
       /**
        * <code>repeated .csvspec.CsvErrorProto error = 1;</code>
        */
-      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtoOrBuilder>
-      getErrorOrBuilderList() {
+      public java.util.List<? extends org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto.CsvErrorProtoOrBuilder> 
+           getErrorOrBuilderList() {
         if (errorBuilder_ != null) {
           return errorBuilder_.getMessageOrBuilderList();
         } else {
@@ -23339,85 +23162,87 @@ public final class GtfsSpecificationProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rcsvspec.proto\022\007csvspec\"\267\002\n\017ColumnInput" +
+      "\n\rcsvspec.proto\022\007csvspec\"\377\002\n\017ColumnInput" +
       "Type\0220\n\004type\030\001 \002(\0162\".csvspec.ColumnInput" +
-      "Type.InputType\"\361\001\n\tInputType\022\032\n\026INPUT_TY" +
+      "Type.InputType\"\271\002\n\tInputType\022\032\n\026INPUT_TY" +
       "PE_UNSPECIFIED\020\000\022\010\n\004TEXT\020\001\022\t\n\005COLOR\020\002\022\t\n" +
       "\005FLOAT\020\003\022\010\n\004DATE\020\004\022\010\n\004TIME\020\005\022\021\n\rCURRENCY" +
       "_CODE\020\006\022\t\n\005EMAIL\020\007\022\010\n\004ENUM\020\010\022\006\n\002ID\020\t\022\021\n\r" +
       "LANGUAGE_CODE\020\n\022\014\n\010LATITUDE\020\013\022\r\n\tLONGITU" +
       "DE\020\014\022\013\n\007INTEGER\020\r\022\020\n\014PHONE_NUMBER\020\016\022\014\n\010T" +
-      "IMEZONE\020\017\022\007\n\003URL\020\020\"g\n\024SupersetKeySpecPro" +
-      "to\022\017\n\007csvname\030\001 \002(\t\022\017\n\007keyname\030\002 \002(\t\022-\n\036" +
-      "restrictnulltosingleforeignkey\030\003 \001(\010:\005fa" +
-      "lse\"X\n\017NamedValueProto\022\014\n\004name\030\001 \002(\t\022\020\n\010" +
-      "intvalue\030\002 \001(\003\022\023\n\013stringvalue\030\003 \001(\t\022\020\n\010e" +
-      "numtype\030\004 \001(\t\"K\n\020ColumnCacheProto\022\034\n\rcac" +
-      "he_numbers\030\001 \001(\010:\005false\022\031\n\ncache_keys\030\002 " +
-      "\001(\010:\005false\"\357\003\n\017ColumnSpecProto\022\014\n\004name\030\001" +
-      " \002(\t\022\024\n\014originalname\030\002 \001(\t\022\016\n\006number\030\003 \001" +
-      "(\005\022\034\n\rinheritfields\030\017 \001(\010:\005false\022\026\n\010requ" +
-      "ired\030\004 \001(\010:\004true\022\023\n\tnullvalue\030\005 \001(\t:\000\022\035\n" +
-      "\016value_required\030\021 \001(\010:\005false\022&\n\004type\030\006 \001" +
-      "(\0132\030.csvspec.ColumnInputType\022\016\n\006intmin\030\007" +
-      " \001(\005\022\016\n\006intmax\030\010 \001(\005\022\020\n\010floatmin\030\r \001(\002\022\020" +
-      "\n\010floatmax\030\016 \001(\002\022,\n\nnamedvalue\030\020 \003(\0132\030.c" +
-      "svspec.NamedValueProto\022\023\n\013matchregexp\030\t " +
-      "\001(\t\022\033\n\014uniquevalues\030\n \001(\010:\005false\0222\n\013supe" +
-      "rsetkey\030\013 \003(\0132\035.csvspec.SupersetKeySpecP" +
-      "roto\022(\n\005cache\030\014 \001(\0132\031.csvspec.ColumnCach" +
-      "eProto\022\024\n\014field_number\030\022 \001(\005\"\201\001\n\014KeySpec" +
-      "Proto\022\014\n\004name\030\001 \002(\t\022\022\n\ncolumnname\030\002 \003(\t\022" +
-      "\033\n\014uniquevalues\030\003 \001(\010:\005false\0222\n\013superset" +
-      "key\030\004 \003(\0132\035.csvspec.SupersetKeySpecProto" +
-      "\"\364\003\n\014CsvSpecProto\022\014\n\004name\030\001 \002(\t\022\020\n\010filen" +
-      "ame\030\002 \001(\t\022\034\n\rinheritfields\030\014 \001(\010:\005false\022" +
-      "\"\n\023inheritinputcolumns\030\r \001(\010:\005false\022\032\n\013i" +
-      "nheritkeys\030\017 \001(\010:\005false\022\026\n\010required\030\003 \001(" +
-      "\010:\004true\022\027\n\thasheader\030\004 \001(\010:\004true\022\027\n\010enco" +
-      "ding\030\005 \001(\t:\005UTF-8\022(\n\006column\030\006 \003(\0132\030.csvs" +
-      "pec.ColumnSpecProto\022\"\n\003key\030\007 \003(\0132\025.csvsp" +
-      "ec.KeySpecProto\022\021\n\tresortkey\030\010 \001(\t\022\032\n\022re" +
-      "quiresortedonkey\030\t \003(\t\022,\n\nnamedvalue\030\020 \003" +
-      "(\0132\030.csvspec.NamedValueProto\022.\n&strip_pr" +
-      "otected_whitespace_from_values\030\022 \001(\010\022/\n\014" +
-      "column_cache\030\023 \001(\0132\031.csvspec.ColumnCache" +
-      "ProtoJ\004\010\n\020\013J\004\010\013\020\014J\004\010\016\020\017\"\343\001\n\rCsvSpecProto" +
-      "s\022\024\n\014templatefile\030\002 \001(\t\022&\n\007csvspec\030\001 \003(\013" +
-      "2\025.csvspec.CsvSpecProto\022,\n\nnamedvalue\030\003 " +
-      "\003(\0132\030.csvspec.NamedValueProto\0225\n&strip_p" +
-      "rotected_whitespace_from_values\030\004 \001(\010:\005f" +
-      "alse\022/\n\014column_cache\030\005 \001(\0132\031.csvspec.Col" +
-      "umnCacheProto\"s\n\023CsvErrorColumnProto\022\r\n\005" +
-      "index\030\001 \001(\005\022\014\n\004type\030\002 \001(\005\022\024\n\014originalnam" +
-      "e\030\003 \001(\t\022)\n\007colspec\030\004 \001(\0132\030.csvspec.Colum" +
-      "nSpecProto\"8\n\022CsvErrorLinesProto\022\021\n\tstar" +
-      "tline\030\001 \002(\005\022\017\n\007endline\030\002 \001(\005\"\315\001\n\025CsvErro" +
-      "rLocationProto\022\017\n\007csvname\030\001 \001(\t\022\023\n\013csvfi" +
-      "lename\030\002 \001(\t\022\017\n\007keyname\030\003 \001(\t\022,\n\006column\030" +
-      "\004 \003(\0132\034.csvspec.CsvErrorColumnProto\022\022\n\nl" +
-      "inenumber\030\005 \003(\005\022.\n\tlinerange\030\006 \003(\0132\033.csv" +
-      "spec.CsvErrorLinesProto\022\013\n\003row\030\007 \003(\005\"\227\005\n" +
-      "\rCsvErrorProto\0223\n\terrortype\030\001 \002(\0162 .csvs" +
-      "pec.CsvErrorProto.ErrorType\0220\n\010location\030" +
-      "\002 \001(\0132\036.csvspec.CsvErrorLocationProto\0225\n" +
-      "\rotherlocation\030\003 \001(\0132\036.csvspec.CsvErrorL" +
-      "ocationProto\"\347\003\n\tErrorType\022\021\n\rMISSING_TA" +
-      "BLE\020\n\022\023\n\017SPLITTING_ERROR\020\024\022\033\n\027CONTAINS_N" +
-      "ULL_CHARACTER\020\025\022\035\n\025UTF8_CONVERSION_ERROR" +
-      "\020\026\032\002\010\001\022\020\n\014INVALID_UTF8\020\027\022\031\n\025DUPLICATE_CO" +
-      "LUMN_NAME\020\030\022\030\n\024BAD_NUMBER_OF_VALUES\020\031\022\022\n" +
-      "\016FILE_CORRUPTED\020\032\022\027\n\023UNEXPECTED_LOCATION" +
-      "\020\033\022\022\n\016MISSING_COLUMN\020\036\022\017\n\013MISSING_KEY\020\037\022" +
-      "\014\n\010UNSORTED\020(\022\022\n\016NON_CONTIGUOUS\020)\022\026\n\022BAD" +
-      "_NUMBER_OF_ROWS\020*\022\017\n\013VALUE_ERROR\0202\022\023\n\017RE" +
-      "GEXP_MISMATCH\0203\022\020\n\014OUT_OF_RANGE\0204\022\021\n\rMIS" +
-      "SING_VALUE\0205\022\024\n\020MISSING_KEY_DATA\020=\022\027\n\023DU" +
-      "PLICATE_KEY_VALUE\020>\022\025\n\021MISSING_KEY_TABLE" +
-      "\020?\022\022\n\016FILE_TOO_LARGE\020@\"7\n\016CsvErrorProtos" +
-      "\022%\n\005error\030\001 \003(\0132\026.csvspec.CsvErrorProtoB" +
-      "?\n%org.mobilitydata.gtfsvalidator.protos" +
-      "B\026GtfsSpecificationProto"
+      "IMEZONE\020\017\022\007\n\003URL\020\020\022\030\n\024NON_NEGATIVE_INTEG" +
+      "ER\020\021\022\026\n\022NON_NEGATIVE_FLOAT\020\022\022\024\n\020NON_NULL" +
+      "_INTEGER\020\023\"g\n\024SupersetKeySpecProto\022\017\n\007cs" +
+      "vname\030\001 \002(\t\022\017\n\007keyname\030\002 \002(\t\022-\n\036restrict" +
+      "nulltosingleforeignkey\030\003 \001(\010:\005false\"X\n\017N" +
+      "amedValueProto\022\014\n\004name\030\001 \002(\t\022\020\n\010intvalue" +
+      "\030\002 \001(\003\022\023\n\013stringvalue\030\003 \001(\t\022\020\n\010enumtype\030" +
+      "\004 \001(\t\"K\n\020ColumnCacheProto\022\034\n\rcache_numbe" +
+      "rs\030\001 \001(\010:\005false\022\031\n\ncache_keys\030\002 \001(\010:\005fal" +
+      "se\"\357\003\n\017ColumnSpecProto\022\014\n\004name\030\001 \002(\t\022\024\n\014" +
+      "originalname\030\002 \001(\t\022\016\n\006number\030\003 \001(\005\022\034\n\rin" +
+      "heritfields\030\017 \001(\010:\005false\022\026\n\010required\030\004 \001" +
+      "(\010:\004true\022\023\n\tnullvalue\030\005 \001(\t:\000\022\035\n\016value_r" +
+      "equired\030\021 \001(\010:\005false\022&\n\004type\030\006 \001(\0132\030.csv" +
+      "spec.ColumnInputType\022\016\n\006intmin\030\007 \001(\005\022\016\n\006" +
+      "intmax\030\010 \001(\005\022\020\n\010floatmin\030\r \001(\002\022\020\n\010floatm" +
+      "ax\030\016 \001(\002\022,\n\nnamedvalue\030\020 \003(\0132\030.csvspec.N" +
+      "amedValueProto\022\023\n\013matchregexp\030\t \001(\t\022\033\n\014u" +
+      "niquevalues\030\n \001(\010:\005false\0222\n\013supersetkey\030" +
+      "\013 \003(\0132\035.csvspec.SupersetKeySpecProto\022(\n\005" +
+      "cache\030\014 \001(\0132\031.csvspec.ColumnCacheProto\022\024" +
+      "\n\014field_number\030\022 \001(\005\"\201\001\n\014KeySpecProto\022\014\n" +
+      "\004name\030\001 \002(\t\022\022\n\ncolumnname\030\002 \003(\t\022\033\n\014uniqu" +
+      "evalues\030\003 \001(\010:\005false\0222\n\013supersetkey\030\004 \003(" +
+      "\0132\035.csvspec.SupersetKeySpecProto\"\364\003\n\014Csv" +
+      "SpecProto\022\014\n\004name\030\001 \002(\t\022\020\n\010filename\030\002 \001(" +
+      "\t\022\034\n\rinheritfields\030\014 \001(\010:\005false\022\"\n\023inher" +
+      "itinputcolumns\030\r \001(\010:\005false\022\032\n\013inheritke" +
+      "ys\030\017 \001(\010:\005false\022\026\n\010required\030\003 \001(\010:\004true\022" +
+      "\027\n\thasheader\030\004 \001(\010:\004true\022\027\n\010encoding\030\005 \001" +
+      "(\t:\005UTF-8\022(\n\006column\030\006 \003(\0132\030.csvspec.Colu" +
+      "mnSpecProto\022\"\n\003key\030\007 \003(\0132\025.csvspec.KeySp" +
+      "ecProto\022\021\n\tresortkey\030\010 \001(\t\022\032\n\022requiresor" +
+      "tedonkey\030\t \003(\t\022,\n\nnamedvalue\030\020 \003(\0132\030.csv" +
+      "spec.NamedValueProto\022.\n&strip_protected_" +
+      "whitespace_from_values\030\022 \001(\010\022/\n\014column_c" +
+      "ache\030\023 \001(\0132\031.csvspec.ColumnCacheProtoJ\004\010" +
+      "\n\020\013J\004\010\013\020\014J\004\010\016\020\017\"\343\001\n\rCsvSpecProtos\022\024\n\014tem" +
+      "platefile\030\002 \001(\t\022&\n\007csvspec\030\001 \003(\0132\025.csvsp" +
+      "ec.CsvSpecProto\022,\n\nnamedvalue\030\003 \003(\0132\030.cs" +
+      "vspec.NamedValueProto\0225\n&strip_protected" +
+      "_whitespace_from_values\030\004 \001(\010:\005false\022/\n\014" +
+      "column_cache\030\005 \001(\0132\031.csvspec.ColumnCache" +
+      "Proto\"s\n\023CsvErrorColumnProto\022\r\n\005index\030\001 " +
+      "\001(\005\022\014\n\004type\030\002 \001(\005\022\024\n\014originalname\030\003 \001(\t\022" +
+      ")\n\007colspec\030\004 \001(\0132\030.csvspec.ColumnSpecPro" +
+      "to\"8\n\022CsvErrorLinesProto\022\021\n\tstartline\030\001 " +
+      "\002(\005\022\017\n\007endline\030\002 \001(\005\"\315\001\n\025CsvErrorLocatio" +
+      "nProto\022\017\n\007csvname\030\001 \001(\t\022\023\n\013csvfilename\030\002" +
+      " \001(\t\022\017\n\007keyname\030\003 \001(\t\022,\n\006column\030\004 \003(\0132\034." +
+      "csvspec.CsvErrorColumnProto\022\022\n\nlinenumbe" +
+      "r\030\005 \003(\005\022.\n\tlinerange\030\006 \003(\0132\033.csvspec.Csv" +
+      "ErrorLinesProto\022\013\n\003row\030\007 \003(\005\"\227\005\n\rCsvErro" +
+      "rProto\0223\n\terrortype\030\001 \002(\0162 .csvspec.CsvE" +
+      "rrorProto.ErrorType\0220\n\010location\030\002 \001(\0132\036." +
+      "csvspec.CsvErrorLocationProto\0225\n\rotherlo" +
+      "cation\030\003 \001(\0132\036.csvspec.CsvErrorLocationP" +
+      "roto\"\347\003\n\tErrorType\022\021\n\rMISSING_TABLE\020\n\022\023\n" +
+      "\017SPLITTING_ERROR\020\024\022\033\n\027CONTAINS_NULL_CHAR" +
+      "ACTER\020\025\022\035\n\025UTF8_CONVERSION_ERROR\020\026\032\002\010\001\022\020" +
+      "\n\014INVALID_UTF8\020\027\022\031\n\025DUPLICATE_COLUMN_NAM" +
+      "E\020\030\022\030\n\024BAD_NUMBER_OF_VALUES\020\031\022\022\n\016FILE_CO" +
+      "RRUPTED\020\032\022\027\n\023UNEXPECTED_LOCATION\020\033\022\022\n\016MI" +
+      "SSING_COLUMN\020\036\022\017\n\013MISSING_KEY\020\037\022\014\n\010UNSOR" +
+      "TED\020(\022\022\n\016NON_CONTIGUOUS\020)\022\026\n\022BAD_NUMBER_" +
+      "OF_ROWS\020*\022\017\n\013VALUE_ERROR\0202\022\023\n\017REGEXP_MIS" +
+      "MATCH\0203\022\020\n\014OUT_OF_RANGE\0204\022\021\n\rMISSING_VAL" +
+      "UE\0205\022\024\n\020MISSING_KEY_DATA\020=\022\027\n\023DUPLICATE_" +
+      "KEY_VALUE\020>\022\025\n\021MISSING_KEY_TABLE\020?\022\022\n\016FI" +
+      "LE_TOO_LARGE\020@\"7\n\016CsvErrorProtos\022%\n\005erro" +
+      "r\030\001 \003(\0132\026.csvspec.CsvErrorProtoB?\n%org.m" +
+      "obilitydata.gtfsvalidator.protosB\026GtfsSp" +
+      "ecificationProto"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

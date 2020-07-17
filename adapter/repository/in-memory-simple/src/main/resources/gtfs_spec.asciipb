@@ -272,9 +272,7 @@ csvspec: {
   column: {
     field_number: 5
     name: "stop_lat"
-    type: { type: FLOAT }
-    floatmin: -90.0
-    floatmax: 90.0
+    type: { type: LATITUDE }
     required: false
     cache: {
       cache_numbers: true
@@ -288,9 +286,7 @@ csvspec: {
   column: {
     field_number: 6
     name: "stop_lon"
-    type: { type: FLOAT }
-    floatmin: -180.0
-    floatmax: 180.0
+    type: { type: LONGITUDE }
     required: false
     cache: {
       cache_numbers: true
@@ -324,30 +320,7 @@ csvspec: {
     field_number: 11
     name: "location_type"
     required: false
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 4
-    namedvalue: {
-      # Default.
-      name: "stop"
-      intvalue: 0
-    }
-    namedvalue: {
-      name: "station"
-      intvalue: 1
-    }
-    namedvalue: {
-      name: "entrance"
-      intvalue: 2
-    }
-    namedvalue: {
-      name: "generic_node"
-      intvalue: 3
-    }
-    namedvalue: {
-      name: "boarding_area"
-      intvalue: 4
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 
   column: {
@@ -382,28 +355,7 @@ csvspec: {
     field_number: 14
     name: "wheelchair_boarding"
     required: false
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 2
-    namedvalue: {
-      # Default. Indicates that there is no information about accessibility of
-      # the stop.
-      name: "accessibility_unknown"
-      intvalue: 0
-    }
-    namedvalue: {
-      # Indicates that this stop is handicap accessible. However, it is not
-      # guaranteed that all vehicles stopping at the stop will be accessible if
-      # the stop is accessible.
-      name: "accessible"
-      intvalue: 1
-    }
-    namedvalue: {
-      # Indicates that no vehicles can be boarded by wheelchair users at this
-      # stop (not even accessible vehicles).
-      name: "inaccessible"
-      intvalue: 2
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 
   column: {
@@ -484,16 +436,7 @@ csvspec: {
     name: "route_type"
     required: true
     value_required: true
-    matchregexp: "[0-9]|1[0-2]|[1-9][0-9]{2}|1[0-9]{3}"
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 7
-    # The type of vehicle running on this route.
-    # The toplevel proto (CsvSpecProtos) defines constants with descriptive
-    # names for the permissible values of this field (see at the bottom of this
-    # file).
-    # Both the original GTFS types (vehicle_type..., now deprecated) and
-    # TPEG-like hierarchical vehicle types (hvt_...) are supported.
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 
   column: {
@@ -545,10 +488,8 @@ csvspec: {
   column: {
     field_number: 13
     name: "route_sort_order"
-    type: { type: INTEGER }
+    type: { type: NON_NEGATIVE_INTEGER }
     required: false
-    intmin: 0
-    intmax: 100000
     # The route_sort_order field can be used to order the routes in a way which
     # is ideal for presentation to customers. Routes with smaller
     # route_sort_order values should be displayed before routes with larger
@@ -612,45 +553,35 @@ csvspec: {
     name: "monday"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
+    type: { type: NON_NEGATIVE_INTEGER }
   }
   column: {
     field_number: 6
     name: "tuesday"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
+    type: { type: NON_NEGATIVE_INTEGER }
   }
   column: {
     field_number: 7
     name: "wednesday"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
+    type: { type: NON_NEGATIVE_INTEGER }
   }
   column: {
     field_number: 8
     name: "thursday"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
+    type: { type: NON_NEGATIVE_INTEGER }
   }
   column: {
     field_number: 9
     name: "friday"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
+    type: { type: NON_NEGATIVE_INTEGER }
   }
   column: {
     field_number: 10
@@ -666,9 +597,7 @@ csvspec: {
     name: "sunday"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 }
 
@@ -708,19 +637,7 @@ csvspec: {
     name: "exception_type"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 1
-    intmax: 2
-    namedvalue: {
-      # To include a date in service_id.
-      name: "include"
-      intvalue: 1
-    }
-    namedvalue: {
-      # To exclude a date from service_id.
-      name: "exclude"
-      intvalue: 2
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 
   # This is just for checking that we don't have more than one service ID per
@@ -830,9 +747,7 @@ csvspec: {
     field_number: 9
     name: "direction_id"
     required: false
-    intmin: 0
-    intmax: 1
-    type: { type: INTEGER }
+    type: { type: NON_NEGATIVE_INTEGER }
     # An optional binary value that can be used by an agency to group
     # trips for the same route into separate directions of travel.
   }
@@ -848,10 +763,8 @@ csvspec: {
   column: {
     field_number: 12
     name: "bikes_allowed"
-    type: { type: INTEGER }
+    type: { type: NON_NEGATIVE_INTEGER }
     required: false
-    intmin: 0
-    intmax: 2
     # Specifies if bikes are allowed on transit vehicles for this trip.  If
     # not-null or unknown, overrides any value specified in routes.txt.
     # Semantics: 0=unknown (default), 1=yes, 2=no.
@@ -861,27 +774,7 @@ csvspec: {
     field_number: 13
     name: "wheelchair_accessible"
     required: false
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 2
-    namedvalue: {
-      # Default. Indicates that there is no accessibility information for the
-      # trip.
-      name: "accessibility_unknown"
-      intvalue: 0
-    }
-    namedvalue: {
-      # Indicates that the vehicle being used on this particular trip can
-      # accommodate at least one rider in a wheelchair.
-      name: "accessible"
-      intvalue: 1
-    }
-    namedvalue: {
-      # Indicates that no riders in wheelchairs can be accommodated on this
-      # trip.
-      name: "inaccessible"
-      intvalue: 2
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 }
 
@@ -963,9 +856,7 @@ csvspec: {
     name: "stop_sequence"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 2147483647
+    type: { type: NON_NEGATIVE_INTEGER }
     cache: {
       cache_numbers: true
     }
@@ -1017,10 +908,8 @@ csvspec: {
   column: {
     field_number: 7
     name: "timepoint"
-    type: { type: INTEGER }
+    type: { type: NON_NEGATIVE_INTEGER }
     required: false
-    intmin: 0
-    intmax: 1
   }
 
   # Fields indicating whether passengers are dropped off or picked up,
@@ -1031,18 +920,15 @@ csvspec: {
   column: {
     field_number: 8
     name: "drop_off_type"
-    type: { type: INTEGER }
+    type: { type: NON_NEGATIVE_INTEGER }
     required: false
-    intmin: 0
-    intmax: 3
   }
   column: {
     field_number: 9
     name: "pickup_type"
-    type: { type: INTEGER }
     required: false
-    intmin: 0
-    intmax: 3
+    type: { type: NON_NEGATIVE_INTEGER }
+    required: false
   }
 
   # If a trip has a shape, it can (but need not) specify the parameter
@@ -1053,10 +939,8 @@ csvspec: {
   column: {
     field_number: 10
     name: "shape_dist_traveled"
-    type: { type: FLOAT }
+    type: { type: NON_NEGATIVE_FLOAT }
     required: false
-    floatmin: 0
-    floatmax: 2147483647
     cache: {
       cache_numbers: true
     }
@@ -1136,9 +1020,7 @@ csvspec: {
     name: "price"
     required: true
     value_required: true
-    type: { type: FLOAT }
-    floatmin: 0.0
-    floatmax:  100.0
+    type: { type: NON_NEGATIVE_FLOAT }
   }
   column: {
     field_number: 5
@@ -1153,18 +1035,7 @@ csvspec: {
     name: "payment_method"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
-    # When and how to pay.
-    namedvalue: {
-      name: "on_board"
-      intvalue: 0
-    }
-    namedvalue: {
-      name: "before_boarding"
-      intvalue: 1
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 
   column: {
@@ -1172,8 +1043,7 @@ csvspec: {
     name: "transfers"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
+    type: { type: NON_NEGATIVE_INTEGER }
     # The maximum number of transfers (excluding block transfers)
     # that are possible with this fare; unlimited if empty.
     # The public GTFS spec limits this value to at most 2, but there is no
@@ -1184,10 +1054,8 @@ csvspec: {
   column: {
     field_number: 8
     name: "transfer_duration"
-    type: { type: INTEGER }
+    type: { type: NON_NEGATIVE_INTEGER }
     required: false
-    intmin: 0
-    intmax: 7200
     # The maximum duration (in seconds) for a journey with this fare,
     # including the transfer/waiting time between trips, if any.
     # The name derives from the use in fare systems that have a standard
@@ -1320,9 +1188,7 @@ csvspec: {
     name: "shape_pt_sequence"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 5500000
+    type: { type: NON_NEGATIVE_INTEGER }
     # The values of shape_pt_sequence must be non-negative integers.
     # Per shape_id, the values of shape_pt_sequence must be unique.
     # This field is used to define the order of points on each shape
@@ -1332,19 +1198,15 @@ csvspec: {
   column: {
     field_number: 4
     name: "shape_dist_traveled"
-    type: { type: FLOAT }
+    type: { type: NON_NEGATIVE_FLOAT }
     required: false
-    floatmin: 0
-    floatmax: 2147483647
   }
   column: {
     field_number: 5
     name: "shape_pt_lat"
     required: true
     value_required: true
-    type: { type: FLOAT }
-    floatmin: -90.0
-    floatmax: 90.0
+    type: { type: LATITUDE }
     # WGS 84 latitude of this vertex.
   }
   column: {
@@ -1352,9 +1214,7 @@ csvspec: {
     name: "shape_pt_lon"
     required: true
     value_required: true
-    type: { type: FLOAT }
-    floatmin: -180.0
-    floatmax: 180.0
+    type: { type: LONGITUDE }
     # WGS 84 longitude of this vertex.
   }
 }
@@ -1408,19 +1268,15 @@ csvspec: {
     name: "headway_secs"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 3600
+    type: { type: NON_NEGATIVE_INTEGER }
     # The distance in time between two successive trips.
   }
 
   column: {
     field_number: 6
     name: "exact_times"
-    type: { type: INTEGER }
+    type: { type: NON_NEGATIVE_INTEGER }
     required: false
-    intmin: 0
-    intmax: 1
     # Are the times resulting from frequency expansion exact?
     # Yes (1) or no (0, default).
   }
@@ -1552,44 +1408,18 @@ csvspec: {
     name: "transfer_type"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 3
+    type: { type: NON_NEGATIVE_INTEGER }
     # NOTE: By the public GTFS spec, the column is required,
     # but the field may be empty, and this is equivalent to a value of 0.
     #
     # The values for this field have the following meanings for transfers
     # from stop to stop:
-    namedvalue: {
-      # 0 (or empty):  This is a recommended transfer point between two routes.
-      name: "preferred"
-      intvalue: 0
-    }
-    namedvalue: {
-      # 1: This is a timed transfer point between two routes (the destination
-      #    trip is expected to wait for the arrival of the source trip).
-      name: "timed"
-      intvalue: 1
-    }
-    namedvalue: {
-      # 2: This transfer requires a minimum amount of time, as specified
-      #    in column min_transfer_time.
-      name: "min_time"
-      intvalue: 2
-    }
-    namedvalue: {
-      # 3: Transfers are not possible between these locations.
-      name: "disallow"
-      intvalue: 3
-    }
   }
   column: {
     field_number: 9
     name: "min_transfer_time"
-    type: { type: INTEGER }
+    type: { type: NON_NEGATIVE_INTEGER }
     required: false
-    intmin: 0
-    intmax: 900
     # A transfer is possible if times between the stops is at least this many
     # seconds.  This field must be set for transfer_type=2 and empty for
     # all other values of transfer_type.
@@ -1629,38 +1459,7 @@ csvspec: {
     field_number: 9
     name: "pathway_mode"
     required: false
-    type: { type: INTEGER }
-    intmin: 1
-    intmax: 7
-    # The mode of pathway.
-    namedvalue: {
-      name: "walkway"
-      intvalue: 1
-    }
-    namedvalue: {
-      name: "stairs"
-      intvalue: 2
-    }
-    namedvalue: {
-      name: "moving_sidewalk"
-      intvalue: 3
-    }
-    namedvalue: {
-      name: "escalator"
-      intvalue: 4
-    }
-    namedvalue: {
-      name: "elevator"
-      intvalue: 5
-    }
-    namedvalue: {
-      name: "fare_gate"
-      intvalue: 6
-    }
-    namedvalue: {
-      name: "exit_gate"
-      intvalue: 7
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 
   # The source and target location, resp., of the pathway.  If it is a station,
@@ -1693,17 +1492,7 @@ csvspec: {
     name: "is_bidirectional"
     required: true
     value_required: true
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
-    namedvalue: {
-      name: "unidirectional"
-      intvalue: 0
-    }
-    namedvalue: {
-      name: "bidirectional"
-      intvalue: 1
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 
   # The length field specifies the horizontal length in meters of the pathway
@@ -1715,9 +1504,7 @@ csvspec: {
   column: {
     field_number: 17
     name: "length"
-    type: { type: FLOAT }
-    floatmin: 0
-    floatmax: 500
+    type: { type: NON_NEGATIVE_FLOAT }
     required: false
   }
 
@@ -1725,20 +1512,8 @@ csvspec: {
   column: {
     field_number: 5
     name: "traversal_time"
-    type: { type: INTEGER }
+    type: { type: NON_NEGATIVE_INTEGER }
     required: false
-    intmin: 0
-    intmax: 500
-    namedvalue: {
-      # Impossible.
-      name: "disallowed"
-      intvalue: -1
-    }
-    namedvalue: {
-      # Unknown.
-      name: "unknown"
-      intvalue: -2
-    }
     # Whether it is good or not to allow this field to be empty is debatable.
   }
 
@@ -1747,9 +1522,7 @@ csvspec: {
   column: {
     field_number: 11
     name: "stair_count"
-    intmin: -500
-    intmax: 500
-    type: { type: INTEGER }
+    type: { type: NON_NULL_INTEGER }
     required: false
   }
 
@@ -1764,8 +1537,6 @@ csvspec: {
   column: {
     field_number: 10
     name: "max_slope"
-    floatmin: -28.0
-    floatmax: 28.0
     type: { type: FLOAT }
     required: false
   }
@@ -1776,9 +1547,7 @@ csvspec: {
   column: {
     field_number: 19
     name: "min_width"
-    intmin: 0
-    intmax: 15
-    type: { type: FLOAT }
+    type: { type: NON_NEGATIVE_FLOAT }
     required: false
   }
 
@@ -1828,8 +1597,6 @@ csvspec: {
     field_number: 3
     name: "level_index"
     type: { type: FLOAT }
-    floatmin: -10.0
-    floatmax: 10.0
     required: true
     value_required: true
   }
@@ -1911,19 +1678,7 @@ csvspec: {
     field_number: 7
     name: "is_producer"
     required: false
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
-    namedvalue: {
-      # Impossible.
-      name: "has_this_role"
-      intvalue: 0
-    }
-    namedvalue: {
-      # Unknown.
-      name: "does_not_have_this_role"
-      intvalue: 1
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 
   # The role of the organization
@@ -1931,38 +1686,14 @@ csvspec: {
     field_number: 8
     name: "is_authority"
     required: false
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
-    namedvalue: {
-      # Impossible.
-      name: "has_this_role"
-      intvalue: 0
-    }
-    namedvalue: {
-      # Unknown.
-      name: "does_not_have_this_role"
-      intvalue: 1
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
   # The role of the organization
   column: {
     field_number: 9
     name: "is_operator"
     required: false
-    type: { type: INTEGER }
-    intmin: 0
-    intmax: 1
-    namedvalue: {
-      # Impossible.
-      name: "has_this_role"
-      intvalue: 0
-    }
-    namedvalue: {
-      # Unknown.
-      name: "does_not_have_this_role"
-      intvalue: 1
-    }
+    type: { type: NON_NEGATIVE_INTEGER }
   }
 
   # URL of the organization.
@@ -1986,68 +1717,3 @@ csvspec: {
     required: false
   }
 }
-
-
-###############################################################################
-## Non-table-specific information
-###############################################################################
-
-# Legacy GTFS vehicle types. Probably we will need to support them forever.
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_tram" intvalue: 0 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_subway" intvalue: 1 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_rail" intvalue: 2 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_bus" intvalue: 3 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_ferry" intvalue: 4 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_cable_car" intvalue: 5 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_gondola_lift" intvalue: 6 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_funicular" intvalue: 7 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_horse_carriage" intvalue: 8 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_intercity_bus" intvalue: 9 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_commuter_train" intvalue: 10 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_trolleybus" intvalue: 11 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "vehicle_type_monorail" intvalue: 12 }
-
-# Hierarchical vehicle types (HVT).
-# Obtained as a result of a discussion at public GTFS group, but not officially
-# part of GTFS yet (April 2011).
-# http://groups.google.com/group/gtfs-changes/msg/9f1c27e827eda843
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_railway_service" intvalue: 100 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_high_speed_rail" intvalue: 101 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_long_distance_trains" intvalue: 102 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_inter_regional_rail" intvalue: 103 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_sleeper_rail" intvalue: 105 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_regional_rail" intvalue: 106 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_tourist_rail" intvalue: 107 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_rail_shuttle" intvalue: 108 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_suburban_railway" intvalue: 109 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_coach_service" intvalue: 200 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_international_coach" intvalue: 201 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_national_coach" intvalue: 202 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_regional_coach" intvalue: 204 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_commuter_coach" intvalue: 208 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_urban_railway_service" intvalue: 400 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_metro" intvalue: 401 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_underground" intvalue: 402 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_monorail" intvalue: 405 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_bus_service" intvalue: 700 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_regional_bus" intvalue: 701 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_express_bus" intvalue: 702 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_local_bus" intvalue: 704 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_trolleybus_service" intvalue: 800 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_tram_service" intvalue: 900 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_water_transport_service" intvalue: 1000 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_air_service" intvalue: 1100 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_telecabin_service" intvalue: 1300 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_funicular_service" intvalue: 1400 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_taxi_service" intvalue: 1500 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_communal_taxi" intvalue: 1501 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_miscellaneous_service" intvalue: 1700 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_cable_car" intvalue: 1701 }
-namedvalue { enumtype: "VehicleTypeEnum" name: "hvt_horse_drawn_carriage" intvalue: 1702 }
-
-# Continuous pick up and drop off type.
-# The type is used in both routes.txt and stop_times.txt.
-namedvalue: { enumtype: "ContinuousPickUpDropOffTypeEnum" name: "allowed" intvalue: 0 }
-namedvalue: { enumtype: "ContinuousPickUpDropOffTypeEnum" name: "not_available" intvalue: 1 }
-namedvalue: { enumtype: "ContinuousPickUpDropOffTypeEnum" name: "must_phone" intvalue: 2 }
-namedvalue: { enumtype: "ContinuousPickUpDropOffTypeEnum" name: "on_request" intvalue: 3 }
