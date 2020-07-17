@@ -61,13 +61,16 @@ class ProcessParsedStopAllTest {
     private static final String PLATFORM_CODE = "platform_code";
 
     @Test
-    void validatedParsedStopOrPlatformShouldCreateStopOrPlatformEntityAndBeAddedToGtfsDataRepository() {
+    void validParsedStopOrPlatformShouldCreateStopOrPlatformEntityAndBeAddedToGtfsDataRepository() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
                 mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final Station.StationBuilder mockStationBuilder =
+                mock(Station.StationBuilder.class, RETURNS_SELF);
         final StopOrPlatform mockStopOrPlatform = mock(StopOrPlatform.class);
         final ParsedEntity mockParsedStopOrPlatform = mock(ParsedEntity.class);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
         @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
 
         when(mockGenericObject.getData()).thenReturn(mockStopOrPlatform);
@@ -75,6 +78,14 @@ class ProcessParsedStopAllTest {
 
         //noinspection unchecked
         when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockFailBuildResult = mock(EntityBuildResult.class);
+
+        when(mockFailBuildResult.getData()).thenReturn(Collections.emptyList());
+        when(mockFailBuildResult.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStationBuilder.build()).thenReturn(mockFailBuildResult);
 
         when(mockParsedStopOrPlatform.getEntityId()).thenReturn(CHILD_ID);
         when(mockParsedStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
@@ -90,12 +101,15 @@ class ProcessParsedStopAllTest {
         when(mockParsedStopOrPlatform.get(LEVEL_ID)).thenReturn(LEVEL_ID);
         when(mockParsedStopOrPlatform.get(PLATFORM_CODE)).thenReturn(PLATFORM_CODE);
 
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockParent.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STATION);
+
         when(mockGtfsDataRepo.addStop(mockStopOrPlatform)).thenReturn(mockStopOrPlatform);
 
         final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
                 mockGtfsDataRepo,
                 mockStopOrPlatformBuilder,
-                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockStationBuilder,
                 mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
                 mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
                 mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
@@ -103,6 +117,7 @@ class ProcessParsedStopAllTest {
 
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockParsedStopOrPlatform);
+        fakePreprocessedStopMap.put(PARENT_ID, mockParent);
 
         underTest.execute(fakePreprocessedStopMap);
 
@@ -156,7 +171,7 @@ class ProcessParsedStopAllTest {
     }
 
     @Test
-    void validatedParsedStationShouldCreateStationEntityAndBeAddedToGtfsDataRepository() {
+    void validParsedStationShouldCreateStationEntityAndBeAddedToGtfsDataRepository() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Station.StationBuilder mockStationBuilder =
@@ -249,13 +264,16 @@ class ProcessParsedStopAllTest {
     }
 
     @Test
-    void validatedParsedEntranceShouldCreateEntranceEntityAndBeAddedToGtfsDataRepository() {
+    void validParsedEntranceShouldCreateEntranceEntityAndBeAddedToGtfsDataRepository() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final Entrance.EntranceBuilder mockEntranceBuilder =
                 mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final Station.StationBuilder mockStationBuilder =
+                mock(Station.StationBuilder.class, RETURNS_SELF);
         final Entrance mockEntrance = mock(Entrance.class);
         final ParsedEntity mockParsedEntrance = mock(ParsedEntity.class);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
         @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
 
         when(mockGenericObject.getData()).thenReturn(mockEntrance);
@@ -263,6 +281,15 @@ class ProcessParsedStopAllTest {
 
         //noinspection unchecked
         when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+
+
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockFailBuildResult = mock(EntityBuildResult.class);
+
+        when(mockFailBuildResult.getData()).thenReturn(Collections.emptyList());
+        when(mockFailBuildResult.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStationBuilder.build()).thenReturn(mockFailBuildResult);
 
         when(mockParsedEntrance.getEntityId()).thenReturn(CHILD_ID);
         when(mockParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
@@ -278,12 +305,15 @@ class ProcessParsedStopAllTest {
         when(mockParsedEntrance.get(LEVEL_ID)).thenReturn(LEVEL_ID);
         when(mockParsedEntrance.get(PLATFORM_CODE)).thenReturn(PLATFORM_CODE);
 
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockParent.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STATION);
+
         when(mockGtfsDataRepo.addStop(mockEntrance)).thenReturn(mockEntrance);
 
         final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
                 mockGtfsDataRepo,
                 mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF),
-                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockStationBuilder,
                 mockEntranceBuilder,
                 mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
                 mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
@@ -341,13 +371,16 @@ class ProcessParsedStopAllTest {
     }
 
     @Test
-    void validatedParsedGenericNodeShouldCreateGenericNodeEntityAndBeAddedToGtfsDataRepository() {
+    void validParsedGenericNodeShouldCreateGenericNodeEntityAndBeAddedToGtfsDataRepository() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final GenericNode.GenericNodeBuilder mockGenericNodeBuilder =
                 mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF);
+        final Station.StationBuilder mockStationBuilder =
+                mock(Station.StationBuilder.class, RETURNS_SELF);
         final GenericNode mockGenericNode = mock(GenericNode.class);
         final ParsedEntity mockParsedGenericNode = mock(ParsedEntity.class);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
         @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
 
         when(mockGenericObject.getData()).thenReturn(mockGenericNode);
@@ -355,6 +388,15 @@ class ProcessParsedStopAllTest {
 
         //noinspection unchecked
         when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+
+
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockFailBuildResult = mock(EntityBuildResult.class);
+
+        when(mockFailBuildResult.getData()).thenReturn(Collections.emptyList());
+        when(mockFailBuildResult.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStationBuilder.build()).thenReturn(mockFailBuildResult);
 
         when(mockParsedGenericNode.getEntityId()).thenReturn(CHILD_ID);
         when(mockParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
@@ -369,6 +411,9 @@ class ProcessParsedStopAllTest {
         when(mockParsedGenericNode.get(WHEELCHAIR_BOARDING)).thenReturn(1);
         when(mockParsedGenericNode.get(LEVEL_ID)).thenReturn(LEVEL_ID);
         when(mockParsedGenericNode.get(PLATFORM_CODE)).thenReturn(PLATFORM_CODE);
+
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockParent.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STATION);
 
         when(mockGtfsDataRepo.addStop(mockGenericNode)).thenReturn(mockGenericNode);
 
@@ -431,13 +476,16 @@ class ProcessParsedStopAllTest {
     }
 
     @Test
-    void validatedParsedBoardingAreaShouldCreateBoardingEntityAndBeAddedToGtfsDataRepository() {
+    void validParsedBoardingAreaShouldCreateBoardingEntityAndBeAddedToGtfsDataRepository() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final BoardingArea.BoardingAreaBuilder mockBoardingAreaBuilder =
                 mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF);
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
         final BoardingArea mockBoardingArea = mock(BoardingArea.class);
         final ParsedEntity mockParsedBoardingArea = mock(ParsedEntity.class);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
         @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
 
         when(mockGenericObject.getData()).thenReturn(mockBoardingArea);
@@ -445,6 +493,15 @@ class ProcessParsedStopAllTest {
 
         //noinspection unchecked
         when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+
+
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockFailBuildResult = mock(EntityBuildResult.class);
+
+        when(mockFailBuildResult.getData()).thenReturn(Collections.emptyList());
+        when(mockFailBuildResult.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockFailBuildResult);
 
         when(mockParsedBoardingArea.getEntityId()).thenReturn(CHILD_ID);
         when(mockParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
@@ -460,11 +517,14 @@ class ProcessParsedStopAllTest {
         when(mockParsedBoardingArea.get(LEVEL_ID)).thenReturn(LEVEL_ID);
         when(mockParsedBoardingArea.get(PLATFORM_CODE)).thenReturn(PLATFORM_CODE);
 
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockParent.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
+
         when(mockGtfsDataRepo.addStop(mockBoardingArea)).thenReturn(mockBoardingArea);
 
         final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
                 mockGtfsDataRepo,
-                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF),
+                mockStopOrPlatformBuilder,
                 mock(Station.StationBuilder.class, RETURNS_SELF),
                 mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
                 mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
@@ -707,11 +767,11 @@ class ProcessParsedStopAllTest {
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final List<DuplicatedEntityNotice> noticeList = captor.getAllValues();
+        final DuplicatedEntityNotice notice = captor.getValue();
 
-        assertEquals("stops.txt", noticeList.get(0).getFilename());
-        assertEquals("stop_id", noticeList.get(0).getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals(CHILD_ID, noticeList.get(0).getEntityId());
+        assertEquals("stops.txt", notice.getFilename());
+        assertEquals("stop_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals(CHILD_ID, notice.getEntityId());
 
         verifyNoMoreInteractions(mockBuilder, mockGtfsDataRepo, mockResultRepo, mockParsedStop, mockStop,
                 mockGenericObject);
