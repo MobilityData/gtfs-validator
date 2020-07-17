@@ -24,14 +24,12 @@ import java.io.IOException;
 public class StationWithParentStationNotice extends ErrorNotice {
 
     public StationWithParentStationNotice(final String childId,
-                                          final Integer childLocationType,
                                           final String parentId) {
         super("stops.txt", E_037,
-                "Invalid `parent_station`",
-                "Stop with id:`" + childId + "` of type:`" + childLocationType + "` specify parent id:`" +
-                        parentId + "`. This is invalid. Expected null",
+                "Non null `parent_station`",
+                "Stop with id:`" + childId + " is a station (location_type=1) with parent_id:`" +
+                        parentId + "`. This is forbidden. Expected null",
                 childId);
-        putNoticeSpecific(KEY_CHILD_LOCATION_TYPE, childLocationType);
         putNoticeSpecific(KEY_PARENT_ID, parentId);
     }
 

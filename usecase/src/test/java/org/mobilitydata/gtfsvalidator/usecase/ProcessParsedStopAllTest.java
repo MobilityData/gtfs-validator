@@ -22,6 +22,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ParentStationInvalidLocationTypeNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StationWithParentStationNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -29,13 +31,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 import static org.mockito.Mockito.*;
 
 class ProcessParsedStopAllTest {
@@ -718,7 +717,1035 @@ class ProcessParsedStopAllTest {
                 mockGenericObject);
     }
 
-    //TODO: tests for parent <--> child relationship
-    //TODO: tests for invalid parent location type
-    //TODO: tests for wheelchair boarding taken from parent when it should (wheelchairBoarding = 0)
+    @Test
+    void childrenAreResolved() {
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+
+        final ParsedEntity mockChild0 = mock(ParsedEntity.class);
+        final ParsedEntity mockChild1 = mock(ParsedEntity.class);
+        final ParsedEntity mockChild2 = mock(ParsedEntity.class);
+        final ParsedEntity mockParent0 = mock(ParsedEntity.class);
+        final ParsedEntity mockParent1 = mock(ParsedEntity.class);
+
+        when(mockChild0.getEntityId()).thenReturn(CHILD_ID + "0");
+        when(mockChild1.getEntityId()).thenReturn(CHILD_ID + "1");
+        when(mockChild2.getEntityId()).thenReturn(CHILD_ID + "2");
+        when(mockParent0.getEntityId()).thenReturn(PARENT_ID + "0");
+        when(mockParent1.getEntityId()).thenReturn(PARENT_ID + "1");
+
+        when(mockChild0.get(PARENT_STATION)).thenReturn(PARENT_ID + "0");
+        when(mockChild1.get(PARENT_STATION)).thenReturn(PARENT_ID + "0");
+        when(mockChild2.get(PARENT_STATION)).thenReturn(PARENT_ID + "1");
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(mockChild0.getEntityId(), mockChild0);
+        fakePreprocessedStopMap.put(mockChild1.getEntityId(), mockChild1);
+        fakePreprocessedStopMap.put(mockChild2.getEntityId(), mockChild2);
+        fakePreprocessedStopMap.put(mockParent0.getEntityId(), mockParent0);
+        fakePreprocessedStopMap.put(mockParent1.getEntityId(), mockParent1);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockStopOrPlatformBuilder, times(1)).childrenList(
+                ArgumentMatchers.eq(List.of(mockChild0.getEntityId(), mockChild1.getEntityId()))
+        );
+        verify(mockStopOrPlatformBuilder, times(1)).childrenList(
+                ArgumentMatchers.eq(List.of(mockChild2.getEntityId()))
+        );
+    }
+
+    @Test
+    void stopOrPlatformWheelchairBoardingInheritanceCheck() {
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
+        final ParsedEntity mockChild = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockChild.get(PARENT_STATION)).thenReturn(PARENT_ID);
+        when(mockParent.get(WHEELCHAIR_BOARDING)).thenReturn(1);
+        when(mockChild.get(WHEELCHAIR_BOARDING)).thenReturn(0);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockChild);
+        fakePreprocessedStopMap.put(PARENT_ID, mockParent);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockParent, times(2)).get(ArgumentMatchers.eq(WHEELCHAIR_BOARDING));
+        verify(mockChild, times(1)).get(ArgumentMatchers.eq(WHEELCHAIR_BOARDING));
+
+        verify(mockStopOrPlatformBuilder, times(2)).wheelchairBoarding(1);
+    }
+
+    @Test
+    void entranceWheelchairBoardingInheritanceCheck() {
+        final Entrance.EntranceBuilder mockEntranceBuilder =
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
+        final ParsedEntity mockChild = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockChild.get(PARENT_STATION)).thenReturn(PARENT_ID);
+        when(mockChild.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
+        when(mockParent.get(WHEELCHAIR_BOARDING)).thenReturn(1);
+        when(mockChild.get(WHEELCHAIR_BOARDING)).thenReturn(0);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockEntranceBuilder,
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockChild);
+        fakePreprocessedStopMap.put(PARENT_ID, mockParent);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockParent, times(2)).get(ArgumentMatchers.eq(WHEELCHAIR_BOARDING));
+        verify(mockChild, times(1)).get(ArgumentMatchers.eq(WHEELCHAIR_BOARDING));
+
+        verify(mockEntranceBuilder, times(1)).wheelchairBoarding(1);
+    }
+
+    @Test
+    void stationWithParentShouldAddNoticeToResultRepo() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Station.StationBuilder mockStationBuilder =
+                mock(Station.StationBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParsedStation = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStationBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockParsedStation.getEntityId()).thenReturn(CHILD_ID);
+        when(mockParsedStation.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STATION);
+        when(mockParsedStation.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF),
+                mockStationBuilder,
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockParsedStation);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<StationWithParentStationNotice> captor =
+                ArgumentCaptor.forClass(StationWithParentStationNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        StationWithParentStationNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+    }
+
+    @Test
+    void stopOrPlatformWithStopOrPlatformParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedStopOrPlatform = mock(ParsedEntity.class);
+        final ParsedEntity parentStopOrPlatform = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedStopOrPlatform.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
+        when(childParsedStopOrPlatform.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentStopOrPlatform.getEntityId()).thenReturn(PARENT_ID);
+        when(parentStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedStopOrPlatform);
+        fakePreprocessedStopMap.put(PARENT_ID, parentStopOrPlatform);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void stopOrPlatformWithEntranceParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final Entrance.EntranceBuilder mockEntranceBuilder =
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedStopOrPlatform = mock(ParsedEntity.class);
+        final ParsedEntity parentEntrance = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedStopOrPlatform.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
+        when(childParsedStopOrPlatform.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentEntrance.getEntityId()).thenReturn(PARENT_ID);
+        when(parentEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockEntranceBuilder,
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedStopOrPlatform);
+        fakePreprocessedStopMap.put(PARENT_ID, parentEntrance);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_ENTRANCE, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void stopOrPlatformWithGenericNodeParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final GenericNode.GenericNodeBuilder mockGenericNodeBuilder =
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedStopOrPlatform = mock(ParsedEntity.class);
+        final ParsedEntity parentGenericNode = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedStopOrPlatform.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
+        when(childParsedStopOrPlatform.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentGenericNode.getEntityId()).thenReturn(PARENT_ID);
+        when(parentGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mockGenericNodeBuilder,
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedStopOrPlatform);
+        fakePreprocessedStopMap.put(PARENT_ID, parentGenericNode);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_GENERIC_NODE, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void stopOrPlatformWithBoardingAreaParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final BoardingArea.BoardingAreaBuilder mockBoardingAreaBuilder =
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedStopOrPlatform = mock(ParsedEntity.class);
+        final ParsedEntity parentEntrance = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedStopOrPlatform.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
+        when(childParsedStopOrPlatform.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentEntrance.getEntityId()).thenReturn(PARENT_ID);
+        when(parentEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mockBoardingAreaBuilder
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedStopOrPlatform);
+        fakePreprocessedStopMap.put(PARENT_ID, parentEntrance);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_BOARDING_AREA, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void entranceWithStopOrPlatformParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final Entrance.EntranceBuilder mockEntranceBuilder =
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedEntrance = mock(ParsedEntity.class);
+        final ParsedEntity parentStopOrPlatform = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedEntrance.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
+        when(childParsedEntrance.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentStopOrPlatform.getEntityId()).thenReturn(PARENT_ID);
+        when(parentStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockEntranceBuilder,
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedEntrance);
+        fakePreprocessedStopMap.put(PARENT_ID, parentStopOrPlatform);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_ENTRANCE, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void entranceWithEntranceParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Entrance.EntranceBuilder mockEntranceBuilder =
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedEntrance = mock(ParsedEntity.class);
+        final ParsedEntity parentParsedEntrance = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedEntrance.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
+        when(childParsedEntrance.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentParsedEntrance.getEntityId()).thenReturn(PARENT_ID);
+        when(parentParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF),
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockEntranceBuilder,
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedEntrance);
+        fakePreprocessedStopMap.put(PARENT_ID, parentParsedEntrance);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_ENTRANCE, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_ENTRANCE, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void entranceWithGenericNodeParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Entrance.EntranceBuilder mockEntranceBuilder =
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final GenericNode.GenericNodeBuilder mockGenericNodeBuilder =
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedEntrance = mock(ParsedEntity.class);
+        final ParsedEntity parentGenericNode = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedEntrance.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
+        when(childParsedEntrance.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentGenericNode.getEntityId()).thenReturn(PARENT_ID);
+        when(parentGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class),
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockEntranceBuilder,
+                mockGenericNodeBuilder,
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedEntrance);
+        fakePreprocessedStopMap.put(PARENT_ID, parentGenericNode);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_ENTRANCE, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_GENERIC_NODE, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void entranceWithBoardingAreaParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Entrance.EntranceBuilder mockEntranceBuilder =
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final BoardingArea.BoardingAreaBuilder mockBoardingAreaBuilder =
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedEntrance = mock(ParsedEntity.class);
+        final ParsedEntity parentParsedBoardingArea = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedEntrance.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
+        when(childParsedEntrance.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentParsedBoardingArea.getEntityId()).thenReturn(PARENT_ID);
+        when(parentParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class),
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockEntranceBuilder,
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mockBoardingAreaBuilder
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedEntrance);
+        fakePreprocessedStopMap.put(PARENT_ID, parentParsedBoardingArea);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_ENTRANCE, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_BOARDING_AREA, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void genericNodeWithStopOrPlatformParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final GenericNode.GenericNodeBuilder mockGenericNodeBuilder =
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedGenericNode = mock(ParsedEntity.class);
+        final ParsedEntity parentParsedStopOrPlatform = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedGenericNode.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
+        when(childParsedGenericNode.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentParsedStopOrPlatform.getEntityId()).thenReturn(PARENT_ID);
+        when(parentParsedStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class),
+                mockGenericNodeBuilder,
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedGenericNode);
+        fakePreprocessedStopMap.put(PARENT_ID, parentParsedStopOrPlatform);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_GENERIC_NODE, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void genericNodeWithEntranceParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Entrance.EntranceBuilder mockEntranceBuilder =
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final GenericNode.GenericNodeBuilder mockGenericNodeBuilder =
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedGenericNode = mock(ParsedEntity.class);
+        final ParsedEntity parentParsedEntrance = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedGenericNode.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
+        when(childParsedGenericNode.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentParsedEntrance.getEntityId()).thenReturn(PARENT_ID);
+        when(parentParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class),
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockEntranceBuilder,
+                mockGenericNodeBuilder,
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedGenericNode);
+        fakePreprocessedStopMap.put(PARENT_ID, parentParsedEntrance);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_GENERIC_NODE, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_ENTRANCE, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void genericNodeWithGenericNodeParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GenericNode.GenericNodeBuilder mockGenericNodeBuilder =
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedGenericNode = mock(ParsedEntity.class);
+        final ParsedEntity parentGenericNode = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedGenericNode.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
+        when(childParsedGenericNode.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentGenericNode.getEntityId()).thenReturn(PARENT_ID);
+        when(parentGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class),
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class),
+                mockGenericNodeBuilder,
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedGenericNode);
+        fakePreprocessedStopMap.put(PARENT_ID, parentGenericNode);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_GENERIC_NODE, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_GENERIC_NODE, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void genericNodeWithBoardingAreaParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final GenericNode.GenericNodeBuilder mockGenericNodeBuilder =
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF);
+        final BoardingArea.BoardingAreaBuilder mockBoardingAreaBuilder =
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedGenericNode = mock(ParsedEntity.class);
+        final ParsedEntity parentParsedBoardingArea = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedGenericNode.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
+        when(childParsedGenericNode.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentParsedBoardingArea.getEntityId()).thenReturn(PARENT_ID);
+        when(parentParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class),
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class),
+                mockGenericNodeBuilder,
+                mockBoardingAreaBuilder
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedGenericNode);
+        fakePreprocessedStopMap.put(PARENT_ID, parentParsedBoardingArea);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_GENERIC_NODE, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_BOARDING_AREA, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void boardingAreaWithStationParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final BoardingArea.BoardingAreaBuilder mockBoardingAreaBuilder =
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF);
+        final Station.StationBuilder mockStationBuilder =
+                mock(Station.StationBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedBoardingArea = mock(ParsedEntity.class);
+        final ParsedEntity parentParsedStation = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockStationBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedBoardingArea.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
+        when(childParsedBoardingArea.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentParsedStation.getEntityId()).thenReturn(PARENT_ID);
+        when(parentParsedStation.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STATION);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class),
+                mockStationBuilder,
+                mock(Entrance.EntranceBuilder.class),
+                mock(GenericNode.GenericNodeBuilder.class),
+                mockBoardingAreaBuilder
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedBoardingArea);
+        fakePreprocessedStopMap.put(PARENT_ID, parentParsedStation);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_BOARDING_AREA, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_STATION, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void boardingAreaWithEntranceParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final BoardingArea.BoardingAreaBuilder mockBoardingAreaBuilder =
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF);
+        final Entrance.EntranceBuilder mockEntranceBuilder =
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedBoardingArea = mock(ParsedEntity.class);
+        final ParsedEntity parentParsedEntrance = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedBoardingArea.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
+        when(childParsedBoardingArea.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentParsedEntrance.getEntityId()).thenReturn(PARENT_ID);
+        when(parentParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class),
+                mock(Station.StationBuilder.class),
+                mockEntranceBuilder,
+                mock(GenericNode.GenericNodeBuilder.class),
+                mockBoardingAreaBuilder
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedBoardingArea);
+        fakePreprocessedStopMap.put(PARENT_ID, parentParsedEntrance);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_BOARDING_AREA, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_ENTRANCE, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void boardingAreaWithGenericNodeParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final BoardingArea.BoardingAreaBuilder mockBoardingAreaBuilder =
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF);
+        final GenericNode.GenericNodeBuilder mockGenericNodeBuilder =
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedBoardingArea = mock(ParsedEntity.class);
+        final ParsedEntity parentParsedGenericNode = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        //noinspection unchecked
+        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedBoardingArea.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
+        when(childParsedBoardingArea.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentParsedGenericNode.getEntityId()).thenReturn(PARENT_ID);
+        when(parentParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class),
+                mock(Station.StationBuilder.class),
+                mock(Entrance.EntranceBuilder.class),
+                mockGenericNodeBuilder,
+                mockBoardingAreaBuilder
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedBoardingArea);
+        fakePreprocessedStopMap.put(PARENT_ID, parentParsedGenericNode);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_BOARDING_AREA, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_GENERIC_NODE, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
+
+    @Test
+    void boardingAreaWithBoardingAreaParentShouldAddNoticeToResultRepository() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final BoardingArea.BoardingAreaBuilder mockBoardingAreaBuilder =
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF);
+        final ParsedEntity childParsedBoardingArea = mock(ParsedEntity.class);
+        final ParsedEntity parentParsedBoardingArea = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+
+        when(childParsedBoardingArea.getEntityId()).thenReturn(CHILD_ID);
+        when(childParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
+        when(childParsedBoardingArea.get(PARENT_STATION)).thenReturn(PARENT_ID);
+
+        when(parentParsedBoardingArea.getEntityId()).thenReturn(PARENT_ID);
+        when(parentParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(mockResultRepo,
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class),
+                mock(Station.StationBuilder.class),
+                mock(Entrance.EntranceBuilder.class),
+                mock(GenericNode.GenericNodeBuilder.class),
+                mockBoardingAreaBuilder
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, childParsedBoardingArea);
+        fakePreprocessedStopMap.put(PARENT_ID, parentParsedBoardingArea);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
+                ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        ParentStationInvalidLocationTypeNotice notice = captor.getValue();
+        assertEquals(CHILD_ID, notice.getEntityId());
+        assertEquals(LOCATION_TYPE_BOARDING_AREA, notice.getNoticeSpecific(KEY_CHILD_LOCATION_TYPE));
+        assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+        assertEquals(LOCATION_TYPE_STOP_OR_PLATFORM, notice.getNoticeSpecific(KEY_EXPECTED_PARENT_LOCATION_TYPE));
+        assertEquals(LOCATION_TYPE_BOARDING_AREA, notice.getNoticeSpecific(KEY_ACTUAL_PARENT_LOCATION_TYPE));
+    }
 }

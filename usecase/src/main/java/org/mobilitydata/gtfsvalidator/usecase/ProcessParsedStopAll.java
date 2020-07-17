@@ -168,7 +168,7 @@ public class ProcessParsedStopAll {
                 case STATION: {
                     if (parentStation != null) {
                         resultRepository.addNotice(
-                                new StationWithParentStationNotice(stopId, 1, parentStation)
+                                new StationWithParentStationNotice(stopId, parentStation)
                         );
                     }
 
