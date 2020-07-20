@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
@@ -477,6 +478,47 @@ class InMemoryGtfsDataRepositoryTest {
                 null, null));
         assertEquals(mockFareRule01, underTest.getFareRule("fare id1", null, null,
                 null, null));
+    }
+
+    @Test
+    void addNullFrequencyShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addFrequency(null));
+        assertEquals("Cannot add null frequency to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addSameFrequencyTwiceShouldReturnNull() {
+        final Frequency mockFrequency00 = mock(Frequency.class);
+        final Frequency mockFrequency01 = mock(Frequency.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFrequency00.getTripId()).thenReturn("trip id");
+        when(mockFrequency00.getStartTime()).thenReturn(0);
+        when(mockFrequency01.getTripId()).thenReturn("trip id");
+        when(mockFrequency01.getStartTime()).thenReturn(0);
+
+        underTest.addFrequency(mockFrequency00);
+
+        assertNull(underTest.addFrequency(mockFrequency00));
+        assertNull(underTest.addFrequency(mockFrequency01));
+    }
+
+    @Test
+    void addFrequencyAndGetFrequencyShouldReturnSameEntity() {
+        final Frequency mockFrequency00 = mock(Frequency.class);
+        final Frequency mockFrequency01 = mock(Frequency.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFrequency00.getTripId()).thenReturn("trip id0");
+        when(mockFrequency01.getTripId()).thenReturn("trip id1");
+        when(mockFrequency00.getFrequencyMappingKey()).thenReturn("fare id0" + "null");
+        when(mockFrequency01.getFrequencyMappingKey()).thenReturn("fare id1" + "null");
+
+        assertEquals(mockFrequency00, underTest.addFrequency(mockFrequency00));
+        assertEquals(mockFrequency01, underTest.addFrequency(mockFrequency01));
+
+        assertEquals(mockFrequency00, underTest.getFrequency("fare id0", null));
+        assertEquals(mockFrequency01, underTest.getFrequency("fare id1", null));
     }
 
     @Test

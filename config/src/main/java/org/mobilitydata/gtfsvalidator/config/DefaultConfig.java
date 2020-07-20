@@ -25,6 +25,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
@@ -272,6 +274,10 @@ public class DefaultConfig {
                 new Entrance.EntranceBuilder(),
                 new GenericNode.GenericNodeBuilder(),
                 new BoardingArea.BoardingAreaBuilder());
+    }
+
+    public ProcessParsedFrequency processParsedFrequency() {
+        return new ProcessParsedFrequency(resultRepo, gtfsDataRepository, timeUtils, new Frequency.FrequencyBuilder());
     }
 
     public GenerateExclusionFilenameList generateExclusionFilenameList() {

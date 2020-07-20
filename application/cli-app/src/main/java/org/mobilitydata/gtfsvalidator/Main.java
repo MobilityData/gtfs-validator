@@ -74,6 +74,7 @@ public class Main {
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
+                final ProcessParsedFrequency processParsedFrequency = config.processParsedFrequency();
                 final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
                 final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
                 final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
@@ -142,6 +143,10 @@ public class Main {
                                 }
                                 case "fare_rules.txt": {
                                     processParsedFareRule.execute(parsedEntity);
+                                    break;
+                                }
+                                case "frequencies.txt": {
+                                    processParsedFrequency.execute(parsedEntity);
                                     break;
                                 }
                                 case "shapes.txt": {
