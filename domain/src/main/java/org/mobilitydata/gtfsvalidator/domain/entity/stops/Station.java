@@ -108,7 +108,7 @@ public class Station extends LocationBase {
         }
 
         public StationBuilder clear() {
-            super.clearBase();
+            super.clear();
             levelId = null;
             wheelchairBoarding = UNKNOWN_WHEELCHAIR_BOARDING;
             originalWheelchairBoarding = Integer.MAX_VALUE;

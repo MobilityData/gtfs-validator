@@ -36,8 +36,8 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
 | [E033](#E033) | `route_id` not found |
 | [E035](#E035) | `agency_id` not found |
-| [E036](#E035) | Stop with invalid parent `location_type` |
-| [E037](#E035) | Stop with `location_type` of 2 (Station) defines a parent |
+| [E036](#E036) | Invalid parent `location_type` for stop |
+| [E037](#E037) | Station stop (`location_type`=2) has a parent stop |
 
 ### Table of Warnings
 
@@ -154,15 +154,29 @@ Value of field `agency_id` should exist in GTFS data.
 
 <a name="E036"/>
 
-### E036 - Stop with invalid parent `location_type`
+### E036 - Invalid parent `location_type` for stop
 
-Value of field `location_type` of parent found in field `parent_station` in invalid.
+Value of field `location_type` of parent found in field `parent_station` is invalid.
+
+According to spec
+- _Stop/platform_ can only have _Station_ as parent
+- _Station_ can NOT have a parent
+- _Entrance/exit_ or _generic node_ can only have _Station_ as parent
+- _Boarding Area_ can only have _Platform_ as parent 
+
+Any other combination raise this error
+
+#### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 <a name="E037"/>
 
-### E037 - Stop with `location_type` of 2 (Station) defines a parent
+### E037 - Station stop (`location_type`=2) has a parent stop
 
-Value of field `parent_station` must be null when `location_type` is 2
+Field `parent_station` must be empty when `location_type` is 2
+
+#### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 # Warnings
 

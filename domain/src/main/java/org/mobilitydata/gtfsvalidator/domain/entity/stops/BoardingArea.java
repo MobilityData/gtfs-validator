@@ -76,7 +76,7 @@ public class BoardingArea extends LocationBase {
         }
 
         public BoardingAreaBuilder clear() {
-            super.clearBase();
+            super.clear();
             parentStation = null;
             return this;
         }

@@ -119,8 +119,9 @@ public class StopOrPlatform extends LocationBase {
             }
         }
 
+
         public StopOrPlatformBuilder clear() {
-            super.clearBase();
+            super.clear();
             parentStation = null;
             wheelchairBoarding = UNKNOWN_WHEELCHAIR_BOARDING;
             originalWheelchairBoarding = Integer.MAX_VALUE;

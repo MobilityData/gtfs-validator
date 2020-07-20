@@ -797,7 +797,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Add a stop representing a row from stops.txt to this {@link GtfsDataRepository}. Return the entity added to the
      * repository if the uniqueness constraint of stop based on stop_id is respected. Otherwise returns null.
      *
-     * @param newStop the internal representation. A daughter of {@link LocationBase}
+     * @param newStop the internal representation. A subclass of {@link LocationBase}
      *                of a row from stops.txt to be added to the repository.
      * @return the entity added to the repository if the uniqueness constraint of stop based on stop_id is
      * respected. Otherwise returns null.
@@ -819,9 +819,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return an immutable map of LocationBase objects representing all the rows from stops.txt,
+     * Return an immutable map of {@link LocationBase} objects representing all the rows from stops.txt,
+     * with stop_id as the key
      *
-     * @return an immutable map of LocationBase objects representing all the rows from stops.txt
+     * @return an immutable map of {@link LocationBase} objects representing all the rows from stops.txt,
+     * with stop_id as the key
      */
     @Override
     public Map<String, LocationBase> getStopAll() {
@@ -831,8 +833,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     /**
      * Return the {@link LocationBase} representing a row from stops.txt related to the id provided as parameter
      *
-     * @param stopId the key from stops.txt related to the LocationBase to be returned
-     * @return the LocationBase representing a row from stops.txt related to the id provided as parameter.
+     * @param stopId the stop_id from stops.txt related to the {@link LocationBase} to be returned
+     * @return the {@link LocationBase} representing a row from stops.txt related to the id provided as parameter.
      * Null if the id couldn't be found.
      */
     @Override

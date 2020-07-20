@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Base class for all entities defined in stops.txt. Can not be directly instantiated: user must use a Builder
- * derived from {@link LocationBase.LocationBaseBuilder} to instantiate a daughter class.
+ * derived from {@link LocationBase.LocationBaseBuilder} to instantiate a subclass.
  */
 public abstract class LocationBase extends GtfsEntity {
 
@@ -168,7 +168,7 @@ public abstract class LocationBase extends GtfsEntity {
             return this;
         }
 
-        protected void clearBase() {
+        public LocationBaseBuilder clear() {
             stopId = null;
             stopCode = null;
             stopName = null;
@@ -180,6 +180,7 @@ public abstract class LocationBase extends GtfsEntity {
             stopTimezone = null;
             childrenIdList = null;
             noticeCollection.clear();
+            return this;
         }
     }
 }

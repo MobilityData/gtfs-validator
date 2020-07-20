@@ -109,7 +109,7 @@ public class Entrance extends LocationBase {
         }
 
         public EntranceBuilder clear() {
-            super.clearBase();
+            super.clear();
             parentStation = null;
             wheelchairBoarding = UNKNOWN_WHEELCHAIR_BOARDING;
             originalWheelchairBoarding = Integer.MAX_VALUE;

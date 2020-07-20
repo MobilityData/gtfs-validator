@@ -76,7 +76,7 @@ public class GenericNode extends LocationBase {
         }
 
         public GenericNodeBuilder clear() {
-            super.clearBase();
+            super.clear();
             parentStation = null;
             return this;
         }
