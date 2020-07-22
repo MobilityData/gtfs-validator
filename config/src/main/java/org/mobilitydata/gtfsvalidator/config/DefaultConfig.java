@@ -24,7 +24,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
@@ -117,6 +116,11 @@ public class DefaultConfig {
 
     public ValidateAllRequiredFilePresence validateAllRequiredFilePresence() {
         return new ValidateAllRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
+    }
+
+    public ValidateCsvNotEmptyForFile validateCsvNotEmptyForFile(final String filename) {
+        return new ValidateCsvNotEmptyForFile(rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                rawFileRepo, resultRepo);
     }
 
     public ValidateHeadersForFile validateHeadersForFile(final String filename) {

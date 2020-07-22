@@ -123,6 +123,11 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final EmptyFileNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final MissingRequiredFileNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }

@@ -43,6 +43,8 @@ public interface NoticeExporter {
 
     void export(MissingRequiredFileNotice toExport) throws IOException;
 
+    void export(EmptyFileNotice toExport) throws IOException;
+
     void export(MissingRequiredValueNotice toExport) throws IOException;
 
     void export(CannotParseColorNotice toExport) throws IOException;

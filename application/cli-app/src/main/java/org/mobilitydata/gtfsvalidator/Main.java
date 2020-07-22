@@ -81,6 +81,7 @@ public class Main {
 
                 // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
+                    config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
 
