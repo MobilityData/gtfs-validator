@@ -158,6 +158,10 @@ public class ProcessParsedStopAll {
                                 WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING) {
                             wheelchairBoarding = (Integer) parent.get("wheelchair_boarding");
                         }
+
+                        stopTimezone = (String) parent.get("stop_timezone");
+                    } else if (stopTimezone == null && gtfsRepo.getAgencyCount() != 0) {
+                        stopTimezone = gtfsRepo.getAgencyAll().iterator().next().getAgencyTimezone();
                     }
 
                     stopOrPlatformBuilder.clear()
@@ -183,6 +187,10 @@ public class ProcessParsedStopAll {
                         resultRepository.addNotice(
                                 new StationWithParentStationNotice(stopId, parentStation)
                         );
+                    }
+
+                    if (stopTimezone == null && gtfsRepo.getAgencyCount() != 0) {
+                        stopTimezone = gtfsRepo.getAgencyAll().iterator().next().getAgencyTimezone();
                     }
 
                     stationBuilder.clear()
@@ -220,6 +228,8 @@ public class ProcessParsedStopAll {
                                 WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING) {
                             wheelchairBoarding = (Integer) parent.get("wheelchair_boarding");
                         }
+
+                        stopTimezone = (String) parent.get("stop_timezone");
                     }
 
                     entranceBuilder.clear()
@@ -252,6 +262,8 @@ public class ProcessParsedStopAll {
                                     )
                             );
                         }
+
+                        stopTimezone = (String) parent.get("stop_timezone");
                     }
 
                     genericNodeBuilder.clear()
@@ -283,6 +295,8 @@ public class ProcessParsedStopAll {
                                     )
                             );
                         }
+
+                        stopTimezone = (String) parent.get("stop_timezone");
                     }
 
                     boardingAreaBuilder.clear()

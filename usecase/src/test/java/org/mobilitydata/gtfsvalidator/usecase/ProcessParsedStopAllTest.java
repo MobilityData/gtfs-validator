@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
@@ -165,6 +166,7 @@ class ProcessParsedStopAllTest {
         inOrder.verify(mockStopOrPlatformBuilder, times(1)).build();
         inOrder.verify(mockGtfsDataRepo,
                 times(1)).addStop(ArgumentMatchers.eq(mockStopOrPlatform));
+        verify(mockGtfsDataRepo, times(1)).getAgencyCount();
 
         verifyNoMoreInteractions(mockStopOrPlatformBuilder,
                 mockResultRepo, mockGtfsDataRepo, mockParsedStopOrPlatform, mockGenericObject);
@@ -874,6 +876,125 @@ class ProcessParsedStopAllTest {
     }
 
     @Test
+    void stopOrPlatformWithParentShouldInheritParentTimezone() {
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
+        final ParsedEntity mockChild = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockChild.get(PARENT_STATION)).thenReturn(PARENT_ID);
+        when(mockParent.get(STOP_TIMEZONE)).thenReturn("PARENT timezone");
+        when(mockChild.get(STOP_TIMEZONE)).thenReturn("CHILD timezone");
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockChild);
+        fakePreprocessedStopMap.put(PARENT_ID, mockParent);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockParent, times(2)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+        verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+
+        verify(mockStopOrPlatformBuilder, times(2)).stopTimezone("PARENT timezone");
+    }
+
+    @Test
+    void stopOrPlatformWithoutTimezoneNorParentShouldInheritAgencyTimezone() {
+        // when no parent is defined and stop_timezone is not defined, timezone is inherited from agency
+
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockChild = mock(ParsedEntity.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Agency mockAgency = mock(Agency.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockAgency.getAgencyTimezone()).thenReturn("AGENCY timezone");
+        when(mockGtfsDataRepo.getAgencyCount()).thenReturn(1);
+        when(mockGtfsDataRepo.getAgencyAll()).thenReturn(List.of(mockAgency));
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mockGtfsDataRepo,
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockChild);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+
+        verify(mockStopOrPlatformBuilder, times(1)).stopTimezone("AGENCY timezone");
+    }
+
+    @Test
+    void stopOrPlatformWithoutParentTimezoneInheritanceCheck() {
+        // when no parent is defined and stop_timezone is defined, timezone is NOT inherited from agency
+
+        final StopOrPlatform.StopOrPlatformBuilder mockStopOrPlatformBuilder =
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockChild = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockChild.get(STOP_TIMEZONE)).thenReturn("CHILD timezone");
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mock(GtfsDataRepository.class),
+                mockStopOrPlatformBuilder,
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockChild);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+
+        verify(mockStopOrPlatformBuilder, times(1)).stopTimezone("CHILD timezone");
+    }
+
+    @Test
     void entranceWheelchairBoardingInheritanceCheck() {
         final Entrance.EntranceBuilder mockEntranceBuilder =
                 mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
@@ -920,6 +1041,50 @@ class ProcessParsedStopAllTest {
     }
 
     @Test
+    void entranceWithParentShouldInheritParentTimezone() {
+        final Entrance.EntranceBuilder mockEntranceBuilder =
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
+        final ParsedEntity mockChild = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockChild.get(LOCATION_TYPE)).thenReturn(2);
+        when(mockParent.get(LOCATION_TYPE)).thenReturn(2);
+
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockChild.get(PARENT_STATION)).thenReturn(PARENT_ID);
+        when(mockParent.get(STOP_TIMEZONE)).thenReturn("PARENT timezone");
+        when(mockChild.get(STOP_TIMEZONE)).thenReturn("CHILD timezone");
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF),
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mockEntranceBuilder,
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockChild);
+        fakePreprocessedStopMap.put(PARENT_ID, mockParent);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockParent, times(2)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+        verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+
+        verify(mockEntranceBuilder, times(2)).stopTimezone("PARENT timezone");
+    }
+
+    @Test
     void stationWithParentShouldAddNoticeToResultRepo() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Station.StationBuilder mockStationBuilder =
@@ -959,6 +1124,137 @@ class ProcessParsedStopAllTest {
         StationWithParentStationNotice notice = captor.getValue();
         assertEquals(CHILD_ID, notice.getEntityId());
         assertEquals(PARENT_ID, notice.getNoticeSpecific(KEY_PARENT_ID));
+    }
+
+    @Test
+    void stationWithoutTimezoneShouldInheritTimezoneFromAgency() {
+        // if not provided, timezone is inherited from agency
+
+        final Station.StationBuilder mockStationBuilder =
+                mock(Station.StationBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockChild = mock(ParsedEntity.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Agency mockAgency = mock(Agency.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockStationBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockChild.get(LOCATION_TYPE)).thenReturn(1);
+
+        when(mockAgency.getAgencyTimezone()).thenReturn("AGENCY timezone");
+        when(mockGtfsDataRepo.getAgencyCount()).thenReturn(1);
+        when(mockGtfsDataRepo.getAgencyAll()).thenReturn(List.of(mockAgency));
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mockGtfsDataRepo,
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF),
+                mockStationBuilder,
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockChild);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+
+        verify(mockStationBuilder, times(1)).stopTimezone("AGENCY timezone");
+    }
+
+    @Test
+    void genericNodeWithParentShouldInheritParentTimezone() {
+        final GenericNode.GenericNodeBuilder mockGenericNodeBuilder =
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
+        final ParsedEntity mockChild = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockChild.get(LOCATION_TYPE)).thenReturn(3);
+        when(mockParent.get(LOCATION_TYPE)).thenReturn(3);
+
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockChild.get(PARENT_STATION)).thenReturn(PARENT_ID);
+        when(mockParent.get(STOP_TIMEZONE)).thenReturn("PARENT timezone");
+        when(mockChild.get(STOP_TIMEZONE)).thenReturn("CHILD timezone");
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF),
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mockGenericNodeBuilder,
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF)
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockChild);
+        fakePreprocessedStopMap.put(PARENT_ID, mockParent);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockParent, times(2)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+        verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+
+        verify(mockGenericNodeBuilder, times(2)).stopTimezone("PARENT timezone");
+    }
+
+    @Test
+    void boardingAreaWithParentShouldInheritParentTimezone() {
+        final BoardingArea.BoardingAreaBuilder mockBoardingAreaBuilder =
+                mock(BoardingArea.BoardingAreaBuilder.class, RETURNS_SELF);
+        final ParsedEntity mockParent = mock(ParsedEntity.class);
+        final ParsedEntity mockChild = mock(ParsedEntity.class);
+        @SuppressWarnings("rawtypes") final EntityBuildResult mockGenericObject = mock(EntityBuildResult.class);
+
+        when(mockGenericObject.getData()).thenReturn(Collections.emptyList());
+        when(mockGenericObject.isSuccess()).thenReturn(false);
+
+        //noinspection unchecked
+        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+
+        when(mockChild.get(LOCATION_TYPE)).thenReturn(4);
+        when(mockParent.get(LOCATION_TYPE)).thenReturn(4);
+
+        when(mockParent.getEntityId()).thenReturn(PARENT_ID);
+        when(mockChild.get(PARENT_STATION)).thenReturn(PARENT_ID);
+        when(mockParent.get(STOP_TIMEZONE)).thenReturn("PARENT timezone");
+        when(mockChild.get(STOP_TIMEZONE)).thenReturn("CHILD timezone");
+
+        final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
+                mock(ValidationResultRepository.class),
+                mock(GtfsDataRepository.class),
+                mock(StopOrPlatform.StopOrPlatformBuilder.class, RETURNS_SELF),
+                mock(Station.StationBuilder.class, RETURNS_SELF),
+                mock(Entrance.EntranceBuilder.class, RETURNS_SELF),
+                mock(GenericNode.GenericNodeBuilder.class, RETURNS_SELF),
+                mockBoardingAreaBuilder
+        );
+
+        Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
+        fakePreprocessedStopMap.put(CHILD_ID, mockChild);
+        fakePreprocessedStopMap.put(PARENT_ID, mockParent);
+
+        underTest.execute(fakePreprocessedStopMap);
+
+        verify(mockParent, times(2)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+        verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
+
+        verify(mockBoardingAreaBuilder, times(2)).stopTimezone("PARENT timezone");
     }
 
     @Test
