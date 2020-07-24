@@ -119,8 +119,9 @@ public class DefaultConfig {
     }
 
     public ValidateCsvNotEmptyForFile validateCsvNotEmptyForFile(final String filename) {
-        return new ValidateCsvNotEmptyForFile(rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
-                rawFileRepo, resultRepo);
+        return new ValidateCsvNotEmptyForFile(
+                rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                specRepo, rawFileRepo, resultRepo, logger);
     }
 
     public ValidateHeadersForFile validateHeadersForFile(final String filename) {

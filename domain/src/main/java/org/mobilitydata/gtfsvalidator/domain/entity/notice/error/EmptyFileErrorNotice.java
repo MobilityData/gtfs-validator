@@ -21,8 +21,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class EmptyFileNotice extends ErrorNotice {
-    public EmptyFileNotice(String filename) {
+public class EmptyFileErrorNotice extends ErrorNotice {
+    public EmptyFileErrorNotice(String filename) {
         super(filename, E_039,
                 "Empty file",
                 "File `" + filename + "` is empty.",

@@ -19,8 +19,8 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentMatchers;
@@ -40,7 +40,7 @@ class ExportResultAsFileTest {
                 mock(NoticeExporter.class);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
-        final CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
+        final MissingHeaderNotice mockNotice0 = mock(MissingHeaderNotice.class);
         final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
 
         when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), anyString())).thenReturn(mockExporter);
@@ -94,7 +94,7 @@ class ExportResultAsFileTest {
         final NoticeExporter mockExporter =
                 mock(NoticeExporter.class);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        final CannotConstructDataProviderNotice mockNotice0 = mock(CannotConstructDataProviderNotice.class);
+        final MissingHeaderNotice mockNotice0 = mock(MissingHeaderNotice.class);
         final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
 

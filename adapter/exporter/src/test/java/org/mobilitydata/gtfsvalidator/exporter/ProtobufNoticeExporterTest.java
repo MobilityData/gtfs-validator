@@ -154,34 +154,6 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportCannotConstructDataProviderNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
-                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
-
-        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
-
-        when(mockBuilder.build()).thenReturn(mockProblem);
-
-        OutputStream mockStream = mock(OutputStream.class);
-
-        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
-                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
-        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
-
-        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new CannotConstructDataProviderNotice(FILENAME));
-
-        verify(mockBuilder, times(1)).clear();
-        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
-        verify(mockBuilder, times(1)).setType(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR));
-        verify(mockBuilder, times(1)).setSeverity(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
-        verify(mockBuilder, times(1)).build();
-        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
-    }
-
-    @Test
     void exportCannotDownloadArchiveFromNetworkNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
@@ -569,6 +541,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("entity_id"));
+        //noinspection ConstantConditions
         verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq(null));
@@ -793,6 +766,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setAltEntityId(
                 ArgumentMatchers.eq("conflicting_field_name"));
+        //noinspection ConstantConditions
         verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq(null));

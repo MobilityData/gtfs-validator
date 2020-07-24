@@ -25,8 +25,8 @@ public class MissingHeaderNotice extends ErrorNotice {
 
     public MissingHeaderNotice(final String filename, final String missingHeaderName) {
         super(filename, E_001,
-                "Field name not defined in the GTFS specification",
-                "File `" + filename + " is missing required field name: `" + missingHeaderName + "`",
+                "Missing required field",
+                "File `" + filename + " is missing required field: `" + missingHeaderName + "`",
                 null);
         putNoticeSpecific(KEY_MISSING_HEADER_NAME, missingHeaderName);
     }

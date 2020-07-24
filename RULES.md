@@ -7,7 +7,6 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | Error ID      | Error Title         |
 |---------------|---------------------------|
 | [E001](#E001) | | 
-| [E002](#E002) | | 
 | [E003](#E003) | | 
 | [E004](#E004) | | 
 | [E006](#E006) | | 
@@ -50,6 +49,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W006](#W006) | Missing route short name |
 | [W007](#W007) | Missing route long name |
 | [W008](#W008) | Route long name contains short name | 
+| [W008](#W008) | Csv file is empty | 
 
 # Errors
 
@@ -155,7 +155,7 @@ Value of field `agency_id` should exist in GTFS data.
 
 ### E039 - Csv file is empty
 
-Empty csv file found in the archive
+Empty csv required file found in the archive
 
 # Warnings
 
@@ -174,3 +174,9 @@ Empty csv file found in the archive
 <a name="W008"/>
 
 ### W008 - Route long name contains short name
+
+<a name="W009"/>
+
+### W009 - Csv file is empty
+
+Empty csv optional file found in the archive

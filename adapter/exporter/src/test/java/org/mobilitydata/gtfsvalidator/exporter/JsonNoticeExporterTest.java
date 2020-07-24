@@ -104,18 +104,6 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportCannotConstructDataProviderNoticeShouldWriteObject() throws IOException {
-        JsonGenerator mockGenerator = mock(JsonGenerator.class);
-
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        CannotConstructDataProviderNotice toExport = new CannotConstructDataProviderNotice(FILENAME);
-        underTest.export(toExport);
-
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
-        verifyNoMoreInteractions(mockGenerator);
-    }
-
-    @Test
     void exportCannotDownloadArchiveFromNetworkNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 

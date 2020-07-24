@@ -79,7 +79,6 @@ public class Main {
                 final ProcessParsedTranslation processParsedTranslation = config.processParsedTranslation();
                 final ProcessParsedStopTime processParsedStopTime = config.processParsedStopTime();
 
-                // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
                     config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();

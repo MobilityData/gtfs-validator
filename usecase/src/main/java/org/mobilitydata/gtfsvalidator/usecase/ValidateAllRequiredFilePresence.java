@@ -52,15 +52,14 @@ public class ValidateAllRequiredFilePresence {
      * A new notice is generated each time a file marked as "required" is missing from a {@link RawFileRepository}
      * instance. This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      *
-     * @return a list of notices generated each time a file marked as "required" is missing from a {@link RawFileRepository} instance.
+     * @return a list of String containing the name of all files that are present in rawFileRepo
      */
     public ArrayList<String> execute() {
         if (!rawFileRepo.getFilenameAll().containsAll(specRepo.getRequiredFilenameList())) {
-
             specRepo.getRequiredFilenameList().stream()
                     .filter(requiredFile -> !rawFileRepo.getFilenameAll().contains(requiredFile))
                     .forEach(missingFile -> resultRepo.addNotice(new MissingRequiredFileNotice(missingFile)));
         }
-        return new ArrayList<>(specRepo.getRequiredFilenameList());
+        return new ArrayList<>(rawFileRepo.getFilenameAll());
     }
 }

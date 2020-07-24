@@ -94,16 +94,6 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final CannotConstructDataProviderNotice toExport) throws IOException {
-        protoBuilder.clear()
-                .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-                .build()
-                .writeTo(streamGenerator.getStream());
-    }
-
-    @Override
     public void export(CannotDownloadArchiveFromNetworkNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
@@ -267,11 +257,22 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(EmptyFileNotice toExport) throws IOException {
+    public void export(EmptyFileErrorNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltEntityId(toExport.getFilename())
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(EmptyFileWarningNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
                 .setAltEntityId(toExport.getFilename())
                 .build()
                 .writeTo(streamGenerator.getStream());
