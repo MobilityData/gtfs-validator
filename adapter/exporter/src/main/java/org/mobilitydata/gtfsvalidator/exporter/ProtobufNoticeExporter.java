@@ -617,6 +617,94 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final FeedInfoStartDateAfterEndDateNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FEED_INFO_START_AND_END_DATE_OUT_OF_ORDER)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_FEED_INFO_START_DATE)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_FEED_INFO_END_DATE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final FeedInfoExpiresInLessThan7DaysNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FEED_EXPIRATION_DATE)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_CURRENT_DATE)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_FEED_INFO_END_DATE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final FeedInfoExpiresInLessThan30DaysNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FEED_EXPIRATION_DATE)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_CURRENT_DATE)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_FEED_INFO_END_DATE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final MissingFeedEndDateNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final MissingFeedStartDateNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();

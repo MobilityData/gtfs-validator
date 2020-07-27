@@ -179,6 +179,10 @@ public class Main {
                 config.validateRouteAgencyId().execute();
                 config.stopTimeBasedCrossValidator().execute();
                 config.shapeBasedCrossValidator().execute();
+                config.validateFeedInfoEndDateAfterStartDate().execute();
+                config.validateFeedCoversTheNext7ServiceDays().execute();
+                config.validateFeedCoversTheNext30ServiceDays().execute();
+                config.validateFeedInfoFeedEndDateIsPresent().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

@@ -25,6 +25,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
@@ -184,6 +186,26 @@ public class DefaultConfig {
 
     public ValidateCalendarEndDateBeforeStartDate validateCalendarEndDateBeforeStartDate() {
         return new ValidateCalendarEndDateBeforeStartDate(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedInfoEndDateAfterStartDate validateFeedInfoEndDateAfterStartDate() {
+        return new ValidateFeedInfoEndDateAfterStartDate(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedCoversTheNext7ServiceDays validateFeedCoversTheNext7ServiceDays() {
+        return new ValidateFeedCoversTheNext7ServiceDays(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedCoversTheNext30ServiceDays validateFeedCoversTheNext30ServiceDays() {
+        return new ValidateFeedCoversTheNext30ServiceDays(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedInfoFeedEndDateIsPresent validateFeedInfoFeedEndDateIsPresent() {
+        return new ValidateFeedInfoFeedEndDateIsPresent(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedInfoFeedStartDateIsPresent validateFeedInfoFeedStartDateIsPresent() {
+        return new ValidateFeedInfoFeedStartDateIsPresent(gtfsDataRepository, resultRepo, logger);
     }
 
     public ExportResultAsFile exportResultAsFile() {

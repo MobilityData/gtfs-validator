@@ -276,4 +276,29 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final ServiceIdNotFoundNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final FeedInfoStartDateAfterEndDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoExpiresInLessThan7DaysNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoExpiresInLessThan30DaysNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingFeedEndDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingFeedStartDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

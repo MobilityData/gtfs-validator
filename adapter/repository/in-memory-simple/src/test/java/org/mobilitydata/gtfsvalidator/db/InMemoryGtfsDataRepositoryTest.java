@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -966,5 +968,22 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(mockTranslation01,
                 underTest.getTranslationByTableNameFieldValueLanguage("stop_times",
                         "field", "spanish"));
+    }
+
+    @Test
+    void callToGetFeedInfoAllShouldReturnFeedInfoCollection() {
+        final FeedInfo mockFeedInfo00 = mock(FeedInfo.class);
+        final FeedInfo mockFeedInfo01 = mock(FeedInfo.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFeedInfo00.getFeedPublisherName()).thenReturn("feed publisher 0");
+        when(mockFeedInfo01.getFeedPublisherName()).thenReturn("feed publisher 1");
+
+        assertEquals(mockFeedInfo00, underTest.addFeedInfo(mockFeedInfo00));
+        assertEquals(mockFeedInfo01, underTest.addFeedInfo(mockFeedInfo01));
+
+        final Map<String, FeedInfo> toCheck = underTest.getFeedInfoAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey(mockFeedInfo00.getFeedPublisherName()));
+        assertTrue(toCheck.containsKey(mockFeedInfo01.getFeedPublisherName()));
     }
 }
