@@ -28,21 +28,20 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Map;
 
 public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
+    Agency addAgency(final Agency newAgency, final Agency.AgencyBuilder builder) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
 
     int getAgencyCount();
 
-    Collection<Agency> getAgencyAll();
+    Map<String, Agency> getAgencyAll();
 
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
-    Collection<Route> getRouteAll();
+    Map<String, Route> getRouteAll();
 
     Route getRouteById(final String routeId);
 
@@ -58,13 +57,13 @@ public interface GtfsDataRepository {
 
     Calendar getCalendarByServiceId(final String serviceId);
 
-    Collection<Calendar> getCalendarAll();
+    Map<String, Calendar> getCalendarAll();
 
     Trip addTrip(final Trip newTrip) throws IllegalArgumentException;
 
     Trip getTripById(final String tripId);
 
-    Collection<Trip> getTripAll();
+    Map<String, Trip> getTripAll();
 
     Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 

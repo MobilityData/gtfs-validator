@@ -173,7 +173,6 @@ public class Main {
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
                 config.validateCalendarEndDateBeforeStartDate().execute();
-                config.validateAgencyIdRequirement().execute();
                 config.validateAgenciesHaveSameAgencyTimezone().execute();
                 config.validateTripRouteId().execute();
                 config.validateRouteAgencyId().execute();

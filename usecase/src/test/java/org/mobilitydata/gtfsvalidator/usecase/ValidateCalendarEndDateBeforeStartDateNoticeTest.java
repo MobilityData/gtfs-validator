@@ -24,7 +24,8 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -44,8 +45,11 @@ class ValidateCalendarEndDateBeforeStartDateNoticeTest {
                 LocalDate.of(2020, 2, 1)
         );
 
+        Map<String, Calendar> mockCalendarCollection = new HashMap<>();
+        mockCalendarCollection.put("service id", mockCalendar);
+
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getCalendarAll()).thenReturn(List.of(mockCalendar));
+        when(mockDataRepo.getCalendarAll()).thenReturn(mockCalendarCollection);
 
         Logger mockLogger = mock(Logger.class);
 
@@ -77,8 +81,11 @@ class ValidateCalendarEndDateBeforeStartDateNoticeTest {
                 LocalDate.of(2020, 1, 1)
         );
 
+        Map<String, Calendar> mockCalendarCollection = new HashMap<>();
+        mockCalendarCollection.put("service id", mockCalendar);
+
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getCalendarAll()).thenReturn(List.of(mockCalendar));
+        when(mockDataRepo.getCalendarAll()).thenReturn(mockCalendarCollection);
 
         Logger mockLogger = mock(Logger.class);
 
@@ -110,8 +117,11 @@ class ValidateCalendarEndDateBeforeStartDateNoticeTest {
                 LocalDate.of(2020, 1, 1)
         );
 
+        Map<String, Calendar> mockCalendarCollection = new HashMap<>();
+        mockCalendarCollection.put("service id", mockCalendar);
+
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getCalendarAll()).thenReturn(List.of(mockCalendar));
+        when(mockDataRepo.getCalendarAll()).thenReturn(mockCalendarCollection);
 
         Logger mockLogger = mock(Logger.class);
 
