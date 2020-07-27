@@ -185,7 +185,7 @@ All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 
 <a name="E039"/>
 
-### E037 - `feed_start_date` after `feed_end_date`
+### E039 - `feed_start_date` after `feed_end_date`
 
 The `feed_end_date` date must not precede the `feed_start_date` date if both are given. 
 
@@ -194,7 +194,7 @@ The `feed_end_date` date must not precede the `feed_start_date` date if both are
 
 <a name="E040"/>
 
-### E038 - Dataset should be valid for at least the next 7 days
+### E040 - Dataset should be valid for at least the next 7 days
 
 At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
 
