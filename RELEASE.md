@@ -18,7 +18,7 @@ both `Run validator on MBTA data` and `upload artifacts` steps
 ### 2. Do the release
 
 Commit and push those changes to your release preparation PR. 
-Locate the .jar file produced by the corresponding GitHub [workflow](https://github.com/MobilityData/gtfs-validator/actions)
+Locate the .jar file artifact produced by the corresponding GitHub [workflow](https://github.com/MobilityData/gtfs-validator/actions)
 
 This file can then be run from the command-line with the normal Java conventions:
 

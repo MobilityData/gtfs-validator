@@ -23,7 +23,7 @@ jobs:
         run: ./gradlew shadowJar
       - name: Run validator on MBTA data
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.2.1-SNAPSHOT.jar -u https://transitfeeds.com/p/mbta/64/20200531/download -i input.zip -e input -o output
-      - name: upload artifacts
+      - name: Persisting artifacts
         uses: actions/upload-artifact@v2
         with:
           name: v1.2.1-SNAPSHOT
