@@ -185,11 +185,11 @@ public class StopTime extends GtfsEntity implements Comparable<StopTime> {
     }
 
     /**
-     * Return true if this {@link StopTime} has field stop_sequence greater than {@param otherStopTime}
+     * Return true if this {@link StopTime} has field stop_sequence greater than {otherStopTime}
      * field stop_sequence; otherwise return false
      *
      * @param otherStopTime stop_time to compare
-     * @return true if this {@link StopTime} has field stop_sequence greater than {@param otherStopTime}
+     * @return true if this {@link StopTime} has field stop_sequence greater than {otherStopTime}
      * field stop_sequence; otherwise return false
      */
     public boolean isGreaterThan(final StopTime otherStopTime) {

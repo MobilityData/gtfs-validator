@@ -36,7 +36,7 @@ public class ApacheExecParamParser implements ExecParamRepository.ExecParamParse
     private final String[] args;
 
     /**
-     * @param commandLineParser parser from the apache collection transforming {@param args} into {@code Options}
+     * @param commandLineParser parser from the apache collection transforming {args} into {@code Options}
      * @param availableOptions  options handled by the {@code ExecParamRepository}
      * @param args              command line to parse
      */
