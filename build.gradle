@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-apply plugin: 'java'
+// so we can aggregate all Javadocs in one
+// see: https://github.com/nebula-plugins/gradle-aggregate-javadocs-plugin
+buildscript {
+    repositories { jcenter() }
 
-javadoc {
-    source = sourceSets.main.allJava
-    classpath = configurations.compile
+    dependencies {
+        classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:3.0.1'
+    }
 }
+
+apply plugin: 'nebula-aggregate-javadocs'
 
 // a task to run all tests and combine them in one report
 task testReport(type: TestReport) {
