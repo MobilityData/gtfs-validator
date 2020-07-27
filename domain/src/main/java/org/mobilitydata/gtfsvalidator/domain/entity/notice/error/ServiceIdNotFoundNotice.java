@@ -21,19 +21,21 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class AgencyIdNotFoundNotice extends ErrorNotice {
-    public AgencyIdNotFoundNotice(final String filename, final String fieldName, final String entityId) {
+public class ServiceIdNotFoundNotice extends ErrorNotice {
+    public ServiceIdNotFoundNotice(final String filename, final String entityId, final String fieldName,
+                                   final String serviceId) {
         super(filename,
-                E_035,
-                "Value of field `agency_id` does not exist in GTFS `agency.txt",
+                E_036,
+                "Value of field `service_id` should exist in GTFS `calendar.txt` or `calendar_dates.txt`",
                 "Field: `" + fieldName + "` for entity from file : `" + filename + "` with id: `" + entityId +
-                        "` does not refer to any record from `agency.txt`",
+                        "` does not refer to any record from `calendar.txt` or `calendar_dates.txt`",
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
+        putNoticeSpecific(KEY_UNKNOWN_SERVICE_ID, serviceId);
     }
 
     @Override
-    public void export(NoticeExporter exporter) throws IOException {
+    public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
 }

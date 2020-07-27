@@ -213,7 +213,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void addCalendarDateAndGetCalendarDateShouldReturnSameEntity() {
+    void getCalendarDateAllShouldReturnCalendarDateCollection() {
         final CalendarDate calendarDate00 = mock(CalendarDate.class);
         final CalendarDate calendarDate01 = mock(CalendarDate.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -222,18 +222,20 @@ class InMemoryGtfsDataRepositoryTest {
         when(calendarDate00.getServiceId()).thenReturn("service id 00");
         when(calendarDate00.getDate()).thenReturn(date);
         when(calendarDate00.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
-        when(calendarDate00.getCalendarDateMappingKey()).thenReturn("service id 00" + date.toString());
 
         when(calendarDate01.getServiceId()).thenReturn("service id 01");
         when(calendarDate01.getDate()).thenReturn(date);
         when(calendarDate01.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
-        when(calendarDate01.getCalendarDateMappingKey()).thenReturn("service id 01" + date.toString());
 
-        assertEquals(calendarDate00, underTest.addCalendarDate(calendarDate00));
-        assertEquals(calendarDate01, underTest.addCalendarDate(calendarDate01));
+        underTest.addCalendarDate(calendarDate00);
+        underTest.addCalendarDate(calendarDate01);
 
-        assertEquals(calendarDate00, underTest.getCalendarDateByServiceIdDate("service id 00", date));
-        assertEquals(calendarDate01, underTest.getCalendarDateByServiceIdDate("service id 01", date));
+        final Map<String, Map<String, CalendarDate>> toCheck = underTest.getCalendarDateAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey("service id 00"));
+        assert (toCheck.get("service id 00").containsKey(date.toString()));
+        assertTrue(toCheck.containsKey("service id 01"));
+        assert (toCheck.get("service id 01").containsKey(date.toString()));
     }
 
     @Test
@@ -255,7 +257,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void addLevelAndGetLevelByIdShouldReturnSameEntity() {
+    void addLevelAndGetLevelByIdShouldReturnSameEntity() {
         final Level mockLevel00 = mock(Level.class);
         final Level mockLevel01 = mock(Level.class);
         when(mockLevel00.getLevelId()).thenReturn("level id 0");
@@ -321,7 +323,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void addSameTripTwiceShouldReturnNull() {
+    void addSameTripTwiceShouldReturnNull() {
         final Trip mockTrip = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockTrip.getTripId()).thenReturn("trip id");
@@ -587,7 +589,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void addPathwayAndGetPathwayByIdShouldReturnSameEntity() {
+    void addPathwayAndGetPathwayByIdShouldReturnSameEntity() {
         final Pathway mockPathway00 = mock(Pathway.class);
         final Pathway mockPathway01 = mock(Pathway.class);
         when(mockPathway00.getPathwayId()).thenReturn("pathway id 00");

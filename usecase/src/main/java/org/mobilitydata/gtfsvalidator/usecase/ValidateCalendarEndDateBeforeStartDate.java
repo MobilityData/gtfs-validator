@@ -50,7 +50,11 @@ public class ValidateCalendarEndDateBeforeStartDate {
         logger.info("Validating rule 'E032 - calendar.txt end_date is before start_date'" + System.lineSeparator());
         dataRepo.getCalendarAll().values().stream()
                 .filter(calendar -> calendar.getEndDate().isBefore(calendar.getStartDate()))
-                .forEach(calendar -> resultRepo.addNotice(new CalendarEndDateBeforeStartDateNotice("calendar.txt",
-                        calendar.getServiceId(), calendar.getStartDate(), calendar.getEndDate())));
+                .forEach(calendar -> resultRepo.addNotice(
+                        new CalendarEndDateBeforeStartDateNotice(
+                                "calendar.txt",
+                                calendar.getServiceId(),
+                                calendar.getStartDate(),
+                                calendar.getEndDate())));
     }
 }
