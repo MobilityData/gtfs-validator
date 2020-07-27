@@ -34,9 +34,12 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E030](#E030) | Inconsistent field `agency_timezone` | 
 | [E031](#E031) | Invalid `agency_id` | 
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
-| [E033](#E033) | `route_id` not found |
-| [E035](#E035) | `agency_id` not found |
-| [E036](#E036) | `service_id` not found |
+| [E033](#E033) | `route_id` not found in GTFS `routes.txt` |
+| [E034](#E034) | `shape_id` not found in GTFS `shapes.txt` |
+| [E035](#E035) | `agency_id` not found in GTFS `agency.txt` |
+| [E036](#E036) | `service_id` not found in GTFS `calendar.txt` or `calendar_dates.txt`|
+| [E037](#E037) | `trip_id` not found in GTFS `trips.txt` |
+| [E038](#E038) | All shapes should be used in `trips.txt` |
 
 ### Table of Warnings
 
@@ -141,13 +144,17 @@ In `calendar.txt`, the `end_date` of a service record must not be earlier than t
 
 <a name="E033"/>
 
-### E033 - `route_id` not found
+### E033 - `route_id` not found in GTFS `routes.txt`
 
 Value of field `route_id` should exist in GTFS `routes.txt`.
 
+### E034 - `shape_id` not found in GTFS `shapes.txt`
+
+Value of field `shape_id` should exist in GTFS `shapes.txt`.
+
 <a name="E035"/>
 
-### E035 - `agency_id` not found
+### E035 - `agency_id` not found in GTFS `agency.txt`
 
 Value of field `agency_id` should exist in GTFS `agency.txt`.
 
@@ -156,6 +163,18 @@ Value of field `agency_id` should exist in GTFS `agency.txt`.
 ### E036 - `service_id` not found
 
 Value of field `service_id` should exist in GTFS `calendar.txt` or `calendar_dates.txt`.
+
+<a name="E037"/>
+
+### E037 - `trip_id` not found in GTFS `trips.txt`
+
+Value of field `trip_id` should exist in GTFS `trips.txt`.
+
+<a name="E038"/>
+
+### E038 - All shapes should be used in `trips.txt` 
+
+All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
 
 # Warnings
 

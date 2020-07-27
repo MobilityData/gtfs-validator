@@ -177,6 +177,8 @@ public class Main {
                 config.validateTripRouteId().execute();
                 config.validateTripServiceId().execute();
                 config.validateRouteAgencyId().execute();
+                config.stopTimeBasedCrossValidator().execute();
+                config.shapeBasedCrossValidator().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

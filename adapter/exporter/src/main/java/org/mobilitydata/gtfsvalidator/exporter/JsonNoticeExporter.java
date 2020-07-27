@@ -258,6 +258,21 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final ShapeIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final TripIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ShapeNotUsedNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final ServiceIdNotFoundNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }

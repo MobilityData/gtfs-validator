@@ -29,6 +29,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.TreeMap;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency, final Agency.AgencyBuilder builder) throws IllegalArgumentException;
@@ -124,6 +125,15 @@ public interface GtfsDataRepository {
     Map<Integer, ShapePoint> getShapeById(final String shapeId);
 
     /**
+     * Return an immutable map representing all records from shapes.txt. The key values for the returned map are
+     * shape_id and the value is another map, which keys are shape_pt_sequence and values are {@link ShapePoint}.
+     * Note that those are ordered by ascending shape_pt_sequence.
+     *
+     * @return an immutable map representing all records from shapes.txt
+     */
+    Map<String, Map<Integer, ShapePoint>> getShapeAll();
+
+    /**
      * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
      * Return the entity added to the repository if the uniqueness constraint on rows from stop_times.txt is respected,
      * if this requirement is not met, returns null. This method adds the {@link StopTime} to this
@@ -146,6 +156,14 @@ public interface GtfsDataRepository {
      * @return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     Map<Integer, StopTime> getStopTimeByTripId(final String tripId);
+
+    /**
+     * Return an immutable map representing all records from stop_times.txt. Elements of this map are mapped by
+     * "trip_id" and ordered by ascending by stop_sequence
+     *
+     * @return an immutable map representing all records from stop_times.txt
+     */
+    Map<String, TreeMap<Integer, StopTime>> getStopTimeAll();
 
     Translation getTranslationByTableNameFieldValueLanguage(final String tableName,
                                                             final String fieldValue,

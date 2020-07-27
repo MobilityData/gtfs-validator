@@ -760,6 +760,28 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void getShapeAllShouldReturnShapeCollection() {
+        final ShapePoint mockShapePoint00 = mock(ShapePoint.class);
+        when(mockShapePoint00.getShapeId()).thenReturn("test id00");
+        when(mockShapePoint00.getShapePtSequence()).thenReturn(4);
+
+        final ShapePoint mockShapePoint01 = mock(ShapePoint.class);
+        when(mockShapePoint01.getShapeId()).thenReturn("test id01");
+        when(mockShapePoint01.getShapePtSequence()).thenReturn(8);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShapePoint(mockShapePoint00);
+        underTest.addShapePoint(mockShapePoint01);
+
+        final Map<String, Map<Integer, ShapePoint>> toCheck = underTest.getShapeAll();
+
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey(mockShapePoint00.getShapeId()));
+        assertTrue(toCheck.containsKey(mockShapePoint01.getShapeId()));
+    }
+
+    @Test
     void addNullStopTimeShouldThrowException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         final Exception exception = assertThrows(IllegalArgumentException.class,
@@ -853,6 +875,35 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(firstStopTimeInSequence, toCheck.get(0));
         assertEquals(secondStopTimeInSequence, toCheck.get(1));
         assertEquals(thirdStopTimeInSequence, toCheck.get(2));
+    }
+
+    @Test
+    void getStopTimeAllShouldReturnStopTimeCollection() {
+        final StopTime firstStopTimeInSequenceOfTrip00 = mock(StopTime.class);
+        when(firstStopTimeInSequenceOfTrip00.getTripId()).thenReturn("trip id00");
+        when(firstStopTimeInSequenceOfTrip00.getStopSequence()).thenReturn(4);
+
+        final StopTime secondStopTimeInSequenceOfTrip00 = mock(StopTime.class);
+        when(secondStopTimeInSequenceOfTrip00.getTripId()).thenReturn("trip id00");
+        when(secondStopTimeInSequenceOfTrip00.getStopSequence()).thenReturn(8);
+
+        final StopTime firstStopTimeInSequenceOfTrip01 = mock(StopTime.class);
+        when(firstStopTimeInSequenceOfTrip01.getTripId()).thenReturn("trip id01");
+        when(firstStopTimeInSequenceOfTrip01.getStopSequence()).thenReturn(12);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addStopTime(firstStopTimeInSequenceOfTrip00);
+        underTest.addStopTime(secondStopTimeInSequenceOfTrip00);
+        underTest.addStopTime(firstStopTimeInSequenceOfTrip01);
+
+        final Map<String, TreeMap<Integer, StopTime>> toCheck = underTest.getStopTimeAll();
+        assertEquals(2, toCheck.size());
+        assertEquals(2, toCheck.get("trip id00").size());
+        assertTrue(toCheck.get("trip id00").containsKey(4));
+        assertTrue(toCheck.get("trip id00").containsKey(8));
+        assertEquals(1, toCheck.get("trip id01").size());
+        assertTrue(toCheck.get("trip id01").containsKey(12));
     }
 
     @Test
