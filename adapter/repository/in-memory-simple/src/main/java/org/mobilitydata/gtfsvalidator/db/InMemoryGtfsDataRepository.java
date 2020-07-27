@@ -458,14 +458,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the Transfer representing a row from transfers.txt related to the composite key provided as parameter.
      *
      * @param fromStopId first part of the composite key: identifies a stop or station where a connection between
-     *                   routes begins. Querying on {@param fromStopId}, the method will will only return records
-     *                   containing {@param fromStopId} in the from_stop_id column of transfers.txt GTFS file. This
-     *                   method will not return any records where {@param fromStopId} is in the to_stop_id column of the
+     *                   routes begins. Querying on {fromStopId}, the method will will only return records
+     *                   containing {fromStopId} in the from_stop_id column of transfers.txt GTFS file. This
+     *                   method will not return any records where {fromStopId} is in the to_stop_id column of the
      *                   same pre-mentioned GTFS file.
      * @param toStopId   second part of the composite key: identifies a stop or station where a connection between
-     *                   routes ends. Querying on {@param toStopId}, the method will will only return records
-     *                   containing {@param toStopId} in the to_stop_id column of transfers.txt GTFS file. This
-     *                   method will not return any records where {@param toStopId} is in the from_stop_id column
+     *                   routes ends. Querying on {toStopId}, the method will will only return records
+     *                   containing {toStopId} in the to_stop_id column of transfers.txt GTFS file. This
+     *                   method will not return any records where {toStopId} is in the from_stop_id column
      *                   of the same pre-mentioned GTFS file.
      * @return the Transfer representing a row from transfers.txt related to the composite key provided as parameter
      */
