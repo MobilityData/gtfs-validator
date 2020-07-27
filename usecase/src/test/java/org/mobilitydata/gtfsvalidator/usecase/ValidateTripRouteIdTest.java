@@ -64,7 +64,9 @@ class ValidateTripRouteIdTest {
         verify(mockDataRepo, times(1)).getTripAll();
 
         verify(mockTrip00, times(2)).getRouteId();
+        verify(mockTrip00, times(1)).getTripId();
         verify(mockTrip01, times(2)).getRouteId();
+        verify(mockTrip01, times(1)).getTripId();
         verify(mockResultRepo, times(2)).addNotice(any(RouteIdNotFoundNotice.class));
 
         verifyNoMoreInteractions(mockTrip00, mockTrip01, mockDataRepo, mockResultRepo, mockLogger);
