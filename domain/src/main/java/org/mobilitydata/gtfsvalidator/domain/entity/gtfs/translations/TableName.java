@@ -48,7 +48,7 @@ public enum TableName {
      * @return the {@link TableName} enum item value matching the string passed as parameter. Or null if the string
      * passed as parameter is null or does not match any {@link TableName} enum item.
      */
-    static public TableName fromString(final String tableName)  {
+    static public TableName fromString(final String tableName) {
         if (tableName == null) {
             return null;
         } else {

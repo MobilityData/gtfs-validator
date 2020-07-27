@@ -36,7 +36,7 @@ class ValidateAllRowLengthForFileTest {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
         when(mockProvider.hasNext()).thenReturn(true, true, true, true, false);
-        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey", "testValue"), 0);
         when(mockProvider.getNext()).thenReturn(testRawEntity);
         when(mockProvider.getHeaderCount()).thenReturn(testRawEntity.size());
 
@@ -67,8 +67,8 @@ class ValidateAllRowLengthForFileTest {
     void invalidRowsShouldGenerateError() {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
-        when(mockProvider.hasNext()).thenReturn(true,  true, true, false);
-        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        when(mockProvider.hasNext()).thenReturn(true, true, true, false);
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey", "testValue"), 0);
         when(mockProvider.getNext()).thenReturn(testRawEntity);
         int testFakeSize = testRawEntity.size() + 2;
         when(mockProvider.getHeaderCount()).thenReturn(testRawEntity.size(), testFakeSize, testFakeSize);

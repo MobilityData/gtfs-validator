@@ -301,10 +301,10 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        InvalidColorNotice toExport = new InvalidColorNotice(
+        CannotParseColorNotice toExport = new CannotParseColorNotice(
                 FILENAME,
                 "field_name",
-                "entity_id",
+                0,
                 "#zz"
         );
         underTest.export(toExport);
@@ -609,12 +609,75 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportNRouteIdNotFoundNoticeShouldWriteObject() throws IOException {
+    void exportRouteIdNotFoundNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         final RouteIdNotFoundNotice toExport = new RouteIdNotFoundNotice("filename", "entity id",
                 "route id", "field name");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportServiceIdNotFoundNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final ServiceIdNotFoundNotice toExport = new ServiceIdNotFoundNotice("filename", "field name",
+                "entity id", "service id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportShapeIdNotfoundNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final ShapeIdNotFoundNotice toExport =
+                new ShapeIdNotFoundNotice("filename", "field name",
+                        "composite key first part",
+                        "composite key second part",
+                        "composite key first value",
+                        "composite key second value", "shape id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportTripIdNotFoundNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final TripIdNotFoundNotice toExport =
+                new TripIdNotFoundNotice("filename",
+                        "field name",
+                        "composite key first part",
+                        "composite key second part",
+                        "composite key first value",
+                        "composite key second value",
+                        "trip id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportNotUsedShapeNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final ShapeNotUsedNotice toExport = new ShapeNotUsedNotice(
+                "entity id",
+                "field name");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

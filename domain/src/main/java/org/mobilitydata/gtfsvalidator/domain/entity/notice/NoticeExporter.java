@@ -45,7 +45,7 @@ public interface NoticeExporter {
 
     void export(MissingRequiredValueNotice toExport) throws IOException;
 
-    void export(InvalidColorNotice toExport) throws IOException;
+    void export(CannotParseColorNotice toExport) throws IOException;
 
     void export(ExtraFileFoundNotice toExport) throws IOException;
 
@@ -94,6 +94,14 @@ public interface NoticeExporter {
     void export(final RouteIdNotFoundNotice routeIdNotFoundNotice) throws IOException;
 
     void export(final AgencyIdNotFoundNotice agencyIdNotFoundNotice) throws IOException;
+
+    void export(final ShapeIdNotFoundNotice shapeIdNotFoundNotice) throws IOException;
+
+    void export(final TripIdNotFoundNotice tripIdNotFoundNotice) throws IOException;
+
+    void export(final ShapeNotUsedNotice shapeNotUsedNotice) throws IOException;
+
+    void export(final ServiceIdNotFoundNotice serviceIdNotFoundNotice) throws IOException;
 
     void export(FeedInfoStartDateAfterEndDateNotice toExport) throws IOException;
 

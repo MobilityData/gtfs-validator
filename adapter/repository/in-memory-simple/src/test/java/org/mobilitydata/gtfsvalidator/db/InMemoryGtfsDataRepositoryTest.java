@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
@@ -31,6 +32,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,29 +46,33 @@ class InMemoryGtfsDataRepositoryTest {
     @Test
     void callToAddAgencyShouldAddAgencyToRepoAndReturnSameEntity() {
         final Agency mockAgency = mock(Agency.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockAgency.getAgencyId()).thenReturn("agency id");
 
-        assertEquals(underTest.addAgency(mockAgency), mockAgency);
+        assertEquals(underTest.addAgency(mockAgency, mockBuilder), mockAgency);
     }
 
     @Test
     void addSameAgencyTwiceShouldReturnNull() {
         final Agency mockAgency = mock(Agency.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockAgency.getAgencyId()).thenReturn("agency id");
 
-        underTest.addAgency(mockAgency);
+        underTest.addAgency(mockAgency, mockBuilder);
 
-        assertNull(underTest.addAgency(mockAgency));
+        assertNull(underTest.addAgency(mockAgency, mockBuilder));
     }
 
     @Test
     void addNullAgencyShouldThrowIllegalArgumentException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+
         //noinspection ConstantConditions
         final Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> underTest.addAgency(null));
+                () -> underTest.addAgency(null, mockBuilder));
         assertEquals("Cannot add null agency to data repository", exception.getMessage());
     }
 
@@ -71,12 +80,14 @@ class InMemoryGtfsDataRepositoryTest {
     void getAgencyByIdShouldReturnRelatedAgency() {
         final Agency mockAgency00 = mock(Agency.class);
         final Agency mockAgency01 = mock(Agency.class);
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockAgency00.getAgencyId()).thenReturn("agency id0");
         when(mockAgency01.getAgencyId()).thenReturn("agency id1");
 
-        underTest.addAgency(mockAgency00);
-        underTest.addAgency(mockAgency01);
+        underTest.addAgency(mockAgency00, mockBuilder);
+        underTest.addAgency(mockAgency01, mockBuilder);
 
         assertEquals(mockAgency00, underTest.getAgencyById("agency id0"));
         assertEquals(mockAgency01, underTest.getAgencyById("agency id1"));
@@ -88,15 +99,17 @@ class InMemoryGtfsDataRepositoryTest {
         when(mockAgency00.getAgencyId()).thenReturn("agency id0");
         final Agency mockAgency01 = mock(Agency.class);
         when(mockAgency01.getAgencyId()).thenReturn("agency id1");
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
-        underTest.addAgency(mockAgency00);
-        underTest.addAgency(mockAgency01);
+        underTest.addAgency(mockAgency00, mockBuilder);
+        underTest.addAgency(mockAgency01, mockBuilder);
 
-        final Collection<Agency> toCheck = underTest.getAgencyAll();
+        final Map<String, Agency> toCheck = underTest.getAgencyAll();
         assertEquals(2, toCheck.size());
-        assertTrue(toCheck.contains(mockAgency00));
-        assertTrue(toCheck.contains(mockAgency01));
+        assertTrue(toCheck.containsKey(mockAgency00.getAgencyId()));
+        assertTrue(toCheck.containsKey(mockAgency01.getAgencyId()));
     }
 
     @Test
@@ -105,12 +118,14 @@ class InMemoryGtfsDataRepositoryTest {
         when(mockAgency00.getAgencyId()).thenReturn("agency id0");
         final Agency mockAgency01 = mock(Agency.class);
         when(mockAgency01.getAgencyId()).thenReturn("agency id1");
+        final Agency.AgencyBuilder mockBuilder = mock(Agency.AgencyBuilder.class);
+
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
 
         assertEquals(0, underTest.getAgencyCount());
-        underTest.addAgency(mockAgency00);
+        underTest.addAgency(mockAgency00, mockBuilder);
         assertEquals(1, underTest.getAgencyCount());
-        underTest.addAgency(mockAgency01);
+        underTest.addAgency(mockAgency01, mockBuilder);
         assertEquals(2, underTest.getAgencyCount());
     }
 
@@ -154,9 +169,8 @@ class InMemoryGtfsDataRepositoryTest {
         underTest.addRoute(mockRoute00);
         underTest.addRoute(mockRoute01);
 
-        Collection<Route> mockRoutes = List.of(mockRoute00, mockRoute01);
-
-        assertTrue(underTest.getRouteAll().containsAll(mockRoutes));
+        assertTrue(underTest.getRouteAll().containsKey("route id0"));
+        assertTrue(underTest.getRouteAll().containsKey("route id1"));
     }
 
     @Test
@@ -201,7 +215,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void addCalendarDateAndGetCalendarDateShouldReturnSameEntity() {
+    void getCalendarDateAllShouldReturnCalendarDateCollection() {
         final CalendarDate calendarDate00 = mock(CalendarDate.class);
         final CalendarDate calendarDate01 = mock(CalendarDate.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -210,18 +224,20 @@ class InMemoryGtfsDataRepositoryTest {
         when(calendarDate00.getServiceId()).thenReturn("service id 00");
         when(calendarDate00.getDate()).thenReturn(date);
         when(calendarDate00.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
-        when(calendarDate00.getCalendarDateMappingKey()).thenReturn("service id 00" + date.toString());
 
         when(calendarDate01.getServiceId()).thenReturn("service id 01");
         when(calendarDate01.getDate()).thenReturn(date);
         when(calendarDate01.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
-        when(calendarDate01.getCalendarDateMappingKey()).thenReturn("service id 01" + date.toString());
 
-        assertEquals(calendarDate00, underTest.addCalendarDate(calendarDate00));
-        assertEquals(calendarDate01, underTest.addCalendarDate(calendarDate01));
+        underTest.addCalendarDate(calendarDate00);
+        underTest.addCalendarDate(calendarDate01);
 
-        assertEquals(calendarDate00, underTest.getCalendarDateByServiceIdDate("service id 00", date));
-        assertEquals(calendarDate01, underTest.getCalendarDateByServiceIdDate("service id 01", date));
+        final Map<String, Map<String, CalendarDate>> toCheck = underTest.getCalendarDateAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey("service id 00"));
+        assert (toCheck.get("service id 00").containsKey(date.toString()));
+        assertTrue(toCheck.containsKey("service id 01"));
+        assert (toCheck.get("service id 01").containsKey(date.toString()));
     }
 
     @Test
@@ -243,7 +259,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void addLevelAndGetLevelByIdShouldReturnSameEntity() {
+    void addLevelAndGetLevelByIdShouldReturnSameEntity() {
         final Level mockLevel00 = mock(Level.class);
         final Level mockLevel01 = mock(Level.class);
         when(mockLevel00.getLevelId()).thenReturn("level id 0");
@@ -291,7 +307,25 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void addSameTripTwiceShouldReturnNull() {
+    void getCalendarAllShouldReturnCalendarCollection() {
+        final Calendar mockCalendar00 = mock(Calendar.class);
+        final Calendar mockCalendar01 = mock(Calendar.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        when(mockCalendar00.getServiceId()).thenReturn("service id00");
+        when(mockCalendar01.getServiceId()).thenReturn("service id01");
+
+        underTest.addCalendar(mockCalendar00);
+        underTest.addCalendar(mockCalendar01);
+
+        final Map<String, Calendar> toCheck = underTest.getCalendarAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey("service id00"));
+        assertTrue(toCheck.containsKey("service id01"));
+    }
+
+    @Test
+    void addSameTripTwiceShouldReturnNull() {
         final Trip mockTrip = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockTrip.getTripId()).thenReturn("trip id");
@@ -308,7 +342,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void addTripShouldReturnSameEntityAndCallToGetTripByIdShouldReturnRelatedTrip() {
+    void addTripShouldReturnSameEntityAndCallToGetTripByIdShouldReturnRelatedTrip() {
         final Trip mockTrip00 = mock(Trip.class);
         final Trip mockTrip01 = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -321,6 +355,24 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(mockTrip00, underTest.getTripById("trip id00"));
         assertEquals(mockTrip01, underTest.getTripById("trip id01"));
     }
+
+    @Test
+    void getTripAllShouldReturnTripCollection() {
+        final Trip mockTrip00 = mock(Trip.class);
+        final Trip mockTrip01 = mock(Trip.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTrip00.getTripId()).thenReturn("trip id00");
+        when(mockTrip01.getTripId()).thenReturn("trip id01");
+
+        underTest.addTrip(mockTrip00);
+        underTest.addTrip(mockTrip01);
+
+        final Map<String, Trip> toCheck = underTest.getTripAll();
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey("trip id00"));
+        assertTrue(toCheck.containsKey("trip id01"));
+    }
+
 
     @Test
     void addSameTransferTwiceShouldReturnNull() {
@@ -480,6 +532,47 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void addNullFrequencyShouldThrowIllegalArgumentException() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> underTest.addFrequency(null));
+        assertEquals("Cannot add null frequency to data repository", exception.getMessage());
+    }
+
+    @Test
+    void addSameFrequencyTwiceShouldReturnNull() {
+        final Frequency mockFrequency00 = mock(Frequency.class);
+        final Frequency mockFrequency01 = mock(Frequency.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFrequency00.getTripId()).thenReturn("trip id");
+        when(mockFrequency00.getStartTime()).thenReturn(0);
+        when(mockFrequency01.getTripId()).thenReturn("trip id");
+        when(mockFrequency01.getStartTime()).thenReturn(0);
+
+        underTest.addFrequency(mockFrequency00);
+
+        assertNull(underTest.addFrequency(mockFrequency00));
+        assertNull(underTest.addFrequency(mockFrequency01));
+    }
+
+    @Test
+    void addFrequencyAndGetFrequencyShouldReturnSameEntity() {
+        final Frequency mockFrequency00 = mock(Frequency.class);
+        final Frequency mockFrequency01 = mock(Frequency.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFrequency00.getTripId()).thenReturn("trip id0");
+        when(mockFrequency01.getTripId()).thenReturn("trip id1");
+        when(mockFrequency00.getFrequencyMappingKey()).thenReturn("fare id0" + "null");
+        when(mockFrequency01.getFrequencyMappingKey()).thenReturn("fare id1" + "null");
+
+        assertEquals(mockFrequency00, underTest.addFrequency(mockFrequency00));
+        assertEquals(mockFrequency01, underTest.addFrequency(mockFrequency01));
+
+        assertEquals(mockFrequency00, underTest.getFrequency("fare id0", null));
+        assertEquals(mockFrequency01, underTest.getFrequency("fare id1", null));
+    }
+
+    @Test
     void addSamePathwayTwiceShouldReturnNull() {
         final Pathway mockPathway = mock(Pathway.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
@@ -498,7 +591,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    public void addPathwayAndGetPathwayByIdShouldReturnSameEntity() {
+    void addPathwayAndGetPathwayByIdShouldReturnSameEntity() {
         final Pathway mockPathway00 = mock(Pathway.class);
         final Pathway mockPathway01 = mock(Pathway.class);
         when(mockPathway00.getPathwayId()).thenReturn("pathway id 00");
@@ -581,7 +674,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void addShapePointWithSameDataShouldReturnNull () {
+    void addShapePointWithSameDataShouldReturnNull() {
         final ShapePoint firstShapePoint = mock(ShapePoint.class);
         when(firstShapePoint.getShapeId()).thenReturn("test id00");
         when(firstShapePoint.getShapePtLat()).thenReturn(50f);
@@ -669,6 +762,28 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void getShapeAllShouldReturnShapeCollection() {
+        final ShapePoint mockShapePoint00 = mock(ShapePoint.class);
+        when(mockShapePoint00.getShapeId()).thenReturn("test id00");
+        when(mockShapePoint00.getShapePtSequence()).thenReturn(4);
+
+        final ShapePoint mockShapePoint01 = mock(ShapePoint.class);
+        when(mockShapePoint01.getShapeId()).thenReturn("test id01");
+        when(mockShapePoint01.getShapePtSequence()).thenReturn(8);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addShapePoint(mockShapePoint00);
+        underTest.addShapePoint(mockShapePoint01);
+
+        final Map<String, Map<Integer, ShapePoint>> toCheck = underTest.getShapeAll();
+
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey(mockShapePoint00.getShapeId()));
+        assertTrue(toCheck.containsKey(mockShapePoint01.getShapeId()));
+    }
+
+    @Test
     void addNullStopTimeShouldThrowException() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         final Exception exception = assertThrows(IllegalArgumentException.class,
@@ -689,7 +804,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void addStopTimeWithSameDataShouldReturnNull () {
+    void addStopTimeWithSameDataShouldReturnNull() {
         final StopTime firstStopTime = mock(StopTime.class);
         when(firstStopTime.getTripId()).thenReturn("trip id");
         when(firstStopTime.getStopSequence()).thenReturn(3);
@@ -705,7 +820,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getStopTimeByTripIdAndAddStopTimeShouldReturnSameEntity(){
+    void getStopTimeByTripIdAndAddStopTimeShouldReturnSameEntity() {
         final StopTime mockStopTime00 = mock(StopTime.class);
         when(mockStopTime00.getTripId()).thenReturn("trip id00");
         when(mockStopTime00.getStopSequence()).thenReturn(3);
@@ -762,6 +877,35 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(firstStopTimeInSequence, toCheck.get(0));
         assertEquals(secondStopTimeInSequence, toCheck.get(1));
         assertEquals(thirdStopTimeInSequence, toCheck.get(2));
+    }
+
+    @Test
+    void getStopTimeAllShouldReturnStopTimeCollection() {
+        final StopTime firstStopTimeInSequenceOfTrip00 = mock(StopTime.class);
+        when(firstStopTimeInSequenceOfTrip00.getTripId()).thenReturn("trip id00");
+        when(firstStopTimeInSequenceOfTrip00.getStopSequence()).thenReturn(4);
+
+        final StopTime secondStopTimeInSequenceOfTrip00 = mock(StopTime.class);
+        when(secondStopTimeInSequenceOfTrip00.getTripId()).thenReturn("trip id00");
+        when(secondStopTimeInSequenceOfTrip00.getStopSequence()).thenReturn(8);
+
+        final StopTime firstStopTimeInSequenceOfTrip01 = mock(StopTime.class);
+        when(firstStopTimeInSequenceOfTrip01.getTripId()).thenReturn("trip id01");
+        when(firstStopTimeInSequenceOfTrip01.getStopSequence()).thenReturn(12);
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addStopTime(firstStopTimeInSequenceOfTrip00);
+        underTest.addStopTime(secondStopTimeInSequenceOfTrip00);
+        underTest.addStopTime(firstStopTimeInSequenceOfTrip01);
+
+        final Map<String, TreeMap<Integer, StopTime>> toCheck = underTest.getStopTimeAll();
+        assertEquals(2, toCheck.size());
+        assertEquals(2, toCheck.get("trip id00").size());
+        assertTrue(toCheck.get("trip id00").containsKey(4));
+        assertTrue(toCheck.get("trip id00").containsKey(8));
+        assertEquals(1, toCheck.get("trip id01").size());
+        assertTrue(toCheck.get("trip id01").containsKey(12));
     }
 
     @Test

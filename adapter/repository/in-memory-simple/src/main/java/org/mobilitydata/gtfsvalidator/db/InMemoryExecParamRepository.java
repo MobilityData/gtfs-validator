@@ -125,23 +125,23 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     /**
      * This method returns a parser for execution parameters.
      * This method returns {@code JsonExecParamParser} if:
-     *  - no configuration file nor arguments are provided,
-     *  - a configuration file is present and no arguments are provided
-     *  - both configuration file and arguments are provided
-     *
-     *  This method returns {@code ApacheExecParamParser} if:
-     *  - no configuration file is present and arguments are provided
+     * - no configuration file nor arguments are provided,
+     * - a configuration file is present and no arguments are provided
+     * - both configuration file and arguments are provided
+     * <p>
+     * This method returns {@code ApacheExecParamParser} if:
+     * - no configuration file is present and arguments are provided
      *
      * @param parameterJsonString the configuration .json file content to extract the execution parameters from.
-     *                            If this parameter is null then, execution parameters are extracted from {@param args}.
-     * @param args                the argument line to parse {@link ExecParam} when {@param parameterJsonString} is null
-     * @return                    {@code JsonExecParamParser} if:
-     *                             - no configuration file nor arguments are provided,
-     *                             - a configuration file is present and no arguments are provided
-     *                             - both configuration file and arguments are provided
-     *
-     *                             {@code ApacheExecParamParser} if:
-     *                             - no configuration file is present and arguments are provided
+     *                            If this parameter is null then, execution parameters are extracted from {args}.
+     * @param args                the argument line to parse {@link ExecParam} when {parameterJsonString} is null
+     * @return {@code JsonExecParamParser} if:
+     * - no configuration file nor arguments are provided,
+     * - a configuration file is present and no arguments are provided
+     * - both configuration file and arguments are provided
+     * <p>
+     * {@code ApacheExecParamParser} if:
+     * - no configuration file is present and arguments are provided
      */
     @Override
     public ExecParamParser getParser(final String parameterJsonString,
@@ -149,11 +149,11 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                                      final Logger logger) {
         if (Strings.isNullOrEmpty(parameterJsonString) && args.length == 0) {
             // true when json configuration file is not present and no arguments are provided
-            logger.info("No configuration file nor arguments provided"+System.lineSeparator());
+            logger.info("No configuration file nor arguments provided" + System.lineSeparator());
             return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
         } else if (!Strings.isNullOrEmpty(parameterJsonString) || args.length == 0) {
             // true when no arguments are provided or when json configuration is provided
-            logger.info("Retrieving execution parameters from execution-parameters.json file"+System.lineSeparator());
+            logger.info("Retrieving execution parameters from execution-parameters.json file" + System.lineSeparator());
             return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
         } else {
             // true when only arguments are provided

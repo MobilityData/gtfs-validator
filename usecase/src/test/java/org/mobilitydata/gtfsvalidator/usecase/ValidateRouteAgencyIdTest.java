@@ -20,17 +20,18 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.AgencyIdNotFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 import static org.mockito.Mockito.*;
 
@@ -44,10 +45,11 @@ class ValidateRouteAgencyIdTest {
         when(mockRoute.getAgencyId()).thenReturn(null);
         when(mockRoute.getRouteId()).thenReturn("route id");
 
-        final List<Route> mockRouteCollection = new ArrayList<>(List.of(mockRoute));
-
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getAgencyCount()).thenReturn(2);
+
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -62,8 +64,8 @@ class ValidateRouteAgencyIdTest {
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
 
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         final ArgumentCaptor<MissingAgencyIdNotice> captor = ArgumentCaptor.forClass(MissingAgencyIdNotice.class);
 
@@ -85,11 +87,13 @@ class ValidateRouteAgencyIdTest {
         when(mockRoute.getAgencyId()).thenReturn("non existing agency id");
         when(mockRoute.getRouteId()).thenReturn("route id");
 
-        final List<Route> mockRouteCollection = new ArrayList<>(List.of(mockRoute));
-
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getAgencyCount()).thenReturn(2);
+
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
+
         when(mockDataRepo.getAgencyById("non existing agency id")).thenReturn(null);
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -103,11 +107,11 @@ class ValidateRouteAgencyIdTest {
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockDataRepo, times(1)).getAgencyById(ArgumentMatchers.eq("non existing "+
+        verify(mockDataRepo, times(1)).getAgencyById(ArgumentMatchers.eq("non existing " +
                 "agency id"));
 
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         final ArgumentCaptor<AgencyIdNotFoundNotice> captor = ArgumentCaptor.forClass(AgencyIdNotFoundNotice.class);
 
@@ -130,11 +134,13 @@ class ValidateRouteAgencyIdTest {
         when(mockRoute.getAgencyId()).thenReturn("non existing agency id");
         when(mockRoute.getRouteId()).thenReturn("route id");
 
-        final List<Route> mockRouteCollection = new ArrayList<>(List.of(mockRoute));
-
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getAgencyCount()).thenReturn(1);
+
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
+
         when(mockDataRepo.getAgencyById("non existing agency id")).thenReturn(null);
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -148,11 +154,11 @@ class ValidateRouteAgencyIdTest {
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
-        verify(mockDataRepo, times(1)).getAgencyById(ArgumentMatchers.eq("non existing "+
+        verify(mockDataRepo, times(1)).getAgencyById(ArgumentMatchers.eq("non existing " +
                 "agency id"));
 
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         final ArgumentCaptor<AgencyIdNotFoundNotice> captor = ArgumentCaptor.forClass(AgencyIdNotFoundNotice.class);
 
@@ -175,10 +181,11 @@ class ValidateRouteAgencyIdTest {
         when(mockRoute.getAgencyId()).thenReturn(null);
         when(mockRoute.getRouteId()).thenReturn("route id");
 
-        final List<Route> mockRouteCollection = new ArrayList<>(List.of(mockRoute));
-
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getAgencyCount()).thenReturn(1);
+
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -193,8 +200,8 @@ class ValidateRouteAgencyIdTest {
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
 
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         verifyNoMoreInteractions(mockDataRepo, mockResultRepo, mockLogger, mockRoute);
     }
@@ -209,10 +216,11 @@ class ValidateRouteAgencyIdTest {
         when(mockRoute.getAgencyId()).thenReturn("existing agency id");
         when(mockRoute.getRouteId()).thenReturn("route id");
 
-        final List<Route> mockRouteCollection = new ArrayList<>(List.of(mockRoute));
-
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getAgencyCount()).thenReturn(2);
+
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
         when(mockDataRepo.getAgencyById("existing agency id")).thenReturn(mockAgency);
 
@@ -230,8 +238,8 @@ class ValidateRouteAgencyIdTest {
         verify(mockDataRepo, times(1))
                 .getAgencyById(ArgumentMatchers.eq("existing agency id"));
 
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         verifyNoMoreInteractions(mockDataRepo, mockResultRepo, mockLogger, mockRoute);
     }
@@ -246,10 +254,11 @@ class ValidateRouteAgencyIdTest {
         when(mockRoute.getAgencyId()).thenReturn("existing agency id");
         when(mockRoute.getRouteId()).thenReturn("route id");
 
-        final List<Route> mockRouteCollection = new ArrayList<>(List.of(mockRoute));
-
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getAgencyCount()).thenReturn(1);
+
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
         when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
         when(mockDataRepo.getAgencyById("existing agency id")).thenReturn(mockAgency);
 
@@ -267,8 +276,8 @@ class ValidateRouteAgencyIdTest {
         verify(mockDataRepo, times(1))
                 .getAgencyById(ArgumentMatchers.eq("existing agency id"));
 
-        verify(mockRoute, times(1)).getRouteId();
         verify(mockRoute, times(1)).getAgencyId();
+        verify(mockRoute, times(1)).getRouteId();
 
         verifyNoMoreInteractions(mockDataRepo, mockResultRepo, mockLogger, mockRoute);
     }

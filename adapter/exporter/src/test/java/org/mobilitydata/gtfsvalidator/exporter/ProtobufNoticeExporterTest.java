@@ -28,6 +28,7 @@ import java.net.URL;
 import java.time.LocalDate;
 
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_ROUTE_ID;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_SERVICE_ID;
 import static org.mockito.Mockito.*;
 
 class ProtobufNoticeExporterTest {
@@ -593,7 +594,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new InvalidColorNotice(FILENAME, "field_name", "entity_id", "#zz")
+        underTest.export(new CannotParseColorNotice(FILENAME, "field_name", 0, "#zz")
         );
 
         verify(mockBuilder, times(1)).clear();
@@ -1265,7 +1266,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new InvalidAgencyIdNotice("filename", "field name", "entity id" ));
+        underTest.export(new InvalidAgencyIdNotice("filename", "field name", "entity id"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
@@ -1277,6 +1278,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
+
     @Test
     void exportNonExistingAgencyIdShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
@@ -1334,6 +1336,153 @@ class ProtobufNoticeExporterTest {
                 .setEntityValue(ArgumentMatchers.eq(KEY_UNKNOWN_ROUTE_ID));
         verify(mockBuilder, times(1))
                 .setAltEntityValue(ArgumentMatchers.eq("route id"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportShapeIdNotFoundNoticeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new ShapeIdNotFoundNotice("filename", "field name",
+                "composite key first part",
+                "composite key second part",
+                "composite key first value",
+                "composite key second value", "shape id"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("field name"));
+        verify(mockBuilder, times(1))
+                .setEntityValue(ArgumentMatchers.eq("composite key first part"));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("composite key second part"));
+        verify(mockBuilder, times(1))
+                .setAltEntityValue(ArgumentMatchers.eq("composite key first value"));
+        verify(mockBuilder, times(1))
+                .setAltValue(ArgumentMatchers.eq("composite key second value"));
+        verify(mockBuilder, times(1))
+                .setCsvKeyName(ArgumentMatchers.eq("shape id"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportTripIdNotFoundNoticeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new TripIdNotFoundNotice("filename",
+                "field name",
+                "composite key first part",
+                "composite key second part",
+                "composite key first value",
+                "composite key second value",
+                "trip id"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("field name"));
+        verify(mockBuilder, times(1))
+                .setEntityValue(ArgumentMatchers.eq("composite key first part"));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("composite key second part"));
+        verify(mockBuilder, times(1))
+                .setAltEntityValue(ArgumentMatchers.eq("composite key first value"));
+        verify(mockBuilder, times(1))
+                .setAltValue(ArgumentMatchers.eq("composite key second value"));
+        verify(mockBuilder, times(1))
+                .setCsvKeyName(ArgumentMatchers.eq("trip id"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportShapeNotUsedNoticeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new ShapeNotUsedNotice("entity id",
+                "field name"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("shapes.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("field name"));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("entity id"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportServiceIdNotFoundNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new ServiceIdNotFoundNotice("filename", "entity id", "service_id",
+                "service id"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("filename"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("entity id"));
+        verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq("service_id"));
+        verify(mockBuilder, times(1))
+                .setEntityValue(ArgumentMatchers.eq(KEY_UNKNOWN_SERVICE_ID));
+        verify(mockBuilder, times(1))
+                .setAltEntityValue(ArgumentMatchers.eq("service id"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

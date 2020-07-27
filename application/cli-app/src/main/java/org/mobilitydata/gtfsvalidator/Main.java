@@ -72,6 +72,7 @@ public class Main {
                 final ProcessParsedFeedInfo processParsedFeedInfo = config.processParsedFeedInfo();
                 final ProcessParsedFareAttribute processParsedFareAttribute = config.processParsedFareAttribute();
                 final ProcessParsedFareRule processParsedFareRule = config.processParsedFareRule();
+                final ProcessParsedFrequency processParsedFrequency = config.processParsedFrequency();
                 final ProcessParsedPathway processParsedPathway = config.processParsedPathway();
                 final ProcessParsedAttribution processParsedAttribution = config.processParsedAttribution();
                 final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
@@ -144,15 +145,19 @@ public class Main {
                                     processParsedFareRule.execute(parsedEntity);
                                     break;
                                 }
+                                case "frequencies.txt": {
+                                    processParsedFrequency.execute(parsedEntity);
+                                    break;
+                                }
                                 case "shapes.txt": {
                                     processParsedShapePoint.execute(parsedEntity);
                                     break;
                                 }
-                                case "translations.txt" :{
+                                case "translations.txt": {
                                     processParsedTranslation.execute(parsedEntity);
                                     break;
                                 }
-                                case "stop_times.txt" :{
+                                case "stop_times.txt": {
                                     processParsedStopTime.execute(parsedEntity);
                                     break;
                                 }
@@ -168,10 +173,12 @@ public class Main {
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
                 config.validateCalendarEndDateBeforeStartDate().execute();
-                config.validateAgencyIdRequirement().execute();
                 config.validateAgenciesHaveSameAgencyTimezone().execute();
                 config.validateTripRouteId().execute();
+                config.validateTripServiceId().execute();
                 config.validateRouteAgencyId().execute();
+                config.stopTimeBasedCrossValidator().execute();
+                config.shapeBasedCrossValidator().execute();
                 config.validateFeedInfoEndDateAfterStartDate().execute();
                 config.validateFeedCoversTheNext7ServiceDays().execute();
                 config.validateFeedCoversTheNext30ServiceDays().execute();

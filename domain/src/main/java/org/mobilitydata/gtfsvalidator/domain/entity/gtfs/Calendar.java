@@ -30,16 +30,26 @@ import java.util.List;
  * {@link CalendarBuilder} to create this.
  */
 public class Calendar extends GtfsEntity {
-    @NotNull private final String serviceId;
-    @NotNull private final Boolean monday;
-    @NotNull private final Boolean tuesday;
-    @NotNull private final Boolean wednesday;
-    @NotNull private final Boolean thursday;
-    @NotNull private final Boolean friday;
-    @NotNull private final Boolean saturday;
-    @NotNull private final Boolean sunday;
-    @NotNull private final LocalDate startDate;
-    @NotNull private final LocalDate endDate;
+    @NotNull
+    private final String serviceId;
+    @NotNull
+    private final Boolean monday;
+    @NotNull
+    private final Boolean tuesday;
+    @NotNull
+    private final Boolean wednesday;
+    @NotNull
+    private final Boolean thursday;
+    @NotNull
+    private final Boolean friday;
+    @NotNull
+    private final Boolean saturday;
+    @NotNull
+    private final Boolean sunday;
+    @NotNull
+    private final LocalDate startDate;
+    @NotNull
+    private final LocalDate endDate;
 
     /**
      * Class for all entities defined in calendar.txt
@@ -78,43 +88,53 @@ public class Calendar extends GtfsEntity {
         this.endDate = endDate;
     }
 
-    @NotNull public String getServiceId() {
+    @NotNull
+    public String getServiceId() {
         return serviceId;
     }
 
-    @NotNull public Boolean isMonday() {
+    @NotNull
+    public Boolean isMonday() {
         return monday;
     }
 
-    @NotNull public Boolean isTuesday() {
+    @NotNull
+    public Boolean isTuesday() {
         return tuesday;
     }
 
-    @NotNull public Boolean isWednesday() {
+    @NotNull
+    public Boolean isWednesday() {
         return wednesday;
     }
 
-    @NotNull public Boolean isThursday() {
+    @NotNull
+    public Boolean isThursday() {
         return thursday;
     }
 
-    @NotNull public Boolean isFriday() {
+    @NotNull
+    public Boolean isFriday() {
         return friday;
     }
 
-    @NotNull public Boolean isSaturday() {
+    @NotNull
+    public Boolean isSaturday() {
         return saturday;
     }
 
-    @NotNull public Boolean isSunday() {
+    @NotNull
+    public Boolean isSunday() {
         return sunday;
     }
 
-    @NotNull public LocalDate getStartDate() {
+    @NotNull
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    @NotNull public LocalDate getEndDate() {
+    @NotNull
+    public LocalDate getEndDate() {
         return endDate;
     }
 
@@ -157,7 +177,7 @@ public class Calendar extends GtfsEntity {
          * Sets fields monday and originalMondayInteger value and returns this
          *
          * @param monday indicates whether the service operates on all mondays in the date range specified
-         *               by {@param startDate} and {@param endDate} fields
+         *               by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder monday(@NotNull final Integer monday) {
@@ -181,7 +201,7 @@ public class Calendar extends GtfsEntity {
          * Sets field tuesday and originalTuesdayInteger value and returns this
          *
          * @param tuesday indicates whether the service operates on all tuesday in the date range specified
-         *                by {@param startDate} and {@param endDate} fields
+         *                by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder tuesday(@NotNull final Integer tuesday) {
@@ -205,7 +225,7 @@ public class Calendar extends GtfsEntity {
          * Sets field wednesday and originalWednesdayInteger value and returns this
          *
          * @param wednesday indicates whether the service operates on all wednesday in the date range specified
-         *                  by {@param startDate} and {@param endDate} fields
+         *                  by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder wednesday(@NotNull final Integer wednesday) {
@@ -229,7 +249,7 @@ public class Calendar extends GtfsEntity {
          * Sets field thursday and originalThursdayInteger value and returns this
          *
          * @param thursday indicates whether the service operates on all thursday in the date range specified
-         *                 by {@param startDate} and {@param endDate} fields
+         *                 by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder thursday(@NotNull final Integer thursday) {
@@ -253,7 +273,7 @@ public class Calendar extends GtfsEntity {
          * Sets field friday and originalFridayInteger value and returns this
          *
          * @param friday indicates whether the service operates on all friday in the date range specified
-         *               by {@param startDate} and {@param endDate} fields
+         *               by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder friday(@NotNull final Integer friday) {
@@ -277,7 +297,7 @@ public class Calendar extends GtfsEntity {
          * Sets field saturday and originalSaturdayInteger value and returns this
          *
          * @param saturday indicates whether the service operates on friday saturday in the date range specified
-         *                 by {@param startDate} and {@param endDate} fields
+         *                 by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder saturday(@NotNull final Integer saturday) {
@@ -301,7 +321,7 @@ public class Calendar extends GtfsEntity {
          * Sets field saturday and originalSundayInteger value and returns this
          *
          * @param sunday indicates whether the service operates on sunday saturday in the date range specified
-         *               by {@param startDate} and {@param endDate} fields
+         *               by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder sunday(@NotNull final Integer sunday) {
@@ -434,6 +454,7 @@ public class Calendar extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public CalendarBuilder clear() {

@@ -17,8 +17,8 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.AgencyIdNotFoundNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -39,18 +39,19 @@ public class ValidateRouteAgencyId {
         logger.info("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator());
 
         final int agencyCount = dataRepo.getAgencyCount();
-        dataRepo.getRouteAll().forEach(route -> {
-            final String routeId = route.getRouteId();
-            final String agencyId = route.getAgencyId();
-            if (agencyCount > 1) {
-                if (agencyId == null) {
-                    resultRepo.addNotice(new MissingAgencyIdNotice("routes.txt", routeId));
-                } else {
-                    if (dataRepo.getAgencyById(agencyId) == null) {
-                        resultRepo.addNotice(new AgencyIdNotFoundNotice("routes.txt", "agency_id",
-                                routeId));
-                    }
-                }
+        dataRepo.getRouteAll().values()
+                .forEach(route -> {
+                    final String routeId = route.getRouteId();
+                    final String agencyId = route.getAgencyId();
+                    if (agencyCount > 1) {
+                        if (agencyId == null) {
+                            resultRepo.addNotice(new MissingAgencyIdNotice("routes.txt", routeId));
+                        } else {
+                            if (dataRepo.getAgencyById(agencyId) == null) {
+                                resultRepo.addNotice(new AgencyIdNotFoundNotice("routes.txt", "agency_id",
+                                        routeId));
+                            }
+                        }
             } else {
                 if (agencyId != null && dataRepo.getAgencyById(agencyId) == null) {
                     resultRepo.addNotice(new AgencyIdNotFoundNotice("routes.txt", "agency_id", routeId));

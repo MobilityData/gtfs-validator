@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
@@ -27,27 +28,27 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Map;
+import java.util.TreeMap;
 
 public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
+    Agency addAgency(final Agency newAgency, final Agency.AgencyBuilder builder) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
 
     int getAgencyCount();
 
-    Collection<Agency> getAgencyAll();
+    Map<String, Agency> getAgencyAll();
 
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
-    Collection<Route> getRouteAll();
+    Map<String, Route> getRouteAll();
 
     Route getRouteById(final String routeId);
 
     CalendarDate addCalendarDate(final CalendarDate newCalendarDate) throws IllegalArgumentException;
 
-    CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDate date);
+    Map<String, Map<String, CalendarDate>> getCalendarDateAll();
 
     Level addLevel(final Level newLevel) throws IllegalArgumentException;
 
@@ -57,13 +58,13 @@ public interface GtfsDataRepository {
 
     Calendar getCalendarByServiceId(final String serviceId);
 
-    Collection<Calendar> getCalendarAll();
+    Map<String, Calendar> getCalendarAll();
 
     Trip addTrip(final Trip newTrip) throws IllegalArgumentException;
 
     Trip getTripById(final String tripId);
 
-    Collection<Trip> getTripAll();
+    Map<String, Trip> getTripAll();
 
     Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 
@@ -83,6 +84,10 @@ public interface GtfsDataRepository {
 
     FareRule getFareRule(final String fareId, final String routeId, final String originId, final String destinationId,
                          final String containsId);
+
+    Frequency addFrequency(final Frequency newFrequency);
+
+    Frequency getFrequency(final String tripId, final Integer startTime);
 
     Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException;
 
@@ -116,10 +121,19 @@ public interface GtfsDataRepository {
      * a shape object. The returned map is ordered by shape_pt_sequence.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * @return an immutable map of shape points from shapes.txt related to the id provided as parameter; which
      * represents a shape object. The returned map is ordered by shape_pt_sequence.
      */
     Map<Integer, ShapePoint> getShapeById(final String shapeId);
+
+    /**
+     * Return an immutable map representing all records from shapes.txt. The key values for the returned map are
+     * shape_id and the value is another map, which keys are shape_pt_sequence and values are {@link ShapePoint}.
+     * Note that those are ordered by ascending shape_pt_sequence.
+     *
+     * @return an immutable map representing all records from shapes.txt
+     */
+    Map<String, Map<Integer, ShapePoint>> getShapeAll();
 
     /**
      * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.
@@ -140,10 +154,18 @@ public interface GtfsDataRepository {
      * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
      * The returned map is ordered by stop_sequence
      *
-     * @param tripId  identifies a trip
-     * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
+     * @param tripId identifies a trip
+     * @return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     Map<Integer, StopTime> getStopTimeByTripId(final String tripId);
+
+    /**
+     * Return an immutable map representing all records from stop_times.txt. Elements of this map are mapped by
+     * "trip_id" and ordered by ascending by stop_sequence
+     *
+     * @return an immutable map representing all records from stop_times.txt
+     */
+    Map<String, TreeMap<Integer, StopTime>> getStopTimeAll();
 
     Translation getTranslationByTableNameFieldValueLanguage(final String tableName,
                                                             final String fieldValue,

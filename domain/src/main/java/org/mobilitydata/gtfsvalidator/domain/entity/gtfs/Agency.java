@@ -124,6 +124,7 @@ public class Agency extends GtfsEntity {
      * {@link Agency}.
      */
     public static class AgencyBuilder {
+        public static final String DEFAULT_AGENCY_ID = "defaultAgencyId";
         private String agencyId;
         private String agencyName;
         private String agencyUrl;
@@ -232,8 +233,8 @@ public class Agency extends GtfsEntity {
          */
         public EntityBuildResult<?> build() {
             if (agencyName == null || agencyUrl == null || agencyTimezone == null ||
-                    (agencyId!=null && agencyId.isBlank())) {
-                if (agencyId!=null && agencyId.isBlank()) {
+                    (agencyId != null && agencyId.isBlank())) {
+                if (agencyId != null && agencyId.isBlank()) {
                     noticeCollection.add(new InvalidAgencyIdNotice("agency.txt", "agency_id",
                             agencyId));
                 }
@@ -258,10 +259,11 @@ public class Agency extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public AgencyBuilder clear() {
-            agencyId = null;
+            agencyId = DEFAULT_AGENCY_ID;
             agencyName = null;
             agencyUrl = null;
             agencyTimezone = null;

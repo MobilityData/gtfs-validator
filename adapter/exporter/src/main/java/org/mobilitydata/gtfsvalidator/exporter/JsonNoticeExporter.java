@@ -133,7 +133,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final InvalidColorNotice toExport) throws IOException {
+    public void export(final CannotParseColorNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
@@ -254,6 +254,26 @@ public class JsonNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(final AgencyIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ShapeIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final TripIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ShapeNotUsedNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ServiceIdNotFoundNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 

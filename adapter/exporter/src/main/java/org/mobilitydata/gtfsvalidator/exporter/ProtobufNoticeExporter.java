@@ -283,7 +283,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(InvalidColorNotice toExport) throws IOException {
+    public void export(CannotParseColorNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_VALUE_ERROR)
@@ -559,6 +559,60 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setEntityId(toExport.getEntityId())
                 .setEntityValue(KEY_UNKNOWN_ROUTE_ID)
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_UNKNOWN_ROUTE_ID)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final ShapeIdNotFoundNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_UNKNOWN_SHAPE_ID)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final TripIdNotFoundNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_UNKNOWN_TRIP_ID)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final ShapeNotUsedNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final ServiceIdNotFoundNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getEntityId())
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setEntityValue(KEY_UNKNOWN_SERVICE_ID)
+                .setAltEntityValue(String.valueOf(String.valueOf(toExport.getNoticeSpecific(KEY_UNKNOWN_SERVICE_ID))))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

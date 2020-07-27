@@ -62,7 +62,8 @@ public class RelationshipDescriptor {
 
     /**
      * Method perform Depth First Search algorithm to find all reachable nodes from this node
-     * @param visited  list of visited {@link RelationshipDescriptor}
+     *
+     * @param visited list of visited {@link RelationshipDescriptor}
      * @return list of reachable nodes from this node
      */
     public HashSet<String> DFS(final HashSet<String> visited) {

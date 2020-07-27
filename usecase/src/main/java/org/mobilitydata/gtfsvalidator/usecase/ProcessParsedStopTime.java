@@ -94,8 +94,8 @@ public class ProcessParsedStopTime {
                 resultRepository.addNotice(
                         new DuplicatedEntityNotice(
                                 "stop_times.txt",
-                        "trip_id",
-                        "stop_sequence",
+                                "trip_id",
+                                "stop_sequence",
                                 tripId,
                                 stopSequence)
                 );

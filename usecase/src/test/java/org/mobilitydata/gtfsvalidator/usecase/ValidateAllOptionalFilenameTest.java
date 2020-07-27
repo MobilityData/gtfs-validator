@@ -36,13 +36,13 @@ class ValidateAllOptionalFilenameTest {
     void allExtraPresentShouldGenerateNotice() {
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
-        Set<String> testSet = Set.of("req0.req","opt0.opt","opt1.opt", "extra0.extra", "extra1.extra", "extra2.extra");
+        Set<String> testSet = Set.of("req0.req", "opt0.opt", "opt1.opt", "extra0.extra", "extra1.extra", "extra2.extra");
         when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
         List<String> testRequiredList = List.of("req0.req");
         when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
-        List<String> testOptionalList = List.of("opt0.opt","opt1.opt");
+        List<String> testOptionalList = List.of("opt0.opt", "opt1.opt");
         when(mockSpecRepo.getOptionalFilenameList()).thenReturn(testOptionalList);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);

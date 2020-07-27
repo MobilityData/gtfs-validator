@@ -146,6 +146,7 @@ public class CalendarDate extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public CalendarDateBuilder clear() {
@@ -156,14 +157,5 @@ public class CalendarDate extends GtfsEntity {
             noticeCollection.clear();
             return this;
         }
-    }
-
-    /**
-     * Returns a composite key for this {@link CalendarDate}
-     *
-     * @return a composite key for this {@link CalendarDate}
-     */
-    public String getCalendarDateMappingKey() {
-        return getServiceId() + getDate().toString();
     }
 }
