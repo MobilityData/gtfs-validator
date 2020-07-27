@@ -68,7 +68,7 @@ class ProcessParsedAgencyTest {
 
         when(mockParsedAgency.get(anyString())).thenReturn(STRING_TEST_VALUE);
 
-        when(mockGtfsDataRepo.addAgency(mockAgency)).thenReturn(mockAgency);
+        when(mockGtfsDataRepo.addAgency(mockAgency, mockBuilder)).thenReturn(mockAgency);
 
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -96,7 +96,8 @@ class ProcessParsedAgencyTest {
         verify(mockBuilder, times(1)).agencyEmail(anyString());
 
         inOrder.verify(mockBuilder, times(1)).build();
-        inOrder.verify(mockGtfsDataRepo, times(1)).addAgency(ArgumentMatchers.eq(mockAgency));
+        inOrder.verify(mockGtfsDataRepo, times(1)).addAgency(ArgumentMatchers.eq(mockAgency),
+                ArgumentMatchers.eq(mockBuilder));
 
         verifyNoMoreInteractions(mockBuilder, mockAgency, mockParsedAgency, mockGtfsDataRepo);
     }
@@ -184,7 +185,7 @@ class ProcessParsedAgencyTest {
 
         //noinspection unchecked
         when(mockBuilder.build()).thenReturn(mockGenericObject);
-        when(mockGtfsDataRepo.addAgency(mockAgency)).thenReturn(null);
+        when(mockGtfsDataRepo.addAgency(mockAgency, mockBuilder)).thenReturn(null);
 
         final ProcessParsedAgency underTest = new ProcessParsedAgency(mockResultRepo, mockGtfsDataRepo, mockBuilder);
 
@@ -210,7 +211,8 @@ class ProcessParsedAgencyTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedAgency, times(1)).getEntityId();
 
-        verify(mockGtfsDataRepo, times(1)).addAgency(ArgumentMatchers.isA(Agency.class));
+        verify(mockGtfsDataRepo, times(1)).addAgency(ArgumentMatchers.isA(Agency.class),
+                ArgumentMatchers.isA(Agency.AgencyBuilder.class));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).agencyId(anyString());

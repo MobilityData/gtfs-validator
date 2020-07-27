@@ -17,10 +17,10 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.jetbrains.annotations.NotNull;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
@@ -29,7 +29,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This holds an internal representation of gtfs entities: each row of each file from a GTFS dataset is represented here
@@ -79,6 +83,13 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
+    // Map containing Frequency entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file frequencies.txt:
+    // - trip_id
+    // - start_time
+    // Example of key after composition: trip_idstart_time
+    private final Map<String, Frequency> frequencyPerTripIdStartTime = new HashMap<>();
+
     // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
     // pathways.txt
     private final Map<String, Pathway> pathwayPerId = new HashMap<>();
@@ -122,17 +133,40 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * respected, if this requirement is not met returns null.
      */
     @Override
-    public Agency addAgency(@NotNull final Agency newAgency) throws IllegalArgumentException {
+    public Agency addAgency(@NotNull final Agency newAgency, final Agency.AgencyBuilder builder)
+            throws IllegalArgumentException {
+        // todo: implement early fail when adding agency with agency_id already in data repository
         //noinspection ConstantConditions
-        if (newAgency != null) {
-            if (agencyPerId.containsKey(newAgency.getAgencyId())) {
-                return null;
-            } else {
-                agencyPerId.put(newAgency.getAgencyId(), newAgency);
-                return newAgency;
-            }
-        } else {
+        if (newAgency == null) {
             throw new IllegalArgumentException("Cannot add null agency to data repository");
+        } else {
+            final String agencyId = newAgency.getAgencyId();
+            if (agencyId == null) {
+                if (getAgencyCount() > 1) {
+                    final Agency replacementAgency = (Agency) builder
+                            .clear()
+                            .agencyId(Agency.AgencyBuilder.DEFAULT_AGENCY_ID)
+                            .agencyEmail(newAgency.getAgencyEmail())
+                            .agencyFareUrl(newAgency.getAgencyUrl())
+                            .agencyLang(newAgency.getAgencyLang())
+                            .agencyName(newAgency.getAgencyName())
+                            .agencyPhone(newAgency.getAgencyPhone())
+                            .agencyUrl(newAgency.getAgencyUrl())
+                            .build()
+                            .getData();
+                    return addAgency(replacementAgency, builder);
+                } else {
+                    agencyPerId.put(agencyId, newAgency);
+                    return newAgency;
+                }
+            } else {
+                if (agencyPerId.containsKey(agencyId)) {
+                    return null;
+                } else {
+                    agencyPerId.put(agencyId, newAgency);
+                    return newAgency;
+                }
+            }
         }
     }
 
@@ -148,13 +182,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return an immutable collection of Agency objects representing all the rows from agency.txt
+     * Return an immutable map of Agency objects representing all the rows from agency.txt. Entities are mapped on field
+     * `agency_id` of file `agency.txt`. Note that if a record from `
      *
-     * @return a immutable collection of Agency objects representing all the rows from agency.txt
+     * @return a immutable map of Agency objects representing all the rows from agency.txt
      */
     @Override
-    public Collection<Agency> getAgencyAll() {
-        return Collections.unmodifiableCollection(agencyPerId.values());
+    public Map<String, Agency> getAgencyAll() {
+        return Collections.unmodifiableMap(agencyPerId);
     }
 
     /**
@@ -191,13 +226,15 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return a collection of Route objects representing all the rows from routes.txt
+     * Return an unmodifiable map of Route objects representing all the rows from routes.txt. Entities are mapped on
+     * value of field route_id of file `routes.txt`.
      *
-     * @return a collection of Route objects representing all the rows from routes.txt
+     * @return an unmodifiable map of Route objects representing all the rows from routes.txt. Entities are mapped on
+     * value of field route_id of file `routes.txt`.
      */
     @Override
-    public Collection<Route> getRouteAll() {
-        return routePerId.values();
+    public Map<String, Route> getRouteAll() {
+        return Collections.unmodifiableMap(routePerId);
     }
 
     /**
@@ -248,8 +285,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     /**
      * Return an immutable map of Trip objects representing all the rows from trips.txt. Entities are mapped on trip_id
+     * of file `trips.txt`.
      *
      * @return an immutable map of Trip objects representing all the rows from trips.txt. Entities are mapped on trip_id
+     * of file `trips.txt`
      */
     @Override
     public Map<String, Trip> getTripAll() {
@@ -550,6 +589,44 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                 final String destinationId, final String containsId) {
         return fareRuleCollection.get(FareRule.getFareRuleMappingKey(fareId, routeId, originId, destinationId,
                 containsId));
+    }
+
+    /**
+     * Add a Frequency representing a row from frequencies.txt to this {@code GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from frequencies.txt
+     * is respected, if this requirement is not met, returns null.
+     *
+     * @param newFrequency the internal representation of a row from frequencies.txt to be added to the
+     *                     repository.
+     * @return the entity added to the repository if the uniqueness constraint of frequency based on rows from
+     * frequencies.txt is respected, if this requirement is not met returns null.
+     * @throws IllegalArgumentException if the argument is null
+     */
+    @Override
+    public Frequency addFrequency(final Frequency newFrequency) throws IllegalArgumentException {
+        if (newFrequency != null) {
+            final String key = newFrequency.getFrequencyMappingKey();
+            if (frequencyPerTripIdStartTime.containsKey(key)) {
+                return null;
+            } else {
+                frequencyPerTripIdStartTime.put(key, newFrequency);
+                return newFrequency;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null frequency to data repository");
+        }
+    }
+
+    /**
+     * Return the Frequency representing a row from frequencies.txt related to the id provided as parameter
+     *
+     * @param tripId    1st part of the composite key: identifies a fare class
+     * @param startTime 2nd part of the composite key: identifies a route associated with the fare class
+     * @return the Frequency representing a row from frequencies.txt related to the id provided as parameter
+     */
+    @Override
+    public Frequency getFrequency(final String tripId, final Integer startTime) {
+        return frequencyPerTripIdStartTime.get(Frequency.getFrequencyMappingKey(tripId, startTime));
     }
 
     /**

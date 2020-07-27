@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
@@ -26,21 +27,21 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
-import java.util.Collection;
+import java.time.LocalDate;
 import java.util.Map;
 
 public interface GtfsDataRepository {
-    Agency addAgency(final Agency newAgency) throws IllegalArgumentException;
+    Agency addAgency(final Agency newAgency, final Agency.AgencyBuilder builder) throws IllegalArgumentException;
 
     Agency getAgencyById(final String agencyId);
 
     int getAgencyCount();
 
-    Collection<Agency> getAgencyAll();
+    Map<String, Agency> getAgencyAll();
 
     Route addRoute(final Route newRoute) throws IllegalArgumentException;
 
-    Collection<Route> getRouteAll();
+    Map<String, Route> getRouteAll();
 
     Route getRouteById(final String routeId);
 
@@ -80,6 +81,10 @@ public interface GtfsDataRepository {
 
     FareRule getFareRule(final String fareId, final String routeId, final String originId, final String destinationId,
                          final String containsId);
+
+    Frequency addFrequency(final Frequency newFrequency);
+
+    Frequency getFrequency(final String tripId, final Integer startTime);
 
     Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException;
 

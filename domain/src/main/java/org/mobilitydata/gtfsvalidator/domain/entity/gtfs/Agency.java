@@ -124,6 +124,7 @@ public class Agency extends GtfsEntity {
      * {@link Agency}.
      */
     public static class AgencyBuilder {
+        public static final String DEFAULT_AGENCY_ID = "defaultAgencyId";
         private String agencyId;
         private String agencyName;
         private String agencyUrl;
@@ -262,7 +263,7 @@ public class Agency extends GtfsEntity {
          * @return builder with all fields set to null;
          */
         public AgencyBuilder clear() {
-            agencyId = null;
+            agencyId = DEFAULT_AGENCY_ID;
             agencyName = null;
             agencyUrl = null;
             agencyTimezone = null;
