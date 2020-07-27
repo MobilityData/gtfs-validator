@@ -604,6 +604,19 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final ServiceIdNotFoundNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getEntityId())
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_FIELD_NAME)))
+                .setEntityValue(KEY_UNKNOWN_SERVICE_ID)
+                .setAltEntityValue(String.valueOf(String.valueOf(toExport.getNoticeSpecific(KEY_UNKNOWN_SERVICE_ID))))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();

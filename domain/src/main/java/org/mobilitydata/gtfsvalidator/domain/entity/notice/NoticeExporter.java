@@ -100,4 +100,6 @@ public interface NoticeExporter {
     void export(final TripIdNotFoundNotice tripIdNotFoundNotice) throws IOException;
 
     void export(final ShapeNotUsedNotice shapeNotUsedNotice) throws IOException;
+
+    void export(final ServiceIdNotFoundNotice serviceIdNotFoundNotice) throws IOException;
 }

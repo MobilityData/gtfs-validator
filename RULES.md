@@ -37,6 +37,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E033](#E033) | `route_id` not found in GTFS `routes.txt` |
 | [E034](#E034) | `shape_id` not found in GTFS `shapes.txt` |
 | [E035](#E035) | `agency_id` not found in GTFS `agency.txt` |
+| [E036](#E036) | `service_id` not found in GTFS `calendar.txt` or `calendar_dates.txt`|
 | [E037](#E037) | `trip_id` not found in GTFS `trips.txt` |
 | [E038](#E038) | All shapes should be used in `trips.txt` |
 
@@ -156,6 +157,12 @@ Value of field `shape_id` should exist in GTFS `shapes.txt`.
 ### E035 - `agency_id` not found in GTFS `agency.txt`
 
 Value of field `agency_id` should exist in GTFS `agency.txt`.
+
+<a name="E036"/>
+
+### E036 - `service_id` not found
+
+Value of field `service_id` should exist in GTFS `calendar.txt` or `calendar_dates.txt`.
 
 <a name="E037"/>
 

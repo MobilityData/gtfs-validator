@@ -59,6 +59,7 @@ public abstract class Notice {
     public static final String KEY_UNKNOWN_ROUTE_ID = "unknownRouteId";
     public static final String KEY_UNKNOWN_SHAPE_ID = "unknownShapeId";
     public static final String KEY_UNKNOWN_TRIP_ID = "unknownTripId";
+    public static final String KEY_UNKNOWN_SERVICE_ID = "unknownServiceId";
     public static final String KEY_AGENCY_NAME = "agencyName";
 
     private final String filename;

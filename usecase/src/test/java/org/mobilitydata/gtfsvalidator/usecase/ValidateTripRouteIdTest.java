@@ -25,9 +25,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentMatchers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Mockito.*;
@@ -50,7 +48,7 @@ class ValidateTripRouteIdTest {
         mockTripCollection.put("trip id 00", mockTrip00);
         mockTripCollection.put("trip id 01", mockTrip01);
         when(mockDataRepo.getTripAll()).thenReturn(mockTripCollection);
-        when(mockDataRepo.getRouteAll()).thenReturn(new ArrayList<>());
+        when(mockDataRepo.getRouteAll()).thenReturn(new HashMap<>());
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
@@ -95,7 +93,12 @@ class ValidateTripRouteIdTest {
         mockTripCollection.put("trip id 00", mockTrip00);
         mockTripCollection.put("trip id 01", mockTrip01);
         when(mockDataRepo.getTripAll()).thenReturn(mockTripCollection);
-        when(mockDataRepo.getRouteAll()).thenReturn(new ArrayList<>(List.of(mockRoute00, mockRoute01)));
+
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id 00", mockRoute00);
+        mockRouteCollection.put("route id 01", mockRoute01);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
@@ -111,11 +114,9 @@ class ValidateTripRouteIdTest {
         verify(mockDataRepo, times(1)).getTripAll();
 
         verify(mockTrip00, times(1)).getRouteId();
-        verify(mockRoute00, times(1)).getRouteId();
         verify(mockTrip01, times(1)).getRouteId();
-        verify(mockRoute01, times(1)).getRouteId();
 
-        verifyNoMoreInteractions(mockTrip00, mockTrip01, mockRoute00, mockRoute01, mockDataRepo, mockResultRepo,
-                mockLogger);
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockTrip00, mockTrip01, mockRoute00, mockRoute01, mockDataRepo, mockLogger);
     }
 }

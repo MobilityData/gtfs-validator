@@ -55,7 +55,7 @@ public class ValidateAgenciesHaveSameAgencyTimezone {
         logger.info("Validating rule 'E030 - Different 'agency_timezone'" + System.lineSeparator());
         final Set<String> timezoneCollection = new HashSet<>();
         dataRepo.getAgencyAll()
-                .forEach(agency -> timezoneCollection.add(agency.getAgencyTimezone()));
+                .forEach((agencyId, agency) -> timezoneCollection.add(agency.getAgencyTimezone()));
         if (timezoneCollection.size() > 1) {
             resultRepo.addNotice(
                     new InconsistentAgencyTimezoneNotice(timezoneCollection.size(), timezoneCollection.toString())
