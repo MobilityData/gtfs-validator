@@ -44,15 +44,13 @@ public class ParseAllExecParam {
     /**
      * Use case execution method: parses execution parameters from a .json file or from an Apache command line and adds
      * the resultant {@code ExecParam} to the repository provided to the constructor.
-     * If the execution parameters are to be parsed for a .json file, the path to that file is specified in
-     * {@param pathToExecParamFile}.
-     * If the execution parameter are to be parsed from Apache command line, {@param args} holds the information to be
+     * If the execution parameter are to be parsed from Apache command line, {args} holds the information to be
      * parsed.
      * This method throws {@link IOException} if the parsing operation could not be executed.
      * This method throws {@link IllegalArgumentException} if an {@link ExecParamRepository} could not be added to the
      * repository provided to the constructor.
      *
-     * @param args the command line execution parameters to parse if {@param fromConfigFile} is false
+     * @param args the command line execution parameters to parse if {fromConfigFile} is false
      * @throws IOException              if the parsing operation could not be executed.
      * @throws IllegalArgumentException if an {@link ExecParamRepository} could not be added to the repository provided
      *                                  to the constructor.
