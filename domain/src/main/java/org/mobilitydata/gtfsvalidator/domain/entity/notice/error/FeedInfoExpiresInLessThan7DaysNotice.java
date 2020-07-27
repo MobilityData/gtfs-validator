@@ -33,7 +33,7 @@ public class FeedInfoExpiresInLessThan7DaysNotice extends ErrorNotice {
                                                 final String compositeKeySecondValue,
                                                 final String compositeKeyThirdValue) {
         super(fileName,
-                E_038,
+                E_040,
                 "Feed expiration date too close",
                 "GTFS dataset should be valid for at least the next 7 days. Current date is: " +
                         currentDateAsString + "Feed expires: `" + feedEndDateAsString + "`." +
