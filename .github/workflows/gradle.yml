@@ -23,7 +23,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: tests-reportAll
-          path: ../**/**/build/reports/tests/test/*
+          path: /home/runner/work/gtfs-validator/gtfs-validator/**/**/build/reports/tests/test/
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
       - name: upload snapshot
