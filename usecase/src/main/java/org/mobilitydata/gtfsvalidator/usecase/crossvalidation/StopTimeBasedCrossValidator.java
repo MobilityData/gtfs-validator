@@ -56,7 +56,7 @@ public class StopTimeBasedCrossValidator {
      */
     public void execute() {
         logger.info("Validating rules :'E034 - `shape_id` not found");
-        logger.info("                  'E037 - `trip_id` not found" + System.lineSeparator());
+        logger.info("                  'E037 - `trip_id` not found");
 
         dataRepo.getStopTimeAll().values().forEach(stopTimeCollection ->
                 stopTimeCollection.values().forEach(stopTime -> {

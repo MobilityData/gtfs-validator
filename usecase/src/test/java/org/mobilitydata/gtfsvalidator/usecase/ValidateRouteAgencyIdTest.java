@@ -59,7 +59,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found"));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -103,7 +103,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found"));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -150,7 +150,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found"));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -195,7 +195,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found"));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -231,7 +231,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found"));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();
@@ -269,7 +269,7 @@ class ValidateRouteAgencyIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(
-                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator()));
+                ArgumentMatchers.eq("Validating rule 'E035 - `agency_id` not found"));
 
         verify(mockDataRepo, times(1)).getAgencyCount();
         verify(mockDataRepo, times(1)).getRouteAll();

@@ -55,8 +55,7 @@ public class ValidateFeedCoversTheNext30ServiceDays {
      * This verification is executed if {@link FeedInfo} has non-null value for field `feed_end_date`.
      */
     public void execute() {
-        logger.info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'"
-                + System.lineSeparator());
+        logger.info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'");
         final LocalDate currentDate = LocalDate.now();
 
         dataRepo.getFeedInfoAll().forEach((feedPublisherName, feedInfo) -> {

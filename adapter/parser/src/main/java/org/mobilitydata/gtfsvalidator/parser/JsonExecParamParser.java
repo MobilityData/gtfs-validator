@@ -61,7 +61,7 @@ public class JsonExecParamParser implements ExecParamRepository.ExecParamParser 
         final Map<String, ExecParam> toReturn = new HashMap<>();
         if (Strings.isNullOrEmpty(parameterJsonString)) {
             logger.info("could not find execution-parameters.json file  -- will consider default values for" +
-                    " execution parameters" + System.lineSeparator());
+                    " execution parameters");
             return toReturn;
         }
         try {

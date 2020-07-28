@@ -61,8 +61,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'"
-                        + System.lineSeparator());
+                .info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'");
 
         verify(mockGtfsDataRepo, times(1)).getFeedInfoAll();
 
@@ -119,8 +118,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'"
-                        + System.lineSeparator());
+                .info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'");
 
         verify(mockGtfsDataRepo, times(1)).getFeedInfoAll();
 
@@ -160,8 +158,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'"
-                        + System.lineSeparator());
+                .info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'");
 
         verify(mockGtfsDataRepo, times(1)).getFeedInfoAll();
 
@@ -193,8 +190,7 @@ class ValidateFeedCoversTheNext30ServiceDaysTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'"
-                        + System.lineSeparator());
+                .info("Validating rule 'W009 - Dataset should cover at least the next 30 days of service'");
 
         verify(mockGtfsDataRepo, times(1)).getFeedInfoAll();
 

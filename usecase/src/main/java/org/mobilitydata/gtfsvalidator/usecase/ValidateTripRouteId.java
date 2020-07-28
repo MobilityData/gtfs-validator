@@ -51,17 +51,15 @@ public class ValidateTripRouteId {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule E033 - `route_id` not found" + System.lineSeparator());
+        logger.info("Validating rule E033 - `route_id` not found");
         final Set<String> routeIdCollection = dataRepo.getRouteAll().keySet();
         dataRepo.getTripAll().values().stream()
                 .filter(trip -> !routeIdCollection.contains(trip.getRouteId()))
-                .forEach(trip -> {
-                    resultRepo.addNotice(
-                            new RouteIdNotFoundNotice("trips.txt",
-                                    trip.getTripId(),
-                                    trip.getRouteId(),
-                                    "route_id")
-                    );
-                });
+                .forEach(trip -> resultRepo.addNotice(
+                        new RouteIdNotFoundNotice("trips.txt",
+                                trip.getTripId(),
+                                trip.getRouteId(),
+                                "route_id")
+                ));
     }
 }

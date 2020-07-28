@@ -59,7 +59,7 @@ class ValidateAgenciesHaveSameAgencyTimezoneTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'E030 - Different 'agency_timezone'" + System.lineSeparator());
+                .info("Validating rule 'E030 - Different 'agency_timezone'");
 
         verify(mockDataRepo, times(1)).getAgencyAll();
         // suppress warning regarding ignored result of method since it is not necessary here.
@@ -97,7 +97,7 @@ class ValidateAgenciesHaveSameAgencyTimezoneTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'E030 - Different 'agency_timezone'" + System.lineSeparator());
+                .info("Validating rule 'E030 - Different 'agency_timezone'");
 
         verify(mockDataRepo, times(1)).getAgencyAll();
         // suppress warning regarding ignored result of method since it is not necessary here.
@@ -146,7 +146,7 @@ class ValidateAgenciesHaveSameAgencyTimezoneTest {
         final InOrder inOrder = inOrder(mockDataRepo, mockResultRepo, mockLogger, mockAgency00);
 
         inOrder.verify(mockLogger, times(1))
-                .info("Validating rule 'E030 - Different 'agency_timezone'" + System.lineSeparator());
+                .info("Validating rule 'E030 - Different 'agency_timezone'");
 
         inOrder.verify(mockDataRepo, times(1)).getAgencyAll();
         // suppress warning regarding ignored result of method since it is not necessary here.

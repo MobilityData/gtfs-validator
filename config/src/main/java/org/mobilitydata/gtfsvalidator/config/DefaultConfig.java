@@ -24,9 +24,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
@@ -99,11 +96,9 @@ public class DefaultConfig {
         this.executionParametersAsString = null;
         try {
             this.executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
-            logger.info("Configuration file execution-parameters.json found in working directory" +
-                    System.lineSeparator());
+            logger.info("Configuration file execution-parameters.json found in working directory");
         } catch (IOException e) {
-            logger.warn("Configuration file execution-parameters.json not found in working directory" +
-                    System.lineSeparator());
+            logger.warn("Configuration file execution-parameters.json not found in working directory");
         }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
     }

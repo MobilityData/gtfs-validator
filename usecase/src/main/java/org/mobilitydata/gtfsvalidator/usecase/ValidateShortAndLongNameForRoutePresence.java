@@ -50,7 +50,7 @@ public class ValidateShortAndLongNameForRoutePresence {
      * to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E027 - Missing route short name and long name'" + System.lineSeparator());
+        logger.info("Validating rule 'E027 - Missing route short name and long name'");
         dataRepo.getRouteAll().values().stream()
                 .filter(route -> !(isPresentName(route.getRouteLongName()) && isPresentName(route.getRouteShortName())))
                 .forEach(route -> {

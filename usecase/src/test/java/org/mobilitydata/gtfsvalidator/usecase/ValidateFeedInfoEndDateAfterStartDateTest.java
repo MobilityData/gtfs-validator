@@ -59,7 +59,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
 
         underTest.execute();
         verify(mockLogger, times(1)).info("Validating rule 'E037 - `feed_start_date`" +
-                " and `feed_end_date` out of order" + System.lineSeparator());
+                " and `feed_end_date` out of order");
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
 
@@ -99,7 +99,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
 
         underTest.execute();
         verify(mockLogger, times(1)).info("Validating rule 'E037 - `feed_start_date`" +
-                " and `feed_end_date` out of order" + System.lineSeparator());
+                " and `feed_end_date` out of order");
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
 
@@ -151,7 +151,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
 
         underTest.execute();
         verify(mockLogger, times(1)).info("Validating rule 'E037 - `feed_start_date`" +
-                " and `feed_end_date` out of order" + System.lineSeparator());
+                " and `feed_end_date` out of order");
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
 
@@ -184,7 +184,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
 
         underTest.execute();
         verify(mockLogger, times(1)).info("Validating rule 'E037 - `feed_start_date`" +
-                " and `feed_end_date` out of order" + System.lineSeparator());
+                " and `feed_end_date` out of order");
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
 

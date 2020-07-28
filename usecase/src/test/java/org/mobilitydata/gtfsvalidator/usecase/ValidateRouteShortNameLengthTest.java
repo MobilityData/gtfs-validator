@@ -28,6 +28,7 @@ import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class ValidateRouteShortNameLengthTest {
 
     @Test
@@ -54,7 +55,7 @@ public class ValidateRouteShortNameLengthTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockLogger, times(1)).info("Validating rule 'W005 - Route short name " +
-                "too long'" + System.lineSeparator());
+                "too long'");
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -84,7 +85,7 @@ public class ValidateRouteShortNameLengthTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockLogger, times(1)).info("Validating rule 'W005 - Route short name " +
-                "too long'" + System.lineSeparator());
+                "too long'");
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -114,7 +115,7 @@ public class ValidateRouteShortNameLengthTest {
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockRoute, times(1)).getRouteShortName();
         verify(mockLogger, times(1)).info("Validating rule 'W005 - Route short name " +
-                "too long'" + System.lineSeparator());
+                "too long'");
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -145,7 +146,7 @@ public class ValidateRouteShortNameLengthTest {
         verify(mockRoute, times(2)).getRouteShortName();
         verify(mockRoute, times(1)).getRouteId();
         verify(mockLogger, times(1)).info("Validating rule 'W005 - Route short name " +
-                "too long'" + System.lineSeparator());
+                "too long'");
         verify(mockResultRepo, times(1)).addNotice(any(RouteShortNameTooLongNotice.class));
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }

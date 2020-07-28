@@ -45,8 +45,7 @@ public class ValidateFeedInfoFeedEndDateIsPresent {
      * `feed_start_date` that a non-value has been provided to field `feed_end_date`.
      */
     public void execute() {
-        logger.info("Validating rule W010 - `feed_end_date` should be provided if `feed_start_date` is provided"
-                + System.lineSeparator());
+        logger.info("Validating rule W010 - `feed_end_date` should be provided if `feed_start_date` is provided");
 
         dataRepo.getFeedInfoAll()
                 .forEach((feedPublisherName, feedInfo) -> {

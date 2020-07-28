@@ -47,7 +47,7 @@ public class ValidateRouteColorAndTextContrast {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E025 - Insufficient route color contrast'" + System.lineSeparator());
+        logger.info("Validating rule 'E025 - Insufficient route color contrast'");
         dataRepo.getRouteAll().values().stream()
                 .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
                 .forEach(route -> resultRepo.addNotice(

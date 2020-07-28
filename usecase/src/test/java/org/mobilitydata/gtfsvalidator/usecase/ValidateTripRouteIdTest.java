@@ -58,7 +58,7 @@ class ValidateTripRouteIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E033 - `route_id` not found" + System.lineSeparator()));
+                "Validating rule E033 - `route_id` not found"));
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();
@@ -110,7 +110,7 @@ class ValidateTripRouteIdTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E033 - `route_id` not found" + System.lineSeparator()));
+                "Validating rule E033 - `route_id` not found"));
 
         verify(mockDataRepo, times(1)).getRouteAll();
         verify(mockDataRepo, times(1)).getTripAll();

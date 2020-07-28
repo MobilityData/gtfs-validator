@@ -36,7 +36,7 @@ public class ValidateRouteAgencyId {
     }
 
     public void execute() {
-        logger.info("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator());
+        logger.info("Validating rule 'E035 - `agency_id` not found");
 
         final int agencyCount = dataRepo.getAgencyCount();
         dataRepo.getRouteAll().values()
