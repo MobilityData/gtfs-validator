@@ -112,4 +112,9 @@ public interface NoticeExporter {
     void export(MissingFeedEndDateNotice missingFeedEndDateNotice) throws IOException;
 
     void export(MissingFeedStartDateNotice missingFeedStartDateNotice) throws IOException;
+
+    void export(final StationWithParentStationNotice stationWithParentStationNotice) throws IOException;
+
+    void export(final ParentStationInvalidLocationTypeNotice parentStationInvalidLocationTypeNotice)
+            throws IOException;
 }

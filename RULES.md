@@ -40,8 +40,10 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E036](#E036) | `service_id` not found in GTFS `calendar.txt` or `calendar_dates.txt`|
 | [E037](#E037) | `trip_id` not found in GTFS `trips.txt` |
 | [E038](#E038) | All shapes should be used in `trips.txt` |
-| [E037](#E039) | `feed_start_date` after `feed_end_date` | 
-| [E038](#E040) | Dataset should be valid for at least the next 7 days | 
+| [E039](#E039) | `feed_start_date` after `feed_end_date` | 
+| [E040](#E040) | Dataset should be valid for at least the next 7 days | 
+| [E041](#E041) | Invalid parent `location_type` for stop |
+| [E042](#E042) | Station stop (`location_type`=2) has a parent stop |
 
 ### Table of Warnings
 
@@ -200,6 +202,32 @@ At any time, the published GTFS dataset should be valid for at least the next 7 
 
 #### References:
 * [Dataset Publishing & General Practices](http://gtfs.org/best-practices/#dataset-publishing--general-practices)
+
+<a name="E041"/>
+
+### E041 - Invalid parent `location_type` for stop
+
+Value of field `location_type` of parent found in field `parent_station` is invalid.
+
+According to spec
+- _Stop/platform_ can only have _Station_ as parent
+- _Station_ can NOT have a parent
+- _Entrance/exit_ or _generic node_ can only have _Station_ as parent
+- _Boarding Area_ can only have _Platform_ as parent 
+
+Any other combination raise this error
+
+#### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
+<a name="E042"/>
+
+### E042 - Station stop (`location_type`=2) has a parent stop
+
+Field `parent_station` must be empty when `location_type` is 2
+
+#### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
 # Warnings
 

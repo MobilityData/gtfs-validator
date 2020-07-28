@@ -34,6 +34,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeConversionUtils;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.ShapeBasedCrossValidator;
@@ -284,6 +285,19 @@ public class DefaultConfig {
 
     public ProcessParsedTranslation processParsedTranslation() {
         return new ProcessParsedTranslation(resultRepo, gtfsDataRepository, new Translation.TranslationBuilder());
+    }
+
+    public PreprocessParsedStop preprocessParsedStop() {
+        return new PreprocessParsedStop(resultRepo);
+    }
+
+    public ProcessParsedStopAll processParsedStopAll() {
+        return new ProcessParsedStopAll(resultRepo, gtfsDataRepository,
+                new StopOrPlatform.StopOrPlatformBuilder(),
+                new Station.StationBuilder(),
+                new Entrance.EntranceBuilder(),
+                new GenericNode.GenericNodeBuilder(),
+                new BoardingArea.BoardingAreaBuilder());
     }
 
     public ProcessParsedFrequency processParsedFrequency() {

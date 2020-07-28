@@ -64,6 +64,10 @@ public abstract class Notice {
     public static final String KEY_FEED_INFO_START_DATE = "feedInfoStartDate";
     public static final String KEY_FEED_INFO_END_DATE = "feedInfoEndDate";
     public static final String KEY_CURRENT_DATE = "currentDate";
+    public static final String KEY_CHILD_LOCATION_TYPE = "childLocationType";
+    public static final String KEY_PARENT_ID = "parentId";
+    public static final String KEY_EXPECTED_PARENT_LOCATION_TYPE = "expectedParentLocationType";
+    public static final String KEY_ACTUAL_PARENT_LOCATION_TYPE = "actualParentLocationType";
 
     private final String filename;
     private final int code;

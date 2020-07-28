@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
 
 import java.time.LocalDate;
 import java.util.Map;
@@ -172,4 +173,10 @@ public interface GtfsDataRepository {
                                                             final String language);
 
     Translation addTranslation(final Translation newTranslationTable);
+
+    LocationBase addStop(final LocationBase newStop);
+
+    LocationBase getStopById(final String stopId);
+
+    Map<String, LocationBase> getStopAll();
 }

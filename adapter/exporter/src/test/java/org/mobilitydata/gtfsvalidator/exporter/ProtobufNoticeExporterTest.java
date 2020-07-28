@@ -1333,7 +1333,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("entity id"));
         verify(mockBuilder, times(1))
-                .setEntityValue(ArgumentMatchers.eq(KEY_UNKNOWN_ROUTE_ID));
+                .setEntityValue(ArgumentMatchers.eq("route id"));
         verify(mockBuilder, times(1))
                 .setAltEntityValue(ArgumentMatchers.eq("route id"));
         verify(mockBuilder, times(1)).build();
