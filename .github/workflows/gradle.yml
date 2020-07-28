@@ -34,9 +34,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: allTests
-          path: /build/reports/allTests/
+          path: build/reports/allTests/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
           name: javadoc
-          path: /build/docs/javadoc/
+          path: build/docs/javadoc/
