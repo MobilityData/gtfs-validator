@@ -39,9 +39,9 @@ public class GenerateFilenameListToProcess {
      * @return the list of filename to validate
      */
     public ArrayList<String> execute(final ArrayList<String> toExclude, final ArrayList<String> toProcess) {
-        logger.info("List of filenames to exclude is: " + toExclude + System.lineSeparator());
+        logger.info("List of filenames to exclude is: " + toExclude);
         toProcess.removeAll(toExclude);
-        logger.info("Will execute validation on the following subset of files: " + toProcess + System.lineSeparator());
+        logger.info("Will execute validation on the following subset of files: " + toProcess);
         return toProcess;
     }
 }

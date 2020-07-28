@@ -47,7 +47,7 @@ public class ValidateCalendarEndDateBeforeStartDate {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E032 - calendar.txt end_date is before start_date'" + System.lineSeparator());
+        logger.info("Validating rule 'E032 - calendar.txt end_date is before start_date'");
         dataRepo.getCalendarAll().values().stream()
                 .filter(calendar -> calendar.getEndDate().isBefore(calendar.getStartDate()))
                 .forEach(calendar -> resultRepo.addNotice(

@@ -59,7 +59,7 @@ class ValidateFeedInfoFeedEndDateIsPresentTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info("Validating rule W010 - `feed_end_date` should be" +
-                " provided if `feed_start_date` is provided" + System.lineSeparator());
+                " provided if `feed_start_date` is provided");
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
 
@@ -114,7 +114,7 @@ class ValidateFeedInfoFeedEndDateIsPresentTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info("Validating rule W010 - `feed_end_date` should be" +
-                " provided if `feed_start_date` is provided" + System.lineSeparator());
+                " provided if `feed_start_date` is provided");
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
         verify(mockFeedInfo, times(1)).getFeedStartDate();
@@ -146,7 +146,7 @@ class ValidateFeedInfoFeedEndDateIsPresentTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info("Validating rule W010 - `feed_end_date` should be" +
-                " provided if `feed_start_date` is provided" + System.lineSeparator());
+                " provided if `feed_start_date` is provided");
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
         verify(mockFeedInfo, times(1)).getFeedStartDate();

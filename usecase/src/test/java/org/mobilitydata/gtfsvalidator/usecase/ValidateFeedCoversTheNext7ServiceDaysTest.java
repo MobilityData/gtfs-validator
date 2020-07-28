@@ -62,8 +62,7 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'E038 - Dataset should be valid for at least the next 7 days'"
-                        + System.lineSeparator());
+                .info("Validating rule 'E038 - Dataset should be valid for at least the next 7 days'");
 
         verify(mockGtfsDataRepo, times(1)).getFeedInfoAll();
 
@@ -123,8 +122,7 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'E038 - Dataset should be valid for at least the next 7 days'"
-                        + System.lineSeparator());
+                .info("Validating rule 'E038 - Dataset should be valid for at least the next 7 days'");
 
         verify(mockGtfsDataRepo, times(1)).getFeedInfoAll();
 
@@ -154,8 +152,7 @@ class ValidateFeedCoversTheNext7ServiceDaysTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'E038 - Dataset should be valid for at least the next 7 days'"
-                        + System.lineSeparator());
+                .info("Validating rule 'E038 - Dataset should be valid for at least the next 7 days'");
 
         verify(mockGtfsDataRepo, times(1)).getFeedInfoAll();
 

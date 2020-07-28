@@ -70,8 +70,7 @@ class ValidateTripServiceIdTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule E036 - `service_id` not found" +
-                System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule E036 - `service_id` not found");
 
         verify(mockDataRepo, times(1)).getCalendarAll();
         verify(mockDataRepo, times(1)).getCalendarDateAll();
@@ -116,8 +115,7 @@ class ValidateTripServiceIdTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule E036 - `service_id` not found" +
-                System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule E036 - `service_id` not found");
 
         verify(mockDataRepo, times(1)).getCalendarAll();
         verify(mockDataRepo, times(1)).getCalendarDateAll();
@@ -163,8 +161,7 @@ class ValidateTripServiceIdTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule E036 - `service_id` not found" +
-                System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule E036 - `service_id` not found");
 
         verify(mockDataRepo, times(1)).getCalendarAll();
         verify(mockDataRepo, times(1)).getCalendarDateAll();
@@ -210,8 +207,7 @@ class ValidateTripServiceIdTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rule E036 - `service_id` not found" +
-                System.lineSeparator());
+        verify(mockLogger, times(1)).info("Validating rule E036 - `service_id` not found");
 
         verify(mockDataRepo, times(1)).getCalendarAll();
         verify(mockDataRepo, times(1)).getCalendarDateAll();

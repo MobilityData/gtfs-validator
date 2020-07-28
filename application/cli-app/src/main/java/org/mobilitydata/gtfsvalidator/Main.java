@@ -84,8 +84,8 @@ public class Main {
 
                 final Map<String, ParsedEntity> preprocessedStopByStopId = new HashMap<>();
 
-                // base validation + build gtfs entities
                 filenameListToProcess.forEach(filename -> {
+                    logger.info("Validate CSV structure and field types for file: " + filename);
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
 

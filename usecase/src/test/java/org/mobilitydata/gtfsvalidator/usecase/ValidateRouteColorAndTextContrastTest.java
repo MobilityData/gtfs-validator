@@ -29,6 +29,7 @@ import java.util.Map;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class ValidateRouteColorAndTextContrastTest {
 
     @Test
@@ -59,7 +60,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +
-                " contrast'" + System.lineSeparator());
+                " contrast'");
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -92,7 +93,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +
-                " contrast'" + System.lineSeparator());
+                " contrast'");
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -125,7 +126,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockRoute, times(1)).getRouteColor();
         verify(mockRoute, times(1)).getRouteTextColor();
         verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +
-                " contrast'" + System.lineSeparator());
+                " contrast'");
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -161,7 +162,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockResultRepo, times(1))
                 .addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +
-                " contrast'" + System.lineSeparator());
+                " contrast'");
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 
@@ -196,7 +197,7 @@ class ValidateRouteColorAndTextContrastTest {
         verify(mockResultRepo, times(1))
                 .addNotice(any(RouteColorAndTextInsufficientContrastNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E025 - Insufficient route color" +
-                " contrast'" + System.lineSeparator());
+                " contrast'");
         verifyNoMoreInteractions(mockRoute, mockDataRepo, mockResultRepo, mockLogger);
     }
 }

@@ -53,7 +53,7 @@ public class ValidateTripServiceId {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule E036 - `service_id` not found" + System.lineSeparator());
+        logger.info("Validating rule E036 - `service_id` not found");
 
         // calendar entities are mapped on service_id
         final Map<String, Calendar> calendarCollection = dataRepo.getCalendarAll();

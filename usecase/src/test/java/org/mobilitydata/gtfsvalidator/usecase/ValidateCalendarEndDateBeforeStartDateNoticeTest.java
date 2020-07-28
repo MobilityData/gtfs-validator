@@ -66,7 +66,7 @@ class ValidateCalendarEndDateBeforeStartDateNoticeTest {
         verify(mockCalendar, times(1)).getStartDate();
         verify(mockCalendar, times(1)).getEndDate();
         verify(mockLogger, times(1)).info("Validating rule 'E032 - calendar.txt end_date is " +
-                "before start_date'" + System.lineSeparator());
+                "before start_date'");
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockCalendar, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -102,7 +102,7 @@ class ValidateCalendarEndDateBeforeStartDateNoticeTest {
         verify(mockCalendar, times(1)).getStartDate();
         verify(mockCalendar, times(1)).getEndDate();
         verify(mockLogger, times(1)).info("Validating rule 'E032 - calendar.txt end_date is " +
-                "before start_date'" + System.lineSeparator());
+                "before start_date'");
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockCalendar, mockDataRepo, mockResultRepo, mockLogger);
     }
@@ -141,7 +141,7 @@ class ValidateCalendarEndDateBeforeStartDateNoticeTest {
         verify(mockResultRepo, times(1))
                 .addNotice(any(CalendarEndDateBeforeStartDateNotice.class));
         verify(mockLogger, times(1)).info("Validating rule 'E032 - calendar.txt end_date is " +
-                "before start_date'" + System.lineSeparator());
+                "before start_date'");
         verifyNoMoreInteractions(mockCalendar, mockDataRepo, mockResultRepo, mockLogger);
     }
 }

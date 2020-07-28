@@ -62,12 +62,11 @@ public class GenerateExclusionFilenameList {
         gtfsFilenameList.addAll(gtfsSpecRepo.getOptionalFilenameList());
 
         if (toExcludeFromValidation == null) {
-            logger.info("No file to exclude -- will execute validation process on all files" + System.lineSeparator());
+            logger.info("No file to exclude -- will execute validation process on all files");
             return new ArrayList<>();
         } else if (!gtfsFilenameList.containsAll(toExcludeFromValidation)) {
             logger.info("Some file requested to be excluded is not defined by the official GTFS specification: "
-                    + toExcludeFromValidation + " -- will execute validation process on all files" +
-                    System.lineSeparator());
+                    + toExcludeFromValidation + " -- will execute validation process on all files");
             toExcludeFromValidation.clear();
         }
         final RelationshipDescriptor root = gtfsSpecRepo.getGtfsRelationshipDescriptor();

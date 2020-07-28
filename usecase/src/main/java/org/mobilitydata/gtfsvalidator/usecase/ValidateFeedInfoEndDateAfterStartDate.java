@@ -56,8 +56,7 @@ public class ValidateFeedInfoEndDateAfterStartDate {
      * `feed_start_date`.
      */
     public void execute() {
-        logger.info("Validating rule 'E037 - `feed_start_date` and `feed_end_date` out of order" +
-                System.lineSeparator());
+        logger.info("Validating rule 'E037 - `feed_start_date` and `feed_end_date` out of order");
         dataRepo.getFeedInfoAll().forEach((feedPublisherName, feedInfo) -> {
             final LocalDate feedStartDate = feedInfo.getFeedStartDate();
             final LocalDate feedEndDate = feedInfo.getFeedEndDate();

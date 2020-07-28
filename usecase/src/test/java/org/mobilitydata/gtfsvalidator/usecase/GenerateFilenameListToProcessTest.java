@@ -38,11 +38,10 @@ class GenerateFilenameListToProcessTest {
 
         assertEquals(0, underTest.execute(toExclude, toProcess).size());
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude +
-                        System.lineSeparator()));
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
-                        + toProcess + System.lineSeparator()));
+                        + toProcess));
         verifyNoMoreInteractions(mockLogger);
     }
 
@@ -56,11 +55,10 @@ class GenerateFilenameListToProcessTest {
         assertEquals(List.of("file2"), underTest.execute(toExclude, toProcess));
 
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude +
-                        System.lineSeparator()));
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
-                        + toProcess + System.lineSeparator()));
+                        + toProcess));
         verifyNoMoreInteractions(mockLogger);
     }
 
@@ -74,11 +72,10 @@ class GenerateFilenameListToProcessTest {
         assertEquals(List.of("file1", "file2"), underTest.execute(toExclude, toProcess));
 
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude +
-                        System.lineSeparator()));
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
-                        + toProcess + System.lineSeparator()));
+                        + toProcess));
         verifyNoMoreInteractions(mockLogger);
     }
 
@@ -92,11 +89,10 @@ class GenerateFilenameListToProcessTest {
         assertEquals(List.of("file0", "file1", "file2"), underTest.execute(toExclude, toProcess));
 
         verify(mockLogger, times(1))
-                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude +
-                        System.lineSeparator()));
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
-                        + toProcess + System.lineSeparator()));
+                        + toProcess));
         verifyNoMoreInteractions(mockLogger);
     }
 }

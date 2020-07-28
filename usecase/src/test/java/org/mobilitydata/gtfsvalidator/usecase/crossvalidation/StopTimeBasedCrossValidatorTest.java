@@ -33,6 +33,7 @@ import java.util.TreeMap;
 
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored"})
 class StopTimeBasedCrossValidatorTest {
 
     @Test
@@ -69,8 +70,7 @@ class StopTimeBasedCrossValidatorTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info("Validating rules :'E034 - `shape_id` not found");
-        verify(mockLogger, times(1)).info("                  'E037 - `trip_id` not found" +
-                System.lineSeparator());
+        verify(mockLogger, times(1)).info("                  'E037 - `trip_id` not found");
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockStopTime, times(1)).getTripId();

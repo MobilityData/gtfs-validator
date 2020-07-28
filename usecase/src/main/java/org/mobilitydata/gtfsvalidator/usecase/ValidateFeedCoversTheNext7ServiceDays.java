@@ -55,8 +55,7 @@ public class ValidateFeedCoversTheNext7ServiceDays {
      * This verification is executed if {@link FeedInfo} has non-null value for field `feed_end_date`.
      */
     public void execute() {
-        logger.info("Validating rule 'E038 - Dataset should be valid for at least the next 7 days'"
-                + System.lineSeparator());
+        logger.info("Validating rule 'E038 - Dataset should be valid for at least the next 7 days'");
         final LocalDate currentDate = LocalDate.now();
 
         dataRepo.getFeedInfoAll().forEach((feedPublisherName, feedInfo) -> {

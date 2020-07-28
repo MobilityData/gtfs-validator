@@ -149,15 +149,15 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                                      final Logger logger) {
         if (Strings.isNullOrEmpty(parameterJsonString) && args.length == 0) {
             // true when json configuration file is not present and no arguments are provided
-            logger.info("No configuration file nor arguments provided" + System.lineSeparator());
+            logger.info("No configuration file nor arguments provided");
             return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
         } else if (!Strings.isNullOrEmpty(parameterJsonString) || args.length == 0) {
             // true when no arguments are provided or when json configuration is provided
-            logger.info("Retrieving execution parameters from execution-parameters.json file" + System.lineSeparator());
+            logger.info("Retrieving execution parameters from execution-parameters.json file");
             return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
         } else {
             // true when only arguments are provided
-            logger.info("Retrieving execution parameters from command-line" + System.lineSeparator());
+            logger.info("Retrieving execution parameters from command-line");
             return new ApacheExecParamParser(new DefaultParser(), getOptions(), args);
         }
     }
@@ -207,7 +207,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
 
                 if (!hasExecParamValue(URL_KEY) & !hasExecParamValue(INPUT_KEY)) {
                     logger.info("--url and relative path to zip file(--zip option) not provided. Trying to " +
-                            "find zip in: " + zipInputPath + System.lineSeparator());
+                            "find zip in: " + zipInputPath);
                     List<String> zipList;
                     try {
                         zipList = Files.walk(Paths.get(zipInputPath))
@@ -219,13 +219,13 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                     }
 
                     if (zipList.isEmpty()) {
-                        logger.error("no zip file found - exiting" + System.lineSeparator());
+                        logger.error("no zip file found - exiting");
                         System.exit(0);
                     } else if (zipList.size() > 1) {
-                        logger.error("multiple zip files found - exiting" + System.lineSeparator());
+                        logger.error("multiple zip files found - exiting");
                         System.exit(0);
                     } else {
-                        logger.info("zip file found: " + zipList.get(0) + System.lineSeparator());
+                        logger.info("zip file found: " + zipList.get(0));
                         zipInputPath = zipList.get(0);
                     }
                 } else if (!hasExecParamValue(INPUT_KEY)) {

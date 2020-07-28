@@ -67,7 +67,7 @@ public class UnzipInputArchive {
      */
     public void execute() throws IOException {
 
-        logger.info("Unzipping archive" + System.lineSeparator());
+        logger.info("Unzipping archive");
 
         final String zipInputPath = execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY);
         final ZipFile inputZip = new ZipFile(zipInputPath);
