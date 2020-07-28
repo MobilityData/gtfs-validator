@@ -609,12 +609,179 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportNRouteIdNotFoundNoticeShouldWriteObject() throws IOException {
+    void exportRouteIdNotFoundNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         final RouteIdNotFoundNotice toExport = new RouteIdNotFoundNotice("filename", "entity id",
                 "route id", "field name");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportServiceIdNotFoundNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final ServiceIdNotFoundNotice toExport = new ServiceIdNotFoundNotice("filename", "field name",
+                "entity id", "service id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportShapeIdNotfoundNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final ShapeIdNotFoundNotice toExport =
+                new ShapeIdNotFoundNotice("filename", "field name",
+                        "composite key first part",
+                        "composite key second part",
+                        "composite key first value",
+                        "composite key second value", "shape id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportTripIdNotFoundNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final TripIdNotFoundNotice toExport =
+                new TripIdNotFoundNotice("filename",
+                        "field name",
+                        "composite key first part",
+                        "composite key second part",
+                        "composite key first value",
+                        "composite key second value",
+                        "trip id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportNotUsedShapeNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final ShapeNotUsedNotice toExport = new ShapeNotUsedNotice(
+                "entity id",
+                "field name");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportFeedInfoStartDateAfterEndDateNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        FeedInfoStartDateAfterEndDateNotice toExport =
+                new FeedInfoStartDateAfterEndDateNotice("feed_info.txt",
+                        "start date",
+                        "end date",
+                        "feed_publisher_name",
+                        "feed_publisher_url",
+                        "feed_lang",
+                        "feed publisher name",
+                        "feed publisher url",
+                        "feed lang");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportFeedInfoExpiresInLessThan7DaysNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final FeedInfoExpiresInLessThan7DaysNotice toExport =
+                new FeedInfoExpiresInLessThan7DaysNotice("feed_info.txt",
+                        "current date",
+                        "end date",
+                        "feed_end_date",
+                        "feed_publisher_name",
+                        "feed_publisher_url",
+                        "feed_lang",
+                        "feed publisher name",
+                        "feed publisher url",
+                        "feed lang");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportFeedInfoExpiresInLessThan30DaysNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final FeedInfoExpiresInLessThan30DaysNotice toExport =
+                new FeedInfoExpiresInLessThan30DaysNotice("feed_info.txt",
+                        "current date",
+                        "end date",
+                        "feed_end_date",
+                        "feed_publisher_name",
+                        "feed_publisher_url",
+                        "feed_lang",
+                        "feed publisher name",
+                        "feed publisher url",
+                        "feed lang");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportMissingFeedEndDateNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final MissingFeedEndDateNotice toExport = new MissingFeedEndDateNotice("feed_info.txt",
+                "feed_end_date",
+                "feed_publisher_name",
+                "feed_publisher_url",
+                "feed_lang",
+                "feed publisher name",
+                "feed publisher url",
+                "feed lang");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportMissingFeedStartDateNoticeShouldWriteObject() throws IOException {
+        final JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final MissingFeedStartDateNotice toExport =
+                new MissingFeedStartDateNotice("feed_info.txt",
+                        "feed_start_date",
+                        "feed_publisher_name",
+                        "feed_publisher_url",
+                        "feed_lang",
+                        "feed publisher name",
+                        "feed publisher url",
+                        "feed lang");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

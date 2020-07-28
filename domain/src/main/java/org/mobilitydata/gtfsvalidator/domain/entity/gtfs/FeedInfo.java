@@ -95,12 +95,12 @@ public class FeedInfo extends GtfsEntity {
     }
 
     @Nullable
-    public LocalDate getStartDate() {
+    public LocalDate getFeedStartDate() {
         return feedStartDate;
     }
 
     @Nullable
-    public LocalDate getEndDate() {
+    public LocalDate getFeedEndDate() {
         return feedEndDate;
     }
 

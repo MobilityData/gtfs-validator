@@ -133,8 +133,8 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * - no configuration file is present and arguments are provided
      *
      * @param parameterJsonString the configuration .json file content to extract the execution parameters from.
-     *                            If this parameter is null then, execution parameters are extracted from {@param args}.
-     * @param args                the argument line to parse {@link ExecParam} when {@param parameterJsonString} is null
+     *                            If this parameter is null then, execution parameters are extracted from {args}.
+     * @param args                the argument line to parse {@link ExecParam} when {parameterJsonString} is null
      * @return {@code JsonExecParamParser} if:
      * - no configuration file nor arguments are provided,
      * - a configuration file is present and no arguments are provided

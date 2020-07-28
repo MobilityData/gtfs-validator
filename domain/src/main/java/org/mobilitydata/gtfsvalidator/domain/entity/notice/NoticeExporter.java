@@ -95,6 +95,24 @@ public interface NoticeExporter {
 
     void export(final AgencyIdNotFoundNotice agencyIdNotFoundNotice) throws IOException;
 
+    void export(final ShapeIdNotFoundNotice shapeIdNotFoundNotice) throws IOException;
+
+    void export(final TripIdNotFoundNotice tripIdNotFoundNotice) throws IOException;
+
+    void export(final ShapeNotUsedNotice shapeNotUsedNotice) throws IOException;
+
+    void export(final ServiceIdNotFoundNotice serviceIdNotFoundNotice) throws IOException;
+
+    void export(FeedInfoStartDateAfterEndDateNotice toExport) throws IOException;
+
+    void export(FeedInfoExpiresInLessThan7DaysNotice feedInfoExpiresInLessThan7DaysNotice) throws IOException;
+
+    void export(FeedInfoExpiresInLessThan30DaysNotice feedInfoExpiresInLessThan30DaysNotice) throws IOException;
+
+    void export(MissingFeedEndDateNotice missingFeedEndDateNotice) throws IOException;
+
+    void export(MissingFeedStartDateNotice missingFeedStartDateNotice) throws IOException;
+
     void export(final StationWithParentStationNotice stationWithParentStationNotice) throws IOException;
 
     void export(final ParentStationInvalidLocationTypeNotice parentStationInvalidLocationTypeNotice)

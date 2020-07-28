@@ -25,6 +25,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
@@ -35,6 +37,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeConversionUtils;
 import org.mobilitydata.gtfsvalidator.usecase.*;
+import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.ShapeBasedCrossValidator;
+import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.StopTimeBasedCrossValidator;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
@@ -185,6 +189,26 @@ public class DefaultConfig {
         return new ValidateCalendarEndDateBeforeStartDate(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateFeedInfoEndDateAfterStartDate validateFeedInfoEndDateAfterStartDate() {
+        return new ValidateFeedInfoEndDateAfterStartDate(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedCoversTheNext7ServiceDays validateFeedCoversTheNext7ServiceDays() {
+        return new ValidateFeedCoversTheNext7ServiceDays(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedCoversTheNext30ServiceDays validateFeedCoversTheNext30ServiceDays() {
+        return new ValidateFeedCoversTheNext30ServiceDays(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedInfoFeedEndDateIsPresent validateFeedInfoFeedEndDateIsPresent() {
+        return new ValidateFeedInfoFeedEndDateIsPresent(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedInfoFeedStartDateIsPresent validateFeedInfoFeedStartDateIsPresent() {
+        return new ValidateFeedInfoFeedStartDateIsPresent(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
@@ -288,10 +312,6 @@ public class DefaultConfig {
         return new GenerateFilenameListToProcess(logger);
     }
 
-    public ValidateAgencyIdRequirement validateAgencyIdRequirement() {
-        return new ValidateAgencyIdRequirement(gtfsDataRepository, resultRepo, logger);
-    }
-
     public ValidateAgenciesHaveSameAgencyTimezone validateAgenciesHaveSameAgencyTimezone() {
         return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
     }
@@ -300,7 +320,21 @@ public class DefaultConfig {
         return new ValidateTripRouteId(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateTripServiceId validateTripServiceId() {
+        return new ValidateTripServiceId(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ValidateRouteAgencyId validateRouteAgencyId() {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public StopTimeBasedCrossValidator stopTimeBasedCrossValidator() {
+        return new StopTimeBasedCrossValidator(gtfsDataRepository, resultRepo, logger,
+                new ValidateShapeIdReferenceInStopTime(),
+                new ValidateStopTimeTripId());
+    }
+
+    public ShapeBasedCrossValidator shapeBasedCrossValidator() {
+        return new ShapeBasedCrossValidator(gtfsDataRepository, resultRepo, logger, new ValidateShapeUsage());
     }
 }

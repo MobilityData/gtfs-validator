@@ -34,10 +34,16 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E030](#E030) | Inconsistent field `agency_timezone` | 
 | [E031](#E031) | Invalid `agency_id` | 
 | [E032](#E032) | `calendar.txt` `end_date` is before `start_date` |
-| [E033](#E033) | `route_id` not found |
-| [E035](#E035) | `agency_id` not found |
-| [E036](#E036) | Invalid parent `location_type` for stop |
-| [E037](#E037) | Station stop (`location_type`=2) has a parent stop |
+| [E033](#E033) | `route_id` not found in GTFS `routes.txt` |
+| [E034](#E034) | `shape_id` not found in GTFS `shapes.txt` |
+| [E035](#E035) | `agency_id` not found in GTFS `agency.txt` |
+| [E036](#E036) | `service_id` not found in GTFS `calendar.txt` or `calendar_dates.txt`|
+| [E037](#E037) | `trip_id` not found in GTFS `trips.txt` |
+| [E038](#E038) | All shapes should be used in `trips.txt` |
+| [E039](#E039) | `feed_start_date` after `feed_end_date` | 
+| [E040](#E040) | Dataset should be valid for at least the next 7 days | 
+| [E041](#E041) | Invalid parent `location_type` for stop |
+| [E042](#E042) | Station stop (`location_type`=2) has a parent stop |
 
 ### Table of Warnings
 
@@ -51,6 +57,9 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W006](#W006) | Missing route short name |
 | [W007](#W007) | Missing route long name |
 | [W008](#W008) | Route long name contains short name | 
+| [W009](#W009) | Dataset should cover at least the next 30 days of service | 
+| [W009](#W010) | `feed_end_date` should be provided if `feed_start_date` is provided | 
+| [W009](#W011) | `feed_start_date` should be provided if `feed_end_date` is provided | 
 
 # Errors
 
@@ -142,19 +151,61 @@ In `calendar.txt`, the `end_date` of a service record must not be earlier than t
 
 <a name="E033"/>
 
-### E033 - `route_id` not found
+### E033 - `route_id` not found in GTFS `routes.txt`
 
-Value of field `route_id` should exist in GTFS data.
+Value of field `route_id` should exist in GTFS `routes.txt`.
+
+<a name="E034"/>
+
+### E034 - `shape_id` not found in GTFS `shapes.txt`
+
+Value of field `shape_id` should exist in GTFS `shapes.txt`.
 
 <a name="E035"/>
 
-### E035 - `agency_id` not found
+### E035 - `agency_id` not found in GTFS `agency.txt`
 
-Value of field `agency_id` should exist in GTFS data.
+Value of field `agency_id` should exist in GTFS `agency.txt`.
 
 <a name="E036"/>
 
-### E036 - Invalid parent `location_type` for stop
+### E036 - `service_id` not found
+
+Value of field `service_id` should exist in GTFS `calendar.txt` or `calendar_dates.txt`.
+
+<a name="E037"/>
+
+### E037 - `trip_id` not found in GTFS `trips.txt`
+
+Value of field `trip_id` should exist in GTFS `trips.txt`.
+
+<a name="E038"/>
+
+### E038 - All shapes should be used in `trips.txt` 
+
+All records defined by GTFS `shapes.txt` should be used in `trips.txt`.
+
+<a name="E039"/>
+
+### E039 - `feed_start_date` after `feed_end_date`
+
+The `feed_end_date` date must not precede the `feed_start_date` date if both are given. 
+
+#### References:
+* [feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
+
+<a name="E040"/>
+
+### E040 - Dataset should be valid for at least the next 7 days
+
+At any time, the published GTFS dataset should be valid for at least the next 7 days, and ideally for as long as the operator is confident that the schedule will continue to be operated.
+
+#### References:
+* [Dataset Publishing & General Practices](http://gtfs.org/best-practices/#dataset-publishing--general-practices)
+
+<a name="E041"/>
+
+### E041 - Invalid parent `location_type` for stop
 
 Value of field `location_type` of parent found in field `parent_station` is invalid.
 
@@ -169,9 +220,9 @@ Any other combination raise this error
 #### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
 
-<a name="E037"/>
+<a name="E042"/>
 
-### E037 - Station stop (`location_type`=2) has a parent stop
+### E042 - Station stop (`location_type`=2) has a parent stop
 
 Field `parent_station` must be empty when `location_type` is 2
 
@@ -195,3 +246,28 @@ Field `parent_station` must be empty when `location_type` is 2
 <a name="W008"/>
 
 ### W008 - Route long name contains short name
+
+<a name="W009"/>
+
+### W009 - Dataset should cover at least the next 30 days of service
+
+If possible, the GTFS dataset should cover at least the next 30 days of service
+
+#### References:
+* [Dataset Publishing & General Practices](http://gtfs.org/best-practices/#dataset-publishing--general-practices)
+
+<a name="W010"/>
+
+### W010 - `feed_end_date` should be provided if `feed_start_date` is provided
+
+`feed_end_date` should be provided in conjunction with field `feed_start_date`.
+ 
+* [feed_info.txt Best Practices](http://gtfs.org/best-practices/#feed_infotxt)
+
+<a name="W011"/>
+
+### W010 - `feed_start_date` should be provided if `feed_end_date` is provided
+
+`feed_end_date` should be provided in conjunction with field `feed_start_date`.
+ 
+* [feed_info.txt Best Practices](http://gtfs.org/best-practices/#feed_infotxt)

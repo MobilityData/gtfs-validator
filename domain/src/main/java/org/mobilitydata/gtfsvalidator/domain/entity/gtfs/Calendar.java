@@ -177,7 +177,7 @@ public class Calendar extends GtfsEntity {
          * Sets fields monday and originalMondayInteger value and returns this
          *
          * @param monday indicates whether the service operates on all mondays in the date range specified
-         *               by {@param startDate} and {@param endDate} fields
+         *               by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder monday(@NotNull final Integer monday) {
@@ -201,7 +201,7 @@ public class Calendar extends GtfsEntity {
          * Sets field tuesday and originalTuesdayInteger value and returns this
          *
          * @param tuesday indicates whether the service operates on all tuesday in the date range specified
-         *                by {@param startDate} and {@param endDate} fields
+         *                by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder tuesday(@NotNull final Integer tuesday) {
@@ -225,7 +225,7 @@ public class Calendar extends GtfsEntity {
          * Sets field wednesday and originalWednesdayInteger value and returns this
          *
          * @param wednesday indicates whether the service operates on all wednesday in the date range specified
-         *                  by {@param startDate} and {@param endDate} fields
+         *                  by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder wednesday(@NotNull final Integer wednesday) {
@@ -249,7 +249,7 @@ public class Calendar extends GtfsEntity {
          * Sets field thursday and originalThursdayInteger value and returns this
          *
          * @param thursday indicates whether the service operates on all thursday in the date range specified
-         *                 by {@param startDate} and {@param endDate} fields
+         *                 by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder thursday(@NotNull final Integer thursday) {
@@ -273,7 +273,7 @@ public class Calendar extends GtfsEntity {
          * Sets field friday and originalFridayInteger value and returns this
          *
          * @param friday indicates whether the service operates on all friday in the date range specified
-         *               by {@param startDate} and {@param endDate} fields
+         *               by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder friday(@NotNull final Integer friday) {
@@ -297,7 +297,7 @@ public class Calendar extends GtfsEntity {
          * Sets field saturday and originalSaturdayInteger value and returns this
          *
          * @param saturday indicates whether the service operates on friday saturday in the date range specified
-         *                 by {@param startDate} and {@param endDate} fields
+         *                 by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder saturday(@NotNull final Integer saturday) {
@@ -321,7 +321,7 @@ public class Calendar extends GtfsEntity {
          * Sets field saturday and originalSundayInteger value and returns this
          *
          * @param sunday indicates whether the service operates on sunday saturday in the date range specified
-         *               by {@param startDate} and {@param endDate} fields
+         *               by {startDate} and {endDate} fields
          * @return builder for future object creation
          */
         public CalendarBuilder sunday(@NotNull final Integer sunday) {
