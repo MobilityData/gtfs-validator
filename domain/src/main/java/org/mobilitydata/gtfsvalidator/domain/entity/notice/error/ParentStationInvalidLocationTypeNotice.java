@@ -28,7 +28,7 @@ public class ParentStationInvalidLocationTypeNotice extends ErrorNotice {
                                                   final String parentId,
                                                   final Integer expectedParentLocationType,
                                                   final Integer actualParentLocationType) {
-        super("stops.txt", E_036,
+        super("stops.txt", E_041,
                 "Invalid parent `location_type`",
                 "Stop with id:`" + childId + "` of type:`" + childLocationType + "` specify parent id:`" +
                         parentId + "` of type:`" + actualParentLocationType + "`. This is invalid. Expected parent" +
