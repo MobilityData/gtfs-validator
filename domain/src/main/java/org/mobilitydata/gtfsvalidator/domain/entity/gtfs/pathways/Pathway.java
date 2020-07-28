@@ -334,7 +334,7 @@ public class Pathway extends GtfsEntity {
                     isBidirectional == null ||
                     (length != null && length < 0) ||
                     (traversalTime != null && traversalTime < 0) ||
-                    (stairCount != null && stairCount < 0) ||
+                    (stairCount != null && stairCount == 0) ||
                     (minWidth != null && minWidth < 0) ||
                     pathwayMode == null) {
 
@@ -377,9 +377,9 @@ public class Pathway extends GtfsEntity {
                             "traversal_time", pathwayId, 0, Integer.MAX_VALUE,
                             traversalTime));
                 }
-                if (stairCount != null && stairCount < 0) {
+                if (stairCount != null && stairCount == 0) {
                     noticeCollection.add(new IntegerFieldValueOutOfRangeNotice("pathways.txt",
-                            "stair_count", pathwayId, 0, Integer.MAX_VALUE,
+                            "stair_count", pathwayId, 0, 0,
                             stairCount));
                 }
                 if (minWidth != null && minWidth < 0) {
