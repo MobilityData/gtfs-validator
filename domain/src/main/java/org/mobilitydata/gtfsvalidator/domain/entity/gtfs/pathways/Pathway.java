@@ -334,7 +334,7 @@ public class Pathway extends GtfsEntity {
                     isBidirectional == null ||
                     (length != null && length < 0) ||
                     (traversalTime != null && traversalTime < 0) ||
-                    (stairCount != null && stairCount < 0) ||
+                    (stairCount != null && stairCount == 0) ||
                     (minWidth != null && minWidth < 0) ||
                     pathwayMode == null) {
 
