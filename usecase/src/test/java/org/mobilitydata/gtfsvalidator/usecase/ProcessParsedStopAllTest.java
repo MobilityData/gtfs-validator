@@ -935,7 +935,7 @@ class ProcessParsedStopAllTest {
 
         when(mockAgency.getAgencyTimezone()).thenReturn("AGENCY timezone");
         when(mockGtfsDataRepo.getAgencyCount()).thenReturn(1);
-        when(mockGtfsDataRepo.getAgencyAll()).thenReturn(List.of(mockAgency));
+        when(mockGtfsDataRepo.getAgencyAll()).thenReturn(Map.of("testKey", mockAgency));
 
         final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
                 mock(ValidationResultRepository.class),
@@ -1147,7 +1147,7 @@ class ProcessParsedStopAllTest {
 
         when(mockAgency.getAgencyTimezone()).thenReturn("AGENCY timezone");
         when(mockGtfsDataRepo.getAgencyCount()).thenReturn(1);
-        when(mockGtfsDataRepo.getAgencyAll()).thenReturn(List.of(mockAgency));
+        when(mockGtfsDataRepo.getAgencyAll()).thenReturn(Map.of("testKey", mockAgency));
 
         final ProcessParsedStopAll underTest = new ProcessParsedStopAll(
                 mock(ValidationResultRepository.class),

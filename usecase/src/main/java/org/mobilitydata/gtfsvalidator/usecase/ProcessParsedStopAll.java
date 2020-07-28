@@ -161,7 +161,7 @@ public class ProcessParsedStopAll {
 
                         stopTimezone = (String) parent.get("stop_timezone");
                     } else if (stopTimezone == null && gtfsRepo.getAgencyCount() != 0) {
-                        stopTimezone = gtfsRepo.getAgencyAll().iterator().next().getAgencyTimezone();
+                        stopTimezone = gtfsRepo.getAgencyAll().values().iterator().next().getAgencyTimezone();
                     }
 
                     stopOrPlatformBuilder.clear()
@@ -190,7 +190,7 @@ public class ProcessParsedStopAll {
                     }
 
                     if (stopTimezone == null && gtfsRepo.getAgencyCount() != 0) {
-                        stopTimezone = gtfsRepo.getAgencyAll().iterator().next().getAgencyTimezone();
+                        stopTimezone = gtfsRepo.getAgencyAll().values().iterator().next().getAgencyTimezone();
                     }
 
                     stationBuilder.clear()
