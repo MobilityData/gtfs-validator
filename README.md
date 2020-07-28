@@ -11,7 +11,7 @@ This command-line tool written in Java that performs the following steps:
 
 # Prerequisites
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
-1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from a [workflow execution](https://github.com/MobilityData/gtfs-validator/actions)
+1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from a [workflow execution](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster)
 
 # Usage
 
