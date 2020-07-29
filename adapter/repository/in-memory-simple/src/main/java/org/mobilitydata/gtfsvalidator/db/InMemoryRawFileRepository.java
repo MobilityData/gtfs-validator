@@ -69,7 +69,7 @@ public class InMemoryRawFileRepository implements RawFileRepository {
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
 
-        Collection<String> toReturn = new HashSet<>();
+        Collection<String> toReturn = new ArrayList<>();
 
         try {
             ((CsvSchema) (mapper.readerFor(Map.class)
@@ -77,7 +77,7 @@ public class InMemoryRawFileRepository implements RawFileRepository {
                     .readValues(csvFile).getParser().getSchema())).iterator().forEachRemaining(column -> toReturn.add(column.getName()));
         } catch (IOException e) {
             //TODO: this should go back up to use case level so it can be properly reported
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
 
         return toReturn;

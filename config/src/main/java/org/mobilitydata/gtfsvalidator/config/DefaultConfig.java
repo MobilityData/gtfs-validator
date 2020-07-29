@@ -124,7 +124,8 @@ public class DefaultConfig {
                 specRepo,
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
                 rawFileRepo,
-                resultRepo
+                resultRepo,
+                logger
         );
     }
 

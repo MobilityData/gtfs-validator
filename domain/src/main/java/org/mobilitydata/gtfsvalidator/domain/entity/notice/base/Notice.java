@@ -43,6 +43,7 @@ public abstract class Notice {
     public static final String KEY_EXPECTED_LENGTH = "expectedLength";
     public static final String KEY_ACTUAL_LENGTH = "actualLength";
     public static final String KEY_MISSING_HEADER_NAME = "missingHeaderName";
+    public static final String KEY_DUPLICATED_HEADER_NAME = "duplicatedHeaderName";
     public static final String KEY_EXTRA_HEADER_NAME = "extraHeaderName";
     public static final String KEY_CONTRAST_RATIO = "contrastRatio";
     public static final String KEY_SHORT_NAME_LENGTH = "shortNameLength";
