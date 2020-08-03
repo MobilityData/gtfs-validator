@@ -133,6 +133,11 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final MissingTripEdgeStopTimeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final CannotParseColorNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }

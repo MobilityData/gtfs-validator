@@ -45,6 +45,8 @@ public interface NoticeExporter {
 
     void export(MissingRequiredValueNotice toExport) throws IOException;
 
+    void export(MissingTripEdgeStopTimeNotice toExport) throws IOException;
+
     void export(CannotParseColorNotice toExport) throws IOException;
 
     void export(ExtraFileFoundNotice toExport) throws IOException;

@@ -283,6 +283,26 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(MissingTripEdgeStopTimeNotice toExport) throws IOException {
+        String fieldName = (String) toExport.getNoticeSpecific(KEY_FIELD_NAME);
+        GtfsValidationOutputProto.GtfsProblem.Type problemType = fieldName.contains("departure") ?
+                GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_TIME_FOR_FIRST_STOP_TIME :
+                GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_TIME_FOR_LAST_STOP_TIME;
+
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(problemType)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltEntityId(fieldName)
+                .setValue("trip_id")
+                .setAltEntityValue("stop_sequence")
+                .setAltValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
     public void export(CannotParseColorNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())

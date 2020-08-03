@@ -297,6 +297,22 @@ class JsonNoticeExporterTest {
     }
 
     @Test
+    void exportMissingTripEdgeStopTimeNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        MissingTripEdgeStopTimeNotice toExport = new MissingTripEdgeStopTimeNotice(
+                "filed_name",
+                "trip_id_XXX",
+                1234
+        );
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
     void exportInvalidColorNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
