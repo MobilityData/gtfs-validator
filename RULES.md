@@ -240,7 +240,7 @@ Field `parent_station` must be empty when `location_type` is 2
 
 ### E043 - Duplicated field
 
-Some file contains the same column name twice
+A file cannot contain the same header value twice (i.e., duplicated column of data).
 
 # Warnings
 

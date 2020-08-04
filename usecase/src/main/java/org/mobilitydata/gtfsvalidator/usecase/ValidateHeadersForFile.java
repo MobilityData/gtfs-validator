@@ -25,7 +25,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -76,7 +75,7 @@ public class ValidateHeadersForFile {
 
         List<String> expectedRequiredHeaderList = specRepo.getRequiredHeadersForFile(rawFileInfo);
         List<String> expectedOptionalHeaderList = specRepo.getOptionalHeadersForFile(rawFileInfo);
-        Collection<String> actualHeaderList = rawFileRepo.getActualHeadersForFile(rawFileInfo);
+        List<String> actualHeaderList = rawFileRepo.getActualHeadersForFile(rawFileInfo);
 
         // Duplicated headers
         Set<String> headerSet = new HashSet<>();
