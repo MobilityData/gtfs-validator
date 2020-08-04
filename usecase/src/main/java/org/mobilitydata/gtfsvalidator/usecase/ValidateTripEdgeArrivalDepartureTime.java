@@ -49,12 +49,12 @@ public class ValidateTripEdgeArrivalDepartureTime {
 
     /**
      * Use case execution method: Checks if first and last stop in sequence associated with a trip define
-     * either or both fields `departure_time` and `arrival_time`.
+     * both fields `departure_time` and `arrival_time`.
      * A new {@link MissingTripEdgeStopTimeNotice} notice is generated each time this condition is false.
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule E043 - Missing trip edge arrival_time and departure_time");
+        logger.info("Validating rule E043 - Missing trip edge arrival_time or departure_time");
 
         dataRepo.getTripAll().keySet().forEach(tripId -> {
             SortedMap<Integer, StopTime> stopTimesForTrip = dataRepo.getStopTimeByTripId(tripId);
@@ -62,7 +62,15 @@ public class ValidateTripEdgeArrivalDepartureTime {
             StopTime tripStartStop = stopTimesForTrip.get(stopTimesForTrip.firstKey());
             StopTime tripEndStop = stopTimesForTrip.get(stopTimesForTrip.lastKey());
 
-            if (tripStartStop.getDepartureTime() == null && tripStartStop.getArrivalTime() == null) {
+            if (tripStartStop.getArrivalTime() == null) {
+                resultRepo.addNotice(
+                        new MissingTripEdgeStopTimeNotice("arrival_time",
+                                tripId,
+                                tripStartStop.getStopSequence()
+                        )
+                );
+            }
+            if (tripStartStop.getDepartureTime() == null) {
                 resultRepo.addNotice(
                         new MissingTripEdgeStopTimeNotice("departure_time",
                                 tripId,
@@ -71,11 +79,19 @@ public class ValidateTripEdgeArrivalDepartureTime {
                 );
             }
 
-            if (tripEndStop.getArrivalTime() == null && tripEndStop.getDepartureTime() == null) {
+            if (tripEndStop.getArrivalTime() == null) {
                 resultRepo.addNotice(
                         new MissingTripEdgeStopTimeNotice("arrival_time",
                                 tripId,
-                                tripStartStop.getStopSequence()
+                                tripEndStop.getStopSequence()
+                        )
+                );
+            }
+            if (tripEndStop.getDepartureTime() == null) {
+                resultRepo.addNotice(
+                        new MissingTripEdgeStopTimeNotice("departure_time",
+                                tripId,
+                                tripEndStop.getStopSequence()
                         )
                 );
             }

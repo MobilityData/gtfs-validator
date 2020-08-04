@@ -40,10 +40,11 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
     void tripWithFirstStopMissingArrivalAndDepartureTimeShouldGenerateNotice() {
 
         final StopTime mockStopTime0 = mock(StopTime.class);
-        when(mockStopTime0.getDepartureTime()).thenReturn(null);
-        when(mockStopTime0.getArrivalTime()).thenReturn(null);
         final StopTime mockStopTime1 = mock(StopTime.class);
         final StopTime mockStopTime2 = mock(StopTime.class);
+        when(mockStopTime0.getDepartureTime()).thenReturn(null);
+        when(mockStopTime0.getArrivalTime()).thenReturn(null);
+        when(mockStopTime0.getStopSequence()).thenReturn(514);
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
 
@@ -65,7 +66,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E043 - Missing trip edge arrival_time and departure_time"));
+                "Validating rule E043 - Missing trip edge arrival_time or departure_time"));
 
         verify(mockDataRepo, times(1)).getTripAll();
         verify(mockDataRepo, times(1)).getStopTimeByTripId(ArgumentMatchers.eq("trip_id__test"));
@@ -74,9 +75,19 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         final ArgumentCaptor<MissingTripEdgeStopTimeNotice> captor =
                 ArgumentCaptor.forClass(MissingTripEdgeStopTimeNotice.class);
 
-        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+        verify(mockResultRepo, times(2)).addNotice(captor.capture());
 
-        final MissingTripEdgeStopTimeNotice notice = captor.getValue();
+        MissingTripEdgeStopTimeNotice notice = captor.getAllValues().get(0);
+
+        assertEquals("stop_times.txt", notice.getFilename());
+        assertEquals("arrival_time", notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("trip_id__test", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(514, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
+
+        notice = captor.getAllValues().get(1);
 
         assertEquals("stop_times.txt", notice.getFilename());
         assertEquals("departure_time", notice.getNoticeSpecific(KEY_FIELD_NAME));
@@ -84,7 +95,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("trip_id__test", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
         assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
-        assertEquals(0, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
+        assertEquals(514, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
 
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo);
     }
@@ -97,6 +108,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         final StopTime mockStopTime2 = mock(StopTime.class);
         when(mockStopTime2.getDepartureTime()).thenReturn(null);
         when(mockStopTime2.getArrivalTime()).thenReturn(null);
+        when(mockStopTime2.getStopSequence()).thenReturn(514);
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
 
@@ -118,7 +130,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E043 - Missing trip edge arrival_time and departure_time"));
+                "Validating rule E043 - Missing trip edge arrival_time or departure_time"));
 
         verify(mockDataRepo, times(1)).getTripAll();
         verify(mockDataRepo, times(1)).getStopTimeByTripId(ArgumentMatchers.eq("trip_id__test"));
@@ -127,9 +139,9 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         final ArgumentCaptor<MissingTripEdgeStopTimeNotice> captor =
                 ArgumentCaptor.forClass(MissingTripEdgeStopTimeNotice.class);
 
-        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+        verify(mockResultRepo, times(2)).addNotice(captor.capture());
 
-        final MissingTripEdgeStopTimeNotice notice = captor.getValue();
+        MissingTripEdgeStopTimeNotice notice = captor.getAllValues().get(0);
 
         assertEquals("stop_times.txt", notice.getFilename());
         assertEquals("arrival_time", notice.getNoticeSpecific(KEY_FIELD_NAME));
@@ -137,7 +149,17 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("trip_id__test", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
         assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
-        assertEquals(0, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
+        assertEquals(514, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
+
+        notice = captor.getAllValues().get(1);
+
+        assertEquals("stop_times.txt", notice.getFilename());
+        assertEquals("departure_time", notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals("no id", notice.getEntityId());
+        assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
+        assertEquals("trip_id__test", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+        assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
+        assertEquals(514, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
 
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo);
     }
@@ -169,7 +191,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E043 - Missing trip edge arrival_time and departure_time"));
+                "Validating rule E043 - Missing trip edge arrival_time or departure_time"));
 
         verify(mockDataRepo, times(1)).getTripAll();
         verify(mockDataRepo, times(1)).getStopTimeByTripId(ArgumentMatchers.eq("trip_id__test"));
@@ -205,7 +227,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E043 - Missing trip edge arrival_time and departure_time"));
+                "Validating rule E043 - Missing trip edge arrival_time or departure_time"));
 
         verify(mockDataRepo, times(1)).getTripAll();
         verify(mockDataRepo, times(2)).getStopTimeByTripId(ArgumentMatchers.anyString());

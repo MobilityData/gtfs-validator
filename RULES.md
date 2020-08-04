@@ -44,7 +44,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E040](#E040) | Dataset should be valid for at least the next 7 days | 
 | [E041](#E041) | Invalid parent `location_type` for stop |
 | [E042](#E042) | Station stop (`location_type`=2) has a parent stop |
-| [E043](#E043) | Missing trip edge `arrival_time` and `departure_time` |
+| [E043](#E043) | Missing trip edge `arrival_time` or `departure_time` |
 
 ### Table of Warnings
 
@@ -234,7 +234,7 @@ Field `parent_station` must be empty when `location_type` is 2
 
 ### E043 - Missing trip edge `arrival_time` and `departure_time`
 
-First and last stop of a trip must define one or both fields
+First and last stop of a trip must define both fields
 
 # Warnings
 
