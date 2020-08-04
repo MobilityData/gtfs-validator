@@ -58,18 +58,18 @@ public class InMemoryRawFileRepository implements RawFileRepository {
     }
 
     /**
-     * Returns the collection of headers for GTFS CSV file from a {@link RawFileInfo}
+     * Returns the collection of headers for GTFS CSV file from a {@link RawFileInfo} including duplicates
      *
      * @param file information regarding a file location and expected content (file name)
      * @return the collection of headers for a given GTFS CSV file
      */
     @Override
-    public Collection<String> getActualHeadersForFile(RawFileInfo file) {
+    public List<String> getActualHeadersForFile(RawFileInfo file) {
         File csvFile = new File(file.getPath() + File.separator + file.getFilename());
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.emptySchema().withHeader();
 
-        Collection<String> toReturn = new HashSet<>();
+        List<String> toReturn = new ArrayList<>();
 
         try {
             ((CsvSchema) (mapper.readerFor(Map.class)
@@ -77,7 +77,7 @@ public class InMemoryRawFileRepository implements RawFileRepository {
                     .readValues(csvFile).getParser().getSchema())).iterator().forEachRemaining(column -> toReturn.add(column.getName()));
         } catch (IOException e) {
             //TODO: this should go back up to use case level so it can be properly reported
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
 
         return toReturn;
