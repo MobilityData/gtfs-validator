@@ -41,6 +41,8 @@ public interface NoticeExporter {
 
     void export(MissingHeaderNotice toExport) throws IOException;
 
+    void export(DuplicatedHeaderNotice toExport) throws IOException;
+
     void export(MissingRequiredFileNotice toExport) throws IOException;
 
     void export(MissingRequiredValueNotice toExport) throws IOException;

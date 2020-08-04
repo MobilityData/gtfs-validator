@@ -269,6 +269,18 @@ class JsonNoticeExporterTest {
     }
 
     @Test
+    void exportDuplicatedHeaderNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        DuplicatedHeaderNotice toExport = new DuplicatedHeaderNotice(FILENAME, "duplicated_header");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
     void exportMissingRequiredFileNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 

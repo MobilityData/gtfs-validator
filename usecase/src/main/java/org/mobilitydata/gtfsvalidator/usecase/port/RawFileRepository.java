@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase.port;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public interface RawFileRepository {
 
     Optional<RawFileInfo> findByName(String filename);
 
-    Collection<String> getActualHeadersForFile(RawFileInfo file);
+    List<String> getActualHeadersForFile(RawFileInfo file);
 
     Set<String> getFilenameAll();
 

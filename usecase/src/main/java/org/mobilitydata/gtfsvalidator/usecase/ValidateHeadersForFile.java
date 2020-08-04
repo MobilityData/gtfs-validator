@@ -16,15 +16,18 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedHeaderNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingHeaderNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Use case to validate the headers of a csv file. This checks that headers marked as required by the GTFS specification
@@ -36,42 +39,59 @@ public class ValidateHeadersForFile {
     private final RawFileInfo rawFileInfo;
     private final RawFileRepository rawFileRepo;
     private final ValidationResultRepository resultRepo;
+    private final Logger logger;
 
     /**
      * @param specRepo    a repository storing information about the GTFS specification used
      * @param rawFileInfo an object containing information regarding a file location and expected content
      * @param rawFileRepo a repository storing information about a GTFS dataset
      * @param resultRepo  a repository storing information about the validation process
+     * @param logger      a logger displaying information about the validation process
      */
     public ValidateHeadersForFile(final GtfsSpecRepository specRepo,
                                   final RawFileInfo rawFileInfo,
                                   final RawFileRepository rawFileRepo,
-                                  final ValidationResultRepository resultRepo
+                                  final ValidationResultRepository resultRepo,
+                                  final Logger logger
     ) {
         this.specRepo = specRepo;
         this.rawFileInfo = rawFileInfo;
         this.rawFileRepo = rawFileRepo;
         this.resultRepo = resultRepo;
+        this.logger = logger;
     }
 
     /**
      * Use case execution method: for a file, checks the presence of all headers marked as "required" in the
      * GTFS specification. A {@link MissingHeaderNotice} is generated each time a required header is missing.
-     * A {@link NonStandardHeaderNotice} is generated for each header not marked as "required". These notices are
+     * A {@link NonStandardHeaderNotice} is generated for each header not marked as "required".
+     * A {@link DuplicatedHeaderNotice} is generated for each duplicated header. These notices are
      * then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
+        logger.info("Validating rules :'E001 - Missing required field");
+        logger.info("                  'E043 - Duplicated field");
+        logger.info("                  'W002 - Non standard field name");
+
         List<String> expectedRequiredHeaderList = specRepo.getRequiredHeadersForFile(rawFileInfo);
         List<String> expectedOptionalHeaderList = specRepo.getOptionalHeadersForFile(rawFileInfo);
-        Collection<String> actualHeaderList = rawFileRepo.getActualHeadersForFile(rawFileInfo);
+        List<String> actualHeaderList = rawFileRepo.getActualHeadersForFile(rawFileInfo);
 
-        //Missing headers
+        // Duplicated headers
+        Set<String> headerSet = new HashSet<>();
+        actualHeaderList.forEach(actualHeader -> {
+            if (!headerSet.add(actualHeader)) {
+                resultRepo.addNotice(new DuplicatedHeaderNotice(rawFileInfo.getFilename(), actualHeader));
+            }
+        });
+
+        // Missing headers
         expectedRequiredHeaderList.stream()
                 .filter(expectedHeader -> !(actualHeaderList.contains(expectedHeader)))
                 .forEach(missingHeader -> resultRepo.addNotice(new MissingHeaderNotice(rawFileInfo.getFilename(),
                         missingHeader)));
 
-        //Extra headers
+        // Extra headers
         actualHeaderList.stream()
                 .filter(header ->
                         !expectedOptionalHeaderList.contains(header) && !expectedRequiredHeaderList.contains(header))

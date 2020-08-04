@@ -21,14 +21,14 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class MissingHeaderNotice extends ErrorNotice {
+public class DuplicatedHeaderNotice extends ErrorNotice {
 
-    public MissingHeaderNotice(final String filename, final String missingHeaderName) {
-        super(filename, E_001,
-                "Missing required field",
-                "File `" + filename + " is missing required field name: `" + missingHeaderName + "`",
+    public DuplicatedHeaderNotice(final String filename, final String duplicatedHeaderName) {
+        super(filename, E_043,
+                "Field is duplicated",
+                "File `" + filename + " contains duplicated field: `" + duplicatedHeaderName + "`",
                 null);
-        putNoticeSpecific(KEY_MISSING_HEADER_NAME, missingHeaderName);
+        putNoticeSpecific(KEY_DUPLICATED_HEADER_NAME, duplicatedHeaderName);
     }
 
     @Override

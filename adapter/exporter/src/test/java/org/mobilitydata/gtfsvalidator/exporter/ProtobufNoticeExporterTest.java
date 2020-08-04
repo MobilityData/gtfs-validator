@@ -27,7 +27,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.time.LocalDate;
 
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_ROUTE_ID;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_SERVICE_ID;
 import static org.mockito.Mockito.*;
 
@@ -507,6 +506,36 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setAltEntityId(
                 ArgumentMatchers.eq("missing_header"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportDuplicatedHeaderNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new DuplicatedHeaderNotice(FILENAME, "duplicated_header"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_DUPLICATE_COLUMN_NAME));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("duplicated_header"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
