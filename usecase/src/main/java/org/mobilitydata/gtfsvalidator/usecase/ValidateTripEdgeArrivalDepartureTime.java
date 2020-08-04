@@ -54,7 +54,7 @@ public class ValidateTripEdgeArrivalDepartureTime {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule E043 - Missing trip edge arrival_time or departure_time");
+        logger.info("Validating rule E044 - Missing trip edge arrival_time or departure_time");
 
         dataRepo.getTripAll().keySet().forEach(tripId -> {
             SortedMap<Integer, StopTime> stopTimesForTrip = dataRepo.getStopTimeByTripId(tripId);

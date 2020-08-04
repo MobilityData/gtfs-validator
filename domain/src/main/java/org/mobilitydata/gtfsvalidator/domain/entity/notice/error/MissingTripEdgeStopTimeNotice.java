@@ -24,7 +24,7 @@ import java.io.IOException;
 public class MissingTripEdgeStopTimeNotice extends ErrorNotice {
 
     public MissingTripEdgeStopTimeNotice(final String fieldName, final String tripId, final Integer stopSequence) {
-        super("stop_times.txt", E_043,
+        super("stop_times.txt", E_044,
                 "Missing trip edge stop time value",
                 "Edge of trip with id:`" + tripId + "` is missing value for field:`" + fieldName
                         + "`. Stop time composite id: " +

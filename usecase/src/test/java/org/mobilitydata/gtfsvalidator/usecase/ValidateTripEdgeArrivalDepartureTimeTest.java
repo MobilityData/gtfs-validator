@@ -66,7 +66,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E043 - Missing trip edge arrival_time or departure_time"));
+                "Validating rule E044 - Missing trip edge arrival_time or departure_time"));
 
         verify(mockDataRepo, times(1)).getTripAll();
         verify(mockDataRepo, times(1)).getStopTimeByTripId(ArgumentMatchers.eq("trip_id__test"));
@@ -130,7 +130,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E043 - Missing trip edge arrival_time or departure_time"));
+                "Validating rule E044 - Missing trip edge arrival_time or departure_time"));
 
         verify(mockDataRepo, times(1)).getTripAll();
         verify(mockDataRepo, times(1)).getStopTimeByTripId(ArgumentMatchers.eq("trip_id__test"));
@@ -191,7 +191,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E043 - Missing trip edge arrival_time or departure_time"));
+                "Validating rule E044 - Missing trip edge arrival_time or departure_time"));
 
         verify(mockDataRepo, times(1)).getTripAll();
         verify(mockDataRepo, times(1)).getStopTimeByTripId(ArgumentMatchers.eq("trip_id__test"));
@@ -227,7 +227,7 @@ class ValidateTripEdgeArrivalDepartureTimeTest {
         underTest.execute();
 
         verify(mockLogger, times(1)).info(ArgumentMatchers.eq(
-                "Validating rule E043 - Missing trip edge arrival_time or departure_time"));
+                "Validating rule E044 - Missing trip edge arrival_time or departure_time"));
 
         verify(mockDataRepo, times(1)).getTripAll();
         verify(mockDataRepo, times(2)).getStopTimeByTripId(ArgumentMatchers.anyString());
