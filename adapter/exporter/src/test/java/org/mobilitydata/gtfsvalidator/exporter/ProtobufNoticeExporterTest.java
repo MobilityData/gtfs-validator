@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
+import org.mobilitydata.gtfsvalidator.domain.entity.StopTimeArrivalTimeAfterDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 import org.mockito.ArgumentMatchers;
@@ -27,7 +28,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.time.LocalDate;
 
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_ROUTE_ID;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_SERVICE_ID;
 import static org.mockito.Mockito.*;
 
@@ -1754,6 +1754,53 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("feed publisher url"));
         verify(mockBuilder, times(1)).setAltEntityId(
                 ArgumentMatchers.eq("feed lang"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportStopTimeArrivalTimeAfterDepartureTimeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(
+                new StopTimeArrivalTimeAfterDepartureTimeNotice("stop_times.txt",
+                        "arrival_time",
+                        "departure_time",
+                        "stop_time_trip_id",
+                        "stop_time_stop_sequence",
+                        "stop time trip id",
+                        "stop time stop sequence"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(
+                ArgumentMatchers.eq("stop_times.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("stop_time_trip_id"));
+        verify(mockBuilder, times(1)).setCsvKeyName(
+                ArgumentMatchers.eq("stop_time_stop_sequence"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(
+                ArgumentMatchers.eq("stop time trip id"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(
+                ArgumentMatchers.eq("stop time stop sequence"));
+        verify(mockBuilder, times(1)).setEntityValue(
+                ArgumentMatchers.eq("arrival_time"));
+        verify(mockBuilder, times(1)).setAltEntityValue(
+                ArgumentMatchers.eq("departure_time"));
+
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

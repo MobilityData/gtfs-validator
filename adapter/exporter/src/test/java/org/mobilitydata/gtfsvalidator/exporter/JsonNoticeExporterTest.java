@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.StopTimeArrivalTimeAfterDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 import org.mockito.ArgumentMatchers;
@@ -782,6 +783,25 @@ class JsonNoticeExporterTest {
                         "feed publisher name",
                         "feed publisher url",
                         "feed lang");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportStopTimeArrivalTimeAfterDepartureTimeNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        StopTimeArrivalTimeAfterDepartureTimeNotice toExport =
+                new StopTimeArrivalTimeAfterDepartureTimeNotice("stop_times.txt",
+                        "arrival_time",
+                        "departure_time",
+                        "stop_time_trip_id",
+                        "stop_time_stop_sequence",
+                        "stop time trip id",
+                        "stop time stop sequence");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

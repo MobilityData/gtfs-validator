@@ -44,6 +44,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E040](#E040) | Dataset should be valid for at least the next 7 days | 
 | [E041](#E041) | Invalid parent `location_type` for stop |
 | [E042](#E042) | Station stop (`location_type`=2) has a parent stop |
+| [E043](#E043) | `arrival_time` after `departure_time` in `stop_times.txt` |
 
 ### Table of Warnings
 
@@ -226,8 +227,14 @@ Any other combination raise this error
 
 Field `parent_station` must be empty when `location_type` is 2
 
+<a name="E043"/>
+
+### E043 - `arrival_time` after `departure_time` in `stop_times.txt`
+
+The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if both are given. 
+
 #### References:
-* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+* [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 
 # Warnings
 

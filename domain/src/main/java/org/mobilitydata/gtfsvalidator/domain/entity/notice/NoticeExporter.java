@@ -1,5 +1,6 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.notice;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.StopTimeArrivalTimeAfterDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
@@ -116,5 +117,8 @@ public interface NoticeExporter {
     void export(final StationWithParentStationNotice stationWithParentStationNotice) throws IOException;
 
     void export(final ParentStationInvalidLocationTypeNotice parentStationInvalidLocationTypeNotice)
+            throws IOException;
+
+    void export(final StopTimeArrivalTimeAfterDepartureTimeNotice StopTimeArrivalTimeAfterDepartureTimeNotice)
             throws IOException;
 }
