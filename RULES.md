@@ -227,6 +227,9 @@ Any other combination raise this error
 
 Field `parent_station` must be empty when `location_type` is 2
 
+#### References:
+* [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
+
 <a name="E043"/>
 
 ### E043 - `arrival_time` after `departure_time` in `stop_times.txt`
