@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.StopTimeArrivalTimeAfterDepartureTimeNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.FeedInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -53,12 +52,12 @@ public class ValidateStopTimeDepartureTimeAfterArrivalTime {
     }
 
     /**
-     * Use case execution method: checks if for each {@code FeedInfo} contained in {@link GtfsDataRepository} that
-     * `feed_end_date` date does not precede the `feed_start_date`. If this requirement is not met, a
-     * {@code FeedInfoStartDateAfterEndDateNotice} is added to the {@code ValidationResultRepo} provided in the
+     * Use case execution method: checks if for each {@code StopTime} contained in {@link GtfsDataRepository} that
+     * `departure_time` date does not precede the `arrival_time`. If this requirement is not met, a
+     * {@code StopTimeArrivalTimeAfterDepartureTimeNotice} is added to the {@code ValidationResultRepo} provided in the
      * constructor.
-     * This verification is executed if {@link FeedInfo} has non-null value for both fields `feed_end_date` and
-     * `feed_start_date`.
+     * This verification is executed if {@link StopTime} has non-null value for both fields `departure_time` and
+     * `arrival_time`.
      */
     public void execute() {
         logger.info("Validating rule 'E043 - `departure_time` and `arrival_time` out of order");
@@ -67,7 +66,6 @@ public class ValidateStopTimeDepartureTimeAfterArrivalTime {
             tripStopTimes.forEach((stopSequence, stopTime) -> {
                 final Integer stopTimeArrivalTime = stopTime.getArrivalTime();
                 final Integer stopTimeDepartureTime = stopTime.getDepartureTime();
-
                 if (stopTimeDepartureTime != null && stopTimeArrivalTime != null) {
                     if (stopTimeDepartureTime < stopTimeArrivalTime) {
                         resultRepo.addNotice(
