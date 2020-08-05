@@ -320,6 +320,10 @@ public class DefaultConfig {
         return new ValidateTripServiceId(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateTripEdgeArrivalDepartureTime validateTripEdgeArrivalDepartureTime() {
+        return new ValidateTripEdgeArrivalDepartureTime(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ValidateRouteAgencyId validateRouteAgencyId() {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
