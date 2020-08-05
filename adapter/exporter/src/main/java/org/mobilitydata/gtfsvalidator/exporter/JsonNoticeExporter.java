@@ -316,4 +316,9 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final ParentStationInvalidLocationTypeNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final StopTimeArrivalTimeAfterDepartureTimeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }
