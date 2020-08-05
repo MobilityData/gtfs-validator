@@ -28,8 +28,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
 
-import java.time.LocalDate;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 public interface GtfsDataRepository {
@@ -158,7 +158,7 @@ public interface GtfsDataRepository {
      * @param tripId identifies a trip
      * @return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
-    Map<Integer, StopTime> getStopTimeByTripId(final String tripId);
+    SortedMap<Integer, StopTime> getStopTimeByTripId(final String tripId);
 
     /**
      * Return an immutable map representing all records from stop_times.txt. Elements of this map are mapped by

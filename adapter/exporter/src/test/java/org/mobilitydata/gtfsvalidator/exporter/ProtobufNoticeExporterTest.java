@@ -608,6 +608,64 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
+    void exportMissingTripStopTimeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        // first stop (departure_time)
+        underTest.export(new MissingTripEdgeStopTimeNotice(
+                        "departure_time",
+                        "trip_id_XXX",
+                        1234
+                )
+        );
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("stop_times.txt"));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(
+                        GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_TIME_FOR_FIRST_STOP_TIME
+                )
+        );
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("departure_time"));
+        verify(mockBuilder, times(1)).setAltEntityValue(
+                ArgumentMatchers.eq("stop_sequence"));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("trip_id"));
+        verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq("trip_id_XXX"));
+        verify(mockBuilder, times(1)).setAltEntityName(ArgumentMatchers.eq("1234"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+
+        // last stop (arrival_time)
+        underTest.export(new MissingTripEdgeStopTimeNotice(
+                        "arrival_time",
+                        "trip_id_XXX",
+                        1234
+                )
+        );
+
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(
+                        GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_TIME_FOR_LAST_STOP_TIME
+                )
+        );
+    }
+
+    @Test
     void exportInvalidColorNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
