@@ -798,7 +798,7 @@ class JsonNoticeExporterTest {
                         "arrival_time",
                         "departure_time",
                         "stop time trip id",
-                        "stop time stop sequence");
+                        514);
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

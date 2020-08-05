@@ -23,8 +23,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
-import java.util.Map;
-
 /**
  * Use case to validate that `departure_time` does not precede the `arrival_time` date if both are fields are
  * provided. This use case is triggered after completing the {@code GtfsDataRepository} provided in the constructor with
@@ -61,24 +59,21 @@ public class ValidateStopTimeDepartureTimeAfterArrivalTime {
      */
     public void execute() {
         logger.info("Validating rule 'E043 - `departure_time` and `arrival_time` out of order");
-        dataRepo.getStopTimeAll().forEach((tripId, innerMap) -> {
-            final Map<Integer, StopTime> tripStopTimes = innerMap;
-            tripStopTimes.forEach((stopSequence, stopTime) -> {
-                final Integer stopTimeArrivalTime = stopTime.getArrivalTime();
-                final Integer stopTimeDepartureTime = stopTime.getDepartureTime();
-                if (stopTimeDepartureTime != null && stopTimeArrivalTime != null) {
-                    if (stopTimeDepartureTime < stopTimeArrivalTime) {
-                        resultRepo.addNotice(
-                                new StopTimeArrivalTimeAfterDepartureTimeNotice(
-                                        "stop_times.txt",
-                                        timeUtils.convertIntegerToHMMSS(stopTimeArrivalTime),
-                                        timeUtils.convertIntegerToHMMSS(stopTimeDepartureTime),
-                                        tripId,
-                                        stopSequence.toString())
-                        );
-                    }
+        dataRepo.getStopTimeAll().forEach((tripId, tripStopTimes) -> tripStopTimes.forEach((stopSequence, stopTime) -> {
+            final Integer stopTimeArrivalTime = stopTime.getArrivalTime();
+            final Integer stopTimeDepartureTime = stopTime.getDepartureTime();
+            if (stopTimeDepartureTime != null && stopTimeArrivalTime != null) {
+                if (stopTimeDepartureTime < stopTimeArrivalTime) {
+                    resultRepo.addNotice(
+                            new StopTimeArrivalTimeAfterDepartureTimeNotice(
+                                    "stop_times.txt",
+                                    timeUtils.convertIntegerToHMMSS(stopTimeArrivalTime),
+                                    timeUtils.convertIntegerToHMMSS(stopTimeDepartureTime),
+                                    tripId,
+                                    stopSequence)
+                    );
                 }
-            });
-        });
+            }
+        }));
     }
 }

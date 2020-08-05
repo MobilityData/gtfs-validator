@@ -1778,7 +1778,7 @@ class ProtobufNoticeExporterTest {
                         "arrival_time",
                         "departure_time",
                         "stop time trip id",
-                        "stop time stop sequence"));
+                        514));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(
@@ -1792,7 +1792,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setOtherCsvFileName(
                 ArgumentMatchers.eq("stop time trip id"));
         verify(mockBuilder, times(1)).setOtherCsvKeyName(
-                ArgumentMatchers.eq("stop time stop sequence"));
+                ArgumentMatchers.eq(String.valueOf(514)));
         verify(mockBuilder, times(1)).setEntityValue(
                 ArgumentMatchers.eq("arrival_time"));
         verify(mockBuilder, times(1)).setAltEntityValue(

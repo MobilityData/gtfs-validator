@@ -132,7 +132,7 @@ class ValidateStopTimeDepartureTimeAfterArrivalTimeTest {
                 .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_PART));
         assertEquals("trip_id", noticeList.get(0)
                 .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FIRST_VALUE));
-        assertEquals("0", noticeList.get(0)
+        assertEquals(0, noticeList.get(0)
                 .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_VALUE));
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockTimeUtil);
     }
