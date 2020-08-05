@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Utility class to carry out operations related to GTFS TIME type
  */
-public class TimeConversionUtils implements TimeUtils {
+public class TimeUtilsImpl implements TimeUtils {
     // Matches any time string representing time in HH:MM:SS format with:
     // - hours between 0 and 99h,
     // - minutes between 0 and 60min
@@ -32,21 +32,21 @@ public class TimeConversionUtils implements TimeUtils {
     // Examples of string matching the related regexp: "00:45:32" or "26:45:22".
     // Examples of string that do not match the regexp: "23:90", "23:90:62" or "abcdefg"
     final static Pattern pattern = Pattern.compile("([0-9][0-9]|[0-9]):[0-5][0-9]:[0-5][0-9]");
-    private static TimeConversionUtils TIME_CONVERSION_UTILS = null;
+    private static TimeUtilsImpl TIME_UTILS = null;
 
-    private TimeConversionUtils() {
+    private TimeUtilsImpl() {
     }
 
     /**
      * Implement singleton pattern
      *
-     * @return a unique instance of {@code TimeConversionUtils}
+     * @return a unique instance of {@code TimeUtilsImpl}
      */
-    public static TimeConversionUtils getInstance() {
-        if (TIME_CONVERSION_UTILS == null) {
-            TIME_CONVERSION_UTILS = new TimeConversionUtils();
+    public static TimeUtilsImpl getInstance() {
+        if (TIME_UTILS == null) {
+            TIME_UTILS = new TimeUtilsImpl();
         }
-        return TIME_CONVERSION_UTILS;
+        return TIME_UTILS;
     }
 
     /**
