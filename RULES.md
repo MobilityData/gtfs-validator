@@ -45,7 +45,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E041](#E041) | Invalid parent `location_type` for stop |
 | [E042](#E042) | Station stop (`location_type`=2) has a parent stop |
 | [E043](#E043) | Duplicated field |
-| [E044](#E044) | `arrival_time` after `departure_time` in `stop_times.txt` |
+| [E045](#E045) | `arrival_time` after `departure_time` in `stop_times.txt` |
 
 ### Table of Warnings
 
@@ -243,9 +243,9 @@ Field `parent_station` must be empty when `location_type` is 2
 
 A file cannot contain the same header value twice (i.e., duplicated column of data).
 
-<a name="E044"/>
+<a name="E045"/>
 
-### E044 - `arrival_time` after `departure_time` in `stop_times.txt`
+### E045 - `arrival_time` after `departure_time` in `stop_times.txt`
 
 The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if both are given. 
 

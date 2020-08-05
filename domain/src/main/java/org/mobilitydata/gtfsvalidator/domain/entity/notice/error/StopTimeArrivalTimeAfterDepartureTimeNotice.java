@@ -28,7 +28,7 @@ public class StopTimeArrivalTimeAfterDepartureTimeNotice extends ErrorNotice {
                                                        final String tripId,
                                                        final Integer stopSequence) {
         super("stop_times.txt",
-                E_043,
+                E_045,
                 "Fields `arrival_time` and `departure_time` out of order",
                 "`departure_time`: `" + departureTimeAsString + "` precedes `arrival_time`: `" +
                         arrivalTimeAsString + "` in file `" + filename +

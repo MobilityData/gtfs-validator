@@ -58,7 +58,7 @@ public class ValidateStopTimeDepartureTimeAfterArrivalTime {
      * `arrival_time`.
      */
     public void execute() {
-        logger.info("Validating rule 'E043 - `departure_time` and `arrival_time` out of order");
+        logger.info("Validating rule 'E045 - `departure_time` and `arrival_time` out of order");
         dataRepo.getStopTimeAll().forEach((tripId, tripStopTimes) -> tripStopTimes.forEach((stopSequence, stopTime) -> {
             final Integer stopTimeArrivalTime = stopTime.getArrivalTime();
             final Integer stopTimeDepartureTime = stopTime.getDepartureTime();

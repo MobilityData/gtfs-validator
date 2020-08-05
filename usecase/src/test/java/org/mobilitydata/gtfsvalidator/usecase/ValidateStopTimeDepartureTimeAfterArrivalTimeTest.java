@@ -63,7 +63,7 @@ class ValidateStopTimeDepartureTimeAfterArrivalTimeTest {
                         mockTimeUtil, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E043 - `departure_time` and " +
+        verify(mockLogger, times(1)).info("Validating rule 'E045 - `departure_time` and " +
                 "`arrival_time` out of order");
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
@@ -105,7 +105,7 @@ class ValidateStopTimeDepartureTimeAfterArrivalTimeTest {
                         mockTimeUtil, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E043 - `departure_time` and " +
+        verify(mockLogger, times(1)).info("Validating rule 'E045 - `departure_time` and " +
                 "`arrival_time` out of order");
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
@@ -164,7 +164,7 @@ class ValidateStopTimeDepartureTimeAfterArrivalTimeTest {
                         mockTimeUtil, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E043 - `departure_time` and " +
+        verify(mockLogger, times(1)).info("Validating rule 'E045 - `departure_time` and " +
                 "`arrival_time` out of order");
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
@@ -203,7 +203,7 @@ class ValidateStopTimeDepartureTimeAfterArrivalTimeTest {
                         mockTimeUtil, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E043 - `departure_time` and " +
+        verify(mockLogger, times(1)).info("Validating rule 'E045 - `departure_time` and " +
                 "`arrival_time` out of order");
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
