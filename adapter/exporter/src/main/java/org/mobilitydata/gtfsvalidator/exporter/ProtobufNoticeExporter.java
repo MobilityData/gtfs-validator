@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
-import org.mobilitydata.gtfsvalidator.domain.entity.StopTimeArrivalTimeAfterDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
@@ -735,10 +734,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
                 .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
-                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART)))
                 .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
-                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE)))
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_ARRIVAL_TIME)))
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_DEPARTURE_TIME)))
                 .build()

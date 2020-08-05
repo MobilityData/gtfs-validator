@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
-import org.mobilitydata.gtfsvalidator.domain.entity.StopTimeArrivalTimeAfterDepartureTimeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 import org.mockito.ArgumentMatchers;

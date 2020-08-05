@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
@@ -25,24 +25,22 @@ public class StopTimeArrivalTimeAfterDepartureTimeNotice extends ErrorNotice {
     public StopTimeArrivalTimeAfterDepartureTimeNotice(final String filename,
                                                        final String arrivalTimeAsString,
                                                        final String departureTimeAsString,
-                                                       final String compositeKeyFirstPart,
-                                                       final String compositeKeySecondPart,
-                                                       final String compositeKeyFirstValue,
-                                                       final String compositeKeySecondValue) {
+                                                       final String tripId,
+                                                       final String stopSequence) {
         super("stop_times.txt",
                 E_043,
                 "Fields `arrival_time` and `departure_time` out of order",
                 "`departure_time`: `" + departureTimeAsString + "` precedes `arrival_time`: `" +
                         arrivalTimeAsString + "` in file `" + filename +
                         "` for entity with composite id:" +
-                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "` -- " +
-                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`.",
+                        "`tripId`: `" + tripId + "` -- " +
+                        "`stopSequence`: `" + stopSequence + "`.",
                 null);
 
-        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
-        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
-        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
-        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "tripId");
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, "stopSequence");
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, tripId);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, stopSequence);
         putNoticeSpecific(KEY_STOP_TIME_ARRIVAL_TIME, arrivalTimeAsString);
         putNoticeSpecific(KEY_STOP_TIME_DEPARTURE_TIME, departureTimeAsString);
     }
