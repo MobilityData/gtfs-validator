@@ -256,6 +256,17 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(DuplicatedHeaderNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_DUPLICATE_COLUMN_NAME)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltEntityId((String) toExport.getNoticeSpecific(KEY_DUPLICATED_HEADER_NAME))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
     public void export(MissingRequiredFileNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())

@@ -6,7 +6,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 
 | Error ID      | Error Title         |
 |---------------|---------------------------|
-| [E001](#E001) | | 
+| [E001](#E001) | Missing required field | 
 | [E002](#E002) | | 
 | [E003](#E003) | | 
 | [E004](#E004) | | 
@@ -44,14 +44,15 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E040](#E040) | Dataset should be valid for at least the next 7 days | 
 | [E041](#E041) | Invalid parent `location_type` for stop |
 | [E042](#E042) | Station stop (`location_type`=2) has a parent stop |
-| [E043](#E043) | `arrival_time` after `departure_time` in `stop_times.txt` |
+| [E043](#E043) | Duplicated field |
+| [E044](#E044) | `arrival_time` after `departure_time` in `stop_times.txt` |
 
 ### Table of Warnings
 
 | Warning ID    | Warning Title             |
 |---------------|---------------------------|
 | [W001](#W001) | | 
-| [W002](#W002) | | 
+| [W002](#W002) | Non standard field name | 
 | [W003](#W003) | | 
 | [W004](#W004) | | 
 | [W005](#W005) | Route short name too long |
@@ -63,6 +64,12 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W009](#W011) | `feed_start_date` should be provided if `feed_end_date` is provided | 
 
 # Errors
+
+<a name="E001"/>
+
+### E001 - Missing required field
+
+A field marked as `required` is missing 
 
 <a name="E022"/>
 
@@ -223,7 +230,7 @@ Any other combination raise this error
 
 <a name="E042"/>
 
-### E042 - Station stop (`location_type`=2) has a parent stop
+### E042 - Station stop (`location_type` = 2) has a parent stop
 
 Field `parent_station` must be empty when `location_type` is 2
 
@@ -232,7 +239,13 @@ Field `parent_station` must be empty when `location_type` is 2
 
 <a name="E043"/>
 
-### E043 - `arrival_time` after `departure_time` in `stop_times.txt`
+### E043 - Duplicated field
+
+A file cannot contain the same header value twice (i.e., duplicated column of data).
+
+<a name="E044"/>
+
+### E044 - `arrival_time` after `departure_time` in `stop_times.txt`
 
 The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if both are given. 
 
@@ -240,6 +253,12 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 
 # Warnings
+
+<a name="W002"/>
+
+### W002 - Non standard field name
+
+A field not defined in the specification was found. It will be ignored.
 
 <a name="W005"/>
 
