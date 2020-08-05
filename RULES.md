@@ -46,6 +46,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E042](#E042) | Station stop (`location_type`=2) has a parent stop |
 | [E043](#E043) | Duplicated field |
 | [E044](#E044) | Missing trip edge `arrival_time` or `departure_time` |
+| [E045](#E045) | `arrival_time` after `departure_time` in `stop_times.txt` |
 
 ### Table of Warnings
 
@@ -248,6 +249,15 @@ A file cannot contain the same header value twice (i.e., duplicated column of da
 ### E044 - Missing trip edge `arrival_time` and `departure_time`
 
 First and last stop of a trip must define both fields
+
+<a name="E045"/>
+
+### E045 - `arrival_time` after `departure_time` in `stop_times.txt`
+
+The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if both are given. 
+
+#### References:
+* [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 
 # Warnings
 

@@ -121,4 +121,7 @@ public interface NoticeExporter {
 
     void export(final ParentStationInvalidLocationTypeNotice parentStationInvalidLocationTypeNotice)
             throws IOException;
+
+    void export(final StopTimeArrivalTimeAfterDepartureTimeNotice StopTimeArrivalTimeAfterDepartureTimeNotice)
+            throws IOException;
 }

@@ -69,6 +69,8 @@ public abstract class Notice {
     public static final String KEY_PARENT_ID = "parentId";
     public static final String KEY_EXPECTED_PARENT_LOCATION_TYPE = "expectedParentLocationType";
     public static final String KEY_ACTUAL_PARENT_LOCATION_TYPE = "actualParentLocationType";
+    public static final String KEY_STOP_TIME_ARRIVAL_TIME = "stopTimeArrivalTime";
+    public static final String KEY_STOP_TIME_DEPARTURE_TIME = "stopTimeDepartureTime";
 
     private final String filename;
     private final int code;

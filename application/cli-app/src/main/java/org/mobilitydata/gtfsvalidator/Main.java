@@ -196,6 +196,8 @@ public class Main {
                 config.validateFeedCoversTheNext7ServiceDays().execute();
                 config.validateFeedCoversTheNext30ServiceDays().execute();
                 config.validateFeedInfoFeedEndDateIsPresent().execute();
+                config.validateFeedInfoFeedStartDateIsPresent().execute();
+                config.validateStopTimeDepartureTimeAfterArrivalTime().execute();
                 config.validateTripEdgeArrivalDepartureTime().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
