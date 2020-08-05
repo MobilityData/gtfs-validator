@@ -1777,8 +1777,6 @@ class ProtobufNoticeExporterTest {
                 new StopTimeArrivalTimeAfterDepartureTimeNotice("stop_times.txt",
                         "arrival_time",
                         "departure_time",
-                        "stop_time_trip_id",
-                        "stop_time_stop_sequence",
                         "stop time trip id",
                         "stop time stop sequence"));
 
@@ -1788,9 +1786,9 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setAltValue(
-                ArgumentMatchers.eq("stop_time_trip_id"));
+                ArgumentMatchers.eq("tripId"));
         verify(mockBuilder, times(1)).setCsvKeyName(
-                ArgumentMatchers.eq("stop_time_stop_sequence"));
+                ArgumentMatchers.eq("stopSequence"));
         verify(mockBuilder, times(1)).setOtherCsvFileName(
                 ArgumentMatchers.eq("stop time trip id"));
         verify(mockBuilder, times(1)).setOtherCsvKeyName(

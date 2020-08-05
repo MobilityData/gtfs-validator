@@ -126,9 +126,9 @@ class ValidateStopTimeDepartureTimeAfterArrivalTimeTest {
         assertEquals("arrival_time", noticeList.get(0).getNoticeSpecific(Notice.KEY_STOP_TIME_ARRIVAL_TIME));
         assertEquals("departure_time", noticeList.get(0)
                 .getNoticeSpecific(Notice.KEY_STOP_TIME_DEPARTURE_TIME));
-        assertEquals("stop_time_trip_id", noticeList.get(0)
+        assertEquals("tripId", noticeList.get(0)
                 .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FIRST_PART));
-        assertEquals("stop_time_stop_sequence", noticeList.get(0)
+        assertEquals("stopSequence", noticeList.get(0)
                 .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_PART));
         assertEquals("trip_id", noticeList.get(0)
                 .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FIRST_VALUE));

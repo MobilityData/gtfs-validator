@@ -797,8 +797,6 @@ class JsonNoticeExporterTest {
                 new StopTimeArrivalTimeAfterDepartureTimeNotice("stop_times.txt",
                         "arrival_time",
                         "departure_time",
-                        "stop_time_trip_id",
-                        "stop_time_stop_sequence",
                         "stop time trip id",
                         "stop time stop sequence");
         underTest.export(toExport);

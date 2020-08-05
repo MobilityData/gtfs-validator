@@ -73,8 +73,6 @@ public class ValidateStopTimeDepartureTimeAfterArrivalTime {
                                         "stop_times.txt",
                                         timeUtils.convertIntegerToHMMSS(stopTimeArrivalTime),
                                         timeUtils.convertIntegerToHMMSS(stopTimeDepartureTime),
-                                        "stop_time_trip_id",
-                                        "stop_time_stop_sequence",
                                         tripId,
                                         stopSequence.toString())
                         );
