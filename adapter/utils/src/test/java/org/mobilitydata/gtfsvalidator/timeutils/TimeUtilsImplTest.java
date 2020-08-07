@@ -21,12 +21,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class TimeConversionUtilsTest {
+public class TimeUtilsImplTest {
     private static final int HOUR_TO_SEC_CONVERSION_FACTOR = 3600;
     private static final int NOON = (12 * HOUR_TO_SEC_CONVERSION_FACTOR);
     private static final int MIN_TO_SEC_CONVERSION_FACTOR = 60;
     private static final int SEC_TO_SEC_CONVERSION_FACTOR = 1;
-    private static TimeConversionUtils TIME_CONVERSION_UTILS = TimeConversionUtils.getInstance();
+    private static final TimeUtilsImpl TIME_CONVERSION_UTILS = TimeUtilsImpl.getInstance();
 
     // Remove warning "PointlessArithmeticExpression" since they these expressions are written to ease code
     // comprehension
@@ -83,6 +83,7 @@ public class TimeConversionUtilsTest {
         malformedTimeAsString = "13:0:22";
         assertNull(TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(malformedTimeAsString));
 
+        //noinspection SpellCheckingInspection
         malformedTimeAsString = "xxee";
         assertNull(TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(malformedTimeAsString));
     }
