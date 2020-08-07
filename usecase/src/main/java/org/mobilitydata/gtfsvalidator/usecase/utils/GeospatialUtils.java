@@ -25,5 +25,5 @@ public interface GeospatialUtils {
      * Note that points of origin (from) and destination (to) can be swapped.
      * Result is expressed in meters.
      **/
-    int distanceBetween(double fromLat, double fromLng, double toLat, double toLng);
+    int distanceBetweenMeter(double fromLat, double fromLng, double toLat, double toLng);
 }

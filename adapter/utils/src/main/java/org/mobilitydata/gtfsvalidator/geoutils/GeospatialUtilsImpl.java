@@ -52,15 +52,15 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
      * @param fromLng longitude of the first coordinates
      * @param toLat   latitude of the second coordinates
      * @param toLng   longitude of the second coordinates
-     * @return the calculation result in kilometers
+     * @return the calculation result in meters
      */
-    public int distanceBetween(double fromLat, double fromLng, double toLat, double toLng) {
+    public int distanceBetweenMeter(double fromLat, double fromLng, double toLat, double toLng) {
         final ShapeFactory shapeFactory = getShapeFactory();
         final DistanceCalculator distanceCalculator = getDistanceCalculator();
         final Point origin = shapeFactory.pointXY(fromLng, fromLat);
         final Point destination = shapeFactory.pointXY(toLng, toLat);
         return (int) (DistanceUtils.DEG_TO_KM * distanceCalculator.distance(origin, destination)
-                        * KILOMETER_TO_METER_CONVERSION_FACTOR);
+                * KILOMETER_TO_METER_CONVERSION_FACTOR);
     }
 
     /**

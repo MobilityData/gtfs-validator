@@ -27,7 +27,7 @@ public class GeospatialUtilsImplTest {
     @Test
     void distanceFromToSameCoordinateIsZero() {
 
-        double toCheck = GEO_UTILS.distanceBetween(45.508888, -73.561668, 45.508888, -73.561668);
+        int toCheck = GEO_UTILS.distanceBetweenMeter(45.508888, -73.561668, 45.508888, -73.561668);
 
         assertEquals(0, toCheck, 0);
     }
@@ -35,8 +35,8 @@ public class GeospatialUtilsImplTest {
     @Test
     void distanceReferenceCheck() {
         // geographic data extracted and validated with an external tool
-        double toCheck = GEO_UTILS.distanceBetween(45.517351, -73.597320, 45.459554, -73.584879);
+        int toCheck = GEO_UTILS.distanceBetweenMeter(45.508888, -73.561668, 45.507753, -73.562677);
 
-        assertEquals(6499, toCheck, 1);
+        assertEquals(148, toCheck);
     }
 }
