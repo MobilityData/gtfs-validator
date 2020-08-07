@@ -17,5 +17,13 @@
 package org.mobilitydata.gtfsvalidator.usecase.utils;
 
 public interface GeospatialUtils {
-    double distanceBetween(double fromLat, double fromLng, double toLat, double toLng);
+    int KILOMETER_TO_METER_CONVERSION_FACTOR = 1000; // conversion factor from kilometers to meters
+
+    /**
+     * Return the distance between two points given there lat/lon positions in the specified unit. The distance is
+     * computed following the haversine formula. See https://locationtech.github.io/spatial4j/apidocs/org/locationtech/spatial4j/context/SpatialContext.html
+     * Note that points of origin (from) and destination (to) can be swapped.
+     * Result is expressed in meters.
+     **/
+    int distanceBetween(double fromLat, double fromLng, double toLat, double toLng);
 }
