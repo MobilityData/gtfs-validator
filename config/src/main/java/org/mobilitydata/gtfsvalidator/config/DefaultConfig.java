@@ -328,6 +328,10 @@ public class DefaultConfig {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateFareAttributeAgencyId validateFareAttributeAgencyId() {
+        return new ValidateFareAttributeAgencyId(gtfsDataRepository, resultRepo, logger);
+    }
+
     public StopTimeBasedCrossValidator stopTimeBasedCrossValidator() {
         return new StopTimeBasedCrossValidator(gtfsDataRepository, resultRepo, logger,
                 new ValidateShapeIdReferenceInStopTime(),

@@ -81,6 +81,8 @@ public interface GtfsDataRepository {
 
     FareAttribute getFareAttributeById(final String fareId);
 
+    Map<String, FareAttribute> getFareAttributeAll();
+
     FareRule addFareRule(final FareRule newFareRule) throws IllegalArgumentException;
 
     FareRule getFareRule(final String fareId, final String routeId, final String originId, final String destinationId,

@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
@@ -36,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -491,6 +489,26 @@ class InMemoryGtfsDataRepositoryTest {
                 underTest.getFareAttributeById("fare attribute id 00"));
         assertEquals(underTest.addFareAttribute(mockFareAttribute01),
                 underTest.getFareAttributeById("fare attribute id 01"));
+    }
+
+    @Test
+    void getFareAttributeAllShouldReturnFareAttributeCollection() {
+        final FareAttribute mockFareAttribute00 = mock(FareAttribute.class);
+        when(mockFareAttribute00.getFareId()).thenReturn("fare id00");
+
+        final FareAttribute mockFareAttribute01 = mock(FareAttribute.class);
+        when(mockFareAttribute00.getFareId()).thenReturn("fare id01");
+
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+
+        underTest.addFareAttribute(mockFareAttribute00);
+        underTest.addFareAttribute(mockFareAttribute01);
+
+        final Map<String, FareAttribute> toCheck = underTest.getFareAttributeAll();
+
+        assertEquals(2, toCheck.size());
+        assertTrue(toCheck.containsKey(mockFareAttribute00.getFareId()));
+        assertTrue(toCheck.containsKey(mockFareAttribute01.getFareId()));
     }
 
     @Test
