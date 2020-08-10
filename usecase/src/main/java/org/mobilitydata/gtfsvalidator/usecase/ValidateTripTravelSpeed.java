@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingTripEdge
 import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 
 /**
  * Use case for E046 to validate that all records of `trips.txt` refer to an a collection of {@code StopTime} from file
@@ -30,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 public class ValidateTripTravelSpeed {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
+    private final GeospatialUtils geoUtils;
     private final Logger logger;
 
     /**
@@ -39,9 +41,11 @@ public class ValidateTripTravelSpeed {
      */
     public ValidateTripTravelSpeed(final GtfsDataRepository dataRepo,
                                    final ValidationResultRepository resultRepo,
+                                   final GeospatialUtils geoUtils,
                                    final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
+        this.geoUtils = geoUtils;
         this.logger = logger;
     }
 
@@ -55,36 +59,79 @@ public class ValidateTripTravelSpeed {
         logger.info("Validating rule E046 - Fast travel between stops");
 
         dataRepo.getTripAll().keySet().forEach(tripId -> {
-
-            var previousStopData = new Object() {
+            var previousStopsData = new Object() {
                 Integer departureTime = null;
-                float latitude;
-                float longitude;
+                double latitude;
+                double longitude;
+
+                // used to accumulate distance between stops with same arrival and departure times
+                int accumulatedDistanceMeter = 0;
             };
 
             dataRepo.getStopTimeByTripId(tripId).forEach((stopSequence, stopTime) -> {
-                if (previousStopData.departureTime != null) {
-                    Integer currentStopArrivalTime = stopTime.getArrivalTime();
-                    if (currentStopArrivalTime != null) {
-                        int durationSecond = currentStopArrivalTime - previousStopData.departureTime;
-                        int distanceMeter = 666; //From distance Utils class
+
+                // prepare data for current iteration
+                LocationBase currentStop = dataRepo.getStopById(stopTime.getStopId());
+                double currentStopLat = currentStop.getStopLat();
+                double currentStopLon = currentStop.getStopLon();
+
+                Integer currentStopArrivalTime = stopTime.getArrivalTime();
+                int distanceFromPreviousStopMeter = geoUtils.distanceBetweenMeter(
+                        previousStopsData.latitude,
+                        previousStopsData.longitude,
+                        currentStopLat,
+                        currentStopLon
+                );
+                boolean sameArrivalAndDeparture = false;
+
+                if (previousStopsData.departureTime != null && currentStopArrivalTime != null) {
+                    sameArrivalAndDeparture = currentStopArrivalTime.equals(previousStopsData.departureTime);
+
+                    if (!sameArrivalAndDeparture) {
+                        int durationSecond = currentStopArrivalTime - previousStopsData.departureTime;
+                        int distanceMeter = distanceFromPreviousStopMeter + previousStopsData.accumulatedDistanceMeter;
                         int speedMeterPerSecond = distanceMeter / durationSecond;
 
                         if (speedMeterPerSecond > 42) { // roughly 150 km per hour. Put it in default parameters
-                            //Add notice
-                            resultRepo.addNotice(
-                                    new MissingTripEdgeStopTimeNotice("arrival_time",
-                                            tripId,
-                                            stopTime.getStopSequence()
-                                    )
-                            );
+
+                            if (previousStopsData.accumulatedDistanceMeter == 0) {
+                                // contiguous stop
+                                //Add notice
+                                /*resultRepo.addNotice(
+                                        new MissingTripEdgeStopTimeNotice("arrival_time",
+                                                tripId,
+                                                stopTime.getStopSequence()
+                                        )
+                                );*/
+                            } else {
+                                // far stops
+                                //Add notice
+                                /*resultRepo.addNotice(
+                                        new MissingTripEdgeStopTimeNotice("arrival_time",
+                                                tripId,
+                                                stopTime.getStopSequence()
+                                        )
+                                );*/
+                            }
                         }
                     }
                 }
-                previousStopData.departureTime = stopTime.getDepartureTime();
-                LocationBase stop = dataRepo.getStopById(stopTime.getStopId());
-                previousStopData.latitude = stop.getStopLat();
-                previousStopData.longitude = stop.getStopLon();
+
+                // Prepare data for next iteration
+                if (sameArrivalAndDeparture) {
+                    previousStopsData.accumulatedDistanceMeter += geoUtils.distanceBetweenMeter(
+                            previousStopsData.latitude,
+                            previousStopsData.longitude,
+                            currentStopLat,
+                            currentStopLon
+                    );
+                } else {
+                    previousStopsData.accumulatedDistanceMeter = 0;
+                }
+
+                previousStopsData.departureTime = stopTime.getDepartureTime();
+                previousStopsData.latitude = currentStopLat;
+                previousStopsData.longitude = currentStopLon;
             });
         });
     }
