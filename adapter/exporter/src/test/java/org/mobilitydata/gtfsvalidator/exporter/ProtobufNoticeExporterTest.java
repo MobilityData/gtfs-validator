@@ -1889,4 +1889,51 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
+
+    @Test
+    void exportFrequencyStartTimeAfterEndTimeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(
+                new FrequencyStartTimeAfterEndTimeNotice("frequencies.txt",
+                        "250",
+                        "120",
+                        "trip_id",
+                        "start_time",
+                        "end_time",
+                        "trip id value"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(
+                ArgumentMatchers.eq("frequencies.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("trip_id"));
+        verify(mockBuilder, times(1)).setCsvKeyName(
+                ArgumentMatchers.eq("start_time"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("end_time"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(
+                ArgumentMatchers.eq("trip id value"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(
+                ArgumentMatchers.eq(String.valueOf(250)));
+        verify(mockBuilder, times(1)).setAltEntityName(
+                ArgumentMatchers.eq(String.valueOf(120)));
+
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
 }

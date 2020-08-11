@@ -832,4 +832,23 @@ class JsonNoticeExporterTest {
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
+
+    @Test
+    void exportFrequencyStartTimeAfterEndTimeNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        FrequencyStartTimeAfterEndTimeNotice toExport =
+                new FrequencyStartTimeAfterEndTimeNotice("frequencies.txt",
+                        "arrival_time",
+                        "departure_time",
+                        "tripId",
+                        "startTime",
+                        "endTime",
+                        "trip_id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
 }
