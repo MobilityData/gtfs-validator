@@ -104,8 +104,8 @@ class ValidateFrequencyStartTimeBeforeEndTimeTest {
 
         verify(mockDataRepo, times(1)).getFrequencyAll();
 
-        verify(mockFrequency, times(1)).getEndTime();
-        verify(mockFrequency, times(1)).getStartTime();
+        verify(mockFrequency, times(2)).getEndTime();
+        verify(mockFrequency, times(2)).getStartTime();
 
         final ArgumentCaptor<FrequencyStartTimeAfterEndTimeNotice> captor =
                 ArgumentCaptor.forClass(FrequencyStartTimeAfterEndTimeNotice.class);
