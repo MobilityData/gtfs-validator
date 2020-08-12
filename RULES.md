@@ -47,6 +47,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E043](#E043) | Duplicated field |
 | [E044](#E044) | Missing trip edge `arrival_time` or `departure_time` |
 | [E045](#E045) | `arrival_time` after `departure_time` in `stop_times.txt` |
+| [E047](#E047) | Stop too far from trip shape |
 
 ### Table of Warnings
 
@@ -258,6 +259,15 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 
 #### References:
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
+
+<a name="E047"/>
+
+### E047 - Stop too far from trip shape
+
+Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of stop locations which a trip serves.
+
+#### References:
+* [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
 
 # Warnings
 

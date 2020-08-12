@@ -767,6 +767,22 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
                 .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_EXPECTED_DISTANCE)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_ACTUAL_DISTANCE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final StopTooFarFromTripShape toExport) throws IOException {
+        // TODO - Needs review - Are these right?
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_ARRIVAL_TIME)))
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_DEPARTURE_TIME)))
                 .build()

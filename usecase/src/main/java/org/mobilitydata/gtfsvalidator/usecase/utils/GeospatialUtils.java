@@ -16,6 +16,15 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.utils;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
+
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+
 public interface GeospatialUtils {
     int KILOMETER_TO_METER_CONVERSION_FACTOR = 1000; // conversion factor from kilometers to meters
 
@@ -26,4 +35,18 @@ public interface GeospatialUtils {
      * Result is expressed in meters.
      **/
     int distanceBetweenMeter(double fromLat, double fromLng, double toLat, double toLng);
+
+    /**
+     * Returns a list of E047 errors for the given input, one for each stop that is too far from the trip shape
+     *
+     * @param tripId    trip_id for the trip
+     * @param stopTimes a map of StopTimes for a trip, sorted by stop_sequence
+     * @param shape     a map of ShapePoints for a trip, sorted by shape_pt_sequence
+     * @param stops     a map of all stops (keyed on stop_id), needed to obtain the latitude and longitude for each stop
+     * @return a list of E047 errors, one for each stop that is too far from the trip shape
+     */
+    List<StopTooFarFromTripShape> checkStopsWithinTripShape(String tripId,
+                                                            SortedMap<Integer, StopTime> stopTimes,
+                                                            SortedMap<Integer, ShapePoint> shape,
+                                                            Map<String, LocationBase> stops);
 }

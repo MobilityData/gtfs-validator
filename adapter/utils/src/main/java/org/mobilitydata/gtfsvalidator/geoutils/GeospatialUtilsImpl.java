@@ -20,7 +20,16 @@ import org.locationtech.spatial4j.distance.DistanceCalculator;
 import org.locationtech.spatial4j.distance.DistanceUtils;
 import org.locationtech.spatial4j.shape.Point;
 import org.locationtech.spatial4j.shape.ShapeFactory;
+import org.locationtech.spatial4j.shape.SpatialRelation;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
+
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 
 import static org.locationtech.spatial4j.context.SpatialContext.GEO;
 
@@ -64,7 +73,46 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
     }
 
     /**
+     * Returns a list of E047 errors for the given input, one for each stop that is too far from the trip shape
+     *
+     * @param tripId    trip_id for the trip
+     * @param stopTimes a map of StopTimes for a trip, sorted by stop_sequence
+     * @param shape     a map of ShapePoints for a trip, sorted by shape_pt_sequence
+     * @param stops     a map of all stops (keyed on stop_id), needed to obtain the latitude and longitude for each stop
+     * @return a list of E047 errors, one for each stop that is too far from the trip shape
+     */
+    public List<StopTooFarFromTripShape> checkStopsWithinTripShape(String tripId,
+                                                                   SortedMap<Integer, StopTime> stopTimes,
+                                                                   SortedMap<Integer, ShapePoint> shape,
+                                                                   Map<String, LocationBase> stops) {
+
+        // Create a polyline for each trip if the GTFS shapes.txt data exists
+        List<ShapePoint> tripShape = mShapePoints.get(shapeAgencyAndId.getId());
+        if (tripShape != null) {
+            ShapeFactory.LineStringBuilder lineBuilder = sf.lineString();
+            for (ShapePoint p : tripShape) {
+                lineBuilder.pointXY(p.getLon(), p.getLat());
+            }
+            mTripShapes.put(tripId, lineBuilder.build());
+        }
+
+        // Create the buffered version of the trip shape if it doesn't yet exist
+        return mTripShapesBuffered.computeIfAbsent(tripId, k -> s.getBuffered(TRIP_BUFFER_DEGREES, s.getContext()));
+
+        org.locationtech.spatial4j.shape.Point p = sf.pointXY(vehiclePosition.getLongitude(), vehiclePosition.getLatitude());
+        return bounds.relate(p).equals(SpatialRelation.CONTAINS);
+
+        new StopTooFarFromTripShape(
+                "shapes.txt",
+                geospatialUtils.convertIntegerToHMMSS(stopTimeArrivalTime),
+                geospatialUtils.convertIntegerToHMMSS(stopTimeDepartureTime),
+                tripId,
+                stopSequence)
+    }
+
+    /**
      * Method returning a {@code ShapeFactory}
+     *
      * @return a {@link ShapeFactory}
      */
     private static ShapeFactory getShapeFactory() {

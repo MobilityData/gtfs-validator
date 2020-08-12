@@ -124,4 +124,7 @@ public interface NoticeExporter {
 
     void export(final StopTimeArrivalTimeAfterDepartureTimeNotice StopTimeArrivalTimeAfterDepartureTimeNotice)
             throws IOException;
+
+    void export(final StopTooFarFromTripShape stopTooFarFromTripShape)
+            throws IOException;
 }
