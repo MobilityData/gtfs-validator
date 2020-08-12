@@ -123,10 +123,8 @@ class ValidateFrequencyStartTimeBeforeEndTimeTest {
                 .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_PART));
         assertEquals("trip_id", noticeList.get(0)
                 .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FIRST_VALUE));
-        assertEquals("end_time", noticeList.get(0)
-                .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals("start_time", noticeList.get(0)
-                .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_THIRD_VALUE));
+                .getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_VALUE));
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockTimeUtil);
     }
 }

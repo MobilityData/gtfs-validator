@@ -842,9 +842,6 @@ class JsonNoticeExporterTest {
                 new FrequencyStartTimeAfterEndTimeNotice("frequencies.txt",
                         "arrival_time",
                         "departure_time",
-                        "tripId",
-                        "startTime",
-                        "endTime",
                         "trip_id");
         underTest.export(toExport);
 

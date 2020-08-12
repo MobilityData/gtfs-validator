@@ -25,27 +25,21 @@ public class FrequencyStartTimeAfterEndTimeNotice extends ErrorNotice {
     public FrequencyStartTimeAfterEndTimeNotice(final String filename,
                                                 final String startTimeAsString,
                                                 final String endTimeAsString,
-                                                final String compositeKeyFirstPart,
-                                                final String compositeKeySecondPart,
-                                                final String compositeKeyThirdPart,
-                                                final String compositeKeyFirstValue) {
+                                                final String tripId) {
         super(filename,
                 E_046,
                 "Fields `start_time` and `end_time` out of order",
                 "`end_time`: `" + startTimeAsString + "` precedes `start_time`: `" +
                         endTimeAsString + "` in file `" + filename +
                         "` for entity with composite id:" +
-                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "` -- " +
-                        "`" + compositeKeySecondPart + "`: `" + startTimeAsString + "` -- " +
-                        "`" + compositeKeyThirdPart + "`: `" + endTimeAsString + "`.",
+                        "`tripId`: `" + tripId + "` -- " +
+                        "`startTime`: `" + startTimeAsString + "`.",
                 null);
 
-        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
-        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
-        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "tripId");
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, tripId);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, "startTime");
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, startTimeAsString);
-        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART, compositeKeyThirdPart);
-        putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE, endTimeAsString);
     }
 
     @Override

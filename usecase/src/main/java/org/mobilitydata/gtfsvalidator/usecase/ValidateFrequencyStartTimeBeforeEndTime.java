@@ -56,21 +56,19 @@ public class ValidateFrequencyStartTimeBeforeEndTime {
     public void execute() {
         logger.info("Validating rule 'E046 - `start_time` and `end_time` out of order");
         dataRepo.getFrequencyAll().forEach((startTimeEndTime, frequency) -> {
-                    final Integer endTime = frequency.getEndTime();
-                    final Integer startTime = frequency.getStartTime();
-                    if (endTime < startTime) {
-                        resultRepo.addNotice(
-                                new FrequencyStartTimeAfterEndTimeNotice(
-                                        "frequencies.txt",
-                                        timeUtils.convertIntegerToHMMSS(endTime),
-                                        timeUtils.convertIntegerToHMMSS(startTime),
-                                        "tripId",
-                                        "startTime",
-                                        "endTime",
-                                        frequency.getTripId())
-                        );
-                    }
-                }
-        );
+            // endTime and startTime are assumed to be not null at this stage. See Frequency builder.
+            // Reference: http://gtfs.org/reference/static#frequenciestxt
+            final int endTime = frequency.getEndTime();
+            final int startTime = frequency.getStartTime();
+            if (endTime < startTime) {
+                resultRepo.addNotice(
+                        new FrequencyStartTimeAfterEndTimeNotice(
+                                "frequencies.txt",
+                                timeUtils.convertIntegerToHMMSS(startTime),
+                                timeUtils.convertIntegerToHMMSS(endTime),
+                                frequency.getTripId())
+                );
+            }
+        });
     }
 }

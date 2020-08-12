@@ -780,10 +780,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
                 .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
-                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART)))
                 .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
-                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
