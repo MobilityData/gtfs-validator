@@ -157,6 +157,10 @@ public class DefaultConfig {
         );
     }
 
+    public GenerateGtfsRequiredFilenameList generateGtfsRequiredFilenameList() {
+        return new GenerateGtfsRequiredFilenameList(specRepo);
+    }
+
     public ValidateAllOptionalFilename validateAllOptionalFileName() {
         return new ValidateAllOptionalFilename(specRepo, rawFileRepo, resultRepo);
     }

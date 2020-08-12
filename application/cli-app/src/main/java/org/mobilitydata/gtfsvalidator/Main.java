@@ -54,11 +54,16 @@ public class Main {
 
                 final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
 
-                final ArrayList<String> datasetFilenameList = config.validateAllRequiredFilePresence().execute();
-                datasetFilenameList.addAll(config.validateAllOptionalFileName().execute());
+                config.validateAllRequiredFilePresence().execute();
+                final List<String> gtfsRequiredFilenameList = config.generateGtfsRequiredFilenameList().execute();
+                final List<String> gtfsArchiveOptionalFilenameList = config.validateAllOptionalFileName().execute();
+                final ArrayList<String> gtfsArchiveValidFilenameList = new ArrayList<>();
+                gtfsArchiveValidFilenameList.addAll(gtfsRequiredFilenameList);
+                gtfsArchiveValidFilenameList.addAll(gtfsArchiveOptionalFilenameList);
 
                 final List<String> filenameListToProcess =
-                        config.generateFilenameListToProcess().execute(filenameListToExclude, datasetFilenameList);
+                        config.generateFilenameListToProcess().execute(filenameListToExclude,
+                                gtfsArchiveValidFilenameList);
 
                 // retrieve use case to be used multiple times
                 final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
