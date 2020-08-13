@@ -18,11 +18,14 @@ package org.mobilitydata.gtfsvalidator.usecase.crossvalidation;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeIdReferenceInStopTime;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateStopTimeTimeCombination;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateStopTimeTripId;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.util.Map;
 
@@ -35,38 +38,50 @@ public class StopTimeBasedCrossValidator {
     private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository dataRepo;
     private final Logger logger;
+    private final TimeUtils timeUtils;
     private final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime;
     private final ValidateStopTimeTripId validateStopTimeTripId;
+    private final ValidateStopTimeTimeCombination validateStopTimeTimeCombination;
 
     public StopTimeBasedCrossValidator(final GtfsDataRepository dataRepo,
                                        final ValidationResultRepository resultRepo,
                                        final Logger logger,
+                                       final TimeUtils timeUtils,
                                        final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime,
-                                       final ValidateStopTimeTripId validateStopTimeTripId
+                                       final ValidateStopTimeTripId validateStopTimeTripId,
+                                       final ValidateStopTimeTimeCombination validateStopTimeTimeCombination
     ) {
         this.resultRepo = resultRepo;
         this.dataRepo = dataRepo;
         this.logger = logger;
+        this.timeUtils = timeUtils;
         this.validateShapeIdReferenceInStopTime = validateShapeIdReferenceInStopTime;
         this.validateStopTimeTripId = validateStopTimeTripId;
+        this.validateStopTimeTimeCombination = validateStopTimeTimeCombination;
     }
 
     /**
      * Executes cross validation rules based on file `stop_times.txt`
      */
     public void execute() {
-        logger.info("Validating rules :'E034 - `shape_id` not found");
+        logger.info("Validating rules: 'E047 - Bad combination of stoptime arrival and departure times`");
+        logger.info("                  'E034 - `shape_id` not found");
         logger.info("                  'E037 - `trip_id` not found");
 
-        dataRepo.getStopTimeAll().values().forEach(stopTimeCollection ->
-                stopTimeCollection.values().forEach(stopTime -> {
-                    final Trip trip = dataRepo.getTripById(stopTime.getTripId());
-                    final Map<Integer, ShapePoint> shape = dataRepo.getShapeById(trip == null ? null : trip.getShapeId());
-                    // E034
-                    validateShapeIdReferenceInStopTime.execute(resultRepo, stopTime, shape, trip);
-                    // E037
-                    validateStopTimeTripId.execute(resultRepo, stopTime, dataRepo.getTripAll());
-                })
+        StopTime previousStopTime = null;
+
+        dataRepo.getStopTimeAll().values().forEach(stopTimeCollection -> {
+                    // E046
+                    validateStopTimeTimeCombination.execute(resultRepo, stopTimeCollection, timeUtils);
+                    stopTimeCollection.values().forEach(stopTime -> {
+                        final Trip trip = dataRepo.getTripById(stopTime.getTripId());
+                        final Map<Integer, ShapePoint> shape = dataRepo.getShapeById(trip == null ? null : trip.getShapeId());
+                        // E034
+                        validateShapeIdReferenceInStopTime.execute(resultRepo, stopTime, shape, trip);
+                        // E037
+                        validateStopTimeTripId.execute(resultRepo, stopTime, dataRepo.getTripAll());
+                    });
+                }
         );
     }
 }

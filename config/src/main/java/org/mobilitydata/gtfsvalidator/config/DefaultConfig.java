@@ -329,9 +329,10 @@ public class DefaultConfig {
     }
 
     public StopTimeBasedCrossValidator stopTimeBasedCrossValidator() {
-        return new StopTimeBasedCrossValidator(gtfsDataRepository, resultRepo, logger,
+        return new StopTimeBasedCrossValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
                 new ValidateShapeIdReferenceInStopTime(),
-                new ValidateStopTimeTripId());
+                new ValidateStopTimeTripId(),
+                new ValidateStopTimeTimeCombination());
     }
 
     public ValidateStopTimeDepartureTimeAfterArrivalTime validateStopTimeDepartureTimeAfterArrivalTime() {
