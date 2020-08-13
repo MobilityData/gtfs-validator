@@ -65,12 +65,12 @@ public class ValidateStopTooFarFromTripShape {
 
         dataRepo.getStopTimeAll().forEach((tripId, tripStopTimes) -> {
             Trip trip = dataRepo.getTripById(tripId);
-            if (trip.getShapeId() == null) {
+            if (trip == null || trip.getShapeId() == null) {
                 // No shape for this trip - skip to the next trip
                 return;
             }
             // Check for possible E047 errors for this combination of stop times and shape points for this trip_id
-            List<StopTooFarFromTripShape> errorsForTrip = geospatialUtils.checkStopsWithinTripShape(tripId,
+            List<StopTooFarFromTripShape> errorsForTrip = geospatialUtils.checkStopsWithinTripShape(trip,
                     tripStopTimes,
                     dataRepo.getShapeById(trip.getShapeId()),
                     dataRepo.getStopAll()

@@ -16,17 +16,21 @@
 
 package org.mobilitydata.gtfsvalidator.geoutils;
 
+import org.locationtech.spatial4j.context.jts.JtsSpatialContext;
 import org.locationtech.spatial4j.distance.DistanceCalculator;
 import org.locationtech.spatial4j.distance.DistanceUtils;
 import org.locationtech.spatial4j.shape.Point;
+import org.locationtech.spatial4j.shape.Shape;
 import org.locationtech.spatial4j.shape.ShapeFactory;
 import org.locationtech.spatial4j.shape.SpatialRelation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
 import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -38,6 +42,10 @@ import static org.locationtech.spatial4j.context.SpatialContext.GEO;
  */
 public class GeospatialUtilsImpl implements GeospatialUtils {
     private static GeospatialUtilsImpl GEO_UTILS = null;
+
+    // Spatial operation buffer values
+    public static final double TRIP_BUFFER_METERS = 100; // Per GTFS Best Practices (https://gtfs.org/best-practices/#shapestxt)
+    public static final double TRIP_BUFFER_DEGREES = DistanceUtils.KM_TO_DEG * (TRIP_BUFFER_METERS / 1000.0d);
 
     private GeospatialUtilsImpl() {
     }
@@ -73,41 +81,51 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
     }
 
     /**
-     * Returns a list of E047 errors for the given input, one for each stop that is too far from the trip shape
+     * Returns a list of E047 errors for the given input, one for each stop that is too far from the trip shapePoints
      *
-     * @param tripId    trip_id for the trip
-     * @param stopTimes a map of StopTimes for a trip, sorted by stop_sequence
-     * @param shape     a map of ShapePoints for a trip, sorted by shape_pt_sequence
-     * @param stops     a map of all stops (keyed on stop_id), needed to obtain the latitude and longitude for each stop
-     * @return a list of E047 errors, one for each stop that is too far from the trip shape
+     * @param trip        Trip for this GTFS trip
+     * @param stopTimes   a map of StopTimes for a trip, sorted by stop_sequence
+     * @param shapePoints a map of ShapePoints for a trip, sorted by shape_pt_sequence
+     * @param stops       a map of all stops (keyed on stop_id), needed to obtain the latitude and longitude for each stop
+     * @return a list of E047 errors, one for each stop that is too far from the trip shapePoints
      */
-    public List<StopTooFarFromTripShape> checkStopsWithinTripShape(String tripId,
+    public List<StopTooFarFromTripShape> checkStopsWithinTripShape(Trip trip,
                                                                    SortedMap<Integer, StopTime> stopTimes,
-                                                                   SortedMap<Integer, ShapePoint> shape,
+                                                                   SortedMap<Integer, ShapePoint> shapePoints,
                                                                    Map<String, LocationBase> stops) {
-
-        // Create a polyline for each trip if the GTFS shapes.txt data exists
-        List<ShapePoint> tripShape = mShapePoints.get(shapeAgencyAndId.getId());
-        if (tripShape != null) {
-            ShapeFactory.LineStringBuilder lineBuilder = sf.lineString();
-            for (ShapePoint p : tripShape) {
-                lineBuilder.pointXY(p.getLon(), p.getLat());
-            }
-            mTripShapes.put(tripId, lineBuilder.build());
+        List<StopTooFarFromTripShape> errors = new ArrayList<>();
+        if (trip == null || stopTimes == null || stopTimes.isEmpty() || shapePoints == null || shapePoints.isEmpty()) {
+            // Nothing to do - return empty list
+            return errors;
         }
 
-        // Create the buffered version of the trip shape if it doesn't yet exist
-        return mTripShapesBuffered.computeIfAbsent(tripId, k -> s.getBuffered(TRIP_BUFFER_DEGREES, s.getContext()));
+        // Create a polyline from the GTFS shapes data
+        ShapeFactory sf = JtsSpatialContext.GEO.getShapeFactory();
+        ShapeFactory.LineStringBuilder lineBuilder = sf.lineString();
+        shapePoints.forEach((integer, shapePoint) -> lineBuilder.pointXY(shapePoint.getShapePtLon(), shapePoint.getShapePtLat()));
+        Shape shapeLine = lineBuilder.build();
 
-        org.locationtech.spatial4j.shape.Point p = sf.pointXY(vehiclePosition.getLongitude(), vehiclePosition.getLatitude());
-        return bounds.relate(p).equals(SpatialRelation.CONTAINS);
+        // Create the buffered version of the trip as a polygon
+        Shape shapeBuffer = shapeLine.getBuffered(TRIP_BUFFER_DEGREES, shapeLine.getContext());
 
-        new StopTooFarFromTripShape(
-                "shapes.txt",
-                geospatialUtils.convertIntegerToHMMSS(stopTimeArrivalTime),
-                geospatialUtils.convertIntegerToHMMSS(stopTimeDepartureTime),
-                tripId,
-                stopSequence)
+        stopTimes.forEach((integer, stopTime) -> {
+            LocationBase stop = stops.get(stopTime.getStopId());
+            // TODO - check for stop type? Some don't have lat/lon
+            org.locationtech.spatial4j.shape.Point p = sf.pointXY(stop.getStopLon(), stop.getStopLat());
+            if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
+                // TODO - measuare distance to shape line
+                errors.add(new StopTooFarFromTripShape(
+                        "shapes.txt",
+                        stopTime.getStopId(),
+                        stopTime.getStopSequence(),
+                        trip.getTripId(),
+                        trip.getShapeId(),
+                        distanceToShapeLine,
+                        TRIP_BUFFER_METERS));
+            }
+        });
+
+        return errors;
     }
 
     /**
