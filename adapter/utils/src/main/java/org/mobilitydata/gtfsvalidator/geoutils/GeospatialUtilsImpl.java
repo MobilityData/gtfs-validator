@@ -113,7 +113,7 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
             // TODO - check for stop type? Some don't have lat/lon
             org.locationtech.spatial4j.shape.Point p = sf.pointXY(stop.getStopLon(), stop.getStopLat());
             if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
-                // TODO - measuare distance to shape line
+                // TODO - measure distance to shape line
                 errors.add(new StopTooFarFromTripShape(
                         "shapes.txt",
                         stopTime.getStopId(),
