@@ -109,6 +109,7 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
         Shape shapeBuffer = shapeLine.getBuffered(TRIP_BUFFER_DEGREES, shapeLine.getContext());
 
         stopTimes.forEach((integer, stopTime) -> {
+            // Check if each stop is within the buffer polygon
             LocationBase stop = stops.get(stopTime.getStopId());
             // TODO - check for stop type? Some don't have lat/lon
             org.locationtech.spatial4j.shape.Point p = sf.pointXY(stop.getStopLon(), stop.getStopLat());
