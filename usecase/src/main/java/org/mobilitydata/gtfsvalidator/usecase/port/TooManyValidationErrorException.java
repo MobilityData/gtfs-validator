@@ -16,20 +16,5 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-
-import java.io.IOException;
-import java.util.Collection;
-
-/**
- * This hold contains notices generated during the validation process.
- */
-public interface ValidationResultRepository {
-
-    Notice addNotice(Notice newNotice) throws TooManyValidationErrorException;
-
-    Collection<Notice> getAll();
-
-    NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException;
+public class TooManyValidationErrorException extends RuntimeException {
 }

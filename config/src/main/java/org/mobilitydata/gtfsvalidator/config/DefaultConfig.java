@@ -51,7 +51,7 @@ import java.nio.file.Paths;
  */
 public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
-    private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
+    private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
     private final TimeUtils timeUtils = TimeUtilsImpl.getInstance();
     private final GtfsSpecRepository specRepo;
@@ -101,6 +101,9 @@ public class DefaultConfig {
             logger.warn("Configuration file execution-parameters.json not found in working directory");
         }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
+
+        //resultRepo = new InMemoryValidationResultRepository(execParamRepo.getExecParamByKey(ABORT_ON_ERROR));
+        resultRepo = new InMemoryValidationResultRepository(true);
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {

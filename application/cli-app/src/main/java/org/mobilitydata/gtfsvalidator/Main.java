@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -206,6 +207,17 @@ public class Main {
             }
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
+        } catch (TooManyValidationErrorException e) {
+            logger.error("Error detected -- ABORTING");
+            config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+
+            try {
+                config.exportResultAsFile().execute();
+
+                logger.info("Set option -failonerror to false for validation process to continue on errors");
+            } catch (IOException ioException) {
+                logger.error("An exception occurred: " + e);
+            }
         }
         final long duration = System.nanoTime() - startTime;
         logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),

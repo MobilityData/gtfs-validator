@@ -22,11 +22,13 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
+import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class InMemoryValidationResultRepositoryTest {
 
@@ -34,13 +36,13 @@ class InMemoryValidationResultRepositoryTest {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
-    void addingNoticeShouldExtendNoticeList() {
+    void addingNoticeShouldExtendNoticeList() throws TooManyValidationErrorException {
 
         WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
 
         ErrorNotice errorNotice = new CannotUnzipInputArchiveNotice(TEST_FILE_NAME);
 
-        ValidationResultRepository underTest = new InMemoryValidationResultRepository();
+        ValidationResultRepository underTest = new InMemoryValidationResultRepository(false);
 
         underTest.addNotice(warningNotice);
         assertEquals(1, underTest.getAll().size());
@@ -61,5 +63,17 @@ class InMemoryValidationResultRepositoryTest {
                 .get();
 
         assertThat(testedNotice, instanceOf(CannotUnzipInputArchiveNotice.class));
+    }
+
+    @Test
+    void abortOnErrorRepoShouldThrowOnError() {
+
+
+        ErrorNotice errorNotice = new CannotUnzipInputArchiveNotice(TEST_FILE_NAME);
+
+        ValidationResultRepository underTest = new InMemoryValidationResultRepository(true);
+
+        assertThrows(TooManyValidationErrorException.class, () ->
+                underTest.addNotice(errorNotice));
     }
 }

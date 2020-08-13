@@ -25,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.exporter.JsonNoticeExporter;
 import org.mobilitydata.gtfsvalidator.exporter.ProtobufNoticeExporter;
+import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.File;
@@ -46,6 +47,11 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     private final List<InfoNotice> infoNoticeList = new ArrayList<>();
     private final List<WarningNotice> warningNoticeList = new ArrayList<>();
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
+    private final boolean throwExceptionOnError;
+
+    public InMemoryValidationResultRepository(boolean throwExceptionOnError) {
+        this.throwExceptionOnError = throwExceptionOnError;
+    }
 
     /**
      * Visit a generic notice to add it to the repository and returns the notice. Useful for automatic type inference
@@ -54,13 +60,16 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
      * @return the notice that was added to the repository
      */
     @Override
-    public Notice addNotice(Notice newNotice) {
+    public Notice addNotice(Notice newNotice) throws TooManyValidationErrorException {
         if (newNotice instanceof InfoNotice) {
             infoNoticeList.add((InfoNotice) newNotice);
         } else if (newNotice instanceof WarningNotice) {
             warningNoticeList.add((WarningNotice) newNotice);
         } else {
             errorNoticeList.add((ErrorNotice) newNotice);
+            if (throwExceptionOnError) {
+                throw new TooManyValidationErrorException();
+            }
         }
         return newNotice;
     }
