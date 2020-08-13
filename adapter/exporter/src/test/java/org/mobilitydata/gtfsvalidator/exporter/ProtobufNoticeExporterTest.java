@@ -701,8 +701,12 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setEntityId(
                 ArgumentMatchers.eq("trip_id_XXX"));
+        verify(mockBuilder, times(1)).setEntityValue(
+                ArgumentMatchers.eq("trip_id"));
         verify(mockBuilder, times(1)).setAltEntityId(
                 ArgumentMatchers.eq("[1, 2, 3]"));
+        verify(mockBuilder, times(1)).setAltEntityValue(
+                ArgumentMatchers.eq("stop_sequence_list"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
 

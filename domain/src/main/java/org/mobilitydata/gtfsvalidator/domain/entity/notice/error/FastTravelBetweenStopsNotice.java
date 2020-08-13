@@ -36,7 +36,7 @@ public class FastTravelBetweenStopsNotice extends ErrorNotice {
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "trip_id");
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, tripId);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, "stop_sequence_list");
-        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, stopSequenceList);
+        putNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE_LIST, stopSequenceList);
     }
 
     @Override

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Use case for E046 to validate that all records of `trips.txt` refer to an a collection of {@code StopTime} from file
+ * Use case for E046 to validate that all records of `trips.txt` refer to a collection of {@code StopTime} from file
  * `stop_times.txt` of which -when sorted by `stop_sequence`-
  * the travel speed between each stop is not above 150 km/h
  */
@@ -56,6 +56,8 @@ public class ValidateTripTravelSpeed {
     /**
      * Use case execution method: Checks all records of `trips.txt` refer to an a collection of {@code StopTime} from file
      * `stop_times.txt` of which -when sorted by `stop_sequence`- the travel speed between each stop is not above 150 km/h
+     * It is assumed that the n-th stoptime has a `departure_time`
+     * that is before or equal to the n+1 stoptime `arrival_time
      * A new {@link FastTravelBetweenStopsNotice} notice is generated each time this condition is false.
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */

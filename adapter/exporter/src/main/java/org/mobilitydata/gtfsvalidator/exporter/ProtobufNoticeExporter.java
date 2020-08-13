@@ -778,13 +778,15 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     public void export(final FastTravelBetweenStopsNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
-                .setType(((List<Integer>) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)).size() > 2 ?
+                .setType(((List<Integer>) toExport.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE_LIST)).size() > 2 ?
                         GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FAST_TRAVEL_BETWEEN_FAR_STOPS :
                         GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FAST_TRAVEL_BETWEEN_CONSECUTIVE_STOPS
                 )
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityId((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE))
-                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setEntityValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE_LIST)))
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

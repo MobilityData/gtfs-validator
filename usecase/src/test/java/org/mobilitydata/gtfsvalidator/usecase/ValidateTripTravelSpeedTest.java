@@ -54,7 +54,6 @@ class ValidateTripTravelSpeedTest {
                 ArgumentMatchers.anyDouble()
         )).thenReturn(10000);
 
-
         final StopTime mockStopTime0 = mock(StopTime.class);
         final StopTime mockStopTime1 = mock(StopTime.class);
         final StopTime mockStopTime2 = mock(StopTime.class);
@@ -112,7 +111,7 @@ class ValidateTripTravelSpeedTest {
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("trip_id__test", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
         assertEquals("stop_sequence_list", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
-        assertEquals(List.of(0, 1), notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
+        assertEquals(List.of(0, 1), notice.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE_LIST));
 
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo);
     }
@@ -131,7 +130,6 @@ class ValidateTripTravelSpeedTest {
                 ArgumentMatchers.anyDouble(),
                 ArgumentMatchers.anyDouble()
         )).thenReturn(10000);
-
 
         final StopTime mockStopTime0 = mock(StopTime.class);
         final StopTime mockStopTime1 = mock(StopTime.class);
@@ -196,7 +194,7 @@ class ValidateTripTravelSpeedTest {
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("trip_id__test", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
         assertEquals("stop_sequence_list", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
-        assertEquals(List.of(1, 2, 3), notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE));
+        assertEquals(List.of(1, 2, 3), notice.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE_LIST));
 
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo);
     }
@@ -215,7 +213,6 @@ class ValidateTripTravelSpeedTest {
                 ArgumentMatchers.anyDouble(),
                 ArgumentMatchers.anyDouble()
         )).thenReturn(10);
-
 
         final StopTime mockStopTime0 = mock(StopTime.class);
         final StopTime mockStopTime1 = mock(StopTime.class);
