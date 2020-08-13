@@ -23,12 +23,17 @@ import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.util.Map;
 
+/**
+ * Use case to validate that for a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence does not precede
+ * the `departure_time` of n-th stoptime in sequence
+ */
 public class ValidateStopTimeTimeCombination {
 
     public void execute(final ValidationResultRepository resultRepo,
                         final Map<Integer, StopTime> stopTimeSequence,
                         final TimeUtils timeUtils) {
 
+        // get previous stoptime relevant information
         final var previousStopTimeData = new Object() {
             Integer arrivalTime = null;
             Integer stopSequence = null;
@@ -36,6 +41,11 @@ public class ValidateStopTimeTimeCombination {
 
         stopTimeSequence.forEach((stopSequence, stopTime) -> {
 
+            // useful when value of departure_time is null, the comparison is therefore done using the arrival_time of
+            // the preceding stoptime in sequence. Here we consider that if departure_time is null, then it can be
+            // approached by the previous stoptime in sequence's arrival_time value.
+            // Note that both `arrival_time` and `departure_time` fields should not be null
+            // (see best practices: http://gtfs.org/best-practices/#stop_timestxt)
             final Integer currentStopTimeDepartureTime = stopTime.getDepartureTime() != null ?
                     stopTime.getDepartureTime() : stopTime.getArrivalTime();
 
@@ -50,6 +60,9 @@ public class ValidateStopTimeTimeCombination {
                                     previousStopTimeData.stopSequence));
                 }
             }
+            // useful when value of arrival_time is null, the comparison is therefore done using the departure_time of
+            // the preceding stoptime in sequence. Here we consider that if arrival_time is null, then it can be approa-
+            // ched by the current stoptime's departure_time value.
             previousStopTimeData.arrivalTime = stopTime.getArrivalTime() != null ?
                     stopTime.getArrivalTime() : stopTime.getDepartureTime();
             previousStopTimeData.stopSequence = stopSequence;
