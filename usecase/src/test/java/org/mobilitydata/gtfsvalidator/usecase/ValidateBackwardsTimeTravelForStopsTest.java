@@ -595,10 +595,9 @@ class ValidateBackwardsTimeTravelForStopsTest {
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
         underTest.execute(mockResultRepo, mockStopTimeSequence, mockTimeUtils);
 
-        verify(firstStopTimeInSequence, times(1)).getDepartureTime();
-        verify(firstStopTimeInSequence, times(1)).getArrivalTime();
         verify(thirdStopTimeInSequence, times(1)).getDepartureTime();
         verify(thirdStopTimeInSequence, times(1)).getArrivalTime();
+        verify(firstStopTimeInSequence, times(1)).getDepartureTime();
 
         verifyNoInteractions(secondStopTimeInSequence, mockResultRepo, mockTimeUtils);
         verifyNoMoreInteractions(firstStopTimeInSequence, thirdStopTimeInSequence);
@@ -646,10 +645,7 @@ class ValidateBackwardsTimeTravelForStopsTest {
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
         underTest.execute(mockResultRepo, mockStopTimeSequence, mockTimeUtils);
 
-        verify(firstStopTimeInSequence, times(1)).getDepartureTime();
-        verify(firstStopTimeInSequence, times(1)).getArrivalTime();
         verify(thirdStopTimeInSequence, times(1)).getDepartureTime();
-        verify(thirdStopTimeInSequence, times(1)).getArrivalTime();
 
         verifyNoInteractions(secondStopTimeInSequence, mockResultRepo, mockTimeUtils);
         verifyNoMoreInteractions(firstStopTimeInSequence, thirdStopTimeInSequence);
