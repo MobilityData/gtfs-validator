@@ -72,6 +72,8 @@ public abstract class Notice {
     public static final String KEY_STOP_TIME_ARRIVAL_TIME = "stopTimeArrivalTime";
     public static final String KEY_STOP_TIME_DEPARTURE_TIME = "stopTimeDepartureTime";
     public static final String KEY_STOP_TIME_STOP_SEQUENCE_LIST = "stopTimeStopSequenceList";
+    public static final String KEY_STOP_TIME_STOP_SEQUENCE = "stopTimeStopSequence";
+    public static final String KEY_STOP_TIME_TRIP_ID = "stopTimeTripId";
 
     private final String filename;
     private final int code;

@@ -49,6 +49,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E046](#E046) | Fast travel between stops in `stop_times.txt` |
 | [E047](#E047) | Csv file is empty |
 | [E048](#E048) | `end_time` after `start_time` in `frequencies.txt` |
+| [E049](#E049) | Backwards time travel between stops in `stop_times.txt` |
 
 ### Table of Warnings
 
@@ -278,6 +279,7 @@ This is related to [W012](#https://github.com/MobilityData/gtfs-validator/blob/m
 #### References:
 * [File requirements](http://gtfs.org/reference/static#file-requirements)
 
+
 ### E048 - `end_time` after `start_time` in `frequencies.txt`
 
 The `end_time` must not precede the `start_time` in `frequencies.txt`. 
@@ -285,6 +287,12 @@ The `end_time` must not precede the `start_time` in `frequencies.txt`.
 #### References:
 * [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
+<a name="E049"/>
+
+### E049 - Backwards time travel between stops in `stop_times.txt`
+
+For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence
+ 
 # Warnings
 
 <a name="W002"/>
