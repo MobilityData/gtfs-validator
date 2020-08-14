@@ -22,7 +22,7 @@ jobs:
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
       - name: Run validator on MBTA data
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.2.2-SNAPSHOT.jar -u https://transitfeeds.com/p/mbta/64/20200531/download -i input.zip -e input -o output -fail_on_error false
+        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.2.2-SNAPSHOT.jar -u https://transitfeeds.com/p/mbta/64/20200531/download -i input.zip -e input -o output -abort_on_error false
       - name: Generate javadoc
         run: ./gradlew aggregateJavadocs
       - name: Persist jar
