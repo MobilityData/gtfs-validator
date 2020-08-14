@@ -260,7 +260,7 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 #### References:
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 
-### E046 - `end_time` after `start_time` in `frequencies.txt`
+### E048 - `end_time` after `start_time` in `frequencies.txt`
 
 The `end_time` must not precede the `start_time` in `frequencies.txt`. 
 

@@ -54,8 +54,8 @@ public class ValidateFrequencyStartTimeBeforeEndTime {
      * constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E046 - `start_time` and `end_time` out of order");
-        dataRepo.getFrequencyAll().forEach((startTimeEndTime, frequency) -> {
+        logger.info("Validating rule 'E048 - `start_time` and `end_time` out of order");
+        dataRepo.getFrequencyAll().forEach((tripIdStartTime, frequency) -> {
             // endTime and startTime cannot be null at this stage. See Frequency builder.
             // Reference: http://gtfs.org/reference/static#frequenciestxt
             if (frequency.getEndTime() < frequency.getStartTime()) {

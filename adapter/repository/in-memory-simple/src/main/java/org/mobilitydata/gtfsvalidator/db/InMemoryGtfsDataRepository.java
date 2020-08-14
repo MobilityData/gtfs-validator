@@ -642,10 +642,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     /**
      * Return an unmodifiable map of Frequency objects representing all the rows from frequencies.txt. Entities are
-     * mapped on values of fields trip_id and start_time of file `frequencies.txt`.
+     * mapped on values of fields trip_id and start_time of file `frequencies.txt`. This composite key is generated via
+     * method @see #Frequency#getFrequencyMappingKey().
      *
      * @return an unmodifiable map of Frequency objects representing all the rows from frequencies.txt. Entities are
-     * mapped on values of fields trip_id and start_time of file `frequencies.txt`.
+     * mapped on values of fields trip_id and start_time of file `frequencies.txt`. This composite key is generated via
+     * method @see #Frequency#getFrequencyMappingKey()
      */
     public Map<String, Frequency> getFrequencyAll() {
         return Collections.unmodifiableMap(frequencyPerTripIdStartTime);

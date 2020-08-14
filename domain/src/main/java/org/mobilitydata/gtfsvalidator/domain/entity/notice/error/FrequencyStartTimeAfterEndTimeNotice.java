@@ -27,13 +27,15 @@ public class FrequencyStartTimeAfterEndTimeNotice extends ErrorNotice {
                                                 final String endTimeAsString,
                                                 final String tripId) {
         super(filename,
-                E_046,
-                "Fields `start_time` and `end_time` out of order",
-                "`end_time`: `" + startTimeAsString + "` precedes `start_time`: `" +
-                        endTimeAsString + "` in file `" + filename +
-                        "` for entity with composite id:" +
-                        "`tripId`: `" + tripId + "` -- " +
-                        "`startTime`: `" + startTimeAsString + "`.",
+                E_048,
+                "`end_time` after `start_time` in `frequencies.txt`",
+                String.format("`end_time`: `%s` precedes `start_time`: `%s` for entity with composite id: " +
+                                "`tripId`: `%s` -- `startTime`: `%s` in file: `%s`.",
+                        endTimeAsString,
+                        startTimeAsString,
+                        tripId,
+                        startTimeAsString,
+                        filename),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "tripId");

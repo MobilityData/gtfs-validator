@@ -59,7 +59,7 @@ class ValidateFrequencyStartTimeBeforeEndTimeTest {
                         mockTimeUtil, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E046 - `start_time` and `end_time`" +
+        verify(mockLogger, times(1)).info("Validating rule 'E048 - `start_time` and `end_time`" +
                 " out of order");
 
         verify(mockDataRepo, times(1)).getFrequencyAll();
@@ -99,7 +99,7 @@ class ValidateFrequencyStartTimeBeforeEndTimeTest {
                         mockTimeUtil, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E046 - `start_time` and `end_time` " +
+        verify(mockLogger, times(1)).info("Validating rule 'E048 - `start_time` and `end_time` " +
                 "out of order");
 
         verify(mockDataRepo, times(1)).getFrequencyAll();
