@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.usecaseprocessor;
+package org.mobilitydata.gtfsvalidator.usecase.usecasevalidator;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
@@ -33,7 +33,7 @@ import java.util.Map;
  * E034 - `shape_id` not found
  * E037 - `trip_id` not found
  */
-public class StopTimeBasedValidator {
+public class StopTimeValidator {
     private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository dataRepo;
     private final Logger logger;
@@ -42,13 +42,13 @@ public class StopTimeBasedValidator {
     private final ValidateStopTimeTripId validateStopTimeTripId;
     private final ValidateBackwardsTimeTravelForStops validateBackwardsTimeTravelForStops;
 
-    public StopTimeBasedValidator(final GtfsDataRepository dataRepo,
-                                  final ValidationResultRepository resultRepo,
-                                  final Logger logger,
-                                  final TimeUtils timeUtils,
-                                  final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime,
-                                  final ValidateStopTimeTripId validateStopTimeTripId,
-                                  final ValidateBackwardsTimeTravelForStops validateBackwardsTimeTravelForStops
+    public StopTimeValidator(final GtfsDataRepository dataRepo,
+                             final ValidationResultRepository resultRepo,
+                             final Logger logger,
+                             final TimeUtils timeUtils,
+                             final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime,
+                             final ValidateStopTimeTripId validateStopTimeTripId,
+                             final ValidateBackwardsTimeTravelForStops validateBackwardsTimeTravelForStops
     ) {
         this.resultRepo = resultRepo;
         this.dataRepo = dataRepo;

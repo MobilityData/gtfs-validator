@@ -35,8 +35,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
-import org.mobilitydata.gtfsvalidator.usecase.usecaseprocessor.ShapeBasedCrossValidator;
-import org.mobilitydata.gtfsvalidator.usecase.usecaseprocessor.StopTimeBasedValidator;
+import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.ShapeBasedCrossValidator;
+import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.StopTimeValidator;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.io.IOException;
@@ -328,8 +328,8 @@ public class DefaultConfig {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
 
-    public StopTimeBasedValidator stopTimeBasedCrossValidator() {
-        return new StopTimeBasedValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
+    public StopTimeValidator stopTimeBasedCrossValidator() {
+        return new StopTimeValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
                 new ValidateShapeIdReferenceInStopTime(),
                 new ValidateStopTimeTripId(),
                 new ValidateBackwardsTimeTravelForStops());
