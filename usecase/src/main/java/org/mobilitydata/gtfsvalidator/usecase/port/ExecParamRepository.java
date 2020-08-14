@@ -44,6 +44,7 @@ public interface ExecParamRepository {
     String PATHWAY_MAX_SLOPE_KEY = "pathway_max_slope";
     String PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY = "pathway_min_width_lower_bound";
     String PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY = "pathway_min_width_upper_bound";
+    String ABORT_ON_ERROR = "abort_on_error";
 
     ExecParam getExecParamByKey(final String optionName);
 

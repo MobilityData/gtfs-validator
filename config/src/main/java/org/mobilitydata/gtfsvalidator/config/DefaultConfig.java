@@ -32,8 +32,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.geoutils.GeospatialUtilsImpl;
+import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.ShapeBasedCrossValidator;
@@ -46,6 +46,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.ABORT_ON_ERROR;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -105,8 +107,8 @@ public class DefaultConfig {
         }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
 
-        //resultRepo = new InMemoryValidationResultRepository(execParamRepo.getExecParamByKey(ABORT_ON_ERROR));
-        resultRepo = new InMemoryValidationResultRepository(true);
+        resultRepo = new InMemoryValidationResultRepository(
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
@@ -226,8 +228,7 @@ public class DefaultConfig {
     }
 
     public ParseAllExecParam parseAllExecutionParameter() {
-        return new ParseAllExecParam(executionParametersAsString, execParamRepo,
-                logger);
+        return new ParseAllExecParam(executionParametersAsString, execParamRepo, logger);
     }
 
     public LogExecutionInfo logExecutionInfo() {

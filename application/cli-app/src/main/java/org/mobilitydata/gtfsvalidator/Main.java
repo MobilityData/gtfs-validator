@@ -222,7 +222,8 @@ public class Main {
             try {
                 config.exportResultAsFile().execute();
 
-                logger.info("Set option -failonerror to false for validation process to continue on errors");
+                logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
+                        " to continue on errors");
             } catch (IOException ioException) {
                 logger.error("An exception occurred: " + e);
             }

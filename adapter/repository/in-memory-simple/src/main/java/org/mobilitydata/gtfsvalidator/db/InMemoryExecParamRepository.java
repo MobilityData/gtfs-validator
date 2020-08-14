@@ -183,7 +183,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             case HELP_KEY:
             case PROTO_KEY: {
                 if (hasExecParam(key)) {
-                    return hasExecParam(key) ? String.valueOf(true) : defaultValue.get(0);
+                    return String.valueOf(true);
                 } else {
                     return defaultValue.get(0);
                 }
@@ -239,6 +239,18 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                         getExecParamByKey(EXCLUSION_KEY).getValue().toString()
                         : null;
             }
+
+            case ABORT_ON_ERROR: {
+                // if command line option is provided with a value then use this value. Example "- abort_on_error true"
+                // or "abort_on_error false"
+                if (hasExecParam(ABORT_ON_ERROR) && hasExecParamValue(ABORT_ON_ERROR)) {
+                    return getExecParamByKey(ABORT_ON_ERROR).getValue().toString();
+                } else {
+                    // otherwise use default value: this includes the case where just the command line option is
+                    // provided without value "-abort_on_error", or no command line option at all.
+                    return defaultValue.get(0);
+                }
+            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }
@@ -287,13 +299,15 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 "Minimum admissible value for field min_width of file pathways.txt");
         options.addOption(PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY, PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY, true,
                 "Maximum admissible value for field min_width of file pathways.txt");
+        options.addOption(ABORT_ON_ERROR, ABORT_ON_ERROR, true,
+                "Stop validation process on first error");
 
         // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
         // Other commands only take 1 argument
         options.getOptions().forEach(option -> {
             switch (option.getLongOpt()) {
-                case ExecParamRepository.PROTO_KEY:
-                case ExecParamRepository.HELP_KEY: {
+                case PROTO_KEY:
+                case HELP_KEY: {
                     option.setArgs(0);
                     break;
                 }
