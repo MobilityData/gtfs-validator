@@ -50,14 +50,13 @@ public class ParseAllExecParam {
      * This method throws {@link IllegalArgumentException} if an {@link ExecParamRepository} could not be added to the
      * repository provided to the constructor.
      *
-     * @param args the command line execution parameters to parse if {fromConfigFile} is false
      * @throws IOException              if the parsing operation could not be executed.
      * @throws IllegalArgumentException if an {@link ExecParamRepository} could not be added to the repository provided
      *                                  to the constructor.
      */
-    public void execute(final String[] args) throws IllegalArgumentException, IOException {
+    public void execute() throws IllegalArgumentException, IOException {
         execParamRepository
-                .getParser(parameterJsonString, args, logger)
+                .getParser(parameterJsonString, logger)
                 .parse()
                 .forEach((s, execParam) -> execParamRepository.addExecParam(execParam));
     }

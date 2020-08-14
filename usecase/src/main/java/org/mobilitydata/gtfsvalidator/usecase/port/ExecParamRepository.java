@@ -56,7 +56,7 @@ public interface ExecParamRepository {
 
     boolean hasExecParamValue(final String key);
 
-    ExecParamParser getParser(final String parameterJsonString, final String[] args, final Logger logger);
+    ExecParamParser getParser(final String parameterJsonString, final Logger logger);
 
     String getExecParamValue(final String key) throws IllegalArgumentException;
 

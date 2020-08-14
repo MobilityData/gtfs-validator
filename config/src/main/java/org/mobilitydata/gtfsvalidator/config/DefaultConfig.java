@@ -43,9 +43,7 @@ import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.ABORT_ON_ERROR;
 
@@ -62,10 +60,9 @@ public class DefaultConfig {
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
-    private String executionParametersAsString;
 
     @SuppressWarnings("UnstableApiUsage")
-    public DefaultConfig(final Logger logger) {
+    public DefaultConfig(final Logger logger, final String executionParametersAsString, final String[] args) {
         this.logger = logger;
         String defaultParameterJsonString = null;
         try {
@@ -75,7 +72,10 @@ public class DefaultConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        execParamRepo = new InMemoryExecParamRepository(defaultParameterJsonString, this.logger);
+        execParamRepo = new InMemoryExecParamRepository(defaultParameterJsonString,
+                logger,
+                executionParametersAsString,
+                args);
 
         String gtfsSpecProtobufString = null;
 
@@ -98,13 +98,6 @@ public class DefaultConfig {
             e.printStackTrace();
         }
 
-        this.executionParametersAsString = null;
-        try {
-            this.executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
-            logger.info("Configuration file execution-parameters.json found in working directory");
-        } catch (IOException e) {
-            logger.warn("Configuration file execution-parameters.json not found in working directory");
-        }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
 
         resultRepo = new InMemoryValidationResultRepository(
@@ -225,10 +218,6 @@ public class DefaultConfig {
 
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
-    }
-
-    public ParseAllExecParam parseAllExecutionParameter() {
-        return new ParseAllExecParam(executionParametersAsString, execParamRepo, logger);
     }
 
     public LogExecutionInfo logExecutionInfo() {

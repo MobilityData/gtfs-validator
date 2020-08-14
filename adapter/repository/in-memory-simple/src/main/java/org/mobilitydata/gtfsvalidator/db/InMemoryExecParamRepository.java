@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.parser.ApacheExecParamParser;
 import org.mobilitydata.gtfsvalidator.parser.JsonExecParamParser;
+import org.mobilitydata.gtfsvalidator.usecase.ParseAllExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.File;
@@ -46,12 +47,22 @@ import java.util.stream.Collectors;
 public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> execParamCollection = new HashMap<>();
     private final Map<String, ExecParam> defaultValueCollection;
+    private final String[] args;
     private final Logger logger;
 
-    public InMemoryExecParamRepository(final String defaultParameterJsonString, final Logger logger) {
+    public InMemoryExecParamRepository(final String defaultParameterJsonString,
+                                       final Logger logger,
+                                       final String executionParametersAsString,
+                                       final String[] args) {
         this.defaultValueCollection = new JsonExecParamParser(defaultParameterJsonString,
                 new ObjectMapper().readerFor(ExecParam.class), logger).parse();
+        this.args = args;
         this.logger = logger;
+        try {
+            new ParseAllExecParam(executionParametersAsString, this, logger).execute();
+        } catch (IOException e) {
+            logger.error("Could not parse execution parameters: " + e.getMessage());
+        }
     }
 
     /**
@@ -134,7 +145,6 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      *
      * @param parameterJsonString the configuration .json file content to extract the execution parameters from.
      *                            If this parameter is null then, execution parameters are extracted from {args}.
-     * @param args                the argument line to parse {@link ExecParam} when {parameterJsonString} is null
      * @return {@code JsonExecParamParser} if:
      * - no configuration file nor arguments are provided,
      * - a configuration file is present and no arguments are provided
@@ -145,7 +155,6 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      */
     @Override
     public ExecParamParser getParser(final String parameterJsonString,
-                                     final String[] args,
                                      final Logger logger) {
         if (Strings.isNullOrEmpty(parameterJsonString) && args.length == 0) {
             // true when json configuration file is not present and no arguments are provided
@@ -244,10 +253,10 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 // if command line option is provided with a value then use this value. Example "- abort_on_error true"
                 // or "abort_on_error false"
                 if (hasExecParam(ABORT_ON_ERROR) && hasExecParamValue(ABORT_ON_ERROR)) {
-                    return getExecParamByKey(ABORT_ON_ERROR).getValue().toString();
+                    return getExecParamByKey(ABORT_ON_ERROR).getValue().get(0);
                 } else {
-                    // otherwise use default value: this includes the case where just the command line option is
-                    // provided without value "-abort_on_error", or no command line option at all.
+                    // otherwise use default value. Note that it is not allowed to use key `abort_on_error` without
+                    // specifying a boolean as argument
                     return defaultValue.get(0);
                 }
             }

@@ -25,6 +25,8 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,11 +38,18 @@ public class Main {
     public static void main(String[] args) {
         final long startTime = System.nanoTime();
         final Logger logger = LogManager.getLogger();
-        final DefaultConfig config = new DefaultConfig(logger);
+        String executionParametersAsString = null;
 
         try {
-            config.parseAllExecutionParameter().execute(args);
+            executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
+            logger.info("Configuration file execution-parameters.json found in working directory");
+        } catch (IOException e) {
+            logger.warn("Configuration file execution-parameters.json not found in working directory");
+        }
 
+        final DefaultConfig config = new DefaultConfig(logger, executionParametersAsString, args);
+
+        try {
             // use case will inspect parameters and decide if help menu should be displayed or not
             if (!config.printHelp().execute()) {
 
