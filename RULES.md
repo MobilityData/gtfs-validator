@@ -47,6 +47,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E043](#E043) | Duplicated field |
 | [E044](#E044) | Missing trip edge `arrival_time` or `departure_time` |
 | [E045](#E045) | `arrival_time` after `departure_time` in `stop_times.txt` |
+| [E046](#E046) | Fast travel between stops in `stop_times.txt` |
 
 ### Table of Warnings
 
@@ -258,6 +259,12 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 
 #### References:
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
+
+<a name="E046"/>
+
+### E046 - Fast travel between stops in `stop_times.txt`
+
+Calculated speed between stops is too fast (>150 kmh) 
 
 # Warnings
 
