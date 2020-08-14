@@ -126,9 +126,9 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
                 // We've already tested this combination of shape ID and stop ID - skip to next stop
                 return;
             }
+            testedCache.add(trip.getShapeId() + stop.getStopId());
             org.locationtech.spatial4j.shape.Point p = sf.pointXY(stop.getStopLon(), stop.getStopLat());
             if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
-                testedCache.add(trip.getShapeId() + stop.getStopId());
                 errors.add(new StopTooFarFromTripShape(
                         "shapes.txt",
                         stopTime.getStopId(),
