@@ -19,8 +19,6 @@ public interface NoticeExporter {
 
     void export(NonAsciiOrNonPrintableCharNotice toExport) throws IOException;
 
-    void export(CannotConstructDataProviderNotice toExport) throws IOException;
-
     void export(CannotDownloadArchiveFromNetworkNotice toExport) throws IOException;
 
     void export(CannotParseFloatNotice toExport) throws IOException;
@@ -44,6 +42,10 @@ public interface NoticeExporter {
     void export(DuplicatedHeaderNotice toExport) throws IOException;
 
     void export(MissingRequiredFileNotice toExport) throws IOException;
+
+    void export(EmptyFileErrorNotice toExport) throws IOException;
+
+    void export(EmptyFileWarningNotice toExport) throws IOException;
 
     void export(MissingRequiredValueNotice toExport) throws IOException;
 

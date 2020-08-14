@@ -27,7 +27,6 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ValidateAllRequiredFilePresenceTest {
@@ -55,15 +54,12 @@ class ValidateAllRequiredFilePresenceTest {
                 mockResultRepo
         );
 
-        List<String> result = underTest.execute();
-        assertEquals(10, result.size());
-        assertEquals(List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req", "req5.req", "req6.req",
-                "req7.req", "req8.req", "req9.req"), result);
+        underTest.execute();
 
         InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
 
         inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
-        inOrder.verify(mockSpecRepo, times(2)).getRequiredFilenameList();
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
@@ -92,15 +88,13 @@ class ValidateAllRequiredFilePresenceTest {
                 mockResultRepo
         );
 
-        List<String> result = underTest.execute();
-        assertEquals(15, result.size());
+        underTest.execute();
 
         InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
 
         inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
         inOrder.verify(mockSpecRepo, times(2)).getRequiredFilenameList();
         inOrder.verify(mockFileRepo, times(15)).getFilenameAll();
-        inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
         verify(mockResultRepo, times(5)).addNotice(any(MissingRequiredFileNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }

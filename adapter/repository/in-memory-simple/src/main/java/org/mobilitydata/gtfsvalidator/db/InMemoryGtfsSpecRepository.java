@@ -143,9 +143,13 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
      * Returns the schema for a given GTFS CSV file
      *
      * @param fileInfo information about the file to process: location and expected content
-     * @return the schema corresponding to the file associated to {@param fileInfo}
+     * @return the schema corresponding to the file associated to {@param fileInfo}, null otherwise
      */
     private GtfsSpecificationProto.CsvSpecProto getSpecForFile(RawFileInfo fileInfo) {
+        if (fileInfo == null || fileInfo.getFilename() == null) {
+            return null;
+        }
+
         return inMemoryGTFSSpec.getCsvspecList().stream()
                 .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
                 .findAny()

@@ -17,18 +17,16 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
-public class MissingHeaderNotice extends ErrorNotice {
-
-    public MissingHeaderNotice(final String filename, final String missingHeaderName) {
-        super(filename, E_001,
-                "Missing required field",
-                String.format("`%s` is missing required field: `%s`.", filename, missingHeaderName),
+public class EmptyFileWarningNotice extends WarningNotice {
+    public EmptyFileWarningNotice(String filename) {
+        super(filename, W_009,
+                "Empty optional csv file",
+                String.format("`%s` has headers but not data.", filename),
                 null);
-        putNoticeSpecific(KEY_MISSING_HEADER_NAME, missingHeaderName);
     }
 
     @Override
