@@ -7,7 +7,6 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | Error ID      | Error Title         |
 |---------------|---------------------------|
 | [E001](#E001) | Missing required field | 
-| [E002](#E002) | | 
 | [E003](#E003) | | 
 | [E004](#E004) | | 
 | [E006](#E006) | | 
