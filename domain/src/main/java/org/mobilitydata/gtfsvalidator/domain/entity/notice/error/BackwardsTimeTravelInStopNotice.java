@@ -21,22 +21,21 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class BadStopTimeTimeCombinationNotice extends ErrorNotice {
-    public BadStopTimeTimeCombinationNotice(final String tripId,
-                                            final Integer stopSequence,
-                                            final String arrivalTimeAsString,
-                                            final String previousStopDepartureTimeAsString,
-                                            final Integer previousStopTimeStopSequence) {
+public class BackwardsTimeTravelInStopNotice extends ErrorNotice {
+    public BackwardsTimeTravelInStopNotice(final String tripId,
+                                           final Integer stopSequence,
+                                           final String arrivalTimeAsString,
+                                           final String previousStopDepartureTimeAsString,
+                                           final Integer previousStopTimeStopSequence) {
         super("stop_times.txt", E_047,
                 "Bad stoptime time combination",
-                "The `arrival_time` (`" + arrivalTimeAsString + "`) of stoptime with `trip_id`: `" + tripId +
-                        "` and `stop_sequence:` " + previousStopTimeStopSequence + "` occurs before the " +
-                        "`departure_time` (`" + previousStopDepartureTimeAsString + "`)of stoptime with same " +
-                        "`trip_id` and `stop_sequence`: `" + stopSequence + "`.",
+                String.format("The `arrival_time`: `%s` (`stop_sequence`: `%s`) occurs before `departure_time`:" +
+                                "`%s` (`stop_sequence`: `%s`) in `trip_id`: `%s`", arrivalTimeAsString, stopSequence,
+                        previousStopDepartureTimeAsString, previousStopTimeStopSequence, tripId),
                 null);
 
-        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "tripId");
-        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, "stopSequence");
+        putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, KEY_STOP_TIME_TRIP_ID);
+        putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, KEY_STOP_TIME_STOP_SEQUENCE);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, tripId);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, stopSequence);
         putNoticeSpecific(KEY_STOP_TIME_ARRIVAL_TIME, arrivalTimeAsString);

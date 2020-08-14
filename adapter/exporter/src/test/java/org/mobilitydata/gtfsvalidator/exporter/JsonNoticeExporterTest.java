@@ -838,10 +838,10 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        BadStopTimeTimeCombinationNotice toExport =
-                new BadStopTimeTimeCombinationNotice("stop_times.txt",
+        BackwardsTimeTravelInStopNotice toExport =
+                new BackwardsTimeTravelInStopNotice("stop_times.txt",
                         5,
-                        "departure_time",
+                        "arrival_time",
                         "previous departure time",
                         2);
         underTest.export(toExport);

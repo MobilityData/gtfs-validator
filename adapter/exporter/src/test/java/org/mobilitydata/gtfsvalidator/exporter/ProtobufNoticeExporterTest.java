@@ -1907,7 +1907,7 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(
-                new BadStopTimeTimeCombinationNotice("trip id value",
+                new BackwardsTimeTravelInStopNotice("trip id value",
                         5,
                         "arrival_time",
                         "previous stoptime departure time",
@@ -1919,9 +1919,9 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setSeverity(
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).setAltValue(
-                ArgumentMatchers.eq("tripId"));
+                ArgumentMatchers.eq("stopTimeTripId"));
         verify(mockBuilder, times(1)).setCsvKeyName(
-                ArgumentMatchers.eq("stopSequence"));
+                ArgumentMatchers.eq("stopTimeStopSequence"));
         verify(mockBuilder, times(1)).setOtherCsvFileName(
                 ArgumentMatchers.eq("trip id value"));
         verify(mockBuilder, times(1)).setOtherCsvKeyName(

@@ -328,7 +328,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final BadStopTimeTimeCombinationNotice toExport) throws IOException {
+    public void export(final BackwardsTimeTravelInStopNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

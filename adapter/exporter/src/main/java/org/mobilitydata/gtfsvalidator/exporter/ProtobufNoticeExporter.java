@@ -774,7 +774,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final BadStopTimeTimeCombinationNotice toExport) throws IOException {
+    public void export(final BackwardsTimeTravelInStopNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
