@@ -27,10 +27,10 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 /**
  * Use case to validate a csv file is not empty.
- * - the file is completely empty --> that's an error
+ * - the file is completely empty: that's an error
  * - the file defines headers but no row of data
- * - required file --> that's an error
- * - optional file --> that's a warning
+ * - required file: that's an error
+ * - optional file: that's a warning
  */
 public class ValidateCsvNotEmptyForFile {
 
