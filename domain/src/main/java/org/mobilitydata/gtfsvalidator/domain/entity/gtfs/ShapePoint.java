@@ -105,11 +105,11 @@ public class ShapePoint extends GtfsEntity implements Comparable<ShapePoint> {
     }
 
     /**
-     * Return true if this {@link ShapePoint} has field shape_pt_sequence greater than {@param otherShape}
+     * Return true if this {@link ShapePoint} has field shape_pt_sequence greater than {otherShapePoint}
      * field shape_pt_sequence; otherwise return false
      *
      * @param otherShapePoint shape to compare
-     * @return true if this {@link ShapePoint} has field shape_pt_sequence greater than {@param otherShape}
+     * @return true if this {@link ShapePoint} has field shape_pt_sequence greater than {otherShapePoint}
      * field shape_pt_sequence; otherwise return false
      */
     public boolean isGreaterThan(final ShapePoint otherShapePoint) {

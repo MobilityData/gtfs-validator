@@ -25,7 +25,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -83,8 +85,12 @@ public class Main {
                 final ProcessParsedShapePoint processParsedShapePoint = config.processParsedShapePoint();
                 final ProcessParsedTranslation processParsedTranslation = config.processParsedTranslation();
                 final ProcessParsedStopTime processParsedStopTime = config.processParsedStopTime();
+                final PreprocessParsedStop preprocessParsedStop = config.preprocessParsedStop();
+
+                final Map<String, ParsedEntity> preprocessedStopByStopId = new HashMap<>();
 
                 filenameListToProcess.forEach(filename -> {
+                    logger.info("Validate CSV structure and field types for file: " + filename);
                     config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
@@ -95,11 +101,6 @@ public class Main {
                         validateGtfsTypes.execute(parsedEntity);
 
                         // load gtfs entities into memory
-                        // in the future all filename in filenameList will be processed. For now focusing on routes.txt
-                        // and agency.txt.
-                        // filenames in filenameList will be determined using a dependency tree defined by a JSON file,
-                        // and command lines or configuration file will be used to exclude files from the validation
-                        // process.
                         if (filenameListToProcess.contains(filename)) {
                             switch (filename) {
                                 case "agency.txt": {
@@ -166,10 +167,23 @@ public class Main {
                                     processParsedStopTime.execute(parsedEntity);
                                     break;
                                 }
+                                case "stops.txt": {
+                                    // rows from stops.txt refer each others
+                                    // building a map of all rows for further processing
+                                    ParsedEntity preprocessedStop = preprocessParsedStop.execute(parsedEntity,
+                                            preprocessedStopByStopId.keySet());
+                                    if (preprocessedStop != null) {
+                                        preprocessedStopByStopId.put(preprocessedStop.getEntityId(), preprocessedStop);
+                                    }
+                                    break;
+                                }
                             }
                         }
                     }
                 });
+
+                config.processParsedStopAll().execute(preprocessedStopByStopId);
+                preprocessedStopByStopId.clear();
 
                 config.validateRouteShortNameLength().execute();
                 config.validateRouteColorAndTextContrast().execute();
@@ -178,10 +192,20 @@ public class Main {
                 config.validateBothRouteNamesPresence().execute();
                 config.validateRouteLongNameDoesNotContainShortName().execute();
                 config.validateCalendarEndDateBeforeStartDate().execute();
-                config.validateAgencyIdRequirement().execute();
                 config.validateAgenciesHaveSameAgencyTimezone().execute();
                 config.validateTripRouteId().execute();
+                config.validateTripServiceId().execute();
                 config.validateRouteAgencyId().execute();
+                config.stopTimeBasedCrossValidator().execute();
+                config.shapeBasedCrossValidator().execute();
+                config.validateFeedInfoEndDateAfterStartDate().execute();
+                config.validateFeedCoversTheNext7ServiceDays().execute();
+                config.validateFeedCoversTheNext30ServiceDays().execute();
+                config.validateFeedInfoFeedEndDateIsPresent().execute();
+                config.validateFeedInfoFeedStartDateIsPresent().execute();
+                config.validateStopTimeDepartureTimeAfterArrivalTime().execute();
+                config.validateTripEdgeArrivalDepartureTime().execute();
+                config.validateTripTravelSpeed().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

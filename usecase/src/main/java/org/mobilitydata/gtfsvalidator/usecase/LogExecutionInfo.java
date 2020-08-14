@@ -43,17 +43,17 @@ public class LogExecutionInfo {
         if (execParamRepo.hasExecParamValue(execParamRepo.URL_KEY) & !execParamRepo
                 .hasExecParamValue(execParamRepo.INPUT_KEY)) {
             logger.info("--url provided but no location to place zip (--zip option). Using default: " +
-                    execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY) + System.lineSeparator());
+                    execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY));
         }
 
         if (!execParamRepo.hasExecParamValue(execParamRepo.EXTRACT_KEY)) {
             logger.info("--input not provided. Will extract zip content in: " + execParamRepo
-                    .getExecParamValue(ExecParamRepository.EXTRACT_KEY) + System.lineSeparator());
+                    .getExecParamValue(ExecParamRepository.EXTRACT_KEY));
         }
 
         if (!execParamRepo.hasExecParamValue(execParamRepo.OUTPUT_KEY)) {
             logger.info("--output not provided. Will place execution results in: " + execParamRepo
-                    .getExecParamValue(execParamRepo.OUTPUT_KEY) + System.lineSeparator());
+                    .getExecParamValue(execParamRepo.OUTPUT_KEY));
         }
     }
 }

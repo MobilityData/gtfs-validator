@@ -128,12 +128,22 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final DuplicatedHeaderNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final MissingRequiredFileNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
     public void export(final MissingRequiredValueNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingTripEdgeStopTimeNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
@@ -259,6 +269,71 @@ public class JsonNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(final AgencyIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ShapeIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final TripIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ShapeNotUsedNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ServiceIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoStartDateAfterEndDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoExpiresInLessThan7DaysNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoExpiresInLessThan30DaysNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingFeedEndDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingFeedStartDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final StationWithParentStationNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ParentStationInvalidLocationTypeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final StopTimeArrivalTimeAfterDepartureTimeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FastTravelBetweenStopsNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

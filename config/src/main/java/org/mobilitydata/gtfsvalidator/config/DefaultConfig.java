@@ -27,13 +27,18 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttr
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.timeutils.TimeConversionUtils;
+import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
+import org.mobilitydata.gtfsvalidator.geoutils.GeospatialUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
+import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.ShapeBasedCrossValidator;
+import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.StopTimeBasedCrossValidator;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
+import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.io.IOException;
@@ -50,7 +55,8 @@ public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
-    private final TimeUtils timeUtils = TimeConversionUtils.getInstance();
+    private final TimeUtils timeUtils = TimeUtilsImpl.getInstance();
+    private final GeospatialUtils geoUtils = GeospatialUtilsImpl.getInstance();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -93,11 +99,9 @@ public class DefaultConfig {
         this.executionParametersAsString = null;
         try {
             this.executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
-            logger.info("Configuration file execution-parameters.json found in working directory" +
-                    System.lineSeparator());
+            logger.info("Configuration file execution-parameters.json found in working directory");
         } catch (IOException e) {
-            logger.warn("Configuration file execution-parameters.json not found in working directory" +
-                    System.lineSeparator());
+            logger.warn("Configuration file execution-parameters.json not found in working directory");
         }
         specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
     }
@@ -129,7 +133,8 @@ public class DefaultConfig {
                 specRepo,
                 rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
                 rawFileRepo,
-                resultRepo
+                resultRepo,
+                logger
         );
     }
 
@@ -191,6 +196,26 @@ public class DefaultConfig {
 
     public ValidateCalendarEndDateBeforeStartDate validateCalendarEndDateBeforeStartDate() {
         return new ValidateCalendarEndDateBeforeStartDate(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedInfoEndDateAfterStartDate validateFeedInfoEndDateAfterStartDate() {
+        return new ValidateFeedInfoEndDateAfterStartDate(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedCoversTheNext7ServiceDays validateFeedCoversTheNext7ServiceDays() {
+        return new ValidateFeedCoversTheNext7ServiceDays(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedCoversTheNext30ServiceDays validateFeedCoversTheNext30ServiceDays() {
+        return new ValidateFeedCoversTheNext30ServiceDays(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedInfoFeedEndDateIsPresent validateFeedInfoFeedEndDateIsPresent() {
+        return new ValidateFeedInfoFeedEndDateIsPresent(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateFeedInfoFeedStartDateIsPresent validateFeedInfoFeedStartDateIsPresent() {
+        return new ValidateFeedInfoFeedStartDateIsPresent(gtfsDataRepository, resultRepo, logger);
     }
 
     public ExportResultAsFile exportResultAsFile() {
@@ -271,6 +296,19 @@ public class DefaultConfig {
         return new ProcessParsedTranslation(resultRepo, gtfsDataRepository, new Translation.TranslationBuilder());
     }
 
+    public PreprocessParsedStop preprocessParsedStop() {
+        return new PreprocessParsedStop(resultRepo);
+    }
+
+    public ProcessParsedStopAll processParsedStopAll() {
+        return new ProcessParsedStopAll(resultRepo, gtfsDataRepository,
+                new StopOrPlatform.StopOrPlatformBuilder(),
+                new Station.StationBuilder(),
+                new Entrance.EntranceBuilder(),
+                new GenericNode.GenericNodeBuilder(),
+                new BoardingArea.BoardingAreaBuilder());
+    }
+
     public ProcessParsedFrequency processParsedFrequency() {
         return new ProcessParsedFrequency(resultRepo, gtfsDataRepository, timeUtils, new Frequency.FrequencyBuilder());
     }
@@ -283,10 +321,6 @@ public class DefaultConfig {
         return new GenerateFilenameListToProcess(logger);
     }
 
-    public ValidateAgencyIdRequirement validateAgencyIdRequirement() {
-        return new ValidateAgencyIdRequirement(gtfsDataRepository, resultRepo, logger);
-    }
-
     public ValidateAgenciesHaveSameAgencyTimezone validateAgenciesHaveSameAgencyTimezone() {
         return new ValidateAgenciesHaveSameAgencyTimezone(gtfsDataRepository, resultRepo, logger);
     }
@@ -295,7 +329,33 @@ public class DefaultConfig {
         return new ValidateTripRouteId(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateTripServiceId validateTripServiceId() {
+        return new ValidateTripServiceId(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateTripEdgeArrivalDepartureTime validateTripEdgeArrivalDepartureTime() {
+        return new ValidateTripEdgeArrivalDepartureTime(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateTripTravelSpeed validateTripTravelSpeed() {
+        return new ValidateTripTravelSpeed(gtfsDataRepository, resultRepo, geoUtils, logger);
+    }
+
     public ValidateRouteAgencyId validateRouteAgencyId() {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public StopTimeBasedCrossValidator stopTimeBasedCrossValidator() {
+        return new StopTimeBasedCrossValidator(gtfsDataRepository, resultRepo, logger,
+                new ValidateShapeIdReferenceInStopTime(),
+                new ValidateStopTimeTripId());
+    }
+
+    public ValidateStopTimeDepartureTimeAfterArrivalTime validateStopTimeDepartureTimeAfterArrivalTime() {
+        return new ValidateStopTimeDepartureTimeAfterArrivalTime(gtfsDataRepository, resultRepo, timeUtils, logger);
+    }
+
+    public ShapeBasedCrossValidator shapeBasedCrossValidator() {
+        return new ShapeBasedCrossValidator(gtfsDataRepository, resultRepo, logger, new ValidateShapeUsage());
     }
 }

@@ -39,6 +39,8 @@ public interface NoticeExporter {
 
     void export(MissingHeaderNotice toExport) throws IOException;
 
+    void export(DuplicatedHeaderNotice toExport) throws IOException;
+
     void export(MissingRequiredFileNotice toExport) throws IOException;
 
     void export(EmptyFileErrorNotice toExport) throws IOException;
@@ -46,6 +48,8 @@ public interface NoticeExporter {
     void export(EmptyFileWarningNotice toExport) throws IOException;
 
     void export(MissingRequiredValueNotice toExport) throws IOException;
+
+    void export(MissingTripEdgeStopTimeNotice toExport) throws IOException;
 
     void export(CannotParseColorNotice toExport) throws IOException;
 
@@ -96,4 +100,32 @@ public interface NoticeExporter {
     void export(final RouteIdNotFoundNotice routeIdNotFoundNotice) throws IOException;
 
     void export(final AgencyIdNotFoundNotice agencyIdNotFoundNotice) throws IOException;
+
+    void export(final ShapeIdNotFoundNotice shapeIdNotFoundNotice) throws IOException;
+
+    void export(final TripIdNotFoundNotice tripIdNotFoundNotice) throws IOException;
+
+    void export(final ShapeNotUsedNotice shapeNotUsedNotice) throws IOException;
+
+    void export(final ServiceIdNotFoundNotice serviceIdNotFoundNotice) throws IOException;
+
+    void export(FeedInfoStartDateAfterEndDateNotice toExport) throws IOException;
+
+    void export(FeedInfoExpiresInLessThan7DaysNotice feedInfoExpiresInLessThan7DaysNotice) throws IOException;
+
+    void export(FeedInfoExpiresInLessThan30DaysNotice feedInfoExpiresInLessThan30DaysNotice) throws IOException;
+
+    void export(MissingFeedEndDateNotice missingFeedEndDateNotice) throws IOException;
+
+    void export(MissingFeedStartDateNotice missingFeedStartDateNotice) throws IOException;
+
+    void export(final StationWithParentStationNotice stationWithParentStationNotice) throws IOException;
+
+    void export(final ParentStationInvalidLocationTypeNotice parentStationInvalidLocationTypeNotice)
+            throws IOException;
+
+    void export(final StopTimeArrivalTimeAfterDepartureTimeNotice StopTimeArrivalTimeAfterDepartureTimeNotice)
+            throws IOException;
+
+    void export(final FastTravelBetweenStopsNotice fastTravelBetweenStopsNotice) throws IOException;
 }

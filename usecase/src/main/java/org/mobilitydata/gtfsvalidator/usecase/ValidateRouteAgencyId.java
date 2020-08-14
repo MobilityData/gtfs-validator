@@ -36,21 +36,22 @@ public class ValidateRouteAgencyId {
     }
 
     public void execute() {
-        logger.info("Validating rule 'E035 - `agency_id` not found" + System.lineSeparator());
+        logger.info("Validating rule 'E035 - `agency_id` not found");
 
         final int agencyCount = dataRepo.getAgencyCount();
-        dataRepo.getRouteAll().forEach(route -> {
-            final String routeId = route.getRouteId();
-            final String agencyId = route.getAgencyId();
-            if (agencyCount > 1) {
-                if (agencyId == null) {
-                    resultRepo.addNotice(new MissingAgencyIdNotice("routes.txt", routeId));
-                } else {
-                    if (dataRepo.getAgencyById(agencyId) == null) {
-                        resultRepo.addNotice(new AgencyIdNotFoundNotice("routes.txt", "agency_id",
-                                routeId));
-                    }
-                }
+        dataRepo.getRouteAll().values()
+                .forEach(route -> {
+                    final String routeId = route.getRouteId();
+                    final String agencyId = route.getAgencyId();
+                    if (agencyCount > 1) {
+                        if (agencyId == null) {
+                            resultRepo.addNotice(new MissingAgencyIdNotice("routes.txt", routeId));
+                        } else {
+                            if (dataRepo.getAgencyById(agencyId) == null) {
+                                resultRepo.addNotice(new AgencyIdNotFoundNotice("routes.txt", "agency_id",
+                                        routeId));
+                            }
+                        }
             } else {
                 if (agencyId != null && dataRepo.getAgencyById(agencyId) == null) {
                     resultRepo.addNotice(new AgencyIdNotFoundNotice("routes.txt", "agency_id", routeId));

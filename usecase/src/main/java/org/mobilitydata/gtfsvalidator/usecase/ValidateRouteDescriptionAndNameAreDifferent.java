@@ -17,12 +17,9 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.SameNameAndDescriptionForRouteNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
-import java.util.Collection;
 
 /**
  * Use case to validate that a Route description is different than the Route name.
@@ -50,11 +47,16 @@ public class ValidateRouteDescriptionAndNameAreDifferent {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E024 - Same name and description for route'" + System.lineSeparator());
-        Collection<Route> routes = dataRepo.getRouteAll();
-        routes.stream()
-                .filter(route -> !(isValidRouteDesc(route.getRouteDesc(), route.getRouteShortName(), route.getRouteLongName())))
-                .forEach(route -> resultRepo.addNotice(new SameNameAndDescriptionForRouteNotice("routes.txt", route.getRouteId())));
+        logger.info("Validating rule 'E024 - Same name and description for route'");
+        dataRepo.getRouteAll().values().stream()
+                .filter(route -> !(isValidRouteDesc(route.getRouteDesc(),
+                        route.getRouteShortName(),
+                        route.getRouteLongName())))
+                .forEach(route -> resultRepo.addNotice(
+                        new SameNameAndDescriptionForRouteNotice(
+                                "routes.txt",
+                                route.getRouteId()))
+                );
     }
 
     /**

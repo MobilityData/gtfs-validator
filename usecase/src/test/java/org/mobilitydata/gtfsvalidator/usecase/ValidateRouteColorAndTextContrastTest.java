@@ -23,11 +23,13 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteColorAndTe
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class ValidateRouteColorAndTextContrastTest {
 
     @Test
@@ -38,7 +40,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn("000000");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -68,7 +73,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn(null);
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
 
@@ -98,7 +106,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn("000000");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         Logger mockLogger = mock(Logger.class);
 
@@ -128,7 +139,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn("ffffff");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         Logger mockLogger = mock(Logger.class);
 
@@ -160,7 +174,10 @@ class ValidateRouteColorAndTextContrastTest {
         when(mockRoute.getRouteTextColor()).thenReturn("a6fe03");
 
         GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getRouteAll()).thenReturn(List.of(mockRoute));
+        Map<String, Route> mockRouteCollection = new HashMap<>();
+        mockRouteCollection.put("route id", mockRoute);
+
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
 
         Logger mockLogger = mock(Logger.class);
 

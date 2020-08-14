@@ -16,8 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedHeaderNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingHeaderNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
@@ -67,7 +69,8 @@ class ValidateHeadersForFileTest {
                 mockSpecRepo,
                 RawFileInfo.builder().build(),
                 mockFileRepo,
-                mockResultRepo
+                mockResultRepo,
+                mock(Logger.class)
         );
 
         underTest.execute();
@@ -101,7 +104,8 @@ class ValidateHeadersForFileTest {
                 mockSpecRepo,
                 RawFileInfo.builder().filename(TEST_TST).build(),
                 mockFileRepo,
-                mockResultRepo
+                mockResultRepo,
+                mock(Logger.class)
         );
 
         underTest.execute();
@@ -136,7 +140,8 @@ class ValidateHeadersForFileTest {
                 mockSpecRepo,
                 RawFileInfo.builder().filename(TEST_TST).build(),
                 mockFileRepo,
-                mockResultRepo
+                mockResultRepo,
+                mock(Logger.class)
         );
 
         underTest.execute();
@@ -171,7 +176,8 @@ class ValidateHeadersForFileTest {
                 mockSpecRepo,
                 RawFileInfo.builder().filename(TEST_TST).build(),
                 mockFileRepo,
-                mockResultRepo
+                mockResultRepo,
+                mock(Logger.class)
         );
 
         underTest.execute();
@@ -207,7 +213,8 @@ class ValidateHeadersForFileTest {
                 mockSpecRepo,
                 RawFileInfo.builder().filename(TEST_TST).build(),
                 mockFileRepo,
-                mockResultRepo
+                mockResultRepo,
+                mock(Logger.class)
         );
 
         underTest.execute();
@@ -242,7 +249,8 @@ class ValidateHeadersForFileTest {
                 mockSpecRepo,
                 RawFileInfo.builder().filename(TEST_TST).build(),
                 mockFileRepo,
-                mockResultRepo
+                mockResultRepo,
+                mock(Logger.class)
         );
 
         underTest.execute();
@@ -254,6 +262,44 @@ class ValidateHeadersForFileTest {
         inOrder.verify(mockFileRepo, times(1)).getActualHeadersForFile(any(RawFileInfo.class));
         verify(mockResultRepo, times(0)).addNotice(any(MissingHeaderNotice.class));
         verify(mockResultRepo, times(2)).addNotice(any(NonStandardHeaderNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
+    }
+
+    @Test
+    void duplicatedHeaderShouldGenerateNotice() {
+
+        List<String> mockRequiredHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2);
+        List<String> mockOptionalHeaders = List.of(OPTIONAL_HEADER_0, OPTIONAL_HEADER_1);
+        List<String> mockHeaders = List.of(REQUIRED_HEADER_0, REQUIRED_HEADER_1, REQUIRED_HEADER_2, REQUIRED_HEADER_0,
+                OPTIONAL_HEADER_0, OPTIONAL_HEADER_1, OPTIONAL_HEADER_0,
+                EXTRA_HEADER_0, EXTRA_HEADER_1, EXTRA_HEADER_0);
+
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        when(mockFileRepo.getActualHeadersForFile(any(RawFileInfo.class))).thenReturn(mockHeaders);
+
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        when(mockSpecRepo.getRequiredHeadersForFile(any(RawFileInfo.class))).thenReturn(mockRequiredHeaders);
+        when(mockSpecRepo.getOptionalHeadersForFile(any(RawFileInfo.class))).thenReturn(mockOptionalHeaders);
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        ValidateHeadersForFile underTest = new ValidateHeadersForFile(
+                mockSpecRepo,
+                RawFileInfo.builder().filename(TEST_TST).build(),
+                mockFileRepo,
+                mockResultRepo,
+                mock(Logger.class)
+        );
+
+        underTest.execute();
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockSpecRepo, times(1)).getOptionalHeadersForFile(any(RawFileInfo.class));
+        inOrder.verify(mockFileRepo, times(1)).getActualHeadersForFile(any(RawFileInfo.class));
+        verify(mockResultRepo, times(3)).addNotice(any(DuplicatedHeaderNotice.class));
+        verify(mockResultRepo, times(3)).addNotice(any(NonStandardHeaderNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 
