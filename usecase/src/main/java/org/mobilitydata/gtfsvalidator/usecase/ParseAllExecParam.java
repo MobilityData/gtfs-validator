@@ -56,7 +56,7 @@ public class ParseAllExecParam {
      */
     public void execute() throws IllegalArgumentException, IOException {
         execParamRepository
-                .getParser(parameterJsonString, logger)
+                .getParser()
                 .parse()
                 .forEach((s, execParam) -> execParamRepository.addExecParam(execParam));
     }

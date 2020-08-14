@@ -49,6 +49,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> defaultValueCollection;
     private final String[] args;
     private final Logger logger;
+    private final String executionParametersAsString;
 
     public InMemoryExecParamRepository(final String defaultParameterJsonString,
                                        final Logger logger,
@@ -58,6 +59,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 new ObjectMapper().readerFor(ExecParam.class), logger).parse();
         this.args = args;
         this.logger = logger;
+        this.executionParametersAsString = executionParametersAsString;
         try {
             new ParseAllExecParam(executionParametersAsString, this, logger).execute();
         } catch (IOException e) {
@@ -143,8 +145,6 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * This method returns {@code ApacheExecParamParser} if:
      * - no configuration file is present and arguments are provided
      *
-     * @param parameterJsonString the configuration .json file content to extract the execution parameters from.
-     *                            If this parameter is null then, execution parameters are extracted from {args}.
      * @return {@code JsonExecParamParser} if:
      * - no configuration file nor arguments are provided,
      * - a configuration file is present and no arguments are provided
@@ -154,16 +154,17 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * - no configuration file is present and arguments are provided
      */
     @Override
-    public ExecParamParser getParser(final String parameterJsonString,
-                                     final Logger logger) {
-        if (Strings.isNullOrEmpty(parameterJsonString) && args.length == 0) {
+    public ExecParamParser getParser() {
+        if (Strings.isNullOrEmpty(executionParametersAsString) && args.length == 0) {
             // true when json configuration file is not present and no arguments are provided
             logger.info("No configuration file nor arguments provided");
-            return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
-        } else if (!Strings.isNullOrEmpty(parameterJsonString) || args.length == 0) {
+            return new JsonExecParamParser(executionParametersAsString, new ObjectMapper().readerFor(ExecParam.class),
+                    logger);
+        } else if (!Strings.isNullOrEmpty(executionParametersAsString) || args.length == 0) {
             // true when no arguments are provided or when json configuration is provided
             logger.info("Retrieving execution parameters from execution-parameters.json file");
-            return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
+            return new JsonExecParamParser(executionParametersAsString, new ObjectMapper().readerFor(ExecParam.class),
+                    logger);
         } else {
             // true when only arguments are provided
             logger.info("Retrieving execution parameters from command-line");
