@@ -26,6 +26,7 @@ import org.mockito.InOrder;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -827,6 +828,21 @@ class JsonNoticeExporterTest {
                         "departure_time",
                         "stop time trip id",
                         514);
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportFastTravelBetweenStopsNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        FastTravelBetweenStopsNotice toExport =
+                new FastTravelBetweenStopsNotice("trip_id__value",
+                        187.0f,
+                        List.of(3, 4, 5, 6));
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
