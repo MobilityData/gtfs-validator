@@ -49,6 +49,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E045](#E045) | `arrival_time` after `departure_time` in `stop_times.txt` |
 | [E046](#E046) | Fast travel between stops in `stop_times.txt` |
 | [E047](#E047) | Backwards time travel between stops in `stop_times.txt` |
+| [E048](#E048) | `end_time` after `start_time` in `frequencies.txt` |
 
 ### Table of Warnings
 
@@ -272,6 +273,13 @@ Calculated speed between stops is too fast (>150 kmh)
 ### E047 - Backwards time travel between stops in `stop_times.txt`
 
 For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence 
+
+### E048 - `end_time` after `start_time` in `frequencies.txt`
+
+The `end_time` must not precede the `start_time` in `frequencies.txt`. 
+
+#### References:
+* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
 # Warnings
 

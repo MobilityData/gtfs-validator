@@ -90,6 +90,8 @@ public interface GtfsDataRepository {
 
     Frequency getFrequency(final String tripId, final Integer startTime);
 
+    Map<String, Frequency> getFrequencyAll();
+
     Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException;
 
     Pathway getPathwayById(final String pathwayId);

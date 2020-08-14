@@ -200,6 +200,7 @@ public class Main {
                 config.validateStopTimeDepartureTimeAfterArrivalTime().execute();
                 config.validateTripEdgeArrivalDepartureTime().execute();
                 config.validateTripTravelSpeed().execute();
+                config.validateFrequencyStartTimeBeforeEndTime().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

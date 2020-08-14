@@ -333,6 +333,11 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final FrequencyStartTimeAfterEndTimeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final BackwardsTimeTravelInStopNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }

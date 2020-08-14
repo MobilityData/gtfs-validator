@@ -342,6 +342,10 @@ public class DefaultConfig {
                 new ValidateBackwardsTimeTravelForStops());
     }
 
+    public ValidateFrequencyStartTimeBeforeEndTime validateFrequencyStartTimeBeforeEndTime() {
+        return new ValidateFrequencyStartTimeBeforeEndTime(gtfsDataRepository, resultRepo, timeUtils, logger);
+    }
+
     public ValidateStopTimeDepartureTimeAfterArrivalTime validateStopTimeDepartureTimeAfterArrivalTime() {
         return new ValidateStopTimeDepartureTimeAfterArrivalTime(gtfsDataRepository, resultRepo, timeUtils, logger);
     }
