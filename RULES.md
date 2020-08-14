@@ -47,7 +47,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E044](#E044) | Missing trip edge `arrival_time` or `departure_time` |
 | [E045](#E045) | `arrival_time` after `departure_time` in `stop_times.txt` |
 | [E046](#E046) | Fast travel between stops in `stop_times.txt` |
-| [E047](#E047) | Csv file is empty |
+| [E047](#E047) |  Required csv file is empty |
 
 ### Table of Warnings
 
@@ -64,7 +64,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W009](#W009) | Dataset should cover at least the next 30 days of service | 
 | [W010](#W010) | `feed_end_date` should be provided if `feed_start_date` is provided | 
 | [W011](#W011) | `feed_start_date` should be provided if `feed_end_date` is provided | 
-| [W012](#W012) | Csv file is empty | 
+| [W012](#W012) | Optional csv file is empty | 
 
 # Errors
 
@@ -269,9 +269,13 @@ Calculated speed between stops is too fast (>150 kmh)
 
 <a name="E047"/>
 
-### E047 - Csv file is empty
+### E047 - Required csv file is empty
 
-Empty csv required file found in the archive
+Empty csv required file found in the archive: file does not have any headers or data. The GTFS specification requires the first line of each file to contain field names. 
+This is related to [W012](#https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#W012).
+
+#### References:
+* [File requirements](http://gtfs.org/reference/static#file-requirements)
 
 # Warnings
 
@@ -324,6 +328,7 @@ If possible, the GTFS dataset should cover at least the next 30 days of service
 
 <a name="W012"/>
 
-### W012 - Csv file is empty
+### W012 - Optional csv file is empty
 
-Empty csv optional file found in the archive
+Empty csv optional file found in the archive: file contains header but does not have data.  
+This is related to [E047](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#E047).
