@@ -345,5 +345,7 @@ public class DefaultConfig {
         return new ShapeBasedCrossValidator(gtfsDataRepository, resultRepo, logger, new ValidateShapeUsage());
     }
 
-    public
+    public ValidateStopTooFarFromTripShape validateStopTooFarFromTripShape() {
+        return new ValidateStopTooFarFromTripShape(gtfsDataRepository, resultRepo, geospatialUtils, logger);
+    }
 }

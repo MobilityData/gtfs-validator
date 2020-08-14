@@ -7,17 +7,14 @@ import java.io.IOException;
 
 public class StopTooFarFromTripShape extends ErrorNotice {
 
-    public StopTooFarFromTripShape(final String filename, final String stopId, final String stopSequence,
-                                   final String tripId, final String shapeId, final float distanceToShape,
-                                   final float stopShapeThreshold) {
+    public StopTooFarFromTripShape(final String filename, final String stopId, final int stopSequence,
+                                   final String tripId, final String shapeId, final double stopShapeThreshold) {
         super(filename, E_047,
                 "Stop too far from trip shape",
-                "stop_id " + stopId + " is " + distanceToShape + " meters from shape_id " + shapeId +
-                        " for trip_id " + tripId + " at stop_sequence " + stopSequence + " : it should be less than " +
-                        stopShapeThreshold + " meters from the trip shape",
+                "stop_id " + stopId + " is more than " + stopShapeThreshold + " meters from shape_id " + shapeId +
+                        " for trip_id " + tripId + " at stop_sequence " + stopSequence,
                 null);
         putNoticeSpecific(KEY_EXPECTED_DISTANCE, stopShapeThreshold);
-        putNoticeSpecific(KEY_ACTUAL_DISTANCE, distanceToShape);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "stop_id");
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, stopId);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, "trip_id");

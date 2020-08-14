@@ -27,13 +27,12 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.BoardingArea;
 import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.StopOrPlatform;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
+import java.util.*;
 
 import static org.locationtech.spatial4j.context.SpatialContext.GEO;
 
@@ -87,12 +86,16 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
      * @param stopTimes   a map of StopTimes for a trip, sorted by stop_sequence
      * @param shapePoints a map of ShapePoints for a trip, sorted by shape_pt_sequence
      * @param stops       a map of all stops (keyed on stop_id), needed to obtain the latitude and longitude for each stop
+     * @param testedCache a cache for previously tested shape_id and stop_id pairs (keyed on shape_id+stop_id). If the
+     *                    combination of shape_id and stop_id appears in this set, we shouldn't test it again. Shapes
+     *                    and stops tested in this method execution will be added to this testedCache.
      * @return a list of E047 errors, one for each stop that is too far from the trip shapePoints
      */
     public List<StopTooFarFromTripShape> checkStopsWithinTripShape(Trip trip,
                                                                    SortedMap<Integer, StopTime> stopTimes,
                                                                    SortedMap<Integer, ShapePoint> shapePoints,
-                                                                   Map<String, LocationBase> stops) {
+                                                                   Map<String, LocationBase> stops,
+                                                                   Set<String> testedCache) {
         List<StopTooFarFromTripShape> errors = new ArrayList<>();
         if (trip == null || stopTimes == null || stopTimes.isEmpty() || shapePoints == null || shapePoints.isEmpty()) {
             // Nothing to do - return empty list
@@ -111,17 +114,27 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
         // Check if each stop is within the buffer polygon
         stopTimes.forEach((integer, stopTime) -> {
             LocationBase stop = stops.get(stopTime.getStopId());
-            // TODO - check for stop type? Some don't have lat/lon
+            if (stop == null || stop.getStopLat() == null || stop.getStopLon() == null) {
+                // Lat/lon are optional for location_type 4 - skip to the next stop if they aren't provided
+                return;
+            }
+            if (!(stop instanceof StopOrPlatform) && !(stop instanceof BoardingArea)) {
+                // This rule only applies to stops of location_type 0 and 4 - skip to next stop
+                return;
+            }
+            if (testedCache.contains(trip.getShapeId() + stop.getStopId())) {
+                // We've already tested this combination of shape ID and stop ID - skip to next stop
+                return;
+            }
             org.locationtech.spatial4j.shape.Point p = sf.pointXY(stop.getStopLon(), stop.getStopLat());
             if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
-                // TODO - measure distance to shape line
+                testedCache.add(trip.getShapeId() + stop.getStopId());
                 errors.add(new StopTooFarFromTripShape(
                         "shapes.txt",
                         stopTime.getStopId(),
                         stopTime.getStopSequence(),
                         trip.getTripId(),
                         trip.getShapeId(),
-                        distanceToShapeLine,
                         TRIP_BUFFER_METERS));
             }
         });

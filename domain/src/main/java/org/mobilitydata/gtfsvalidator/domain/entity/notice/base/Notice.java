@@ -72,7 +72,6 @@ public abstract class Notice {
     public static final String KEY_STOP_TIME_ARRIVAL_TIME = "stopTimeArrivalTime";
     public static final String KEY_STOP_TIME_DEPARTURE_TIME = "stopTimeDepartureTime";
     public static final String KEY_EXPECTED_DISTANCE = "expectedDistance";
-    public static final String KEY_ACTUAL_DISTANCE = "actualDistance";
 
     private final String filename;
     private final int code;

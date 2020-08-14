@@ -768,7 +768,6 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_EXPECTED_DISTANCE)))
-                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_ACTUAL_DISTANCE)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

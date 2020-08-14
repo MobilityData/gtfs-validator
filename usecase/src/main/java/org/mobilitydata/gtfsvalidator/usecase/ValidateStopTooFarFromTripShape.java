@@ -24,7 +24,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Use case to validate that a stop is within a distance threshold for a trip shape. This use case can be used after
@@ -59,9 +61,12 @@ public class ValidateStopTooFarFromTripShape {
      * provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E047 - Stop too far from trip shape");
+        logger.info("Validating rule 'E047 - Stop too far from trip shape'");
 
         List<StopTooFarFromTripShape> errors = new ArrayList<>();
+
+        // Cache for previously tested shape_id and stop_id pairs - we don't need to test them more than once
+        Set<String> testedCache = new HashSet<>();
 
         dataRepo.getStopTimeAll().forEach((tripId, tripStopTimes) -> {
             Trip trip = dataRepo.getTripById(tripId);
@@ -73,7 +78,8 @@ public class ValidateStopTooFarFromTripShape {
             List<StopTooFarFromTripShape> errorsForTrip = geospatialUtils.checkStopsWithinTripShape(trip,
                     tripStopTimes,
                     dataRepo.getShapeById(trip.getShapeId()),
-                    dataRepo.getStopAll()
+                    dataRepo.getStopAll(),
+                    testedCache
             );
             errors.addAll(errorsForTrip);
         });
