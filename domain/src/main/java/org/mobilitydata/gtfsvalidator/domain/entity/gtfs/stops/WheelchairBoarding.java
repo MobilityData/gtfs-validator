@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.stops;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops;
 
 import java.util.stream.Stream;
 
