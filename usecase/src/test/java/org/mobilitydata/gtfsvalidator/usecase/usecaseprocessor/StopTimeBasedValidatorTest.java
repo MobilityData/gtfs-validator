@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.crossvalidation;
+package org.mobilitydata.gtfsvalidator.usecase.usecaseprocessor;
 
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ import java.util.TreeMap;
 import static org.mockito.Mockito.*;
 
 @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored"})
-class StopTimeBasedCrossValidatorTest {
+class StopTimeBasedValidatorTest {
 
     @Test
     void allStopTimeCrossValidationUseCasesShouldBeCalled() {
@@ -68,8 +68,8 @@ class StopTimeBasedCrossValidatorTest {
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
 
-        final StopTimeBasedCrossValidator underTest =
-                spy(new StopTimeBasedCrossValidator(mockDataRepo, mockResultRepo, mockLogger, mockTimeUtils, mockE034,
+        final StopTimeBasedValidator underTest =
+                spy(new StopTimeBasedValidator(mockDataRepo, mockResultRepo, mockLogger, mockTimeUtils, mockE034,
                         mockE037, mockE046));
 
         underTest.execute();
