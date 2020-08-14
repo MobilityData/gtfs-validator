@@ -47,7 +47,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E043](#E043) | Duplicated field |
 | [E044](#E044) | Missing trip edge `arrival_time` or `departure_time` |
 | [E045](#E045) | `arrival_time` after `departure_time` in `stop_times.txt` |
-| [E047](#E047) | Bad combination of fields `arrival_time` and `departure_time` in `stop_times.txt` |
+| [E047](#E047) | Backwards time travel between stops in `stop_times.txt` |
 
 ### Table of Warnings
 
@@ -262,7 +262,7 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 
 <a name="E047"/>
 
-### E047 - Bad combination of fields `arrival_time` and `departure_time` in `stop_times.txt`
+### E047 - Backwards time travel between stops in `stop_times.txt`
 
 For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence 
 
