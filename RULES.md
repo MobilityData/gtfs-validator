@@ -272,7 +272,7 @@ Calculated speed between stops is too fast (>150 kmh)
 
 ### E047 - Csv file is empty
 
-Empty csv file found in the archive: file does not have any headers or data. The GTFS specification requires the first line of each file to contain field names. 
+Empty csv file found in the archive: file does not have any headers, or is a required file and does not have any data. The GTFS specification requires the first line of each file to contain field names and required files must have data.
 This is related to [W012](#https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#W012).
 
 #### References:

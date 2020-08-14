@@ -62,7 +62,7 @@ public class ValidateCsvNotEmptyForFile {
      * Use case execution method: for a file, checks if it empty
      * If no file content at all is available or it contains headers but no row of data and is required,
      * a {@link EmptyFileErrorNotice} is added to the {@link ValidationResultRepository} provided in the constructor.
-     * If a file contains headers and is optional,
+     * If a file contains headers and is optional but no rows of data,
      * a {@link EmptyFileWarningNotice} is added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
