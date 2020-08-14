@@ -21,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.Entrance;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding;
 
 import java.util.ArrayList;
 import java.util.Collections;

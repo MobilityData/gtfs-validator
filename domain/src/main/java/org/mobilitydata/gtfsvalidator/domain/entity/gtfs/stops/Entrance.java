@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.stops;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,8 +24,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumV
 
 import java.util.List;
 
-import static org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding.INVALID_VALUE;
-import static org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
+import static org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.WheelchairBoarding.INVALID_VALUE;
+import static org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING;
 
 /**
  * Model class for an entity defined in stops.txt with location_type = 2. Can't be constructed directly.
