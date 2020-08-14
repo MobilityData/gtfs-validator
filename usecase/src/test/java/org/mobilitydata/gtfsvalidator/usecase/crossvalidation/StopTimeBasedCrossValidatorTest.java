@@ -21,8 +21,8 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateBackwardsTimeTravelForStops;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeIdReferenceInStopTime;
-import org.mobilitydata.gtfsvalidator.usecase.ValidateStopTimeTimeCombination;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateStopTimeTripId;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -64,7 +64,7 @@ class StopTimeBasedCrossValidatorTest {
         final Logger mockLogger = mock(Logger.class);
         final ValidateShapeIdReferenceInStopTime mockE034 = mock(ValidateShapeIdReferenceInStopTime.class);
         final ValidateStopTimeTripId mockE037 = mock(ValidateStopTimeTripId.class);
-        final ValidateStopTimeTimeCombination mockE046 = mock(ValidateStopTimeTimeCombination.class);
+        final ValidateBackwardsTimeTravelForStops mockE046 = mock(ValidateBackwardsTimeTravelForStops.class);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
 

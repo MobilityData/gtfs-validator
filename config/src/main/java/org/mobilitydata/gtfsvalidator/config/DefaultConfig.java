@@ -332,7 +332,7 @@ public class DefaultConfig {
         return new StopTimeBasedCrossValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
                 new ValidateShapeIdReferenceInStopTime(),
                 new ValidateStopTimeTripId(),
-                new ValidateStopTimeTimeCombination());
+                new ValidateBackwardsTimeTravelForStops());
     }
 
     public ValidateStopTimeDepartureTimeAfterArrivalTime validateStopTimeDepartureTimeAfterArrivalTime() {
