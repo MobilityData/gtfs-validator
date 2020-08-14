@@ -30,6 +30,7 @@ import java.util.Map;
 
 /**
  * Use case to execute validation for GTFS files `stop_times.txt`, `shapes.txt`, and `trips.txt`
+ * E049 -  Backwards time travel between stops in `stop_times.txt`
  * E034 - `shape_id` not found
  * E037 - `trip_id` not found
  */
@@ -63,12 +64,12 @@ public class StopTimeValidator {
      * Executes validation rules based on file `stop_times.txt`
      */
     public void execute() {
-        logger.info("Validating rules: 'E047 - Bad combination of stoptime arrival and departure times`");
+        logger.info("Validating rules: 'E049 - Bad combination of stoptime arrival and departure times`");
         logger.info("                  'E034 - `shape_id` not found");
         logger.info("                  'E037 - `trip_id` not found");
 
         dataRepo.getStopTimeAll().values().forEach(stopTimeCollection -> {
-            // E047
+            // E049
             validateBackwardsTimeTravelForStops.execute(resultRepo, stopTimeCollection, timeUtils);
             stopTimeCollection.values().forEach(stopTime -> {
                 final Trip trip = dataRepo.getTripById(stopTime.getTripId());
