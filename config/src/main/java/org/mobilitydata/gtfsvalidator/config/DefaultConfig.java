@@ -27,16 +27,18 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttr
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
+import org.mobilitydata.gtfsvalidator.geoutils.GeospatialUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.ShapeBasedCrossValidator;
 import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.StopTimeBasedCrossValidator;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
+import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.io.IOException;
@@ -54,6 +56,7 @@ public class DefaultConfig {
     private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
     private final TimeUtils timeUtils = TimeUtilsImpl.getInstance();
+    private final GeospatialUtils geoUtils = GeospatialUtilsImpl.getInstance();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -325,6 +328,10 @@ public class DefaultConfig {
 
     public ValidateTripEdgeArrivalDepartureTime validateTripEdgeArrivalDepartureTime() {
         return new ValidateTripEdgeArrivalDepartureTime(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateTripTravelSpeed validateTripTravelSpeed() {
+        return new ValidateTripTravelSpeed(gtfsDataRepository, resultRepo, geoUtils, logger);
     }
 
     public ValidateRouteAgencyId validateRouteAgencyId() {

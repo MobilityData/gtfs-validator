@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.BoardingArea;
 
 import java.util.ArrayList;
 import java.util.Collections;
