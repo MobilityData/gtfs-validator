@@ -17,10 +17,9 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mobilitydata.gtfsvalidator.domain.entity.stops.WheelchairBoarding.*;
+import static org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.WheelchairBoarding.*;
 
 class WheelchairBoardingTest {
 

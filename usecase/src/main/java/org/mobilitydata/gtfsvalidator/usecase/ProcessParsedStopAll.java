@@ -18,11 +18,11 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DuplicatedEntityNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ParentStationInvalidLocationTypeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StationWithParentStationNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
