@@ -27,7 +27,7 @@ import java.util.SortedMap;
 /**
  * Use case for E043 to validate that all records of `trips.txt` refer to an a collection of {@code StopTime} from file
  * `stop_times.txt` of which -when sorted by `stop_sequence`-
- * the first and last element define either or both `departure_time` and `arrival_time`
+ * the first and last element define both `departure_time` and `arrival_time`
  */
 public class ValidateTripEdgeArrivalDepartureTime {
     private final GtfsDataRepository dataRepo;

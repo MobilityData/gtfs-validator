@@ -199,6 +199,7 @@ public class Main {
                 config.validateFeedInfoFeedStartDateIsPresent().execute();
                 config.validateStopTimeDepartureTimeAfterArrivalTime().execute();
                 config.validateTripEdgeArrivalDepartureTime().execute();
+                config.validateTripTravelSpeed().execute();
                 config.validateFrequencyStartTimeBeforeEndTime().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);

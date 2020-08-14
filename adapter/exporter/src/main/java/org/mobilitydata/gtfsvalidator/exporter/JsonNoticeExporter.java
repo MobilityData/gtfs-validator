@@ -328,6 +328,11 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final FastTravelBetweenStopsNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final FrequencyStartTimeAfterEndTimeNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }

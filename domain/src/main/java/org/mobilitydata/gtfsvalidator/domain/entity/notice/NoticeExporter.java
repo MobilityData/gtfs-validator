@@ -125,5 +125,7 @@ public interface NoticeExporter {
     void export(final StopTimeArrivalTimeAfterDepartureTimeNotice StopTimeArrivalTimeAfterDepartureTimeNotice)
             throws IOException;
 
+    void export(final FastTravelBetweenStopsNotice fastTravelBetweenStopsNotice) throws IOException;
+
     void export(final FrequencyStartTimeAfterEndTimeNotice frequencyStartTimeAfterEndTimeNotice) throws IOException;
 }
