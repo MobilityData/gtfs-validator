@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 import java.util.Map;
 
 /**
- * Use case to execute cross validation for GTFS files `stop_times.txt`, `shapes.txt`, and `trips.txt`
+ * Use case to execute validation for GTFS files `stop_times.txt`, `shapes.txt`, and `trips.txt`
  * E034 - `shape_id` not found
  * E037 - `trip_id` not found
  */
@@ -60,7 +60,7 @@ public class StopTimeBasedValidator {
     }
 
     /**
-     * Executes cross validation rules based on file `stop_times.txt`
+     * Executes validation rules based on file `stop_times.txt`
      */
     public void execute() {
         logger.info("Validating rules: 'E047 - Bad combination of stoptime arrival and departure times`");
@@ -68,14 +68,14 @@ public class StopTimeBasedValidator {
         logger.info("                  'E037 - `trip_id` not found");
 
         dataRepo.getStopTimeAll().values().forEach(stopTimeCollection -> {
-                    // E046
+            // E046
             validateBackwardsTimeTravelForStops.execute(resultRepo, stopTimeCollection, timeUtils);
             stopTimeCollection.values().forEach(stopTime -> {
                 final Trip trip = dataRepo.getTripById(stopTime.getTripId());
                 final Map<Integer, ShapePoint> shape = dataRepo.getShapeById(trip == null ? null : trip.getShapeId());
-                // E034
+                // E034 - cross validation
                 validateShapeIdReferenceInStopTime.execute(resultRepo, stopTime, shape, trip);
-                // E037
+                // E037 - cross validation
                 validateStopTimeTripId.execute(resultRepo, stopTime, dataRepo.getTripAll());
             });
                 }
