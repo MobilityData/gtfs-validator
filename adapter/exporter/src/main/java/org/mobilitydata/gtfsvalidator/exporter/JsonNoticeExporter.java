@@ -68,11 +68,6 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final CannotConstructDataProviderNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
     public void export(final CannotDownloadArchiveFromNetworkNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
@@ -119,6 +114,16 @@ public class JsonNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(final MissingHeaderNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final EmptyFileErrorNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final EmptyFileWarningNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 

@@ -122,6 +122,12 @@ public class DefaultConfig {
         return new ValidateAllRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
     }
 
+    public ValidateCsvNotEmptyForFile validateCsvNotEmptyForFile(final String filename) {
+        return new ValidateCsvNotEmptyForFile(
+                rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                specRepo, rawFileRepo, resultRepo, logger);
+    }
+
     public ValidateHeadersForFile validateHeadersForFile(final String filename) {
         return new ValidateHeadersForFile(
                 specRepo,
@@ -154,6 +160,10 @@ public class DefaultConfig {
                 specRepo,
                 resultRepo
         );
+    }
+
+    public GenerateGtfsRequiredFilenameList generateGtfsRequiredFilenameList() {
+        return new GenerateGtfsRequiredFilenameList(specRepo);
     }
 
     public ValidateAllOptionalFilename validateAllOptionalFileName() {

@@ -28,6 +28,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_SERVICE_ID;
 import static org.mockito.Mockito.*;
 
@@ -150,34 +151,6 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING));
         verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setAltEntityId(ArgumentMatchers.eq("entity_id"));
-        verify(mockBuilder, times(1)).build();
-        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
-    }
-
-    @Test
-    void exportCannotConstructDataProviderNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
-        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
-                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
-
-        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
-
-        when(mockBuilder.build()).thenReturn(mockProblem);
-
-        OutputStream mockStream = mock(OutputStream.class);
-
-        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
-                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
-        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
-
-        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new CannotConstructDataProviderNotice(FILENAME));
-
-        verify(mockBuilder, times(1)).clear();
-        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq(FILENAME));
-        verify(mockBuilder, times(1)).setType(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR));
-        verify(mockBuilder, times(1)).setSeverity(
-                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
@@ -600,6 +573,7 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setAltEntityValue(
                 ArgumentMatchers.eq("entity_id"));
+        //noinspection ConstantConditions
         verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq(null));
@@ -941,6 +915,7 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setEntityId(ArgumentMatchers.eq("field_name"));
         verify(mockBuilder, times(1)).setAltEntityId(
                 ArgumentMatchers.eq("conflicting_field_name"));
+        //noinspection ConstantConditions
         verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq(null));
         verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq(null));
@@ -1985,6 +1960,68 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("trip id value"));
         verify(mockBuilder, times(1)).setOtherCsvKeyName(
                 ArgumentMatchers.eq(String.valueOf(250)));
+
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportEmptyFileErrorNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(
+                new EmptyFileErrorNotice("filename"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(
+                ArgumentMatchers.eq("filename"));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(TYPE_CSV_BAD_NUMBER_OF_ROWS));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportEmptyFileWarningNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(
+                new EmptyFileWarningNotice("filename"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(
+                ArgumentMatchers.eq("filename"));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(TYPE_CSV_BAD_NUMBER_OF_ROWS));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
 
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));

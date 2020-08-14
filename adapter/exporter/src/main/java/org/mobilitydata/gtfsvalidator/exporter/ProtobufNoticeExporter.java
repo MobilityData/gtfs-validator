@@ -29,6 +29,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 public class ProtobufNoticeExporter implements NoticeExporter {
@@ -89,16 +90,6 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING)
                 .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
                 .setAltEntityId(toExport.getEntityId())
-                .build()
-                .writeTo(streamGenerator.getStream());
-    }
-
-    @Override
-    public void export(final CannotConstructDataProviderNotice toExport) throws IOException {
-        protoBuilder.clear()
-                .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -275,6 +266,27 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setAltEntityId(toExport.getFilename())
                 .build()
                 .writeTo(streamGenerator.getStream());
+    }
+
+    private void parsingEmptyFileNoticeToProto(final String filename,
+                                               final GtfsValidationOutputProto.GtfsProblem.Severity severity)
+            throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(filename)
+                .setType(TYPE_CSV_BAD_NUMBER_OF_ROWS)
+                .setSeverity(severity)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final EmptyFileErrorNotice toExport) throws IOException {
+        parsingEmptyFileNoticeToProto(toExport.getFilename(), GtfsValidationOutputProto.GtfsProblem.Severity.ERROR);
+    }
+
+    @Override
+    public void export(final EmptyFileWarningNotice toExport) throws IOException {
+        parsingEmptyFileNoticeToProto(toExport.getFilename(), GtfsValidationOutputProto.GtfsProblem.Severity.WARNING);
     }
 
     @Override
