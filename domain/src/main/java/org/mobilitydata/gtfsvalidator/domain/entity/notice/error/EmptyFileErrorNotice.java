@@ -25,7 +25,7 @@ public class EmptyFileErrorNotice extends ErrorNotice {
     public EmptyFileErrorNotice(String filename) {
         super(filename, E_039,
                 "Empty file",
-                "File `" + filename + "` is empty.",
+                String.format("`%s` does not have any headers or data.", filename),
                 null);
     }
 

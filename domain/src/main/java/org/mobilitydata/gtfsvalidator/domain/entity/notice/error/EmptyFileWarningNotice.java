@@ -24,8 +24,8 @@ import java.io.IOException;
 public class EmptyFileWarningNotice extends WarningNotice {
     public EmptyFileWarningNotice(String filename) {
         super(filename, W_009,
-                "Empty file",
-                "File `" + filename + "` is empty.",
+                "Empty optional file",
+                String.format("`%s` has headers but not data.", filename),
                 null);
     }
 
