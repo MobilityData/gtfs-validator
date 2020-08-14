@@ -74,7 +74,7 @@ class StopTimeValidatorTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rules: 'E047 - Bad combination of stoptime arrival and departure times`");
+        verify(mockLogger, times(1)).info("Validating rules: 'E049 - Bad combination of stoptime arrival and departure times`");
         verify(mockLogger, times(1)).info("                  'E034 - `shape_id` not found");
         verify(mockLogger, times(1)).info("                  'E037 - `trip_id` not found");
 
