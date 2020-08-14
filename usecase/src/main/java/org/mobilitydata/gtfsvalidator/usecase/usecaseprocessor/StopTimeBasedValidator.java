@@ -68,7 +68,7 @@ public class StopTimeBasedValidator {
         logger.info("                  'E037 - `trip_id` not found");
 
         dataRepo.getStopTimeAll().values().forEach(stopTimeCollection -> {
-            // E046
+            // E047
             validateBackwardsTimeTravelForStops.execute(resultRepo, stopTimeCollection, timeUtils);
             stopTimeCollection.values().forEach(stopTime -> {
                 final Trip trip = dataRepo.getTripById(stopTime.getTripId());
@@ -78,7 +78,6 @@ public class StopTimeBasedValidator {
                 // E037 - cross validation
                 validateStopTimeTripId.execute(resultRepo, stopTime, dataRepo.getTripAll());
             });
-                }
-        );
+        });
     }
 }
