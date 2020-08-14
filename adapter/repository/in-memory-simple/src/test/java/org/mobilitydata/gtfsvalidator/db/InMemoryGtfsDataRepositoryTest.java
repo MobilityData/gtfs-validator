@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
@@ -36,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -570,6 +568,32 @@ class InMemoryGtfsDataRepositoryTest {
 
         assertEquals(mockFrequency00, underTest.getFrequency("fare id0", null));
         assertEquals(mockFrequency01, underTest.getFrequency("fare id1", null));
+    }
+
+    @Test
+    void getFrequencyAllShouldReturnFrequencyCollection() {
+        final Frequency mockFrequency00 = mock(Frequency.class);
+        final Frequency mockFrequency01 = mock(Frequency.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFrequency00.getTripId()).thenReturn("trip id00");
+        when(mockFrequency00.getStartTime()).thenReturn(235);
+        when(mockFrequency00.getFrequencyMappingKey()).thenReturn("trip id00235");
+        when(mockFrequency01.getTripId()).thenReturn("trip id01");
+        when(mockFrequency00.getStartTime()).thenReturn(8985);
+        when(mockFrequency01.getFrequencyMappingKey()).thenReturn("trip id018985");
+
+        underTest.addFrequency(mockFrequency00);
+        underTest.addFrequency(mockFrequency01);
+
+        assertTrue(underTest.getFrequencyAll().containsKey("trip id00235"));
+        assertTrue(underTest.getFrequencyAll().containsKey("trip id018985"));
+    }
+
+    @Test
+    void getFrequencyAllShouldReturnImmutableFrequencyCollection() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        assertThrows(UnsupportedOperationException.class, () ->
+                underTest.getFrequencyAll().put("test id", mock(Frequency.class)));
     }
 
     @Test
