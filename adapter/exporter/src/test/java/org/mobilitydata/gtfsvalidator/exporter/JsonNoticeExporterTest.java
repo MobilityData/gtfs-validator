@@ -866,7 +866,7 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportBadStopTimeTimeCombinationNoticeShouldWriteObject() throws IOException {
+    void exportBackwardsTimeTravelInStopNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);

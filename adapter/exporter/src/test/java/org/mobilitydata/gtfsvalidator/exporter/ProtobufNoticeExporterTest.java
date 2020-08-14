@@ -1991,7 +1991,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportBadStopTimeTimeCombinationNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportBackwardsTimeTravelInStopNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
