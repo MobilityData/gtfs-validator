@@ -31,6 +31,7 @@ jobs:
           name: v1.2.2-SNAPSHOT
           path: application/cli-app/build/libs/gtfs-validator-v1.2.2-SNAPSHOT.jar
       - name: Persist test report
+        if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
           name: v1.2.2-SNAPSHOT_tests
