@@ -61,47 +61,75 @@ public class DefaultConfig {
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
 
-    @SuppressWarnings("UnstableApiUsage")
-    public DefaultConfig(final Logger logger, final String executionParametersAsString, final String[] args) {
+    public DefaultConfig(final String[] args, final Logger logger) {
         this.logger = logger;
-        String defaultParameterJsonString = null;
+
+        execParamRepo = new InMemoryExecParamRepository(
+                args,
+                loadDefaultParameter(),
+                logger
+        );
+
+        specRepo = new InMemoryGtfsSpecRepository(loadGtfsProtobuf(), loadGtfsRelationshipDescription());
+
+        resultRepo = new InMemoryValidationResultRepository(
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+    }
+
+    public DefaultConfig(final String executionParametersAsString, final Logger logger) {
+        this.logger = logger;
+
+        execParamRepo = new InMemoryExecParamRepository(
+                executionParametersAsString,
+                loadDefaultParameter(),
+                logger
+        );
+
+        specRepo = new InMemoryGtfsSpecRepository(loadGtfsProtobuf(), loadGtfsRelationshipDescription());
+
+        resultRepo = new InMemoryValidationResultRepository(
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    private String loadDefaultParameter() {
+        String toReturn = null;
         try {
-            defaultParameterJsonString = Resources.toString(
+            toReturn = Resources.toString(
                     Resources.getResource("default-execution-parameters.json"),
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        execParamRepo = new InMemoryExecParamRepository(defaultParameterJsonString,
-                logger,
-                executionParametersAsString,
-                args);
 
-        String gtfsSpecProtobufString = null;
+        return toReturn;
+    }
 
+    @SuppressWarnings("UnstableApiUsage")
+    private String loadGtfsProtobuf() {
+        String toReturn = null;
         try {
-            gtfsSpecProtobufString = Resources.toString(
+            toReturn = Resources.toString(
                     Resources.getResource("gtfs_spec.asciipb"),
                     StandardCharsets.UTF_8
             );
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return toReturn;
+    }
 
-        String gtfsSchemaAsString = null;
-
+    @SuppressWarnings("UnstableApiUsage")
+    private String loadGtfsRelationshipDescription() {
+        String toReturn = null;
         try {
-            gtfsSchemaAsString = Resources.toString(
+            toReturn = Resources.toString(
                     Resources.getResource("gtfs-relationship-description.json"),
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
-
-        resultRepo = new InMemoryValidationResultRepository(
-                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+        return toReturn;
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {

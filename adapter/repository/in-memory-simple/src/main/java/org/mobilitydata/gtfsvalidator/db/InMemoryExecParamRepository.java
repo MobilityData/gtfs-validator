@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
@@ -47,21 +46,31 @@ import java.util.stream.Collectors;
 public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> execParamCollection = new HashMap<>();
     private final Map<String, ExecParam> defaultValueCollection;
-    private final String[] args;
     private final Logger logger;
-    private final String executionParametersAsString;
 
-    public InMemoryExecParamRepository(final String defaultParameterJsonString,
-                                       final Logger logger,
-                                       final String executionParametersAsString,
-                                       final String[] args) {
+    public InMemoryExecParamRepository(final String[] args,
+                                       final String defaultParameterJsonString,
+                                       final Logger logger
+    ) {
         this.defaultValueCollection = new JsonExecParamParser(defaultParameterJsonString,
                 new ObjectMapper().readerFor(ExecParam.class), logger).parse();
-        this.args = args;
         this.logger = logger;
-        this.executionParametersAsString = executionParametersAsString;
+
         try {
-            new ParseAllExecParam(executionParametersAsString, this, logger).execute();
+            new ParseAllExecParam(this, logger).execute(args);
+        } catch (IOException e) {
+            logger.error("Could not parse execution parameters: " + e.getMessage());
+        }
+    }
+
+    public InMemoryExecParamRepository(final String executionParametersAsString,
+                                       final String defaultParameterJsonString,
+                                       final Logger logger) {
+        this.defaultValueCollection = new JsonExecParamParser(defaultParameterJsonString,
+                new ObjectMapper().readerFor(ExecParam.class), logger).parse();
+        this.logger = logger;
+        try {
+            new ParseAllExecParam(this, logger).execute(executionParametersAsString);
         } catch (IOException e) {
             logger.error("Could not parse execution parameters: " + e.getMessage());
         }
@@ -136,40 +145,20 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     }
 
     /**
-     * This method returns a parser for execution parameters.
-     * This method returns {@code JsonExecParamParser} if:
-     * - no configuration file nor arguments are provided,
-     * - a configuration file is present and no arguments are provided
-     * - both configuration file and arguments are provided
-     * <p>
-     * This method returns {@code ApacheExecParamParser} if:
-     * - no configuration file is present and arguments are provided
-     *
-     * @return {@code JsonExecParamParser} if:
-     * - no configuration file nor arguments are provided,
-     * - a configuration file is present and no arguments are provided
-     * - both configuration file and arguments are provided
-     * <p>
-     * {@code ApacheExecParamParser} if:
-     * - no configuration file is present and arguments are provided
+     * This method returns a parser for execution parameters in a json string
      */
     @Override
-    public ExecParamParser getParser() {
-        if (Strings.isNullOrEmpty(executionParametersAsString) && args.length == 0) {
-            // true when json configuration file is not present and no arguments are provided
-            logger.info("No configuration file nor arguments provided");
-            return new JsonExecParamParser(executionParametersAsString, new ObjectMapper().readerFor(ExecParam.class),
-                    logger);
-        } else if (!Strings.isNullOrEmpty(executionParametersAsString) || args.length == 0) {
-            // true when no arguments are provided or when json configuration is provided
-            logger.info("Retrieving execution parameters from execution-parameters.json file");
-            return new JsonExecParamParser(executionParametersAsString, new ObjectMapper().readerFor(ExecParam.class),
-                    logger);
-        } else {
-            // true when only arguments are provided
-            logger.info("Retrieving execution parameters from command-line");
-            return new ApacheExecParamParser(new DefaultParser(), getOptions(), args);
-        }
+    public ExecParamParser getParser(String jsonString) {
+        return new JsonExecParamParser(jsonString, new ObjectMapper().readerFor(ExecParam.class),
+                logger);
+    }
+
+    /**
+     * This method returns a parser for execution parameters in a string array
+     */
+    @Override
+    public ExecParamParser getParser(String[] argStringArray) {
+        return new ApacheExecParamParser(new DefaultParser(), getOptions(), argStringArray);
     }
 
     /**

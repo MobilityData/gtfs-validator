@@ -25,38 +25,53 @@ import java.io.IOException;
  * Use case to parse execution parameters from a .json file or from an Apache command line
  */
 public class ParseAllExecParam {
-    private final String parameterJsonString;
     private final ExecParamRepository execParamRepository;
     private final Logger logger;
 
     /**
-     * @param parameterJsonString the .json file content to extract execution parameters from
      * @param execParamRepository the repository containing execution parameters and their values
+     * @param logger              log output
      */
-    public ParseAllExecParam(final String parameterJsonString,
-                             final ExecParamRepository execParamRepository,
+    public ParseAllExecParam(final ExecParamRepository execParamRepository,
                              final Logger logger) {
-        this.parameterJsonString = parameterJsonString;
         this.execParamRepository = execParamRepository;
         this.logger = logger;
     }
 
     /**
-     * Use case execution method: parses execution parameters from a .json file or from an Apache command line and adds
+     * Use case execution method: parses execution parameters from a .json file and adds
      * the resultant {@code ExecParam} to the repository provided to the constructor.
-     * If the execution parameter are to be parsed from Apache command line, {args} holds the information to be
-     * parsed.
      * This method throws {@link IOException} if the parsing operation could not be executed.
      * This method throws {@link IllegalArgumentException} if an {@link ExecParamRepository} could not be added to the
      * repository provided to the constructor.
      *
+     * @param executionParameterJsonString the Json formatted string containing the parameters to parse
      * @throws IOException              if the parsing operation could not be executed.
      * @throws IllegalArgumentException if an {@link ExecParamRepository} could not be added to the repository provided
      *                                  to the constructor.
      */
-    public void execute() throws IllegalArgumentException, IOException {
+    public void execute(String executionParameterJsonString) throws IllegalArgumentException, IOException {
         execParamRepository
-                .getParser()
+                .getParser(executionParameterJsonString)
+                .parse()
+                .forEach((s, execParam) -> execParamRepository.addExecParam(execParam));
+    }
+
+    /**
+     * Use case execution method: parses execution parameters from command line args array and adds
+     * the resultant {@code ExecParam} to the repository provided to the constructor.
+     * This method throws {@link IOException} if the parsing operation could not be executed.
+     * This method throws {@link IllegalArgumentException} if an {@link ExecParamRepository} could not be added to the
+     * repository provided to the constructor.
+     *
+     * @param argStringArray the command line arguments to parse
+     * @throws IOException              if the parsing operation could not be executed.
+     * @throws IllegalArgumentException if an {@link ExecParamRepository} could not be added to the repository provided
+     *                                  to the constructor.
+     */
+    public void execute(String[] argStringArray) throws IllegalArgumentException, IOException {
+        execParamRepository
+                .getParser(argStringArray)
                 .parse()
                 .forEach((s, execParam) -> execParamRepository.addExecParam(execParam));
     }
