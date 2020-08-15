@@ -105,18 +105,6 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportCannotConstructDataProviderNoticeShouldWriteObject() throws IOException {
-        JsonGenerator mockGenerator = mock(JsonGenerator.class);
-
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        CannotConstructDataProviderNotice toExport = new CannotConstructDataProviderNotice(FILENAME);
-        underTest.export(toExport);
-
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
-        verifyNoMoreInteractions(mockGenerator);
-    }
-
-    @Test
     void exportCannotDownloadArchiveFromNetworkNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
@@ -843,6 +831,65 @@ class JsonNoticeExporterTest {
                 new FastTravelBetweenStopsNotice("trip_id__value",
                         187.0f,
                         List.of(3, 4, 5, 6));
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportEmptyFileErrorNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        EmptyFileErrorNotice toExport =
+                new EmptyFileErrorNotice("filename");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportEmptyFileWarningNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        EmptyFileWarningNotice toExport =
+                new EmptyFileWarningNotice("filename");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportFrequencyStartTimeAfterEndTimeNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        FrequencyStartTimeAfterEndTimeNotice toExport =
+                new FrequencyStartTimeAfterEndTimeNotice("frequencies.txt",
+                        "arrival_time",
+                        "departure_time",
+                        "trip_id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportBackwardsTimeTravelInStopNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        BackwardsTimeTravelInStopNotice toExport =
+                new BackwardsTimeTravelInStopNotice("stop_times.txt",
+                        5,
+                        "arrival_time",
+                        "previous departure time",
+                        2);
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

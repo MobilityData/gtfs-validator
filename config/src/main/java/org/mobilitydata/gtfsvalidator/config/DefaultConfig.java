@@ -35,9 +35,9 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.geoutils.GeospatialUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
-import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.ShapeBasedCrossValidator;
-import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.StopTimeBasedCrossValidator;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
+import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.ShapeBasedCrossValidator;
+import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.StopTimeValidator;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
@@ -122,6 +122,12 @@ public class DefaultConfig {
         return new ValidateAllRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
     }
 
+    public ValidateCsvNotEmptyForFile validateCsvNotEmptyForFile(final String filename) {
+        return new ValidateCsvNotEmptyForFile(
+                rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                specRepo, rawFileRepo, resultRepo, logger);
+    }
+
     public ValidateHeadersForFile validateHeadersForFile(final String filename) {
         return new ValidateHeadersForFile(
                 specRepo,
@@ -154,6 +160,10 @@ public class DefaultConfig {
                 specRepo,
                 resultRepo
         );
+    }
+
+    public GenerateGtfsRequiredFilenameList generateGtfsRequiredFilenameList() {
+        return new GenerateGtfsRequiredFilenameList(specRepo);
     }
 
     public ValidateAllOptionalFilename validateAllOptionalFileName() {
@@ -335,10 +345,15 @@ public class DefaultConfig {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
 
-    public StopTimeBasedCrossValidator stopTimeBasedCrossValidator() {
-        return new StopTimeBasedCrossValidator(gtfsDataRepository, resultRepo, logger,
+    public StopTimeValidator stopTimeBasedCrossValidator() {
+        return new StopTimeValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
                 new ValidateShapeIdReferenceInStopTime(),
-                new ValidateStopTimeTripId());
+                new ValidateStopTimeTripId(),
+                new ValidateBackwardsTimeTravelForStops());
+    }
+
+    public ValidateFrequencyStartTimeBeforeEndTime validateFrequencyStartTimeBeforeEndTime() {
+        return new ValidateFrequencyStartTimeBeforeEndTime(gtfsDataRepository, resultRepo, timeUtils, logger);
     }
 
     public ValidateStopTimeDepartureTimeAfterArrivalTime validateStopTimeDepartureTimeAfterArrivalTime() {

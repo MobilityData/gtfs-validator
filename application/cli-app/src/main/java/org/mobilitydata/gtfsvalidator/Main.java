@@ -56,11 +56,16 @@ public class Main {
 
                 final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
 
-                final ArrayList<String> datasetFilenameList = config.validateAllRequiredFilePresence().execute();
-                datasetFilenameList.addAll(config.validateAllOptionalFileName().execute());
+                config.validateAllRequiredFilePresence().execute();
+                final List<String> gtfsRequiredFilenameList = config.generateGtfsRequiredFilenameList().execute();
+                final List<String> gtfsArchiveOptionalFilenameList = config.validateAllOptionalFileName().execute();
+                final ArrayList<String> gtfsArchiveValidFilenameList = new ArrayList<>();
+                gtfsArchiveValidFilenameList.addAll(gtfsRequiredFilenameList);
+                gtfsArchiveValidFilenameList.addAll(gtfsArchiveOptionalFilenameList);
 
                 final List<String> filenameListToProcess =
-                        config.generateFilenameListToProcess().execute(filenameListToExclude, datasetFilenameList);
+                        config.generateFilenameListToProcess().execute(filenameListToExclude,
+                                gtfsArchiveValidFilenameList);
 
                 // retrieve use case to be used multiple times
                 final ValidateGtfsTypes validateGtfsTypes = config.validateGtfsTypes();
@@ -86,6 +91,7 @@ public class Main {
 
                 filenameListToProcess.forEach(filename -> {
                     logger.info("Validate CSV structure and field types for file: " + filename);
+                    config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
 
@@ -200,6 +206,7 @@ public class Main {
                 config.validateStopTimeDepartureTimeAfterArrivalTime().execute();
                 config.validateTripEdgeArrivalDepartureTime().execute();
                 config.validateTripTravelSpeed().execute();
+                config.validateFrequencyStartTimeBeforeEndTime().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

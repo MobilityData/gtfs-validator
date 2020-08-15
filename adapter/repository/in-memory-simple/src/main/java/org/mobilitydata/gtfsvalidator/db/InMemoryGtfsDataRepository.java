@@ -641,6 +641,19 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
+     * Return an unmodifiable map of Frequency objects representing all the rows from frequencies.txt. Entities are
+     * mapped on values of fields trip_id and start_time of file `frequencies.txt`. This composite key is generated via
+     * method @see #Frequency#getFrequencyMappingKey().
+     *
+     * @return an unmodifiable map of Frequency objects representing all the rows from frequencies.txt. Entities are
+     * mapped on values of fields trip_id and start_time of file `frequencies.txt`. This composite key is generated via
+     * method @see #Frequency#getFrequencyMappingKey()
+     */
+    public Map<String, Frequency> getFrequencyAll() {
+        return Collections.unmodifiableMap(frequencyPerTripIdStartTime);
+    }
+
+    /**
      * Add a Pathway representing a row from pathways.txt to this {@link GtfsDataRepository}.
      * Return the entity added to the repository if the uniqueness constraint of route based on pathway_id is respected,
      * if this requirement is not met, returns null.
