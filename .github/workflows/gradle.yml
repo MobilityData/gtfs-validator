@@ -19,6 +19,9 @@ jobs:
           java-version: 1.11
       - name: Run test
         run: ./gradlew testReport
+      - name: Run test continue
+        if: ${{ failure() }}
+        run: ./gradlew testReport --continue
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
       - name: Run validator on MBTA data
