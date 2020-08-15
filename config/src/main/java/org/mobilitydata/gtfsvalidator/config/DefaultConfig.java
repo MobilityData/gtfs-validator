@@ -32,8 +32,8 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.geoutils.GeospatialUtilsImpl;
+import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
 import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.ShapeBasedCrossValidator;
@@ -43,9 +43,9 @@ import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
+import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.ABORT_ON_ERROR;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -53,57 +53,83 @@ import java.nio.file.Paths;
  */
 public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
-    private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
+    private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
     private final TimeUtils timeUtils = TimeUtilsImpl.getInstance();
     private final GeospatialUtils geoUtils = GeospatialUtilsImpl.getInstance();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
-    private String executionParametersAsString;
+
+    public DefaultConfig(final String[] args, final Logger logger) {
+        this.logger = logger;
+
+        execParamRepo = new InMemoryExecParamRepository(
+                args,
+                loadDefaultParameter(),
+                logger
+        );
+
+        specRepo = new InMemoryGtfsSpecRepository(loadGtfsProtobuf(), loadGtfsRelationshipDescription());
+
+        resultRepo = new InMemoryValidationResultRepository(
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+    }
+
+    public DefaultConfig(final String executionParametersAsString, final Logger logger) {
+        this.logger = logger;
+
+        execParamRepo = new InMemoryExecParamRepository(
+                executionParametersAsString,
+                loadDefaultParameter(),
+                logger
+        );
+
+        specRepo = new InMemoryGtfsSpecRepository(loadGtfsProtobuf(), loadGtfsRelationshipDescription());
+
+        resultRepo = new InMemoryValidationResultRepository(
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+    }
 
     @SuppressWarnings("UnstableApiUsage")
-    public DefaultConfig(final Logger logger) {
-        this.logger = logger;
-        String defaultParameterJsonString = null;
+    private String loadDefaultParameter() {
+        String toReturn = null;
         try {
-            defaultParameterJsonString = Resources.toString(
+            toReturn = Resources.toString(
                     Resources.getResource("default-execution-parameters.json"),
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        execParamRepo = new InMemoryExecParamRepository(defaultParameterJsonString, this.logger);
 
-        String gtfsSpecProtobufString = null;
+        return toReturn;
+    }
 
+    @SuppressWarnings("UnstableApiUsage")
+    private String loadGtfsProtobuf() {
+        String toReturn = null;
         try {
-            gtfsSpecProtobufString = Resources.toString(
+            toReturn = Resources.toString(
                     Resources.getResource("gtfs_spec.asciipb"),
                     StandardCharsets.UTF_8
             );
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return toReturn;
+    }
 
-        String gtfsSchemaAsString = null;
-
+    @SuppressWarnings("UnstableApiUsage")
+    private String loadGtfsRelationshipDescription() {
+        String toReturn = null;
         try {
-            gtfsSchemaAsString = Resources.toString(
+            toReturn = Resources.toString(
                     Resources.getResource("gtfs-relationship-description.json"),
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        this.executionParametersAsString = null;
-        try {
-            this.executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
-            logger.info("Configuration file execution-parameters.json found in working directory");
-        } catch (IOException e) {
-            logger.warn("Configuration file execution-parameters.json not found in working directory");
-        }
-        specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
+        return toReturn;
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
@@ -220,11 +246,6 @@ public class DefaultConfig {
 
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
-    }
-
-    public ParseAllExecParam parseAllExecutionParameter() {
-        return new ParseAllExecParam(executionParametersAsString, execParamRepo,
-                logger);
     }
 
     public LogExecutionInfo logExecutionInfo() {

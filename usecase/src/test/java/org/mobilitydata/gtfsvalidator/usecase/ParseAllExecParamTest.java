@@ -18,12 +18,11 @@ class ParseAllExecParamTest {
     @Test
     public void allExecParamFromCommandLineShouldBeParsedAndAddedToRepoAsExecParamEntities()
             throws IOException {
-        final String jsonParameterString = null;
-        final String[] mockString = new String[1];
+        final String jsonParameterString = "{}";
         final ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
-        final ParseAllExecParam underTest = new ParseAllExecParam(jsonParameterString, mockExecParamRepository,
+        final ParseAllExecParam underTest = new ParseAllExecParam(mockExecParamRepository,
                 mockLogger);
 
         final ExecParamRepository.ExecParamParser mockParser =
@@ -39,18 +38,16 @@ class ParseAllExecParamTest {
         mockExecutionParameterMap.put(mockHelpExecParam.getKey(), mockHelpExecParam);
         mockExecutionParameterMap.put(mockInputExecParam.getKey(), mockInputExecParam);
 
-        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(null),
-                ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger)))
+        when(mockExecParamRepository.getParser(ArgumentMatchers.anyString()))
                 .thenReturn(mockParser);
         when(mockParser.parse()).thenReturn(mockExecutionParameterMap);
 
-        underTest.execute(mockString);
+        underTest.execute(jsonParameterString);
 
         final InOrder inOrder = inOrder(mockExecParamRepository, mockParser);
 
         inOrder.verify(mockExecParamRepository, times(1))
-                .getParser(ArgumentMatchers.eq(null),
-                        ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger));
+                .getParser(ArgumentMatchers.eq(jsonParameterString));
         inOrder.verify(mockParser, times(1)).parse();
         inOrder.verify(mockExecParamRepository, times(2))
                 .addExecParam(ArgumentMatchers.isA(ExecParam.class));
@@ -61,11 +58,10 @@ class ParseAllExecParamTest {
             throws IOException {
         final String testExecParam = "[{ \"key\": \"help\" },{ \"key\": \"input\", \"paramValue\": \"input\" }," +
                 "{ \"key\": \"output\", \"paramValue\": \"output\" }]";
-        final String[] mockString = new String[1];
         final ExecParamRepository mockExecParamRepository = mock(ExecParamRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
-        final ParseAllExecParam underTest = new ParseAllExecParam(testExecParam, mockExecParamRepository,
+        final ParseAllExecParam underTest = new ParseAllExecParam(mockExecParamRepository,
                 mockLogger);
 
         final ExecParamRepository.ExecParamParser mockParser =
@@ -81,18 +77,16 @@ class ParseAllExecParamTest {
         mockExecutionParameterMap.put(mockHelpExecParam.getKey(), mockHelpExecParam);
         mockExecutionParameterMap.put(mockInputExecParam.getKey(), mockInputExecParam);
 
-        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(testExecParam),
-                ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger)))
+        when(mockExecParamRepository.getParser(ArgumentMatchers.eq(testExecParam)))
                 .thenReturn(mockParser);
         when(mockParser.parse()).thenReturn(mockExecutionParameterMap);
 
-        underTest.execute(mockString);
+        underTest.execute(testExecParam);
 
         final InOrder inOrder = inOrder(mockExecParamRepository, mockParser);
 
         inOrder.verify(mockExecParamRepository, times(1))
-                .getParser(ArgumentMatchers.eq(testExecParam),
-                        ArgumentMatchers.eq(mockString), ArgumentMatchers.eq(mockLogger));
+                .getParser(ArgumentMatchers.eq(testExecParam));
         inOrder.verify(mockParser, times(1)).parse();
         inOrder.verify(mockExecParamRepository, times(2))
                 .addExecParam(ArgumentMatchers.isA(ExecParam.class));

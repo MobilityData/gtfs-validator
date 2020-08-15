@@ -16,14 +16,18 @@
 
 package org.mobilitydata.gtfsvalidator;
 
+import com.google.common.base.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
 import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +39,9 @@ public class Main {
     public static void main(String[] args) {
         final long startTime = System.nanoTime();
         final Logger logger = LogManager.getLogger();
-        final DefaultConfig config = new DefaultConfig(logger);
+        final DefaultConfig config = initConfig(args, logger);
 
         try {
-            config.parseAllExecutionParameter().execute(args);
-
             // use case will inspect parameters and decide if help menu should be displayed or not
             if (!config.printHelp().execute()) {
 
@@ -214,10 +216,47 @@ public class Main {
             }
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
+        } catch (TooManyValidationErrorException e) {
+            logger.error("Error detected -- ABORTING");
+            config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+
+            try {
+                config.exportResultAsFile().execute();
+
+                logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
+                        " to continue on errors");
+            } catch (IOException ioException) {
+                logger.error("An exception occurred: " + e);
+            }
         }
         final long duration = System.nanoTime() - startTime;
         logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
                 TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
                 TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
+    }
+
+    private static DefaultConfig initConfig(String[] args, Logger logger) {
+        String executionParametersAsString = null;
+
+        try {
+            executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
+            logger.info("Configuration file execution-parameters.json found in working directory");
+        } catch (IOException e) {
+            logger.warn("Configuration file execution-parameters.json not found in working directory");
+        }
+
+        if (Strings.isNullOrEmpty(executionParametersAsString) && args.length == 0) {
+            // true when json configuration file is not present and no arguments are provided
+            logger.info("No configuration file nor arguments provided");
+            return new DefaultConfig(executionParametersAsString, logger);
+        } else if (!Strings.isNullOrEmpty(executionParametersAsString) || args.length == 0) {
+            // true when no arguments are provided or when json configuration is provided
+            logger.info("Retrieving execution parameters from execution-parameters.json file");
+            return new DefaultConfig(executionParametersAsString, logger);
+        } else {
+            // true when only arguments are provided
+            logger.info("Retrieving execution parameters from command-line");
+            return new DefaultConfig(args, logger);
+        }
     }
 }
