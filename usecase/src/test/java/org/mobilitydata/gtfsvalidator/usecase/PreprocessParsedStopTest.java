@@ -67,7 +67,7 @@ class PreprocessParsedStopTest {
         MissingRequiredValueNotice notice = captor.getValue();
         assertEquals("stops.txt", notice.getFilename());
         assertEquals(STOP_ID, notice.getNoticeSpecific(KEY_FIELD_NAME));
-        assertEquals("no id", notice.getEntityId());
+        assertEquals("no idfftft", notice.getEntityId());
 
         verifyNoMoreInteractions(mockParsedStop, mockResultRepo);
     }
