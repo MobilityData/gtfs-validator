@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 public class ProtobufNoticeExporter implements NoticeExporter {
@@ -848,6 +849,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvFileName(toExport.getFilename())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_TRIP_WITH_NO_USABLE_STOPS)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

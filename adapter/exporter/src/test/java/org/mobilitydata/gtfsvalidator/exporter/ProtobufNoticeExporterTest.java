@@ -29,6 +29,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_SERVICE_ID;
 import static org.mockito.Mockito.*;
 
@@ -2126,6 +2127,8 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1))
                 .setEntityId(ArgumentMatchers.eq("trip_id"));
+        verify(mockBuilder, times(1))
+                .setType(ArgumentMatchers.eq(TYPE_TRIP_WITH_NO_USABLE_STOPS));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
