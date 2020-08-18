@@ -23,7 +23,7 @@ import java.io.IOException;
 
 public class EmptyFileErrorNotice extends ErrorNotice {
     public EmptyFileErrorNotice(String filename) {
-        super(filename, E_039,
+        super(filename, E_047,
                 "Empty csv file",
                 String.format("`%s` does not have any headers or data.", filename),
                 null);

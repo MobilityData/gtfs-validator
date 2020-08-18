@@ -209,6 +209,7 @@ public class Main {
                 config.validateTripEdgeArrivalDepartureTime().execute();
                 config.validateTripTravelSpeed().execute();
                 config.validateTripUsage().execute();
+                config.validateTripNumberOfStops().execute();
                 config.validateFrequencyStartTimeBeforeEndTime().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);

@@ -134,4 +134,6 @@ public interface NoticeExporter {
     void export(final BackwardsTimeTravelInStopNotice backwardsTimeTravelInStopNotice) throws IOException;
 
     void export(final TripNotUsedNotice tripNotUsedNotice) throws IOException;
+
+    void export(final UnusableTripNotice unusableTripNotice) throws IOException;
 }
