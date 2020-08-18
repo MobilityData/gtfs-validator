@@ -132,4 +132,6 @@ public interface NoticeExporter {
     void export(final FrequencyStartTimeAfterEndTimeNotice frequencyStartTimeAfterEndTimeNotice) throws IOException;
 
     void export(final BackwardsTimeTravelInStopNotice backwardsTimeTravelInStopNotice) throws IOException;
+
+    void export(final TripNotUsedNotice tripNotUsedNotice) throws IOException;
 }

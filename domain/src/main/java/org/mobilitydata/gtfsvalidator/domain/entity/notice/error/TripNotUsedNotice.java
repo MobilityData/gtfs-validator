@@ -1,0 +1,38 @@
+/*
+ *  Copyright (c) 2020. MobilityData IO.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
+
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+
+import java.io.IOException;
+
+public class TripNotUsedNotice extends ErrorNotice {
+    public TripNotUsedNotice(final String tripId) {
+        super("trips.txt",
+                E_050,
+                "Trips must be used in `stop_tines.txt`",
+                String.format("All records defined by GTFS `trips.txt` should be used in `stop_times.txt`." +
+                        " File `trips.txt` defines entity with id: `" + tripId + "`that is not used.", tripId),
+                tripId);
+    }
+
+    @Override
+    public void export(NoticeExporter exporter) throws IOException {
+        exporter.export(this);
+    }
+}

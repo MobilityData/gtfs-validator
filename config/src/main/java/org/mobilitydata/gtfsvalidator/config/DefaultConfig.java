@@ -362,6 +362,10 @@ public class DefaultConfig {
         return new ValidateTripTravelSpeed(gtfsDataRepository, resultRepo, geoUtils, logger);
     }
 
+    public ValidateTripUsage validateTripUsage() {
+        return new ValidateTripUsage(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ValidateRouteAgencyId validateRouteAgencyId() {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
