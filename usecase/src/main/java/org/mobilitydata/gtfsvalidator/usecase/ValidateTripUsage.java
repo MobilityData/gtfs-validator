@@ -42,7 +42,9 @@ public class ValidateTripUsage {
     }
 
     /**
-     * Use case execution method: checks if every trip is referred to at least once in `stop_times.txt`
+     * Use case execution method: checks if every trip is referred to at least once in `stop_times.txt`.
+     * Each time this condition is not met, a {@code TripNotUsedNotice} is generated and added to the
+     * {@code ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
         logger.info("Validating rule 'E050 - Trips must be used in `stop_times.txt`.'");

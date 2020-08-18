@@ -39,7 +39,9 @@ public class ValidateTripNumberOfStops {
     }
 
     /**
-     * Use case to validate that each {@link Trip} has more than one stop
+     * Use case to validate that each {@link Trip} has more than one stop. Each time this condition is not met, a
+     * {@code UnusableTripNotice} is generated and added to the {@code ValidationResultRepository} provided in the
+     * constructor.
      */
     public void execute() {
         logger.info("Validating rule 'E051 - Trips must have more than one stop to be usable.");
