@@ -27,7 +27,7 @@ public class BackwardsTimeTravelInStopNotice extends ErrorNotice {
                                            final String arrivalTimeAsString,
                                            final String previousStopDepartureTimeAsString,
                                            final Integer previousStopTimeStopSequence) {
-        super("stop_times.txt", E_049,
+        super("stop_times.txt", E_047,
                 "Bad stoptime time combination",
                 String.format("The `arrival_time`: `%s` (`stop_sequence`: `%s`) occurs before `departure_time`:" +
                                 "`%s` (`stop_sequence`: `%s`) in `trip_id`: `%s`", arrivalTimeAsString, stopSequence,
