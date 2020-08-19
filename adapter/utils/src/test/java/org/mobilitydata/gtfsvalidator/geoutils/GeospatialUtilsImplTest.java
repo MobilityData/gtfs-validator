@@ -17,8 +17,18 @@
 package org.mobilitydata.gtfsvalidator.geoutils;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
+import org.mobilitydata.gtfsvalidator.domain.entity.stops.StopOrPlatform;
+
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class GeospatialUtilsImplTest {
 
@@ -39,4 +49,121 @@ public class GeospatialUtilsImplTest {
 
         assertEquals(148, toCheck);
     }
+
+    @Test
+    void stopWithinTripShapeBufferShouldNotGenerateNotice() {
+        // See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
+
+        // stops.txt
+        final String stopId1 = "1001";
+        final StopOrPlatform stop1 = mock(StopOrPlatform.class);
+        when(stop1.getStopId()).thenReturn(stopId1);
+        when(stop1.getStopLat()).thenReturn(28.05811731042478f);
+        when(stop1.getStopLon()).thenReturn(-82.41616877502503f);
+
+        final String stopId2 = "1002";
+        final StopOrPlatform stop2 = mock(StopOrPlatform.class);
+        when(stop1.getStopId()).thenReturn(stopId2);
+        when(stop1.getStopLat()).thenReturn(34.05812364854794f);
+        when(stop1.getStopLon()).thenReturn(-82.41617370439423f);
+
+        // stop_times.txt
+        final StopTime stopTime1 = mock(StopTime.class);
+        when(stopTime1.getStopSequence()).thenReturn(1);
+        when(stopTime1.getStopId()).thenReturn(stopId1);
+
+        final StopTime stopTime2 = mock(StopTime.class);
+        when(stopTime2.getStopSequence()).thenReturn(2);
+        when(stopTime2.getStopId()).thenReturn(stopId2);
+
+        // shapes.txt
+        final String shapeId = "shape1";
+        final ShapePoint pt1 = mock(ShapePoint.class);
+        final ShapePoint pt2 = mock(ShapePoint.class);
+        final ShapePoint pt3 = mock(ShapePoint.class);
+        final ShapePoint pt4 = mock(ShapePoint.class);
+        final ShapePoint pt5 = mock(ShapePoint.class);
+
+        when(pt1.getShapeId()).thenReturn(shapeId);
+        when(pt2.getShapeId()).thenReturn(shapeId);
+        when(pt3.getShapeId()).thenReturn(shapeId);
+        when(pt4.getShapeId()).thenReturn(shapeId);
+        when(pt5.getShapeId()).thenReturn(shapeId);
+
+        when(pt1.getShapePtSequence()).thenReturn(1);
+        when(pt2.getShapePtSequence()).thenReturn(2);
+        when(pt3.getShapePtSequence()).thenReturn(3);
+        when(pt4.getShapePtSequence()).thenReturn(4);
+        when(pt5.getShapePtSequence()).thenReturn(5);
+
+        when(pt1.getShapePtLat()).thenReturn(28.05724310653972f);
+        when(pt1.getShapePtLon()).thenReturn(-82.41350776611507f);
+        when(pt2.getShapePtLat()).thenReturn(28.05746701492806f);
+        when(pt2.getShapePtLon()).thenReturn(-82.41493135129478f);
+        when(pt3.getShapePtLat()).thenReturn(28.05800068503469f);
+        when(pt3.getShapePtLon()).thenReturn(-82.4159394137605f);
+        when(pt4.getShapePtLat()).thenReturn(28.05808869825447f);
+        when(pt4.getShapePtLon()).thenReturn(-82.41648754043338f);
+        when(pt5.getShapePtLat()).thenReturn(28.05809979887893f);
+        when(pt5.getShapePtLon()).thenReturn(-82.41773971025437f);
+
+        // trips.txt
+        final String tripId = "trip1";
+        final Trip trip = mock(Trip.class);
+        when(trip.getTripId()).thenReturn(tripId);
+        when(trip.getShapeId()).thenReturn(shapeId);
+
+        // Map containing StopTime entities. Entities are mapped on a composite key made of the values found in the columns
+        // of GTFS file stop_times.txt:
+        // - trip_id
+        // - stop_sequence
+        final Map<String, TreeMap<Integer, StopTime>> stopTimeCollection = new HashMap<>(1);
+        final TreeMap<Integer, StopTime> stopTimes = new TreeMap<>();
+        stopTimes.put(1, stopTime1);
+        stopTimes.put(2, stopTime2);
+        stopTimeCollection.put(tripId, stopTimes);
+
+        // Map containing Stop entities. Entities are mapped on the value found in column stop_id of GTFS file stops.txt
+        final Map<String, LocationBase> stopPerId = new HashMap<>(2);
+        stopPerId.put(stopId1, stop1);
+        stopPerId.put(stopId2, stop2);
+
+        // Entities are mapped on shape_pt_sequence of GTFS file shapes.txt
+        SortedMap<Integer, ShapePoint> points = new TreeMap<>();
+        points.put(1, pt1);
+        points.put(2, pt1);
+        points.put(3, pt1);
+        points.put(4, pt1);
+        points.put(5, pt1);
+
+        List<StopTooFarFromTripShape> errorList =
+                GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
+        assertEquals(0, errorList.size());
+    }
+
+    @Test
+    void stopOutsideTripShapeBufferShouldGenerateNotice() {
+        // TODO
+    }
+
+    @Test
+    void twoTripsWithSameShapeStopOutsideBufferShouldGenerateOneNotice() {
+        // TODO
+    }
+
+    @Test
+    void tripWithoutShapeShouldNotGenerateNotice() {
+        // TODO
+    }
+
+    @Test
+    void stopWithoutLocationShouldNotGenerateNotice() {
+        // TODO
+    }
+
+    @Test
+    void stopLocationTypeNotZeroOrFourShouldNotGenerateNotice() {
+        // TODO
+    }
+
 }
