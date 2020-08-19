@@ -40,12 +40,12 @@ class ValidateTripUsageTest {
         final Logger mockLogger = mock(Logger.class);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         final Map<String, Trip> mockTripCollection = new HashMap<>();
-        mockTripCollection.put("trip id", mock(Trip.class));
+        mockTripCollection.put("12345", mock(Trip.class));
         when(mockDataRepo.getTripAll()).thenReturn(mockTripCollection);
 
         final Map<String, TreeMap<Integer, StopTime>> mockStopTimeCollection = new HashMap<>();
         final TreeMap<Integer, StopTime> innerStopTimeMap = new TreeMap<>();
-        mockStopTimeCollection.put("trip id", innerStopTimeMap);
+        mockStopTimeCollection.put("12345", innerStopTimeMap);
         when(mockDataRepo.getStopTimeAll()).thenReturn(mockStopTimeCollection);
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -67,12 +67,12 @@ class ValidateTripUsageTest {
         final Logger mockLogger = mock(Logger.class);
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         final Map<String, Trip> mockTripCollection = new HashMap<>();
-        mockTripCollection.put("unused trip id", mock(Trip.class));
+        mockTripCollection.put("unused trip id value: 4455", mock(Trip.class));
         when(mockDataRepo.getTripAll()).thenReturn(mockTripCollection);
 
         final Map<String, TreeMap<Integer, StopTime>> mockStopTimeCollection = new HashMap<>();
         final TreeMap<Integer, StopTime> innerStopTimeMap = new TreeMap<>();
-        mockStopTimeCollection.put("trip id", innerStopTimeMap);
+        mockStopTimeCollection.put("12345", innerStopTimeMap);
         when(mockDataRepo.getStopTimeAll()).thenReturn(mockStopTimeCollection);
 
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -93,7 +93,7 @@ class ValidateTripUsageTest {
         final List<TripNotUsedNotice> noticeList = captor.getAllValues();
 
         assertEquals("trips.txt", noticeList.get(0).getFilename());
-        assertEquals("unused trip id", noticeList.get(0).getEntityId());
+        assertEquals("unused trip id value: 4455", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockResultRepo);
 

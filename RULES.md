@@ -299,13 +299,13 @@ For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must 
 
 ### E050 - Trips must be used in `stop_times.txt`
 
-For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence
+Trips must be referred to at least once in `stop_times.txt`.
 
 <a name="E051"/>
 
 ### E051 - Trips must have more than one stop to be usable
 
-A trip must service more than one stop in `stop_times.txt`.
+A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
 
 # Warnings
 

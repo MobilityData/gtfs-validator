@@ -25,9 +25,9 @@ public class TripNotUsedNotice extends ErrorNotice {
     public TripNotUsedNotice(final String tripId) {
         super("trips.txt",
                 E_050,
-                "Trips must be used in `stop_tines.txt`",
-                String.format("All records defined by GTFS `trips.txt` should be used in `stop_times.txt`." +
-                        " File `trips.txt` defines entity with id: `" + tripId + "`that is not used.", tripId),
+                "Trips must be used in `stop_times.txt`",
+                String.format("`trip_id` %s is unused. Trips in `trips.txt` should be referenced in `stop_times.txt`.",
+                        tripId),
                 tripId);
     }
 
