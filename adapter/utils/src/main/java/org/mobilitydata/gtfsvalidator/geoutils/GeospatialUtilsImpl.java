@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.geoutils;
 
-import org.locationtech.spatial4j.context.jts.JtsSpatialContext;
 import org.locationtech.spatial4j.distance.DistanceCalculator;
 import org.locationtech.spatial4j.distance.DistanceUtils;
 import org.locationtech.spatial4j.shape.Point;
@@ -102,8 +101,7 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
         }
 
         // Create a polyline from the GTFS shapes data
-        ShapeFactory sf = JtsSpatialContext.GEO.getShapeFactory();
-        ShapeFactory.LineStringBuilder lineBuilder = sf.lineString();
+        ShapeFactory.LineStringBuilder lineBuilder = getShapeFactory().lineString();
         shapePoints.forEach((integer, shapePoint) -> lineBuilder.pointXY(shapePoint.getShapePtLon(), shapePoint.getShapePtLat()));
         Shape shapeLine = lineBuilder.build();
 
@@ -126,7 +124,7 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
                 return;
             }
             testedCache.add(trip.getShapeId() + stop.getStopId());
-            org.locationtech.spatial4j.shape.Point p = sf.pointXY(stop.getStopLon(), stop.getStopLat());
+            org.locationtech.spatial4j.shape.Point p = getShapeFactory().pointXY(stop.getStopLon(), stop.getStopLat());
             if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
                 errors.add(new StopTooFarFromTripShape(
                         "shapes.txt",

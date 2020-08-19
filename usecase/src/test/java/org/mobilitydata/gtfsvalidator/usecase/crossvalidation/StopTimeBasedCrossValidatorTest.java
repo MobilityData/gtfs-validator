@@ -29,6 +29,7 @@ import org.mockito.ArgumentMatchers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 import static org.mockito.Mockito.*;
@@ -48,7 +49,7 @@ class StopTimeBasedCrossValidatorTest {
         mockStopTimeCollection.put("trip id", innerMap);
         when(mockStopTime.getTripId()).thenReturn("trip id");
 
-        final Map<Integer, ShapePoint> mockShape = mock(HashMap.class);
+        final SortedMap<Integer, ShapePoint> mockShape = mock(TreeMap.class);
         final Trip mockTrip = mock(Trip.class);
         when(mockTrip.getShapeId()).thenReturn("shape id");
 

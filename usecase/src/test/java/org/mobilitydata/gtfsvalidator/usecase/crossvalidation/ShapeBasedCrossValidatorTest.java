@@ -46,8 +46,8 @@ class ShapeBasedCrossValidatorTest {
         final Map<String, Trip> mockTripCollection = new HashMap<>();
         mockTripCollection.put("trip id", mockTrip);
 
-        final Map<String, Map<Integer, ShapePoint>> mockShapeCollection = new HashMap<>();
-        final Map<Integer, ShapePoint> innerMap = new TreeMap<>();
+        final Map<String, SortedMap<Integer, ShapePoint>> mockShapeCollection = new HashMap<>();
+        final SortedMap<Integer, ShapePoint> innerMap = new TreeMap<>();
         innerMap.put(1, mockShapePoint);
         mockShapeCollection.put("shape id", innerMap);
 
