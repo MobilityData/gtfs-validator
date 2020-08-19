@@ -43,7 +43,6 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
     private static GeospatialUtilsImpl GEO_UTILS = null;
 
     // Spatial operation buffer values
-    public static final double TRIP_BUFFER_METERS = 100; // Per GTFS Best Practices (https://gtfs.org/best-practices/#shapestxt)
     public static final double TRIP_BUFFER_DEGREES = DistanceUtils.KM_TO_DEG * (TRIP_BUFFER_METERS / 1000.0d);
 
     private GeospatialUtilsImpl() {

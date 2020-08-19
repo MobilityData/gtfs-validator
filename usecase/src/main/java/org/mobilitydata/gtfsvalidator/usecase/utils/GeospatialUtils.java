@@ -30,6 +30,9 @@ import java.util.SortedMap;
 public interface GeospatialUtils {
     int KILOMETER_TO_METER_CONVERSION_FACTOR = 1000; // conversion factor from kilometers to meters
 
+    // Spatial operation buffer values
+    double TRIP_BUFFER_METERS = 100; // Per GTFS Best Practices (https://gtfs.org/best-practices/#shapestxt)
+
     /**
      * Return the distance between two points given there lat/lon positions in the specified unit. The distance is
      * computed following the haversine formula. See https://locationtech.github.io/spatial4j/apidocs/org/locationtech/spatial4j/context/SpatialContext.html
