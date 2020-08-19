@@ -146,8 +146,7 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
         verify(mockDataRepo, times(1)).getTripById(tripId);
         verify(mockDataRepo, times(1)).getStopAll();
 
-//        verifyNoInteractions(mockResultRepo);
-//        verifyNoMoreInteractions(mockDataRepo, mockLogger, stopTime1, mockGeoUtil);
+        verifyNoInteractions(mockResultRepo);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
