@@ -152,30 +152,30 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void stopOutsideTripShapeBufferShouldGenerateNotice() {
-
+        // TODO
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void twoTripsWithSameShapeStopOutsideBufferShouldGenerateOneNotice() {
-
+        // TODO
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void tripWithoutShapeShouldNotGenerateNotice() {
-
+        // TODO
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void stopWithoutLocationShouldNotGenerateNotice() {
-
+        // TODO
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
     void stopLocationTypeNotZeroOrFourShouldNotGenerateNotice() {
-
+        // TODO
     }
 }
