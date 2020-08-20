@@ -52,6 +52,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E049](#E049) | Backwards time travel between stops in `stop_times.txt` |
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
+| [E052](#E052) | Block trips must not have overlapping stop times |
 
 ### Table of Warnings
 
@@ -307,6 +308,14 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
 
+
+<a name="E052"/>
+
+### E052 - Block trips must not have overlapping stop times
+
+Stop times should not be overlapping in Block trips. 
+
+-    
 # Warnings
 
 <a name="W002"/>

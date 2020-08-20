@@ -29,8 +29,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 public class ProtobufNoticeExporter implements NoticeExporter {
@@ -855,8 +854,26 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(OverlappingTripsInBlockNotice overlappingTripsInBlockNotice) throws IOException {
-        // todo
+    public void export(final BlockTripsWithOverlappingStopTimesNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_BLOCK_TRIPS_WITH_OVERLAPPING_STOP_TIMES)
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_BLOCK_ID)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_CONFLICTING_TRIP_ID)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_FIRST_TIME)))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_LAST_TIME)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_TRIP_FIRST_TIME)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_TRIP_LAST_TIME)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_FIRST_STOP_SEQUENCE)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_LAST_STOP_SEQUENCE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_TRIP_FIRST_STOP_SEQUENCE)))
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_TRIP_LAST_STOP_SEQUENCE)))
+                .setParentEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_DAY_LIST)))
+                .setParentEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_DATE_LIST)))
+                .build()
+                .writeTo(streamGenerator.getStream());
     }
 
     public static class ProtobufOutputStreamGenerator {

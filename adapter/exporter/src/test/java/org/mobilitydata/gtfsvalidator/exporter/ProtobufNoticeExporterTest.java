@@ -28,8 +28,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_SERVICE_ID;
 import static org.mockito.Mockito.*;
 
@@ -2129,6 +2128,50 @@ class ProtobufNoticeExporterTest {
                 .setEntityId(ArgumentMatchers.eq("trip_id"));
         verify(mockBuilder, times(1))
                 .setType(ArgumentMatchers.eq(TYPE_TRIP_WITH_NO_USABLE_STOPS));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportBlockTripsWithOverlappingStopTimesNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new BlockTripsWithOverlappingStopTimesNotice("trip id value", "block id value",
+                2, 3, "07:00", "10:00",
+                "conflicting trip id value", 6,
+                10, "08:00", "11:00"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("trips.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("trip id value"));
+        verify(mockBuilder, times(1)).setType(ArgumentMatchers.eq(TYPE_BLOCK_TRIPS_WITH_OVERLAPPING_STOP_TIMES));
+        verify(mockBuilder, times(1)).setEntityName(ArgumentMatchers.eq("block id value"));
+        verify(mockBuilder, times(1)).setAltEntityName(ArgumentMatchers.eq("conflicting trip id value"));
+        verify(mockBuilder, times(1)).setCsvKeyName(ArgumentMatchers.eq("07:00"));
+        verify(mockBuilder, times(1)).setAltEntityId(ArgumentMatchers.eq("10:00"));
+        verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("08:00"));
+        verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("11:00"));
+        verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq("2"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(ArgumentMatchers.eq("3"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(ArgumentMatchers.eq("6"));
+        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("10"));
+        verify(mockBuilder, times(1)).setParentEntityName(ArgumentMatchers.eq(""));
+        verify(mockBuilder, times(1)).setParentEntityId(ArgumentMatchers.eq(""));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

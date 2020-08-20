@@ -480,32 +480,48 @@ public class Calendar extends GtfsEntity {
         }
     }
 
+    /**
+     * Utility method to determine if date ranges of {@link Calendar} overlap
+     *
+     * @param otherCalendar {@link Calendar} to compare
+     * @return true if calendars date ranges overlap, else false
+     */
     public boolean areCalendarOverlapping(final Calendar otherCalendar) {
-        return ((otherCalendar.getStartDate().isAfter(startDate) || otherCalendar.getStartDate().isEqual(startDate))
-                || (otherCalendar.getEndDate().isBefore(endDate) || otherCalendar.getEndDate().isEqual(endDate)));
+        return
+                // calendars have a common date:
+                (startDate.isEqual(otherCalendar.getStartDate()) || startDate.isEqual(otherCalendar.getEndDate()) ||
+                        endDate.isEqual(otherCalendar.getStartDate()) || endDate.isEqual(otherCalendar.getEndDate()))
+                        || // calendars overlap
+                        startDate.isBefore(otherCalendar.getEndDate()) && endDate.isAfter(otherCalendar.getStartDate());
     }
 
+    /**
+     * Utility method to determine the common days of week of operation for two {@link Calendar}
+     *
+     * @param otherCalendar {@link Calendar} to compare
+     * @return the list of days both calendar are active as a list of {@link String}
+     */
     public List<String> getCalendarsCommonOperationDayCollection(final Calendar otherCalendar) {
         final List<String> toReturn = new ArrayList<>();
         if (isMonday() && otherCalendar.isMonday()) {
             toReturn.add("monday");
         }
-        if (isMonday() && otherCalendar.isMonday()) {
+        if (isTuesday() && otherCalendar.isTuesday()) {
             toReturn.add("tuesday");
         }
-        if (isMonday() && otherCalendar.isMonday()) {
+        if (isWednesday() && otherCalendar.isWednesday()) {
             toReturn.add("wednesday");
         }
-        if (isMonday() && otherCalendar.isMonday()) {
+        if (isThursday() && otherCalendar.isThursday()) {
             toReturn.add("thursday");
         }
-        if (isMonday() && otherCalendar.isMonday()) {
+        if (isFriday() && otherCalendar.isFriday()) {
             toReturn.add("friday");
         }
-        if (isMonday() && otherCalendar.isMonday()) {
+        if (isSaturday() && otherCalendar.isSaturday()) {
             toReturn.add("saturday");
         }
-        if (isMonday() && otherCalendar.isMonday()) {
+        if (isSunday() && otherCalendar.isSunday()) {
             toReturn.add("sunday");
         }
         return toReturn;

@@ -358,7 +358,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final OverlappingTripsInBlockNotice toExport) throws IOException {
+    public void export(final BlockTripsWithOverlappingStopTimesNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

@@ -921,4 +921,20 @@ class JsonNoticeExporterTest {
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
+
+    @Test
+    void exportBlockTripsWithOverlappingStopTimesNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        BlockTripsWithOverlappingStopTimesNotice toExport =
+                new BlockTripsWithOverlappingStopTimesNotice("trip id value", "block id value",
+                        2, 3, "07:00", "10:00",
+                        "conflicting trip id value", 6,
+                        10, "08:00", "11:00");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
 }

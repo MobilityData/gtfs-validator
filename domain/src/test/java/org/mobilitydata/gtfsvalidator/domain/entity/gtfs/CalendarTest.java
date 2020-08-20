@@ -23,8 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequired
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 class CalendarTest {
@@ -625,5 +624,172 @@ class CalendarTest {
                 .build();
 
         assertTrue(buildResult.getData() instanceof Calendar);
+    }
+
+    @Test
+    void areCalendarOverlappingShouldReturnTrueWhenDatesOverlap() {
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+
+        final Calendar firstCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 12, 31))
+                .build()
+                .getData();
+
+        final Calendar overlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 6, 30))
+                .build()
+                .getData();
+
+        assertTrue(firstCalendar.areCalendarOverlapping(overlappingCalendar));
+        assertTrue(overlappingCalendar.areCalendarOverlapping(firstCalendar));
+
+        final Calendar secondOverlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDate.of(2020, 4, 1))
+                .endDate(LocalDate.of(2020, 8, 30))
+                .build()
+                .getData();
+
+        assertTrue(secondOverlappingCalendar.areCalendarOverlapping(overlappingCalendar));
+        assertTrue(overlappingCalendar.areCalendarOverlapping(secondOverlappingCalendar));
+
+        final Calendar thirdOverlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDate.of(2020, 12, 31))
+                .endDate(LocalDate.of(2021, 8, 30))
+                .build()
+                .getData();
+
+        assertTrue(thirdOverlappingCalendar.areCalendarOverlapping(firstCalendar));
+        assertTrue(firstCalendar.areCalendarOverlapping(thirdOverlappingCalendar));
+    }
+
+    @Test
+    void areCalendarOverlappingShouldReturnFalseWhenDatesDoNotOverlap() {
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+
+        final Calendar firstCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 1, 31))
+                .build()
+                .getData();
+
+        final Calendar nonOverlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDate.of(2020, 3, 1))
+                .endDate(LocalDate.of(2020, 4, 30))
+                .build()
+                .getData();
+
+        assertFalse(firstCalendar.areCalendarOverlapping(nonOverlappingCalendar));
+        assertFalse(nonOverlappingCalendar.areCalendarOverlapping(firstCalendar));
+    }
+
+    @Test
+    void getCalendarCommonOperationDayCollectionShouldReturnCollectionOfCommonOperationDays() {
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+
+        final Calendar firstCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(1)
+                .wednesday(0)
+                .thursday(0)
+                .friday(1)
+                .saturday(0)
+                .sunday(1)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 1, 31))
+                .build()
+                .getData();
+
+        final Calendar nonOverlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(1)
+                .thursday(0)
+                .friday(1)
+                .saturday(0)
+                .sunday(1)
+                .startDate(LocalDate.of(2020, 3, 1))
+                .endDate(LocalDate.of(2020, 4, 30))
+                .build()
+                .getData();
+
+        assertEquals(List.of("friday", "sunday"),
+                firstCalendar.getCalendarsCommonOperationDayCollection(nonOverlappingCalendar));
+    }
+
+    @Test
+    void getCalendarCommonOperationDayCollectionShouldReturnEmptyListIfNoCommonOperationDays() {
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+
+        final Calendar firstCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(1)
+                .saturday(1)
+                .sunday(1)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 1, 31))
+                .build()
+                .getData();
+
+        final Calendar nonOverlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(1)
+                .tuesday(1)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(0)
+                .sunday(0)
+                .startDate(LocalDate.of(2020, 3, 1))
+                .endDate(LocalDate.of(2020, 4, 30))
+                .build()
+                .getData();
+
+        assertEquals(0, firstCalendar.getCalendarsCommonOperationDayCollection(nonOverlappingCalendar).size());
     }
 }
