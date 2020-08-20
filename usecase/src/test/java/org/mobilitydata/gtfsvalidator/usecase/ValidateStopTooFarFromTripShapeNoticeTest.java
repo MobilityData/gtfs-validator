@@ -52,9 +52,9 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
 
         final String stopId2 = "1002";
         final LocationBase stop2 = mock(LocationBase.class);
-        when(stop1.getStopId()).thenReturn(stopId2);
-        when(stop1.getStopLat()).thenReturn(28.05812364854794f);
-        when(stop1.getStopLon()).thenReturn(-82.41617370439423f);
+        when(stop2.getStopId()).thenReturn(stopId2);
+        when(stop2.getStopLat()).thenReturn(28.05812364854794f);
+        when(stop2.getStopLon()).thenReturn(-82.41617370439423f);
 
         // stop_times.txt
         final StopTime stopTime1 = mock(StopTime.class);
