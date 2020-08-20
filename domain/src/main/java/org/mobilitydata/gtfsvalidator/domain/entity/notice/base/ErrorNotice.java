@@ -67,6 +67,9 @@ public abstract class ErrorNotice extends Notice {
     protected static final int E_046 = 46;
     protected static final int E_047 = 47;
     protected static final int E_048 = 48;
+    protected static final int E_049 = 49;
+    protected static final int E_050 = 50;
+    protected static final int E_051 = 51;
     protected static final int E_052 = 52;
 
     public ErrorNotice(final String filename,

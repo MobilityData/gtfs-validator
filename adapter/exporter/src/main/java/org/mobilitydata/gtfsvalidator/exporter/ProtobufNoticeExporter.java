@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 public class ProtobufNoticeExporter implements NoticeExporter {
@@ -828,6 +829,27 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_ARRIVAL_TIME)))
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_DEPARTURE_TIME)))
                 .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final TripNotUsedNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final UnusableTripNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_TRIP_WITH_NO_USABLE_STOPS)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
