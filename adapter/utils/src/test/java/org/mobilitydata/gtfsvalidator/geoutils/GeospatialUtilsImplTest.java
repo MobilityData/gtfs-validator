@@ -63,9 +63,9 @@ public class GeospatialUtilsImplTest {
 
         final String stopId2 = "1002";
         final StopOrPlatform stop2 = mock(StopOrPlatform.class);
-        when(stop1.getStopId()).thenReturn(stopId2);
-        when(stop1.getStopLat()).thenReturn(34.05812364854794f);
-        when(stop1.getStopLon()).thenReturn(-82.41617370439423f);
+        when(stop2.getStopId()).thenReturn(stopId2);
+        when(stop2.getStopLat()).thenReturn(28.05812364854794f);
+        when(stop2.getStopLon()).thenReturn(-82.41617370439423f);
 
         // stop_times.txt
         final StopTime stopTime1 = mock(StopTime.class);
@@ -113,32 +113,22 @@ public class GeospatialUtilsImplTest {
         when(trip.getTripId()).thenReturn(tripId);
         when(trip.getShapeId()).thenReturn(shapeId);
 
-        // Map containing StopTime entities. Entities are mapped on a composite key made of the values found in the columns
-        // of GTFS file stop_times.txt:
+        // Map containing StopTime entities. Entities are mapped on keys from GTFS file stop_times.txt:
         // - trip_id
         // - stop_sequence
         final Map<String, TreeMap<Integer, StopTime>> stopTimeCollection = new HashMap<>(1);
-        final TreeMap<Integer, StopTime> stopTimes = new TreeMap<>();
-        stopTimes.put(1, stopTime1);
-        stopTimes.put(2, stopTime2);
+        final TreeMap<Integer, StopTime> stopTimes = new TreeMap<>(Map.of(1, stopTime1, 2, stopTime2));
         stopTimeCollection.put(tripId, stopTimes);
 
-        // Map containing Stop entities. Entities are mapped on the value found in column stop_id of GTFS file stops.txt
-        final Map<String, LocationBase> stopPerId = new HashMap<>(2);
-        stopPerId.put(stopId1, stop1);
-        stopPerId.put(stopId2, stop2);
+        // Map containing Stop entities. Entities are keyed on GTFS stops.txt stop_id
+        final Map<String, LocationBase> stopPerId = new HashMap<>(Map.of(stopId1, stop1, stopId2, stop2));
 
-        // Entities are mapped on shape_pt_sequence of GTFS file shapes.txt
-        SortedMap<Integer, ShapePoint> points = new TreeMap<>();
-        points.put(1, pt1);
-        points.put(2, pt1);
-        points.put(3, pt1);
-        points.put(4, pt1);
-        points.put(5, pt1);
+        // Entities are keyed on shape_pt_sequence of GTFS file shapes.txt
+        SortedMap<Integer, ShapePoint> points = new TreeMap<>(Map.of(1, pt1, 2, pt2, 3, pt3, 4, pt4, 5, pt5));
 
         List<StopTooFarFromTripShape> errorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
-        assertEquals(0, errorList.size());
+        assertEquals(0, errorList.size()); // FIXME
     }
 
     @Test

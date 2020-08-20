@@ -102,18 +102,17 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
         when(trip.getTripId()).thenReturn(tripId);
         when(trip.getShapeId()).thenReturn(shapeId);
 
-        // Map containing StopTime entities. Entities are mapped on a composite key made of the values found in the columns
-        // of GTFS file stop_times.txt:
+        // Map containing StopTime entities. Entities are mapped on keys from GTFS file stop_times.txt:
         // - trip_id
         // - stop_sequence
         final Map<String, TreeMap<Integer, StopTime>> stopTimeCollection = new HashMap<>(1);
         final TreeMap<Integer, StopTime> stopTimes = new TreeMap<>(Map.of(1, stopTime1, 2, stopTime2));
         stopTimeCollection.put(tripId, stopTimes);
 
-        // Map containing Stop entities. Entities are mapped on the value found in column stop_id of GTFS file stops.txt
+        // Map containing Stop entities. Entities are keyed on GTFS stops.txt stop_id
         final Map<String, LocationBase> stopPerId = new HashMap<>(Map.of(stopId1, stop1, stopId2, stop2));
 
-        // Entities are mapped on shape_pt_sequence of GTFS file shapes.txt
+        // Entities are keyed on shape_pt_sequence of GTFS file shapes.txt
         SortedMap<Integer, ShapePoint> points = new TreeMap<>(Map.of(1, pt1, 2, pt2, 3, pt3, 4, pt4, 5, pt5));
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
