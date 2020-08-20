@@ -120,10 +120,10 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
         // Entities are mapped on shape_pt_sequence of GTFS file shapes.txt
         SortedMap<Integer, ShapePoint> points = new TreeMap<>();
         points.put(1, pt1);
-        points.put(2, pt1);
-        points.put(3, pt1);
-        points.put(4, pt1);
-        points.put(5, pt1);
+        points.put(2, pt2);
+        points.put(3, pt3);
+        points.put(4, pt4);
+        points.put(5, pt5);
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getStopAll()).thenReturn(stopPerId);
