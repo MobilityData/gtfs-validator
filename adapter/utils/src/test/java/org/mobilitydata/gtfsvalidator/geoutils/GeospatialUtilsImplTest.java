@@ -28,6 +28,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice.E_047;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_COMPOSITE_KEY_FIRST_VALUE;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -225,9 +226,13 @@ public class GeospatialUtilsImplTest {
 
         List<StopTooFarFromTripShape> errorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
+
         assertEquals(1, errorList.size());
-        assertEquals(E_047, errorList.get(0).getCode());
-        assertEquals("Stop too far from trip shape", errorList.get(0).getTitle());
+
+        StopTooFarFromTripShape notice = errorList.get(0);
+        assertEquals(E_047, notice.getCode());
+        assertEquals("Stop too far from trip shape", notice.getTitle());
+        assertEquals(stopId3, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
     }
 
     @Test
