@@ -48,6 +48,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Map containing Trip entities. Entities are mapped on the value found in column trip_id of GTFS file trips.txt
     private final Map<String, Trip> tripPerId = new HashMap<>();
 
+    // Map containing Trip entities. Entities are mapped on the value found in column block_id of GTFS file trips.txt
+    private final Map<String, List<Trip>> tripPerBlockId = new HashMap<>();
+
     // Map containing Calendar entities. Entities are mapped on the value found in column service_id of GTFS file
     // calendar.txt.
     private final Map<String, Calendar> calendarPerServiceId = new HashMap<>();
@@ -266,6 +269,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             } else {
                 final String tripId = newTrip.getTripId();
                 tripPerId.put(tripId, newTrip);
+                final String blockId = newTrip.getBlockId();
+                if (blockId != null) {
+                    if (tripPerBlockId.containsKey(blockId)) {
+                        tripPerBlockId.get(blockId).add(newTrip);
+                    } else {
+                        final List<Trip> tripCollection = new ArrayList<>();
+                        tripCollection.add(newTrip);
+                        tripPerBlockId.put(blockId, tripCollection);
+                    }
+                }
                 return newTrip;
             }
         } else {
@@ -296,6 +309,15 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return Collections.unmodifiableMap(tripPerId);
     }
 
+    /**
+     * Return an immutable map of {@link Trip} grouped by blockId value
+     *
+     * @return an immutable map of {@link Trip} grouped by blockId value
+     */
+    @Override
+    public Map<String, List<Trip>> getAllTripByBlockId() {
+        return Collections.unmodifiableMap(tripPerBlockId);
+    }
 
     /**
      * Add a CalendarDate representing a row from calendar_dates.txt to this. Return the entity added to the repository

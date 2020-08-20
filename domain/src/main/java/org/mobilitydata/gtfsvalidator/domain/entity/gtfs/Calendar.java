@@ -479,4 +479,35 @@ public class Calendar extends GtfsEntity {
             return this;
         }
     }
+
+    public boolean areCalendarOverlapping(final Calendar otherCalendar) {
+        return ((otherCalendar.getStartDate().isAfter(startDate) || otherCalendar.getStartDate().isEqual(startDate))
+                || (otherCalendar.getEndDate().isBefore(endDate) || otherCalendar.getEndDate().isEqual(endDate)));
+    }
+
+    public List<String> getCalendarsCommonOperationDayCollection(final Calendar otherCalendar) {
+        final List<String> toReturn = new ArrayList<>();
+        if (isMonday() && otherCalendar.isMonday()) {
+            toReturn.add("monday");
+        }
+        if (isMonday() && otherCalendar.isMonday()) {
+            toReturn.add("tuesday");
+        }
+        if (isMonday() && otherCalendar.isMonday()) {
+            toReturn.add("wednesday");
+        }
+        if (isMonday() && otherCalendar.isMonday()) {
+            toReturn.add("thursday");
+        }
+        if (isMonday() && otherCalendar.isMonday()) {
+            toReturn.add("friday");
+        }
+        if (isMonday() && otherCalendar.isMonday()) {
+            toReturn.add("saturday");
+        }
+        if (isMonday() && otherCalendar.isMonday()) {
+            toReturn.add("sunday");
+        }
+        return toReturn;
+    }
 }

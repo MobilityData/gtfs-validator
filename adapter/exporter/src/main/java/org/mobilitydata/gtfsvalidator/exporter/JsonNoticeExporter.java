@@ -346,4 +346,9 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final BackwardsTimeTravelInStopNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final OverlappingTripsInBlockNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }
