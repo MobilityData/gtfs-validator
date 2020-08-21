@@ -64,8 +64,6 @@ public class GeospatialUtilsImplTest {
      */
     @Test
     void stopWithinTripShapeBufferShouldNotGenerateNotice() {
-        //
-
         // stops.txt
         final String stopId1 = "1001";
         final StopOrPlatform stop1 = mock(StopOrPlatform.class);
@@ -145,10 +143,18 @@ public class GeospatialUtilsImplTest {
         assertEquals(0, errorList.size());
     }
 
+    /**
+     * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
+     * <p>
+     * For debugging, you can export a JTS-version of the buffer in WKT format using code at
+     * https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a#gistcomment-3425554.
+     * The WKT output can then be visualized at https://arthur-e.github.io/Wicket/sandbox-gmaps3.html.
+     * <p>
+     * The spatial4j version of the buffer can't easily be visualized using GeoJSON or WKT because it uses a LineString
+     * and a proprietary "buffer" extension to GeoJSON and WKT, which most tools don't support.
+     */
     @Test
     void stopOutsideTripShapeBufferShouldGenerateNotice() {
-        // See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
-
         // stops.txt
         final String stopId1 = "1001";
         final StopOrPlatform stop1 = mock(StopOrPlatform.class);
@@ -245,24 +251,170 @@ public class GeospatialUtilsImplTest {
         assertEquals(stopId3, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
     }
 
+    /**
+     * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
+     * <p>
+     * For debugging, you can export a JTS-version of the buffer in WKT format using code at
+     * https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a#gistcomment-3425554.
+     * The WKT output can then be visualized at https://arthur-e.github.io/Wicket/sandbox-gmaps3.html.
+     * <p>
+     * The spatial4j version of the buffer can't easily be visualized using GeoJSON or WKT because it uses a LineString
+     * and a proprietary "buffer" extension to GeoJSON and WKT, which most tools don't support.
+     */
     @Test
     void twoTripsWithSameShapeStopOutsideBufferShouldGenerateOneNotice() {
-        // TODO
+        // stops.txt
+        final String stopId1 = "1001";
+        final StopOrPlatform stop1 = mock(StopOrPlatform.class);
+        when(stop1.getStopId()).thenReturn(stopId1);
+        // Location inside buffer
+        when(stop1.getStopLat()).thenReturn(28.05811731042478f);
+        when(stop1.getStopLon()).thenReturn(-82.41616877502503f);
+
+        final String stopId2 = "1002";
+        final StopOrPlatform stop2 = mock(StopOrPlatform.class);
+        when(stop2.getStopId()).thenReturn(stopId2);
+        // Location inside buffer
+        when(stop2.getStopLat()).thenReturn(28.05812364854794f);
+        when(stop2.getStopLon()).thenReturn(-82.41617370439423f);
+
+        final String stopId3 = "1003";
+        final StopOrPlatform stop3 = mock(StopOrPlatform.class);
+        when(stop3.getStopId()).thenReturn(stopId3);
+        // Location OUTSIDE buffer
+        when(stop3.getStopLat()).thenReturn(28.05673053256373f);
+        when(stop3.getStopLon()).thenReturn(-82.4170801432763f);
+
+        // stop_times.txt
+        final StopTime stopTime1 = mock(StopTime.class);
+        when(stopTime1.getStopSequence()).thenReturn(1);
+        when(stopTime1.getStopId()).thenReturn(stopId1);
+
+        final StopTime stopTime2 = mock(StopTime.class);
+        when(stopTime2.getStopSequence()).thenReturn(2);
+        when(stopTime2.getStopId()).thenReturn(stopId2);
+
+        final StopTime stopTime3 = mock(StopTime.class);
+        when(stopTime3.getStopSequence()).thenReturn(3);
+        when(stopTime3.getStopId()).thenReturn(stopId3);
+
+        // shapes.txt
+        final String shapeId = "shape1";
+        final ShapePoint pt1 = mock(ShapePoint.class);
+        final ShapePoint pt2 = mock(ShapePoint.class);
+        final ShapePoint pt3 = mock(ShapePoint.class);
+        final ShapePoint pt4 = mock(ShapePoint.class);
+        final ShapePoint pt5 = mock(ShapePoint.class);
+
+        when(pt1.getShapeId()).thenReturn(shapeId);
+        when(pt2.getShapeId()).thenReturn(shapeId);
+        when(pt3.getShapeId()).thenReturn(shapeId);
+        when(pt4.getShapeId()).thenReturn(shapeId);
+        when(pt5.getShapeId()).thenReturn(shapeId);
+
+        when(pt1.getShapePtSequence()).thenReturn(1);
+        when(pt2.getShapePtSequence()).thenReturn(2);
+        when(pt3.getShapePtSequence()).thenReturn(3);
+        when(pt4.getShapePtSequence()).thenReturn(4);
+        when(pt5.getShapePtSequence()).thenReturn(5);
+
+        when(pt1.getShapePtLat()).thenReturn(28.05724310653972f);
+        when(pt1.getShapePtLon()).thenReturn(-82.41350776611507f);
+        when(pt2.getShapePtLat()).thenReturn(28.05746701492806f);
+        when(pt2.getShapePtLon()).thenReturn(-82.41493135129478f);
+        when(pt3.getShapePtLat()).thenReturn(28.05800068503469f);
+        when(pt3.getShapePtLon()).thenReturn(-82.4159394137605f);
+        when(pt4.getShapePtLat()).thenReturn(28.05808869825447f);
+        when(pt4.getShapePtLon()).thenReturn(-82.41648754043338f);
+        when(pt5.getShapePtLat()).thenReturn(28.05809979887893f);
+        when(pt5.getShapePtLon()).thenReturn(-82.41773971025437f);
+
+        // trips.txt
+        final String tripId1 = "trip1";
+        final Trip trip1 = mock(Trip.class);
+        when(trip1.getTripId()).thenReturn(tripId1);
+        when(trip1.getShapeId()).thenReturn(shapeId);
+
+        final String tripId2 = "trip2";
+        final Trip trip2 = mock(Trip.class);
+        when(trip2.getTripId()).thenReturn(tripId2);
+        when(trip2.getShapeId()).thenReturn(shapeId);
+
+        // Map containing StopTime entities. Entities are mapped on keys from GTFS file stop_times.txt:
+        // - trip_id
+        // - stop_sequence
+        final Map<String, TreeMap<Integer, StopTime>> stopTimeCollection = new HashMap<>(1);
+        final TreeMap<Integer, StopTime> stopTimes = new TreeMap<>(Map.of(1, stopTime1, 2, stopTime2, 3, stopTime3));
+        stopTimeCollection.put(tripId1, stopTimes);
+        stopTimeCollection.put(tripId2, stopTimes);
+
+        // Map containing Stop entities. Entities are keyed on GTFS stops.txt stop_id
+        final Map<String, LocationBase> stopPerId = new HashMap<>(Map.of(stopId1, stop1, stopId2, stop2, stopId3, stop3));
+
+        // Entities are keyed on shape_pt_sequence of GTFS file shapes.txt
+        SortedMap<Integer, ShapePoint> points = new TreeMap<>(Map.of(1, pt1, 2, pt2, 3, pt3, 4, pt4, 5, pt5));
+
+        // The testedCache will get populated with combination of each tested shapeId+stopId
+        Set<String> testedCache = new HashSet<>();
+
+        List<StopTooFarFromTripShape> trip1ErrorList =
+                GEO_UTILS.checkStopsWithinTripShape(trip1, stopTimes, points, stopPerId, testedCache);
+
+        assertEquals(1, trip1ErrorList.size());
+
+        StopTooFarFromTripShape notice = trip1ErrorList.get(0);
+        assertEquals(E_047, notice.getCode());
+        assertEquals("Stop too far from trip shape", notice.getTitle());
+        assertEquals(stopId3, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+
+        // Validate the 2nd trip - no new errors should be added, because the shapeId+stopId combination has already been flagged
+        List<StopTooFarFromTripShape> trip2ErrorList =
+                GEO_UTILS.checkStopsWithinTripShape(trip1, stopTimes, points, stopPerId, testedCache);
+        assertEquals(0, trip2ErrorList.size());
     }
 
+    /**
+     * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
+     * <p>
+     * For debugging, you can export a JTS-version of the buffer in WKT format using code at
+     * https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a#gistcomment-3425554.
+     * The WKT output can then be visualized at https://arthur-e.github.io/Wicket/sandbox-gmaps3.html.
+     * <p>
+     * The spatial4j version of the buffer can't easily be visualized using GeoJSON or WKT because it uses a LineString
+     * and a proprietary "buffer" extension to GeoJSON and WKT, which most tools don't support.
+     */
     @Test
     void tripWithoutShapeShouldNotGenerateNotice() {
         // TODO
     }
 
+    /**
+     * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
+     * <p>
+     * For debugging, you can export a JTS-version of the buffer in WKT format using code at
+     * https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a#gistcomment-3425554.
+     * The WKT output can then be visualized at https://arthur-e.github.io/Wicket/sandbox-gmaps3.html.
+     * <p>
+     * The spatial4j version of the buffer can't easily be visualized using GeoJSON or WKT because it uses a LineString
+     * and a proprietary "buffer" extension to GeoJSON and WKT, which most tools don't support.
+     */
     @Test
     void stopWithoutLocationShouldNotGenerateNotice() {
         // TODO
     }
 
+    /**
+     * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
+     * <p>
+     * For debugging, you can export a JTS-version of the buffer in WKT format using code at
+     * https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a#gistcomment-3425554.
+     * The WKT output can then be visualized at https://arthur-e.github.io/Wicket/sandbox-gmaps3.html.
+     * <p>
+     * The spatial4j version of the buffer can't easily be visualized using GeoJSON or WKT because it uses a LineString
+     * and a proprietary "buffer" extension to GeoJSON and WKT, which most tools don't support.
+     */
     @Test
     void stopLocationTypeNotZeroOrFourShouldNotGenerateNotice() {
         // TODO
     }
-
 }
