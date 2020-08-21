@@ -18,8 +18,7 @@ package org.mobilitydata.gtfsvalidator.timeutils;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class TimeUtilsImplTest {
     private static final int HOUR_TO_SEC_CONVERSION_FACTOR = 3600;
@@ -197,5 +196,20 @@ public class TimeUtilsImplTest {
         toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(threePm);
         assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+    }
+
+    @Test
+    void overlappingPeriodsShouldReturnTrue() {
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                800, 1200));
+    }
+
+    @Test
+    void nonOverlappingPeriodsShouldReturnFalse() {
+        assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                1100, 1200));
+        // common end time and start time
+        assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                1000, 1200));
     }
 }
