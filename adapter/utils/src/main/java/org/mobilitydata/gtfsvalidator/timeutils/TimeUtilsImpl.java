@@ -59,6 +59,7 @@ public class TimeUtilsImpl implements TimeUtils {
      * @return the number of seconds elapsed since noon of day of service. The time is measured from "noon minus 12h"
      * of the service day (effectively midnight except for days on which daylight savings time changes occur).
      */
+    @Override
     public Integer convertHHMMSSToIntFromNoonOfDayOfService(final String timeAsString) {
         if (timeAsString != null && pattern.matcher(timeAsString).matches()) {
             final String[] timeStringSplit = timeAsString.split(":");
@@ -86,6 +87,7 @@ public class TimeUtilsImpl implements TimeUtils {
      * @return the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */
+    @Override
     public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoon) {
         if (elapsedDurationSinceNoon != null) {
             // Determine number of hours elapsed
@@ -121,5 +123,11 @@ public class TimeUtilsImpl implements TimeUtils {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public boolean arePeriodsOverlapping(final int firstPeriodFirstTime, final int firstPeriodLastTime,
+                                         final int secondPeriodFirstTime, final int secondPeriodLastTime) {
+        return !(firstPeriodFirstTime <= secondPeriodLastTime && firstPeriodLastTime <= secondPeriodFirstTime);
     }
 }
