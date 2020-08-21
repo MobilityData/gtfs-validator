@@ -385,6 +385,10 @@ public class DefaultConfig {
         return new ValidateFrequencyStartTimeBeforeEndTime(gtfsDataRepository, resultRepo, timeUtils, logger);
     }
 
+    public ValidateFrequencyOverlap validateFrequencyOverlap() {
+        return new ValidateFrequencyOverlap(gtfsDataRepository, resultRepo, timeUtils, logger);
+    }
+
     public ValidateStopTimeDepartureTimeAfterArrivalTime validateStopTimeDepartureTimeAfterArrivalTime() {
         return new ValidateStopTimeDepartureTimeAfterArrivalTime(gtfsDataRepository, resultRepo, timeUtils, logger);
     }

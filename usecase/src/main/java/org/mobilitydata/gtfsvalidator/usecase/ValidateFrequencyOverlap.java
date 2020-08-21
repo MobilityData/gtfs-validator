@@ -33,8 +33,8 @@ public class ValidateFrequencyOverlap {
 
     public ValidateFrequencyOverlap(final GtfsDataRepository dataRepo,
                                     final ValidationResultRepository resultRepo,
-                                    final Logger logger,
-                                    final TimeUtils timeUtils) {
+                                    final TimeUtils timeUtils,
+                                    final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
         this.logger = logger;

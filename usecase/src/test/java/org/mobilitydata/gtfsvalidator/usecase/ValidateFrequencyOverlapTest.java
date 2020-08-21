@@ -84,7 +84,7 @@ class ValidateFrequencyOverlapTest {
         when(mockDataRepo.getFrequencyAllByTripId()).thenReturn(frequenciesPerTripIdCollection);
 
         final ValidateFrequencyOverlap underTest =
-                new ValidateFrequencyOverlap(mockDataRepo, mockResultRepo, mockLogger, mockTimeUtil);
+                new ValidateFrequencyOverlap(mockDataRepo, mockResultRepo, mockTimeUtil, mockLogger);
 
         underTest.execute();
 
@@ -182,7 +182,7 @@ class ValidateFrequencyOverlapTest {
         when(mockDataRepo.getFrequencyAllByTripId()).thenReturn(frequenciesPerTripIdCollection);
 
         final ValidateFrequencyOverlap underTest =
-                new ValidateFrequencyOverlap(mockDataRepo, mockResultRepo, mockLogger, mockTimeUtil);
+                new ValidateFrequencyOverlap(mockDataRepo, mockResultRepo, mockTimeUtil, mockLogger);
 
         underTest.execute();
 
@@ -256,7 +256,7 @@ class ValidateFrequencyOverlapTest {
         when(mockDataRepo.getFrequencyAllByTripId()).thenReturn(frequenciesPerTripIdCollection);
 
         final ValidateFrequencyOverlap underTest =
-                new ValidateFrequencyOverlap(mockDataRepo, mockResultRepo, mockLogger, mockTimeUtil);
+                new ValidateFrequencyOverlap(mockDataRepo, mockResultRepo, mockTimeUtil, mockLogger);
 
         underTest.execute();
 
