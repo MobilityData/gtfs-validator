@@ -52,9 +52,19 @@ public class GeospatialUtilsImplTest {
         assertEquals(148, toCheck);
     }
 
+    /**
+     * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
+     * <p>
+     * For debugging, you can export a JTS-version of the buffer in WKT format using code at
+     * https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a#gistcomment-3425554.
+     * The WKT output can then be visualized at https://arthur-e.github.io/Wicket/sandbox-gmaps3.html.
+     * <p>
+     * The spatial4j version of the buffer can't easily be visualized using GeoJSON or WKT because it uses a LineString
+     * and a proprietary "buffer" extension to GeoJSON and WKT, which most tools don't support.
+     */
     @Test
     void stopWithinTripShapeBufferShouldNotGenerateNotice() {
-        // See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
+        //
 
         // stops.txt
         final String stopId1 = "1001";
