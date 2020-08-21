@@ -854,6 +854,21 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final OverlappingTripFrequenciesNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_FREQUENCY_START_TIME)))
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_FREQUENCY_END_TIME)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();

@@ -356,4 +356,9 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final UnusableTripNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final OverlappingTripFrequenciesNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }
