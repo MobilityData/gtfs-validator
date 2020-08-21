@@ -2001,6 +2001,8 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("1234"));
         verify(mockBuilder, times(1)).setOtherCsvKeyName(
                 ArgumentMatchers.eq(("start time value")));
+        verify(mockBuilder, times(1)).setEntityValue(
+                ArgumentMatchers.eq(("end time value")));
         verify(mockBuilder, times(1)).setEntityName(
                 ArgumentMatchers.eq("conflicting start time value"));
         verify(mockBuilder, times(1)).setValue(

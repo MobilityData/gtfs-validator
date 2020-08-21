@@ -40,12 +40,13 @@ public class OverlappingTripFrequenciesNotice extends ErrorNotice {
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, tripId);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, "startTime");
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, currentFrequencyStartTime);
+        putNoticeSpecific(KEY_FREQUENCY_END_TIME, currentFrequencyEndTime);
         putNoticeSpecific(KEY_CONFLICTING_FREQUENCY_START_TIME, conflictingFrequencyStartTime);
         putNoticeSpecific(KEY_CONFLICTING_FREQUENCY_END_TIME, conflictingFrequencyEndTime);
     }
 
     @Override
-    public void export(NoticeExporter exporter) throws IOException {
+    public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
     }
 }

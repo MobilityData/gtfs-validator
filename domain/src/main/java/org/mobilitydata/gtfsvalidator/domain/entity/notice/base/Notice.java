@@ -76,6 +76,7 @@ public abstract class Notice {
     public static final String KEY_STOP_TIME_TRIP_ID = "stopTimeTripId";
     public static final String KEY_CONFLICTING_FREQUENCY_START_TIME = "conflictingFrequencyStartTime";
     public static final String KEY_CONFLICTING_FREQUENCY_END_TIME = "conflictingFrequencyEndTime";
+    public static final String KEY_FREQUENCY_END_TIME = "frequencyEndTime";
 
     private final String filename;
     private final int code;
