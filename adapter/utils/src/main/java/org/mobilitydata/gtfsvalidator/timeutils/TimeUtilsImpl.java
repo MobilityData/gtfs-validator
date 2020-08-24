@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.timeutils;
 
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
+import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -67,9 +68,10 @@ public class TimeUtilsImpl implements TimeUtils {
                 final int minuteValue = Integer.parseInt(timeStringSplit[1]);
                 final int secondValue = Integer.parseInt(timeStringSplit[2]);
                 // Converting time to an Integer value representing number of seconds
-                final int timeValueAsInt = hourValue * 3600 + minuteValue * 60 + secondValue;
+                final int timeValueAsInt = (int) (TimeUnit.HOURS.toSeconds(hourValue) +
+                        TimeUnit.MINUTES.toSeconds(minuteValue) + secondValue);
                 // Setting noon as point zero, subtracting 12 * 3600 seconds
-                return timeValueAsInt - (12 * 3600);
+                return timeValueAsInt - (int) (TimeUnit.HOURS.toSeconds(12));
             } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
                 return null;
             }
@@ -88,39 +90,33 @@ public class TimeUtilsImpl implements TimeUtils {
      */
     public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoon) {
         if (elapsedDurationSinceNoon != null) {
-            // Determine number of hours elapsed
-            int hourValue;
-            int minuteValue;
-            int secondValue;
+            final LocalTime noon = LocalTime.NOON;
+            final boolean isTimePM = elapsedDurationSinceNoon >= 0;
             // elapsedDurationSinceNoon > 0 for times after noon, e.g 14:00PM is represented a +2*3600s=+7200s
             // elapsedDurationSinceNoon < 0 for times before noon, e.g 11:00AM is represented as -1*3600s=-3600s
-            if (elapsedDurationSinceNoon >= 0) {
-                hourValue = (int) (TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon) + 12);
-                // Determine number of minutes and seconds elapsed
-                minuteValue = (int) (TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon)));
-                secondValue = (int) (TimeUnit.SECONDS.toSeconds(elapsedDurationSinceNoon) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon)));
+//            LocalTime toReturn = elapsedDurationSinceNoon < 24*3600 ?
+            LocalTime toReturn = noon.plusHours(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon));
+            final boolean isTimeGreaterThan24hours = elapsedDurationSinceNoon >= TimeUnit.HOURS.toSeconds(12);
+
+            if (isTimePM) {
+                toReturn = toReturn.plusMinutes(
+                        TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
+                                TimeUnit.HOURS.toMinutes(toReturn.getHour() - noon.getHour()));
+                toReturn = toReturn.plusSeconds(elapsedDurationSinceNoon -
+                        TimeUnit.HOURS.toSeconds(toReturn.getHour() - noon.getHour()) -
+                        TimeUnit.MINUTES.toSeconds(toReturn.getMinute()));
             } else {
-                hourValue = (int) (TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon + 12 * 3600));
-                // Determine number of minutes elapsed minus the number of hours elapsed
-                minuteValue = ((int) (TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon)))) % 60;
-                if (minuteValue < 0) {
-                    minuteValue = 60 + minuteValue;
-                }
-                // Determine number of seconds elapsed minus the number of hours and minutes elapsed
-                secondValue = (int) (TimeUnit.SECONDS.toSeconds(elapsedDurationSinceNoon) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon)));
-                if (secondValue < 0) {
-                    minuteValue = minuteValue - 1;
-                }
-                if ((int) (TimeUnit.SECONDS.toSeconds(elapsedDurationSinceNoon) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon))) < 0) {
-                    secondValue = 60 + secondValue;
-                }
+                toReturn = toReturn.plusMinutes(
+                        (TimeUnit.SECONDS.toMinutes(
+                                elapsedDurationSinceNoon) - TimeUnit.HOURS.toMinutes(toReturn.getHour())) % 60);
+                toReturn = toReturn.plusSeconds(elapsedDurationSinceNoon -
+                        TimeUnit.HOURS.toSeconds(toReturn.getHour() - noon.getHour()) -
+                        TimeUnit.MINUTES.toSeconds(toReturn.getMinute()));
             }
-            return String.format("%02d:%02d:%02d", hourValue, minuteValue, secondValue);
+            return String.format("%02d:%02d:%02d",
+                    isTimeGreaterThan24hours ? toReturn.getHour() + 24 : toReturn.getHour(),
+                    toReturn.getMinute(),
+                    toReturn.getSecond());
         } else {
             return null;
         }

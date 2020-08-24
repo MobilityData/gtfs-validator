@@ -223,5 +223,17 @@ public class TimeUtilsImplTest {
         toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(threePm);
         assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+
+        final int twentyFiveThirtyPm40sec = (25 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
+                40 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(twentyFiveThirtyPm40sec);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+                TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+
+        final int twentyEightFortySevenPm20sec = (28 * HOUR_TO_SEC_CONVERSION_FACTOR + 47 * MIN_TO_SEC_CONVERSION_FACTOR +
+                20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(twentyEightFortySevenPm20sec);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+                TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
     }
 }
