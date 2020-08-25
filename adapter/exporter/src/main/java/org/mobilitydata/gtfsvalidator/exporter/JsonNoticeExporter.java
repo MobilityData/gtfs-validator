@@ -356,4 +356,14 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final UnusableTripNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final DecreasingStopTimeDistanceErrorNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DecreasingStopTimeDistanceWarningNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }
