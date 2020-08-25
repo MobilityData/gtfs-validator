@@ -220,6 +220,10 @@ public class DefaultConfig {
         return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateRouteLongNameAreUnique validateRouteLongNameAreUnique() {
+        return new ValidateRouteLongNameAreUnique(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ValidateCalendarEndDateBeforeStartDate validateCalendarEndDateBeforeStartDate() {
         return new ValidateCalendarEndDateBeforeStartDate(gtfsDataRepository, resultRepo, logger);
     }
