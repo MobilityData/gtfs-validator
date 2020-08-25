@@ -23,6 +23,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.TreeMap;
 
+/**
+ * Use case to validate that for each trip, stop times have increasing `shape_dist_travelled` values.
+ */
 public class ValidateStopTimeIncreasingDistance {
     private final ValidationResultRepository resultRepo;
 
@@ -33,6 +36,13 @@ public class ValidateStopTimeIncreasingDistance {
         this.resultRepo = resultRepo;
     }
 
+    /**
+     * Checks if `shape_dist_traveled` increases along a trip. This generates an {@code ErrorNotice} if two consecutive
+     * stop time `shape_dist_traveled` value are not arranged in ascending order. This generates a
+     * {@code WarningNotice} if two consecutive stop time have the same value for `shape_dist_travelled`.
+     *
+     * @param stopTimeSequence {@link StopTime} collection mapped on `stop_sequence` value for a given `trip_id`
+     */
     public void execute(final TreeMap<Integer, StopTime> stopTimeSequence) {
         // get previous stoptime relevant information
         final var previousStopTimeData = new Object() {
