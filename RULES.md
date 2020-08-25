@@ -52,6 +52,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E049](#E049) | Backwards time travel between stops in `stop_times.txt` |
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
+| [E054](#E054) | Decreasing travelled distance |
 
 ### Table of Warnings
 
@@ -69,6 +70,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W010](#W010) | `feed_end_date` should be provided if `feed_start_date` is provided | 
 | [W011](#W011) | `feed_start_date` should be provided if `feed_end_date` is provided | 
 | [W012](#W012) | Optional csv file is empty | 
+| [W013](#W013) | Decreasing travelled distance |
 
 # Errors
 
@@ -307,6 +309,12 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
 
+<a name="E054"/>
+
+### E054 - Decreasing travelled distance
+
+Stop times in a trip should have increasing distance.
+
 # Warnings
 
 <a name="W002"/>
@@ -362,3 +370,9 @@ If possible, the GTFS dataset should cover at least the next 30 days of service
 
 Empty csv optional file found in the archive: file contains header but does not have data.  
 This is related to [E047](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#E047).
+
+<a name="W013"/>
+
+### W013 - Decreasing travelled distance
+
+Stop times in a trip should be have strictly increasing distance: two consecutive stop times should not have equal `shape_dist_traveled` values.
