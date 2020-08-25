@@ -74,6 +74,8 @@ public abstract class Notice {
     public static final String KEY_STOP_TIME_STOP_SEQUENCE_LIST = "stopTimeStopSequenceList";
     public static final String KEY_STOP_TIME_STOP_SEQUENCE = "stopTimeStopSequence";
     public static final String KEY_STOP_TIME_TRIP_ID = "stopTimeTripId";
+    public static final String KEY_ROUTE_CONFLICTING_ROUTE_ID = "routeConflictingRouteId";
+    public static final String KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME = "routeDuplicateRouteLongName";
 
     private final String filename;
     private final int code;

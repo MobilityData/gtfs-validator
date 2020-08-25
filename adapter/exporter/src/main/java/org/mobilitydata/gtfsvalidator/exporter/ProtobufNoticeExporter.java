@@ -29,8 +29,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 public class ProtobufNoticeExporter implements NoticeExporter {
@@ -850,6 +849,19 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityId(String.valueOf(toExport.getEntityId()))
                 .setType(TYPE_TRIP_WITH_NO_USABLE_STOPS)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(DuplicateRouteLongNameNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_ROUTE_NAME_REUSED)
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
