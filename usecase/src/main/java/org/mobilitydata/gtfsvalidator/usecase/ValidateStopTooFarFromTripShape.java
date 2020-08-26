@@ -74,7 +74,7 @@ public class ValidateStopTooFarFromTripShape {
                 // No shape for this trip - skip to the next trip
                 return;
             }
-            // Check for possible E047 errors for this combination of stop times and shape points for this trip_id
+            // Check for possible E052 errors for this combination of stop times and shape points for this trip_id
             List<StopTooFarFromTripShape> errorsForTrip = geospatialUtils.checkStopsWithinTripShape(trip,
                     tripStopTimes,
                     dataRepo.getShapeById(trip.getShapeId()),
