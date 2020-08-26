@@ -949,4 +949,19 @@ class JsonNoticeExporterTest {
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
+
+    @Test
+    void exportDuplicateRouteLongNameRouteShortNameCombinationNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        DuplicateRouteLongNameRouteShortNameCombinationNotice toExport =
+                new DuplicateRouteLongNameRouteShortNameCombinationNotice("123", "456",
+                        "duplicate route long name",
+                        "duplicate route short name");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
 }

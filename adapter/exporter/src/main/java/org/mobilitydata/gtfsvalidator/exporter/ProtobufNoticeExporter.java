@@ -878,6 +878,20 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final DuplicateRouteLongNameRouteShortNameCombinationNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_ROUTE_NAME_REUSED)
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME)))
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();

@@ -140,4 +140,7 @@ public interface NoticeExporter {
     void export(final DuplicateRouteLongNameNotice duplicateRouteLongNameNotice) throws IOException;
 
     void export(final DuplicateRouteShortNameNotice duplicateRouteShortNameNotice) throws IOException;
+
+    void export(final DuplicateRouteLongNameRouteShortNameCombinationNotice
+                        duplicateRouteLongNameRouteShortNameCombinationNotice) throws IOException;
 }
