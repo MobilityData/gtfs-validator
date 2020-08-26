@@ -138,4 +138,6 @@ public interface NoticeExporter {
     void export(final UnusableTripNotice unusableTripNotice) throws IOException;
 
     void export(final DuplicateRouteLongNameNotice duplicateRouteLongNameNotice) throws IOException;
+
+    void export(final DuplicateRouteShortNameNotice duplicateRouteShortNameNotice) throws IOException;
 }
