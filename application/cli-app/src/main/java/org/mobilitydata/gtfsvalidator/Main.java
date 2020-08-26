@@ -212,6 +212,7 @@ public class Main {
                 config.validateTripNumberOfStops().execute();
                 config.validateFrequencyStartTimeBeforeEndTime().execute();
                 config.validateRouteLongNameAreUnique().execute();
+                config.validateRouteShortNameAreUnique().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
