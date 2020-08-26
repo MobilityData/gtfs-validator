@@ -21,11 +21,20 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FeedInfoLangAge
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+/**
+ * Use case to validate that `agency.agency_lang` and `feed_info.feed_lang` match. This use case is triggered after
+ * completing the {@code GtfsDataRepository} provided in the constructor with {@code StopTime} entities.
+ */
 public class ValidateAgencyLangAndFeedInfoFeedLangMatch {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
 
+    /**
+     * @param dataRepo   a repository storing the data of a GTFS dataset
+     * @param resultRepo a repository storing information about the validation process
+     * @param logger     a logger to log information about the validation process
+     */
     public ValidateAgencyLangAndFeedInfoFeedLangMatch(final GtfsDataRepository dataRepo,
                                                       final ValidationResultRepository resultRepo,
                                                       final Logger logger) {
@@ -34,6 +43,12 @@ public class ValidateAgencyLangAndFeedInfoFeedLangMatch {
         this.logger = logger;
     }
 
+    /**
+     * Use case execution method: checks if for each {@code Agency} defines a value for `agency.agency_lang` that
+     * matches the value contained in `feed_info.feed_lang` if `feed_info.txt` is provided. If this requirement is not
+     * met, a {@code StopTimeArrivalTimeAfterDepartureTimeNotice} is added to the {@code ValidationResultRepo} provided
+     * in the constructor.
+     */
     public void execute() {
         logger.info("Validating rule 'E055 - Mismatching feed and agency language fields'");
         final String feedInfoFeedLang = dataRepo.getFeedInfoAll().size() > 1 ?
