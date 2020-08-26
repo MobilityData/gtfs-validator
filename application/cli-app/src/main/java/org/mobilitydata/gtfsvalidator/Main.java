@@ -213,6 +213,7 @@ public class Main {
                 config.validateFrequencyStartTimeBeforeEndTime().execute();
                 config.validateRouteLongNameAreUnique().execute();
                 config.validateRouteShortNameAreUnique().execute();
+                config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
