@@ -26,21 +26,20 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests to validate behavior of use case for "Stop too far from trip shape" test
+ * Unit tests to validate behavior of use case for "Stop too far from trip shape" test. Note that geospatial parts
+ * of tests are executed in GeospatialUtilsImplTest in the adapter module as the implementation of the GeospatialUtils
+ * interface.
  */
 class ValidateStopTooFarFromTripShapeNoticeTest {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void stopWithinTripShapeBufferShouldNotGenerateNotice() {
+    void stopWithinTripShapeShouldCallProperMethods() {
         // See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
 
         // stops.txt
@@ -131,41 +130,13 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
         underTest.execute();
         verify(mockLogger, times(1)).info("Validating rule 'E047 - Stop too far from trip shape'");
 
+        verify(mockGeoUtil, times(1)).checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
+
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockDataRepo, times(1)).getShapeById(shapeId);
         verify(mockDataRepo, times(1)).getTripById(tripId);
         verify(mockDataRepo, times(1)).getStopAll();
 
         verifyNoInteractions(mockResultRepo);
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    @Test
-    void stopOutsideTripShapeBufferShouldGenerateNotice() {
-        // TODO
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    @Test
-    void twoTripsWithSameShapeStopOutsideBufferShouldGenerateOneNotice() {
-        // TODO
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    @Test
-    void tripWithoutShapeShouldNotGenerateNotice() {
-        // TODO
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    @Test
-    void stopWithoutLocationShouldNotGenerateNotice() {
-        // TODO
-    }
-
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    @Test
-    void stopLocationTypeNotZeroOrFourShouldNotGenerateNotice() {
-        // TODO
     }
 }
