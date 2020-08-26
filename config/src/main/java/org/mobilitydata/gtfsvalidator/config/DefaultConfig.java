@@ -244,6 +244,10 @@ public class DefaultConfig {
         return new ValidateFeedInfoFeedStartDateIsPresent(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateAgencyLangAndFeedInfoFeedLangMatch validateAgencyLangAndFeedInfoFeedLangMatch() {
+        return new ValidateAgencyLangAndFeedInfoFeedLangMatch(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
