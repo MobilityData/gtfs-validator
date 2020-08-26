@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.crossvalidation;
+package org.mobilitydata.gtfsvalidator.usecase.usecasevalidator;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeUsage;

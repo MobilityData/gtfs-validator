@@ -61,7 +61,7 @@ public class ValidateStopTooFarFromTripShape {
      * provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E047 - Stop too far from trip shape'");
+        logger.info("Validating rule 'E052 - Stop too far from trip shape'");
 
         List<StopTooFarFromTripShape> errors = new ArrayList<>();
 

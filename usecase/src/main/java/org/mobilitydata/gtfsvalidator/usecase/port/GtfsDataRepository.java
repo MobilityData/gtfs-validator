@@ -22,11 +22,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttr
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
 
 import java.util.Map;
 import java.util.SortedMap;
@@ -89,6 +89,8 @@ public interface GtfsDataRepository {
     Frequency addFrequency(final Frequency newFrequency);
 
     Frequency getFrequency(final String tripId, final Integer startTime);
+
+    Map<String, Frequency> getFrequencyAll();
 
     Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException;
 

@@ -7,7 +7,6 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | Error ID      | Error Title         |
 |---------------|---------------------------|
 | [E001](#E001) | Missing required field | 
-| [E002](#E002) | | 
 | [E003](#E003) | | 
 | [E004](#E004) | | 
 | [E006](#E006) | | 
@@ -47,6 +46,12 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E043](#E043) | Duplicated field |
 | [E044](#E044) | Missing trip edge `arrival_time` or `departure_time` |
 | [E045](#E045) | `arrival_time` after `departure_time` in `stop_times.txt` |
+| [E046](#E046) | Fast travel between stops in `stop_times.txt` |
+| [E047](#E047) | Csv file is empty |
+| [E048](#E048) | `end_time` after `start_time` in `frequencies.txt` |
+| [E049](#E049) | Backwards time travel between stops in `stop_times.txt` |
+| [E050](#E050) | Trips must be used in `stop_times.txt` |
+| [E051](#E051) | Trips must have more than one stop to be usable |
 | [E052](#E052) | Stop too far from trip shape |
 
 ### Table of Warnings
@@ -62,8 +67,9 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W007](#W007) | Missing route long name |
 | [W008](#W008) | Route long name contains short name | 
 | [W009](#W009) | Dataset should cover at least the next 30 days of service | 
-| [W009](#W010) | `feed_end_date` should be provided if `feed_start_date` is provided | 
-| [W009](#W011) | `feed_start_date` should be provided if `feed_end_date` is provided | 
+| [W010](#W010) | `feed_end_date` should be provided if `feed_start_date` is provided | 
+| [W011](#W011) | `feed_start_date` should be provided if `feed_end_date` is provided | 
+| [W012](#W012) | Optional csv file is empty | 
 
 # Errors
 
@@ -260,6 +266,48 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 #### References:
 * [stop_times.txt specification](http://gtfs.org/reference/static/#stop_timestxt)
 
+<a name="E046"/>
+
+### E046 - Fast travel between stops in `stop_times.txt`
+
+Calculated speed between stops is too fast (>150 kmh) 
+
+<a name="E047"/>
+
+### E047 - Csv file is empty
+
+Empty csv file found in the archive: file does not have any headers, or is a required file and does not have any data. The GTFS specification requires the first line of each file to contain field names and required files must have data.
+This is related to [W012](#https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#W012).
+
+#### References:
+* [File requirements](http://gtfs.org/reference/static#file-requirements)
+
+
+### E048 - `end_time` after `start_time` in `frequencies.txt`
+
+The `end_time` must not precede the `start_time` in `frequencies.txt`. 
+
+#### References:
+* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+
+<a name="E049"/>
+
+### E049 - Backwards time travel between stops in `stop_times.txt`
+
+For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence
+ 
+ <a name="E050"/>
+
+### E050 - Trips must be used in `stop_times.txt`
+
+Trips must be referred to at least once in `stop_times.txt`.
+
+<a name="E051"/>
+
+### E051 - Trips must have more than one stop to be usable
+
+A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
+
 <a name="E052"/>
 
 ### E052 - Stop too far from trip shape
@@ -312,8 +360,15 @@ If possible, the GTFS dataset should cover at least the next 30 days of service
 
 <a name="W011"/>
 
-### W010 - `feed_start_date` should be provided if `feed_end_date` is provided
+### W011 - `feed_start_date` should be provided if `feed_end_date` is provided
 
 `feed_end_date` should be provided in conjunction with field `feed_start_date`.
  
 * [feed_info.txt Best Practices](http://gtfs.org/best-practices/#feed_infotxt)
+
+<a name="W012"/>
+
+### W012 - Optional csv file is empty
+
+Empty csv optional file found in the archive: file contains header but does not have data.  
+This is related to [E047](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#E047).

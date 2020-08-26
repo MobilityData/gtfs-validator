@@ -27,25 +27,25 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttr
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.*;
 import org.mobilitydata.gtfsvalidator.geoutils.GeospatialUtilsImpl;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
-import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.ShapeBasedCrossValidator;
-import org.mobilitydata.gtfsvalidator.usecase.crossvalidation.StopTimeBasedCrossValidator;
 import org.mobilitydata.gtfsvalidator.usecase.port.*;
+import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.ShapeBasedCrossValidator;
+import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.StopTimeValidator;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
+import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.ABORT_ON_ERROR;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -53,57 +53,83 @@ import java.nio.file.Paths;
  */
 public class DefaultConfig {
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
-    private final ValidationResultRepository resultRepo = new InMemoryValidationResultRepository();
+    private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
     private final TimeUtils timeUtils = TimeUtilsImpl.getInstance();
-    private final GeospatialUtils geospatialUtils = GeospatialUtilsImpl.getInstance();
+    private final GeospatialUtils geoUtils = GeospatialUtilsImpl.getInstance();
     private final GtfsSpecRepository specRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
-    private String executionParametersAsString;
+
+    public DefaultConfig(final String[] args, final Logger logger) {
+        this.logger = logger;
+
+        execParamRepo = new InMemoryExecParamRepository(
+                args,
+                loadDefaultParameter(),
+                logger
+        );
+
+        specRepo = new InMemoryGtfsSpecRepository(loadGtfsProtobuf(), loadGtfsRelationshipDescription());
+
+        resultRepo = new InMemoryValidationResultRepository(
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+    }
+
+    public DefaultConfig(final String executionParametersAsString, final Logger logger) {
+        this.logger = logger;
+
+        execParamRepo = new InMemoryExecParamRepository(
+                executionParametersAsString,
+                loadDefaultParameter(),
+                logger
+        );
+
+        specRepo = new InMemoryGtfsSpecRepository(loadGtfsProtobuf(), loadGtfsRelationshipDescription());
+
+        resultRepo = new InMemoryValidationResultRepository(
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+    }
 
     @SuppressWarnings("UnstableApiUsage")
-    public DefaultConfig(final Logger logger) {
-        this.logger = logger;
-        String defaultParameterJsonString = null;
+    private String loadDefaultParameter() {
+        String toReturn = null;
         try {
-            defaultParameterJsonString = Resources.toString(
+            toReturn = Resources.toString(
                     Resources.getResource("default-execution-parameters.json"),
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        execParamRepo = new InMemoryExecParamRepository(defaultParameterJsonString, this.logger);
 
-        String gtfsSpecProtobufString = null;
+        return toReturn;
+    }
 
+    @SuppressWarnings("UnstableApiUsage")
+    private String loadGtfsProtobuf() {
+        String toReturn = null;
         try {
-            gtfsSpecProtobufString = Resources.toString(
+            toReturn = Resources.toString(
                     Resources.getResource("gtfs_spec.asciipb"),
                     StandardCharsets.UTF_8
             );
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return toReturn;
+    }
 
-        String gtfsSchemaAsString = null;
-
+    @SuppressWarnings("UnstableApiUsage")
+    private String loadGtfsRelationshipDescription() {
+        String toReturn = null;
         try {
-            gtfsSchemaAsString = Resources.toString(
+            toReturn = Resources.toString(
                     Resources.getResource("gtfs-relationship-description.json"),
                     StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        this.executionParametersAsString = null;
-        try {
-            this.executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
-            logger.info("Configuration file execution-parameters.json found in working directory");
-        } catch (IOException e) {
-            logger.warn("Configuration file execution-parameters.json not found in working directory");
-        }
-        specRepo = new InMemoryGtfsSpecRepository(gtfsSpecProtobufString, gtfsSchemaAsString);
+        return toReturn;
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
@@ -120,6 +146,12 @@ public class DefaultConfig {
 
     public ValidateAllRequiredFilePresence validateAllRequiredFilePresence() {
         return new ValidateAllRequiredFilePresence(specRepo, rawFileRepo, resultRepo);
+    }
+
+    public ValidateCsvNotEmptyForFile validateCsvNotEmptyForFile(final String filename) {
+        return new ValidateCsvNotEmptyForFile(
+                rawFileRepo.findByName(filename).orElse(RawFileInfo.builder().build()),
+                specRepo, rawFileRepo, resultRepo, logger);
     }
 
     public ValidateHeadersForFile validateHeadersForFile(final String filename) {
@@ -154,6 +186,10 @@ public class DefaultConfig {
                 specRepo,
                 resultRepo
         );
+    }
+
+    public GenerateGtfsRequiredFilenameList generateGtfsRequiredFilenameList() {
+        return new GenerateGtfsRequiredFilenameList(specRepo);
     }
 
     public ValidateAllOptionalFilename validateAllOptionalFileName() {
@@ -210,11 +246,6 @@ public class DefaultConfig {
 
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
-    }
-
-    public ParseAllExecParam parseAllExecutionParameter() {
-        return new ParseAllExecParam(executionParametersAsString, execParamRepo,
-                logger);
     }
 
     public LogExecutionInfo logExecutionInfo() {
@@ -327,14 +358,31 @@ public class DefaultConfig {
         return new ValidateTripEdgeArrivalDepartureTime(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateTripTravelSpeed validateTripTravelSpeed() {
+        return new ValidateTripTravelSpeed(gtfsDataRepository, resultRepo, geoUtils, logger);
+    }
+
+    public ValidateTripUsage validateTripUsage() {
+        return new ValidateTripUsage(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateTripNumberOfStops validateTripNumberOfStops() {
+        return new ValidateTripNumberOfStops(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ValidateRouteAgencyId validateRouteAgencyId() {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
 
-    public StopTimeBasedCrossValidator stopTimeBasedCrossValidator() {
-        return new StopTimeBasedCrossValidator(gtfsDataRepository, resultRepo, logger,
+    public StopTimeValidator stopTimeBasedCrossValidator() {
+        return new StopTimeValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
                 new ValidateShapeIdReferenceInStopTime(),
-                new ValidateStopTimeTripId());
+                new ValidateStopTimeTripId(),
+                new ValidateBackwardsTimeTravelForStops());
+    }
+
+    public ValidateFrequencyStartTimeBeforeEndTime validateFrequencyStartTimeBeforeEndTime() {
+        return new ValidateFrequencyStartTimeBeforeEndTime(gtfsDataRepository, resultRepo, timeUtils, logger);
     }
 
     public ValidateStopTimeDepartureTimeAfterArrivalTime validateStopTimeDepartureTimeAfterArrivalTime() {
@@ -346,6 +394,6 @@ public class DefaultConfig {
     }
 
     public ValidateStopTooFarFromTripShape validateStopTooFarFromTripShape() {
-        return new ValidateStopTooFarFromTripShape(gtfsDataRepository, resultRepo, geospatialUtils, logger);
+        return new ValidateStopTooFarFromTripShape(gtfsDataRepository, resultRepo, geoUtils, logger);
     }
 }

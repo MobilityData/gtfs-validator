@@ -29,6 +29,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 public class ProtobufNoticeExporter implements NoticeExporter {
@@ -89,16 +91,6 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.SUSPICIOUS_WARNING)
                 .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_FIELD_NAME))
                 .setAltEntityId(toExport.getEntityId())
-                .build()
-                .writeTo(streamGenerator.getStream());
-    }
-
-    @Override
-    public void export(final CannotConstructDataProviderNotice toExport) throws IOException {
-        protoBuilder.clear()
-                .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_UNKNOWN_ERROR)
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -275,6 +267,27 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setAltEntityId(toExport.getFilename())
                 .build()
                 .writeTo(streamGenerator.getStream());
+    }
+
+    private void parsingEmptyFileNoticeToProto(final String filename,
+                                               final GtfsValidationOutputProto.GtfsProblem.Severity severity)
+            throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(filename)
+                .setType(TYPE_CSV_BAD_NUMBER_OF_ROWS)
+                .setSeverity(severity)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final EmptyFileErrorNotice toExport) throws IOException {
+        parsingEmptyFileNoticeToProto(toExport.getFilename(), GtfsValidationOutputProto.GtfsProblem.Severity.ERROR);
+    }
+
+    @Override
+    public void export(final EmptyFileWarningNotice toExport) throws IOException {
+        parsingEmptyFileNoticeToProto(toExport.getFilename(), GtfsValidationOutputProto.GtfsProblem.Severity.WARNING);
     }
 
     @Override
@@ -783,6 +796,74 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_EXPECTED_DISTANCE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void export(final FastTravelBetweenStopsNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setType(((List<Integer>) toExport.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE_LIST)).size() > 2 ?
+                        GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FAST_TRAVEL_BETWEEN_FAR_STOPS :
+                        GtfsValidationOutputProto.GtfsProblem.Type.TYPE_FAST_TRAVEL_BETWEEN_CONSECUTIVE_STOPS
+                )
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE))
+                .setEntityValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE_LIST)))
+                .setAltEntityValue((String) toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final FrequencyStartTimeAfterEndTimeNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final BackwardsTimeTravelInStopNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_ARRIVAL_TIME)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_DEPARTURE_TIME)))
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final TripNotUsedNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final UnusableTripNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_TRIP_WITH_NO_USABLE_STOPS)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

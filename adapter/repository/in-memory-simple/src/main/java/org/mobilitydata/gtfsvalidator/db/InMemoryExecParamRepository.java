@@ -17,13 +17,13 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Strings;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.parser.ApacheExecParamParser;
 import org.mobilitydata.gtfsvalidator.parser.JsonExecParamParser;
+import org.mobilitydata.gtfsvalidator.usecase.ParseAllExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 
 import java.io.File;
@@ -48,10 +48,32 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     private final Map<String, ExecParam> defaultValueCollection;
     private final Logger logger;
 
-    public InMemoryExecParamRepository(final String defaultParameterJsonString, final Logger logger) {
+    public InMemoryExecParamRepository(final String[] args,
+                                       final String defaultParameterJsonString,
+                                       final Logger logger
+    ) {
         this.defaultValueCollection = new JsonExecParamParser(defaultParameterJsonString,
                 new ObjectMapper().readerFor(ExecParam.class), logger).parse();
         this.logger = logger;
+
+        try {
+            new ParseAllExecParam(this, logger).execute(args);
+        } catch (IOException e) {
+            logger.error("Could not parse execution parameters: " + e.getMessage());
+        }
+    }
+
+    public InMemoryExecParamRepository(final String executionParametersAsString,
+                                       final String defaultParameterJsonString,
+                                       final Logger logger) {
+        this.defaultValueCollection = new JsonExecParamParser(defaultParameterJsonString,
+                new ObjectMapper().readerFor(ExecParam.class), logger).parse();
+        this.logger = logger;
+        try {
+            new ParseAllExecParam(this, logger).execute(executionParametersAsString);
+        } catch (IOException e) {
+            logger.error("Could not parse execution parameters: " + e.getMessage());
+        }
     }
 
     /**
@@ -123,43 +145,20 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
     }
 
     /**
-     * This method returns a parser for execution parameters.
-     * This method returns {@code JsonExecParamParser} if:
-     * - no configuration file nor arguments are provided,
-     * - a configuration file is present and no arguments are provided
-     * - both configuration file and arguments are provided
-     * <p>
-     * This method returns {@code ApacheExecParamParser} if:
-     * - no configuration file is present and arguments are provided
-     *
-     * @param parameterJsonString the configuration .json file content to extract the execution parameters from.
-     *                            If this parameter is null then, execution parameters are extracted from {args}.
-     * @param args                the argument line to parse {@link ExecParam} when {parameterJsonString} is null
-     * @return {@code JsonExecParamParser} if:
-     * - no configuration file nor arguments are provided,
-     * - a configuration file is present and no arguments are provided
-     * - both configuration file and arguments are provided
-     * <p>
-     * {@code ApacheExecParamParser} if:
-     * - no configuration file is present and arguments are provided
+     * This method returns a parser for execution parameters in a json string
      */
     @Override
-    public ExecParamParser getParser(final String parameterJsonString,
-                                     final String[] args,
-                                     final Logger logger) {
-        if (Strings.isNullOrEmpty(parameterJsonString) && args.length == 0) {
-            // true when json configuration file is not present and no arguments are provided
-            logger.info("No configuration file nor arguments provided");
-            return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
-        } else if (!Strings.isNullOrEmpty(parameterJsonString) || args.length == 0) {
-            // true when no arguments are provided or when json configuration is provided
-            logger.info("Retrieving execution parameters from execution-parameters.json file");
-            return new JsonExecParamParser(parameterJsonString, new ObjectMapper().readerFor(ExecParam.class), logger);
-        } else {
-            // true when only arguments are provided
-            logger.info("Retrieving execution parameters from command-line");
-            return new ApacheExecParamParser(new DefaultParser(), getOptions(), args);
-        }
+    public ExecParamParser getParser(String jsonString) {
+        return new JsonExecParamParser(jsonString, new ObjectMapper().readerFor(ExecParam.class),
+                logger);
+    }
+
+    /**
+     * This method returns a parser for execution parameters in a string array
+     */
+    @Override
+    public ExecParamParser getParser(String[] argStringArray) {
+        return new ApacheExecParamParser(new DefaultParser(), getOptions(), argStringArray);
     }
 
     /**
@@ -183,7 +182,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
             case HELP_KEY:
             case PROTO_KEY: {
                 if (hasExecParam(key)) {
-                    return hasExecParam(key) ? String.valueOf(true) : defaultValue.get(0);
+                    return String.valueOf(true);
                 } else {
                     return defaultValue.get(0);
                 }
@@ -239,6 +238,18 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                         getExecParamByKey(EXCLUSION_KEY).getValue().toString()
                         : null;
             }
+
+            case ABORT_ON_ERROR: {
+                // if command line option is provided with a value then use this value. Example "- abort_on_error true"
+                // or "abort_on_error false"
+                if (hasExecParam(ABORT_ON_ERROR) && hasExecParamValue(ABORT_ON_ERROR)) {
+                    return getExecParamByKey(ABORT_ON_ERROR).getValue().get(0);
+                } else {
+                    // otherwise use default value. Note that it is not allowed to use key `abort_on_error` without
+                    // specifying a boolean as argument
+                    return defaultValue.get(0);
+                }
+            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }
@@ -287,13 +298,15 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 "Minimum admissible value for field min_width of file pathways.txt");
         options.addOption(PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY, PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY, true,
                 "Maximum admissible value for field min_width of file pathways.txt");
+        options.addOption(ABORT_ON_ERROR, ABORT_ON_ERROR, true,
+                "Stop validation process on first error");
 
         // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
         // Other commands only take 1 argument
         options.getOptions().forEach(option -> {
             switch (option.getLongOpt()) {
-                case ExecParamRepository.PROTO_KEY:
-                case ExecParamRepository.HELP_KEY: {
+                case PROTO_KEY:
+                case HELP_KEY: {
                     option.setArgs(0);
                     break;
                 }

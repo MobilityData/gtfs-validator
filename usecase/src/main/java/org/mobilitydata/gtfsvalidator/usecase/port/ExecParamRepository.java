@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
 import org.apache.commons.cli.Options;
-import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 
 import java.io.IOException;
@@ -44,6 +43,7 @@ public interface ExecParamRepository {
     String PATHWAY_MAX_SLOPE_KEY = "pathway_max_slope";
     String PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY = "pathway_min_width_lower_bound";
     String PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY = "pathway_min_width_upper_bound";
+    String ABORT_ON_ERROR = "abort_on_error";
 
     ExecParam getExecParamByKey(final String optionName);
 
@@ -55,7 +55,9 @@ public interface ExecParamRepository {
 
     boolean hasExecParamValue(final String key);
 
-    ExecParamParser getParser(final String parameterJsonString, final String[] args, final Logger logger);
+    ExecParamParser getParser(String jsonString);
+
+    ExecParamParser getParser(String[] argStringArray);
 
     String getExecParamValue(final String key) throws IllegalArgumentException;
 

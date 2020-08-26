@@ -21,12 +21,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class CannotConstructDataProviderNotice extends ErrorNotice {
-
-    public CannotConstructDataProviderNotice(String filename) {
-        super(filename, E_002,
-                "Data provider error",
-                "An error occurred while trying to access raw data for file: " + filename,
+public class EmptyFileErrorNotice extends ErrorNotice {
+    public EmptyFileErrorNotice(String filename) {
+        super(filename, E_039,
+                "Empty csv file",
+                String.format("`%s` does not have any headers or data.", filename),
                 null);
     }
 

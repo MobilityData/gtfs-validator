@@ -14,17 +14,19 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.crossvalidation;
+package org.mobilitydata.gtfsvalidator.usecase.usecasevalidator;
 
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateBackwardsTimeTravelForStops;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeIdReferenceInStopTime;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateStopTimeTripId;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 import org.mockito.ArgumentMatchers;
 
 import java.util.HashMap;
@@ -35,7 +37,7 @@ import java.util.TreeMap;
 import static org.mockito.Mockito.*;
 
 @SuppressWarnings({"unchecked", "ResultOfMethodCallIgnored"})
-class StopTimeBasedCrossValidatorTest {
+class StopTimeValidatorTest {
 
     @Test
     void allStopTimeCrossValidationUseCasesShouldBeCalled() {
@@ -63,14 +65,18 @@ class StopTimeBasedCrossValidatorTest {
         final Logger mockLogger = mock(Logger.class);
         final ValidateShapeIdReferenceInStopTime mockE034 = mock(ValidateShapeIdReferenceInStopTime.class);
         final ValidateStopTimeTripId mockE037 = mock(ValidateStopTimeTripId.class);
+        final ValidateBackwardsTimeTravelForStops mockE046 = mock(ValidateBackwardsTimeTravelForStops.class);
 
+        final TimeUtils mockTimeUtils = mock(TimeUtils.class);
 
-        final StopTimeBasedCrossValidator underTest =
-                spy(new StopTimeBasedCrossValidator(mockDataRepo, mockResultRepo, mockLogger, mockE034, mockE037));
+        final StopTimeValidator underTest =
+                spy(new StopTimeValidator(mockDataRepo, mockResultRepo, mockLogger, mockTimeUtils, mockE034,
+                        mockE037, mockE046));
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("Validating rules :'E034 - `shape_id` not found");
+        verify(mockLogger, times(1)).info("Validating rules: 'E049 - Bad combination of stoptime arrival and departure times`");
+        verify(mockLogger, times(1)).info("                  'E034 - `shape_id` not found");
         verify(mockLogger, times(1)).info("                  'E037 - `trip_id` not found");
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
@@ -78,6 +84,7 @@ class StopTimeBasedCrossValidatorTest {
         verify(mockDataRepo, times(1)).getShapeById(ArgumentMatchers.eq("shape id"));
         verify(mockDataRepo, times(1)).getTripAll();
 
+        verify(mockE046, times(1)).execute(mockResultRepo, innerMap, mockTimeUtils);
         verify(mockE034, times(1)).execute(ArgumentMatchers.eq(mockResultRepo),
                 ArgumentMatchers.eq(mockStopTime), ArgumentMatchers.eq(mockShape), ArgumentMatchers.eq(mockTrip));
 

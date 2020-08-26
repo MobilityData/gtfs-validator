@@ -18,13 +18,13 @@ package org.mobilitydata.gtfsvalidator.geoutils;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.BoardingArea;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.Entrance;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.LocationBase;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.StopOrPlatform;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.BoardingArea;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.Entrance;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.StopOrPlatform;
 
 import java.util.*;
 

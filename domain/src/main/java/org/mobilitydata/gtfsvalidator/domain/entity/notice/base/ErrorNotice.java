@@ -20,7 +20,7 @@ public abstract class ErrorNotice extends Notice {
     private static final String level = "ERROR";
 
     protected static final int E_001 = 1;
-    protected static final int E_002 = 2;
+    // protected static final int E_002 = 2; // RESERVED - was CannotConstructDataProviderNotice
     protected static final int E_003 = 3;
     protected static final int E_004 = 4;
     protected static final int E_005 = 5;
@@ -64,6 +64,12 @@ public abstract class ErrorNotice extends Notice {
     protected static final int E_043 = 43;
     protected static final int E_044 = 44;
     protected static final int E_045 = 45;
+    protected static final int E_046 = 46;
+    protected static final int E_047 = 47;
+    protected static final int E_048 = 48;
+    protected static final int E_049 = 49;
+    protected static final int E_050 = 50;
+    protected static final int E_051 = 51;
     public static final int E_052 = 52;
 
     public ErrorNotice(final String filename,

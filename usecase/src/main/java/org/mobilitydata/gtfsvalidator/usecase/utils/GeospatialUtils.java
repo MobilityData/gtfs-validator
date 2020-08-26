@@ -17,10 +17,10 @@
 package org.mobilitydata.gtfsvalidator.usecase.utils;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
-import org.mobilitydata.gtfsvalidator.domain.entity.stops.LocationBase;
 
 import java.util.List;
 import java.util.Map;

@@ -30,6 +30,7 @@ public abstract class WarningNotice extends Notice {
     protected static final int W_009 = 9;
     protected static final int W_010 = 10;
     protected static final int W_011 = 11;
+    protected static final int W_012 = 12;
 
     public WarningNotice(final String filename,
                          final int code,

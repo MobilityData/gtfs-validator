@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.stops;
+package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,25 +24,25 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequired
 import java.util.List;
 
 /**
- * Model class for an entity defined in stops.txt with location_type = 4. Can't be constructed directly.
- * Use {@link BoardingAreaBuilder} to instantiate
+ * Model class for an entity defined in stops.txt with location_type = 3. Can't be constructed directly.
+ * Use {@link GenericNodeBuilder} to instantiate
  */
-public class BoardingArea extends LocationBase {
+public class GenericNode extends LocationBase {
 
     @NotNull
     private final String parentStation;
 
-    private BoardingArea(@NotNull final String stopId,
-                         @Nullable final String stopCode,
-                         @Nullable final String stopName,
-                         @Nullable final String stopDesc,
-                         @Nullable final Float stopLat,
-                         @Nullable final Float stopLon,
-                         @Nullable final String zoneId,
-                         @Nullable final String stopUrl,
-                         @NotNull final String parentStation,
-                         @Nullable final String stopTimezone,
-                         @Nullable final List<String> children) {
+    private GenericNode(@NotNull final String stopId,
+                        @Nullable final String stopCode,
+                        @Nullable final String stopName,
+                        @Nullable final String stopDesc,
+                        @Nullable final Float stopLat,
+                        @Nullable final Float stopLon,
+                        @Nullable final String zoneId,
+                        @Nullable final String stopUrl,
+                        @NotNull final String parentStation,
+                        @Nullable final String stopTimezone,
+                        @Nullable final List<String> children) {
         super(stopId, stopCode, stopName, stopDesc, stopLat, stopLon, zoneId, stopUrl, stopTimezone, children);
         this.parentStation = parentStation;
     }
@@ -51,11 +51,11 @@ public class BoardingArea extends LocationBase {
         return parentStation;
     }
 
-    public static class BoardingAreaBuilder extends LocationBaseBuilder {
+    public static class GenericNodeBuilder extends LocationBaseBuilder {
 
         private String parentStation;
 
-        public BoardingAreaBuilder parentStation(final String parentStation) {
+        public GenericNodeBuilder parentStation(final String parentStation) {
             this.parentStation = parentStation;
             return this;
         }
@@ -70,12 +70,12 @@ public class BoardingArea extends LocationBase {
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {
-                return new EntityBuildResult<>(new BoardingArea(stopId, stopCode, stopName, stopDesc, stopLat, stopLon,
+                return new EntityBuildResult<>(new GenericNode(stopId, stopCode, stopName, stopDesc, stopLat, stopLon,
                         zoneId, stopUrl, parentStation, stopTimezone, childrenIdList));
             }
         }
 
-        public BoardingAreaBuilder clear() {
+        public GenericNodeBuilder clear() {
             super.clear();
             parentStation = null;
             return this;

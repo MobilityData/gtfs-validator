@@ -27,7 +27,7 @@ import java.util.Collection;
  */
 public interface ValidationResultRepository {
 
-    Notice addNotice(Notice newNotice);
+    Notice addNotice(Notice newNotice) throws TooManyValidationErrorException;
 
     Collection<Notice> getAll();
 
