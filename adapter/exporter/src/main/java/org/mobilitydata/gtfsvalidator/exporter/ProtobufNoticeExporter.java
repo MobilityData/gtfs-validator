@@ -29,8 +29,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 public class ProtobufNoticeExporter implements NoticeExporter {
@@ -735,6 +734,20 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE)))
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_CURRENT_DATE)))
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_FEED_INFO_END_DATE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final FeedInfoLangAgencyLangMismatchNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setEntityId(toExport.getEntityId())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setType(TYPE_AGENCY_LANG_AND_FEED_LANG_MISMATCH)
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_AGENCY_AGENCY_NAME)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_AGENCY_AGENCY_LANG)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_FEED_INFO_FEED_LANG)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
