@@ -70,6 +70,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W011](#W011) | `feed_start_date` should be provided if `feed_end_date` is provided | 
 | [W012](#W012) | Optional csv file is empty | 
 | [W014](#W014) | Duplicate `routes.route_long_name` | 
+| [W015](#W015) | Duplicate `routes.route_short_name` | 
 
 # Errors
 
@@ -369,3 +370,9 @@ This is related to [E047](https://github.com/MobilityData/gtfs-validator/blob/ma
 ### W014 -  Duplicate `routes.route_long_name`
 
 All routes should have different `route_long_name`. If routes have same `route_long_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route.
+
+<a name="W015"/>
+
+### W015 -  Duplicate `routes.route_short_name`
+
+All routes should have different `route_short_name`. If routes have same `route_long_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route.

@@ -25,11 +25,21 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Use case to validate that that each non-null value of `route_short_name` from {@link Route} entities are unique.
+ * This use case is triggered after completing the {@code GtfsDataRepository} provided in the constructor with
+ * {@code Route} entities.
+ */
 public class ValidateRouteShortNameAreUnique {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
 
+    /**
+     * @param dataRepo   a repository storing the data of a GTFS dataset
+     * @param resultRepo a repository storing information about the validation process
+     * @param logger     a logger used to log information about the validation process
+     */
     public ValidateRouteShortNameAreUnique(final GtfsDataRepository dataRepo,
                                            final ValidationResultRepository resultRepo,
                                            final Logger logger) {
@@ -38,6 +48,12 @@ public class ValidateRouteShortNameAreUnique {
         this.logger = logger;
     }
 
+    /**
+     * Use case execution method: checks unicity of `route_short_name` in file `routes.txt`. A notice is
+     * generated and added to the {@code ValidationResultRepository} provided in the constructor each time this
+     * requirement is not satisfied.
+     * Note that two {@link Route} can have the same `route_short_name` if they do not belong to the same agency
+     */
     public void execute() {
         logger.info("Validating rule 'W015 - Duplicate `routes.route_short_name`'");
 
