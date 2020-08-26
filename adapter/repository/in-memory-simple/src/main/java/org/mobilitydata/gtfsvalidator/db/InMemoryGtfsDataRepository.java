@@ -489,6 +489,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * @return the entity added to the repository if the uniqueness constraint of route based on feed_publisher_name is
      * respected, if this requirement is not met returns null.
      */
+    // todo: take into account that feed info is a single-line file! We can not add more than 1 feed_info
     @Override
     public FeedInfo addFeedInfo(final FeedInfo newFeedInfo) throws IllegalArgumentException {
         if (newFeedInfo != null) {
