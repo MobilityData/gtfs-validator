@@ -29,7 +29,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.stops.StopOrPlatform;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice.E_047;
+import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice.E_052;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_COMPOSITE_KEY_FIRST_VALUE;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -55,6 +55,8 @@ public class GeospatialUtilsImplTest {
     }
 
     /**
+     * Test geospatial implementation for rule "E052 - Stop too far from trip shape"
+     * <p>
      * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
      * <p>
      * For debugging, you can export a JTS-version of the buffer in WKT format using code at
@@ -146,6 +148,8 @@ public class GeospatialUtilsImplTest {
     }
 
     /**
+     * Test geospatial implementation for rule "E052 - Stop too far from trip shape"
+     *
      * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
      * <p>
      * For debugging, you can export a JTS-version of the buffer in WKT format using code at
@@ -248,12 +252,14 @@ public class GeospatialUtilsImplTest {
         assertEquals(1, errorList.size());
 
         StopTooFarFromTripShape notice = errorList.get(0);
-        assertEquals(E_047, notice.getCode());
+        assertEquals(E_052, notice.getCode());
         assertEquals("Stop too far from trip shape", notice.getTitle());
         assertEquals(stopId3, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
     }
 
     /**
+     * Test geospatial implementation for rule "E052 - Stop too far from trip shape"
+     *
      * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
      * <p>
      * For debugging, you can export a JTS-version of the buffer in WKT format using code at
@@ -365,7 +371,7 @@ public class GeospatialUtilsImplTest {
         assertEquals(1, trip1ErrorList.size());
 
         StopTooFarFromTripShape notice = trip1ErrorList.get(0);
-        assertEquals(E_047, notice.getCode());
+        assertEquals(E_052, notice.getCode());
         assertEquals("Stop too far from trip shape", notice.getTitle());
         assertEquals(stopId3, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
 
@@ -376,6 +382,8 @@ public class GeospatialUtilsImplTest {
     }
 
     /**
+     * Test geospatial implementation for rule "E052 - Stop too far from trip shape"
+     *
      * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
      * <p>
      * For debugging, you can export a JTS-version of the buffer in WKT format using code at
@@ -446,6 +454,8 @@ public class GeospatialUtilsImplTest {
     }
 
     /**
+     * Test geospatial implementation for rule "E052 - Stop too far from trip shape"
+     *
      * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
      * <p>
      * For debugging, you can export a JTS-version of the buffer in WKT format using code at
@@ -549,6 +559,8 @@ public class GeospatialUtilsImplTest {
     }
 
     /**
+     * Test geospatial implementation for rule "E052 - Stop too far from trip shape"
+     *
      * See map of trip shape and stops (in GeoJSON) at https://gist.github.com/barbeau/d9c0b90a26a3e2ba105cae5f0e8aec4a
      * <p>
      * For debugging, you can export a JTS-version of the buffer in WKT format using code at

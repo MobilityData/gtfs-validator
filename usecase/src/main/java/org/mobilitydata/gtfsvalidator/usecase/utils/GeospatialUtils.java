@@ -42,7 +42,7 @@ public interface GeospatialUtils {
     int distanceBetweenMeter(double fromLat, double fromLng, double toLat, double toLng);
 
     /**
-     * Returns a list of E047 errors for the given input, one for each stop that is too far from the trip shape
+     * Returns a list of E052 errors for the given input, one for each stop that is too far from the trip shape
      *
      * @param trip        Trip for this GTFS trip
      * @param stopTimes   a map of StopTimes for a trip, sorted by stop_sequence
@@ -51,7 +51,7 @@ public interface GeospatialUtils {
      * @param testedCache a cache for previously tested shape_id and stop_id pairs (keyed on shape_id+stop_id). If the
      *                    combination of shape_id and stop_id appears in this set, we shouldn't test it again. Shapes
      *                    and stops tested in this method execution will be added to this testedCache.
-     * @return a list of E047 errors, one for each stop that is too far from the trip shape
+     * @return a list of E052 errors, one for each stop that is too far from the trip shape
      */
     List<StopTooFarFromTripShape> checkStopsWithinTripShape(Trip trip,
                                                             SortedMap<Integer, StopTime> stopTimes,

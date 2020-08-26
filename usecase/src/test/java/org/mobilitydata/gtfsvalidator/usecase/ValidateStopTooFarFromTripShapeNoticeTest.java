@@ -31,7 +31,7 @@ import java.util.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests to validate behavior of use case for "Stop too far from trip shape" test. Note that geospatial parts
+ * Unit tests to validate behavior of use case for E052 "Stop too far from trip shape". Note that geospatial parts
  * of tests are executed in GeospatialUtilsImplTest in the adapter module as the implementation of the GeospatialUtils
  * interface.
  */
@@ -128,7 +128,7 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
                         mockGeoUtil, mockLogger);
 
         underTest.execute();
-        verify(mockLogger, times(1)).info("Validating rule 'E047 - Stop too far from trip shape'");
+        verify(mockLogger, times(1)).info("Validating rule 'E052 - Stop too far from trip shape'");
 
         verify(mockGeoUtil, times(1)).checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
 
