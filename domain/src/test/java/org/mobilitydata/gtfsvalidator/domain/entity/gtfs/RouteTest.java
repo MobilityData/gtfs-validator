@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingShortAndLongNameForRouteNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
 import java.util.List;
@@ -137,6 +138,110 @@ class RouteTest {
         final InvalidAgencyIdNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
         assertEquals("agency_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+    }
+
+    @Test
+    void createRouteWithBlankRouteShortNameAndRouteLongNameShouldGenerateNotice() {
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(" ")
+                .routeLongName("    ")
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(1)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingShortAndLongNameForRouteNotice> noticeCollection =
+                (List<MissingShortAndLongNameForRouteNotice>) entityBuildResult.getData();
+
+        final MissingShortAndLongNameForRouteNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+    }
+
+    @Test
+    void createRouteWithNullRouteShortNameAndRouteLongNameShouldGenerateNotice() {
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(null)
+                .routeLongName(null)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(1)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingShortAndLongNameForRouteNotice> noticeCollection =
+                (List<MissingShortAndLongNameForRouteNotice>) entityBuildResult.getData();
+
+        final MissingShortAndLongNameForRouteNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+    }
+
+    @Test
+    void createRouteWithNullRouteShortNameAndBlankRouteLongNameShouldGenerateNotice() {
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(null)
+                .routeLongName(" ")
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(1)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingShortAndLongNameForRouteNotice> noticeCollection =
+                (List<MissingShortAndLongNameForRouteNotice>) entityBuildResult.getData();
+
+        final MissingShortAndLongNameForRouteNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+    }
+
+    @Test
+    void createRouteWithBlankRouteShortNameAndNullRouteLongNameShouldGenerateNotice() {
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(null)
+                .routeLongName(" ")
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(1)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingShortAndLongNameForRouteNotice> noticeCollection =
+                (List<MissingShortAndLongNameForRouteNotice>) entityBuildResult.getData();
+
+        final MissingShortAndLongNameForRouteNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
     }
 }

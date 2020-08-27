@@ -27,7 +27,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E024](#E024) | Same name and description for route | 
 | [E025](#E025) | Insufficient route color contrast |
 | [E026](#E026) | Invalid route type | 
-| [E027](#E027) | Missing route short name and long name | 
+| [E027](#E027) | Missing route short name or long name | 
 | [E028](#E028) | Route long name equals short name | 
 | [E029](#E029) | Missing field `agency_id` for file `agency.txt` with more than 1 record | 
 | [E030](#E030) | Inconsistent field `agency_timezone` | 
@@ -131,7 +131,7 @@ A Route color and a Route text color should be contrasting. Minimum Contrast Rat
 
 <a name="E027"/>
 
-### E027 - Missing route short name and long name
+### E027 - Missing route short name or long name
 
 <a name="E028"/>
 

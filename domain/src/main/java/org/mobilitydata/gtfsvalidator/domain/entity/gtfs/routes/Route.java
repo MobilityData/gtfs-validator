@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingShortAndLongNameForRouteNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
 import java.util.ArrayList;
@@ -277,7 +278,8 @@ public class Route extends GtfsEntity {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() throws IllegalArgumentException {
-            if (routeId == null || routeType == null || agencyId.isBlank()) {
+            if (routeId == null || routeType == null || agencyId.isBlank() ||
+                    (!isPresentName(routeLongName) && !isPresentName(routeShortName))) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
                             routeId));
@@ -294,11 +296,24 @@ public class Route extends GtfsEntity {
                     noticeCollection.add(
                             new InvalidAgencyIdNotice("routes.txt", "agency_id", routeId));
                 }
+                // checks if at least one of name fields is provided
+                if (!isPresentName(routeLongName) && !isPresentName(routeShortName)) {
+                    noticeCollection.add(new MissingShortAndLongNameForRouteNotice("routes.txt", routeId));
+                    ;
+                }
                 return new EntityBuildResult(noticeCollection);
             } else {
                 return new EntityBuildResult(new Route(routeId, agencyId, routeShortName, routeLongName, routeDesc,
                         routeType, routeUrl, routeColor, routeTextColor, routeSortOrder));
             }
+        }
+
+        /**
+         * @param routeName a name of a Route
+         * @return true if this Route name is not missing or empty, false if not.
+         */
+        private boolean isPresentName(final String routeName) {
+            return routeName != null && !routeName.isBlank();
         }
 
         /**
