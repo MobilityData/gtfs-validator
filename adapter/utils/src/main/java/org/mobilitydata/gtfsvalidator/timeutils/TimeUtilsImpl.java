@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.timeutils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -83,40 +84,36 @@ public class TimeUtilsImpl implements TimeUtils {
     /**
      * This method converts a number of seconds elapsed since noon of say of service to a string formatted as HH:MM:SS.
      *
-     * @param elapsedDurationSinceNoon the number of seconds elapsed since noon of say of service to be converted as a
-     *                                 string formatted as HH:MM:SS.
+     * @param elapsedDurationSinceNoonInSeconds the number of seconds elapsed since noon of day of service to be
+     *                                          converted as a string formatted as HH:MM:SS.
      * @return the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */
-    public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoon) {
-        if (elapsedDurationSinceNoon != null) {
+    public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoonInSeconds) {
+        if (elapsedDurationSinceNoonInSeconds != null) {
             final LocalTime noon = LocalTime.NOON;
-            final boolean isTimePM = elapsedDurationSinceNoon >= 0;
-            // elapsedDurationSinceNoon > 0 for times after noon, e.g 14:00PM is represented a +2*3600s=+7200s
-            // elapsedDurationSinceNoon < 0 for times before noon, e.g 11:00AM is represented as -1*3600s=-3600s
-//            LocalTime toReturn = elapsedDurationSinceNoon < 24*3600 ?
-            LocalTime toReturn = noon.plusHours(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon));
-            final boolean isTimeGreaterThan24hours = elapsedDurationSinceNoon >= TimeUnit.HOURS.toSeconds(12);
+            // elapsedDurationSinceNoonInSeconds > 0 for times after noon, e.g 14:00PM is represented a +2*3600s=+7200s
+            // elapsedDurationSinceNoonInSeconds < 0 for times before noon, e.g 11:00AM is represented as -1*3600s=-3600s
+            final boolean isTimeGreaterThan24hours =
+                    elapsedDurationSinceNoonInSeconds >= TimeUnit.HOURS.toSeconds(12);
 
-            if (isTimePM) {
-                toReturn = toReturn.plusMinutes(
-                        TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
-                                TimeUnit.HOURS.toMinutes(toReturn.getHour() - noon.getHour()));
-                toReturn = toReturn.plusSeconds(elapsedDurationSinceNoon -
-                        TimeUnit.HOURS.toSeconds(toReturn.getHour() - noon.getHour()) -
-                        TimeUnit.MINUTES.toSeconds(toReturn.getMinute()));
+            if (!isTimeGreaterThan24hours) {
+                return String.format("%02d:%02d:%02d", noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getHour(),
+                        noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getMinute(),
+                        noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getSecond());
             } else {
-                toReturn = toReturn.plusMinutes(
-                        (TimeUnit.SECONDS.toMinutes(
-                                elapsedDurationSinceNoon) - TimeUnit.HOURS.toMinutes(toReturn.getHour())) % 60);
-                toReturn = toReturn.plusSeconds(elapsedDurationSinceNoon -
-                        TimeUnit.HOURS.toSeconds(toReturn.getHour() - noon.getHour()) -
-                        TimeUnit.MINUTES.toSeconds(toReturn.getMinute()));
+                // This wraps around midnight
+                LocalTime timeAfterMidnight = noon.plusSeconds(elapsedDurationSinceNoonInSeconds);
+                // Get the number of hours, minutes, and seconds between midnight and timeAfterMidnight, which is the
+                // time to add to 24:00:00
+                long hoursAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.HOURS);
+                long minutesAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.MINUTES) % 60;
+                long secondsAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.SECONDS) % 60;
+                return String.format("%02d:%02d:%02d",
+                        hoursAfterMidnight + 24,
+                        minutesAfterMidnight,
+                        secondsAfterMidnight);
             }
-            return String.format("%02d:%02d:%02d",
-                    isTimeGreaterThan24hours ? toReturn.getHour() + 24 : toReturn.getHour(),
-                    toReturn.getMinute(),
-                    toReturn.getSecond());
         } else {
             return null;
         }
