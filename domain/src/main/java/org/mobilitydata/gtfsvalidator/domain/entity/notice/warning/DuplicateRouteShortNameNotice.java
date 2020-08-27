@@ -27,10 +27,12 @@ public class DuplicateRouteShortNameNotice extends WarningNotice {
                                          final String duplicateRouteShortName) {
         super("routes.txt",
                 W_015,
-                "Duplicate `route_long_name`",
+                "Duplicate `route_short_name`",
                 String.format("Routes with `route_id`: `%s` and `%s` have same `route_short_name`: `%s`. These routes" +
                                 " must be different route routes serving different areas and must not be different" +
-                                " trips of the same route or different directions of the same route",
+                                " trips of the same route or different directions of the same route." +
+                                " Note that two routes can have the same `route_short_name` if they do not belong to" +
+                                " the same agency.",
                         routeId, conflictingRouteId, duplicateRouteShortName),
                 conflictingRouteId);
         putNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID, routeId);

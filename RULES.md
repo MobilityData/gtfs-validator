@@ -370,16 +370,18 @@ This is related to [E047](https://github.com/MobilityData/gtfs-validator/blob/ma
 
 ### W014 - Duplicate `routes.route_long_name`
 
-All routes should have different `route_long_name`. If routes have same `route_long_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route.
+All routes should have different `route_long_name`. If routes have the same `route_long_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route.
+Note that two routes can have the same `route_long_name` if they do not belong to the same agency.
 
 <a name="W015"/>
 
 ### W015 - Duplicate `routes.route_short_name`
 
-All routes should have different `route_short_name`. If routes have same `route_long_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route.
+All routes should have different `route_short_name`. If routes have the same `route_short_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route. 
+Note that two routes can have the same `route_short_name` if they do not belong to the same agency.
 
 <a name="W016"/>
 
-### W016 - Duplicate combination of fields `route_long_name` and `routes.route_short_name`
+### W016 - Duplicate combination of fields `routes.route_long_name` and `routes.route_short_name`
 
-`route_short_name` and `route_long_name` 'should not be used for more than once. 
+The same combination of `route_short_name` and `route_long_name` should not be used for more than one route.

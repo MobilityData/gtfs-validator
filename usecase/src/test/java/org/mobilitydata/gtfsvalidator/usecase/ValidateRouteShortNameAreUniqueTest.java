@@ -140,7 +140,7 @@ class ValidateRouteShortNameAreUniqueTest {
     // suppressed warning regarding ignored result of method because method is called in assertions
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void duplicateRouteShortNameWhenRoutesBelongToUniqueAgencyShouldGenerateNotice() {
+    void duplicateRouteShortNameWhenRoutesBelongToNullAgencyShouldGenerateNotice() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Map<String, Route> mockRouteCollection = new HashMap<>();
 

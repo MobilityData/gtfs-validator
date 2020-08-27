@@ -62,12 +62,10 @@ public class ValidateRouteShortNameAreUnique {
             final String routeShortName = route.getRouteShortName();
             if (routeShortName != null) {
                 if (routeByRouteShortName.containsKey(routeShortName)) {
-                    final String routeAgencyId = route.getAgencyId();
-                    final String otherRouteAgencyId = routeByRouteShortName.get(routeShortName).getAgencyId();
-                    final boolean routesAreFromSameAgency =
-                            dataRepo.getAgencyCount() == 1 ||
-                                    (routeAgencyId != null && routeAgencyId.equals(otherRouteAgencyId));
-                    if (routesAreFromSameAgency) {
+                    if (areRouteFromSameAgency(
+                            dataRepo,
+                            route.getAgencyId(),
+                            routeByRouteShortName.get(routeShortName).getAgencyId())) {
                         resultRepo.addNotice(
                                 new DuplicateRouteShortNameNotice(
                                         routeByRouteShortName.get(routeShortName).getRouteId(),
@@ -80,5 +78,21 @@ public class ValidateRouteShortNameAreUnique {
                 }
             }
         });
+    }
+
+    /**
+     * Utility method to determine if two routes are from the same agency
+     *
+     * @param dataRepo           a repository storing the data of a GTFS dataset
+     * @param routeAgencyId      first agency_id
+     * @param otherRouteAgencyId second agency_id
+     * @return true if both agency ids are equals or the GTFS data repository contains only one agency, returns false
+     * otherwise.
+     */
+    private boolean areRouteFromSameAgency(final GtfsDataRepository dataRepo,
+                                           final String routeAgencyId,
+                                           final String otherRouteAgencyId) {
+        return dataRepo.getAgencyCount() == 1 ||
+                (routeAgencyId != null && routeAgencyId.equals(otherRouteAgencyId));
     }
 }

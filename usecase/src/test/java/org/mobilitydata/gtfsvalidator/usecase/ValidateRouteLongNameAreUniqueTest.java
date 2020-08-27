@@ -38,7 +38,7 @@ class ValidateRouteLongNameAreUniqueTest {
     // suppressed warning regarding ignored result of method because method is called in assertions
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void duplicateRouteLongNameShouldGenerateNotice() {
+    void duplicateRouteLongNameWhenRoutesBelongToSameAgencyShouldGenerateNotice() {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Map<String, Route> mockRouteCollection = new HashMap<>();
 
@@ -48,10 +48,12 @@ class ValidateRouteLongNameAreUniqueTest {
         final Route mockRoute1 = mock(Route.class);
         when(mockRoute1.getRouteId()).thenReturn("route id1");
         when(mockRoute1.getRouteLongName()).thenReturn("duplicate route long name");
+        when(mockRoute1.getAgencyId()).thenReturn("common agency id");
 
         final Route mockRoute2 = mock(Route.class);
         when(mockRoute2.getRouteId()).thenReturn("route id2");
         when(mockRoute2.getRouteLongName()).thenReturn("duplicate route long name");
+        when(mockRoute2.getAgencyId()).thenReturn("common agency id");
 
         final Route mockRoute3 = mock(Route.class);
         when(mockRoute3.getRouteLongName()).thenReturn("route 3 long name");
@@ -63,6 +65,7 @@ class ValidateRouteLongNameAreUniqueTest {
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
+        when(mockDataRepo.getAgencyCount()).thenReturn(3);
 
         final Logger mockLogger = mock(Logger.class);
         final ValidateRouteLongNameAreUnique underTest =
@@ -73,11 +76,14 @@ class ValidateRouteLongNameAreUniqueTest {
         verify(mockLogger, times(1))
                 .info("Validating rule 'W014 - Duplicate `routes.route_long_name`'");
         verify(mockDataRepo, times(1)).getRouteAll();
+        verify(mockDataRepo, times(1)).getAgencyCount();
 
         verify(mockRoute0, times(1)).getRouteLongName();
         verify(mockRoute1, times(1)).getRouteLongName();
+        verify(mockRoute1, times(1)).getAgencyId();
         verify(mockRoute2, times(1)).getRouteLongName();
         verify(mockRoute2, times(1)).getRouteId();
+        verify(mockRoute2, times(1)).getAgencyId();
         verify(mockRoute3, times(1)).getRouteLongName();
 
         final ArgumentCaptor<DuplicateRouteLongNameNotice> captor =
@@ -95,6 +101,131 @@ class ValidateRouteLongNameAreUniqueTest {
 
         verifyNoMoreInteractions(mockRoute0, mockRoute1, mockRoute2, mockRoute3, mockResultRepo, mockLogger,
                 mockDataRepo);
+    }
+
+    // suppressed warning regarding ignored result of method because method is called in assertions
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @Test
+    void duplicateRouteLongNameWhenRoutesBelongToDifferentAgenciesShouldNotGenerateNotice() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+
+        final Route mockRoute0 = mock(Route.class);
+        when(mockRoute0.getRouteLongName()).thenReturn("route 0 long name");
+
+        final Route mockRoute1 = mock(Route.class);
+        when(mockRoute1.getRouteId()).thenReturn("route id1");
+        when(mockRoute1.getRouteLongName()).thenReturn("duplicate route long name");
+        when(mockRoute1.getAgencyId()).thenReturn("agency id value for route 1");
+
+        final Route mockRoute2 = mock(Route.class);
+        when(mockRoute2.getRouteId()).thenReturn("route id2");
+        when(mockRoute2.getRouteLongName()).thenReturn("duplicate route long name");
+        when(mockRoute2.getAgencyId()).thenReturn("agency id value for route 2");
+
+        final Route mockRoute3 = mock(Route.class);
+        when(mockRoute3.getRouteLongName()).thenReturn("route 3 long name");
+
+        mockRouteCollection.put("route id0", mockRoute0);
+        mockRouteCollection.put("route id1", mockRoute1);
+        mockRouteCollection.put("route id2", mockRoute2);
+        mockRouteCollection.put("route id3", mockRoute3);
+
+        final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
+        when(mockDataRepo.getAgencyCount()).thenReturn(3);
+
+        final Logger mockLogger = mock(Logger.class);
+        final ValidateRouteLongNameAreUnique underTest =
+                new ValidateRouteLongNameAreUnique(mockDataRepo, mockResultRepo, mockLogger);
+
+        underTest.execute();
+
+        verify(mockLogger, times(1))
+                .info("Validating rule 'W014 - Duplicate `routes.route_long_name`'");
+        verify(mockDataRepo, times(1)).getRouteAll();
+        verify(mockDataRepo, times(1)).getAgencyCount();
+
+        verify(mockRoute0, times(1)).getRouteLongName();
+        verify(mockRoute1, times(1)).getRouteLongName();
+        verify(mockRoute1, times(1)).getAgencyId();
+        verify(mockRoute2, times(1)).getRouteLongName();
+        verify(mockRoute2, times(1)).getAgencyId();
+        verify(mockRoute3, times(1)).getRouteLongName();
+
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockRoute0, mockRoute1, mockRoute2, mockRoute3, mockLogger, mockDataRepo);
+    }
+
+    // suppressed warning regarding ignored result of method because method is called in assertions
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @Test
+    void duplicateRouteLongNameWhenRoutesBelongToNullAgencyShouldGenerateNotice() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+
+        final Route mockRoute0 = mock(Route.class);
+        when(mockRoute0.getRouteLongName()).thenReturn("route 0 long name");
+
+        final Route mockRoute1 = mock(Route.class);
+        when(mockRoute1.getRouteId()).thenReturn("route id1");
+        when(mockRoute1.getRouteLongName()).thenReturn("duplicate route long name");
+        when(mockRoute1.getAgencyId()).thenReturn(null);
+
+        final Route mockRoute2 = mock(Route.class);
+        when(mockRoute2.getRouteId()).thenReturn("route id2");
+        when(mockRoute2.getRouteLongName()).thenReturn("duplicate route long name");
+        when(mockRoute2.getAgencyId()).thenReturn(null);
+
+        final Route mockRoute3 = mock(Route.class);
+        when(mockRoute3.getRouteLongName()).thenReturn("route 3 long name");
+
+        mockRouteCollection.put("route id0", mockRoute0);
+        mockRouteCollection.put("route id1", mockRoute1);
+        mockRouteCollection.put("route id2", mockRoute2);
+        mockRouteCollection.put("route id3", mockRoute3);
+
+        final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
+        when(mockDataRepo.getAgencyCount()).thenReturn(1);
+
+        final Logger mockLogger = mock(Logger.class);
+        final ValidateRouteLongNameAreUnique underTest =
+                new ValidateRouteLongNameAreUnique(mockDataRepo, mockResultRepo, mockLogger);
+
+        underTest.execute();
+
+        verify(mockLogger, times(1))
+                .info("Validating rule 'W014 - Duplicate `routes.route_long_name`'");
+        verify(mockDataRepo, times(1)).getRouteAll();
+        verify(mockDataRepo, times(1)).getAgencyCount();
+
+        verify(mockRoute0, times(1)).getRouteLongName();
+
+        verify(mockRoute1, times(1)).getRouteLongName();
+        verify(mockRoute1, times(1)).getAgencyId();
+
+        verify(mockRoute2, times(1)).getRouteLongName();
+        verify(mockRoute2, times(1)).getAgencyId();
+        verify(mockRoute2, times(1)).getRouteId();
+
+        verify(mockRoute3, times(1)).getRouteLongName();
+
+        final ArgumentCaptor<DuplicateRouteLongNameNotice> captor =
+                ArgumentCaptor.forClass(DuplicateRouteLongNameNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        final List<DuplicateRouteLongNameNotice> noticeList = captor.getAllValues();
+
+        assertEquals("routes.txt", noticeList.get(0).getFilename());
+        assertEquals("route id1", noticeList.get(0).getEntityId());
+        assertEquals("route id2", noticeList.get(0).getNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID));
+        assertEquals("duplicate route long name",
+                noticeList.get(0).getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME));
+
+        verifyNoMoreInteractions(mockRoute0, mockRoute1, mockRoute2, mockRoute3, mockLogger, mockDataRepo,
+                mockResultRepo);
     }
 
     // suppressed warning regarding ignored result of method because method is called in assertions

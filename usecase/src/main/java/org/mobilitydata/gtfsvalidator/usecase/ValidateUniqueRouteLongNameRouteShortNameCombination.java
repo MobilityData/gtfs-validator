@@ -49,29 +49,28 @@ public class ValidateUniqueRouteLongNameRouteShortNameCombination {
     }
 
     /**
-     * Use case execution method: checks unicity of combination of fields `route_long_name` and `route_short_name`
+     * Use case execution method: checks uniqueness of combination of fields `route_long_name` and `route_short_name`
      * in file `routes.txt`. A notice is generated and added to the {@code ValidationResultRepository} provided in the
      * constructor each time this requirement is not satisfied.
      */
     public void execute() {
-        logger.info("Validating rule 'W016 - Duplicate combination od fields`route_short_name` and `route_long_name`'");
+        logger.info("Validating rule 'W016 - Duplicate combination of fields `route_short_name` and `route_long_name`'");
 
         final Map<String, Route> routeByRouteLongNameRouteShortName = new HashMap<>();
         dataRepo.getRouteAll().forEach((routeId, route) -> {
             final String routeShortName = route.getRouteShortName();
             final String routeLongName = route.getRouteLongName();
-            if (routeShortName != null && routeLongName != null) {
-                if (routeByRouteLongNameRouteShortName.containsKey(routeLongName + routeShortName)) {
-                    resultRepo.addNotice(
-                            new DuplicateRouteLongNameRouteShortNameCombinationNotice(
-                                    routeByRouteLongNameRouteShortName.get(routeLongName + routeShortName).getRouteId(),
-                                    routeId,
-                                    routeLongName,
-                                    routeShortName)
-                    );
-                } else {
-                    routeByRouteLongNameRouteShortName.put(routeLongName + routeShortName, route);
-                }
+            // it is assumed that both routeShortName and routeLongName are not simultaneously null from previous
+            // validation
+            if (routeByRouteLongNameRouteShortName.containsKey(routeLongName + routeShortName)) {
+                resultRepo.addNotice(
+                        new DuplicateRouteLongNameRouteShortNameCombinationNotice(
+                                routeByRouteLongNameRouteShortName.get(routeLongName + routeShortName).getRouteId(),
+                                routeId,
+                                routeLongName,
+                                routeShortName));
+            } else {
+                routeByRouteLongNameRouteShortName.put(routeLongName + routeShortName, route);
             }
         });
     }

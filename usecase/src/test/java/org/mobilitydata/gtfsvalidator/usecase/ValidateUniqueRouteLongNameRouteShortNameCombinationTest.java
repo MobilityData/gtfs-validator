@@ -74,7 +74,8 @@ class ValidateUniqueRouteLongNameRouteShortNameCombinationTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'W016 - Duplicate combination od fields`route_short_name` and `route_long_name`'");
+                .info("Validating rule 'W016 - Duplicate combination of fields `route_short_name` and" +
+                        " `route_long_name`'");
         verify(mockDataRepo, times(1)).getRouteAll();
 
         verify(mockRoute0, times(1)).getRouteLongName();
@@ -132,7 +133,8 @@ class ValidateUniqueRouteLongNameRouteShortNameCombinationTest {
         underTest.execute();
 
         verify(mockLogger, times(1))
-                .info("Validating rule 'W016 - Duplicate combination od fields`route_short_name` and `route_long_name`'");
+                .info("Validating rule 'W016 - Duplicate combination of fields `route_short_name` and" +
+                        " `route_long_name`'");
         verify(mockDataRepo, times(1)).getRouteAll();
 
         verify(mockRoute0, times(1)).getRouteLongName();
@@ -156,6 +158,152 @@ class ValidateUniqueRouteLongNameRouteShortNameCombinationTest {
         assertEquals("route id1", noticeList.get(0).getEntityId());
         assertEquals("route id2", noticeList.get(0).getNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID));
         assertEquals("duplicate route long name",
+                noticeList.get(0).getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME));
+        assertEquals("duplicate route short name",
+                noticeList.get(0).getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME));
+
+        verifyNoMoreInteractions(mockRoute0, mockRoute1, mockRoute2, mockRoute3, mockResultRepo, mockLogger,
+                mockDataRepo);
+    }
+
+    @Test
+    void duplicateRouteNameCombinationWithNullRouteShortNameShouldGenerateNotice() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+
+        final Route mockRoute0 = mock(Route.class);
+        when(mockRoute0.getRouteLongName()).thenReturn("route 0 long name");
+        when(mockRoute0.getRouteShortName()).thenReturn("route 0 short name");
+
+        final Route mockRoute1 = mock(Route.class);
+        when(mockRoute1.getRouteId()).thenReturn("route id1");
+        when(mockRoute1.getRouteLongName()).thenReturn("duplicate route long name");
+        when(mockRoute1.getRouteShortName()).thenReturn(null);
+        when(mockRoute1.getRouteId()).thenReturn("route id1");
+
+        final Route mockRoute2 = mock(Route.class);
+        when(mockRoute2.getRouteId()).thenReturn("route id2");
+        when(mockRoute2.getRouteLongName()).thenReturn("duplicate route long name");
+        when(mockRoute2.getRouteShortName()).thenReturn(null);
+        when(mockRoute2.getRouteId()).thenReturn("route id2");
+
+        final Route mockRoute3 = mock(Route.class);
+        when(mockRoute3.getRouteLongName()).thenReturn("route 3 long name");
+        when(mockRoute3.getRouteShortName()).thenReturn("route 3 short name");
+
+        mockRouteCollection.put("route id0", mockRoute0);
+        mockRouteCollection.put("route id1", mockRoute1);
+        mockRouteCollection.put("route id2", mockRoute2);
+        mockRouteCollection.put("route id3", mockRoute3);
+
+        final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
+
+        final Logger mockLogger = mock(Logger.class);
+        final ValidateUniqueRouteLongNameRouteShortNameCombination underTest =
+                new ValidateUniqueRouteLongNameRouteShortNameCombination(mockDataRepo, mockResultRepo, mockLogger);
+
+        underTest.execute();
+
+        verify(mockLogger, times(1))
+                .info("Validating rule 'W016 - Duplicate combination of fields `route_short_name` and" +
+                        " `route_long_name`'");
+        verify(mockDataRepo, times(1)).getRouteAll();
+
+        verify(mockRoute0, times(1)).getRouteLongName();
+        verify(mockRoute0, times(1)).getRouteShortName();
+        verify(mockRoute1, times(1)).getRouteLongName();
+        verify(mockRoute1, times(1)).getRouteShortName();
+        verify(mockRoute2, times(1)).getRouteLongName();
+        verify(mockRoute2, times(1)).getRouteId();
+        verify(mockRoute2, times(1)).getRouteShortName();
+        verify(mockRoute3, times(1)).getRouteLongName();
+        verify(mockRoute3, times(1)).getRouteShortName();
+
+        final ArgumentCaptor<DuplicateRouteLongNameRouteShortNameCombinationNotice> captor =
+                ArgumentCaptor.forClass(DuplicateRouteLongNameRouteShortNameCombinationNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        final List<DuplicateRouteLongNameRouteShortNameCombinationNotice> noticeList = captor.getAllValues();
+
+        assertEquals("routes.txt", noticeList.get(0).getFilename());
+        assertEquals("route id1", noticeList.get(0).getEntityId());
+        assertEquals("route id2", noticeList.get(0).getNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID));
+        assertEquals("duplicate route long name",
+                noticeList.get(0).getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME));
+        assertEquals(null,
+                noticeList.get(0).getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME));
+
+        verifyNoMoreInteractions(mockRoute0, mockRoute1, mockRoute2, mockRoute3, mockResultRepo, mockLogger,
+                mockDataRepo);
+    }
+
+    @Test
+    void duplicateRouteNameCombinationWithNullRouteLongNameShouldGenerateNotice() {
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Map<String, Route> mockRouteCollection = new HashMap<>();
+
+        final Route mockRoute0 = mock(Route.class);
+        when(mockRoute0.getRouteLongName()).thenReturn("route 0 long name");
+        when(mockRoute0.getRouteShortName()).thenReturn("route 0 short name");
+
+        final Route mockRoute1 = mock(Route.class);
+        when(mockRoute1.getRouteId()).thenReturn("route id1");
+        when(mockRoute1.getRouteLongName()).thenReturn(null);
+        when(mockRoute1.getRouteShortName()).thenReturn("duplicate route short name");
+        when(mockRoute1.getRouteId()).thenReturn("route id1");
+
+        final Route mockRoute2 = mock(Route.class);
+        when(mockRoute2.getRouteId()).thenReturn("route id2");
+        when(mockRoute2.getRouteLongName()).thenReturn(null);
+        when(mockRoute2.getRouteShortName()).thenReturn("duplicate route short name");
+        when(mockRoute2.getRouteId()).thenReturn("route id2");
+
+        final Route mockRoute3 = mock(Route.class);
+        when(mockRoute3.getRouteLongName()).thenReturn("route 3 long name");
+        when(mockRoute3.getRouteShortName()).thenReturn("route 3 short name");
+
+        mockRouteCollection.put("route id0", mockRoute0);
+        mockRouteCollection.put("route id1", mockRoute1);
+        mockRouteCollection.put("route id2", mockRoute2);
+        mockRouteCollection.put("route id3", mockRoute3);
+
+        final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        when(mockDataRepo.getRouteAll()).thenReturn(mockRouteCollection);
+
+        final Logger mockLogger = mock(Logger.class);
+        final ValidateUniqueRouteLongNameRouteShortNameCombination underTest =
+                new ValidateUniqueRouteLongNameRouteShortNameCombination(mockDataRepo, mockResultRepo, mockLogger);
+
+        underTest.execute();
+
+        verify(mockLogger, times(1))
+                .info("Validating rule 'W016 - Duplicate combination of fields `route_short_name` and" +
+                        " `route_long_name`'");
+        verify(mockDataRepo, times(1)).getRouteAll();
+
+        verify(mockRoute0, times(1)).getRouteLongName();
+        verify(mockRoute0, times(1)).getRouteShortName();
+        verify(mockRoute1, times(1)).getRouteLongName();
+        verify(mockRoute1, times(1)).getRouteShortName();
+        verify(mockRoute2, times(1)).getRouteLongName();
+        verify(mockRoute2, times(1)).getRouteId();
+        verify(mockRoute2, times(1)).getRouteShortName();
+        verify(mockRoute3, times(1)).getRouteLongName();
+        verify(mockRoute3, times(1)).getRouteShortName();
+
+        final ArgumentCaptor<DuplicateRouteLongNameRouteShortNameCombinationNotice> captor =
+                ArgumentCaptor.forClass(DuplicateRouteLongNameRouteShortNameCombinationNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        final List<DuplicateRouteLongNameRouteShortNameCombinationNotice> noticeList = captor.getAllValues();
+
+        assertEquals("routes.txt", noticeList.get(0).getFilename());
+        assertEquals("route id1", noticeList.get(0).getEntityId());
+        assertEquals("route id2", noticeList.get(0).getNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID));
+        assertEquals(null,
                 noticeList.get(0).getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME));
         assertEquals("duplicate route short name",
                 noticeList.get(0).getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME));

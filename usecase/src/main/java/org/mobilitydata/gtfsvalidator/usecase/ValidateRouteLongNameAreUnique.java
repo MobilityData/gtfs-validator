@@ -49,9 +49,10 @@ public class ValidateRouteLongNameAreUnique {
     }
 
     /**
-     * Use case execution method: checks unicity of `route_long_name` in file `routes.txt`. A notice is
+     * Use case execution method: checks uniqueness of `route_long_name` in file `routes.txt`. A notice is
      * generated and added to the {@code ValidationResultRepository} provided in the constructor each time this
      * requirement is not satisfied.
+     * Note that two {@link Route} can have the same `route_long_name` if they do not belong to the same agency
      */
     public void execute() {
         logger.info("Validating rule 'W014 - Duplicate `routes.route_long_name`'");
@@ -61,16 +62,36 @@ public class ValidateRouteLongNameAreUnique {
             final String routeLongName = route.getRouteLongName();
             if (routeLongName != null) {
                 if (routeByRouteLongName.containsKey(routeLongName)) {
-                    resultRepo.addNotice(
-                            new DuplicateRouteLongNameNotice(
-                                    routeByRouteLongName.get(routeLongName).getRouteId(),
-                                    routeId,
-                                    routeLongName)
-                    );
+                    if (areRouteFromSameAgency(
+                            dataRepo,
+                            route.getAgencyId(),
+                            routeByRouteLongName.get(routeLongName).getAgencyId())) {
+                        resultRepo.addNotice(
+                                new DuplicateRouteLongNameNotice(
+                                        routeByRouteLongName.get(routeLongName).getRouteId(),
+                                        routeId,
+                                        routeLongName)
+                        );
+                    }
                 } else {
                     routeByRouteLongName.put(routeLongName, route);
                 }
             }
         });
+    }
+
+    /**
+     * Utility method to determine if two routes are from the same agency
+     *
+     * @param dataRepo           a repository storing the data of a GTFS dataset
+     * @param routeAgencyId      first agency_id
+     * @param otherRouteAgencyId second agency_id
+     * @return true if both agency ids are equals or the GTFS data repository contains only one agency, returns false
+     * otherwise.
+     */
+    private boolean areRouteFromSameAgency(final GtfsDataRepository dataRepo,
+                                           final String routeAgencyId,
+                                           final String otherRouteAgencyId) {
+        return dataRepo.getAgencyCount() == 1 || (routeAgencyId != null && routeAgencyId.equals(otherRouteAgencyId));
     }
 }
