@@ -77,8 +77,6 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
                         stopTimeCollectionForCurrentTrip.get(stopTimeCollectionForCurrentTrip.lastKey());
                 final Integer currentTripFirstTime = currentTripFirstStopTimeInSequence.getArrivalTime();
                 final Integer currentTripLastTime = currentTripLastStopTimeInSequence.getDepartureTime();
-                final Integer currentTripFirstStopSequence = currentTripFirstStopTimeInSequence.getStopSequence();
-                final Integer currentTripLastStopSequence = currentTripLastStopTimeInSequence.getStopSequence();
 
                 visitedTripIdCollection.add(currentTripId);
 
@@ -120,19 +118,18 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
                                                     currentTripLastTime,
                                                     unvisitedTripFirstTime,
                                                     unvisitedTripLastTime)) {
-                                                resultRepo.addNotice(new BlockTripsWithOverlappingStopTimesNotice(
-                                                        currentTripId,
-                                                        blockId,
-                                                        currentTripFirstStopSequence,
-                                                        currentTripLastStopSequence,
-                                                        timeUtils.convertIntegerToHMMSS(currentTripFirstTime),
-                                                        timeUtils.convertIntegerToHMMSS(currentTripLastTime),
-                                                        unvisitedTripId,
-                                                        unvisitedTripFirstStopTimeInSequence.getStopSequence(),
-                                                        unvisitedTripLastStopTimeInSequence.getStopSequence(),
-                                                        timeUtils.convertIntegerToHMMSS(unvisitedTripFirstTime),
-                                                        timeUtils.convertIntegerToHMMSS(unvisitedTripLastTime)
-                                                ));
+                                                resultRepo.addNotice(
+                                                        new BlockTripsWithOverlappingStopTimesNotice(
+                                                                currentTripId,
+                                                                timeUtils.convertIntegerToHMMSS(currentTripFirstTime),
+                                                                timeUtils.convertIntegerToHMMSS(currentTripLastTime),
+                                                                unvisitedTripId,
+                                                                timeUtils.convertIntegerToHMMSS(unvisitedTripFirstTime),
+                                                                timeUtils.convertIntegerToHMMSS(unvisitedTripLastTime),
+                                                                blockId)
+                                                );
+
+
                                             }
                                         }
                                     }
@@ -178,29 +175,25 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
                                                                 currentTripLastTime,
                                                                 unvisitedTripFirstTime,
                                                                 unvisitedTripLastTime)) {
+                                                            final List<String> commonDaysOfOperation =
+                                                                    currentTripCalendar
+                                                                            .getCalendarsCommonOperationDayCollection(
+                                                                                    unvisitedTripCalendar);
                                                             resultRepo.addNotice(
                                                                     new BlockTripsWithOverlappingStopTimesNotice(
                                                                             currentTripId,
-                                                                            blockId,
-                                                                            currentTripFirstStopSequence,
-                                                                            currentTripLastStopSequence,
                                                                             timeUtils.convertIntegerToHMMSS(
                                                                                     currentTripFirstTime),
                                                                             timeUtils.convertIntegerToHMMSS(
                                                                                     currentTripLastTime),
                                                                             unvisitedTripId,
-                                                                            unvisitedTripFirstStopTimeInSequence
-                                                                                    .getStopSequence(),
-                                                                            unvisitedTripLastStopTimeInSequence
-                                                                                    .getStopSequence(),
                                                                             timeUtils.convertIntegerToHMMSS(
                                                                                     unvisitedTripFirstTime),
                                                                             timeUtils.convertIntegerToHMMSS(
                                                                                     unvisitedTripLastTime),
-                                                                            currentTripCalendar
-                                                                                    .getCalendarsCommonOperationDayCollection(
-                                                                                            unvisitedTripCalendar)
-                                                                    ));
+                                                                            blockId,
+                                                                            commonDaysOfOperation)
+                                                            );
                                                         }
                                                     }
                                                 }
@@ -243,25 +236,18 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
                                                         resultRepo.addNotice(
                                                                 new BlockTripsWithOverlappingStopTimesNotice(
                                                                         currentTripId,
-                                                                        blockId,
-                                                                        currentTripFirstStopSequence,
-                                                                        currentTripLastStopSequence,
                                                                         timeUtils.convertIntegerToHMMSS(
                                                                                 currentTripFirstTime),
                                                                         timeUtils.convertIntegerToHMMSS(
                                                                                 currentTripLastTime),
-                                                                        unvisitedTrip.getTripId(),
-                                                                        unvisitedTripFirstStopTimeInSequence
-                                                                                .getStopSequence(),
-                                                                        unvisitedTripLastStopTimeInSequence
-                                                                                .getStopSequence(),
+                                                                        unvisitedTripId,
                                                                         timeUtils.convertIntegerToHMMSS(
                                                                                 unvisitedTripFirstTime),
                                                                         timeUtils.convertIntegerToHMMSS(
                                                                                 unvisitedTripLastTime),
-                                                                        potentialConflictingDates
-
-                                                                ));
+                                                                        blockId,
+                                                                        potentialConflictingDates)
+                                                        );
                                                     }
                                                 }
                                             }

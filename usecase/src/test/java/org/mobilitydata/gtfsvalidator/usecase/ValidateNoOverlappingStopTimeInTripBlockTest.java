@@ -166,24 +166,18 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
-        verify(firstTripFirstStopTime, times(1)).getStopSequence();
-        verify(firstTripLastStopTime, times(1)).getStopSequence();
 
         verify(secondTripFirstStopTime, times(2)).getArrivalTime();
-        verify(secondTripFirstStopTime, times(1)).getStopSequence();
 
         verify(thirdTripFirstStopTime, times(3)).getArrivalTime();
-        verify(thirdTripFirstStopTime, times(1)).getStopSequence();
 
         verify(firstTripLastStopTime, times(1)).getDepartureTime();
 
         verify(secondTripLastStopTime, times(2)).getDepartureTime();
-        verify(secondTripLastStopTime, times(1)).getStopSequence();
         verify(secondTripLastStopTime, times(2)).getDepartureTime();
 
 
         verify(thirdTripLastStopTime, times(3)).getDepartureTime();
-        verify(thirdTripLastStopTime, times(1)).getStopSequence();
 
         verify(mockTimeUtils, times(3))
                 .arePeriodsOverlapping(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(),
@@ -364,20 +358,14 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         verify(mockDataRepo, times(3)).getStopTimeByTripId("8");
 
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
-        verify(firstTripFirstStopTime, times(1)).getStopSequence();
 
         verify(firstTripLastStopTime, times(1)).getDepartureTime();
-        verify(firstTripLastStopTime, times(1)).getStopSequence();
 
         verify(secondTripFirstStopTime, times(2)).getArrivalTime();
-        verify(secondTripFirstStopTime, times(1)).getStopSequence();
         verify(secondTripLastStopTime, times(2)).getDepartureTime();
-        verify(secondTripLastStopTime, times(1)).getStopSequence();
 
         verify(thirdTripFirstStopTime, times(3)).getArrivalTime();
-        verify(thirdTripFirstStopTime, times(1)).getStopSequence();
         verify(thirdTripLastStopTime, times(3)).getDepartureTime();
-        verify(thirdTripLastStopTime, times(1)).getStopSequence();
 
         verify(mockDataRepo, times(1)).getCalendarAll();
 
@@ -559,22 +547,16 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         verify(calendarDateForServiceC, times(2)).getExceptionType();
 
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
-        verify(firstTripFirstStopTime, times(1)).getStopSequence();
-        verify(firstTripLastStopTime, times(1)).getStopSequence();
 
         verify(secondTripFirstStopTime, times(2)).getArrivalTime();
-        verify(secondTripFirstStopTime, times(1)).getStopSequence();
 
         verify(thirdTripFirstStopTime, times(3)).getArrivalTime();
-        verify(thirdTripFirstStopTime, times(1)).getStopSequence();
 
         verify(firstTripLastStopTime, times(1)).getDepartureTime();
 
         verify(secondTripLastStopTime, times(2)).getDepartureTime();
-        verify(secondTripLastStopTime, times(1)).getStopSequence();
 
         verify(thirdTripLastStopTime, times(3)).getDepartureTime();
-        verify(thirdTripLastStopTime, times(1)).getStopSequence();
 
         verifyNoInteractions(mockResultRepo, mockTimeUtils);
         verifyNoMoreInteractions(mockLogger, mockDataRepo, firstMockTrip, secondMockTrip, thirdMockTrip,
@@ -720,23 +702,17 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
-        verify(firstTripFirstStopTime, times(1)).getStopSequence();
 
         verify(secondTripFirstStopTime, times(2)).getArrivalTime();
-        verify(secondTripFirstStopTime, times(2)).getStopSequence();
 
         verify(thirdTripFirstStopTime, times(3)).getArrivalTime();
-        verify(thirdTripFirstStopTime, times(1)).getStopSequence();
 
         verify(firstTripLastStopTime, times(1)).getDepartureTime();
-        verify(firstTripLastStopTime, times(1)).getStopSequence();
 
         verify(secondTripLastStopTime, times(2)).getDepartureTime();
         verify(secondTripLastStopTime, times(2)).getDepartureTime();
-        verify(secondTripLastStopTime, times(2)).getStopSequence();
 
         verify(thirdTripLastStopTime, times(3)).getDepartureTime();
-        verify(thirdTripLastStopTime, times(1)).getStopSequence();
 
         verify(mockTimeUtils, times(1)).convertIntegerToHMMSS(700);
         verify(mockTimeUtils, times(1)).convertIntegerToHMMSS(1000);
@@ -756,15 +732,11 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         assertEquals("trips.txt", noticeList.get(0).getFilename());
         assertEquals("2", noticeList.get(0).getEntityId());
         assertEquals("7", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_BLOCK_ID));
-        assertEquals("5", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_CONFLICTING_TRIP_ID));
+        assertEquals("5", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_PREVIOUS_TRIP_ID));
         assertEquals("700", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_FIRST_TIME));
         assertEquals("1000", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_LAST_TIME));
-        assertEquals("903", noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_FIRST_TIME));
-        assertEquals("1120", noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_LAST_TIME));
-        assertEquals(10, noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_FIRST_STOP_SEQUENCE));
-        assertEquals(11, noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_LAST_STOP_SEQUENCE));
-        assertEquals(12, noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_FIRST_STOP_SEQUENCE));
-        assertEquals(13, noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_LAST_STOP_SEQUENCE));
+        assertEquals("903", noticeList.get(0).getNoticeSpecific(Notice.KEY_PREVIOUS_TRIP_FIRST_TIME));
+        assertEquals("1120", noticeList.get(0).getNoticeSpecific(Notice.KEY_PREVIOUS_TRIP_LAST_TIME));
 
         verifyNoMoreInteractions(mockLogger, mockDataRepo, mockTimeUtils, firstMockTrip, secondMockTrip, thirdMockTrip,
                 firstTripFirstStopTime, firstTripLastStopTime, secondTripFirstStopTime, secondTripLastStopTime,
@@ -950,17 +922,11 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         verify(mockDataRepo, times(3)).getStopTimeByTripId("8");
 
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
-        verify(firstTripFirstStopTime, times(1)).getStopSequence();
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
-        verify(firstTripLastStopTime, times(1)).getStopSequence();
 
         verify(secondTripFirstStopTime, times(2)).getArrivalTime();
-        verify(secondTripFirstStopTime, times(1)).getStopSequence();
-        verify(secondTripLastStopTime, times(1)).getStopSequence();
 
         verify(thirdTripFirstStopTime, times(3)).getArrivalTime();
-        verify(thirdTripFirstStopTime, times(2)).getStopSequence();
-        verify(thirdTripLastStopTime, times(2)).getStopSequence();
 
         verify(firstTripLastStopTime, times(1)).getDepartureTime();
 
@@ -991,15 +957,11 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         assertEquals("trips.txt", noticeList.get(0).getFilename());
         assertEquals("2", noticeList.get(0).getEntityId());
         assertEquals("7", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_BLOCK_ID));
-        assertEquals("8", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_CONFLICTING_TRIP_ID));
+        assertEquals("8", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_PREVIOUS_TRIP_ID));
         assertEquals("700", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_FIRST_TIME));
         assertEquals("1000", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_LAST_TIME));
-        assertEquals("940", noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_FIRST_TIME));
-        assertEquals("1350", noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_LAST_TIME));
-        assertEquals(10, noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_FIRST_STOP_SEQUENCE));
-        assertEquals(11, noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_LAST_STOP_SEQUENCE));
-        assertEquals(14, noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_FIRST_STOP_SEQUENCE));
-        assertEquals(15, noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_LAST_STOP_SEQUENCE));
+        assertEquals("940", noticeList.get(0).getNoticeSpecific(Notice.KEY_PREVIOUS_TRIP_FIRST_TIME));
+        assertEquals("1350", noticeList.get(0).getNoticeSpecific(Notice.KEY_PREVIOUS_TRIP_LAST_TIME));
         assertEquals(List.of("tuesday"), noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_DAY_LIST));
 
         verifyNoMoreInteractions(mockLogger, mockDataRepo, firstMockTrip, secondMockTrip, thirdMockTrip,
@@ -1170,7 +1132,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         verify(firstMockTrip, times(4)).getServiceId();
         verify(secondMockTrip, times(5)).getTripId();
         verify(secondMockTrip, times(4)).getServiceId();
-        verify(thirdMockTrip, times(6)).getTripId();
+        verify(thirdMockTrip, times(5)).getTripId();
         verify(thirdMockTrip, times(4)).getServiceId();
 
         verify(mockDataRepo, times(1)).getStopTimeByTripId("2");
@@ -1184,15 +1146,10 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         verify(calendarDateForServiceC, times(2)).getExceptionType();
 
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
-        verify(firstTripFirstStopTime, times(1)).getStopSequence();
-        verify(firstTripLastStopTime, times(1)).getStopSequence();
 
         verify(secondTripFirstStopTime, times(2)).getArrivalTime();
-        verify(secondTripFirstStopTime, times(1)).getStopSequence();
-        verify(secondTripLastStopTime, times(1)).getStopSequence();
 
         verify(thirdTripFirstStopTime, times(3)).getArrivalTime();
-        verify(thirdTripFirstStopTime, times(2)).getStopSequence();
 
         verify(firstTripLastStopTime, times(1)).getDepartureTime();
 
@@ -1200,8 +1157,6 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         verify(secondTripLastStopTime, times(2)).getDepartureTime();
 
         verify(thirdTripLastStopTime, times(3)).getDepartureTime();
-        verify(thirdTripFirstStopTime, times(2)).getStopSequence();
-        verify(thirdTripLastStopTime, times(2)).getStopSequence();
 
         final ArgumentCaptor<BlockTripsWithOverlappingStopTimesNotice> captor =
                 ArgumentCaptor.forClass(BlockTripsWithOverlappingStopTimesNotice.class);
@@ -1213,15 +1168,11 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         assertEquals("trips.txt", noticeList.get(0).getFilename());
         assertEquals("2", noticeList.get(0).getEntityId());
         assertEquals("7", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_BLOCK_ID));
-        assertEquals("8", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_CONFLICTING_TRIP_ID));
+        assertEquals("8", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_PREVIOUS_TRIP_ID));
         assertEquals("700", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_FIRST_TIME));
         assertEquals("1000", noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_LAST_TIME));
-        assertEquals("940", noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_FIRST_TIME));
-        assertEquals("1350", noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_LAST_TIME));
-        assertEquals(10, noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_FIRST_STOP_SEQUENCE));
-        assertEquals(11, noticeList.get(0).getNoticeSpecific(Notice.KEY_TRIP_LAST_STOP_SEQUENCE));
-        assertEquals(14, noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_FIRST_STOP_SEQUENCE));
-        assertEquals(15, noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_TRIP_LAST_STOP_SEQUENCE));
+        assertEquals("940", noticeList.get(0).getNoticeSpecific(Notice.KEY_PREVIOUS_TRIP_FIRST_TIME));
+        assertEquals("1350", noticeList.get(0).getNoticeSpecific(Notice.KEY_PREVIOUS_TRIP_LAST_TIME));
         assertEquals(Set.of("20200723"), noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_DATE_LIST));
 
         verify(mockTimeUtils, times(1)).convertIntegerToHMMSS(700);
@@ -1360,23 +1311,17 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
-        verify(firstTripFirstStopTime, times(1)).getStopSequence();
-        verify(firstTripLastStopTime, times(1)).getStopSequence();
 
         verify(secondTripFirstStopTime, times(1)).getArrivalTime();
-        verify(secondTripFirstStopTime, times(1)).getStopSequence();
 
         verify(thirdTripFirstStopTime, times(2)).getArrivalTime();
-        verify(thirdTripFirstStopTime, times(1)).getStopSequence();
 
         verify(firstTripLastStopTime, times(1)).getDepartureTime();
 
         verify(secondTripLastStopTime, times(1)).getDepartureTime();
-        verify(secondTripLastStopTime, times(1)).getStopSequence();
         verify(secondTripLastStopTime, times(1)).getDepartureTime();
 
         verify(thirdTripLastStopTime, times(2)).getDepartureTime();
-        verify(thirdTripLastStopTime, times(1)).getStopSequence();
 
         verify(mockTimeUtils, times(1))
                 .arePeriodsOverlapping(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(),
@@ -1510,23 +1455,17 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
         verify(firstTripFirstStopTime, times(1)).getArrivalTime();
-        verify(firstTripFirstStopTime, times(1)).getStopSequence();
-        verify(firstTripLastStopTime, times(1)).getStopSequence();
 
         verify(secondTripFirstStopTime, times(1)).getArrivalTime();
-        verify(secondTripFirstStopTime, times(1)).getStopSequence();
 
         verify(thirdTripFirstStopTime, times(2)).getArrivalTime();
-        verify(thirdTripFirstStopTime, times(1)).getStopSequence();
 
         verify(firstTripLastStopTime, times(1)).getDepartureTime();
 
         verify(secondTripLastStopTime, times(1)).getDepartureTime();
-        verify(secondTripLastStopTime, times(1)).getStopSequence();
         verify(secondTripLastStopTime, times(1)).getDepartureTime();
 
         verify(thirdTripLastStopTime, times(2)).getDepartureTime();
-        verify(thirdTripLastStopTime, times(1)).getStopSequence();
 
         verify(mockTimeUtils, times(1))
                 .arePeriodsOverlapping(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(),

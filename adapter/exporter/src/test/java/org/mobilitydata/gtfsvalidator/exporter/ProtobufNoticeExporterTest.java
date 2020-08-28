@@ -2178,10 +2178,9 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new BlockTripsWithOverlappingStopTimesNotice("trip id value", "block id value",
-                2, 3, "07:00", "10:00",
-                "conflicting trip id value", 6,
-                10, "08:00", "11:00"));
+        underTest.export(new BlockTripsWithOverlappingStopTimesNotice("trip id value", "07:00",
+                "10:00", "previous trip id value", "08:00",
+                "11:00", "block id value"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("trips.txt"));
@@ -2189,17 +2188,16 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
         verify(mockBuilder, times(1))
                 .setEntityId(ArgumentMatchers.eq("trip id value"));
-        verify(mockBuilder, times(1)).setType(ArgumentMatchers.eq(TYPE_BLOCK_TRIPS_WITH_OVERLAPPING_STOP_TIMES));
-        verify(mockBuilder, times(1)).setEntityName(ArgumentMatchers.eq("block id value"));
-        verify(mockBuilder, times(1)).setAltEntityName(ArgumentMatchers.eq("conflicting trip id value"));
+        verify(mockBuilder, times(1))
+                .setType(ArgumentMatchers.eq(TYPE_BLOCK_TRIPS_WITH_OVERLAPPING_STOP_TIMES));
+        verify(mockBuilder, times(1)).setEntityName(ArgumentMatchers.eq("trip id value"));
         verify(mockBuilder, times(1)).setCsvKeyName(ArgumentMatchers.eq("07:00"));
         verify(mockBuilder, times(1)).setAltEntityId(ArgumentMatchers.eq("10:00"));
+        verify(mockBuilder, times(1))
+                .setAltEntityName(ArgumentMatchers.eq("previous trip id value"));
         verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("08:00"));
         verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("11:00"));
-        verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq("2"));
-        verify(mockBuilder, times(1)).setOtherCsvFileName(ArgumentMatchers.eq("3"));
-        verify(mockBuilder, times(1)).setOtherCsvKeyName(ArgumentMatchers.eq("6"));
-        verify(mockBuilder, times(1)).setValue(ArgumentMatchers.eq("10"));
+        verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq("block id value"));
         verify(mockBuilder, times(1)).setParentEntityName(ArgumentMatchers.eq(""));
         verify(mockBuilder, times(1)).setParentEntityId(ArgumentMatchers.eq(""));
         verify(mockBuilder, times(1)).build();

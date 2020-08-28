@@ -75,16 +75,13 @@ public abstract class Notice {
     public static final String KEY_STOP_TIME_STOP_SEQUENCE = "stopTimeStopSequence";
     public static final String KEY_STOP_TIME_TRIP_ID = "stopTimeTripId";
     public static final String KEY_OTHER_MISSING_FILENAME = "otherMissingFilename";
-    public static final String KEY_TRIP_CONFLICTING_TRIP_ID = "conflictingTripId";
+    public static final String KEY_TRIP_PREVIOUS_TRIP_ID = "previousTripId";
+    public static final String KEY_TRIP_TRIP_ID = "tripId";
     public static final String KEY_TRIP_BLOCK_ID = "blockId";
     public static final String KEY_TRIP_FIRST_TIME = "tripFirstTime";
     public static final String KEY_TRIP_LAST_TIME = "tripLastTime";
-    public static final String KEY_CONFLICTING_TRIP_FIRST_TIME = "conflictingTripFirstTime";
-    public static final String KEY_CONFLICTING_TRIP_LAST_TIME = "conflictingTripLastTime";
-    public static final String KEY_TRIP_FIRST_STOP_SEQUENCE = "tripFirstStopSequence";
-    public static final String KEY_TRIP_LAST_STOP_SEQUENCE = "tripLastStopSequence";
-    public static final String KEY_CONFLICTING_TRIP_FIRST_STOP_SEQUENCE = "conflictingTripFirstStopSequence";
-    public static final String KEY_CONFLICTING_TRIP_LAST_STOP_SEQUENCE = "conflictingTripLastStopSequence";
+    public static final String KEY_PREVIOUS_TRIP_FIRST_TIME = "previousTripFirstTime";
+    public static final String KEY_PREVIOUS_TRIP_LAST_TIME = "previousTripLastTime";
     public static final String KEY_CONFLICTING_DAY_LIST = "conflictingDayList";
     public static final String KEY_CONFLICTING_DATE_LIST = "conflictingDateList";
 
