@@ -25,24 +25,25 @@ public class OverlappingTripFrequenciesNotice extends ErrorNotice {
     public OverlappingTripFrequenciesNotice(final String tripId,
                                             final String currentFrequencyStartTime,
                                             final String currentFrequencyEndTime,
-                                            final String conflictingFrequencyStartTime,
-                                            final String conflictingFrequencyEndTime) {
+                                            final String previousFrequencyStartTime,
+                                            final String previousFrequencyEndTime) {
         super("frequencies.txt",
                 E_053,
                 "Overlapping trip frequencies",
                 String.format("Overlapping trip frequencies for trip: `%s`. First period `%s`-`%s` overlaps with" +
                                 " second period: `%s`-`%s`.",
                         tripId, currentFrequencyStartTime, currentFrequencyEndTime,
-                        conflictingFrequencyStartTime, conflictingFrequencyEndTime),
+                        previousFrequencyStartTime, previousFrequencyEndTime),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "tripId");
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, tripId);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, "startTime");
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, currentFrequencyStartTime);
+        putNoticeSpecific(KEY_FREQUENCY_START_TIME, currentFrequencyStartTime);
         putNoticeSpecific(KEY_FREQUENCY_END_TIME, currentFrequencyEndTime);
-        putNoticeSpecific(KEY_CONFLICTING_FREQUENCY_START_TIME, conflictingFrequencyStartTime);
-        putNoticeSpecific(KEY_CONFLICTING_FREQUENCY_END_TIME, conflictingFrequencyEndTime);
+        putNoticeSpecific(KEY_PREVIOUS_FREQUENCY_START_TIME, previousFrequencyStartTime);
+        putNoticeSpecific(KEY_PREVIOUS_FREQUENCY_END_TIME, previousFrequencyEndTime);
     }
 
     @Override

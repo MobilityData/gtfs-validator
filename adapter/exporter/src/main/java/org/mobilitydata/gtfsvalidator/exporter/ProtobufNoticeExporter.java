@@ -873,9 +873,10 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
                 .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_FREQUENCY_START_TIME)))
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_FREQUENCY_END_TIME)))
-                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_FREQUENCY_START_TIME)))
-                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_FREQUENCY_END_TIME)))
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_FREQUENCY_START_TIME)))
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_FREQUENCY_END_TIME)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

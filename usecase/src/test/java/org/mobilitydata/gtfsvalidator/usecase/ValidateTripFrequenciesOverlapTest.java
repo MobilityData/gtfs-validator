@@ -128,10 +128,11 @@ class ValidateTripFrequenciesOverlapTest {
         assertEquals("tripId", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("startTime", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_PART));
         assertEquals("12", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FIRST_VALUE));
-        assertEquals("1200", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_VALUE));
-        assertEquals("1800", noticeList.get(0).getNoticeSpecific(Notice.KEY_FREQUENCY_END_TIME));
-        assertEquals("1544", noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_FREQUENCY_START_TIME));
-        assertEquals("2143", noticeList.get(0).getNoticeSpecific(Notice.KEY_CONFLICTING_FREQUENCY_END_TIME));
+        assertEquals("1544", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_VALUE));
+        assertEquals("1544", noticeList.get(0).getNoticeSpecific(Notice.KEY_FREQUENCY_START_TIME));
+        assertEquals("2143", noticeList.get(0).getNoticeSpecific(Notice.KEY_FREQUENCY_END_TIME));
+        assertEquals("1200", noticeList.get(0).getNoticeSpecific(Notice.KEY_PREVIOUS_FREQUENCY_START_TIME));
+        assertEquals("1800", noticeList.get(0).getNoticeSpecific(Notice.KEY_PREVIOUS_FREQUENCY_END_TIME));
 
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockTimeUtil, firstFrequency,
                 secondFrequency, thirdFrequency);

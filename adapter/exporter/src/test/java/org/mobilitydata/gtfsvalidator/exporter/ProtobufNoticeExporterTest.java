@@ -1985,8 +1985,8 @@ class ProtobufNoticeExporterTest {
                 new OverlappingTripFrequenciesNotice("1234",
                         "start time value",
                         "end time value",
-                        "conflicting start time value",
-                        "conflicting end time value"));
+                        "previous start time value",
+                        "previous end time value"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(
@@ -2000,12 +2000,14 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("1234"));
         verify(mockBuilder, times(1)).setOtherCsvKeyName(
                 ArgumentMatchers.eq(("start time value")));
+        verify(mockBuilder, times(1)).setAltEntityName(
+                ArgumentMatchers.eq(("start time value")));
         verify(mockBuilder, times(1)).setEntityValue(
                 ArgumentMatchers.eq(("end time value")));
         verify(mockBuilder, times(1)).setEntityName(
-                ArgumentMatchers.eq("conflicting start time value"));
+                ArgumentMatchers.eq("previous start time value"));
         verify(mockBuilder, times(1)).setValue(
-                ArgumentMatchers.eq("conflicting end time value"));
+                ArgumentMatchers.eq("previous end time value"));
 
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));

@@ -62,10 +62,10 @@ public class ValidateTripFrequenciesOverlap {
                                         unvisitedFrequencyStartTime, unvisitedFrequencyEndTime)) {
                                     resultRepo.addNotice(
                                             new OverlappingTripFrequenciesNotice(tripId,
-                                                    timeUtils.convertIntegerToHMMSS(currentFrequencyStartTime),
-                                                    timeUtils.convertIntegerToHMMSS(currentFrequencyEndTime),
                                                     timeUtils.convertIntegerToHMMSS(unvisitedFrequencyStartTime),
-                                                    timeUtils.convertIntegerToHMMSS(unvisitedFrequencyEndTime)));
+                                                    timeUtils.convertIntegerToHMMSS(unvisitedFrequencyEndTime),
+                                                    timeUtils.convertIntegerToHMMSS(currentFrequencyStartTime),
+                                                    timeUtils.convertIntegerToHMMSS(currentFrequencyEndTime)));
                                 }
                             }
                         }
