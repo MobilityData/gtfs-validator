@@ -17,8 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DecreasingStopTimeDistanceErrorNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.DecreasingStopTimeDistanceWarningNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DecreasingStopTimeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.TreeMap;
@@ -52,22 +51,14 @@ public class ValidateStopTimeIncreasingDistance {
         stopTimeSequence.forEach((stopSequence, stopTime) -> {
             final Float shapeDistTraveled = stopTime.getShapeDistTraveled();
             if (shapeDistTraveled != null && previousStopTimeData.shapeDistTraveled != null) {
-                if (previousStopTimeData.shapeDistTraveled > shapeDistTraveled) {
+                if (previousStopTimeData.shapeDistTraveled >= shapeDistTraveled) {
                     resultRepo.addNotice(
-                            new DecreasingStopTimeDistanceErrorNotice(
+                            new DecreasingStopTimeDistanceNotice(
                                     stopTime.getTripId(),
                                     previousStopTimeData.stopSequence,
                                     previousStopTimeData.shapeDistTraveled,
                                     stopSequence,
                                     shapeDistTraveled)
-                    );
-                } else if (previousStopTimeData.shapeDistTraveled.equals(shapeDistTraveled)) {
-                    resultRepo.addNotice(
-                            new DecreasingStopTimeDistanceWarningNotice(
-                                    stopTime.getTripId(),
-                                    previousStopTimeData.stopSequence,
-                                    previousStopTimeData.shapeDistTraveled,
-                                    stopSequence)
                     );
                 }
             }

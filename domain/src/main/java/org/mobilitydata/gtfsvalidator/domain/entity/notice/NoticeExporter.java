@@ -137,7 +137,5 @@ public interface NoticeExporter {
 
     void export(final UnusableTripNotice unusableTripNotice) throws IOException;
 
-    void export(final DecreasingStopTimeDistanceErrorNotice decreasingStopTimeDistanceErrorNotice) throws IOException;
-
-    void export(final DecreasingStopTimeDistanceWarningNotice decreasingStopTimeDistanceWarningNotice) throws IOException;
+    void export(final DecreasingStopTimeDistanceNotice decreasingStopTimeDistanceErrorNotice) throws IOException;
 }

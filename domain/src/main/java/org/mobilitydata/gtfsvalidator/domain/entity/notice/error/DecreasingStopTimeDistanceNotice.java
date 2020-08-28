@@ -21,26 +21,28 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class DecreasingStopTimeDistanceErrorNotice extends ErrorNotice {
-    public DecreasingStopTimeDistanceErrorNotice(final String tripId,
-                                                 final int stopSequence,
-                                                 final Float shapeDistTraveled,
-                                                 final int conflictingStopSequence,
-                                                 final Float conflictingShapeDistTraveled) {
+public class DecreasingStopTimeDistanceNotice extends ErrorNotice {
+    public DecreasingStopTimeDistanceNotice(final String tripId,
+                                            final int previousStopSequence,
+                                            final Float previousShapeDistTraveled,
+                                            final int stopSequence,
+                                            final Float shapeDistTraveled) {
         super("stop_times.txt", E_054,
                 "Decreasing `shape_dist_traveled` values",
-                String.format("Trip with `trip_id` `%s` the stop `%s` has shape_dist_traveled=`%s`, which should be" +
-                                " larger than the previous ones. In this case, the previous distance was `%s` (for the " +
-                                "stop `%s`).",
-                        tripId, conflictingStopSequence, conflictingShapeDistTraveled, shapeDistTraveled, stopSequence),
+                String.format("`trip_id`: `%s` `stop_sequence`: `%s` has a larger `shape_dist_traveled` (`%s`) than" +
+                                " `stop_sequence`: `%s` (`%s`). `shape_dist_traveled` must increase with" +
+                                " `stop_sequence`.",
+                        tripId, stopSequence, shapeDistTraveled, previousStopSequence,
+                        previousShapeDistTraveled),
                 null);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "trip_id");
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, "stop_sequence");
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, tripId);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, stopSequence);
+        putNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE, stopSequence);
         putNoticeSpecific(KEY_STOP_TIME_SHAPE_DIST_TRAVELED, shapeDistTraveled);
-        putNoticeSpecific(KEY_STOP_TIME_CONFLICTING_SHAPE_DIST_TRAVELED, conflictingShapeDistTraveled);
-        putNoticeSpecific(KEY_STOP_TIME_CONFLICTING_STOP_SEQUENCE, conflictingStopSequence);
+        putNoticeSpecific(KEY_STOP_TIME_PREVIOUS_STOP_SEQUENCE, previousStopSequence);
+        putNoticeSpecific(KEY_STOP_TIME_PREVIOUS_SHAPE_DIST_TRAVELED, previousShapeDistTraveled);
     }
 
     @Override

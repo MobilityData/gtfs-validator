@@ -18,7 +18,6 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
@@ -856,31 +855,20 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final DecreasingStopTimeDistanceErrorNotice toExport) throws IOException {
-        decreasingStopTimeDistanceToProto(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR, toExport);
-
-    }
-
-    @Override
-    public void export(final DecreasingStopTimeDistanceWarningNotice toExport) throws IOException {
-        decreasingStopTimeDistanceToProto(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING, toExport);
-    }
-
-    private void decreasingStopTimeDistanceToProto(final GtfsValidationOutputProto.GtfsProblem.Severity severity,
-                                                   final Notice toExport)
-            throws IOException {
+    public void export(final DecreasingStopTimeDistanceNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
-                .setSeverity(severity)
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
                 .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
                 .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE)))
                 .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_SHAPE_DIST_TRAVELED)))
                 .setAltEntityName(
-                        String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_CONFLICTING_SHAPE_DIST_TRAVELED)))
+                        String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_SHAPE_DIST_TRAVELED)))
                 .setParentEntityName(
-                        String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_CONFLICTING_STOP_SEQUENCE)))
+                        String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_STOP_SEQUENCE)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
