@@ -89,8 +89,11 @@ public class TimeUtilsImpl implements TimeUtils {
      * @return the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */
-    public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoonInSeconds) {
-        if (elapsedDurationSinceNoonInSeconds != null) {
+    public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoonInSeconds) throws
+            IllegalArgumentException {
+        if (elapsedDurationSinceNoonInSeconds == null) {
+            throw new IllegalArgumentException("elapsedDurationSinceNoonInSeconds cannot be null");
+        } else {
             final LocalTime noon = LocalTime.NOON;
             // elapsedDurationSinceNoonInSeconds > 0 for times after noon, e.g 14:00PM is represented a +2*3600s=+7200s
             // elapsedDurationSinceNoonInSeconds < 0 for times before noon, e.g 11:00AM is represented as -1*3600s=-3600s
@@ -110,12 +113,10 @@ public class TimeUtilsImpl implements TimeUtils {
                 long minutesAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.MINUTES) % 60;
                 long secondsAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.SECONDS) % 60;
                 return String.format("%02d:%02d:%02d",
-                        hoursAfterMidnight + 24,
+                        24 + hoursAfterMidnight,
                         minutesAfterMidnight,
                         secondsAfterMidnight);
             }
-        } else {
-            return null;
         }
     }
 }

@@ -16,10 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.timeutils;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TimeUtilsImplTest {
     private static final int HOUR_TO_SEC_CONVERSION_FACTOR = 3600;
@@ -167,8 +169,10 @@ public class TimeUtilsImplTest {
     }
 
     @Test
-    void convertIntegerToHMMSSOnNullValueShouldReturnNull() {
-        assertNull(TIME_CONVERSION_UTILS.convertIntegerToHMMSS(null));
+    void convertIntegerToHMMSSOnNullValueShouldThrowException() {
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> TIME_CONVERSION_UTILS.convertIntegerToHMMSS(null));
+        Assertions.assertEquals("elapsedDurationSinceNoonInSeconds cannot be null", exception.getMessage());
     }
 
     // Remove warning "PointlessArithmeticExpression" since they these expressions are written to ease code
