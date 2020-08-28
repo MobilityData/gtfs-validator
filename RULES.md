@@ -309,7 +309,6 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
 
-
 <a name="E055"/>
 
 ### E055 - Mismatching feed and agency language fields
