@@ -34,7 +34,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class ValidateFrequencyOverlapTest {
+class ValidateTripFrequenciesOverlapTest {
 
     // suppressed warning regarding ignored result of method since it is not necessary here
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -83,8 +83,8 @@ class ValidateFrequencyOverlapTest {
         frequenciesPerTripIdCollection.put("12", tripFrequencyCollection);
         when(mockDataRepo.getFrequencyAllByTripId()).thenReturn(frequenciesPerTripIdCollection);
 
-        final ValidateFrequencyOverlap underTest =
-                new ValidateFrequencyOverlap(mockDataRepo, mockResultRepo, mockTimeUtil, mockLogger);
+        final ValidateTripFrequenciesOverlap underTest =
+                new ValidateTripFrequenciesOverlap(mockDataRepo, mockResultRepo, mockTimeUtil, mockLogger);
 
         underTest.execute();
 
@@ -181,8 +181,8 @@ class ValidateFrequencyOverlapTest {
         frequenciesPerTripIdCollection.put("12", tripFrequencyCollection);
         when(mockDataRepo.getFrequencyAllByTripId()).thenReturn(frequenciesPerTripIdCollection);
 
-        final ValidateFrequencyOverlap underTest =
-                new ValidateFrequencyOverlap(mockDataRepo, mockResultRepo, mockTimeUtil, mockLogger);
+        final ValidateTripFrequenciesOverlap underTest =
+                new ValidateTripFrequenciesOverlap(mockDataRepo, mockResultRepo, mockTimeUtil, mockLogger);
 
         underTest.execute();
 
@@ -255,8 +255,8 @@ class ValidateFrequencyOverlapTest {
         frequenciesPerTripIdCollection.put("12", tripFrequencyCollection);
         when(mockDataRepo.getFrequencyAllByTripId()).thenReturn(frequenciesPerTripIdCollection);
 
-        final ValidateFrequencyOverlap underTest =
-                new ValidateFrequencyOverlap(mockDataRepo, mockResultRepo, mockTimeUtil, mockLogger);
+        final ValidateTripFrequenciesOverlap underTest =
+                new ValidateTripFrequenciesOverlap(mockDataRepo, mockResultRepo, mockTimeUtil, mockLogger);
 
         underTest.execute();
 

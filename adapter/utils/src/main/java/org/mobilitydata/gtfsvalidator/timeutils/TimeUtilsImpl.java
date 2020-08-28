@@ -125,9 +125,21 @@ public class TimeUtilsImpl implements TimeUtils {
         }
     }
 
+    /**
+     * This method checks if two periods of times overlap
+     *
+     * @param firstPeriodFirstTimeInSeconds  lower bound of the first period of time
+     * @param firstPeriodLastTimeInSeconds   upper bound of the first period of time
+     * @param secondPeriodFirstTimeInSeconds lower bound of the second period of time
+     * @param secondPeriodLastTimeInSeconds  upper bound of the second period of time
+     * @return true if the two periods of time overlap, otherwise returns false
+     */
     @Override
-    public boolean arePeriodsOverlapping(final int firstPeriodFirstTime, final int firstPeriodLastTime,
-                                         final int secondPeriodFirstTime, final int secondPeriodLastTime) {
-        return !(firstPeriodFirstTime <= secondPeriodLastTime && firstPeriodLastTime <= secondPeriodFirstTime);
+    public boolean arePeriodsOverlapping(final int firstPeriodFirstTimeInSeconds,
+                                         final int firstPeriodLastTimeInSeconds,
+                                         final int secondPeriodFirstTimeInSeconds,
+                                         final int secondPeriodLastTimeInSeconds) {
+        return !(firstPeriodFirstTimeInSeconds <= secondPeriodLastTimeInSeconds &&
+                firstPeriodLastTimeInSeconds <= secondPeriodFirstTimeInSeconds);
     }
 }

@@ -89,7 +89,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     private final Map<String, Frequency> frequencyPerTripIdStartTime = new HashMap<>();
 
     // Map containing Frequency entities. Entities are mapped on trip_id value. For each trip_id, Frequency entities are
-    // stored based on their start_time value.
+    // stored based on their trip_id value.
     private final Map<String, List<Frequency>> frequencyPerTripId = new HashMap<>();
 
     // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
@@ -652,6 +652,13 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         return frequencyPerTripIdStartTime.get(Frequency.getFrequencyMappingKey(tripId, startTime));
     }
 
+    /**
+     * Return an unmodifiable map of Frequency objects from `frequencies.txt`. Entities are mapped on value of trip_id
+     * of file `frequencies.txt`.
+     *
+     * @return an unmodifiable map of Frequency objects from `frequencies.txt`. Entities are mapped on value of trip_id
+     * of `frequencies.txt`
+     */
     @Override
     public Map<String, List<Frequency>> getFrequencyAllByTripId() {
         return Collections.unmodifiableMap(frequencyPerTripId);

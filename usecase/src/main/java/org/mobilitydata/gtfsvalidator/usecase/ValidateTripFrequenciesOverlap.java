@@ -25,16 +25,16 @@ import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidateFrequencyOverlap {
+public class ValidateTripFrequenciesOverlap {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
     private final TimeUtils timeUtils;
 
-    public ValidateFrequencyOverlap(final GtfsDataRepository dataRepo,
-                                    final ValidationResultRepository resultRepo,
-                                    final TimeUtils timeUtils,
-                                    final Logger logger) {
+    public ValidateTripFrequenciesOverlap(final GtfsDataRepository dataRepo,
+                                          final ValidationResultRepository resultRepo,
+                                          final TimeUtils timeUtils,
+                                          final Logger logger) {
         this.dataRepo = dataRepo;
         this.resultRepo = resultRepo;
         this.logger = logger;
@@ -43,6 +43,7 @@ public class ValidateFrequencyOverlap {
 
     public void execute() {
         logger.info("Validating rule 'E053 - Trip frequencies overlap'");
+
         dataRepo.getFrequencyAllByTripId().forEach((tripId, frequencyCollection) -> {
             final List<String> visitedFrequencyTripIdStartTimeCollection = new ArrayList<>();
 
