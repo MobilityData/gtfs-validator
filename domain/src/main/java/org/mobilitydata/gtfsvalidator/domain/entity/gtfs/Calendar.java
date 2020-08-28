@@ -488,7 +488,7 @@ public class Calendar extends GtfsEntity {
      */
     public boolean areCalendarOverlapping(final Calendar otherCalendar) {
         return
-                // calendars have a common date:
+                // calendars have a common date
                 (startDate.isEqual(otherCalendar.getStartDate()) || startDate.isEqual(otherCalendar.getEndDate()) ||
                         endDate.isEqual(otherCalendar.getStartDate()) || endDate.isEqual(otherCalendar.getEndDate()))
                         || // calendars overlap

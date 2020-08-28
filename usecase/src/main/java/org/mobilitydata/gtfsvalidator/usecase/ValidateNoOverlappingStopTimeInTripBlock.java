@@ -116,7 +116,10 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
                                         // stop_times arrival_time and departure_time are supposed to be ordered
                                         if (unvisitedTripFirstTime <= unvisitedTripLastTime) {
                                             // if times overlap
-                                            if (currentTripFirstTime < unvisitedTripLastTime && unvisitedTripFirstTime < currentTripLastTime) {
+                                            if (timeUtils.arePeriodsOverlapping(currentTripFirstTime,
+                                                    currentTripLastTime,
+                                                    unvisitedTripFirstTime,
+                                                    unvisitedTripLastTime)) {
                                                 resultRepo.addNotice(new BlockTripsWithOverlappingStopTimesNotice(
                                                         currentTripId,
                                                         blockId,
@@ -137,8 +140,6 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
                                     // if trips have different service_id additional check needs to be done to determine
                                     // whether they operate on the same day or noy
                                     // This is done by checking files `calendar.txt` and `calendar_dates.txt
-                                    // Note that both files can be provided, but also only one of these files can be
-                                    // provided.
 
                                     // | routeId | tripId | serviceId | blockId | first stop time | last stop time |
                                     // |---------|--------|-----------|---------|-----------------|----------------|
@@ -150,7 +151,8 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
                                     Map<String, CalendarDate> currentTripCalendarDatePossibilityCollection = null;
                                     Map<String, CalendarDate> unvisitedTripCalendarDatePossibilityCollection = null;
                                     if (areCalendarProvided) {
-                                        currentTripCalendar = dataRepo.getCalendarByServiceId(currentTrip.getServiceId());
+                                        currentTripCalendar =
+                                                dataRepo.getCalendarByServiceId(currentTrip.getServiceId());
                                         unvisitedTripCalendar =
                                                 dataRepo.getCalendarByServiceId(unvisitedTrip.getServiceId());
                                     } else {
@@ -172,23 +174,33 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
 
                                                     if (unvisitedTripFirstTime <= unvisitedTripLastTime) {
                                                         // if times overlap
-                                                        if (currentTripFirstTime < unvisitedTripLastTime && unvisitedTripFirstTime < currentTripLastTime) {
-                                                            resultRepo.addNotice(new BlockTripsWithOverlappingStopTimesNotice(
-                                                                    currentTripId,
-                                                                    blockId,
-                                                                    currentTripFirstStopSequence,
-                                                                    currentTripLastStopSequence,
-                                                                    timeUtils.convertIntegerToHMMSS(currentTripFirstTime),
-                                                                    timeUtils.convertIntegerToHMMSS(currentTripLastTime),
-                                                                    unvisitedTripId,
-                                                                    unvisitedTripFirstStopTimeInSequence.getStopSequence(),
-                                                                    unvisitedTripLastStopTimeInSequence.getStopSequence(),
-                                                                    timeUtils.convertIntegerToHMMSS(unvisitedTripFirstTime),
-                                                                    timeUtils.convertIntegerToHMMSS(unvisitedTripLastTime),
-                                                                    currentTripCalendar
-                                                                            .getCalendarsCommonOperationDayCollection(
-                                                                                    unvisitedTripCalendar)
-                                                            ));
+                                                        if (timeUtils.arePeriodsOverlapping(currentTripFirstTime,
+                                                                currentTripLastTime,
+                                                                unvisitedTripFirstTime,
+                                                                unvisitedTripLastTime)) {
+                                                            resultRepo.addNotice(
+                                                                    new BlockTripsWithOverlappingStopTimesNotice(
+                                                                            currentTripId,
+                                                                            blockId,
+                                                                            currentTripFirstStopSequence,
+                                                                            currentTripLastStopSequence,
+                                                                            timeUtils.convertIntegerToHMMSS(
+                                                                                    currentTripFirstTime),
+                                                                            timeUtils.convertIntegerToHMMSS(
+                                                                                    currentTripLastTime),
+                                                                            unvisitedTripId,
+                                                                            unvisitedTripFirstStopTimeInSequence
+                                                                                    .getStopSequence(),
+                                                                            unvisitedTripLastStopTimeInSequence
+                                                                                    .getStopSequence(),
+                                                                            timeUtils.convertIntegerToHMMSS(
+                                                                                    unvisitedTripFirstTime),
+                                                                            timeUtils.convertIntegerToHMMSS(
+                                                                                    unvisitedTripLastTime),
+                                                                            currentTripCalendar
+                                                                                    .getCalendarsCommonOperationDayCollection(
+                                                                                            unvisitedTripCalendar)
+                                                                    ));
                                                         }
                                                     }
                                                 }
@@ -224,22 +236,32 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
 
                                                 if (unvisitedTripFirstTime <= unvisitedTripLastTime) {
                                                     // if times overlap
-                                                    if (currentTripFirstTime < unvisitedTripLastTime && unvisitedTripFirstTime < currentTripLastTime) {
-                                                        resultRepo.addNotice(new BlockTripsWithOverlappingStopTimesNotice(
-                                                                currentTripId,
-                                                                blockId,
-                                                                currentTripFirstStopSequence,
-                                                                currentTripLastStopSequence,
-                                                                timeUtils.convertIntegerToHMMSS(currentTripFirstTime),
-                                                                timeUtils.convertIntegerToHMMSS(currentTripLastTime),
-                                                                unvisitedTrip.getTripId(),
-                                                                unvisitedTripFirstStopTimeInSequence.getStopSequence(),
-                                                                unvisitedTripLastStopTimeInSequence.getStopSequence(),
-                                                                timeUtils.convertIntegerToHMMSS(unvisitedTripFirstTime),
-                                                                timeUtils.convertIntegerToHMMSS(unvisitedTripLastTime),
-                                                                potentialConflictingDates
+                                                    if (timeUtils.arePeriodsOverlapping(currentTripFirstTime,
+                                                            currentTripLastTime,
+                                                            unvisitedTripFirstTime,
+                                                            unvisitedTripLastTime)) {
+                                                        resultRepo.addNotice(
+                                                                new BlockTripsWithOverlappingStopTimesNotice(
+                                                                        currentTripId,
+                                                                        blockId,
+                                                                        currentTripFirstStopSequence,
+                                                                        currentTripLastStopSequence,
+                                                                        timeUtils.convertIntegerToHMMSS(
+                                                                                currentTripFirstTime),
+                                                                        timeUtils.convertIntegerToHMMSS(
+                                                                                currentTripLastTime),
+                                                                        unvisitedTrip.getTripId(),
+                                                                        unvisitedTripFirstStopTimeInSequence
+                                                                                .getStopSequence(),
+                                                                        unvisitedTripLastStopTimeInSequence
+                                                                                .getStopSequence(),
+                                                                        timeUtils.convertIntegerToHMMSS(
+                                                                                unvisitedTripFirstTime),
+                                                                        timeUtils.convertIntegerToHMMSS(
+                                                                                unvisitedTripLastTime),
+                                                                        potentialConflictingDates
 
-                                                        ));
+                                                                ));
                                                     }
                                                 }
                                             }
