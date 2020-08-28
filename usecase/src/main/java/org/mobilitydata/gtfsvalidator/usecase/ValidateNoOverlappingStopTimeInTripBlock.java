@@ -58,7 +58,7 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
      * calendar or calendar_dates is provided
      */
     public void execute() {
-        logger.info("validating rule 'E052 - Trips from same block overlap'");
+        logger.info("validating rule 'E054 - Trips from same block overlap'");
 
         final Map<String, List<Trip>> tripPerBlockId = dataRepo.getAllTripByBlockId();
         final boolean areCalendarProvided = dataRepo.getCalendarAll().size() != 0;

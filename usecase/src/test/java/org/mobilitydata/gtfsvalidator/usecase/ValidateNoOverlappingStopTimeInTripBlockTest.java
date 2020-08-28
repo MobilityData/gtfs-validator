@@ -147,7 +147,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("validating rule 'E052 - Trips from same block" +
+        verify(mockLogger, times(1)).info("validating rule 'E054 - Trips from same block" +
                 " overlap'");
 
         verify(mockDataRepo, times(1)).getAllTripByBlockId();
@@ -340,7 +340,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("validating rule 'E052 - Trips from same block" +
+        verify(mockLogger, times(1)).info("validating rule 'E054 - Trips from same block" +
                 " overlap'");
 
         verify(mockDataRepo, times(1)).getAllTripByBlockId();
@@ -523,7 +523,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("validating rule 'E052 - Trips from same block" +
+        verify(mockLogger, times(1)).info("validating rule 'E054 - Trips from same block" +
                 " overlap'");
 
         verify(mockDataRepo, times(1)).getAllTripByBlockId();
@@ -683,7 +683,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("validating rule 'E052 - Trips from same block" +
+        verify(mockLogger, times(1)).info("validating rule 'E054 - Trips from same block" +
                 " overlap'");
 
         verify(mockDataRepo, times(1)).getAllTripByBlockId();
@@ -901,7 +901,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("validating rule 'E052 - Trips from same block" +
+        verify(mockLogger, times(1)).info("validating rule 'E054 - Trips from same block" +
                 " overlap'");
 
         verify(mockDataRepo, times(1)).getCalendarAll();
@@ -1122,7 +1122,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("validating rule 'E052 - Trips from same block" +
+        verify(mockLogger, times(1)).info("validating rule 'E054 - Trips from same block" +
                 " overlap'");
 
         verify(mockDataRepo, times(1)).getAllTripByBlockId();
@@ -1293,7 +1293,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("validating rule 'E052 - Trips from same block" +
+        verify(mockLogger, times(1)).info("validating rule 'E054 - Trips from same block" +
                 " overlap'");
 
         verify(mockDataRepo, times(1)).getAllTripByBlockId();
@@ -1437,7 +1437,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
 
         underTest.execute();
 
-        verify(mockLogger, times(1)).info("validating rule 'E052 - Trips from same block" +
+        verify(mockLogger, times(1)).info("validating rule 'E054 - Trips from same block" +
                 " overlap'");
 
         verify(mockDataRepo, times(1)).getAllTripByBlockId();
