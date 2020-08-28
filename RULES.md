@@ -52,6 +52,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E049](#E049) | Backwards time travel between stops in `stop_times.txt` |
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
+| [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
 
 ### Table of Warnings
 
@@ -307,6 +308,12 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
 
+<a name="E056"/>
+
+### E056 - Missing both `calendar_dates.txt` and `calendar.txt` files
+
+Both files `calendar_dates.txt` and `calendar.txt` are missing from the GTFS archive. At least one of the files must be provided.
+                        
 # Warnings
 
 <a name="W002"/>
