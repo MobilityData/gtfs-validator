@@ -16,10 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.timeutils;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TimeUtilsImplTest {
     private static final int HOUR_TO_SEC_CONVERSION_FACTOR = 3600;
@@ -56,10 +58,20 @@ public class TimeUtilsImplTest {
         assertEquals(((10 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON), toCheck);
 
+        final String fiveTenAm34sec = "05:10:34";
+        toCheck = TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(fiveTenAm34sec);
+        assertEquals(((5 * HOUR_TO_SEC_CONVERSION_FACTOR + 10 * MIN_TO_SEC_CONVERSION_FACTOR +
+                34 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON), toCheck);
+
         final String sixThirtyAm20sec = "06:30:20";
         toCheck = TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(sixThirtyAm20sec);
         assertEquals(((6 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
                 20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON), toCheck);
+
+        final String sixOneAm = "06:01:00";
+        toCheck = TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(sixOneAm);
+        assertEquals(((6 * HOUR_TO_SEC_CONVERSION_FACTOR + 1 * MIN_TO_SEC_CONVERSION_FACTOR +
+                0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON), toCheck);
 
         final String oneThirtyAm40sec = "25:30:40";
         toCheck = TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(oneThirtyAm40sec);
@@ -125,6 +137,16 @@ public class TimeUtilsImplTest {
         toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(sixFortyPm);
         assertEquals("18:40:00", toCheck);
 
+        final int sixAmOne = (6 * HOUR_TO_SEC_CONVERSION_FACTOR + 1 * MIN_TO_SEC_CONVERSION_FACTOR +
+                0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(sixAmOne);
+        assertEquals("06:01:00", toCheck);
+
+        final int fiveTenAm34sec = (5 * HOUR_TO_SEC_CONVERSION_FACTOR + 10 * MIN_TO_SEC_CONVERSION_FACTOR +
+                34 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(fiveTenAm34sec);
+        assertEquals("05:10:34", toCheck);
+
         final int tenAm = (10 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
         toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(tenAm);
@@ -147,8 +169,10 @@ public class TimeUtilsImplTest {
     }
 
     @Test
-    void convertIntegerToHMMSSOnNullValueShouldReturnNull() {
-        assertNull(TIME_CONVERSION_UTILS.convertIntegerToHMMSS(null));
+    void convertIntegerToHMMSSOnNullValueShouldThrowException() {
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> TIME_CONVERSION_UTILS.convertIntegerToHMMSS(null));
+        Assertions.assertEquals("elapsedDurationSinceNoonInSeconds cannot be null", exception.getMessage());
     }
 
     // Remove warning "PointlessArithmeticExpression" since they these expressions are written to ease code
@@ -156,8 +180,8 @@ public class TimeUtilsImplTest {
     @SuppressWarnings("PointlessArithmeticExpression")
     @Test
     void convertHHMMSStoIntegerAndIntegerToHHMMSSShouldBeConsistent() {
-        final int oneThirtyAm40sec = (13 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
-                20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        final int oneThirtyAm40sec = (1 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
+                40 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
         String toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(oneThirtyAm40sec);
         assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
@@ -165,6 +189,12 @@ public class TimeUtilsImplTest {
         final int sixThirtyAm20sec = (6 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
                 20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
         toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(sixThirtyAm20sec);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+                TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+
+        final int sixAmOne = (6 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
+                0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(sixAmOne);
         assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
@@ -195,6 +225,18 @@ public class TimeUtilsImplTest {
         final int threePm = (15 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
         toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(threePm);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+                TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+
+        final int twentyFiveThirtyPm40sec = (25 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
+                40 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(twentyFiveThirtyPm40sec);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+                TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+
+        final int twentyEightFortySevenPm20sec = (28 * HOUR_TO_SEC_CONVERSION_FACTOR + 47 * MIN_TO_SEC_CONVERSION_FACTOR +
+                20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(twentyEightFortySevenPm20sec);
         assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
     }
