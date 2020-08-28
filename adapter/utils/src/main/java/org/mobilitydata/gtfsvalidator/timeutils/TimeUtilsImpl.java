@@ -93,30 +93,29 @@ public class TimeUtilsImpl implements TimeUtils {
             IllegalArgumentException {
         if (elapsedDurationSinceNoonInSeconds == null) {
             throw new IllegalArgumentException("elapsedDurationSinceNoonInSeconds cannot be null");
-        } else {
-            final LocalTime noon = LocalTime.NOON;
-            // elapsedDurationSinceNoonInSeconds > 0 for times after noon, e.g 14:00PM is represented a +2*3600s=+7200s
-            // elapsedDurationSinceNoonInSeconds < 0 for times before noon, e.g 11:00AM is represented as -1*3600s=-3600s
-            final boolean isTimeGreaterThan24hours =
-                    elapsedDurationSinceNoonInSeconds >= TimeUnit.HOURS.toSeconds(12);
+        }
+        final LocalTime noon = LocalTime.NOON;
+        // elapsedDurationSinceNoonInSeconds > 0 for times after noon, e.g 14:00PM is represented a +2*3600s=+7200s
+        // elapsedDurationSinceNoonInSeconds < 0 for times before noon, e.g 11:00AM is represented as -1*3600s=-3600s
+        final boolean isTimeGreaterThan24hours =
+                elapsedDurationSinceNoonInSeconds >= TimeUnit.HOURS.toSeconds(12);
 
-            if (!isTimeGreaterThan24hours) {
-                return String.format("%02d:%02d:%02d", noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getHour(),
-                        noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getMinute(),
-                        noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getSecond());
-            } else {
-                // This wraps around midnight
-                LocalTime timeAfterMidnight = noon.plusSeconds(elapsedDurationSinceNoonInSeconds);
-                // Get the number of hours, minutes, and seconds between midnight and timeAfterMidnight, which is the
-                // time to add to 24:00:00
-                long hoursAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.HOURS);
-                long minutesAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.MINUTES) % 60;
-                long secondsAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.SECONDS) % 60;
-                return String.format("%02d:%02d:%02d",
-                        24 + hoursAfterMidnight,
-                        minutesAfterMidnight,
-                        secondsAfterMidnight);
-            }
+        if (!isTimeGreaterThan24hours) {
+            return String.format("%02d:%02d:%02d", noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getHour(),
+                    noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getMinute(),
+                    noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getSecond());
+        } else {
+            // This wraps around midnight
+            LocalTime timeAfterMidnight = noon.plusSeconds(elapsedDurationSinceNoonInSeconds);
+            // Get the number of hours, minutes, and seconds between midnight and timeAfterMidnight, which is the
+            // time to add to 24:00:00
+            long hoursAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.HOURS);
+            long minutesAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.MINUTES) % 60;
+            long secondsAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.SECONDS) % 60;
+            return String.format("%02d:%02d:%02d",
+                    24 + hoursAfterMidnight,
+                    minutesAfterMidnight,
+                    secondsAfterMidnight);
         }
     }
 }
