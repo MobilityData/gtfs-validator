@@ -53,6 +53,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
 | [E055](#E055) | Mismatching feed and agency language fields |
+| [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
 
 ### Table of Warnings
 
@@ -315,6 +316,12 @@ A trip must visit more than one stop in `stop_times.txt` to be usable by passeng
 
 Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and `feed_info.feed_lang`.
 
+<a name="E056"/>
+
+### E056 - Missing both `calendar_dates.txt` and `calendar.txt` files
+
+Both files `calendar_dates.txt` and `calendar.txt` are missing from the GTFS archive. At least one of the files must be provided.
+                        
 # Warnings
 
 <a name="W002"/>

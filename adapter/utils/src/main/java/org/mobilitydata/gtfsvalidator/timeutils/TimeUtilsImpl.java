@@ -18,6 +18,8 @@ package org.mobilitydata.gtfsvalidator.timeutils;
 
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -67,9 +69,10 @@ public class TimeUtilsImpl implements TimeUtils {
                 final int minuteValue = Integer.parseInt(timeStringSplit[1]);
                 final int secondValue = Integer.parseInt(timeStringSplit[2]);
                 // Converting time to an Integer value representing number of seconds
-                final int timeValueAsInt = hourValue * 3600 + minuteValue * 60 + secondValue;
+                final int timeValueAsInt = (int) (TimeUnit.HOURS.toSeconds(hourValue) +
+                        TimeUnit.MINUTES.toSeconds(minuteValue) + secondValue);
                 // Setting noon as point zero, subtracting 12 * 3600 seconds
-                return timeValueAsInt - (12 * 3600);
+                return timeValueAsInt - (int) (TimeUnit.HOURS.toSeconds(12));
             } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
                 return null;
             }
@@ -81,45 +84,38 @@ public class TimeUtilsImpl implements TimeUtils {
     /**
      * This method converts a number of seconds elapsed since noon of say of service to a string formatted as HH:MM:SS.
      *
-     * @param elapsedDurationSinceNoon the number of seconds elapsed since noon of say of service to be converted as a
-     *                                 string formatted as HH:MM:SS.
+     * @param elapsedDurationSinceNoonInSeconds the number of seconds elapsed since noon of day of service to be
+     *                                          converted as a string formatted as HH:MM:SS.
      * @return the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */
-    public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoon) {
-        if (elapsedDurationSinceNoon != null) {
-            // Determine number of hours elapsed
-            int hourValue = (int) (TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon) + 12);
-            int minuteValue;
-            int secondValue;
-            // elapsedDurationSinceNoon > 0 for times after noon, e.g 14:00PM is represented a +2*3600s=+7200s
-            // elapsedDurationSinceNoon < 0 for times before noon, e.g 11:00AM is represented as -1*3600s=-3600s
-            if (elapsedDurationSinceNoon > 0) {
-                // Determine number of minutes and seconds elapsed
-                minuteValue = (int) (TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon)));
-                secondValue = (int) (TimeUnit.SECONDS.toSeconds(elapsedDurationSinceNoon) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon)));
-            } else {
-                // Determine number of minutes elapsed minus the number of hours elapsed
-                minuteValue = ((int) (TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon)))) % 60;
-                if (minuteValue < 0) {
-                    hourValue = hourValue - 1;
-                    minuteValue = 1 + ((int) -(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.SECONDS.toHours(elapsedDurationSinceNoon))));
-                }
-                // Determine number of seconds elapsed minus the number of hours and minutes elapsed
-                secondValue = (int) (TimeUnit.SECONDS.toSeconds(elapsedDurationSinceNoon) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon)));
-                if ((int) (TimeUnit.SECONDS.toSeconds(elapsedDurationSinceNoon) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.SECONDS.toMinutes(elapsedDurationSinceNoon))) < 0) {
-                    secondValue = 60 + secondValue;
-                }
-            }
-            return String.format("%02d:%02d:%02d", hourValue, minuteValue, secondValue);
+    public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoonInSeconds) throws
+            IllegalArgumentException {
+        if (elapsedDurationSinceNoonInSeconds == null) {
+            throw new IllegalArgumentException("elapsedDurationSinceNoonInSeconds cannot be null");
+        }
+        final LocalTime noon = LocalTime.NOON;
+        // elapsedDurationSinceNoonInSeconds > 0 for times after noon, e.g 14:00PM is represented a +2*3600s=+7200s
+        // elapsedDurationSinceNoonInSeconds < 0 for times before noon, e.g 11:00AM is represented as -1*3600s=-3600s
+        final boolean isTimeGreaterThan24hours =
+                elapsedDurationSinceNoonInSeconds >= TimeUnit.HOURS.toSeconds(12);
+
+        if (!isTimeGreaterThan24hours) {
+            return String.format("%02d:%02d:%02d", noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getHour(),
+                    noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getMinute(),
+                    noon.plusSeconds(elapsedDurationSinceNoonInSeconds).getSecond());
         } else {
-            return null;
+            // This wraps around midnight
+            LocalTime timeAfterMidnight = noon.plusSeconds(elapsedDurationSinceNoonInSeconds);
+            // Get the number of hours, minutes, and seconds between midnight and timeAfterMidnight, which is the
+            // time to add to 24:00:00
+            long hoursAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.HOURS);
+            long minutesAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.MINUTES) % 60;
+            long secondsAfterMidnight = LocalTime.MIDNIGHT.until(timeAfterMidnight, ChronoUnit.SECONDS) % 60;
+            return String.format("%02d:%02d:%02d",
+                    24 + hoursAfterMidnight,
+                    minutesAfterMidnight,
+                    secondsAfterMidnight);
         }
     }
 }

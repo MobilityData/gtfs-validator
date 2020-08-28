@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingCalendarAndCalendarDateFilesNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredFileNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
@@ -38,7 +39,7 @@ class ValidateAllRequiredFilePresenceTest {
         Set<String> testSet = Set.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req",
                 "req5.req", "req6.req", "req7.req", "req8.req", "req9.req",
                 "opt0.opt", "opt1.opt", "opt2.opt", "opt3.opt", "opt4.opt",
-                "opt5.opt", "opt6.opt", "opt7.opt", "opt8.opt", "opt9.opt");
+                "opt5.opt", "opt6.opt", "opt7.opt", "opt8.opt", "opt9.opt", "calendar_dates.txt", "calendar.txt");
         when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
@@ -60,6 +61,7 @@ class ValidateAllRequiredFilePresenceTest {
 
         inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
         inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
+        inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
@@ -71,7 +73,7 @@ class ValidateAllRequiredFilePresenceTest {
         Set<String> testSet = Set.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req",
                 "req5.req", "req6.req", "req7.req", "req8.req", "req9.req",
                 "opt0.opt", "opt1.opt", "opt2.opt", "opt3.opt", "opt4.opt",
-                "opt5.opt", "opt6.opt", "opt7.opt", "opt8.opt", "opt9.opt");
+                "opt5.opt", "opt6.opt", "opt7.opt", "opt8.opt", "opt9.opt", "calendar_dates.txt", "calendar.txt");
         when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
 
         GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
@@ -94,8 +96,102 @@ class ValidateAllRequiredFilePresenceTest {
 
         inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
         inOrder.verify(mockSpecRepo, times(2)).getRequiredFilenameList();
-        inOrder.verify(mockFileRepo, times(15)).getFilenameAll();
+        inOrder.verify(mockFileRepo, times(16)).getFilenameAll();
         verify(mockResultRepo, times(5)).addNotice(any(MissingRequiredFileNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
+    }
+
+    @Test
+    void missingCalendarFileWhenCalendarDateIsPresentShouldNotGenerateNotice() {
+
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        Set<String> testSet = Set.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req",
+                "opt0.opt", "opt1.opt", "opt2.opt", "opt3.opt", "opt4.opt",
+                "opt5.opt", "opt6.opt", "opt7.opt", "opt8.opt", "opt9.opt", "calendar_dates.txt");
+        when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
+
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        List<String> testRequiredList = List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req");
+        when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
+                mockSpecRepo,
+                mockFileRepo,
+                mockResultRepo
+        );
+
+        underTest.execute();
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
+        inOrder.verify(mockFileRepo, times(2)).getFilenameAll();
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
+    }
+
+    @Test
+    void missingCalendarDatesFileWhenCalendarIsPresentShouldNotGenerateNotice() {
+
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        Set<String> testSet = Set.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req",
+                "opt0.opt", "opt1.opt", "opt2.opt", "opt3.opt", "opt4.opt",
+                "opt5.opt", "opt6.opt", "opt7.opt", "opt8.opt", "opt9.opt", "calendar.txt");
+        when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
+
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        List<String> testRequiredList = List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req");
+        when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
+                mockSpecRepo,
+                mockFileRepo,
+                mockResultRepo
+        );
+
+        underTest.execute();
+
+        InOrder inOrder = Mockito.inOrder(mockFileRepo, mockSpecRepo);
+
+        inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
+        inOrder.verify(mockSpecRepo, times(1)).getRequiredFilenameList();
+        inOrder.verify(mockFileRepo, times(1)).getFilenameAll();
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
+    }
+
+    @Test
+    void missingCalendarDatesAndCalendarFilesShouldGenerateNotice() {
+
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        Set<String> testSet = Set.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req",
+                "opt0.opt", "opt1.opt", "opt2.opt", "opt3.opt", "opt4.opt",
+                "opt5.opt", "opt6.opt", "opt7.opt", "opt8.opt", "opt9.opt");
+        when(mockFileRepo.getFilenameAll()).thenReturn(testSet);
+
+        GtfsSpecRepository mockSpecRepo = mock(GtfsSpecRepository.class);
+        List<String> testRequiredList = List.of("req0.req", "req1.req", "req2.req", "req3.req", "req4.req");
+        when(mockSpecRepo.getRequiredFilenameList()).thenReturn(testRequiredList);
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        ValidateAllRequiredFilePresence underTest = new ValidateAllRequiredFilePresence(
+                mockSpecRepo,
+                mockFileRepo,
+                mockResultRepo
+        );
+
+        underTest.execute();
+
+        verify(mockFileRepo, times(3)).getFilenameAll();
+        verify(mockSpecRepo, times(1)).getRequiredFilenameList();
+        verify(mockResultRepo, times(1)).addNotice(
+                any(MissingCalendarAndCalendarDateFilesNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 }

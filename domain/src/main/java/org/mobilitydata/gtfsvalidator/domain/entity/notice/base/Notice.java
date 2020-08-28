@@ -74,6 +74,7 @@ public abstract class Notice {
     public static final String KEY_STOP_TIME_STOP_SEQUENCE_LIST = "stopTimeStopSequenceList";
     public static final String KEY_STOP_TIME_STOP_SEQUENCE = "stopTimeStopSequence";
     public static final String KEY_STOP_TIME_TRIP_ID = "stopTimeTripId";
+    public static final String KEY_OTHER_MISSING_FILENAME = "otherMissingFilename";
     public static final String KEY_AGENCY_AGENCY_NAME = "agencyAgencyName";
     public static final String KEY_AGENCY_AGENCY_LANG = "agencyAgencyLang";
     public static final String KEY_FEED_INFO_FEED_LANG = "feedInfoFeedLang";
