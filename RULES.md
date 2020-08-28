@@ -312,7 +312,7 @@ A trip must visit more than one stop in `stop_times.txt` to be usable by passeng
 
 ### E056 - Missing both `calendar_dates.txt` and `calendar.txt` files
 
-Both files `calendar.dates.txt` and `calendar_dates.txt` are missing from the GTFS archive. At least one of both files must be provided.
+Both files `calendar_dates.txt` and `calendar.txt` are missing from the GTFS archive. At least one of the files must be provided.
                         
 # Warnings
 

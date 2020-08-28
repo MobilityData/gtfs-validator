@@ -25,8 +25,8 @@ public class MissingCalendarAndCalendarDateFilesNotice extends ErrorNotice {
     public MissingCalendarAndCalendarDateFilesNotice() {
         super("calendar.txt", E_056,
                 "Missing both `calendar_dates.txt` and `calendar.txt` files",
-                "Both files `calendar.dates.txt` and `calendar_dates.txt` are missing from the GTFS " +
-                        "archive. At least one of both files must be provided",
+                "Both files `calendar_dates.txt` and `calendar.txt` are missing from the GTFS " +
+                        "archive. At least one of the files must be provided",
                 null);
         putNoticeSpecific(KEY_OTHER_MISSING_FILENAME, "calendar_dates.txt");
     }
