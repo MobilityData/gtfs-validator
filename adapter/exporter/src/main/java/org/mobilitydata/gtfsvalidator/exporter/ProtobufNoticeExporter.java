@@ -261,7 +261,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     public void export(MissingRequiredFileNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_TABLE)
+                .setType(TYPE_CSV_MISSING_TABLE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getFilename())
                 .build()
@@ -849,6 +849,17 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityId(String.valueOf(toExport.getEntityId()))
                 .setType(TYPE_TRIP_WITH_NO_USABLE_STOPS)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final MissingCalendarAndCalendarDateFilesNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setType(TYPE_CSV_MISSING_TABLE)
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_OTHER_MISSING_FILENAME)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
