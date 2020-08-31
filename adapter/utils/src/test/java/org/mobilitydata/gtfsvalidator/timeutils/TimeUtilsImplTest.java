@@ -19,10 +19,7 @@ package org.mobilitydata.gtfsvalidator.timeutils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TimeUtilsImplTest {
     private static final int HOUR_TO_SEC_CONVERSION_FACTOR = 3600;
@@ -243,17 +240,72 @@ public class TimeUtilsImplTest {
     }
 
     @Test
-    void overlappingPeriodsShouldReturnTrue() {
+    void partialOverlapWithOneCommonBoundaryShouldReturnTrue() {
+        //   a |--------|         07:00 am -> 10:00 am
+        //   b     |----|         09:00 am -> 10:00 am
+        // period `b` partially overlaps with period `a`
         assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
-                800, 1200));
+                900, 1000));
+
+        // permute periods `a` and `b` in method call
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(900, 1000,
+                700, 1000));
+
+        //   a |--------|         07:00 am -> 10:00 am
+        //   b |----|             07:00 am -> 09:00 am
+        // period `b` partially overlaps with period `a`
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                700, 900));
+
+        // permute periods `a` and `b` in method call
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 900,
+                700, 1000));
     }
 
     @Test
-    void nonOverlappingPeriodsShouldReturnFalse() {
+    void partialOverlapPeriodsShouldReturnTrue() {
+        //   a |--------|       07:00 am -> 10:00 am
+        //     b      |----|    08:00 am -> 12:00 am
+        // period `b` partially overlaps with period `a`
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                800, 1200));
+
+        // permute periods `a` and `b` in method call
+        //     b      |----|    08:00 am -> 12:00 am
+        //   a |--------|       07:00 am -> 10:00 am
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(800, 1200,
+                700, 1000));
+    }
+
+    @Test
+    void firstPeriodContainedWithTheSecondOneShouldReturnTrueWhenArePeriodsOverlappingIsCalled() {
+        //   a |--------|       07:00 am -> 12:00 am
+        //   b   |----|         08:00 am -> 11:00 am
+        // period `b` is contained within period `a`
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1200,
+                800, 1100));
+    }
+
+    @Test
+    void secondPeriodContainedWithinTheFirstOneShouldReturnTrueWhenArePeriodsOverlappingIsCalled() {
+        //   a   |----|         08:00 am -> 11:00 am
+        //   b |--------|       07:00 am -> 12:00 am
+        // period `a` is contained within period `b`
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(800, 1100,
+                700, 1200));
+    }
+
+    @Test
+    void disjointPeriodsShouldReturnFalse() {
+        // Disjoint periods of time, with `a` being the first period and `b` the second one
+        // a |--------|                 07:00 am -> 10:00 am
+        //             b  |----|        11:00 am -> 12:00 am
         assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
                 1100, 1200));
-        // common end time and start time
-        assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
-                1000, 1200));
+        // permute periods a and b in method call
+        //             b  |----|        11:00 am -> 12:00 am
+        // a |--------|                 07:00 am -> 10:00 am
+        assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(1100, 1200,
+                700, 1000));
     }
 }
