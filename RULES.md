@@ -289,7 +289,7 @@ This is related to [W012](#https://github.com/MobilityData/gtfs-validator/blob/m
 The `end_time` must not precede the `start_time` in `frequencies.txt`. 
 
 #### References:
-* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
 <a name="E049"/>
 
@@ -317,7 +317,7 @@ Trip frequencies must not overlap in time
 
 #### References:
 
-* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
 <a name="E056"/>
 

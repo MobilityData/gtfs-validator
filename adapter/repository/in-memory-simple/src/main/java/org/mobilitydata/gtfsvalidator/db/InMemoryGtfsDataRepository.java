@@ -654,10 +654,12 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     /**
      * Return an unmodifiable map of Frequency objects from `frequencies.txt`. Entities are mapped on value of trip_id
-     * of file `frequencies.txt`.
+     * of file `frequencies.txt`. Each trip_id may include multiple {@link Frequency} entries, therefore, a list of
+     * these entries is returned.
      *
      * @return an unmodifiable map of Frequency objects from `frequencies.txt`. Entities are mapped on value of trip_id
-     * of `frequencies.txt`
+     * of `frequencies.txt`. Each trip_id may include multiple {@link Frequency} entries, therefore, a list of these
+     * entries is returned.
      */
     @Override
     public Map<String, List<Frequency>> getFrequencyAllByTripId() {

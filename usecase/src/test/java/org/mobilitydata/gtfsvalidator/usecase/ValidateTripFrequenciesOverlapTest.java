@@ -51,6 +51,8 @@ class ValidateTripFrequenciesOverlapTest {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
         final TimeUtils mockTimeUtil = mock(TimeUtils.class);
+        // the implementation of time utility class is tested in:
+        // org.mobilitydata.gtfsvalidator.usecase.utils.test.TimeUtilsImplTest
         when(mockTimeUtil.convertIntegerToHMMSS(1200)).thenReturn("1200");
         when(mockTimeUtil.convertIntegerToHMMSS(1800)).thenReturn("1800");
         when(mockTimeUtil.convertIntegerToHMMSS(1544)).thenReturn("1544");
@@ -92,16 +94,16 @@ class ValidateTripFrequenciesOverlapTest {
 
         verify(mockDataRepo, times(1)).getFrequencyAllByTripId();
         verify(firstFrequency, times(4)).getFrequencyMappingKey();
-        verify(firstFrequency, times(1)).getStartTime();
-        verify(firstFrequency, times(1)).getEndTime();
+        verify(firstFrequency, times(2)).getStartTime();
+        verify(firstFrequency, times(2)).getEndTime();
 
         verify(secondFrequency, times(4)).getFrequencyMappingKey();
-        verify(secondFrequency, times(2)).getStartTime();
-        verify(secondFrequency, times(2)).getEndTime();
+        verify(secondFrequency, times(4)).getStartTime();
+        verify(secondFrequency, times(4)).getEndTime();
 
         verify(thirdFrequency, times(4)).getFrequencyMappingKey();
-        verify(thirdFrequency, times(3)).getEndTime();
-        verify(thirdFrequency, times(3)).getStartTime();
+        verify(thirdFrequency, times(6)).getEndTime();
+        verify(thirdFrequency, times(6)).getStartTime();
 
         verify(mockTimeUtil, times(1)).convertIntegerToHMMSS(1200);
         verify(mockTimeUtil, times(1)).convertIntegerToHMMSS(1800);
@@ -153,7 +155,8 @@ class ValidateTripFrequenciesOverlapTest {
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
         final TimeUtils mockTimeUtil = mock(TimeUtils.class);
-
+        // the implementation of time utility class is tested in:
+        // org.mobilitydata.gtfsvalidator.usecase.utils.test.TimeUtilsImplTest
         when(mockTimeUtil.arePeriodsOverlapping(1200, 1800,
                 2143, 2200)).thenReturn(false);
         when(mockTimeUtil.arePeriodsOverlapping(1200, 1800,
@@ -191,16 +194,16 @@ class ValidateTripFrequenciesOverlapTest {
 
         verify(mockDataRepo, times(1)).getFrequencyAllByTripId();
         verify(firstFrequency, times(4)).getFrequencyMappingKey();
-        verify(firstFrequency, times(1)).getStartTime();
-        verify(firstFrequency, times(1)).getEndTime();
+        verify(firstFrequency, times(2)).getStartTime();
+        verify(firstFrequency, times(2)).getEndTime();
 
         verify(secondFrequency, times(4)).getFrequencyMappingKey();
-        verify(secondFrequency, times(2)).getStartTime();
-        verify(secondFrequency, times(2)).getEndTime();
+        verify(secondFrequency, times(4)).getStartTime();
+        verify(secondFrequency, times(4)).getEndTime();
 
         verify(thirdFrequency, times(4)).getFrequencyMappingKey();
-        verify(thirdFrequency, times(3)).getEndTime();
-        verify(thirdFrequency, times(3)).getStartTime();
+        verify(thirdFrequency, times(6)).getEndTime();
+        verify(thirdFrequency, times(6)).getStartTime();
 
         verify(mockTimeUtil, times(1))
                 .arePeriodsOverlapping(1200, 1800,
@@ -265,21 +268,22 @@ class ValidateTripFrequenciesOverlapTest {
 
         verify(mockDataRepo, times(1)).getFrequencyAllByTripId();
         verify(firstFrequency, times(3)).getFrequencyMappingKey();
-        verify(firstFrequency, times(1)).getStartTime();
-        verify(firstFrequency, times(1)).getEndTime();
+        verify(firstFrequency, times(2)).getStartTime();
+        verify(firstFrequency, times(2)).getEndTime();
 
         verify(secondFrequency, times(3)).getFrequencyMappingKey();
-        verify(secondFrequency, times(2)).getStartTime();
-        verify(secondFrequency, times(2)).getEndTime();
+        verify(secondFrequency, times(4)).getStartTime();
+        verify(secondFrequency, times(4)).getEndTime();
 
         verify(thirdFrequency, times(3)).getFrequencyMappingKey();
-        verify(thirdFrequency, times(2)).getEndTime();
-        verify(thirdFrequency, times(2)).getStartTime();
+        verify(thirdFrequency, times(4)).getEndTime();
+        verify(thirdFrequency, times(4)).getStartTime();
 
         verify(mockTimeUtil, times(1))
                 .arePeriodsOverlapping(1200, 1800,
                         344, 845);
         verifyNoInteractions(mockResultRepo);
-        verifyNoMoreInteractions(mockDataRepo, mockLogger, firstFrequency, secondFrequency, thirdFrequency, mockTimeUtil);
+        verifyNoMoreInteractions(mockDataRepo, mockLogger, firstFrequency, secondFrequency, thirdFrequency,
+                mockTimeUtil);
     }
 }
