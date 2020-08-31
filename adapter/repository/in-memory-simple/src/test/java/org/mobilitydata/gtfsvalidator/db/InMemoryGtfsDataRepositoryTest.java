@@ -571,6 +571,38 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void getFrequencyAllByTripIdShouldReturnAllFrequencyEntitiesGroupedByTripId() {
+        final Frequency mockFrequency00 = mock(Frequency.class);
+        final Frequency mockFrequency01 = mock(Frequency.class);
+        final Frequency mockFrequency02 = mock(Frequency.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockFrequency00.getTripId()).thenReturn("first trip id");
+        when(mockFrequency00.getStartTime()).thenReturn(0);
+        when(mockFrequency01.getTripId()).thenReturn("first trip id");
+        when(mockFrequency01.getStartTime()).thenReturn(1);
+        when(mockFrequency02.getTripId()).thenReturn("second trip id");
+        when(mockFrequency02.getStartTime()).thenReturn(1);
+        when(mockFrequency00.getFrequencyMappingKey()).thenReturn("first trip id" + "0");
+        when(mockFrequency01.getFrequencyMappingKey()).thenReturn("first trip id" + "1");
+        when(mockFrequency02.getFrequencyMappingKey()).thenReturn("second trip id" + "1");
+
+        underTest.addFrequency(mockFrequency00);
+        underTest.addFrequency(mockFrequency01);
+        underTest.addFrequency(mockFrequency02);
+
+        assertEquals(2, underTest.getFrequencyAllByTripId().size());
+        assertTrue(underTest.getFrequencyAllByTripId().containsKey("first trip id"));
+        assertTrue(underTest.getFrequencyAllByTripId().containsKey("second trip id"));
+
+        assertEquals(2, underTest.getFrequencyAllByTripId().get("first trip id").size());
+        assertEquals(1, underTest.getFrequencyAllByTripId().get("second trip id").size());
+
+        assertTrue(underTest.getFrequencyAllByTripId().get("first trip id").contains(mockFrequency00));
+        assertTrue(underTest.getFrequencyAllByTripId().get("first trip id").contains(mockFrequency01));
+        assertTrue(underTest.getFrequencyAllByTripId().get("second trip id").contains(mockFrequency02));
+    }
+
+    @Test
     void getFrequencyAllShouldReturnFrequencyCollection() {
         final Frequency mockFrequency00 = mock(Frequency.class);
         final Frequency mockFrequency01 = mock(Frequency.class);

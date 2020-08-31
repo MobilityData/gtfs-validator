@@ -61,6 +61,7 @@ public class TimeUtilsImpl implements TimeUtils {
      * @return the number of seconds elapsed since noon of day of service. The time is measured from "noon minus 12h"
      * of the service day (effectively midnight except for days on which daylight savings time changes occur).
      */
+    @Override
     public Integer convertHHMMSSToIntFromNoonOfDayOfService(final String timeAsString) {
         if (timeAsString != null && pattern.matcher(timeAsString).matches()) {
             final String[] timeStringSplit = timeAsString.split(":");
@@ -117,5 +118,29 @@ public class TimeUtilsImpl implements TimeUtils {
                     minutesAfterMidnight,
                     secondsAfterMidnight);
         }
+    }
+
+    /**
+     * This method checks if two periods of times overlap
+     *
+     * @param firstPeriodFirstTimeSecs  lower bound of the first period of time in number of seconds elapsed since noon
+     * @param firstPeriodLastTimeSecs   upper bound of the first period of time in number of seconds elapsed since noon
+     * @param secondPeriodFirstTimeSecs lower bound of the second period of time in number of seconds elapsed since noon
+     * @param secondPeriodLastTimeSecs  upper bound of the second period of time in number of seconds elapsed since noon
+     * @return true if the two periods of time overlap, otherwise returns false
+     */
+    @Override
+    public boolean arePeriodsOverlapping(final int firstPeriodFirstTimeSecs,
+                                         final int firstPeriodLastTimeSecs,
+                                         final int secondPeriodFirstTimeSecs,
+                                         final int secondPeriodLastTimeSecs) {
+        if (firstPeriodFirstTimeSecs > secondPeriodFirstTimeSecs) {
+            return arePeriodsOverlapping(secondPeriodFirstTimeSecs,
+                    secondPeriodLastTimeSecs,
+                    firstPeriodFirstTimeSecs,
+                    firstPeriodLastTimeSecs);
+        }
+        return !(firstPeriodFirstTimeSecs < secondPeriodLastTimeSecs &&
+                firstPeriodLastTimeSecs < secondPeriodFirstTimeSecs);
     }
 }

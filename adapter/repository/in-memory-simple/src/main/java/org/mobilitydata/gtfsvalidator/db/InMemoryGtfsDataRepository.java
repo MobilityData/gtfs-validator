@@ -88,6 +88,10 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Example of key after composition: trip_idstart_time
     private final Map<String, Frequency> frequencyPerTripIdStartTime = new HashMap<>();
 
+    // Map containing Frequency entities. Entities are mapped on trip_id value. For each trip_id, Frequency entities are
+    // stored based on their trip_id value.
+    private final Map<String, List<Frequency>> frequencyPerTripId = new HashMap<>();
+
     // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
     // pathways.txt
     private final Map<String, Pathway> pathwayPerId = new HashMap<>();
@@ -620,7 +624,15 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             if (frequencyPerTripIdStartTime.containsKey(key)) {
                 return null;
             } else {
+                final String tripId = newFrequency.getTripId();
                 frequencyPerTripIdStartTime.put(key, newFrequency);
+                if (frequencyPerTripId.containsKey(tripId)) {
+                    frequencyPerTripId.get(tripId).add(newFrequency);
+                } else {
+                    final List<Frequency> frequencyCollection = new ArrayList<>();
+                    frequencyCollection.add(newFrequency);
+                    frequencyPerTripId.put(tripId, frequencyCollection);
+                }
                 return newFrequency;
             }
         } else {
@@ -638,6 +650,20 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public Frequency getFrequency(final String tripId, final Integer startTime) {
         return frequencyPerTripIdStartTime.get(Frequency.getFrequencyMappingKey(tripId, startTime));
+    }
+
+    /**
+     * Return an unmodifiable map of Frequency objects from `frequencies.txt`. Entities are mapped on value of trip_id
+     * of file `frequencies.txt`. Each trip_id may include multiple {@link Frequency} entries, therefore, a list of
+     * these entries is returned.
+     *
+     * @return an unmodifiable map of Frequency objects from `frequencies.txt`. Entities are mapped on value of trip_id
+     * of `frequencies.txt`. Each trip_id may include multiple {@link Frequency} entries, therefore, a list of these
+     * entries is returned.
+     */
+    @Override
+    public Map<String, List<Frequency>> getFrequencyAllByTripId() {
+        return Collections.unmodifiableMap(frequencyPerTripId);
     }
 
     /**
