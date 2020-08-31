@@ -271,6 +271,8 @@ public class TimeUtilsImplTest {
                 800, 1200));
 
         // permute periods `a` and `b` in method call
+        //     b      |----|    08:00 am -> 12:00 am
+        //   a |--------|       07:00 am -> 10:00 am
         assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(800, 1200,
                 700, 1000));
     }
@@ -301,6 +303,8 @@ public class TimeUtilsImplTest {
         assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
                 1100, 1200));
         // permute periods a and b in method call
+        //             b  |----|        11:00 am -> 12:00 am
+        // a |--------|                 07:00 am -> 10:00 am
         assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(1100, 1200,
                 700, 1000));
     }
