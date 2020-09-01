@@ -86,7 +86,6 @@ public abstract class Notice {
     public static final String KEY_TRIP_LAST_TIME = "tripLastTime";
     public static final String KEY_PREVIOUS_TRIP_FIRST_TIME = "previousTripFirstTime";
     public static final String KEY_PREVIOUS_TRIP_LAST_TIME = "previousTripLastTime";
-    public static final String KEY_CONFLICTING_DAY_LIST = "conflictingDayList";
     public static final String KEY_CONFLICTING_DATE_LIST = "conflictingDateList";
 
     private final String filename;

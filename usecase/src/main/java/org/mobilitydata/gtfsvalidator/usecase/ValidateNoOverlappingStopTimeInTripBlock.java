@@ -53,7 +53,7 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
      * - trips from same block with same service id that overlap should generate a notice
      * - trips from same block with same service_id that do not overlap should not generate notice
      * - trips from same block with with different service_id that overlap should generate notice whether calendar or
-     * calendar_Dates is provided
+     * calendar_dates is provided
      * - trips from same block with with different service_id that do not overlap should not generate notice whether
      * calendar or calendar_dates is provided
      */
@@ -61,204 +61,304 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
         logger.info("validating rule 'E054 - Trips from same block overlap'");
 
         final Map<String, List<Trip>> tripPerBlockId = dataRepo.getAllTripByBlockId();
-        final boolean areCalendarProvided = dataRepo.getCalendarAll().size() != 0;
-
-        tripPerBlockId.forEach((blockId, tripCollectionFromSameBlockId) -> {
-            final List<String> visitedTripIdCollection = new ArrayList<>();
-            tripCollectionFromSameBlockId.forEach(currentTrip -> {
-
+        final boolean isCalendarProvided = dataRepo.getCalendarAll().size() != 0;
+        tripPerBlockId.forEach((blockId, trips) -> {
+            final Map<String, Trip> visitedTripIdCollection = new HashMap();
+            trips.forEach(currentTrip -> {
                 final String currentTripId = currentTrip.getTripId();
-                final SortedMap<Integer, StopTime> stopTimeCollectionForCurrentTrip =
-                        dataRepo.getStopTimeByTripId(currentTrip.getTripId());
+                final SortedMap<Integer, StopTime> tripStopTimes = dataRepo.getStopTimeByTripId(currentTripId);
 
-                final StopTime currentTripFirstStopTimeInSequence =
-                        stopTimeCollectionForCurrentTrip.get(stopTimeCollectionForCurrentTrip.firstKey());
-                final StopTime currentTripLastStopTimeInSequence =
-                        stopTimeCollectionForCurrentTrip.get(stopTimeCollectionForCurrentTrip.lastKey());
-                final Integer currentTripFirstTime = currentTripFirstStopTimeInSequence.getArrivalTime();
-                final Integer currentTripLastTime = currentTripLastStopTimeInSequence.getDepartureTime();
-
-                visitedTripIdCollection.add(currentTripId);
-
-                if (currentTripFirstTime != null && currentTripLastTime != null) {
-                    if (currentTripFirstTime <= currentTripLastTime) {
-                        tripCollectionFromSameBlockId.forEach(unvisitedTrip -> {
-                            final String unvisitedTripId = unvisitedTrip.getTripId();
-                            if (!visitedTripIdCollection.contains(unvisitedTripId)) {
-                                // if trips have the same service_id
-                                // | routeId | tripId | serviceId | blockId | first stop time | last stop time |
-                                // |---------|--------|-----------|---------|-----------------|----------------|
-                                // | 0       | 2      | a         | 5       | 07:00           | 10:00          |
-                                // | 0       | 5      | a         | 5       | 08:45           | 11:20          |
-                                // | 0       | 8      | a         | 5       | 11:40           | 13:50          |
-
-                                // fetch related StopTime for unvisitedTrip
-                                final SortedMap<Integer, StopTime> stopTimesForUnvisitedTrip =
-                                        dataRepo.getStopTimeByTripId(unvisitedTripId);
-
-                                final StopTime unvisitedTripFirstStopTimeInSequence =
-                                        stopTimesForUnvisitedTrip.get(stopTimesForUnvisitedTrip.firstKey());
-                                final StopTime unvisitedTripLastStopTimeInSequence =
-                                        stopTimesForUnvisitedTrip.get(stopTimesForUnvisitedTrip.lastKey());
-
-                                final Integer unvisitedTripFirstTime =
-                                        unvisitedTripFirstStopTimeInSequence.getArrivalTime();
-                                final Integer unvisitedTripLastTime =
-                                        unvisitedTripLastStopTimeInSequence.getDepartureTime();
-
-                                if (unvisitedTrip.getServiceId().equals(currentTrip.getServiceId())) {
-
-                                    // stop_times arrival_time and departure_time should not be null to perform the
-                                    // subsequent operations
-                                    if (unvisitedTripFirstTime != null && unvisitedTripLastTime != null) {
-                                        // stop_times arrival_time and departure_time are supposed to be ordered
-                                        if (unvisitedTripFirstTime <= unvisitedTripLastTime) {
-                                            // if times overlap
-                                            if (timeUtils.arePeriodsOverlapping(currentTripFirstTime,
-                                                    currentTripLastTime,
-                                                    unvisitedTripFirstTime,
-                                                    unvisitedTripLastTime)) {
-                                                resultRepo.addNotice(
-                                                        new BlockTripsWithOverlappingStopTimesNotice(
-                                                                currentTripId,
-                                                                timeUtils.convertIntegerToHMMSS(currentTripFirstTime),
-                                                                timeUtils.convertIntegerToHMMSS(currentTripLastTime),
-                                                                unvisitedTripId,
-                                                                timeUtils.convertIntegerToHMMSS(unvisitedTripFirstTime),
-                                                                timeUtils.convertIntegerToHMMSS(unvisitedTripLastTime),
-                                                                blockId)
-                                                );
-
-
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    // if trips have different service_id additional check needs to be done to determine
-                                    // whether they operate on the same day or noy
-                                    // This is done by checking files `calendar.txt` and `calendar_dates.txt
-
-                                    // | routeId | tripId | serviceId | blockId | first stop time | last stop time |
-                                    // |---------|--------|-----------|---------|-----------------|----------------|
-                                    // | 0       | 2      | a         | 5       | 07:00           | 10:00          |
-                                    // | 0       | 5      | b         | 5       | 08:45           | 11:20          |
-                                    // | 0       | 8      | c         | 5       | 11:40           | 13:50          |
-                                    Calendar currentTripCalendar = null;
-                                    Calendar unvisitedTripCalendar = null;
-                                    Map<String, CalendarDate> currentTripCalendarDatePossibilityCollection = null;
-                                    Map<String, CalendarDate> unvisitedTripCalendarDatePossibilityCollection = null;
-                                    if (areCalendarProvided) {
-                                        currentTripCalendar =
-                                                dataRepo.getCalendarByServiceId(currentTrip.getServiceId());
-                                        unvisitedTripCalendar =
-                                                dataRepo.getCalendarByServiceId(unvisitedTrip.getServiceId());
-                                    } else {
-                                        currentTripCalendarDatePossibilityCollection =
-                                                dataRepo.getCalendarDateAll().get(currentTrip.getServiceId());
-                                        unvisitedTripCalendarDatePossibilityCollection =
-                                                dataRepo.getCalendarDateAll().get(unvisitedTrip.getServiceId());
-                                    }
-                                    // interpret data from `calendar.txt` to determine if currentTrip and unvisitedTrip
-                                    // operate on same days
-                                    if (areCalendarProvided) {
-                                        // first check if `start_date` and `end_date` overlap for both trips
-                                        if (currentTripCalendar.areCalendarOverlapping(unvisitedTripCalendar)) {
-                                            // determine the if the trips operate on same days
-                                            if (currentTripCalendar.getCalendarsCommonOperationDayCollection(
-                                                    unvisitedTripCalendar).size() >= 1) {
-
-                                                if (unvisitedTripFirstTime != null && unvisitedTripLastTime != null) {
-
-                                                    if (unvisitedTripFirstTime <= unvisitedTripLastTime) {
-                                                        // if times overlap
-                                                        if (timeUtils.arePeriodsOverlapping(currentTripFirstTime,
-                                                                currentTripLastTime,
-                                                                unvisitedTripFirstTime,
-                                                                unvisitedTripLastTime)) {
-                                                            final List<String> commonDaysOfOperation =
-                                                                    currentTripCalendar
-                                                                            .getCalendarsCommonOperationDayCollection(
-                                                                                    unvisitedTripCalendar);
-                                                            resultRepo.addNotice(
-                                                                    new BlockTripsWithOverlappingStopTimesNotice(
-                                                                            currentTripId,
-                                                                            timeUtils.convertIntegerToHMMSS(
-                                                                                    currentTripFirstTime),
-                                                                            timeUtils.convertIntegerToHMMSS(
-                                                                                    currentTripLastTime),
-                                                                            unvisitedTripId,
-                                                                            timeUtils.convertIntegerToHMMSS(
-                                                                                    unvisitedTripFirstTime),
-                                                                            timeUtils.convertIntegerToHMMSS(
-                                                                                    unvisitedTripLastTime),
-                                                                            blockId,
-                                                                            commonDaysOfOperation)
-                                                            );
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        // interpret data from `calendar_dates.txt` to determine if currentTrip and
-                                        // unvisitedTrip operate on same days
-                                        final Set<String> currentTripDatePossibilityCollection = new HashSet<>();
-                                        currentTripCalendarDatePossibilityCollection.forEach((date, calendarDate) -> {
-                                            if (calendarDate.getExceptionType() == ExceptionType.ADDED_SERVICE) {
-                                                currentTripDatePossibilityCollection.add(date);
-                                            }
-                                        });
-
-                                        final Set<String> unvisitedTripDatePossibilityCollection = new HashSet<>();
-                                        unvisitedTripCalendarDatePossibilityCollection.forEach((date, calendarDate) -> {
-                                            if (calendarDate.getExceptionType() == ExceptionType.ADDED_SERVICE) {
-                                                unvisitedTripDatePossibilityCollection.add(date);
-                                            }
-                                        });
-
-                                        // get the list of common dates during which trips with different service_id
-                                        // operate: this represent the list of dates where there could be potential time
-                                        // overlap.
-                                        final Set<String> potentialConflictingDates =
-                                                new HashSet<>(Set.copyOf(currentTripDatePossibilityCollection));
-                                        potentialConflictingDates.retainAll(unvisitedTripDatePossibilityCollection);
-
-                                        if (potentialConflictingDates.size() >= 1) {
-
-                                            if (unvisitedTripFirstTime != null && unvisitedTripLastTime != null) {
-
-                                                if (unvisitedTripFirstTime <= unvisitedTripLastTime) {
-                                                    // if times overlap
-                                                    if (timeUtils.arePeriodsOverlapping(currentTripFirstTime,
-                                                            currentTripLastTime,
-                                                            unvisitedTripFirstTime,
-                                                            unvisitedTripLastTime)) {
-                                                        resultRepo.addNotice(
-                                                                new BlockTripsWithOverlappingStopTimesNotice(
-                                                                        currentTripId,
-                                                                        timeUtils.convertIntegerToHMMSS(
-                                                                                currentTripFirstTime),
-                                                                        timeUtils.convertIntegerToHMMSS(
-                                                                                currentTripLastTime),
-                                                                        unvisitedTripId,
-                                                                        timeUtils.convertIntegerToHMMSS(
-                                                                                unvisitedTripFirstTime),
-                                                                        timeUtils.convertIntegerToHMMSS(
-                                                                                unvisitedTripLastTime),
-                                                                        blockId,
-                                                                        potentialConflictingDates)
-                                                        );
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    }
+                final StopTime tripFirstStopTime = tripStopTimes.get(tripStopTimes.firstKey());
+                final StopTime tripLastStopTime = tripStopTimes.get(tripStopTimes.lastKey());
+                final Integer tripFirstTime = tripFirstStopTime.getArrivalTime();
+                final Integer tripLastTime = tripLastStopTime.getDepartureTime();
+                visitedTripIdCollection.put(currentTripId, currentTrip);
+                if (tripFirstTime == null || tripLastTime == null) {
+                    return;
                 }
+                if (!areTripTimesValid(tripFirstStopTime, tripLastStopTime)) {
+                    return;
+                }
+                trips.forEach(unvisitedTrip -> {
+                    final String unvisitedTripId = unvisitedTrip.getTripId();
+                    if (visitedTripIdCollection.containsKey(unvisitedTripId)) {
+                        return;
+                    }
+                    // if trips have the same service_id
+                    // | routeId | tripId | serviceId | blockId | first stop time | last stop time |
+                    // |---------|--------|-----------|---------|-----------------|----------------|
+                    // | 0       | 2      | a         | 5       | 07:00           | 10:00          |
+                    // | 0       | 5      | a         | 5       | 08:45           | 11:20          |
+                    // | 0       | 8      | a         | 5       | 11:40           | 13:50          |
+
+                    // fetch related StopTime for unvisitedTrip
+                    final SortedMap<Integer, StopTime> unvisitedTripStopTimes =
+                            dataRepo.getStopTimeByTripId(unvisitedTripId);
+                    final StopTime unvisitedTripFirstStopTime =
+                            unvisitedTripStopTimes.get(unvisitedTripStopTimes.firstKey());
+                    final StopTime unvisitedTripLastStopTime =
+                            unvisitedTripStopTimes.get(unvisitedTripStopTimes.lastKey());
+
+                    final Integer unvisitedTripFirstTime = unvisitedTripFirstStopTime.getArrivalTime();
+                    final Integer unvisitedTripLastTime = unvisitedTripLastStopTime.getDepartureTime();
+                    if (unvisitedTrip.hasSameServiceId(currentTrip)) {
+                        checkOverlappingForTripsWithSameServiceId(
+                                blockId,
+                                currentTripId,
+                                unvisitedTripId,
+                                tripFirstTime,
+                                tripLastTime,
+                                unvisitedTripFirstTime,
+                                unvisitedTripLastTime,
+                                unvisitedTripFirstStopTime,
+                                unvisitedTripLastStopTime);
+                    } else {
+                        // if trips have different service_id additional check needs to be done to determine
+                        // whether they operate on the same day or not
+                        // This is done by checking files `calendar.txt` and `calendar_dates.txt
+
+                        // | routeId | tripId | serviceId | blockId | first stop time | last stop time |
+                        // |---------|--------|-----------|---------|-----------------|----------------|
+                        // | 0       | 2      | a         | 5       | 07:00           | 10:00          |
+                        // | 0       | 5      | b         | 5       | 08:45           | 11:20          |
+                        // | 0       | 8      | c         | 5       | 11:40           | 13:50          |
+                        if (isCalendarProvided) {
+                            checkOverlappingTripsDifferentServiceIdCalendarProvided(
+                                    blockId,
+                                    currentTrip,
+                                    currentTripId,
+                                    unvisitedTrip,
+                                    unvisitedTripId,
+                                    tripFirstTime,
+                                    tripLastTime,
+                                    unvisitedTripFirstTime,
+                                    unvisitedTripLastTime,
+                                    unvisitedTripFirstStopTime,
+                                    unvisitedTripLastStopTime);
+                        } else {
+                            checkOverlappingTripsDifferentServiceIdCalendarNotProvided(
+                                    blockId,
+                                    currentTrip,
+                                    currentTripId,
+                                    unvisitedTrip,
+                                    unvisitedTripId,
+                                    tripFirstTime,
+                                    tripLastTime,
+                                    unvisitedTripFirstTime,
+                                    unvisitedTripLastTime,
+                                    unvisitedTripFirstStopTime,
+                                    unvisitedTripLastStopTime);
+                        }
+                    }
+                });
             });
         });
+    }
+
+    /**
+     * Utility method to determine if {@code Trip} times are valid. Returns true if
+     * tripFirstStopTime.arrivalTime < tripLastStopTime.departureTime, otherwise returns false
+     *
+     * @param tripFirstStopTime first {@link StopTime} of trip
+     * @param tripLastStopTime  last {@link StopTime} of trip
+     * @return true if {@param tripFirstStopTime} arrival time is before {@param tripLastStopTime} departure time,
+     * otherwise returns false.
+     */
+    private boolean areTripTimesValid(final StopTime tripFirstStopTime, final StopTime tripLastStopTime) {
+        final Integer arrivalTime = tripFirstStopTime.getArrivalTime();
+        final Integer departureTime = tripLastStopTime.getDepartureTime();
+        if (arrivalTime != null & departureTime != null) {
+            return arrivalTime < departureTime;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Utility method to determine if trips are overlapping when trips have the same service_id
+     *
+     * @param blockId                id of the block
+     * @param tripId                 id of {@link Trip}
+     * @param otherTripId            other {@link Trip} id
+     * @param tripFirstTime          {@link Trip} first time
+     * @param tripLastTime           {@link Trip} last time
+     * @param otherTripFirstTime     other {@link Trip} first time
+     * @param otherTripLastTime      other {@link Trip} last time
+     * @param otherTripFirstStopTime other {@link Trip} first {@link StopTime}
+     * @param otherTripLastStopTime  other {@link Trip} last {@link StopTime}
+     */
+    private void checkOverlappingForTripsWithSameServiceId(final String blockId,
+                                                           final String tripId,
+                                                           final String otherTripId,
+                                                           final int tripFirstTime,
+                                                           final int tripLastTime,
+                                                           final Integer otherTripFirstTime,
+                                                           final Integer otherTripLastTime,
+                                                           final StopTime otherTripFirstStopTime,
+                                                           final StopTime otherTripLastStopTime) {
+        // stop_times arrival_time and departure_time should not be null to perform the
+        // subsequent operations
+        if (otherTripFirstTime == null || otherTripLastTime == null) {
+            return;
+        }
+        // stop_times arrival_time and departure_time are supposed to be ordered
+        if (!areTripTimesValid(otherTripFirstStopTime, otherTripLastStopTime)) {
+            return;
+        }
+        // if times overlap
+        if (!timeUtils.arePeriodsOverlapping(tripFirstTime, tripLastTime,
+                otherTripFirstTime, otherTripLastTime)) {
+            return;
+        }
+        resultRepo.addNotice(new BlockTripsWithOverlappingStopTimesNotice(
+                tripId,
+                timeUtils.convertIntegerToHMMSS(tripFirstTime),
+                timeUtils.convertIntegerToHMMSS(tripLastTime),
+                otherTripId,
+                timeUtils.convertIntegerToHMMSS(otherTripFirstTime),
+                timeUtils.convertIntegerToHMMSS(otherTripLastTime),
+                blockId));
+    }
+
+    /**
+     * Utility method to determine if trips are overlapping when trips do not have the same service_id and file
+     * `calendar.txt` is provided in the GTFS archive.
+     *
+     * @param blockId                id of the block
+     * @param trip                   first {@link Trip} to analyze
+     * @param tripId                 id of {@link Trip}
+     * @param otherTrip              other {@link Trip} to analyze
+     * @param otherTripId            other {@link Trip} id
+     * @param tripFirstTime          {@link Trip} first time
+     * @param tripLastTime           {@link Trip} last time
+     * @param otherTripFirstTime     other {@link Trip} first time
+     * @param otherTripLastTime      other {@link Trip} last time
+     * @param otherTripFirstStopTime other {@link Trip} first {@link StopTime}
+     * @param otherTripLastStopTime  other {@link Trip} last {@link StopTime}
+     */
+    private void checkOverlappingTripsDifferentServiceIdCalendarProvided(final String blockId,
+                                                                         final Trip trip,
+                                                                         final String tripId,
+                                                                         final Trip otherTrip,
+                                                                         final String otherTripId,
+                                                                         final int tripFirstTime,
+                                                                         final int tripLastTime,
+                                                                         final Integer otherTripFirstTime,
+                                                                         final Integer otherTripLastTime,
+                                                                         final StopTime otherTripFirstStopTime,
+                                                                         final StopTime otherTripLastStopTime) {
+        // interpret data from `calendar.txt` to determine if currentTrip and otherTrip
+        // operate on same days
+        Calendar tripCalendar = dataRepo.getCalendarByServiceId(trip.getServiceId());
+        Calendar unvisitedTripCalendar = dataRepo.getCalendarByServiceId(otherTrip.getServiceId());
+        // first check if `start_date` and `end_date` overlap for both trips
+        if (!tripCalendar.isOverlapping(unvisitedTripCalendar)) {
+            return;
+        }
+        // determine the if the trips operate on same days
+        if (tripCalendar.getOverlappingDays(unvisitedTripCalendar).size() == 0) {
+            return;
+        }
+        if (otherTripFirstTime == null || otherTripLastTime == null) {
+            return;
+        }
+        if (!areTripTimesValid(otherTripFirstStopTime, otherTripLastStopTime)) {
+            return;
+        }
+        if (!timeUtils.arePeriodsOverlapping(tripFirstTime, tripLastTime,
+                otherTripFirstTime, otherTripLastTime)) {
+            return;
+        }
+        // if times overlap
+        resultRepo.addNotice(
+                new BlockTripsWithOverlappingStopTimesNotice(
+                        tripId,
+                        timeUtils.convertIntegerToHMMSS(tripFirstTime),
+                        timeUtils.convertIntegerToHMMSS(tripLastTime),
+                        otherTripId,
+                        timeUtils.convertIntegerToHMMSS(otherTripFirstTime),
+                        timeUtils.convertIntegerToHMMSS(otherTripLastTime),
+                        blockId,
+                        tripCalendar.getOverlappingDays(unvisitedTripCalendar)));
+    }
+
+    /**
+     * Utility method to determine if trips are overlapping when trips do not have the same service_id and file
+     * `calendar.txt` is not provided in the GTFS archive.
+     *
+     * @param blockId                id of the block
+     * @param trip                   first {@link Trip} to analyze
+     * @param tripId                 id of {@link Trip}
+     * @param otherTrip              other {@link Trip} to analyze
+     * @param otherTripId            other {@link Trip} id
+     * @param tripFirstTime          {@link Trip} first time
+     * @param tripLastTime           {@link Trip} last time
+     * @param otherTripFirstTime     other {@link Trip} first time
+     * @param otherTripLastTime      other {@link Trip} last time
+     * @param otherTripFirstStopTime other {@link Trip} first {@link StopTime}
+     * @param otherTripLastStopTime  other {@link Trip} last {@link StopTime}
+     */
+    private void checkOverlappingTripsDifferentServiceIdCalendarNotProvided(final String blockId,
+                                                                            final Trip trip,
+                                                                            final String tripId,
+                                                                            final Trip otherTrip,
+                                                                            final String otherTripId,
+                                                                            final int tripFirstTime,
+                                                                            final int tripLastTime,
+                                                                            final Integer otherTripFirstTime,
+                                                                            final Integer otherTripLastTime,
+                                                                            final StopTime otherTripFirstStopTime,
+                                                                            final StopTime otherTripLastStopTime) {
+        // interpret data from `calendar_dates.txt` to determine if currentTrip and
+        // otherTrip operate on same days
+        final Map<String, CalendarDate> tripCalendarDateCollection =
+                dataRepo.getCalendarDateAll().get(trip.getServiceId());
+        final Map<String, CalendarDate> unvisitedTripCalendarDateCollection =
+                dataRepo.getCalendarDateAll().get(otherTrip.getServiceId());
+        final Set<String> currentTripServiceDates = new HashSet<>();
+        tripCalendarDateCollection.forEach((date, calendarDate) -> {
+            if (calendarDate.getExceptionType() == ExceptionType.ADDED_SERVICE) {
+                currentTripServiceDates.add(date);
+            }
+        });
+        final Set<String> unvisitedTripServiceDates = new HashSet<>();
+        unvisitedTripCalendarDateCollection.forEach((date, calendarDate) -> {
+            if (calendarDate.getExceptionType() == ExceptionType.ADDED_SERVICE) {
+                unvisitedTripServiceDates.add(date);
+            }
+        });
+        // get the list of common dates during which trips with different service_id
+        // operate: this represent the list of dates where there could be potential time
+        // overlap.
+        final Set<String> potentialConflictingDates =
+                new HashSet<>(Set.copyOf(currentTripServiceDates));
+        potentialConflictingDates.retainAll(unvisitedTripServiceDates);
+
+        if (potentialConflictingDates.size() == 0) {
+            return;
+        }
+        if (otherTripFirstTime == null || otherTripLastTime == null) {
+            return;
+        }
+        if (!areTripTimesValid(otherTripFirstStopTime,
+                otherTripLastStopTime)) {
+            return;
+        }
+        if (!timeUtils.arePeriodsOverlapping(tripFirstTime, tripLastTime,
+                otherTripFirstTime, otherTripLastTime)) {
+            return;
+        }
+        // if times overlap
+        resultRepo.addNotice(
+                new BlockTripsWithOverlappingStopTimesNotice(
+                        tripId,
+                        timeUtils.convertIntegerToHMMSS(tripFirstTime),
+                        timeUtils.convertIntegerToHMMSS(tripLastTime),
+                        otherTripId,
+                        timeUtils.convertIntegerToHMMSS(otherTripFirstTime),
+                        timeUtils.convertIntegerToHMMSS(otherTripLastTime),
+                        blockId,
+                        potentialConflictingDates)
+        );
     }
 }

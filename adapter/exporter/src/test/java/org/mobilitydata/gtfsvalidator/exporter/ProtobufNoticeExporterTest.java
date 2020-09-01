@@ -2246,7 +2246,6 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("08:00"));
         verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("11:00"));
         verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq("block id value"));
-        verify(mockBuilder, times(1)).setParentEntityName(ArgumentMatchers.eq(""));
         verify(mockBuilder, times(1)).setParentEntityId(ArgumentMatchers.eq(""));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));

@@ -324,7 +324,11 @@ Trip frequencies must not overlap in time
 
 ### E054 - Block trips must not have overlapping stop times
 
-Stop times should not be overlapping in Block trips. 
+Trip stop times should not overlap when they are part of the same block operating on the same day.
+
+#### References:
+
+* [GTFS trips.txt specification](http://gtfs.org/reference/static/#tripstxt)
 
 <a name="E056"/>
 

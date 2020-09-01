@@ -23,13 +23,22 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequired
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class for all entities defined in calendar.txt. Can not be directly instantiated: user must use
  * {@link CalendarBuilder} to create this.
  */
 public class Calendar extends GtfsEntity {
+    private static final String MONDAY = "monday";
+    private static final String TUESDAY = "tuesday";
+    private static final String WEDNESDAY = "wednesday";
+    private static final String THURSDAY = "thursday";
+    private static final String FRIDAY = "friday";
+    private static final String SATURDAY = "saturday";
+    private static final String SUNDAY = "sunday";
     @NotNull
     private final String serviceId;
     @NotNull
@@ -378,59 +387,59 @@ public class Calendar extends GtfsEntity {
                     || saturday == null || sunday == null || startDate == null || endDate == null || serviceId == null) {
                 if (originalMondayInteger == null) {
                     noticeCollection.add(
-                            new MissingRequiredValueNotice("calendar.txt", "monday", serviceId));
+                            new MissingRequiredValueNotice("calendar.txt", MONDAY, serviceId));
                 } else if (originalMondayInteger < 0 || originalMondayInteger > 1) {
                     noticeCollection.add(
-                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "monday", serviceId,
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", MONDAY, serviceId,
                                     0, 1, originalMondayInteger));
                 }
                 if (originalTuesdayInteger == null) {
                     noticeCollection.add(
-                            new MissingRequiredValueNotice("calendar.txt", "tuesday", serviceId));
+                            new MissingRequiredValueNotice("calendar.txt", TUESDAY, serviceId));
                 } else if (originalTuesdayInteger < 0 || originalTuesdayInteger > 1) {
                     noticeCollection.add(
-                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "tuesday",
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", TUESDAY,
                                     serviceId, 0, 1, originalTuesdayInteger));
                 }
                 if (originalWednesdayInteger == null) {
                     noticeCollection.add(
-                            new MissingRequiredValueNotice("calendar.txt", "wednesday", serviceId));
+                            new MissingRequiredValueNotice("calendar.txt", WEDNESDAY, serviceId));
                 } else if (originalWednesdayInteger < 0 || originalWednesdayInteger > 1) {
                     noticeCollection.add(
-                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "wednesday",
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", WEDNESDAY,
                                     serviceId, 0, 1, originalWednesdayInteger));
                 }
                 if (originalThursdayInteger == null) {
                     noticeCollection.add(
-                            new MissingRequiredValueNotice("calendar.txt", "thursday", serviceId));
+                            new MissingRequiredValueNotice("calendar.txt", THURSDAY, serviceId));
                 } else if (originalThursdayInteger < 0 || originalThursdayInteger > 1) {
                     noticeCollection.add(
-                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "thursday",
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", THURSDAY,
                                     serviceId, 0, 1, originalThursdayInteger));
                 }
                 if (originalFridayInteger == null) {
                     noticeCollection.add(
-                            new MissingRequiredValueNotice("calendar.txt", "friday",
+                            new MissingRequiredValueNotice("calendar.txt", FRIDAY,
                                     serviceId));
                 } else if (originalFridayInteger < 0 || originalFridayInteger > 1) {
                     noticeCollection.add(
-                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "friday", serviceId,
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", FRIDAY, serviceId,
                                     0, 1, originalFridayInteger));
                 }
                 if (originalSaturdayInteger == null) {
                     noticeCollection.add(
-                            new MissingRequiredValueNotice("calendar.txt", "saturday", serviceId));
+                            new MissingRequiredValueNotice("calendar.txt", SATURDAY, serviceId));
                 } else if (originalSaturdayInteger < 0 || originalSaturdayInteger > 1) {
                     noticeCollection.add(
-                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "saturday",
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", SATURDAY,
                                     serviceId, 0, 1, originalSaturdayInteger));
                 }
                 if (originalSundayInteger == null) {
                     noticeCollection.add(
-                            new MissingRequiredValueNotice("calendar.txt", "sunday", serviceId));
+                            new MissingRequiredValueNotice("calendar.txt", SUNDAY, serviceId));
                 } else if (originalSundayInteger < 0 || originalSundayInteger > 1) {
                     noticeCollection.add(
-                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", "sunday",
+                            new IntegerFieldValueOutOfRangeNotice("calendar.txt", SUNDAY,
                                     serviceId, 0, 1, originalSundayInteger));
                 }
                 if (serviceId == null) {
@@ -486,7 +495,10 @@ public class Calendar extends GtfsEntity {
      * @param otherCalendar {@link Calendar} to compare
      * @return true if calendars date ranges overlap, else false
      */
-    public boolean areCalendarOverlapping(final Calendar otherCalendar) {
+    public boolean isOverlapping(final Calendar otherCalendar) {
+        if (otherCalendar.getStartDate().isBefore(startDate)) {
+            return otherCalendar.isOverlapping(this);
+        }
         return
                 // calendars have a common date
                 (startDate.isEqual(otherCalendar.getStartDate()) || startDate.isEqual(otherCalendar.getEndDate()) ||
@@ -501,28 +513,28 @@ public class Calendar extends GtfsEntity {
      * @param otherCalendar {@link Calendar} to compare
      * @return the list of days both calendar are active as a list of {@link String}
      */
-    public List<String> getCalendarsCommonOperationDayCollection(final Calendar otherCalendar) {
-        final List<String> toReturn = new ArrayList<>();
+    public Set<String> getOverlappingDays(final Calendar otherCalendar) {
+        final Set<String> toReturn = new HashSet<>();
         if (isMonday() && otherCalendar.isMonday()) {
-            toReturn.add("monday");
+            toReturn.add(MONDAY);
         }
         if (isTuesday() && otherCalendar.isTuesday()) {
-            toReturn.add("tuesday");
+            toReturn.add(TUESDAY);
         }
         if (isWednesday() && otherCalendar.isWednesday()) {
-            toReturn.add("wednesday");
+            toReturn.add(WEDNESDAY);
         }
         if (isThursday() && otherCalendar.isThursday()) {
-            toReturn.add("thursday");
+            toReturn.add(THURSDAY);
         }
         if (isFriday() && otherCalendar.isFriday()) {
-            toReturn.add("friday");
+            toReturn.add(FRIDAY);
         }
         if (isSaturday() && otherCalendar.isSaturday()) {
-            toReturn.add("saturday");
+            toReturn.add(SATURDAY);
         }
         if (isSunday() && otherCalendar.isSunday()) {
-            toReturn.add("sunday");
+            toReturn.add(SUNDAY);
         }
         return toReturn;
     }

@@ -895,7 +895,6 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_TRIP_FIRST_TIME)))
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME)))
                 .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_BLOCK_ID)))
-                .setParentEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_DAY_LIST)))
                 .setParentEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_DATE_LIST)))
                 .build()
                 .writeTo(streamGenerator.getStream());

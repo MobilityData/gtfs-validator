@@ -20,7 +20,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 public class BlockTripsWithOverlappingStopTimesNotice extends ErrorNotice {
@@ -49,42 +48,10 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ErrorNotice {
         putNoticeSpecific(KEY_PREVIOUS_TRIP_FIRST_TIME, previousTripFirstTime);
         putNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME, previousTripLastTime);
         putNoticeSpecific(KEY_CONFLICTING_DATE_LIST, "");
-        putNoticeSpecific(KEY_CONFLICTING_DAY_LIST, "");
     }
 
     // This constructor is used when generating notice related to E054: conflicting trips have different service_id
-    // and file `calendar.txt` is provided.
-    public BlockTripsWithOverlappingStopTimesNotice(final String tripId,
-                                                    final String tripFirstTime,
-                                                    final String tripLastTime,
-                                                    final String previousTripId,
-                                                    final String previousTripFirstTime,
-                                                    final String previousTripLastTime,
-                                                    final String blockId,
-                                                    final List<String> conflictingDayCollection) {
-        super("trips.txt",
-                E_054,
-                "Block trips must not have overlapping stop times",
-                String.format("Trips with `trip_id`: `%s` (first time: `%s`, last time: `%s`)" +
-                                " and `%s` (first time: `%s`, last time: `%s`) from block: `%s` overlap." +
-                                " Conflicts happen on: %s.",
-                        tripId, tripFirstTime, tripLastTime, previousTripId, previousTripFirstTime,
-                        previousTripLastTime, blockId, conflictingDayCollection),
-                tripId);
-
-        putNoticeSpecific(KEY_TRIP_TRIP_ID, tripId);
-        putNoticeSpecific(KEY_TRIP_BLOCK_ID, blockId);
-        putNoticeSpecific(KEY_TRIP_FIRST_TIME, tripFirstTime);
-        putNoticeSpecific(KEY_TRIP_LAST_TIME, tripLastTime);
-        putNoticeSpecific(KEY_TRIP_PREVIOUS_TRIP_ID, previousTripId);
-        putNoticeSpecific(KEY_PREVIOUS_TRIP_FIRST_TIME, previousTripFirstTime);
-        putNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME, previousTripLastTime);
-        putNoticeSpecific(KEY_CONFLICTING_DATE_LIST, "");
-        putNoticeSpecific(KEY_CONFLICTING_DAY_LIST, conflictingDayCollection);
-    }
-
-    // This constructor is used when generating notice related to E054: conflicting trips have different service_id
-    // and only file `calendar_dates.txt` is provided.
+    // and file `calendar_dates.txt` or `calendar.txt` is provided.
     public BlockTripsWithOverlappingStopTimesNotice(final String tripId,
                                                     final String tripFirstTime,
                                                     final String tripLastTime,
@@ -111,7 +78,6 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ErrorNotice {
         putNoticeSpecific(KEY_PREVIOUS_TRIP_FIRST_TIME, previousTripFirstTime);
         putNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME, previousTripLastTime);
         putNoticeSpecific(KEY_CONFLICTING_DATE_LIST, conflictingDateCollection);
-        putNoticeSpecific(KEY_CONFLICTING_DAY_LIST, "");
     }
 
     @Override
