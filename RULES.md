@@ -332,8 +332,8 @@ the norm ISO 639-2.
 * If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error
 
 #### References:
-* [feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
-* [agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
+* [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
+* [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
 
 <a name="E056"/>
 
