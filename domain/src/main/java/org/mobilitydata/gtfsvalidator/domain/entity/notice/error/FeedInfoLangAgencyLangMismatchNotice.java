@@ -30,7 +30,7 @@ public class FeedInfoLangAgencyLangMismatchNotice extends ErrorNotice {
         super("feed_info.txt",
                 E_055,
                 "Mismatching feed and agency language fields",
-                String.format("Agency with `agency_name`: `%s` have mismatching `agency.agency_lang`: `%s` and" +
+                String.format("Agency `agency_name`: `%s` has mismatching `agency.agency_lang`: `%s` and" +
                                 " feed_info.feed_lang`: `%s`.",
                         agencyName,
                         agencyLang,

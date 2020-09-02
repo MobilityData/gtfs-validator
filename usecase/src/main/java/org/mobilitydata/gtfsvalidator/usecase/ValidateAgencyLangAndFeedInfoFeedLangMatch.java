@@ -21,11 +21,15 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FeedInfoLangAge
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Use case to validate that `agency.agency_lang` and `feed_info.feed_lang` match. This use case is triggered after
  * completing the {@code GtfsDataRepository} provided in the constructor with {@code FeedInfo} entities.
  */
 public class ValidateAgencyLangAndFeedInfoFeedLangMatch {
+    private static final String MUL = "mul";
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
@@ -52,24 +56,50 @@ public class ValidateAgencyLangAndFeedInfoFeedLangMatch {
     public void execute() {
         logger.info("Validating rule 'E055 - Mismatching feed and agency language fields'");
 
-        if (dataRepo.getFeedInfoAll().size() > 0) {
-            // .get can be used without isPresent check here since line 55 ensures the presence of at least 1 element
-            // in the map
-            final String feedInfoFeedLang =
-                    dataRepo.getFeedInfoAll().values().stream().findFirst().get().getFeedLang();
-            dataRepo.getAgencyAll().forEach((agencyId, agency) -> {
-                if (!feedInfoFeedLang.equals("mul")) {
-                    if (!feedInfoFeedLang.equals(agency.getAgencyLang())) {
-                        resultRepo.addNotice(
-                                new FeedInfoLangAgencyLangMismatchNotice(
-                                        agencyId,
-                                        agency.getAgencyName(),
-                                        agency.getAgencyLang(),
-                                        feedInfoFeedLang)
-                        );
-                    }
-                }
-            });
+        if (dataRepo.getFeedInfoAll().size() == 0) {
+            return;
         }
+        // .get can be used without isPresent check here since line 55 ensures the presence of at least 1 element
+        // in the map
+        final String feedInfoFeedLang =
+                dataRepo.getFeedInfoAll().values().stream().findFirst().get().getFeedLang();
+        final Set<String> agencyLangCollection = new HashSet<>();
+        dataRepo.getAgencyAll().forEach((agencyId, agency) -> agencyLangCollection.add(agency.getAgencyLang()));
+
+        dataRepo.getAgencyAll().forEach((agencyId, agency) -> {
+            if (!feedInfoFeedLang.equals(MUL)) {
+                // If feed_lang is not mul and differs from agency_lang, that's an error
+                if (!feedInfoFeedLang.equals(agency.getAgencyLang())) {
+                    resultRepo.addNotice(
+                            new FeedInfoLangAgencyLangMismatchNotice(
+                                    agencyId,
+                                    agency.getAgencyName(),
+                                    agency.getAgencyLang(),
+                                    feedInfoFeedLang));
+                    return;
+                }
+                // If there is more than one agency_lang and feed_lang isn't mul, that's an error
+                if (agencyLangCollection.size() > 1 && !feedInfoFeedLang.equals(agency.getAgencyLang())) {
+                    resultRepo.addNotice(
+                            new FeedInfoLangAgencyLangMismatchNotice(
+                                    agencyId,
+                                    agency.getAgencyName(),
+                                    agency.getAgencyLang(),
+                                    feedInfoFeedLang));
+                    return;
+                }
+            } else {
+                // If feed_lang is mul and there isn't more than one agency_lang, that's an error
+                if (agencyLangCollection.size() <= 1) {
+                    resultRepo.addNotice(
+                            new FeedInfoLangAgencyLangMismatchNotice(
+                                    agencyId,
+                                    agency.getAgencyName(),
+                                    agency.getAgencyLang(),
+                                    feedInfoFeedLang));
+                    return;
+                }
+            }
+        });
     }
 }
