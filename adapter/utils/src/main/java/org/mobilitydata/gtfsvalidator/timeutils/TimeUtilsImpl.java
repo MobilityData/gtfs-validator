@@ -122,24 +122,24 @@ public class TimeUtilsImpl implements TimeUtils {
 
     /**
      * This method checks if two periods of times overlap:
-     * a |--------|            07:00 am -> 10:00 am     here, method returns false according to the Python Validator im-
-     * b          |----|       10:00 am -> 11:00 am     plementation                                                                                                 implementation
+     * a |--------|            07:00 am to 10:00 am     here, method returns false according to the Python Validator im-
+     * b          |----|       10:00 am to 11:00 am     plementation                                                                                                 implementation
      * <p>
      * <p>
-     * a |--------|            07:00 am -> 10:00 am     here, method returns false
-     * b              |----|   11:00 am -> 12:00 am
+     * a |--------|            07:00 am to 10:00 am     here, method returns false
+     * b              |----|   11:00 am to 12:00 am
      * <p>
-     * a |--------|            07:00 am -> 10:00 am     here, method returns true
-     * b     |----|            09:00 am -> 10:00 am
+     * a |--------|            07:00 am to 10:00 am     here, method returns true
+     * b     |----|            09:00 am to 10:00 am
      * <p>
-     * a |--------|            07:00 am -> 10:00 am     here, method returns true
-     * b |----|                07:00 am -> 09:00 am
+     * a |--------|            07:00 am to 10:00 am     here, method returns true
+     * b |----|                07:00 am to 09:00 am
      * <p>
-     * a |--------|            07:00 am -> 10:00 am     here, method returns true
-     * b       |----|          08:00 am -> 12:00 am
+     * a |--------|            07:00 am to 10:00 am     here, method returns true
+     * b       |----|          08:00 am to 12:00 am
      * <p>
-     * a |--------|            07:00 am -> 12:00 am     here, method returns true
-     * b   |----|              08:00 am -> 11:00 am
+     * a |--------|            07:00 am to 12:00 am     here, method returns true
+     * b   |----|              08:00 am to 11:00 am
      *
      * @param firstPeriodFirstTimeSecs  lower bound of the first period of time in number of seconds elapsed since noon
      * @param firstPeriodLastTimeSecs   upper bound of the first period of time in number of seconds elapsed since noon
