@@ -58,9 +58,12 @@ class RouteTest {
         final List<MissingRequiredValueNotice> noticeCollection =
                 (List<MissingRequiredValueNotice>) entityBuildResult.getData();
 
-        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+        assertEquals(1, noticeCollection.size());
 
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(15, notice.getCode());
         assertEquals("route_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
@@ -87,8 +90,11 @@ class RouteTest {
         final List<UnexpectedEnumValueNotice> noticeCollection =
                 (List<UnexpectedEnumValueNotice>) entityBuildResult.getData();
 
+        assertEquals(1, noticeCollection.size());
         final UnexpectedEnumValueNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(21, notice.getCode());
         assertEquals("route_type", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
         assertEquals(15, notice.getNoticeSpecific(KEY_ENUM_VALUE));
@@ -135,8 +141,11 @@ class RouteTest {
         final List<InvalidAgencyIdNotice> noticeCollection =
                 (List<InvalidAgencyIdNotice>) entityBuildResult.getData();
 
+        assertEquals(1, noticeCollection.size());
         final InvalidAgencyIdNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(31, notice.getCode());
         assertEquals("agency_id", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
     }
@@ -162,8 +171,11 @@ class RouteTest {
         final List<MissingShortAndLongNameForRouteNotice> noticeCollection =
                 (List<MissingShortAndLongNameForRouteNotice>) entityBuildResult.getData();
 
+        assertEquals(1, noticeCollection.size());
         final MissingShortAndLongNameForRouteNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(27, notice.getCode());
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
     }
 
@@ -188,8 +200,11 @@ class RouteTest {
         final List<MissingShortAndLongNameForRouteNotice> noticeCollection =
                 (List<MissingShortAndLongNameForRouteNotice>) entityBuildResult.getData();
 
+        assertEquals(1, noticeCollection.size());
         final MissingShortAndLongNameForRouteNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(27, notice.getCode());
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
     }
 
@@ -214,8 +229,11 @@ class RouteTest {
         final List<MissingShortAndLongNameForRouteNotice> noticeCollection =
                 (List<MissingShortAndLongNameForRouteNotice>) entityBuildResult.getData();
 
+        assertEquals(1, noticeCollection.size());
         final MissingShortAndLongNameForRouteNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(27, notice.getCode());
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
     }
 
@@ -225,8 +243,8 @@ class RouteTest {
 
         final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
                 .agencyId(STRING_TEST_VALUE)
-                .routeShortName(null)
-                .routeLongName(" ")
+                .routeShortName(" ")
+                .routeLongName(null)
                 .routeDesc(STRING_TEST_VALUE)
                 .routeType(1)
                 .routeUrl(STRING_TEST_VALUE)
@@ -240,8 +258,11 @@ class RouteTest {
         final List<MissingShortAndLongNameForRouteNotice> noticeCollection =
                 (List<MissingShortAndLongNameForRouteNotice>) entityBuildResult.getData();
 
+        assertEquals(1, noticeCollection.size());
         final MissingShortAndLongNameForRouteNotice notice = noticeCollection.get(0);
         assertEquals("routes.txt", notice.getFilename());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(27, notice.getCode());
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
     }
 }

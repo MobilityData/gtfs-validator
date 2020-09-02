@@ -299,7 +299,6 @@ public class Route extends GtfsEntity {
                 // checks if at least one of name fields is provided
                 if (!isPresentName(routeLongName) && !isPresentName(routeShortName)) {
                     noticeCollection.add(new MissingShortAndLongNameForRouteNotice("routes.txt", routeId));
-                    ;
                 }
                 return new EntityBuildResult(noticeCollection);
             } else {
