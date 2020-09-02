@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
@@ -28,10 +29,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 public interface GtfsDataRepository {
     Agency addAgency(final Agency newAgency, final Agency.AgencyBuilder builder) throws IllegalArgumentException;
@@ -50,7 +48,7 @@ public interface GtfsDataRepository {
 
     CalendarDate addCalendarDate(final CalendarDate newCalendarDate) throws IllegalArgumentException;
 
-    Map<String, Map<String, CalendarDate>> getCalendarDateAll();
+    Map<String, Set<CalendarDate>> getCalendarDateAll();
 
     Level addLevel(final Level newLevel) throws IllegalArgumentException;
 

@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
@@ -39,15 +40,8 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ErrorNotice {
                         tripId, tripFirstTime, tripLastTime, previousTripId, previousTripFirstTime,
                         previousTripLastTime, blockId),
                 tripId);
-
-        putNoticeSpecific(KEY_TRIP_TRIP_ID, tripId);
-        putNoticeSpecific(KEY_TRIP_BLOCK_ID, blockId);
-        putNoticeSpecific(KEY_TRIP_FIRST_TIME, tripFirstTime);
-        putNoticeSpecific(KEY_TRIP_LAST_TIME, tripLastTime);
-        putNoticeSpecific(KEY_TRIP_PREVIOUS_TRIP_ID, previousTripId);
-        putNoticeSpecific(KEY_PREVIOUS_TRIP_FIRST_TIME, previousTripFirstTime);
-        putNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME, previousTripLastTime);
-        putNoticeSpecific(KEY_CONFLICTING_DATE_LIST, "");
+        putNoticeSpecific(tripId, tripFirstTime, tripLastTime, previousTripId, previousTripFirstTime,
+                previousTripLastTime, blockId, null);
     }
 
     // This constructor is used when generating notice related to E054: conflicting trips have different service_id
@@ -70,18 +64,42 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ErrorNotice {
                         previousTripLastTime, blockId, conflictingDateCollection),
                 tripId);
 
-        putNoticeSpecific(KEY_TRIP_TRIP_ID, tripId);
-        putNoticeSpecific(KEY_TRIP_BLOCK_ID, blockId);
-        putNoticeSpecific(KEY_TRIP_FIRST_TIME, tripFirstTime);
-        putNoticeSpecific(KEY_TRIP_LAST_TIME, tripLastTime);
-        putNoticeSpecific(KEY_TRIP_PREVIOUS_TRIP_ID, previousTripId);
-        putNoticeSpecific(KEY_PREVIOUS_TRIP_FIRST_TIME, previousTripFirstTime);
-        putNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME, previousTripLastTime);
-        putNoticeSpecific(KEY_CONFLICTING_DATE_LIST, conflictingDateCollection);
+        putNoticeSpecific(tripId, tripFirstTime, tripLastTime, previousTripId, previousTripFirstTime,
+                previousTripLastTime, blockId, conflictingDateCollection);
     }
 
     @Override
     public void export(final NoticeExporter exporter) throws IOException {
         exporter.export(this);
+    }
+
+    /**
+     * Sets notice specific information
+     *
+     * @param tripId                    id of {@link Trip}
+     * @param tripFirstTime             {@link Trip} first time
+     * @param tripLastTime              {@link Trip} last time
+     * @param previousTripId            id of problematic {@link Trip}
+     * @param previousTripFirstTime     problematic {@link Trip} first time
+     * @param previousTripLastTime      problematic {@link Trip} last time
+     * @param blockId                   id of the block
+     * @param conflictingDateCollection list of dates on which conflicts happen
+     */
+    private void putNoticeSpecific(final String tripId,
+                                   final String tripFirstTime,
+                                   final String tripLastTime,
+                                   final String previousTripId,
+                                   final String previousTripFirstTime,
+                                   final String previousTripLastTime,
+                                   final String blockId,
+                                   final Set<String> conflictingDateCollection) {
+        putNoticeSpecific(KEY_TRIP_TRIP_ID, tripId);
+        putNoticeSpecific(KEY_TRIP_FIRST_TIME, tripFirstTime);
+        putNoticeSpecific(KEY_TRIP_LAST_TIME, tripLastTime);
+        putNoticeSpecific(KEY_TRIP_PREVIOUS_TRIP_ID, previousTripId);
+        putNoticeSpecific(KEY_PREVIOUS_TRIP_FIRST_TIME, previousTripFirstTime);
+        putNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME, previousTripLastTime);
+        putNoticeSpecific(KEY_TRIP_BLOCK_ID, blockId);
+        putNoticeSpecific(KEY_CONFLICTING_DATE_LIST, conflictingDateCollection);
     }
 }

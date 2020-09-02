@@ -490,7 +490,8 @@ public class Calendar extends GtfsEntity {
     }
 
     /**
-     * Utility method to determine if date ranges of {@link Calendar} overlap
+     * Returns true if this and the provided {@link Calendar} overlap. Note that having the same start/end date is
+     * considered overlapping.
      *
      * @param otherCalendar {@link Calendar} to compare
      * @return true if calendars date ranges overlap, else false
@@ -508,10 +509,10 @@ public class Calendar extends GtfsEntity {
     }
 
     /**
-     * Utility method to determine the common days of week of operation for two {@link Calendar}
+     * Returns the common days of the week of service for this and the provided {@link Calendar}
      *
      * @param otherCalendar {@link Calendar} to compare
-     * @return the list of days both calendar are active as a list of {@link String}
+     * @return the common days of the week of service for this and the provided {@link Calendar}
      */
     public Set<String> getOverlappingDays(final Calendar otherCalendar) {
         final Set<String> toReturn = new HashSet<>();

@@ -26,9 +26,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
@@ -53,10 +51,10 @@ class ValidateTripServiceIdTest {
         final Map<String, Trip> mockTripCollection = new HashMap<>();
         mockTripCollection.put("trip id", mockTrip);
 
-        final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
-        final Map<String, CalendarDate> innerMap = new HashMap<>();
-        innerMap.put("date", mockCalendarDate);
-        mockCalendarDateCollection.put("other service id", innerMap);
+        final Map<String, Set<CalendarDate>> mockCalendarDateCollection = new HashMap<>();
+        final Set<CalendarDate> innerSet = new HashSet<>();
+        innerSet.add(mockCalendarDate);
+        mockCalendarDateCollection.put("other service id", innerSet);
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getCalendarAll()).thenReturn(mockCalendarCollection);
@@ -98,10 +96,10 @@ class ValidateTripServiceIdTest {
         final Map<String, Trip> mockTripCollection = new HashMap<>();
         mockTripCollection.put("trip id", mockTrip);
 
-        final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
-        final Map<String, CalendarDate> innerMap = new HashMap<>();
-        innerMap.put("date", mockCalendarDate);
-        mockCalendarDateCollection.put("service id", innerMap);
+        final Map<String, Set<CalendarDate>> mockCalendarDateCollection = new HashMap<>();
+        final Set<CalendarDate> innerSet = new HashSet<>();
+        innerSet.add(mockCalendarDate);
+        mockCalendarDateCollection.put("service id", innerSet);
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getCalendarAll()).thenReturn(mockCalendarCollection);
@@ -140,13 +138,13 @@ class ValidateTripServiceIdTest {
         final Map<String, Calendar> mockCalendarCollection = new HashMap<>();
         mockCalendarCollection.put("service id", mockCalendar);
 
-        final Map<String, CalendarDate> innerMap = new HashMap<>();
-        innerMap.put("date", mockCalendarDate);
+        final Set<CalendarDate> innerSet = new HashSet<>();
+        innerSet.add(mockCalendarDate);
         final Map<String, Trip> mockTripCollection = new HashMap<>();
         mockTripCollection.put("trip id", mockTrip);
 
-        final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
-        mockCalendarDateCollection.put("service id", innerMap);
+        final Map<String, Set<CalendarDate>> mockCalendarDateCollection = new HashMap<>();
+        mockCalendarDateCollection.put("service id", innerSet);
 
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
@@ -190,10 +188,10 @@ class ValidateTripServiceIdTest {
         final Map<String, Trip> mockTripCollection = new HashMap<>();
         mockTripCollection.put("trip id", mockTrip);
 
-        final Map<String, CalendarDate> innerMap = new HashMap<>();
-        innerMap.put("date", mockCalendarDate);
-        final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
-        mockCalendarDateCollection.put("service id", innerMap);
+        final Set<CalendarDate> innerSet = new HashSet<>();
+        innerSet.add(mockCalendarDate);
+        final Map<String, Set<CalendarDate>> mockCalendarDateCollection = new HashMap<>();
+        mockCalendarDateCollection.put("service id", innerSet);
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
         when(mockDataRepo.getCalendarAll()).thenReturn(mockCalendarCollection);

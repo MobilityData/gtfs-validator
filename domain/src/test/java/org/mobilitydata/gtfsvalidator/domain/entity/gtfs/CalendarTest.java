@@ -633,7 +633,7 @@ class CalendarTest {
         //              b  |----|   2020/03/01 -> 2020/04/30
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
-        final Calendar firstCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarA = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -646,7 +646,7 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        final Calendar nonOverlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarB = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -659,11 +659,11 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        assertFalse(firstCalendar.isOverlapping(nonOverlappingCalendar));
+        assertFalse(calendarA.isOverlapping(calendarB));
         // permute periods `a` and `b`
-        //            b  |----|    2020/03/01 -> 2020/04/30
-        // a |---      -----|      2020/01/01 -> 2020/01/31
-        assertFalse(nonOverlappingCalendar.isOverlapping(firstCalendar));
+        //            a  |----|    2020/03/01 -> 2020/04/30
+        // b |--------|            2020/01/01 -> 2020/01/31
+        assertFalse(calendarB.isOverlapping(calendarA));
     }
 
     @Test
@@ -673,7 +673,7 @@ class CalendarTest {
         //   b  |----|   2020/03/01 -> 2020/04/30
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
-        final Calendar firstCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarA = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -686,7 +686,7 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        final Calendar overlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarB = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -699,13 +699,13 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        assertTrue(firstCalendar.isOverlapping(overlappingCalendar));
+        assertTrue(calendarA.isOverlapping(calendarB));
 
         // permute periods `a` and `b` in method call
         // periods `b` is contained within period `a`
         //   b  |----|   2020/03/01 -> 2020/04/30
         //  a |--------| 2020/01/01 -> 2020/12/31
-        assertTrue(overlappingCalendar.isOverlapping(firstCalendar));
+        assertTrue(calendarB.isOverlapping(calendarA));
     }
 
     @Test
@@ -715,7 +715,7 @@ class CalendarTest {
         //  b |----|     2020/01/01 -> 2020/04/30
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
-        final Calendar firstCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarA = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -728,7 +728,7 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        final Calendar overlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarB = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -741,12 +741,12 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        assertTrue(firstCalendar.isOverlapping(overlappingCalendar));
+        assertTrue(calendarA.isOverlapping(calendarB));
 
         // permute periods `a` and `b` in method call
         //  b |----|     2020/01/01 -> 2020/04/30
         //  a |--------| 2020/01/01 -> 2020/12/31
-        assertTrue(overlappingCalendar.isOverlapping(firstCalendar));
+        assertTrue(calendarB.isOverlapping(calendarA));
     }
 
     @Test
@@ -756,7 +756,7 @@ class CalendarTest {
         //      b |----|     2020/05/06 -> 2020/12/31
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
-        final Calendar firstCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarA = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -769,7 +769,7 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        final Calendar overlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarB = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -782,12 +782,12 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        assertTrue(firstCalendar.isOverlapping(overlappingCalendar));
+        assertTrue(calendarA.isOverlapping(calendarB));
 
         // permute periods `a` and `b` in method call
-        //  a |--------|     2020/01/01 -> 2020/12/31
         //      b |----|     2020/05/06 -> 2020/12/31
-        assertTrue(overlappingCalendar.isOverlapping(firstCalendar));
+        //  a |--------|     2020/01/01 -> 2020/12/31
+        assertTrue(calendarB.isOverlapping(calendarA));
     }
 
     @Test
@@ -797,7 +797,7 @@ class CalendarTest {
         //      b |-------|  2020/05/06 -> 2020/12/31
         final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
 
-        final Calendar firstCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarA = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -810,7 +810,7 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        final Calendar overlappingCalendar = (Calendar) underTest.serviceId(SERVICE_ID)
+        final Calendar calendarB = (Calendar) underTest.serviceId(SERVICE_ID)
                 .monday(0)
                 .tuesday(0)
                 .wednesday(0)
@@ -823,12 +823,12 @@ class CalendarTest {
                 .build()
                 .getData();
 
-        assertTrue(firstCalendar.isOverlapping(overlappingCalendar));
+        assertTrue(calendarA.isOverlapping(calendarB));
 
         // permute periods `a` and `b` in method call
         //      b |-------|  2020/05/06 -> 2020/12/31
         //  a |--------|     2020/01/01 -> 2020/06/30
-        assertTrue(overlappingCalendar.isOverlapping(firstCalendar));
+        assertTrue(calendarB.isOverlapping(calendarA));
     }
 
     @Test

@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
@@ -31,10 +32,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translatio
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -216,8 +214,10 @@ class InMemoryGtfsDataRepositoryTest {
     void getCalendarDateAllShouldReturnCalendarDateCollection() {
         final CalendarDate calendarDate00 = mock(CalendarDate.class);
         final CalendarDate calendarDate01 = mock(CalendarDate.class);
+        final CalendarDate calendarDate02 = mock(CalendarDate.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         final LocalDate date = LocalDate.now();
+        final LocalDate secondDate = date.plusDays(5);
 
         when(calendarDate00.getServiceId()).thenReturn("service id 00");
         when(calendarDate00.getDate()).thenReturn(date);
@@ -227,15 +227,21 @@ class InMemoryGtfsDataRepositoryTest {
         when(calendarDate01.getDate()).thenReturn(date);
         when(calendarDate01.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
 
+        when(calendarDate02.getServiceId()).thenReturn("service id 01");
+        when(calendarDate02.getDate()).thenReturn(secondDate);
+        when(calendarDate02.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
+
         underTest.addCalendarDate(calendarDate00);
         underTest.addCalendarDate(calendarDate01);
+        underTest.addCalendarDate(calendarDate02);
 
-        final Map<String, Map<String, CalendarDate>> toCheck = underTest.getCalendarDateAll();
+        final Map<String, Set<CalendarDate>> toCheck = underTest.getCalendarDateAll();
         assertEquals(2, toCheck.size());
         assertTrue(toCheck.containsKey("service id 00"));
-        assert (toCheck.get("service id 00").containsKey(date.toString()));
+        assertTrue(toCheck.get("service id 00").contains(calendarDate00));
         assertTrue(toCheck.containsKey("service id 01"));
-        assert (toCheck.get("service id 01").containsKey(date.toString()));
+        assertTrue(toCheck.get("service id 01").contains(calendarDate01));
+        assertTrue(toCheck.get("service id 01").contains(calendarDate02));
     }
 
     @Test

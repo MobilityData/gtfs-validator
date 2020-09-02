@@ -56,6 +56,8 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
      * calendar_dates is provided
      * - trips from same block with with different service_id that do not overlap should not generate notice whether
      * calendar or calendar_dates is provided
+     * Note that at present, this use case does not consider the corner cases where files `calendar.txt` and
+     * `calendar_dates.txt` are both provided in the GTFS archive.
      */
     public void execute() {
         logger.info("validating rule 'E054 - Trips from same block overlap'");
@@ -156,7 +158,7 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
     }
 
     /**
-     * Utility method to determine if {@code Trip} times are valid. Returns true if
+     * Determines if {@code Trip} times are valid. Returns true if
      * tripFirstStopTime.arrivalTime < tripLastStopTime.departureTime, otherwise returns false
      *
      * @param tripFirstStopTime first {@link StopTime} of trip
@@ -175,7 +177,9 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
     }
 
     /**
-     * Utility method to determine if trips are overlapping when trips have the same service_id
+     * Determines if trips with same service_od are overlapping. A notice is generated and added to the
+     * {@link ValidationResultRepository} provided in the constructor each time trips with same service id overlap
+     * in time.
      *
      * @param blockId                id of the block
      * @param tripId                 id of {@link Trip}
@@ -212,17 +216,18 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
         }
         resultRepo.addNotice(new BlockTripsWithOverlappingStopTimesNotice(
                 tripId,
-                timeUtils.convertIntegerToHMMSS(tripFirstTime),
-                timeUtils.convertIntegerToHMMSS(tripLastTime),
+                timeUtils.convertIntegerToHHMMSS(tripFirstTime),
+                timeUtils.convertIntegerToHHMMSS(tripLastTime),
                 otherTripId,
-                timeUtils.convertIntegerToHMMSS(otherTripFirstTime),
-                timeUtils.convertIntegerToHMMSS(otherTripLastTime),
+                timeUtils.convertIntegerToHHMMSS(otherTripFirstTime),
+                timeUtils.convertIntegerToHHMMSS(otherTripLastTime),
                 blockId));
     }
 
     /**
-     * Utility method to determine if trips are overlapping when trips do not have the same service_id and file
-     * `calendar.txt` is provided in the GTFS archive.
+     * Determines if trips are overlapping when trips do not have the same service_id and file `calendar.txt` is provided
+     * in the GTFS archive. A notice is generate and added to the {@link ValidationResultRepository} provided in the
+     * constructor each time said trips overlap in time.
      *
      * @param blockId                id of the block
      * @param trip                   first {@link Trip} to analyze
@@ -273,18 +278,19 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
         resultRepo.addNotice(
                 new BlockTripsWithOverlappingStopTimesNotice(
                         tripId,
-                        timeUtils.convertIntegerToHMMSS(tripFirstTime),
-                        timeUtils.convertIntegerToHMMSS(tripLastTime),
+                        timeUtils.convertIntegerToHHMMSS(tripFirstTime),
+                        timeUtils.convertIntegerToHHMMSS(tripLastTime),
                         otherTripId,
-                        timeUtils.convertIntegerToHMMSS(otherTripFirstTime),
-                        timeUtils.convertIntegerToHMMSS(otherTripLastTime),
+                        timeUtils.convertIntegerToHHMMSS(otherTripFirstTime),
+                        timeUtils.convertIntegerToHHMMSS(otherTripLastTime),
                         blockId,
                         tripCalendar.getOverlappingDays(unvisitedTripCalendar)));
     }
 
     /**
-     * Utility method to determine if trips are overlapping when trips do not have the same service_id and file
-     * `calendar.txt` is not provided in the GTFS archive.
+     * Determines if trips are overlapping when trips do not have the same service_id and file `calendar.txt` is not
+     * provided in the GTFS archive. A notice is generate and added to the {@link ValidationResultRepository} provided
+     * in the constructor each time said trips overlap in time.
      *
      * @param blockId                id of the block
      * @param trip                   first {@link Trip} to analyze
@@ -309,54 +315,43 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
                                                                             final Integer otherTripLastTime,
                                                                             final StopTime otherTripFirstStopTime,
                                                                             final StopTime otherTripLastStopTime) {
-        // interpret data from `calendar_dates.txt` to determine if currentTrip and
-        // otherTrip operate on same days
-        final Map<String, CalendarDate> tripCalendarDateCollection =
-                dataRepo.getCalendarDateAll().get(trip.getServiceId());
-        final Map<String, CalendarDate> unvisitedTripCalendarDateCollection =
+        // interpret data from `calendar_dates.txt` to determine if trip and otherTrip operate on same days
+        final Set<String> tripCalendarDateCollection = new HashSet<>();
+        dataRepo.getCalendarDateAll().get(trip.getServiceId())
+                .forEach(calendarDate -> tripCalendarDateCollection.add(calendarDate.getDate().toString()));
+        final Set<CalendarDate> unvisitedTripCalendarDateCollection =
                 dataRepo.getCalendarDateAll().get(otherTrip.getServiceId());
-        final Set<String> currentTripServiceDates = new HashSet<>();
-        tripCalendarDateCollection.forEach((date, calendarDate) -> {
+        // get the list of common dates during which trips with different service_id operate: this represent the list of
+        // dates where there could be potential time overlap.
+        final Set<String> potentialConflictingDates = new HashSet<>();
+        unvisitedTripCalendarDateCollection.forEach(calendarDate -> {
             if (calendarDate.getExceptionType() == ExceptionType.ADDED_SERVICE) {
-                currentTripServiceDates.add(date);
+                if (tripCalendarDateCollection.contains(calendarDate.getDate().toString())) {
+                    potentialConflictingDates.add(calendarDate.getDate().toString());
+                }
             }
         });
-        final Set<String> unvisitedTripServiceDates = new HashSet<>();
-        unvisitedTripCalendarDateCollection.forEach((date, calendarDate) -> {
-            if (calendarDate.getExceptionType() == ExceptionType.ADDED_SERVICE) {
-                unvisitedTripServiceDates.add(date);
-            }
-        });
-        // get the list of common dates during which trips with different service_id
-        // operate: this represent the list of dates where there could be potential time
-        // overlap.
-        final Set<String> potentialConflictingDates =
-                new HashSet<>(Set.copyOf(currentTripServiceDates));
-        potentialConflictingDates.retainAll(unvisitedTripServiceDates);
-
         if (potentialConflictingDates.size() == 0) {
             return;
         }
         if (otherTripFirstTime == null || otherTripLastTime == null) {
             return;
         }
-        if (!areTripTimesValid(otherTripFirstStopTime,
-                otherTripLastStopTime)) {
+        if (!areTripTimesValid(otherTripFirstStopTime, otherTripLastStopTime)) {
             return;
         }
-        if (!timeUtils.arePeriodsOverlapping(tripFirstTime, tripLastTime,
-                otherTripFirstTime, otherTripLastTime)) {
+        if (!timeUtils.arePeriodsOverlapping(tripFirstTime, tripLastTime, otherTripFirstTime, otherTripLastTime)) {
             return;
         }
         // if times overlap
         resultRepo.addNotice(
                 new BlockTripsWithOverlappingStopTimesNotice(
                         tripId,
-                        timeUtils.convertIntegerToHMMSS(tripFirstTime),
-                        timeUtils.convertIntegerToHMMSS(tripLastTime),
+                        timeUtils.convertIntegerToHHMMSS(tripFirstTime),
+                        timeUtils.convertIntegerToHHMMSS(tripLastTime),
                         otherTripId,
-                        timeUtils.convertIntegerToHMMSS(otherTripFirstTime),
-                        timeUtils.convertIntegerToHMMSS(otherTripLastTime),
+                        timeUtils.convertIntegerToHHMMSS(otherTripFirstTime),
+                        timeUtils.convertIntegerToHHMMSS(otherTripLastTime),
                         blockId,
                         potentialConflictingDates)
         );
