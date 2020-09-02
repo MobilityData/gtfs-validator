@@ -29,8 +29,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 
 public class ProtobufNoticeExporter implements NoticeExporter {
@@ -262,7 +261,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     public void export(MissingRequiredFileNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_TABLE)
+                .setType(TYPE_CSV_MISSING_TABLE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getFilename())
                 .build()
@@ -850,6 +849,34 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityId(String.valueOf(toExport.getEntityId()))
                 .setType(TYPE_TRIP_WITH_NO_USABLE_STOPS)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final MissingCalendarAndCalendarDateFilesNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setType(TYPE_CSV_MISSING_TABLE)
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_OTHER_MISSING_FILENAME)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final OverlappingTripFrequenciesNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_FREQUENCY_START_TIME)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_FREQUENCY_END_TIME)))
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_FREQUENCY_START_TIME)))
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_FREQUENCY_END_TIME)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
