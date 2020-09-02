@@ -52,6 +52,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E049](#E049) | Backwards time travel between stops in `stop_times.txt` |
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
+| [E053](#E053) | Trip frequencies overlap |
 | [E055](#E055) | Mismatching feed and agency language fields |
 | [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
 
@@ -289,7 +290,7 @@ This is related to [W012](#https://github.com/MobilityData/gtfs-validator/blob/m
 The `end_time` must not precede the `start_time` in `frequencies.txt`. 
 
 #### References:
-* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
 <a name="E049"/>
 
@@ -309,6 +310,16 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
 
+<a name="E053"/>
+
+### E053 - Trip frequencies overlap
+
+Trip frequencies must not overlap in time
+
+#### References:
+
+* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+
 <a name="E055"/>
 
 ### E055 - Mismatching feed and agency language fields
@@ -319,7 +330,6 @@ the norm ISO 639-2.
 * If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
 * If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
 * If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error
-
 
 #### References:
 * [feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)

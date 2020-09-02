@@ -18,5 +18,9 @@ package org.mobilitydata.gtfsvalidator.usecase.utils;
 
 public interface TimeUtils {
     Integer convertHHMMSSToIntFromNoonOfDayOfService(final String timeAsString);
+
     String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoon);
+
+    boolean arePeriodsOverlapping(final int firstPeriodFirstTime, final int firstPeriodLastTime,
+                                  final int secondPeriodFirstTime, final int secondPeriodLastTime);
 }
