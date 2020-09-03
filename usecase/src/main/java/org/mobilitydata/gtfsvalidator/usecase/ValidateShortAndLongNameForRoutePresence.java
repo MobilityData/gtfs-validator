@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingShortAndLongNameForRouteNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MissingRouteLongNameNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MissingRouteShortNameNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
@@ -45,18 +44,16 @@ public class ValidateShortAndLongNameForRoutePresence {
 
     /**
      * Use case execution method: checks if Route short name and long name are missing
-     * for every Routes in a {@link GtfsDataRepository}. If both are missing, a new error notice is generated.
-     * If only one is missing, a warning error notice is generated. This notice is then added
-     * to the {@link ValidationResultRepository} provided in the constructor.
+     * for every Routes in a {@link GtfsDataRepository}. If one of the fields is missing, a warning error notice is
+     * generated. This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
+     * Note that no record from `routes.txt` can have both fields null or blank.
      */
     public void execute() {
         logger.info("Validating rule 'E027 - Missing route short name and long name'");
         dataRepo.getRouteAll().values().stream()
                 .filter(route -> !(isPresentName(route.getRouteLongName()) && isPresentName(route.getRouteShortName())))
                 .forEach(route -> {
-                    if (!isPresentName(route.getRouteLongName()) && !isPresentName(route.getRouteShortName())) {
-                        resultRepo.addNotice(new MissingShortAndLongNameForRouteNotice("routes.txt", route.getRouteId()));
-                    } else if (!isPresentName(route.getRouteLongName())) {
+                    if (!isPresentName(route.getRouteLongName())) {
                         resultRepo.addNotice(new MissingRouteLongNameNotice("routes.txt", route.getRouteId()));
                     } else {
                         resultRepo.addNotice(new MissingRouteShortNameNotice("routes.txt", route.getRouteId()));
