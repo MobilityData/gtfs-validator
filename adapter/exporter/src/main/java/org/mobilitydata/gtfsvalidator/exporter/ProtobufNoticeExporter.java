@@ -881,6 +881,25 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final BlockTripsWithOverlappingStopTimesNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_BLOCK_TRIPS_WITH_OVERLAPPING_STOP_TIMES)
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_TRIP_ID)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_FIRST_TIME)))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_LAST_TIME)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_PREVIOUS_TRIP_ID)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_TRIP_FIRST_TIME)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_BLOCK_ID)))
+                .setParentEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_DATE_LIST)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();

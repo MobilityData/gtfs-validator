@@ -79,6 +79,14 @@ public abstract class Notice {
     public static final String KEY_PREVIOUS_FREQUENCY_END_TIME = "previousFrequencyEndTime";
     public static final String KEY_FREQUENCY_START_TIME = "frequencyStartTime";
     public static final String KEY_FREQUENCY_END_TIME = "frequencyEndTime";
+    public static final String KEY_TRIP_PREVIOUS_TRIP_ID = "previousTripId";
+    public static final String KEY_TRIP_TRIP_ID = "tripId";
+    public static final String KEY_TRIP_BLOCK_ID = "blockId";
+    public static final String KEY_TRIP_FIRST_TIME = "tripFirstTime";
+    public static final String KEY_TRIP_LAST_TIME = "tripLastTime";
+    public static final String KEY_PREVIOUS_TRIP_FIRST_TIME = "previousTripFirstTime";
+    public static final String KEY_PREVIOUS_TRIP_LAST_TIME = "previousTripLastTime";
+    public static final String KEY_CONFLICTING_DATE_LIST = "conflictingDateList";
 
     private final String filename;
     private final int code;

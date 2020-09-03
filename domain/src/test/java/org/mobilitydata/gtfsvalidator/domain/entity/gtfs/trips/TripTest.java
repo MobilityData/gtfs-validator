@@ -26,8 +26,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumV
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_ENUM_VALUE;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
@@ -253,5 +252,77 @@ class TripTest {
         assertEquals("bikes_allowed", notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("trip id", notice.getEntityId());
         assertEquals(4, notice.getNoticeSpecific(KEY_ENUM_VALUE));
+    }
+
+    @Test
+    void tripsWithSameServiceIdShouldReturnTrueWhenCallingHasSameServiceId() {
+        final Trip.TripBuilder tripBuilder = new Trip.TripBuilder();
+
+        tripBuilder.routeId("route id")
+                .serviceId("service id")
+                .tripId("trip id")
+                .tripHeadsign("test")
+                .tripShortName("test")
+                .directionId(1)
+                .blockId("test")
+                .shapeId("test")
+                .wheelchairAccessible(1)
+                .bikesAllowed(0);
+
+        EntityBuildResult<?> entityBuildResult = tripBuilder.build();
+        final Trip firstTrip = (Trip) entityBuildResult.getData();
+
+        tripBuilder.routeId("route id")
+                .serviceId("service id")
+                .tripId("trip id")
+                .tripHeadsign("test")
+                .tripShortName("test")
+                .directionId(1)
+                .blockId("test")
+                .shapeId("test")
+                .wheelchairAccessible(1)
+                .bikesAllowed(1);
+
+        entityBuildResult = tripBuilder.build();
+        final Trip secondTrip = (Trip) entityBuildResult.getData();
+
+        assertTrue(firstTrip.hasSameServiceId(secondTrip));
+        assertTrue(secondTrip.hasSameServiceId(firstTrip));
+    }
+
+    @Test
+    void tripsWithDifferentServiceIdShouldReturnFalseWhenCallingHasSameServiceId() {
+        final Trip.TripBuilder tripBuilder = new Trip.TripBuilder();
+
+        tripBuilder.routeId("route id")
+                .serviceId("service id")
+                .tripId("trip id")
+                .tripHeadsign("test")
+                .tripShortName("test")
+                .directionId(1)
+                .blockId("test")
+                .shapeId("test")
+                .wheelchairAccessible(1)
+                .bikesAllowed(0);
+
+        EntityBuildResult<?> entityBuildResult = tripBuilder.build();
+        final Trip firstTrip = (Trip) entityBuildResult.getData();
+
+        tripBuilder.routeId("route id")
+                .serviceId("different service id")
+                .tripId("trip id")
+                .tripHeadsign("test")
+                .tripShortName("test")
+                .directionId(1)
+                .blockId("test")
+                .shapeId("test")
+                .wheelchairAccessible(1)
+                .bikesAllowed(1);
+
+        entityBuildResult = tripBuilder.build();
+        final Trip secondTrip = (Trip) entityBuildResult.getData();
+
+        assertFalse(firstTrip.hasSameServiceId(secondTrip));
+        assertFalse(secondTrip.hasSameServiceId(firstTrip));
     }
 }

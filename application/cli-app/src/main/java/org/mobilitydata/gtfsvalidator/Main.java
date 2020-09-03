@@ -212,6 +212,7 @@ public class Main {
                 config.validateTripNumberOfStops().execute();
                 config.validateFrequencyStartTimeBeforeEndTime().execute();
                 config.validateFrequencyOverlap().execute();
+                config.validateNoOverlappingStopTimeInTripBlock().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

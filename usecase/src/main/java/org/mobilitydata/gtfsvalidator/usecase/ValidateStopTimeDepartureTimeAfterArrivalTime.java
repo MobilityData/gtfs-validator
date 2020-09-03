@@ -67,8 +67,8 @@ public class ValidateStopTimeDepartureTimeAfterArrivalTime {
                     resultRepo.addNotice(
                             new StopTimeArrivalTimeAfterDepartureTimeNotice(
                                     "stop_times.txt",
-                                    timeUtils.convertIntegerToHMMSS(stopTimeArrivalTime),
-                                    timeUtils.convertIntegerToHMMSS(stopTimeDepartureTime),
+                                    timeUtils.convertIntegerToHHMMSS(stopTimeArrivalTime),
+                                    timeUtils.convertIntegerToHHMMSS(stopTimeDepartureTime),
                                     tripId,
                                     stopSequence)
                     );

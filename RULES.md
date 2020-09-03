@@ -53,6 +53,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
 | [E053](#E053) | Trip frequencies overlap |
+| [E054](#E054) | Block trips must not have overlapping stop times |
 | [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
 
 ### Table of Warnings
@@ -323,6 +324,16 @@ Trip frequencies must not overlap in time
 #### References:
 
 * [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+
+<a name="E054"/>
+
+### E054 - Block trips must not have overlapping stop times
+
+Trip stop times should not overlap when they are part of the same block operating on the same day.
+
+#### References:
+
+* [GTFS trips.txt specification](http://gtfs.org/reference/static/#tripstxt)
 
 <a name="E056"/>
 
