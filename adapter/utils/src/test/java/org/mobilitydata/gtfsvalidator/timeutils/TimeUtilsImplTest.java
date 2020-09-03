@@ -243,7 +243,7 @@ public class TimeUtilsImplTest {
     void commonFirstPeriodLastTimeAndSecondPeriodFirstTimeShouldReturnFalse() {
         //   a |--------|         07:00 am -> 10:00 am
         //   b          |----|    10:00 am -> 11:00 am
-        // period `b` partially overlaps with period `a`
+        // period `b` shares edge with period `a`
         assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
                 1000, 1100));
 
@@ -258,7 +258,7 @@ public class TimeUtilsImplTest {
     void partialOverlapWithOneCommonBoundaryShouldReturnTrue() {
         //   a |--------|         07:00 am -> 10:00 am
         //   b     |----|         09:00 am -> 10:00 am
-        // period `b` partially overlaps with period `a`
+        // period `b` shares edge with period `a`
         assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
                 900, 1000));
 
@@ -268,7 +268,7 @@ public class TimeUtilsImplTest {
 
         //   a |--------|         07:00 am -> 10:00 am
         //   b |----|             07:00 am -> 09:00 am
-        // period `b` partially overlaps with period `a`
+        // period `a` shares edge with period `b`
         assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
                 700, 900));
 

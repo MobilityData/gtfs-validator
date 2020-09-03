@@ -32,31 +32,46 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ValidateNoOverlappingStopTimeInTripBlockTest {
-    private static final int HOURS_TO_SECS = 3600;
-    private static final int MINS_TO_SECS = 60;
-    private static final int NOON = 12;
+    private static final LocalTime NOON = LocalTime.NOON;
 
-    private static final int FIVE_AM_AS_SECS_BEFORE_NOON = (5 - NOON) * HOURS_TO_SECS;
-    private static final int SIX_AM_AS_SECS_BEFORE_NOON = (6 - NOON) * HOURS_TO_SECS;
-    private static final int SEVEN_AM_AS_SECS_BEFORE_NOON = (7 - NOON) * HOURS_TO_SECS;
-    private static final int SEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON = -(4 * HOURS_TO_SECS + 20 * MINS_TO_SECS);
-    private static final int EIGHT_AM_20_MIN_AS_SECS_BEFORE_NOON = -(3 * HOURS_TO_SECS + 40 * MINS_TO_SECS);
-    private static final int NINE_AM_03_MIN_AS_SECS_BEFORE_NOON = -(2 * HOURS_TO_SECS + 57 * MINS_TO_SECS);
-    private static final int NINE_AM_40_MIN_AS_SECS_BEFORE_NOON = -(2 * HOURS_TO_SECS + 20 * MINS_TO_SECS);
-    private static final int TEN_AM_AS_SECS_BEFORE_NOON = (10 - NOON) * HOURS_TO_SECS;
-    private static final int TEN_AM_20_MIN_AS_SECS_BEFORE_NOON = -(HOURS_TO_SECS + 40 * MINS_TO_SECS);
-    private static final int TEN_AM_30_MIN_AS_SECS_BEFORE_NOON = -(HOURS_TO_SECS + 30 * MINS_TO_SECS);
-    private static final int ELEVEN_AM_03_MIN_AS_SECS_BEFORE_NOON = -(57 * MINS_TO_SECS);
-    private static final int ELEVEN_AM_15_MIN_AS_SECS_BEFORE_NOON = -(45 * MINS_TO_SECS);
-    private static final int ELEVEN_AM_16_MIN_AS_SECS_BEFORE_NOON = -(44 * MINS_TO_SECS);
-    private static final int ELEVEN_AM_20_MIN_AS_SECS_BEFORE_NOON = -(40 * MINS_TO_SECS);
-    private static final int ELEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON = -(20 * MINS_TO_SECS);
+    private static final int FIVE_AM_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(5, 0, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int SIX_AM_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(6, 0, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int SEVEN_AM_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(7, 0, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int SEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(7, 40, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int EIGHT_AM_20_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(8, 20, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int NINE_AM_03_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(9, 3, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int NINE_AM_40_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(9, 40, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int TEN_AM_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(10, 0, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int TEN_AM_20_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(10, 20, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int TEN_AM_30_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(10, 30, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int ELEVEN_AM_03_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(11, 3, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int ELEVEN_AM_15_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(11, 15, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int ELEVEN_AM_16_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(11, 16, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int ELEVEN_AM_20_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(11, 20, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int ELEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(11, 40, 0).until(NOON, ChronoUnit.SECONDS);
 
     // suppressed warning regarding ignored result of method, since methods are called in assertions
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -560,19 +575,19 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         when(mockDataRepo.getStopTimeByTripId("8")).thenReturn(mockThirdTripStopTimeCollection);
         when(mockDataRepo.getCalendarAll()).thenReturn(new HashMap<>());
 
-        final Map<String, Set<CalendarDate>> mockCalendarDateCollection = new HashMap<>();
-        final Set<CalendarDate> calendarDateCollectionServiceA = new HashSet<>();
-        final Set<CalendarDate> calendarDateCollectionServiceB = new HashSet<>();
-        final Set<CalendarDate> calendarDateCollectionServiceC = new HashSet<>();
+        final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceA = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceB = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceC = new HashMap<>();
         final CalendarDate firstCalendarDateForServiceA = mock(CalendarDate.class);
         final CalendarDate secondCalendarDateForServiceA = mock(CalendarDate.class);
         final CalendarDate calendarDateForServiceB = mock(CalendarDate.class);
         final CalendarDate calendarDateForServiceC = mock(CalendarDate.class);
 
-        calendarDateCollectionServiceA.add(firstCalendarDateForServiceA);
-        calendarDateCollectionServiceA.add(secondCalendarDateForServiceA);
-        calendarDateCollectionServiceB.add(calendarDateForServiceB);
-        calendarDateCollectionServiceC.add(calendarDateForServiceC);
+        calendarDateCollectionServiceA.put("2020-07-23", firstCalendarDateForServiceA);
+        calendarDateCollectionServiceA.put("2020-08-01", secondCalendarDateForServiceA);
+        calendarDateCollectionServiceB.put("2020-09-04", calendarDateForServiceB);
+        calendarDateCollectionServiceC.put("2020-01-08", calendarDateForServiceC);
 
         when(firstCalendarDateForServiceA.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
         when(firstCalendarDateForServiceA.getDate()).thenReturn(LocalDate.of(2020, 7, 23));
@@ -623,12 +638,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         verify(mockDataRepo, times(3)).getStopTimeByTripId("8");
         verify(mockDataRepo, times(6)).getCalendarDateAll();
 
-        verify(firstCalendarDateForServiceA, times(2)).getDate();
-
-        verify(secondCalendarDateForServiceA, times(2)).getDate();
-
         verify(calendarDateForServiceB, times(1)).getExceptionType();
-        verify(calendarDateForServiceB, times(1)).getDate();
 
         verify(calendarDateForServiceC, times(2)).getExceptionType();
         verify(calendarDateForServiceC, times(2)).getDate();
@@ -1226,18 +1236,18 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         when(mockDataRepo.getStopTimeByTripId("5")).thenReturn(mockSecondTripStopTimeCollection);
         when(mockDataRepo.getStopTimeByTripId("8")).thenReturn(mockThirdTripStopTimeCollection);
 
-        final Map<String, Set<CalendarDate>> mockCalendarDateCollection = new HashMap<>();
-        final Set<CalendarDate> calendarDateCollectionServiceA = new HashSet<>();
-        final Set<CalendarDate> calendarDateCollectionServiceB = new HashSet<>();
-        final Set<CalendarDate> calendarDateCollectionServiceC = new HashSet<>();
+        final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceA = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceB = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceC = new HashMap<>();
         final CalendarDate firstCalendarDateForServiceA = mock(CalendarDate.class);
         final CalendarDate secondCalendarDateForServiceA = mock(CalendarDate.class);
         final CalendarDate calendarDateForServiceB = mock(CalendarDate.class);
         final CalendarDate calendarDateForServiceC = mock(CalendarDate.class);
-        calendarDateCollectionServiceA.add(firstCalendarDateForServiceA);
-        calendarDateCollectionServiceA.add(secondCalendarDateForServiceA);
-        calendarDateCollectionServiceB.add(calendarDateForServiceB);
-        calendarDateCollectionServiceC.add(calendarDateForServiceC);
+        calendarDateCollectionServiceA.put("2020-07-23", firstCalendarDateForServiceA);
+        calendarDateCollectionServiceA.put("2020-08-01", secondCalendarDateForServiceA);
+        calendarDateCollectionServiceB.put("2020-09-04", calendarDateForServiceB);
+        calendarDateCollectionServiceC.put("2020-07-23", calendarDateForServiceC);
 
         when(firstCalendarDateForServiceA.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
         when(firstCalendarDateForServiceA.getDate()).thenReturn(LocalDate.of(2020, 7, 23));
@@ -1294,9 +1304,6 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         verify(mockDataRepo, times(3)).getStopTimeByTripId("8");
         verify(mockDataRepo, times(6)).getCalendarDateAll();
 
-        verify(firstCalendarDateForServiceA, times(2)).getDate();
-        verify(secondCalendarDateForServiceA, times(2)).getDate();
-        verify(calendarDateForServiceB, times(1)).getDate();
         verify(calendarDateForServiceC, times(3)).getDate();
         verify(calendarDateForServiceB, times(1)).getExceptionType();
         verify(calendarDateForServiceC, times(2)).getExceptionType();

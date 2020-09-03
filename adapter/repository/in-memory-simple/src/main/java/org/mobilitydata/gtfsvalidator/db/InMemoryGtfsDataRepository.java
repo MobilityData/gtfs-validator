@@ -57,7 +57,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // CalendarDate entities container. The key for the outer map is the calendar_dates.txt service_id, with the key for
     // the inner map being the calendar_dates.txt date field
-    private final Map<String, Set<CalendarDate>> calendarDatePerServiceIdAndDate = new HashMap<>();
+    private final Map<String, Map<String, CalendarDate>> calendarDatePerServiceIdAndDate = new HashMap<>();
 
     // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
     private final Map<String, Level> levelPerId = new HashMap<>();
@@ -339,17 +339,18 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         //noinspection ConstantConditions
         if (newCalendarDate != null) {
             final String serviceId = newCalendarDate.getServiceId();
+            final String dateAsString = newCalendarDate.getDate().toString();
             if (calendarDatePerServiceIdAndDate.containsKey(serviceId)) {
-                if (calendarDatePerServiceIdAndDate.get(serviceId).contains(newCalendarDate)) {
+                if (calendarDatePerServiceIdAndDate.get(serviceId).containsKey(dateAsString)) {
                     return null;
                 } else {
-                    calendarDatePerServiceIdAndDate.get(serviceId).add(newCalendarDate);
+                    calendarDatePerServiceIdAndDate.get(serviceId).put(dateAsString, newCalendarDate);
                     return newCalendarDate;
                 }
             } else {
-                final Set<CalendarDate> innerSet = new HashSet<>();
-                innerSet.add(newCalendarDate);
-                calendarDatePerServiceIdAndDate.put(serviceId, innerSet);
+                final Map<String, CalendarDate> innerMap = new HashMap<>();
+                innerMap.put(dateAsString, newCalendarDate);
+                calendarDatePerServiceIdAndDate.put(serviceId, innerMap);
                 return newCalendarDate;
             }
         } else {
@@ -364,7 +365,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * @return a immutable collection of {@code CalendarDate} objects representing all the rows from calendar_dates.txt.
      * Entities are mapped on service_id and date in a nested map.
      */
-    public Map<String, Set<CalendarDate>> getCalendarDateAll() {
+    public Map<String, Map<String, CalendarDate>> getCalendarDateAll() {
         return Collections.unmodifiableMap(calendarDatePerServiceIdAndDate);
     }
 

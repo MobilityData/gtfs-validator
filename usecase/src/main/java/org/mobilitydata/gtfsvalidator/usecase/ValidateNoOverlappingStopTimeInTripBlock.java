@@ -318,9 +318,10 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
         // interpret data from `calendar_dates.txt` to determine if trip and otherTrip operate on same days
         final Set<String> tripCalendarDateCollection = new HashSet<>();
         dataRepo.getCalendarDateAll().get(trip.getServiceId())
-                .forEach(calendarDate -> tripCalendarDateCollection.add(calendarDate.getDate().toString()));
-        final Set<CalendarDate> unvisitedTripCalendarDateCollection =
-                dataRepo.getCalendarDateAll().get(otherTrip.getServiceId());
+                .forEach((date, calendarDate) -> tripCalendarDateCollection.add(date));
+        final Set<CalendarDate> unvisitedTripCalendarDateCollection = new HashSet<>();
+        dataRepo.getCalendarDateAll().get(otherTrip.getServiceId()).forEach((date, calendarDate) ->
+                unvisitedTripCalendarDateCollection.add(calendarDate));
         // get the list of common dates during which trips with different service_id operate: this represent the list of
         // dates where there could be potential time overlap.
         final Set<String> potentialConflictingDates = new HashSet<>();

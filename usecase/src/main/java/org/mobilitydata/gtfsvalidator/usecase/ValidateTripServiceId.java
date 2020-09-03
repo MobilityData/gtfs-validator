@@ -24,7 +24,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Use case for E036 to validate that all records of `trips.txt` refer to an existing {@code Calendar} or
@@ -59,7 +58,7 @@ public class ValidateTripServiceId {
         // calendar entities are mapped on service_id
         final Map<String, Calendar> calendarCollection = dataRepo.getCalendarAll();
         // CalendarDate entities are mapped on service_id and date in a nested map
-        final Map<String, Set<CalendarDate>> calendarDateCollection = dataRepo.getCalendarDateAll();
+        final Map<String, Map<String, CalendarDate>> calendarDateCollection = dataRepo.getCalendarDateAll();
         dataRepo.getTripAll().values().stream()
                 .filter(trip -> !calendarCollection.containsKey(trip.getServiceId()) &&
                         !calendarDateCollection.containsKey(trip.getServiceId()))
