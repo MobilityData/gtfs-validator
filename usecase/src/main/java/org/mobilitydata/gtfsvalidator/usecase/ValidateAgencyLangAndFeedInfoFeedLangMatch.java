@@ -74,8 +74,7 @@ public class ValidateAgencyLangAndFeedInfoFeedLangMatch {
             return;
         }
         // If there is more than one agency_lang and feed_lang isn't mul, that's an error
-        // check if feed_lang is `mul` here is redundant but is provided for future software maintenance
-        if (!feedInfoFeedLang.equals(MUL) && agencyLangCollection.size() > 1 && !agencyLangCollection.contains(feedInfoFeedLang)) {
+        if (agencyLangCollection.size() > 1 && !agencyLangCollection.contains(feedInfoFeedLang)) {
             resultRepo.addNotice(new FeedInfoLangAgencyLangMismatchNotice(agencyLangCollection, feedInfoFeedLang));
             return;
         }
