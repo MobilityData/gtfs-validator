@@ -41,7 +41,6 @@ import static org.mockito.Mockito.*;
 
 class ValidateNoOverlappingStopTimeInTripBlockTest {
     private static final LocalTime NOON = LocalTime.NOON;
-
     private static final int FIVE_AM_AS_SECS_BEFORE_NOON =
             (int) -LocalTime.of(5, 0, 0).until(NOON, ChronoUnit.SECONDS);
     private static final int SIX_AM_AS_SECS_BEFORE_NOON =
