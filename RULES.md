@@ -135,7 +135,7 @@ A Route color and a Route text color should be contrasting. Minimum Contrast Rat
 
 ### E027 - Missing route short name and long name
 
-At least one of short name or long name should be provided - both can't be blank or missing.
+At least one of `routes.route_short_name` or `routes.route_long_name` should be provided - both can't be blank or missing.
 
 #### References:
 * [routes.txt specification](https://gtfs.org/reference/static/#routestxt)
