@@ -330,8 +330,7 @@ Trip frequencies must not overlap in time
 ### E055 - Mismatching feed and agency language fields
 
 Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and `feed_info.feed_lang`.
-The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by 
-the norm ISO 639-2.
+The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
 * If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
 * If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
 * If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error

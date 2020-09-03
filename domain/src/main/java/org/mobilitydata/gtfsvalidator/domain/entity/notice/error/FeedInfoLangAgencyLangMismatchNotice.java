@@ -20,6 +20,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class FeedInfoLangAgencyLangMismatchNotice extends ErrorNotice {
 
@@ -40,6 +41,29 @@ public class FeedInfoLangAgencyLangMismatchNotice extends ErrorNotice {
         putNoticeSpecific(KEY_AGENCY_AGENCY_NAME, agencyName);
         putNoticeSpecific(KEY_AGENCY_AGENCY_LANG, agencyLang);
         putNoticeSpecific(KEY_FEED_INFO_FEED_LANG, feedInfoFeedLang);
+    }
+
+    public FeedInfoLangAgencyLangMismatchNotice(final Set<String> agencyLangCollection, final String feedInfoFeedLang) {
+        super("feed_info.txt",
+                E_055,
+                "Mismatching feed and agency language fields",
+                String.format("`feed_info.feed_lang` is `%s` but `agency.txt` defines more than one " +
+                                "`agency.agency_lang`: `%s`",
+                        feedInfoFeedLang, agencyLangCollection),
+                null);
+        putNoticeSpecific(KEY_FEED_INFO_FEED_LANG, feedInfoFeedLang);
+        putNoticeSpecific(KEY_AGENCY_AGENCY_LANG_COLLECTION, agencyLangCollection);
+    }
+
+    public FeedInfoLangAgencyLangMismatchNotice(final Set<String> agencyLangCollection) {
+        super("feed_info.txt",
+                E_055,
+                "Mismatching feed and agency language fields",
+                String.format("`feed_info.feed_lang` is `mul` but `agency.txt` only defines: `%s` as agency_lang.",
+                        agencyLangCollection),
+                null);
+        putNoticeSpecific(KEY_AGENCY_AGENCY_LANG_COLLECTION, agencyLangCollection);
+        putNoticeSpecific(KEY_FEED_INFO_FEED_LANG, "mul");
     }
 
     @Override

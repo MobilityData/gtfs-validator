@@ -65,40 +65,30 @@ public class ValidateAgencyLangAndFeedInfoFeedLangMatch {
                 dataRepo.getFeedInfoAll().values().stream().findFirst().get().getFeedLang();
         final Set<String> agencyLangCollection = new HashSet<>();
         dataRepo.getAgencyAll().forEach((agencyId, agency) -> agencyLangCollection.add(agency.getAgencyLang()));
+        if (feedInfoFeedLang.equals(MUL)) {
+            // If feed_lang is mul and there isn't more than one agency_lang, that's an error
+            if (agencyLangCollection.size() <= 1) {
+                resultRepo.addNotice(new FeedInfoLangAgencyLangMismatchNotice(agencyLangCollection));
+                return;
+            }
+            return;
+        }
+        // If there is more than one agency_lang and feed_lang isn't mul, that's an error
+        // check if feed_lang is `mul` here is redundant but is provided for future software maintenance
+        if (!feedInfoFeedLang.equals(MUL) && agencyLangCollection.size() > 1 && !agencyLangCollection.contains(feedInfoFeedLang)) {
+            resultRepo.addNotice(new FeedInfoLangAgencyLangMismatchNotice(agencyLangCollection, feedInfoFeedLang));
+            return;
+        }
 
         dataRepo.getAgencyAll().forEach((agencyId, agency) -> {
-            if (!feedInfoFeedLang.equals(MUL)) {
-                // If feed_lang is not mul and differs from agency_lang, that's an error
-                if (!feedInfoFeedLang.equals(agency.getAgencyLang())) {
-                    resultRepo.addNotice(
-                            new FeedInfoLangAgencyLangMismatchNotice(
-                                    agencyId,
-                                    agency.getAgencyName(),
-                                    agency.getAgencyLang(),
-                                    feedInfoFeedLang));
-                    return;
-                }
-                // If there is more than one agency_lang and feed_lang isn't mul, that's an error
-                if (agencyLangCollection.size() > 1 && !feedInfoFeedLang.equals(agency.getAgencyLang())) {
-                    resultRepo.addNotice(
-                            new FeedInfoLangAgencyLangMismatchNotice(
-                                    agencyId,
-                                    agency.getAgencyName(),
-                                    agency.getAgencyLang(),
-                                    feedInfoFeedLang));
-                    return;
-                }
-            } else {
-                // If feed_lang is mul and there isn't more than one agency_lang, that's an error
-                if (agencyLangCollection.size() <= 1) {
-                    resultRepo.addNotice(
-                            new FeedInfoLangAgencyLangMismatchNotice(
-                                    agencyId,
-                                    agency.getAgencyName(),
-                                    agency.getAgencyLang(),
-                                    feedInfoFeedLang));
-                    return;
-                }
+            // If feed_lang is not mul and differs from agency_lang, that's an error
+            if (!feedInfoFeedLang.equals(agency.getAgencyLang())) {
+                resultRepo.addNotice(
+                        new FeedInfoLangAgencyLangMismatchNotice(
+                                agencyId,
+                                agency.getAgencyName(),
+                                agency.getAgencyLang(),
+                                feedInfoFeedLang));
             }
         });
     }

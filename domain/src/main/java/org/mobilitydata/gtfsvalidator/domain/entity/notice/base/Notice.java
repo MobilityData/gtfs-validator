@@ -81,6 +81,7 @@ public abstract class Notice {
     public static final String KEY_FREQUENCY_END_TIME = "frequencyEndTime";
     public static final String KEY_AGENCY_AGENCY_NAME = "agencyAgencyName";
     public static final String KEY_AGENCY_AGENCY_LANG = "agencyAgencyLang";
+    public static final String KEY_AGENCY_AGENCY_LANG_COLLECTION = "agencyAgencyLangCollection";
     public static final String KEY_FEED_INFO_FEED_LANG = "feedInfoFeedLang";
 
     private final String filename;
