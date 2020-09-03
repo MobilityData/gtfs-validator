@@ -378,6 +378,10 @@ public class DefaultConfig {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateNoOverlappingStopTimeInTripBlock validateNoOverlappingStopTimeInTripBlock() {
+        return new ValidateNoOverlappingStopTimeInTripBlock(gtfsDataRepository, resultRepo, logger, timeUtils);
+    }
+
     public StopTimeValidator stopTimeBasedCrossValidator() {
         return new StopTimeValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
                 new ValidateShapeIdReferenceInStopTime(),

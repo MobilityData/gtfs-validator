@@ -53,10 +53,10 @@ class ValidateTripFrequenciesOverlapTest {
         final TimeUtils mockTimeUtil = mock(TimeUtils.class);
         // the implementation of time utility class is tested in:
         // org.mobilitydata.gtfsvalidator.usecase.utils.test.TimeUtilsImplTest
-        when(mockTimeUtil.convertIntegerToHMMSS(1200)).thenReturn("1200");
-        when(mockTimeUtil.convertIntegerToHMMSS(1800)).thenReturn("1800");
-        when(mockTimeUtil.convertIntegerToHMMSS(1544)).thenReturn("1544");
-        when(mockTimeUtil.convertIntegerToHMMSS(2143)).thenReturn("2143");
+        when(mockTimeUtil.convertIntegerToHHMMSS(1200)).thenReturn("1200");
+        when(mockTimeUtil.convertIntegerToHHMMSS(1800)).thenReturn("1800");
+        when(mockTimeUtil.convertIntegerToHHMMSS(1544)).thenReturn("1544");
+        when(mockTimeUtil.convertIntegerToHHMMSS(2143)).thenReturn("2143");
         when(mockTimeUtil.arePeriodsOverlapping(1200, 1800,
                 1544, 2143)).thenReturn(true);
         when(mockTimeUtil.arePeriodsOverlapping(1200, 1800,
@@ -105,10 +105,10 @@ class ValidateTripFrequenciesOverlapTest {
         verify(thirdFrequency, times(6)).getEndTime();
         verify(thirdFrequency, times(6)).getStartTime();
 
-        verify(mockTimeUtil, times(1)).convertIntegerToHMMSS(1200);
-        verify(mockTimeUtil, times(1)).convertIntegerToHMMSS(1800);
-        verify(mockTimeUtil, times(1)).convertIntegerToHMMSS(1544);
-        verify(mockTimeUtil, times(1)).convertIntegerToHMMSS(2143);
+        verify(mockTimeUtil, times(1)).convertIntegerToHHMMSS(1200);
+        verify(mockTimeUtil, times(1)).convertIntegerToHHMMSS(1800);
+        verify(mockTimeUtil, times(1)).convertIntegerToHHMMSS(1544);
+        verify(mockTimeUtil, times(1)).convertIntegerToHHMMSS(2143);
         verify(mockTimeUtil, times(1))
                 .arePeriodsOverlapping(1200, 1800,
                         1544, 2143);

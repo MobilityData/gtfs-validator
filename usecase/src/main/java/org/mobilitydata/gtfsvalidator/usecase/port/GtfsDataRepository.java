@@ -68,6 +68,8 @@ public interface GtfsDataRepository {
 
     Map<String, Trip> getTripAll();
 
+    Map<String, List<Trip>> getAllTripByBlockId();
+
     Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 
     Transfer getTransferByStopPair(final String fromStopId, final String toStopId);

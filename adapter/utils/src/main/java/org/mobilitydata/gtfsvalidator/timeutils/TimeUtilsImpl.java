@@ -90,7 +90,7 @@ public class TimeUtilsImpl implements TimeUtils {
      * @return the human readable string representation of the number of seconds elapsed since noon of day of service.
      * This string is formatted as follows: HH:MM:SS.
      */
-    public String convertIntegerToHMMSS(final Integer elapsedDurationSinceNoonInSeconds) throws
+    public String convertIntegerToHHMMSS(final Integer elapsedDurationSinceNoonInSeconds) throws
             IllegalArgumentException {
         if (elapsedDurationSinceNoonInSeconds == null) {
             throw new IllegalArgumentException("elapsedDurationSinceNoonInSeconds cannot be null");
@@ -121,7 +121,25 @@ public class TimeUtilsImpl implements TimeUtils {
     }
 
     /**
-     * This method checks if two periods of times overlap
+     * This method checks if two periods of times overlap:
+     * a |--------|            07:00 am to 10:00 am     here, method returns false according to the Python Validator im-
+     * b          |----|       10:00 am to 11:00 am     plementation                                                                                                 implementation
+     * <p>
+     * <p>
+     * a |--------|            07:00 am to 10:00 am     here, method returns false
+     * b              |----|   11:00 am to 12:00 am
+     * <p>
+     * a |--------|            07:00 am to 10:00 am     here, method returns true
+     * b     |----|            09:00 am to 10:00 am
+     * <p>
+     * a |--------|            07:00 am to 10:00 am     here, method returns true
+     * b |----|                07:00 am to 09:00 am
+     * <p>
+     * a |--------|            07:00 am to 10:00 am     here, method returns true
+     * b       |----|          08:00 am to 12:00 am
+     * <p>
+     * a |--------|            07:00 am to 12:00 am     here, method returns true
+     * b   |----|              08:00 am to 11:00 am
      *
      * @param firstPeriodFirstTimeSecs  lower bound of the first period of time in number of seconds elapsed since noon
      * @param firstPeriodLastTimeSecs   upper bound of the first period of time in number of seconds elapsed since noon
@@ -140,7 +158,7 @@ public class TimeUtilsImpl implements TimeUtils {
                     firstPeriodFirstTimeSecs,
                     firstPeriodLastTimeSecs);
         }
-        return !(firstPeriodFirstTimeSecs < secondPeriodLastTimeSecs &&
-                firstPeriodLastTimeSecs < secondPeriodFirstTimeSecs);
+        return !(firstPeriodFirstTimeSecs <= secondPeriodLastTimeSecs &&
+                firstPeriodLastTimeSecs <= secondPeriodFirstTimeSecs);
     }
 }

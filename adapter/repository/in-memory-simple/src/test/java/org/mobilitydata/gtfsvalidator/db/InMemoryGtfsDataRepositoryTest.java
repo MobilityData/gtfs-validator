@@ -327,6 +327,7 @@ class InMemoryGtfsDataRepositoryTest {
         final Trip mockTrip = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockTrip.getTripId()).thenReturn("trip id");
+        when(mockTrip.getBlockId()).thenReturn("block id");
 
         underTest.addTrip(mockTrip);
 
@@ -345,7 +346,9 @@ class InMemoryGtfsDataRepositoryTest {
         final Trip mockTrip01 = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockTrip00.getTripId()).thenReturn("trip id00");
+        when(mockTrip00.getBlockId()).thenReturn("block id00");
         when(mockTrip01.getTripId()).thenReturn("trip id01");
+        when(mockTrip01.getBlockId()).thenReturn("block id01");
 
         assertEquals(mockTrip00, underTest.addTrip(mockTrip00));
         assertEquals(mockTrip01, underTest.addTrip(mockTrip01));
@@ -355,12 +358,37 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void addTripShouldReturnSameEntityAndCallToGetAllTripByBlockIdShouldReturnRelatedTrip() {
+        final Trip mockTrip00 = mock(Trip.class);
+        final Trip mockTrip01 = mock(Trip.class);
+        final Trip mockTrip02 = mock(Trip.class);
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        when(mockTrip00.getTripId()).thenReturn("trip id00");
+        when(mockTrip00.getBlockId()).thenReturn("block id00");
+
+        when(mockTrip01.getTripId()).thenReturn("trip id01");
+        when(mockTrip01.getBlockId()).thenReturn("block id01");
+
+        when(mockTrip02.getTripId()).thenReturn("trip id02");
+        when(mockTrip02.getBlockId()).thenReturn("block id01");
+
+        assertEquals(mockTrip00, underTest.addTrip(mockTrip00));
+        assertEquals(mockTrip01, underTest.addTrip(mockTrip01));
+        assertEquals(mockTrip02, underTest.addTrip(mockTrip02));
+
+        assertEquals(List.of(mockTrip00), underTest.getAllTripByBlockId().get("block id00"));
+        assertEquals(List.of(mockTrip01, mockTrip02), underTest.getAllTripByBlockId().get("block id01"));
+    }
+
+    @Test
     void getTripAllShouldReturnTripCollection() {
         final Trip mockTrip00 = mock(Trip.class);
         final Trip mockTrip01 = mock(Trip.class);
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         when(mockTrip00.getTripId()).thenReturn("trip id00");
+        when(mockTrip00.getBlockId()).thenReturn("block id00");
         when(mockTrip01.getTripId()).thenReturn("trip id01");
+        when(mockTrip01.getBlockId()).thenReturn("block id01");
 
         underTest.addTrip(mockTrip00);
         underTest.addTrip(mockTrip01);
@@ -370,7 +398,6 @@ class InMemoryGtfsDataRepositoryTest {
         assertTrue(toCheck.containsKey("trip id00"));
         assertTrue(toCheck.containsKey("trip id01"));
     }
-
 
     @Test
     void addSameTransferTwiceShouldReturnNull() {

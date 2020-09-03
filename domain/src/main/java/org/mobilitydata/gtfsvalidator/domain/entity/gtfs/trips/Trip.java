@@ -340,4 +340,8 @@ public class Trip extends GtfsEntity {
             return this;
         }
     }
+
+    public boolean hasSameServiceId(final Trip otherTrip) {
+        return serviceId.equals(otherTrip.getServiceId());
+    }
 }
