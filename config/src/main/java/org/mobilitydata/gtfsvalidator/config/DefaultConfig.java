@@ -220,6 +220,18 @@ public class DefaultConfig {
         return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateRouteLongNameAreUnique validateRouteLongNameAreUnique() {
+        return new ValidateRouteLongNameAreUnique(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateRouteShortNameAreUnique validateRouteShortNameAreUnique() {
+        return new ValidateRouteShortNameAreUnique(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateUniqueRouteLongNameRouteShortNameCombination validateUniqueRouteLongNameRouteShortNameCombination() {
+        return new ValidateUniqueRouteLongNameRouteShortNameCombination(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ValidateCalendarEndDateBeforeStartDate validateCalendarEndDateBeforeStartDate() {
         return new ValidateCalendarEndDateBeforeStartDate(gtfsDataRepository, resultRepo, logger);
     }

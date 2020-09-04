@@ -376,4 +376,19 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final FeedInfoLangAgencyLangMismatchNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final DuplicateRouteLongNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteLongNameRouteShortNameCombinationNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }

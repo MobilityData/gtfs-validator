@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
@@ -910,6 +911,44 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME)))
                 .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_BLOCK_ID)))
                 .setParentEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_DATE_LIST)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final DuplicateRouteLongNameNotice toExport) throws IOException {
+        duplicateRouteNameToProto(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME)),
+                toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteShortNameNotice toExport) throws IOException {
+        duplicateRouteNameToProto(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME)),
+                toExport);
+    }
+
+    private void duplicateRouteNameToProto(final String duplicateRouteNameKey, final Notice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_ROUTE_NAME_REUSED)
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID)))
+                .setOtherCsvFileName(duplicateRouteNameKey)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final DuplicateRouteLongNameRouteShortNameCombinationNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_ROUTE_NAME_REUSED)
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME)))
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
