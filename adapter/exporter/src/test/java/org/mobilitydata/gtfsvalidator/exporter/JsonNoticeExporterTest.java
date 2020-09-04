@@ -880,6 +880,23 @@ class JsonNoticeExporterTest {
     }
 
     @Test
+    void exportOverlappingTripFrequenciesNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        OverlappingTripFrequenciesNotice toExport =
+                new OverlappingTripFrequenciesNotice("1234",
+                        "arrival time value",
+                        "departure time value",
+                        "conflicting start time value",
+                        "conflicting end time value");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
     void exportBackwardsTimeTravelInStopNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
@@ -916,6 +933,49 @@ class JsonNoticeExporterTest {
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         UnusableTripNotice toExport =
                 new UnusableTripNotice("trip_id");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportMissingCalendarAndCalendarDateFilesNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        MissingCalendarAndCalendarDateFilesNotice toExport =
+                new MissingCalendarAndCalendarDateFilesNotice();
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportBlockTripsWithOverlappingStopTimesNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        BlockTripsWithOverlappingStopTimesNotice toExport =
+                new BlockTripsWithOverlappingStopTimesNotice("trip id value", "07:00",
+                        "10:00", "previous trip id value", "08:00",
+                        "11:00", "block id");
+
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportFeedInfoLangAgencyLangMismatchNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        FeedInfoLangAgencyLangMismatchNotice toExport =
+                new FeedInfoLangAgencyLangMismatchNotice("agency id value", "agency name value"
+                        , "agency lang value", "feed info lang value");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));

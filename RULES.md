@@ -52,6 +52,10 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E049](#E049) | Backwards time travel between stops in `stop_times.txt` |
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
+| [E053](#E053) | Trip frequencies overlap |
+| [E054](#E054) | Block trips must not have overlapping stop times |
+| [E055](#E055) | Mismatching feed and agency language fields |
+| [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
 | [E057](#E057) | Decreasing `shape_dist_traveled` in `stop_times.txt` |
 
 ### Table of Warnings
@@ -133,6 +137,11 @@ A Route color and a Route text color should be contrasting. Minimum Contrast Rat
 <a name="E027"/>
 
 ### E027 - Missing route short name and long name
+
+At least one of `routes.route_short_name` or `routes.route_long_name` should be provided - both can't be blank or missing.
+
+#### References:
+* [routes.txt specification](https://gtfs.org/reference/static/#routestxt)
 
 <a name="E028"/>
 
@@ -288,7 +297,7 @@ This is related to [W012](#https://github.com/MobilityData/gtfs-validator/blob/m
 The `end_time` must not precede the `start_time` in `frequencies.txt`. 
 
 #### References:
-* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
 <a name="E049"/>
 
@@ -308,6 +317,46 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
 
+<a name="E053"/>
+
+### E053 - Trip frequencies overlap
+
+Trip frequencies must not overlap in time
+
+#### References:
+
+* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+
+<a name="E054"/>
+
+### E054 - Block trips must not have overlapping stop times
+
+Trip stop times should not overlap when they are part of the same block operating on the same day.
+
+#### References:
+
+* [GTFS trips.txt specification](http://gtfs.org/reference/static/#tripstxt)
+
+<a name="E055"/>
+
+### E055 - Mismatching feed and agency language fields
+
+Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and `feed_info.feed_lang`.
+The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
+* If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
+* If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
+* If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error
+
+#### References:
+* [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
+* [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
+
+<a name="E056"/>
+
+### E056 - Missing both `calendar_dates.txt` and `calendar.txt` files
+
+Both files `calendar_dates.txt` and `calendar.txt` are missing from the GTFS archive. At least one of the files must be provided.
+                        
 <a name="E057"/>
 
 ### E057 - Decreasing `shape_dist_traveled` in `stop_times.txt`

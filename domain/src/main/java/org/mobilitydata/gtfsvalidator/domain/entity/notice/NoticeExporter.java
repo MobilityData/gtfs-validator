@@ -137,5 +137,13 @@ public interface NoticeExporter {
 
     void export(final UnusableTripNotice unusableTripNotice) throws IOException;
 
+    void export(final MissingCalendarAndCalendarDateFilesNotice missingCalendarAndCalendarDateFilesNotice) throws IOException;
+
+    void export(final OverlappingTripFrequenciesNotice overlappingTripFrequenciesNotice) throws IOException;
+
+    void export(final BlockTripsWithOverlappingStopTimesNotice blockTripsWithOverlappingStopTimesNotice) throws IOException;
+
+    void export(final FeedInfoLangAgencyLangMismatchNotice feedInfoLangAgencyLangMismatchNotice) throws IOException;
+
     void export(final DecreasingStopTimeDistanceNotice decreasingStopTimeDistanceErrorNotice) throws IOException;
 }

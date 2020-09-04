@@ -97,8 +97,8 @@ class ValidateStopTimeDepartureTimeAfterArrivalTimeTest {
         final Logger mockLogger = mock(Logger.class);
 
         final TimeUtils mockTimeUtil = mock(TimeUtils.class);
-        when(mockTimeUtil.convertIntegerToHMMSS(arrivalTime)).thenReturn("arrival_time");
-        when(mockTimeUtil.convertIntegerToHMMSS(departureTime)).thenReturn("departure_time");
+        when(mockTimeUtil.convertIntegerToHHMMSS(arrivalTime)).thenReturn("arrival_time");
+        when(mockTimeUtil.convertIntegerToHHMMSS(departureTime)).thenReturn("departure_time");
 
         final ValidateStopTimeDepartureTimeAfterArrivalTime underTest =
                 new ValidateStopTimeDepartureTimeAfterArrivalTime(mockDataRepo, mockResultRepo,
@@ -118,7 +118,7 @@ class ValidateStopTimeDepartureTimeAfterArrivalTimeTest {
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        verify(mockTimeUtil, times(2)).convertIntegerToHMMSS(anyInt());
+        verify(mockTimeUtil, times(2)).convertIntegerToHHMMSS(anyInt());
 
         final List<StopTimeArrivalTimeAfterDepartureTimeNotice> noticeList = captor.getAllValues();
 

@@ -211,6 +211,9 @@ public class Main {
                 config.validateTripUsage().execute();
                 config.validateTripNumberOfStops().execute();
                 config.validateFrequencyStartTimeBeforeEndTime().execute();
+                config.validateFrequencyOverlap().execute();
+                config.validateNoOverlappingStopTimeInTripBlock().execute();
+                config.validateAgencyLangAndFeedInfoFeedLangMatch().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

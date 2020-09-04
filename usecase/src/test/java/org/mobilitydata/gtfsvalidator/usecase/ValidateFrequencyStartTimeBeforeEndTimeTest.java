@@ -91,8 +91,8 @@ class ValidateFrequencyStartTimeBeforeEndTimeTest {
         final Logger mockLogger = mock(Logger.class);
 
         final TimeUtils mockTimeUtil = mock(TimeUtils.class);
-        when(mockTimeUtil.convertIntegerToHMMSS(endTime)).thenReturn("end_time");
-        when(mockTimeUtil.convertIntegerToHMMSS(startTime)).thenReturn("start_time");
+        when(mockTimeUtil.convertIntegerToHHMMSS(endTime)).thenReturn("end_time");
+        when(mockTimeUtil.convertIntegerToHHMMSS(startTime)).thenReturn("start_time");
 
         final ValidateFrequencyStartTimeBeforeEndTime underTest =
                 new ValidateFrequencyStartTimeBeforeEndTime(mockDataRepo, mockResultRepo,
@@ -112,7 +112,7 @@ class ValidateFrequencyStartTimeBeforeEndTimeTest {
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        verify(mockTimeUtil, times(2)).convertIntegerToHMMSS(anyInt());
+        verify(mockTimeUtil, times(2)).convertIntegerToHHMMSS(anyInt());
 
         final List<FrequencyStartTimeAfterEndTimeNotice> noticeList = captor.getAllValues();
 

@@ -62,8 +62,8 @@ public class ValidateFrequencyStartTimeBeforeEndTime {
                 resultRepo.addNotice(
                         new FrequencyStartTimeAfterEndTimeNotice(
                                 "frequencies.txt",
-                                timeUtils.convertIntegerToHMMSS(frequency.getStartTime()),
-                                timeUtils.convertIntegerToHMMSS(frequency.getEndTime()),
+                                timeUtils.convertIntegerToHHMMSS(frequency.getStartTime()),
+                                timeUtils.convertIntegerToHHMMSS(frequency.getEndTime()),
                                 frequency.getTripId())
                 );
             }
