@@ -256,6 +256,10 @@ public class DefaultConfig {
         return new ValidateFeedInfoFeedStartDateIsPresent(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateAgencyLangAndFeedInfoFeedLangMatch validateAgencyLangAndFeedInfoFeedLangMatch() {
+        return new ValidateAgencyLangAndFeedInfoFeedLangMatch(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo, execParamRepo, logger);
     }
@@ -386,6 +390,10 @@ public class DefaultConfig {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateNoOverlappingStopTimeInTripBlock validateNoOverlappingStopTimeInTripBlock() {
+        return new ValidateNoOverlappingStopTimeInTripBlock(gtfsDataRepository, resultRepo, logger, timeUtils);
+    }
+
     public StopTimeValidator stopTimeBasedCrossValidator() {
         return new StopTimeValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
                 new ValidateShapeIdReferenceInStopTime(),
@@ -395,6 +403,10 @@ public class DefaultConfig {
 
     public ValidateFrequencyStartTimeBeforeEndTime validateFrequencyStartTimeBeforeEndTime() {
         return new ValidateFrequencyStartTimeBeforeEndTime(gtfsDataRepository, resultRepo, timeUtils, logger);
+    }
+
+    public ValidateTripFrequenciesOverlap validateFrequencyOverlap() {
+        return new ValidateTripFrequenciesOverlap(gtfsDataRepository, resultRepo, timeUtils, logger);
     }
 
     public ValidateStopTimeDepartureTimeAfterArrivalTime validateStopTimeDepartureTimeAfterArrivalTime() {

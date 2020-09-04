@@ -16,10 +16,10 @@
 
 package org.mobilitydata.gtfsvalidator.timeutils;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TimeUtilsImplTest {
     private static final int HOUR_TO_SEC_CONVERSION_FACTOR = 3600;
@@ -56,10 +56,20 @@ public class TimeUtilsImplTest {
         assertEquals(((10 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON), toCheck);
 
+        final String fiveTenAm34sec = "05:10:34";
+        toCheck = TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(fiveTenAm34sec);
+        assertEquals(((5 * HOUR_TO_SEC_CONVERSION_FACTOR + 10 * MIN_TO_SEC_CONVERSION_FACTOR +
+                34 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON), toCheck);
+
         final String sixThirtyAm20sec = "06:30:20";
         toCheck = TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(sixThirtyAm20sec);
         assertEquals(((6 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
                 20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON), toCheck);
+
+        final String sixOneAm = "06:01:00";
+        toCheck = TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(sixOneAm);
+        assertEquals(((6 * HOUR_TO_SEC_CONVERSION_FACTOR + 1 * MIN_TO_SEC_CONVERSION_FACTOR +
+                0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON), toCheck);
 
         final String oneThirtyAm40sec = "25:30:40";
         toCheck = TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(oneThirtyAm40sec);
@@ -107,48 +117,60 @@ public class TimeUtilsImplTest {
     void hourAsIntShouldConvertToHHMMSS() {
         final int threePm = (15 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        String toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(threePm);
+        String toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(threePm);
         assertEquals("15:00:00", toCheck);
 
         final int noon = (12 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(noon);
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(noon);
         assertEquals("12:00:00", toCheck);
 
         final int midnight = (24 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(midnight);
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(midnight);
         assertEquals("24:00:00", toCheck);
 
         final int sixFortyPm = (18 * HOUR_TO_SEC_CONVERSION_FACTOR + 40 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(sixFortyPm);
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(sixFortyPm);
         assertEquals("18:40:00", toCheck);
+
+        final int sixAmOne = (6 * HOUR_TO_SEC_CONVERSION_FACTOR + 1 * MIN_TO_SEC_CONVERSION_FACTOR +
+                0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(sixAmOne);
+        assertEquals("06:01:00", toCheck);
+
+        final int fiveTenAm34sec = (5 * HOUR_TO_SEC_CONVERSION_FACTOR + 10 * MIN_TO_SEC_CONVERSION_FACTOR +
+                34 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(fiveTenAm34sec);
+        assertEquals("05:10:34", toCheck);
 
         final int tenAm = (10 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(tenAm);
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(tenAm);
         assertEquals("10:00:00", toCheck);
 
         final int sixThirtyAm20sec = (6 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
                 20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(sixThirtyAm20sec);
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(sixThirtyAm20sec);
         assertEquals("06:30:20", toCheck);
 
         final int twentyFiveThirtyPm40sec = (25 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
                 40 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(twentyFiveThirtyPm40sec);
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(twentyFiveThirtyPm40sec);
         assertEquals("25:30:40", toCheck);
 
         final int oneThirtyAm40sec = (1 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
                 40 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(oneThirtyAm40sec);
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(oneThirtyAm40sec);
         assertEquals("01:30:40", toCheck);
     }
 
     @Test
-    void convertIntegerToHMMSSOnNullValueShouldReturnNull() {
-        assertNull(TIME_CONVERSION_UTILS.convertIntegerToHMMSS(null));
+    void convertIntegerToHHMMSSOnNullValueShouldThrowException() {
+        final Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(null));
+        Assertions.assertEquals("elapsedDurationSinceNoonInSeconds cannot be null", exception.getMessage());
     }
 
     // Remove warning "PointlessArithmeticExpression" since they these expressions are written to ease code
@@ -156,46 +178,149 @@ public class TimeUtilsImplTest {
     @SuppressWarnings("PointlessArithmeticExpression")
     @Test
     void convertHHMMSStoIntegerAndIntegerToHHMMSSShouldBeConsistent() {
-        final int oneThirtyAm40sec = (13 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
-                20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        String toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(oneThirtyAm40sec);
-        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+        final int oneThirtyAm40sec = (1 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
+                40 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        String toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(oneThirtyAm40sec);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
         final int sixThirtyAm20sec = (6 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
                 20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(sixThirtyAm20sec);
-        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(sixThirtyAm20sec);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
+                TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+
+        final int sixAmOne = (6 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
+                0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(sixAmOne);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
         final int tenAm = (10 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(tenAm);
-        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(tenAm);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
         final int sixFortyPm = (18 * HOUR_TO_SEC_CONVERSION_FACTOR + 40 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(sixFortyPm);
-        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(sixFortyPm);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
         final int midnight = (24 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(midnight);
-        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(midnight);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
         final int noon = (12 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(noon);
-        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(noon);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
 
         final int threePm = (15 * HOUR_TO_SEC_CONVERSION_FACTOR + 0 * MIN_TO_SEC_CONVERSION_FACTOR +
                 0 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
-        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHMMSS(threePm);
-        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHMMSS(
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(threePm);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
                 TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+
+        final int twentyFiveThirtyPm40sec = (25 * HOUR_TO_SEC_CONVERSION_FACTOR + 30 * MIN_TO_SEC_CONVERSION_FACTOR +
+                40 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(twentyFiveThirtyPm40sec);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
+                TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+
+        final int twentyEightFortySevenPm20sec = (28 * HOUR_TO_SEC_CONVERSION_FACTOR + 47 * MIN_TO_SEC_CONVERSION_FACTOR +
+                20 * SEC_TO_SEC_CONVERSION_FACTOR) - NOON;
+        toCheck = TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(twentyEightFortySevenPm20sec);
+        assertEquals(toCheck, TIME_CONVERSION_UTILS.convertIntegerToHHMMSS(
+                TIME_CONVERSION_UTILS.convertHHMMSSToIntFromNoonOfDayOfService(toCheck)));
+    }
+
+    @Test
+    void commonFirstPeriodLastTimeAndSecondPeriodFirstTimeShouldReturnFalse() {
+        //   a |--------|         07:00 am -> 10:00 am
+        //   b          |----|    10:00 am -> 11:00 am
+        // period `b` shares edge with period `a`
+        assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                1000, 1100));
+
+        // permute periods `a` and `b` in method call
+        //   b          |----|    10:00 am -> 11:00 am
+        //   a |--------|         07:00 am -> 10:00 am
+        assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(1000, 1100,
+                700, 1000));
+    }
+
+    @Test
+    void partialOverlapWithOneCommonBoundaryShouldReturnTrue() {
+        //   a |--------|         07:00 am -> 10:00 am
+        //   b     |----|         09:00 am -> 10:00 am
+        // period `b` shares edge with period `a`
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                900, 1000));
+
+        // permute periods `a` and `b` in method call
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(900, 1000,
+                700, 1000));
+
+        //   a |--------|         07:00 am -> 10:00 am
+        //   b |----|             07:00 am -> 09:00 am
+        // period `a` shares edge with period `b`
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                700, 900));
+
+        // permute periods `a` and `b` in method call
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 900,
+                700, 1000));
+    }
+
+    @Test
+    void partialOverlapPeriodsShouldReturnTrue() {
+        //   a |--------|       07:00 am -> 10:00 am
+        //     b      |----|    08:00 am -> 12:00 am
+        // period `b` partially overlaps with period `a`
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                800, 1200));
+
+        // permute periods `a` and `b` in method call
+        //     b      |----|    08:00 am -> 12:00 am
+        //   a |--------|       07:00 am -> 10:00 am
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(800, 1200,
+                700, 1000));
+    }
+
+    @Test
+    void firstPeriodContainedWithTheSecondOneShouldReturnTrueWhenArePeriodsOverlappingIsCalled() {
+        //   a |--------|       07:00 am -> 12:00 am
+        //   b   |----|         08:00 am -> 11:00 am
+        // period `b` is contained within period `a`
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1200,
+                800, 1100));
+    }
+
+    @Test
+    void secondPeriodContainedWithinTheFirstOneShouldReturnTrueWhenArePeriodsOverlappingIsCalled() {
+        //   a   |----|         08:00 am -> 11:00 am
+        //   b |--------|       07:00 am -> 12:00 am
+        // period `a` is contained within period `b`
+        assertTrue(TIME_CONVERSION_UTILS.arePeriodsOverlapping(800, 1100,
+                700, 1200));
+    }
+
+    @Test
+    void disjointPeriodsShouldReturnFalse() {
+        // Disjoint periods of time, with `a` being the first period and `b` the second one
+        // a |--------|                 07:00 am -> 10:00 am
+        //             b  |----|        11:00 am -> 12:00 am
+        assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(700, 1000,
+                1100, 1200));
+        // permute periods a and b in method call
+        //             b  |----|        11:00 am -> 12:00 am
+        // a |--------|                 07:00 am -> 10:00 am
+        assertFalse(TIME_CONVERSION_UTILS.arePeriodsOverlapping(1100, 1200,
+                700, 1000));
     }
 }

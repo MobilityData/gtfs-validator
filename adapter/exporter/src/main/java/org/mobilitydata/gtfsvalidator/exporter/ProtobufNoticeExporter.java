@@ -262,7 +262,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     public void export(MissingRequiredFileNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
-                .setType(GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_MISSING_TABLE)
+                .setType(TYPE_CSV_MISSING_TABLE)
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltEntityId(toExport.getFilename())
                 .build()
@@ -740,6 +740,20 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final FeedInfoLangAgencyLangMismatchNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setEntityId(toExport.getEntityId())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setType(TYPE_AGENCY_LANG_AND_FEED_LANG_MISMATCH)
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_AGENCY_NAME)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_AGENCY_AGENCY_LANG)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_FEED_INFO_FEED_LANG)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
     public void export(final MissingFeedEndDateNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
@@ -850,6 +864,53 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setEntityId(String.valueOf(toExport.getEntityId()))
                 .setType(TYPE_TRIP_WITH_NO_USABLE_STOPS)
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final MissingCalendarAndCalendarDateFilesNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setType(TYPE_CSV_MISSING_TABLE)
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_OTHER_MISSING_FILENAME)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final OverlappingTripFrequenciesNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
+                .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_FREQUENCY_START_TIME)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_FREQUENCY_END_TIME)))
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_FREQUENCY_START_TIME)))
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_FREQUENCY_END_TIME)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final BlockTripsWithOverlappingStopTimesNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(String.valueOf(toExport.getEntityId()))
+                .setType(TYPE_BLOCK_TRIPS_WITH_OVERLAPPING_STOP_TIMES)
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_TRIP_ID)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_FIRST_TIME)))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_LAST_TIME)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_PREVIOUS_TRIP_ID)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_TRIP_FIRST_TIME)))
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_PREVIOUS_TRIP_LAST_TIME)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_BLOCK_ID)))
+                .setParentEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_CONFLICTING_DATE_LIST)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
