@@ -38,7 +38,7 @@ public class FeedInfoLangAgencyLangMismatchNotice extends ErrorNotice {
                         feedInfoFeedLang),
                 agencyId
         );
-        putNoticeSpecific(KEY_AGENCY_AGENCY_NAME, agencyName);
+        putNoticeSpecific(KEY_AGENCY_NAME, agencyName);
         putNoticeSpecific(KEY_AGENCY_AGENCY_LANG, agencyLang);
         putNoticeSpecific(KEY_FEED_INFO_FEED_LANG, feedInfoFeedLang);
     }

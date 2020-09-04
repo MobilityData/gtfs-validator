@@ -745,7 +745,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setEntityId(toExport.getEntityId())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setType(TYPE_AGENCY_LANG_AND_FEED_LANG_MISMATCH)
-                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_AGENCY_AGENCY_NAME)))
+                .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_AGENCY_NAME)))
                 .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_AGENCY_AGENCY_LANG)))
                 .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_FEED_INFO_FEED_LANG)))
                 .build()

@@ -104,6 +104,7 @@ class ValidateAgencyLangAndFeedInfoFeedLangMatchTest {
         final Agency mockAgency0 = mock(Agency.class);
         when(mockAgency0.getAgencyLang()).thenReturn("non matching language");
         when(mockAgency0.getAgencyName()).thenReturn("agency name");
+
         final Agency mockAgency1 = mock(Agency.class);
         when(mockAgency1.getAgencyName()).thenReturn("other agency name");
         when(mockAgency1.getAgencyLang()).thenReturn("default language");
@@ -124,14 +125,12 @@ class ValidateAgencyLangAndFeedInfoFeedLangMatchTest {
                 "agency language fields'");
 
         verify(mockDataRepo, times(2)).getFeedInfoAll();
-        verify(mockDataRepo, times(2)).getAgencyAll();
+        verify(mockDataRepo, times(1)).getAgencyAll();
 
         verify(mockFeedInfo, times(1)).getFeedLang();
 
-        verify(mockAgency0, times(3)).getAgencyLang();
-        verify(mockAgency0, times(1)).getAgencyName();
-
-        verify(mockAgency1, times(2)).getAgencyLang();
+        verify(mockAgency0, times(1)).getAgencyLang();
+        verify(mockAgency1, times(1)).getAgencyLang();
 
         final ArgumentCaptor<FeedInfoLangAgencyLangMismatchNotice> captor =
                 ArgumentCaptor.forClass(FeedInfoLangAgencyLangMismatchNotice.class);
@@ -144,12 +143,64 @@ class ValidateAgencyLangAndFeedInfoFeedLangMatchTest {
         assertEquals("feed_info.txt", noticeList.get(0).getFilename());
         assertEquals("ERROR", noticeList.get(0).getLevel());
         assertEquals(55, noticeList.get(0).getCode());
-        assertEquals("agency name", noticeList.get(0).getNoticeSpecific(KEY_AGENCY_AGENCY_NAME));
-        assertEquals("non matching language", noticeList.get(0).getNoticeSpecific(KEY_AGENCY_AGENCY_LANG));
+        assertEquals(Set.of("non matching language", "default language"),
+                noticeList.get(0).getNoticeSpecific(KEY_AGENCY_AGENCY_LANG_COLLECTION));
         assertEquals("default language", noticeList.get(0).getNoticeSpecific(KEY_FEED_INFO_FEED_LANG));
-        assertEquals("agency id 0", noticeList.get(0).getEntityId());
 
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockFeedInfo, mockAgency0, mockAgency1);
+    }
+
+    // suppressed warning regarding ignored result of method, since the method is called in assertions
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    @Test
+    void nonMatchingFeedInfoFeedLangAndUniqueAgencyLangShouldGenerateNotice() {
+        final FeedInfo mockFeedInfo = mock(FeedInfo.class);
+        when(mockFeedInfo.getFeedLang()).thenReturn("default language");
+
+        final Agency mockAgency = mock(Agency.class);
+        when(mockAgency.getAgencyLang()).thenReturn("non matching language");
+        when(mockAgency.getAgencyName()).thenReturn("agency name");
+
+        final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        when(mockDataRepo.getFeedInfoAll()).thenReturn(new HashMap<>(Map.of("feed publisher name", mockFeedInfo)));
+        when(mockDataRepo.getAgencyAll()).thenReturn(
+                new HashMap<>(Map.of("agency id 0", mockAgency)));
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Logger mockLogger = mock(Logger.class);
+
+        final ValidateAgencyLangAndFeedInfoFeedLangMatch underTest =
+                new ValidateAgencyLangAndFeedInfoFeedLangMatch(mockDataRepo, mockResultRepo, mockLogger);
+
+        underTest.execute();
+
+        verify(mockLogger, times(1)).info("Validating rule 'E055 - Mismatching feed and " +
+                "agency language fields'");
+
+        verify(mockDataRepo, times(2)).getFeedInfoAll();
+        verify(mockDataRepo, times(2)).getAgencyAll();
+
+        verify(mockFeedInfo, times(1)).getFeedLang();
+
+        verify(mockAgency, times(3)).getAgencyLang();
+        verify(mockAgency, times(1)).getAgencyName();
+
+        final ArgumentCaptor<FeedInfoLangAgencyLangMismatchNotice> captor =
+                ArgumentCaptor.forClass(FeedInfoLangAgencyLangMismatchNotice.class);
+
+        verify(mockResultRepo, times(1)).addNotice(captor.capture());
+
+        final List<FeedInfoLangAgencyLangMismatchNotice> noticeList = captor.getAllValues();
+
+        assertEquals(1, noticeList.size());
+        assertEquals("feed_info.txt", noticeList.get(0).getFilename());
+        assertEquals("agency id 0", noticeList.get(0).getEntityId());
+        assertEquals("ERROR", noticeList.get(0).getLevel());
+        assertEquals(55, noticeList.get(0).getCode());
+        assertEquals("non matching language", noticeList.get(0).getNoticeSpecific(KEY_AGENCY_AGENCY_LANG));
+        assertEquals("default language", noticeList.get(0).getNoticeSpecific(KEY_FEED_INFO_FEED_LANG));
+        assertEquals("agency name", noticeList.get(0).getNoticeSpecific(KEY_AGENCY_NAME));
+
+        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockFeedInfo, mockAgency);
     }
 
     @Test
@@ -274,12 +325,11 @@ class ValidateAgencyLangAndFeedInfoFeedLangMatchTest {
                 "agency language fields'");
 
         verify(mockDataRepo, times(2)).getFeedInfoAll();
-        verify(mockDataRepo, times(2)).getAgencyAll();
+        verify(mockDataRepo, times(1)).getAgencyAll();
 
         verify(mockFeedInfo, times(1)).getFeedLang();
-        verify(mockAgency0, times(2)).getAgencyLang();
-        verify(mockAgency1, times(3)).getAgencyLang();
-        verify(mockAgency1, times(1)).getAgencyName();
+        verify(mockAgency0, times(1)).getAgencyLang();
+        verify(mockAgency1, times(1)).getAgencyLang();
 
         final ArgumentCaptor<FeedInfoLangAgencyLangMismatchNotice> captor =
                 ArgumentCaptor.forClass(FeedInfoLangAgencyLangMismatchNotice.class);
@@ -292,9 +342,8 @@ class ValidateAgencyLangAndFeedInfoFeedLangMatchTest {
         assertEquals("feed_info.txt", noticeList.get(0).getFilename());
         assertEquals("ERROR", noticeList.get(0).getLevel());
         assertEquals(55, noticeList.get(0).getCode());
-        assertEquals("agency id 1", noticeList.get(0).getEntityId());
-        assertEquals("agency name", noticeList.get(0).getNoticeSpecific(KEY_AGENCY_AGENCY_NAME));
-        assertEquals("mismatching language", noticeList.get(0).getNoticeSpecific(KEY_AGENCY_AGENCY_LANG));
+        assertEquals(Set.of("default language", "mismatching language"),
+                noticeList.get(0).getNoticeSpecific(KEY_AGENCY_AGENCY_LANG_COLLECTION));
         assertEquals("default language", noticeList.get(0).getNoticeSpecific(KEY_FEED_INFO_FEED_LANG));
 
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockFeedInfo, mockAgency0, mockAgency1);
