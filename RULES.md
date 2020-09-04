@@ -54,6 +54,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E051](#E051) | Trips must have more than one stop to be usable |
 | [E053](#E053) | Trip frequencies overlap |
 | [E054](#E054) | Block trips must not have overlapping stop times |
+| [E055](#E055) | Mismatching feed and agency language fields |
 | [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
 
 ### Table of Warnings
@@ -334,6 +335,20 @@ Trip stop times should not overlap when they are part of the same block operatin
 #### References:
 
 * [GTFS trips.txt specification](http://gtfs.org/reference/static/#tripstxt)
+
+<a name="E055"/>
+
+### E055 - Mismatching feed and agency language fields
+
+Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and `feed_info.feed_lang`.
+The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
+* If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
+* If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
+* If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error
+
+#### References:
+* [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
+* [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
 
 <a name="E056"/>
 

@@ -87,6 +87,9 @@ public abstract class Notice {
     public static final String KEY_PREVIOUS_TRIP_FIRST_TIME = "previousTripFirstTime";
     public static final String KEY_PREVIOUS_TRIP_LAST_TIME = "previousTripLastTime";
     public static final String KEY_CONFLICTING_DATE_LIST = "conflictingDateList";
+    public static final String KEY_AGENCY_AGENCY_LANG = "agencyAgencyLang";
+    public static final String KEY_AGENCY_AGENCY_LANG_COLLECTION = "agencyAgencyLangCollection";
+    public static final String KEY_FEED_INFO_FEED_LANG = "feedInfoFeedLang";
 
     private final String filename;
     private final int code;
