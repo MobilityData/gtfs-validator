@@ -378,6 +378,21 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final DuplicateRouteLongNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteLongNameRouteShortNameCombinationNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final DecreasingStopTimeDistanceNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }

@@ -983,6 +983,49 @@ class JsonNoticeExporterTest {
     }
 
     @Test
+    void exportDuplicateRouteLongNameNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        DuplicateRouteLongNameNotice toExport =
+                new DuplicateRouteLongNameNotice("123", "456", "duplicate" +
+                        " route long name");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportDuplicateRouteShortNameNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        DuplicateRouteShortNameNotice toExport =
+                new DuplicateRouteShortNameNotice("123", "456", "duplicate" +
+                        " route short name");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportDuplicateRouteLongNameRouteShortNameCombinationNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        DuplicateRouteLongNameRouteShortNameCombinationNotice toExport =
+                new DuplicateRouteLongNameRouteShortNameCombinationNotice("123", "456",
+                        "duplicate route long name",
+                        "duplicate route short name");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
     void exportDecreasingStopTimeDistanceErrorNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 

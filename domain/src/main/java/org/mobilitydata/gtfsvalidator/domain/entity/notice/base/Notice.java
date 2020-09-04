@@ -90,6 +90,9 @@ public abstract class Notice {
     public static final String KEY_AGENCY_AGENCY_LANG = "agencyAgencyLang";
     public static final String KEY_AGENCY_AGENCY_LANG_COLLECTION = "agencyAgencyLangCollection";
     public static final String KEY_FEED_INFO_FEED_LANG = "feedInfoFeedLang";
+    public static final String KEY_ROUTE_CONFLICTING_ROUTE_ID = "routeConflictingRouteId";
+    public static final String KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME = "routeDuplicateRouteLongName";
+    public static final String KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME = "routeDuplicateRouteShortName";
     public static final String KEY_STOP_TIME_SHAPE_DIST_TRAVELED = "stopTimeShapeDistTraveled";
     public static final String KEY_STOP_TIME_PREVIOUS_STOP_SEQUENCE = "previousStopSequence";
     public static final String KEY_STOP_TIME_PREVIOUS_SHAPE_DIST_TRAVELED = "stopTimeConflictingShapeDistTraveled";

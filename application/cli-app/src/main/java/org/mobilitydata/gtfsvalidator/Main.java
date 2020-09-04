@@ -214,6 +214,9 @@ public class Main {
                 config.validateFrequencyOverlap().execute();
                 config.validateNoOverlappingStopTimeInTripBlock().execute();
                 config.validateAgencyLangAndFeedInfoFeedLangMatch().execute();
+                config.validateRouteLongNameAreUnique().execute();
+                config.validateRouteShortNameAreUnique().execute();
+                config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 
