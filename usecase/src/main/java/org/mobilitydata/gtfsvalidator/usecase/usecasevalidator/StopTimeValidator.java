@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateBackwardsTimeTravelForStops;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeIdReferenceInStopTime;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateStopTimeIncreasingDistance;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateStopTimeTripId;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -42,6 +43,7 @@ public class StopTimeValidator {
     private final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime;
     private final ValidateStopTimeTripId validateStopTimeTripId;
     private final ValidateBackwardsTimeTravelForStops validateBackwardsTimeTravelForStops;
+    private final ValidateStopTimeIncreasingDistance validateStopTimeIncreasingDistance;
 
     public StopTimeValidator(final GtfsDataRepository dataRepo,
                              final ValidationResultRepository resultRepo,
@@ -49,7 +51,8 @@ public class StopTimeValidator {
                              final TimeUtils timeUtils,
                              final ValidateShapeIdReferenceInStopTime validateShapeIdReferenceInStopTime,
                              final ValidateStopTimeTripId validateStopTimeTripId,
-                             final ValidateBackwardsTimeTravelForStops validateBackwardsTimeTravelForStops
+                             final ValidateBackwardsTimeTravelForStops validateBackwardsTimeTravelForStops,
+                             final ValidateStopTimeIncreasingDistance validateStopTimeIncreasingDistance
     ) {
         this.resultRepo = resultRepo;
         this.dataRepo = dataRepo;
@@ -58,6 +61,7 @@ public class StopTimeValidator {
         this.validateShapeIdReferenceInStopTime = validateShapeIdReferenceInStopTime;
         this.validateStopTimeTripId = validateStopTimeTripId;
         this.validateBackwardsTimeTravelForStops = validateBackwardsTimeTravelForStops;
+        this.validateStopTimeIncreasingDistance = validateStopTimeIncreasingDistance;
     }
 
     /**
@@ -67,10 +71,13 @@ public class StopTimeValidator {
         logger.info("Validating rules: 'E049 - Bad combination of stoptime arrival and departure times`");
         logger.info("                  'E034 - `shape_id` not found");
         logger.info("                  'E037 - `trip_id` not found");
+        logger.info("                  'E054 & W013 - Decreasing travelled distance");
 
         dataRepo.getStopTimeAll().values().forEach(stopTimeCollection -> {
             // E049
             validateBackwardsTimeTravelForStops.execute(resultRepo, stopTimeCollection, timeUtils);
+            // E054 and W013
+            validateStopTimeIncreasingDistance.execute(stopTimeCollection);
             stopTimeCollection.values().forEach(stopTime -> {
                 final Trip trip = dataRepo.getTripById(stopTime.getTripId());
                 final Map<Integer, ShapePoint> shape = dataRepo.getShapeById(trip == null ? null : trip.getShapeId());

@@ -56,6 +56,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E054](#E054) | Block trips must not have overlapping stop times |
 | [E055](#E055) | Mismatching feed and agency language fields |
 | [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
+| [E057](#E057) | Decreasing `shape_dist_traveled` in `stop_times.txt` |
 
 ### Table of Warnings
 
@@ -359,6 +360,15 @@ The default language may be multilingual for datasets with the original text in 
 
 Both files `calendar_dates.txt` and `calendar.txt` are missing from the GTFS archive. At least one of the files must be provided.
                         
+<a name="E057"/>
+
+### E057 - Decreasing `shape_dist_traveled` in `stop_times.txt`
+
+Stop times in a trip should have increasing distance.
+
+#### References:
+* [stop_times.txt specification](https://gtfs.org/reference/static#stop_timestxt)
+
 # Warnings
 
 <a name="W002"/>

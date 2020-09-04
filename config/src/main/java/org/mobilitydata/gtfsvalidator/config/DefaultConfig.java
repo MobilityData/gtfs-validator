@@ -398,7 +398,8 @@ public class DefaultConfig {
         return new StopTimeValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
                 new ValidateShapeIdReferenceInStopTime(),
                 new ValidateStopTimeTripId(),
-                new ValidateBackwardsTimeTravelForStops());
+                new ValidateBackwardsTimeTravelForStops(),
+                new ValidateStopTimeIncreasingDistance(resultRepo));
     }
 
     public ValidateFrequencyStartTimeBeforeEndTime validateFrequencyStartTimeBeforeEndTime() {

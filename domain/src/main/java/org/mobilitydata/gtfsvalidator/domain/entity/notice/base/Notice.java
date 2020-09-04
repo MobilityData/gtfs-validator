@@ -93,6 +93,9 @@ public abstract class Notice {
     public static final String KEY_ROUTE_CONFLICTING_ROUTE_ID = "routeConflictingRouteId";
     public static final String KEY_ROUTE_DUPLICATE_ROUTE_LONG_NAME = "routeDuplicateRouteLongName";
     public static final String KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME = "routeDuplicateRouteShortName";
+    public static final String KEY_STOP_TIME_SHAPE_DIST_TRAVELED = "stopTimeShapeDistTraveled";
+    public static final String KEY_STOP_TIME_PREVIOUS_STOP_SEQUENCE = "previousStopSequence";
+    public static final String KEY_STOP_TIME_PREVIOUS_SHAPE_DIST_TRAVELED = "stopTimeConflictingShapeDistTraveled";
 
     private final String filename;
     private final int code;
