@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DecreasingStopT
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 
+import java.util.List;
 import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -140,10 +141,14 @@ class ValidateStopTimeIncreasingDistanceTest {
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final DecreasingStopTimeDistanceNotice notice = captor.getAllValues().get(0);
+        final List<DecreasingStopTimeDistanceNotice> noticeList = captor.getAllValues();
+        final DecreasingStopTimeDistanceNotice notice = noticeList.get(0);
 
+        assertEquals(1, noticeList.size());
         assertEquals("stop_times.txt", notice.getFilename());
         assertEquals("no id", notice.getEntityId());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(57, notice.getCode());
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
         assertEquals("trip id value", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
@@ -195,10 +200,14 @@ class ValidateStopTimeIncreasingDistanceTest {
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final DecreasingStopTimeDistanceNotice notice = captor.getAllValues().get(0);
+        final List<DecreasingStopTimeDistanceNotice> noticeList = captor.getAllValues();
+        final DecreasingStopTimeDistanceNotice notice = noticeList.get(0);
 
+        assertEquals(1, noticeList.size());
         assertEquals("stop_times.txt", notice.getFilename());
         assertEquals("no id", notice.getEntityId());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(57, notice.getCode());
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
         assertEquals("trip id value", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
@@ -250,10 +259,14 @@ class ValidateStopTimeIncreasingDistanceTest {
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final DecreasingStopTimeDistanceNotice notice = captor.getAllValues().get(0);
+        final List<DecreasingStopTimeDistanceNotice> noticeList = captor.getAllValues();
+        final DecreasingStopTimeDistanceNotice notice = noticeList.get(0);
 
+        assertEquals(1, noticeList.size());
         assertEquals("stop_times.txt", notice.getFilename());
         assertEquals("no id", notice.getEntityId());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(57, notice.getCode());
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
         assertEquals("trip id value", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
@@ -289,8 +302,7 @@ class ValidateStopTimeIncreasingDistanceTest {
         stopTimeSequence.put(3, thirdStopTimeInSequence);
         stopTimeSequence.put(4, fourthStopTimeInSequence);
 
-        final ValidateStopTimeIncreasingDistance underTest =
-                new ValidateStopTimeIncreasingDistance(mockResultRepo);
+        final ValidateStopTimeIncreasingDistance underTest = new ValidateStopTimeIncreasingDistance(mockResultRepo);
 
         underTest.execute(stopTimeSequence);
 
@@ -305,10 +317,14 @@ class ValidateStopTimeIncreasingDistanceTest {
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final DecreasingStopTimeDistanceNotice notice = captor.getAllValues().get(0);
+        final List<DecreasingStopTimeDistanceNotice> noticeList = captor.getAllValues();
+        final DecreasingStopTimeDistanceNotice notice = noticeList.get(0);
 
+        assertEquals(1, noticeList.size());
         assertEquals("stop_times.txt", notice.getFilename());
         assertEquals("no id", notice.getEntityId());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(57, notice.getCode());
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
         assertEquals("trip id value", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
@@ -358,10 +374,14 @@ class ValidateStopTimeIncreasingDistanceTest {
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final DecreasingStopTimeDistanceNotice notice = captor.getAllValues().get(0);
+        final List<DecreasingStopTimeDistanceNotice> noticeList = captor.getAllValues();
+        final DecreasingStopTimeDistanceNotice notice = noticeList.get(0);
 
+        assertEquals(1, noticeList.size());
         assertEquals("stop_times.txt", notice.getFilename());
         assertEquals("no id", notice.getEntityId());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(57, notice.getCode());
         assertEquals("trip_id", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART));
         assertEquals("stop_sequence", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART));
         assertEquals("trip id value", notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));

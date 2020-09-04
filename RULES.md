@@ -52,7 +52,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E049](#E049) | Backwards time travel between stops in `stop_times.txt` |
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
-| [E054](#E054) | Decreasing `shape_dist_traveled` in `stop_times.txt` |
+| [E057](#E057) | Decreasing `shape_dist_traveled` in `stop_times.txt` |
 
 ### Table of Warnings
 
@@ -308,9 +308,9 @@ Trips must be referred to at least once in `stop_times.txt`.
 
 A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
 
-<a name="E054"/>
+<a name="E057"/>
 
-### E054 - Decreasing `shape_dist_traveled` in `stop_times.txt`
+### E057 - Decreasing `shape_dist_traveled` in `stop_times.txt`
 
 Stop times in a trip should have increasing distance.
 

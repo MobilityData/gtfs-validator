@@ -27,7 +27,7 @@ public class DecreasingStopTimeDistanceNotice extends ErrorNotice {
                                             final Float previousShapeDistTraveled,
                                             final int stopSequence,
                                             final Float shapeDistTraveled) {
-        super("stop_times.txt", E_054,
+        super("stop_times.txt", E_057,
                 "Decreasing `shape_dist_traveled` values",
                 String.format("`trip_id`: `%s` `stop_sequence`: `%s` has a larger `shape_dist_traveled` (`%s`) than" +
                                 " `stop_sequence`: `%s` (`%s`). `shape_dist_traveled` must increase with" +
