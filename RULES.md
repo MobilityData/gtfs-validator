@@ -367,9 +367,9 @@ Both files `calendar_dates.txt` and `calendar.txt` are missing from the GTFS arc
 
 Stop times in a trip should have increasing distance.
 
-<a name="E057"/>
+<a name="E058"/>
 
-### E057 - Decreasing `shape_dist_traveled` in `shapes.txt`
+### E058 - Decreasing `shape_dist_traveled` in `shapes.txt`
 
 `shape_dist_raveled` should increase along a shape.
 

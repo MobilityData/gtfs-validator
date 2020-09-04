@@ -964,10 +964,8 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE)))
                 .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_SHAPE_DIST_TRAVELED)))
-                .setAltEntityName(
-                        String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_SHAPE_DIST_TRAVELED)))
-                .setParentEntityName(
-                        String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_STOP_SEQUENCE)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_SHAPE_DIST_TRAVELED)))
+                .setParentEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_STOP_SEQUENCE)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
