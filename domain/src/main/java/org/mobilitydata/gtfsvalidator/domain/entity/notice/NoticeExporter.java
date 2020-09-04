@@ -153,4 +153,6 @@ public interface NoticeExporter {
                         duplicateRouteLongNameRouteShortNameCombinationNotice) throws IOException;
 
     void export(final DecreasingStopTimeDistanceNotice decreasingStopTimeDistanceErrorNotice) throws IOException;
+
+    void export(final DecreasingShapeDistanceNotice decreasingShapeDistanceNotice) throws IOException;
 }

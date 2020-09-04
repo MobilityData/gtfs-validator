@@ -57,6 +57,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E055](#E055) | Mismatching feed and agency language fields |
 | [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
 | [E057](#E057) | Decreasing `shape_dist_traveled` in `stop_times.txt` |
+| [E058](#E058) | Decreasing `shape_dist_traveled` in `shapes.txt` |
 
 ### Table of Warnings
 
@@ -366,8 +367,14 @@ Both files `calendar_dates.txt` and `calendar.txt` are missing from the GTFS arc
 
 Stop times in a trip should have increasing distance.
 
+<a name="E057"/>
+
+### E057 - Decreasing `shape_dist_traveled` in `shapes.txt`
+
+`shape_dist_raveled` should increase along a shape.
+
 #### References:
-* [stop_times.txt specification](https://gtfs.org/reference/static#stop_timestxt)
+* [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
 
 # Warnings
 
