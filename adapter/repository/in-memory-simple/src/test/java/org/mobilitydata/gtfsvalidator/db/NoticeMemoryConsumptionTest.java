@@ -14,7 +14,9 @@ public class NoticeMemoryConsumptionTest {
     private static final Logger LOGGER = LogManager.getLogger();
 
     // used to provide a 10% safety margin to avoid instability due to the behavior of the garbage collector
-    private static final float SAFETY_BUFFER_FACTOR = 1.10f;
+    private static final float SAFETY_BUFFER_FACTOR_10_PERCENT = 1.10f;
+    // used to provide a 11% safety margin to avoid instability due to the behavior of the garbage collector
+    private static final float SAFETY_BUFFER_FACTOR_11_PERCENT = 1.11f;
 
     private void generateNotices(ValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
@@ -38,7 +40,7 @@ public class NoticeMemoryConsumptionTest {
         );
     }
 
-    private void memoryLimitTest(int noticesCount, int maxMemoryLimit) {
+    private void memoryLimitTest(int noticesCount, int maxMemoryLimit, float safetyBufferFactor) {
 
         ValidationResultRepository underTest = new InMemoryValidationResultRepository(false);
 
@@ -60,7 +62,7 @@ public class NoticeMemoryConsumptionTest {
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assertTrue(usedMemory < maxMemoryLimit * SAFETY_BUFFER_FACTOR);
+        assertTrue(usedMemory < maxMemoryLimit * safetyBufferFactor);
     }
 
     @BeforeEach
@@ -76,30 +78,40 @@ public class NoticeMemoryConsumptionTest {
     @Test
     @Order(1)
     public void memoryLimitTest_100notices() {
-        memoryLimitTest(100, 10_000_000);
+        memoryLimitTest(100,
+                10_000_000,
+                SAFETY_BUFFER_FACTOR_11_PERCENT);
     }
 
     @Test
     @Order(2)
     public void memoryLimitTest_1000notices() {
-        memoryLimitTest(1000, 10_000_000);
+        memoryLimitTest(1000,
+                10_000_000,
+                SAFETY_BUFFER_FACTOR_11_PERCENT);
     }
 
     @Test
     @Order(3)
     public void memoryLimitTest_10_000notices() {
-        memoryLimitTest(10_000, 15_000_000);
+        memoryLimitTest(10_000,
+                15_000_000,
+                SAFETY_BUFFER_FACTOR_10_PERCENT);
     }
 
     @Test
     @Order(4)
     public void memoryLimitTest_100_000notices() {
-        memoryLimitTest(100_000, 60_000_000);
+        memoryLimitTest(100_000,
+                60_000_000,
+                SAFETY_BUFFER_FACTOR_10_PERCENT);
     }
 
     @Test
     @Order(5)
     public void memoryLimitTest_1_000_000notices() {
-        memoryLimitTest(1_000_000, 500_000_000);
+        memoryLimitTest(1_000_000,
+                500_000_000,
+                SAFETY_BUFFER_FACTOR_10_PERCENT);
     }
 }
