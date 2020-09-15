@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase.usecasevalidator;
 
 import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeIncreasingDistance;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeUsage;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -33,18 +34,18 @@ public class ShapeBasedCrossValidator {
     private final GtfsDataRepository dataRepo;
     private final Logger logger;
     private final ValidateShapeUsage validateShapeUsage;
-//    private final ValidateShapeIncreasingDistance validateShapeIncreasingDistance;
+    private final ValidateShapeIncreasingDistance validateShapeIncreasingDistance;
 
     public ShapeBasedCrossValidator(final GtfsDataRepository dataRepo,
                                     final ValidationResultRepository resultRepo,
                                     final Logger logger,
-                                    final ValidateShapeUsage validateShapeUsage) {
-//                                    final ValidateShapeIncreasingDistance validateShapeIncreasingDistance) {
+                                    final ValidateShapeUsage validateShapeUsage,
+                                    final ValidateShapeIncreasingDistance validateShapeIncreasingDistance) {
         this.resultRepo = resultRepo;
         this.dataRepo = dataRepo;
         this.logger = logger;
         this.validateShapeUsage = validateShapeUsage;
-//        this.validateShapeIncreasingDistance = validateShapeIncreasingDistance;
+        this.validateShapeIncreasingDistance = validateShapeIncreasingDistance;
     }
 
     /**
@@ -64,7 +65,7 @@ public class ShapeBasedCrossValidator {
                             .get()
                             .getShapeId();
                     validateShapeUsage.execute(resultRepo, shapeId, tripShapeIdCollection);
-//                    validateShapeIncreasingDistance.execute(shape, shapeId);
+                    validateShapeIncreasingDistance.execute(shape, shapeId);
                 });
     }
 }

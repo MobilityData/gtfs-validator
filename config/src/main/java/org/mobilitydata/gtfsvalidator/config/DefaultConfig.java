@@ -419,7 +419,7 @@ public class DefaultConfig {
                 gtfsDataRepository,
                 resultRepo,
                 logger,
-                new ValidateShapeUsage());
-//                new ValidateShapeIncreasingDistance(resultRepo));
+                new ValidateShapeUsage(),
+                new ValidateShapeIncreasingDistance(resultRepo));
     }
 }

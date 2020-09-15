@@ -970,21 +970,21 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
-//    @Override
-//    public void export(final DecreasingShapeDistanceNotice toExport) throws IOException {
-//        protoBuilder.clear()
-//                .setCsvFileName(toExport.getFilename())
-//                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
-//                .setEntityId(toExport.getEntityId())
-//                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PT_SEQUENCE)))
-//                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_DIST_TRAVELED)))
-//                .setAltEntityName(
-//                        String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PREVIOUS_SHAPE_PT_SEQUENCE)))
-//                .setParentEntityName(
-//                        String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PREVIOUS_SHAPE_DIST_TRAVELED)))
-//                .build()
-//                .writeTo(streamGenerator.getStream());
-//    }
+    @Override
+    public void export(final DecreasingShapeDistanceNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getEntityId())
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PT_SEQUENCE)))
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_DIST_TRAVELED)))
+                .setAltEntityName(
+                        String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PREVIOUS_SHAPE_PT_SEQUENCE)))
+                .setParentEntityName(
+                        String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PREVIOUS_SHAPE_DIST_TRAVELED)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
 
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
