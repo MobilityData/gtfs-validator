@@ -15,8 +15,8 @@ public class NoticeMemoryConsumptionTest {
 
     // used to provide a 10% safety margin to avoid instability due to the behavior of the garbage collector
     private static final float SAFETY_BUFFER_FACTOR_10_PERCENT = 1.10f;
-    // used to provide a 11% safety margin to avoid instability due to the behavior of the garbage collector
-    private static final float SAFETY_BUFFER_FACTOR_11_PERCENT = 1.11f;
+    // used to provide a 15% safety margin to avoid instability due to the behavior of the garbage collector
+    private static final float SAFETY_BUFFER_FACTOR_11_PERCENT = 1.15f;
 
     private void generateNotices(ValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
@@ -54,11 +54,10 @@ public class NoticeMemoryConsumptionTest {
 
         long usedMemory = totalMemoryInBytes - freeMemoryInBytes;
         // console output used to debug failing tests
-        System.out.println(String.format("Test for %d notices: used memory = %d megabytes," +
-                        " max memory limit = %d megabytes",
+        System.out.printf("Test for %d notices: used memory = %d megabytes, max memory limit = %d megabytes%n",
                 noticesCount,
                 usedMemory / 1_000_000,
-                maxMemoryLimit / 1_000_000));
+                maxMemoryLimit / 1_000_000);
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
