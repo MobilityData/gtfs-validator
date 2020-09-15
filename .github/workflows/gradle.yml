@@ -18,7 +18,7 @@ jobs:
         with:
           java-version: 1.11
       - name: Run test
-        run: ./gradlew testReport -d
+        run: ./gradlew testReport
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
       - name: Run validator on MBTA data
