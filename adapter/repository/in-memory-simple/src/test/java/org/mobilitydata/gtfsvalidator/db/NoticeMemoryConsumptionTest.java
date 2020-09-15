@@ -53,11 +53,6 @@ public class NoticeMemoryConsumptionTest {
         logInformation(totalMemoryInBytes, freeMemoryInBytes, noticesCount);
 
         long usedMemory = totalMemoryInBytes - freeMemoryInBytes;
-        // console output used to debug failing tests
-        System.out.printf("Test for %d notices: used memory = %d bytes, max memory limit = %d bytes%n",
-                noticesCount,
-                usedMemory,
-                maxMemoryLimit);
 
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
