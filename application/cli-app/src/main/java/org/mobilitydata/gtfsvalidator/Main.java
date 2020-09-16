@@ -212,6 +212,12 @@ public class Main {
                 config.validateTripNumberOfStops().execute();
                 config.validateFrequencyStartTimeBeforeEndTime().execute();
                 config.validateStopTooFarFromTripShape().execute();
+                config.validateFrequencyOverlap().execute();
+                config.validateNoOverlappingStopTimeInTripBlock().execute();
+                config.validateAgencyLangAndFeedInfoFeedLangMatch().execute();
+                config.validateRouteLongNameAreUnique().execute();
+                config.validateRouteShortNameAreUnique().execute();
+                config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
 
                 config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
 

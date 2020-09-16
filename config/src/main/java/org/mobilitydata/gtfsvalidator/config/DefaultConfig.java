@@ -220,6 +220,18 @@ public class DefaultConfig {
         return new ValidateRouteLongNameDoesNotContainOrEqualShortName(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateRouteLongNameAreUnique validateRouteLongNameAreUnique() {
+        return new ValidateRouteLongNameAreUnique(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateRouteShortNameAreUnique validateRouteShortNameAreUnique() {
+        return new ValidateRouteShortNameAreUnique(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateUniqueRouteLongNameRouteShortNameCombination validateUniqueRouteLongNameRouteShortNameCombination() {
+        return new ValidateUniqueRouteLongNameRouteShortNameCombination(gtfsDataRepository, resultRepo, logger);
+    }
+
     public ValidateCalendarEndDateBeforeStartDate validateCalendarEndDateBeforeStartDate() {
         return new ValidateCalendarEndDateBeforeStartDate(gtfsDataRepository, resultRepo, logger);
     }
@@ -242,6 +254,10 @@ public class DefaultConfig {
 
     public ValidateFeedInfoFeedStartDateIsPresent validateFeedInfoFeedStartDateIsPresent() {
         return new ValidateFeedInfoFeedStartDateIsPresent(gtfsDataRepository, resultRepo, logger);
+    }
+
+    public ValidateAgencyLangAndFeedInfoFeedLangMatch validateAgencyLangAndFeedInfoFeedLangMatch() {
+        return new ValidateAgencyLangAndFeedInfoFeedLangMatch(gtfsDataRepository, resultRepo, logger);
     }
 
     public ExportResultAsFile exportResultAsFile() {
@@ -374,15 +390,24 @@ public class DefaultConfig {
         return new ValidateRouteAgencyId(gtfsDataRepository, resultRepo, logger);
     }
 
+    public ValidateNoOverlappingStopTimeInTripBlock validateNoOverlappingStopTimeInTripBlock() {
+        return new ValidateNoOverlappingStopTimeInTripBlock(gtfsDataRepository, resultRepo, logger, timeUtils);
+    }
+
     public StopTimeValidator stopTimeBasedCrossValidator() {
         return new StopTimeValidator(gtfsDataRepository, resultRepo, logger, timeUtils,
                 new ValidateShapeIdReferenceInStopTime(),
                 new ValidateStopTimeTripId(),
-                new ValidateBackwardsTimeTravelForStops());
+                new ValidateBackwardsTimeTravelForStops(),
+                new ValidateStopTimeIncreasingDistance(resultRepo));
     }
 
     public ValidateFrequencyStartTimeBeforeEndTime validateFrequencyStartTimeBeforeEndTime() {
         return new ValidateFrequencyStartTimeBeforeEndTime(gtfsDataRepository, resultRepo, timeUtils, logger);
+    }
+
+    public ValidateTripFrequenciesOverlap validateFrequencyOverlap() {
+        return new ValidateTripFrequenciesOverlap(gtfsDataRepository, resultRepo, timeUtils, logger);
     }
 
     public ValidateStopTimeDepartureTimeAfterArrivalTime validateStopTimeDepartureTimeAfterArrivalTime() {

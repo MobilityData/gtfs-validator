@@ -28,6 +28,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 
+import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -67,6 +68,8 @@ public interface GtfsDataRepository {
 
     Map<String, Trip> getTripAll();
 
+    Map<String, List<Trip>> getAllTripByBlockId();
+
     Transfer addTransfer(final Transfer newTransfer) throws IllegalArgumentException;
 
     Transfer getTransferByStopPair(final String fromStopId, final String toStopId);
@@ -91,6 +94,8 @@ public interface GtfsDataRepository {
     Frequency getFrequency(final String tripId, final Integer startTime);
 
     Map<String, Frequency> getFrequencyAll();
+
+    Map<String, List<Frequency>> getFrequencyAllByTripId();
 
     Pathway addPathway(final Pathway newPathway) throws IllegalArgumentException;
 

@@ -53,6 +53,11 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
 | [E052](#E052) | Stop too far from trip shape |
+| [E053](#E053) | Trip frequencies overlap |
+| [E054](#E054) | Block trips must not have overlapping stop times |
+| [E055](#E055) | Mismatching feed and agency language fields |
+| [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
+| [E057](#E057) | Decreasing `shape_dist_traveled` in `stop_times.txt` |
 
 ### Table of Warnings
 
@@ -70,6 +75,9 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [W010](#W010) | `feed_end_date` should be provided if `feed_start_date` is provided | 
 | [W011](#W011) | `feed_start_date` should be provided if `feed_end_date` is provided | 
 | [W012](#W012) | Optional csv file is empty | 
+| [W014](#W014) | Duplicate `routes.route_long_name` | 
+| [W015](#W015) | Duplicate `routes.route_short_name` | 
+| [W016](#W016) | Duplicate combination of fields `route_long_name` and `routes.route_short_name` | 
 
 # Errors
 
@@ -133,6 +141,11 @@ A Route color and a Route text color should be contrasting. Minimum Contrast Rat
 <a name="E027"/>
 
 ### E027 - Missing route short name and long name
+
+At least one of `routes.route_short_name` or `routes.route_long_name` should be provided - both can't be blank or missing.
+
+#### References:
+* [routes.txt specification](https://gtfs.org/reference/static/#routestxt)
 
 <a name="E028"/>
 
@@ -288,7 +301,7 @@ This is related to [W012](#https://github.com/MobilityData/gtfs-validator/blob/m
 The `end_time` must not precede the `start_time` in `frequencies.txt`. 
 
 #### References:
-* [frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
 
 <a name="E049"/>
 
@@ -316,6 +329,55 @@ Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100
 
 #### References:
 * [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
+
+<a name="E053"/>
+
+### E053 - Trip frequencies overlap
+
+Trip frequencies must not overlap in time
+
+#### References:
+
+* [GTFS frequencies.txt specification](http://gtfs.org/reference/static/#frequenciestxt)
+
+<a name="E054"/>
+
+### E054 - Block trips must not have overlapping stop times
+
+Trip stop times should not overlap when they are part of the same block operating on the same day.
+
+#### References:
+
+* [GTFS trips.txt specification](http://gtfs.org/reference/static/#tripstxt)
+
+<a name="E055"/>
+
+### E055 - Mismatching feed and agency language fields
+
+Files `agency.txt` and `feed_info.txt` must define matching `agency.agency_lang` and `feed_info.feed_lang`.
+The default language may be multilingual for datasets with the original text in multiple languages. In such cases, the feed_lang field should contain the language code mul defined by the norm ISO 639-2.
+* If `feed_lang` is not `mul` and does not match with `agency_lang`, that's an error
+* If there is more than one `agency_lang` and `feed_lang` isn't `mul`, that's an error
+* If `feed_lang` is `mul` and there isn't more than one `agency_lang`, that's an error
+
+#### References:
+* [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
+* [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
+
+<a name="E056"/>
+
+### E056 - Missing both `calendar_dates.txt` and `calendar.txt` files
+
+Both files `calendar_dates.txt` and `calendar.txt` are missing from the GTFS archive. At least one of the files must be provided.
+                        
+<a name="E057"/>
+
+### E057 - Decreasing `shape_dist_traveled` in `stop_times.txt`
+
+Stop times in a trip should have increasing distance.
+
+#### References:
+* [stop_times.txt specification](https://gtfs.org/reference/static#stop_timestxt)
 
 # Warnings
 
@@ -372,3 +434,23 @@ If possible, the GTFS dataset should cover at least the next 30 days of service
 
 Empty csv optional file found in the archive: file contains header but does not have data.  
 This is related to [E047](https://github.com/MobilityData/gtfs-validator/blob/master/RULES.md#E047).
+
+<a name="W014"/>
+
+### W014 - Duplicate `routes.route_long_name`
+
+All routes should have different `routes.route_long_name`. If routes have the same `routes.route_long_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route.
+Note that two routes can have the same `routes.route_long_name` if they do not belong to the same agency.
+
+<a name="W015"/>
+
+### W015 - Duplicate `routes.route_short_name`
+
+All routes should have different `rouytes.route_short_name`. If routes have the same `routes.route_short_name`, they must be different routes serving different areas; and must not be different trips of the same route or different directions of the same route. 
+Note that two routes can have the same `routes.route_short_name` if they do not belong to the same agency.
+
+<a name="W016"/>
+
+### W016 - Duplicate combination of fields `routes.route_long_name` and `routes.route_short_name`
+
+The same combination of `route_short_name` and `route_long_name` should not be used for more than one route.

@@ -29,8 +29,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_CSV_BAD_NUMBER_OF_ROWS;
-import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.TYPE_TRIP_WITH_NO_USABLE_STOPS;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_SERVICE_ID;
 import static org.mockito.Mockito.*;
 
@@ -1968,6 +1967,54 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
+    void exportOverlappingTripFrequenciesNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(
+                new OverlappingTripFrequenciesNotice("1234",
+                        "start time value",
+                        "end time value",
+                        "previous start time value",
+                        "previous end time value"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(
+                ArgumentMatchers.eq("frequencies.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("tripId"));
+        verify(mockBuilder, times(1)).setCsvKeyName(ArgumentMatchers.eq("startTime"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(
+                ArgumentMatchers.eq("1234"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(
+                ArgumentMatchers.eq(("start time value")));
+        verify(mockBuilder, times(1)).setAltEntityName(
+                ArgumentMatchers.eq(("start time value")));
+        verify(mockBuilder, times(1)).setEntityValue(
+                ArgumentMatchers.eq(("end time value")));
+        verify(mockBuilder, times(1)).setEntityName(
+                ArgumentMatchers.eq("previous start time value"));
+        verify(mockBuilder, times(1)).setValue(
+                ArgumentMatchers.eq("previous end time value"));
+
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
     void exportEmptyFileErrorNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
@@ -2175,6 +2222,270 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).setEntityValue(
                 ArgumentMatchers.eq(String.valueOf(GeospatialUtils.TRIP_BUFFER_METERS)));
 
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportMissingCalendarAndCalendarDateFilesNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new MissingCalendarAndCalendarDateFilesNotice());
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("calendar.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1))
+                .setType(ArgumentMatchers.eq(TYPE_CSV_MISSING_TABLE));
+        verify(mockBuilder, times(1))
+                .setAltEntityId(ArgumentMatchers.eq("calendar_dates.txt"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportBlockTripsWithOverlappingStopTimesNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new BlockTripsWithOverlappingStopTimesNotice("trip id value", "07:00",
+                "10:00", "previous trip id value", "08:00",
+                "11:00", "block id value"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("trips.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("trip id value"));
+        verify(mockBuilder, times(1))
+                .setType(ArgumentMatchers.eq(TYPE_BLOCK_TRIPS_WITH_OVERLAPPING_STOP_TIMES));
+        verify(mockBuilder, times(1)).setEntityName(ArgumentMatchers.eq("trip id value"));
+        verify(mockBuilder, times(1)).setCsvKeyName(ArgumentMatchers.eq("07:00"));
+        verify(mockBuilder, times(1)).setAltEntityId(ArgumentMatchers.eq("10:00"));
+        verify(mockBuilder, times(1))
+                .setAltEntityName(ArgumentMatchers.eq("previous trip id value"));
+        verify(mockBuilder, times(1)).setEntityValue(ArgumentMatchers.eq("08:00"));
+        verify(mockBuilder, times(1)).setAltEntityValue(ArgumentMatchers.eq("11:00"));
+        verify(mockBuilder, times(1)).setAltValue(ArgumentMatchers.eq("block id value"));
+        verify(mockBuilder, times(1)).setParentEntityId(ArgumentMatchers.eq("null"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportFeedInfoLangAgencyLangMismatchNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(
+                new FeedInfoLangAgencyLangMismatchNotice(
+                        "agency id value",
+                        "agency name value",
+                        "agency lang value",
+                        "feed info lang value"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("feed_info.txt"));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("agency id value"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setType(
+                ArgumentMatchers.eq(TYPE_AGENCY_LANG_AND_FEED_LANG_MISMATCH));
+        verify(mockBuilder, times(1))
+                .setAltValue(ArgumentMatchers.eq("agency name value"));
+        verify(mockBuilder, times(1))
+                .setCsvKeyName(ArgumentMatchers.eq("agency lang value"));
+        verify(mockBuilder, times(1))
+                .setOtherCsvFileName(ArgumentMatchers.eq("feed info lang value"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportDuplicateRouteLongNameNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new DuplicateRouteLongNameNotice("123", "456",
+                "duplicate route long name"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("routes.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("456"));
+        verify(mockBuilder, times(1))
+                .setType(ArgumentMatchers.eq(TYPE_ROUTE_NAME_REUSED));
+        verify(mockBuilder, times(1))
+                .setEntityName(ArgumentMatchers.eq("123"));
+        verify(mockBuilder, times(1))
+                .setOtherCsvFileName(ArgumentMatchers.eq("duplicate route long name"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportDuplicateRouteShortNameNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new DuplicateRouteShortNameNotice("123", "456",
+                "duplicate route short name"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("routes.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("456"));
+        verify(mockBuilder, times(1))
+                .setType(ArgumentMatchers.eq(TYPE_ROUTE_NAME_REUSED));
+        verify(mockBuilder, times(1))
+                .setEntityName(ArgumentMatchers.eq("123"));
+        verify(mockBuilder, times(1))
+                .setOtherCsvFileName(ArgumentMatchers.eq("duplicate route short name"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportDuplicateRouteLongNameRouteShortNameCombinationNoticeShouldMapToCsvProblemAndWriteToStream()
+            throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new DuplicateRouteLongNameRouteShortNameCombinationNotice("123", "456",
+                "duplicate route long name", "duplicate route short name"));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(ArgumentMatchers.eq("routes.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING));
+        verify(mockBuilder, times(1))
+                .setEntityId(ArgumentMatchers.eq("456"));
+        verify(mockBuilder, times(1))
+                .setType(ArgumentMatchers.eq(TYPE_ROUTE_NAME_REUSED));
+        verify(mockBuilder, times(1))
+                .setEntityName(ArgumentMatchers.eq("123"));
+        verify(mockBuilder, times(1))
+                .setOtherCsvFileName(ArgumentMatchers.eq("duplicate route long name"));
+        verify(mockBuilder, times(1))
+                .setValue(ArgumentMatchers.eq("duplicate route short name"));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportDecreasingStopTimeDistanceErrorNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(new DecreasingStopTimeDistanceNotice("12350", 2, 5f,
+                22, 3f));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1))
+                .setCsvFileName(ArgumentMatchers.eq("stop_times.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1))
+                .setEntityValue(ArgumentMatchers.eq("trip_id"));
+        verify(mockBuilder, times(1))
+                .setEntityName(ArgumentMatchers.eq("stop_sequence"));
+        verify(mockBuilder, times(1))
+                .setOtherCsvFileName(ArgumentMatchers.eq("12350"));
+        verify(mockBuilder, times(1))
+                .setOtherCsvKeyName(ArgumentMatchers.eq("22"));
+        verify(mockBuilder, times(1))
+                .setAltEntityValue(ArgumentMatchers.eq("22"));
+        verify(mockBuilder, times(1))
+                .setValue(ArgumentMatchers.eq("3.0"));
+        verify(mockBuilder, times(1))
+                .setAltEntityName(ArgumentMatchers.eq("5.0"));
+        verify(mockBuilder, times(1))
+                .setParentEntityName(ArgumentMatchers.eq("2"));
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

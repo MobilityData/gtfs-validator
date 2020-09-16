@@ -63,12 +63,12 @@ class ValidateBackwardsTimeTravelForStopsTest {
         mockStopTimeSequence.put(8, thirdStopTimeInSequence);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
-        when(mockTimeUtils.convertIntegerToHMMSS(710)).thenReturn("710");
-        when(mockTimeUtils.convertIntegerToHMMSS(920)).thenReturn("920");
-        when(mockTimeUtils.convertIntegerToHMMSS(945)).thenReturn("945");
-        when(mockTimeUtils.convertIntegerToHMMSS(1011)).thenReturn("1011");
-        when(mockTimeUtils.convertIntegerToHMMSS(1144)).thenReturn("1144");
-        when(mockTimeUtils.convertIntegerToHMMSS(1201)).thenReturn("1201");
+        when(mockTimeUtils.convertIntegerToHHMMSS(710)).thenReturn("710");
+        when(mockTimeUtils.convertIntegerToHHMMSS(920)).thenReturn("920");
+        when(mockTimeUtils.convertIntegerToHHMMSS(945)).thenReturn("945");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1011)).thenReturn("1011");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1144)).thenReturn("1144");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1201)).thenReturn("1201");
 
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
         underTest.execute(mockResultRepo, mockStopTimeSequence, mockTimeUtils);
@@ -121,12 +121,12 @@ class ValidateBackwardsTimeTravelForStopsTest {
         mockStopTimeSequence.put(8, thirdStopTimeInSequence);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
-        when(mockTimeUtils.convertIntegerToHMMSS(710)).thenReturn("710");
-        when(mockTimeUtils.convertIntegerToHMMSS(920)).thenReturn("920");
-        when(mockTimeUtils.convertIntegerToHMMSS(910)).thenReturn("910");
-        when(mockTimeUtils.convertIntegerToHMMSS(1011)).thenReturn("1011");
-        when(mockTimeUtils.convertIntegerToHMMSS(1020)).thenReturn("1020");
-        when(mockTimeUtils.convertIntegerToHMMSS(1201)).thenReturn("1201");
+        when(mockTimeUtils.convertIntegerToHHMMSS(710)).thenReturn("710");
+        when(mockTimeUtils.convertIntegerToHHMMSS(920)).thenReturn("920");
+        when(mockTimeUtils.convertIntegerToHHMMSS(910)).thenReturn("910");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1011)).thenReturn("1011");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1020)).thenReturn("1020");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1201)).thenReturn("1201");
 
 
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
@@ -197,11 +197,11 @@ class ValidateBackwardsTimeTravelForStopsTest {
         mockStopTimeSequence.put(8, thirdStopTimeInSequence);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
-        when(mockTimeUtils.convertIntegerToHMMSS(710)).thenReturn("710");
-        when(mockTimeUtils.convertIntegerToHMMSS(920)).thenReturn("920");
-        when(mockTimeUtils.convertIntegerToHMMSS(1000)).thenReturn("1000");
-        when(mockTimeUtils.convertIntegerToHMMSS(1020)).thenReturn("1020");
-        when(mockTimeUtils.convertIntegerToHMMSS(1201)).thenReturn("1201");
+        when(mockTimeUtils.convertIntegerToHHMMSS(710)).thenReturn("710");
+        when(mockTimeUtils.convertIntegerToHHMMSS(920)).thenReturn("920");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1000)).thenReturn("1000");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1020)).thenReturn("1020");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1201)).thenReturn("1201");
 
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
         underTest.execute(mockResultRepo, mockStopTimeSequence, mockTimeUtils);
@@ -252,11 +252,11 @@ class ValidateBackwardsTimeTravelForStopsTest {
         mockStopTimeSequence.put(8, thirdStopTimeInSequence);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
-        when(mockTimeUtils.convertIntegerToHMMSS(710)).thenReturn("710");
-        when(mockTimeUtils.convertIntegerToHMMSS(920)).thenReturn("920");
-        when(mockTimeUtils.convertIntegerToHMMSS(950)).thenReturn("950");
-        when(mockTimeUtils.convertIntegerToHMMSS(1020)).thenReturn("1020");
-        when(mockTimeUtils.convertIntegerToHMMSS(1201)).thenReturn("1201");
+        when(mockTimeUtils.convertIntegerToHHMMSS(710)).thenReturn("710");
+        when(mockTimeUtils.convertIntegerToHHMMSS(920)).thenReturn("920");
+        when(mockTimeUtils.convertIntegerToHHMMSS(950)).thenReturn("950");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1020)).thenReturn("1020");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1201)).thenReturn("1201");
 
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
         underTest.execute(mockResultRepo, mockStopTimeSequence, mockTimeUtils);
@@ -308,10 +308,10 @@ class ValidateBackwardsTimeTravelForStopsTest {
         mockStopTimeSequence.put(8, thirdStopTimeInSequence);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
-        when(mockTimeUtils.convertIntegerToHMMSS(710)).thenReturn("710");
-        when(mockTimeUtils.convertIntegerToHMMSS(920)).thenReturn("920");
-        when(mockTimeUtils.convertIntegerToHMMSS(950)).thenReturn("950");
-        when(mockTimeUtils.convertIntegerToHMMSS(1201)).thenReturn("1201");
+        when(mockTimeUtils.convertIntegerToHHMMSS(710)).thenReturn("710");
+        when(mockTimeUtils.convertIntegerToHHMMSS(920)).thenReturn("920");
+        when(mockTimeUtils.convertIntegerToHHMMSS(950)).thenReturn("950");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1201)).thenReturn("1201");
 
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
         underTest.execute(mockResultRepo, mockStopTimeSequence, mockTimeUtils);
@@ -360,10 +360,10 @@ class ValidateBackwardsTimeTravelForStopsTest {
         mockStopTimeSequence.put(8, thirdStopTimeInSequence);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
-        when(mockTimeUtils.convertIntegerToHMMSS(710)).thenReturn("710");
-        when(mockTimeUtils.convertIntegerToHMMSS(920)).thenReturn("920");
-        when(mockTimeUtils.convertIntegerToHMMSS(910)).thenReturn("910");
-        when(mockTimeUtils.convertIntegerToHMMSS(1201)).thenReturn("1201");
+        when(mockTimeUtils.convertIntegerToHHMMSS(710)).thenReturn("710");
+        when(mockTimeUtils.convertIntegerToHHMMSS(920)).thenReturn("920");
+        when(mockTimeUtils.convertIntegerToHHMMSS(910)).thenReturn("910");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1201)).thenReturn("1201");
 
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
         underTest.execute(mockResultRepo, mockStopTimeSequence, mockTimeUtils);
@@ -436,11 +436,11 @@ class ValidateBackwardsTimeTravelForStopsTest {
         mockStopTimeSequence.put(8, thirdStopTimeInSequence);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
-        when(mockTimeUtils.convertIntegerToHMMSS(710)).thenReturn("710");
-        when(mockTimeUtils.convertIntegerToHMMSS(920)).thenReturn("920");
-        when(mockTimeUtils.convertIntegerToHMMSS(845)).thenReturn("845");
-        when(mockTimeUtils.convertIntegerToHMMSS(910)).thenReturn("910");
-        when(mockTimeUtils.convertIntegerToHMMSS(1201)).thenReturn("1201");
+        when(mockTimeUtils.convertIntegerToHHMMSS(710)).thenReturn("710");
+        when(mockTimeUtils.convertIntegerToHHMMSS(920)).thenReturn("920");
+        when(mockTimeUtils.convertIntegerToHHMMSS(845)).thenReturn("845");
+        when(mockTimeUtils.convertIntegerToHHMMSS(910)).thenReturn("910");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1201)).thenReturn("1201");
 
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
         underTest.execute(mockResultRepo, mockStopTimeSequence, mockTimeUtils);
@@ -513,11 +513,11 @@ class ValidateBackwardsTimeTravelForStopsTest {
         mockStopTimeSequence.put(8, thirdStopTimeInSequence);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
-        when(mockTimeUtils.convertIntegerToHMMSS(710)).thenReturn("710");
-        when(mockTimeUtils.convertIntegerToHMMSS(920)).thenReturn("920");
-        when(mockTimeUtils.convertIntegerToHMMSS(930)).thenReturn("930");
-        when(mockTimeUtils.convertIntegerToHMMSS(820)).thenReturn("820");
-        when(mockTimeUtils.convertIntegerToHMMSS(1201)).thenReturn("1201");
+        when(mockTimeUtils.convertIntegerToHHMMSS(710)).thenReturn("710");
+        when(mockTimeUtils.convertIntegerToHHMMSS(920)).thenReturn("920");
+        when(mockTimeUtils.convertIntegerToHHMMSS(930)).thenReturn("930");
+        when(mockTimeUtils.convertIntegerToHHMMSS(820)).thenReturn("820");
+        when(mockTimeUtils.convertIntegerToHHMMSS(1201)).thenReturn("1201");
 
         final ValidateBackwardsTimeTravelForStops underTest = new ValidateBackwardsTimeTravelForStops();
         underTest.execute(mockResultRepo, mockStopTimeSequence, mockTimeUtils);

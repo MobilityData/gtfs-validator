@@ -51,8 +51,8 @@ public class ValidateBackwardsTimeTravelForStops {
                                 new BackwardsTimeTravelInStopNotice(
                                         stopTime.getTripId(),
                                         stopTime.getStopSequence(),
-                                        timeUtils.convertIntegerToHMMSS(stopTime.getArrivalTime()),
-                                        timeUtils.convertIntegerToHMMSS(previousStopTimeData.departureTime),
+                                        timeUtils.convertIntegerToHHMMSS(stopTime.getArrivalTime()),
+                                        timeUtils.convertIntegerToHHMMSS(previousStopTimeData.departureTime),
                                         previousStopTimeData.stopSequence));
                     }
                 }

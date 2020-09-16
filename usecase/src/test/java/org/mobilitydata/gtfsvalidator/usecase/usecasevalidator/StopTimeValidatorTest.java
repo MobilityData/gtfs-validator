@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateBackwardsTimeTravelForStops;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeIdReferenceInStopTime;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateStopTimeIncreasingDistance;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateStopTimeTripId;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -66,18 +67,21 @@ class StopTimeValidatorTest {
         final ValidateShapeIdReferenceInStopTime mockE034 = mock(ValidateShapeIdReferenceInStopTime.class);
         final ValidateStopTimeTripId mockE037 = mock(ValidateStopTimeTripId.class);
         final ValidateBackwardsTimeTravelForStops mockE046 = mock(ValidateBackwardsTimeTravelForStops.class);
+        final ValidateStopTimeIncreasingDistance mockE054AndW013 = mock(ValidateStopTimeIncreasingDistance.class);
 
         final TimeUtils mockTimeUtils = mock(TimeUtils.class);
 
         final StopTimeValidator underTest =
                 spy(new StopTimeValidator(mockDataRepo, mockResultRepo, mockLogger, mockTimeUtils, mockE034,
-                        mockE037, mockE046));
+                        mockE037, mockE046, mockE054AndW013));
 
         underTest.execute();
 
         verify(mockLogger, times(1)).info("Validating rules: 'E049 - Bad combination of stoptime arrival and departure times`");
         verify(mockLogger, times(1)).info("                  'E034 - `shape_id` not found");
         verify(mockLogger, times(1)).info("                  'E037 - `trip_id` not found");
+        verify(mockLogger, times(1))
+                .info("                  'E054 & W013 - Decreasing travelled distance");
 
         verify(mockDataRepo, times(1)).getStopTimeAll();
         verify(mockStopTime, times(1)).getTripId();
@@ -90,5 +94,6 @@ class StopTimeValidatorTest {
 
         verify(mockE037, times(1)).execute(ArgumentMatchers.eq(mockResultRepo),
                 ArgumentMatchers.eq(mockStopTime), ArgumentMatchers.eq(mockTripCollection));
+        verify(mockE054AndW013, times(1)).execute(innerMap);
     }
 }

@@ -361,4 +361,44 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final StopTooFarFromTripShape toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(final MissingCalendarAndCalendarDateFilesNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final OverlappingTripFrequenciesNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final BlockTripsWithOverlappingStopTimesNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoLangAgencyLangMismatchNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteLongNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteLongNameRouteShortNameCombinationNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DecreasingStopTimeDistanceNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }
