@@ -34,17 +34,17 @@ public class ValidateShapeIncreasingDistance {
     }
 
     /**
-     * @param shapePointCollection map storing shape point information for a given `shape_id`
-     * @param shapeId              id of the shape to process
+     * @param shape   map storing all shape point information for a given `shape_id`
+     * @param shapeId id of the shape to process
      */
-    public void execute(final Map<Integer, ShapePoint> shapePointCollection,
+    public void execute(final Map<Integer, ShapePoint> shape,
                         final String shapeId) {
         // get previous shape point relevant information
         final var previousShapePointData = new Object() {
             Float shapeDistTraveled = null;
             Integer shapePtSequence = null;
         };
-        shapePointCollection.forEach((shapePtSequence, shapePoint) -> {
+        shape.forEach((shapePtSequence, shapePoint) -> {
             final Float shapeDistTraveled = shapePoint.getShapeDistTraveled();
             if (shapeDistTraveled != null && previousShapePointData.shapeDistTraveled != null) {
                 if (previousShapePointData.shapeDistTraveled >= shapeDistTraveled) {
