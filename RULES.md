@@ -371,7 +371,7 @@ Stop times in a trip should have increasing distance.
 
 ### E058 - Decreasing `shape_dist_traveled` in `shapes.txt`
 
-`shape_dist_raveled` should increase along a shape.
+`shape_dist_traveled` should increase along a shape.
 
 #### References:
 * [shapes.txt specification](https://gtfs.org/reference/static#shapestxt)
