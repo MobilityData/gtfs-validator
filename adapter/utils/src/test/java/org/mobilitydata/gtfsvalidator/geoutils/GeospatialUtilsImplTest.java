@@ -31,8 +31,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice.E_052;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_COMPOSITE_KEY_FIRST_VALUE;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class GeospatialUtilsImplTest {
 
@@ -145,6 +144,37 @@ public class GeospatialUtilsImplTest {
         List<StopTooFarFromTripShapeNotice> errorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
         assertEquals(0, errorList.size());
+
+        verify(trip, times(4)).getShapeId();
+        verify(stop1, times(2)).getStopId();
+        verify(stop1, times(2)).getStopLon();
+        verify(stop1, times(2)).getStopLat();
+        verify(stop2, times(2)).getStopLon();
+        verify(stop2, times(2)).getStopLat();
+        verify(stop2, times(2)).getStopId();
+        verify(stopTime1, times(1)).getStopId();
+        verify(stopTime2, times(1)).getStopId();
+        verify(pt1, times(1)).getShapePtLon();
+        verify(pt1, times(1)).getShapePtLat();
+        verify(pt2, times(1)).getShapePtLon();
+        verify(pt2, times(1)).getShapePtLat();
+        verify(pt3, times(1)).getShapePtLon();
+        verify(pt3, times(1)).getShapePtLat();
+        verify(pt4, times(1)).getShapePtLon();
+        verify(pt4, times(1)).getShapePtLat();
+        verify(pt5, times(1)).getShapePtLon();
+        verify(pt5, times(1)).getShapePtLat();
+
+        verifyNoMoreInteractions(trip);
+        verifyNoMoreInteractions(stop1);
+        verifyNoMoreInteractions(stop2);
+        verifyNoMoreInteractions(stopTime1);
+        verifyNoMoreInteractions(stopTime2);
+        verifyNoMoreInteractions(pt1);
+        verifyNoMoreInteractions(pt2);
+        verifyNoMoreInteractions(pt3);
+        verifyNoMoreInteractions(pt4);
+        verifyNoMoreInteractions(pt5);
     }
 
     /**
@@ -255,6 +285,43 @@ public class GeospatialUtilsImplTest {
         assertEquals(E_052, notice.getCode());
         assertEquals("Stop too far from trip shape", notice.getTitle());
         assertEquals(stopId3, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
+
+        verify(trip, times(7)).getShapeId();
+        verify(trip, times(1)).getTripId();
+        verify(stop1, times(2)).getStopId();
+        verify(stop1, times(2)).getStopLon();
+        verify(stop1, times(2)).getStopLat();
+        verify(stop2, times(2)).getStopLon();
+        verify(stop2, times(2)).getStopLat();
+        verify(stop2, times(2)).getStopId();
+        verify(stop3, times(2)).getStopLon();
+        verify(stop3, times(2)).getStopLat();
+        verify(stop3, times(2)).getStopId();
+        verify(stopTime1, times(1)).getStopId();
+        verify(stopTime2, times(1)).getStopId();
+        verify(stopTime3, times(2)).getStopId();
+        verify(stopTime3, times(1)).getStopSequence();
+        verify(pt1, times(1)).getShapePtLon();
+        verify(pt1, times(1)).getShapePtLat();
+        verify(pt2, times(1)).getShapePtLon();
+        verify(pt2, times(1)).getShapePtLat();
+        verify(pt3, times(1)).getShapePtLon();
+        verify(pt3, times(1)).getShapePtLat();
+        verify(pt4, times(1)).getShapePtLon();
+        verify(pt4, times(1)).getShapePtLat();
+        verify(pt5, times(1)).getShapePtLon();
+        verify(pt5, times(1)).getShapePtLat();
+
+        verifyNoMoreInteractions(trip);
+        verifyNoMoreInteractions(stop1);
+        verifyNoMoreInteractions(stop2);
+        verifyNoMoreInteractions(stopTime1);
+        verifyNoMoreInteractions(stopTime2);
+        verifyNoMoreInteractions(pt1);
+        verifyNoMoreInteractions(pt2);
+        verifyNoMoreInteractions(pt3);
+        verifyNoMoreInteractions(pt4);
+        verifyNoMoreInteractions(pt5);
     }
 
     /**
@@ -379,6 +446,44 @@ public class GeospatialUtilsImplTest {
         List<StopTooFarFromTripShapeNotice> trip2ErrorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip1, stopTimes, points, stopPerId, testedCache);
         assertEquals(0, trip2ErrorList.size());
+
+        verify(trip1, times(10)).getShapeId();
+        verify(trip1, times(1)).getTripId();
+        verify(stop1, times(3)).getStopId();
+        verify(stop1, times(3)).getStopLon();
+        verify(stop1, times(3)).getStopLat();
+        verify(stop2, times(3)).getStopLon();
+        verify(stop2, times(3)).getStopLat();
+        verify(stop2, times(3)).getStopId();
+        verify(stop3, times(3)).getStopLon();
+        verify(stop3, times(3)).getStopLat();
+        verify(stop3, times(3)).getStopId();
+        verify(stopTime1, times(2)).getStopId();
+        verify(stopTime2, times(2)).getStopId();
+        verify(stopTime3, times(3)).getStopId();
+        verify(stopTime3, times(1)).getStopSequence();
+        verify(pt1, times(2)).getShapePtLon();
+        verify(pt1, times(2)).getShapePtLat();
+        verify(pt2, times(2)).getShapePtLon();
+        verify(pt2, times(2)).getShapePtLat();
+        verify(pt3, times(2)).getShapePtLon();
+        verify(pt3, times(2)).getShapePtLat();
+        verify(pt4, times(2)).getShapePtLon();
+        verify(pt4, times(2)).getShapePtLat();
+        verify(pt5, times(2)).getShapePtLon();
+        verify(pt5, times(2)).getShapePtLat();
+
+        verifyNoMoreInteractions(trip1);
+        verifyNoMoreInteractions(trip2);
+        verifyNoMoreInteractions(stop1);
+        verifyNoMoreInteractions(stop2);
+        verifyNoMoreInteractions(stopTime1);
+        verifyNoMoreInteractions(stopTime2);
+        verifyNoMoreInteractions(pt1);
+        verifyNoMoreInteractions(pt2);
+        verifyNoMoreInteractions(pt3);
+        verifyNoMoreInteractions(pt4);
+        verifyNoMoreInteractions(pt5);
     }
 
     /**
@@ -451,6 +556,12 @@ public class GeospatialUtilsImplTest {
                 GEO_UTILS.checkStopsWithinTripShape(trip1, stopTimes, null, stopPerId, new HashSet<>());
 
         assertEquals(0, errorList.size());
+
+        verifyNoMoreInteractions(trip1);
+        verifyNoMoreInteractions(stop1);
+        verifyNoMoreInteractions(stop2);
+        verifyNoMoreInteractions(stopTime1);
+        verifyNoMoreInteractions(stopTime2);
     }
 
     /**
@@ -556,6 +667,34 @@ public class GeospatialUtilsImplTest {
                 GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
 
         assertEquals(0, errorList.size());
+
+        verify(stop1, times(1)).getStopLat();
+        verify(stop2, times(1)).getStopLat();
+        verify(stop3, times(1)).getStopLat();
+        verify(stopTime1, times(1)).getStopId();
+        verify(stopTime2, times(1)).getStopId();
+        verify(stopTime3, times(1)).getStopId();
+        verify(pt1, times(1)).getShapePtLon();
+        verify(pt1, times(1)).getShapePtLat();
+        verify(pt2, times(1)).getShapePtLon();
+        verify(pt2, times(1)).getShapePtLat();
+        verify(pt3, times(1)).getShapePtLon();
+        verify(pt3, times(1)).getShapePtLat();
+        verify(pt4, times(1)).getShapePtLon();
+        verify(pt4, times(1)).getShapePtLat();
+        verify(pt5, times(1)).getShapePtLon();
+        verify(pt5, times(1)).getShapePtLat();
+
+        verifyNoMoreInteractions(trip);
+        verifyNoMoreInteractions(stop1);
+        verifyNoMoreInteractions(stop2);
+        verifyNoMoreInteractions(stopTime1);
+        verifyNoMoreInteractions(stopTime2);
+        verifyNoMoreInteractions(pt1);
+        verifyNoMoreInteractions(pt2);
+        verifyNoMoreInteractions(pt3);
+        verifyNoMoreInteractions(pt4);
+        verifyNoMoreInteractions(pt5);
     }
 
     /**
@@ -661,5 +800,36 @@ public class GeospatialUtilsImplTest {
                 GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
 
         assertEquals(0, errorList.size());
+
+        verify(stop1, times(1)).getStopLat();
+        verify(stop1, times(1)).getStopLon();
+        verify(stop2, times(1)).getStopLat();
+        verify(stop2, times(1)).getStopLon();
+        verify(stop3, times(1)).getStopLat();
+        verify(stop3, times(1)).getStopLon();
+        verify(stopTime1, times(1)).getStopId();
+        verify(stopTime2, times(1)).getStopId();
+        verify(stopTime3, times(1)).getStopId();
+        verify(pt1, times(1)).getShapePtLon();
+        verify(pt1, times(1)).getShapePtLat();
+        verify(pt2, times(1)).getShapePtLon();
+        verify(pt2, times(1)).getShapePtLat();
+        verify(pt3, times(1)).getShapePtLon();
+        verify(pt3, times(1)).getShapePtLat();
+        verify(pt4, times(1)).getShapePtLon();
+        verify(pt4, times(1)).getShapePtLat();
+        verify(pt5, times(1)).getShapePtLon();
+        verify(pt5, times(1)).getShapePtLat();
+
+        verifyNoMoreInteractions(trip);
+        verifyNoMoreInteractions(stop1);
+        verifyNoMoreInteractions(stop2);
+        verifyNoMoreInteractions(stopTime1);
+        verifyNoMoreInteractions(stopTime2);
+        verifyNoMoreInteractions(pt1);
+        verifyNoMoreInteractions(pt2);
+        verifyNoMoreInteractions(pt3);
+        verifyNoMoreInteractions(pt4);
+        verifyNoMoreInteractions(pt5);
     }
 }
