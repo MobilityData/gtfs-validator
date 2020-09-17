@@ -147,6 +147,13 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
 
         verifyNoMoreInteractions(stop1);
         verifyNoMoreInteractions(stop2);
+        verifyNoMoreInteractions(stopTime1);
+        verifyNoMoreInteractions(stopTime2);
+        verifyNoMoreInteractions(pt1);
+        verifyNoMoreInteractions(pt2);
+        verifyNoMoreInteractions(pt3);
+        verifyNoMoreInteractions(pt4);
+        verifyNoMoreInteractions(pt5);
         verifyNoMoreInteractions(trip);
         verifyNoMoreInteractions(mockGeoUtil);
 
@@ -304,6 +311,13 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
 
         verifyNoMoreInteractions(stop1);
         verifyNoMoreInteractions(stop2);
+        verifyNoMoreInteractions(stopTime1);
+        verifyNoMoreInteractions(stopTime2);
+        verifyNoMoreInteractions(pt1);
+        verifyNoMoreInteractions(pt2);
+        verifyNoMoreInteractions(pt3);
+        verifyNoMoreInteractions(pt4);
+        verifyNoMoreInteractions(pt5);
         verifyNoMoreInteractions(trip);
         verifyNoMoreInteractions(mockGeoUtil);
 
