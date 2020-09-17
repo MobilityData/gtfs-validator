@@ -808,8 +808,10 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .setAltValue(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART)))
                 .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_PART)))
                 .setOtherCsvFileName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE)))
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
+                .setAltEntityId(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE)))
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_EXPECTED_DISTANCE)))
                 .build()
                 .writeTo(streamGenerator.getStream());
