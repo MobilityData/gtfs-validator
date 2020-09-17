@@ -109,7 +109,7 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
         Shape shapeBuffer = shapeLine.getBuffered(TRIP_BUFFER_DEGREES, shapeLine.getContext());
 
         // Check if each stop is within the buffer polygon
-        stopTimes.forEach((integer, stopTime) -> {
+        stopTimes.forEach((stopSequence, stopTime) -> {
             LocationBase stop = stopsByStopId.get(stopTime.getStopId());
             if (stop == null || stop.getStopLat() == null || stop.getStopLon() == null) {
                 // Lat/lon are optional for location_type 4 - skip to the next stop if they aren't provided
@@ -127,7 +127,6 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
             org.locationtech.spatial4j.shape.Point p = getShapeFactory().pointXY(stop.getStopLon(), stop.getStopLat());
             if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
                 errors.add(new StopTooFarFromTripShapeNotice(
-                        "shapes.txt",
                         stopTime.getStopId(),
                         stopTime.getStopSequence(),
                         trip.getTripId(),

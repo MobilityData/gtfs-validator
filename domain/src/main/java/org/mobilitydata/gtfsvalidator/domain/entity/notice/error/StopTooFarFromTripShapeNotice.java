@@ -7,9 +7,9 @@ import java.io.IOException;
 
 public class StopTooFarFromTripShapeNotice extends ErrorNotice {
 
-    public StopTooFarFromTripShapeNotice(final String filename, final String stopId, final int stopSequence,
+    public StopTooFarFromTripShapeNotice(final String stopId, final int stopSequence,
                                          final String tripId, final String shapeId, final double stopShapeThreshold) {
-        super(filename, E_052,
+        super("shapes.txt", E_052,
                 "Stop too far from trip shape",
                 "stop_id " + stopId + " is more than " + stopShapeThreshold + " meters from shape_id " + shapeId +
                         " for trip_id " + tripId + " at stop_sequence " + stopSequence,

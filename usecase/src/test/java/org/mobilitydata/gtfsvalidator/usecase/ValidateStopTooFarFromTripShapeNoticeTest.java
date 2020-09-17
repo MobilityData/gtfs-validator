@@ -244,7 +244,6 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
         final GeospatialUtils mockGeoUtil = mock(GeospatialUtils.class);
         Set<String> testedCache = new HashSet<>();
         StopTooFarFromTripShapeNotice stopTooFarFromTripShapeNotice = new StopTooFarFromTripShapeNotice(
-                "shapes.txt",
                 stopId3,
                 3,
                 trip.getTripId(),
