@@ -2219,6 +2219,10 @@ class ProtobufNoticeExporterTest {
                 ArgumentMatchers.eq("1234"));
         verify(mockBuilder, times(1)).setOtherCsvKeyName(
                 ArgumentMatchers.eq("A"));
+        verify(mockBuilder, times(1)).setAltEntityName(
+                ArgumentMatchers.eq("shape_id"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("ZYX"));
         verify(mockBuilder, times(1)).setEntityValue(
                 ArgumentMatchers.eq(String.valueOf(GeospatialUtils.TRIP_BUFFER_METERS)));
 

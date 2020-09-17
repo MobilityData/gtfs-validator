@@ -802,7 +802,6 @@ public class ProtobufNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(final StopTooFarFromTripShape toExport) throws IOException {
-        // TODO - Needs review - Are these right?
         protoBuilder.clear()
                 .setCsvFileName(toExport.getFilename())
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
