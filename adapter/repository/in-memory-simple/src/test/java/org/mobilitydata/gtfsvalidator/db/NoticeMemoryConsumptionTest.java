@@ -16,7 +16,7 @@ public class NoticeMemoryConsumptionTest {
     // used to provide a 10% safety margin to avoid instability due to the behavior of the garbage collector
     private static final float SAFETY_BUFFER_FACTOR_10_PERCENT = 1.10f;
     // used to provide a 11% safety margin to avoid instability due to the behavior of the garbage collector
-    private static final float SAFETY_BUFFER_FACTOR_11_PERCENT = 1.11f;
+    private static final float SAFETY_BUFFER_FACTOR_15_PERCENT = 1.15f;
 
     private void generateNotices(ValidationResultRepository resultRepository, int numberOfNotices) {
         for (int i = 0; i < numberOfNotices; i++) {
@@ -72,7 +72,7 @@ public class NoticeMemoryConsumptionTest {
     public void memoryLimitTest_100notices() {
         memoryLimitTest(100,
                 10_000_000,
-                SAFETY_BUFFER_FACTOR_11_PERCENT);
+                SAFETY_BUFFER_FACTOR_15_PERCENT);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class NoticeMemoryConsumptionTest {
     public void memoryLimitTest_1000notices() {
         memoryLimitTest(1000,
                 10_000_000,
-                SAFETY_BUFFER_FACTOR_11_PERCENT);
+                SAFETY_BUFFER_FACTOR_15_PERCENT);
     }
 
     @Test
