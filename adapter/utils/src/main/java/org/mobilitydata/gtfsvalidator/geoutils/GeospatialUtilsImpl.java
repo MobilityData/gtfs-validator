@@ -80,19 +80,19 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
     /**
      * Returns a list of E052 errors for the given input, one for each stop that is too far from the trip shapePoints
      *
-     * @param trip        Trip for this GTFS trip
-     * @param stopTimes   a map of StopTimes for a trip, sorted by stop_sequence
-     * @param shapePoints a map of ShapePoints for a trip, sorted by shape_pt_sequence
-     * @param stops       a map of all stops (keyed on stop_id), needed to obtain the latitude and longitude for each stop
-     * @param testedCache a cache for previously tested shape_id and stop_id pairs (keyed on shape_id+stop_id). If the
-     *                    combination of shape_id and stop_id appears in this set, we shouldn't test it again. Shapes
-     *                    and stops tested in this method execution will be added to this testedCache.
+     * @param trip          Trip for this GTFS trip
+     * @param stopTimes     a map of StopTimes for a trip, sorted by stop_sequence
+     * @param shapePoints   a map of ShapePoints for a trip, sorted by shape_pt_sequence
+     * @param stopsByStopId a map of all stops (keyed on stop_id), needed to obtain the latitude and longitude for each stop
+     * @param testedCache   a cache for previously tested shape_id and stop_id pairs (keyed on shape_id+stop_id). If the
+     *                      combination of shape_id and stop_id appears in this set, we shouldn't test it again. Shapes
+     *                      and stops tested in this method execution will be added to this testedCache.
      * @return a list of E052 errors, one for each stop that is too far from the trip shapePoints
      */
     public List<StopTooFarFromTripShapeNotice> checkStopsWithinTripShape(final Trip trip,
                                                                          final SortedMap<Integer, StopTime> stopTimes,
                                                                          final SortedMap<Integer, ShapePoint> shapePoints,
-                                                                         final Map<String, LocationBase> stops,
+                                                                         final Map<String, LocationBase> stopsByStopId,
                                                                          final Set<String> testedCache) {
         List<StopTooFarFromTripShapeNotice> errors = new ArrayList<>();
         if (trip == null || stopTimes == null || stopTimes.isEmpty() || shapePoints == null || shapePoints.isEmpty()) {
@@ -110,7 +110,7 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
 
         // Check if each stop is within the buffer polygon
         stopTimes.forEach((integer, stopTime) -> {
-            LocationBase stop = stops.get(stopTime.getStopId());
+            LocationBase stop = stopsByStopId.get(stopTime.getStopId());
             if (stop == null || stop.getStopLat() == null || stop.getStopLon() == null) {
                 // Lat/lon are optional for location_type 4 - skip to the next stop if they aren't provided
                 return;
