@@ -89,11 +89,11 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
      *                    and stops tested in this method execution will be added to this testedCache.
      * @return a list of E052 errors, one for each stop that is too far from the trip shapePoints
      */
-    public List<StopTooFarFromTripShapeNotice> checkStopsWithinTripShape(Trip trip,
-                                                                         SortedMap<Integer, StopTime> stopTimes,
-                                                                         SortedMap<Integer, ShapePoint> shapePoints,
-                                                                         Map<String, LocationBase> stops,
-                                                                         Set<String> testedCache) {
+    public List<StopTooFarFromTripShapeNotice> checkStopsWithinTripShape(final Trip trip,
+                                                                         final SortedMap<Integer, StopTime> stopTimes,
+                                                                         final SortedMap<Integer, ShapePoint> shapePoints,
+                                                                         final Map<String, LocationBase> stops,
+                                                                         final Set<String> testedCache) {
         List<StopTooFarFromTripShapeNotice> errors = new ArrayList<>();
         if (trip == null || stopTimes == null || stopTimes.isEmpty() || shapePoints == null || shapePoints.isEmpty()) {
             // Nothing to do - return empty list
