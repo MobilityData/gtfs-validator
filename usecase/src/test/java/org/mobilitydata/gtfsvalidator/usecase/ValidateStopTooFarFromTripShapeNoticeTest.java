@@ -253,8 +253,8 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
         StopTooFarFromTripShapeNotice stopTooFarFromTripShapeNotice = new StopTooFarFromTripShapeNotice(
                 stopId3,
                 3,
-                trip.getTripId(),
-                trip.getShapeId(),
+                "trip1",
+                "shape1",
                 TRIP_BUFFER_METERS);
         // Mock a call to the GeospatialUtils implementation and an error response
         when(mockGeoUtil.checkStopsWithinTripShape(trip,
@@ -299,6 +299,13 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
         assertEquals("shape1", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_THIRD_VALUE));
         assertEquals("stop_sequence", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FOURTH_PART));
         assertEquals(3, noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FOURTH_VALUE));
+
+        verify(trip, times(2)).getShapeId();
+
+        verifyNoMoreInteractions(stop1);
+        verifyNoMoreInteractions(stop2);
+        verifyNoMoreInteractions(trip);
+        verifyNoMoreInteractions(mockGeoUtil);
 
         verifyNoMoreInteractions(mockResultRepo);
     }
