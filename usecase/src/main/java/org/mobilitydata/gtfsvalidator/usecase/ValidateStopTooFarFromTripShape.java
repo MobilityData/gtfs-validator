@@ -63,13 +63,13 @@ public class ValidateStopTooFarFromTripShape {
     public void execute() {
         logger.info("Validating rule 'E052 - Stop too far from trip shape'");
 
-        List<StopTooFarFromTripShape> errors = new ArrayList<>();
+        final List<StopTooFarFromTripShape> errors = new ArrayList<>();
 
         // Cache for previously tested shape_id and stop_id pairs - we don't need to test them more than once
-        Set<String> testedCache = new HashSet<>();
+        final Set<String> testedCache = new HashSet<>();
 
         dataRepo.getStopTimeAll().forEach((tripId, tripStopTimes) -> {
-            Trip trip = dataRepo.getTripById(tripId);
+            final Trip trip = dataRepo.getTripById(tripId);
             if (trip == null || trip.getShapeId() == null) {
                 // No shape for this trip - skip to the next trip
                 return;
@@ -83,7 +83,6 @@ public class ValidateStopTooFarFromTripShape {
             );
             errors.addAll(errorsForTrip);
         });
-
         errors.forEach(resultRepo::addNotice);
     }
 }
