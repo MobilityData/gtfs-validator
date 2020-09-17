@@ -53,14 +53,18 @@ class ValidateShapeIncreasingDistanceTest {
         shape.put(4, fourthShapePoint);
 
         final String shapeId = "shape id ";
-        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance(mockResultRepo);
+        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance();
 
-        underTest.execute(shape, shapeId);
+        underTest.execute(shape, shapeId, mockResultRepo);
 
-        verify(firstShapePoint, times(1)).getShapeDistTraveled();
-        verify(secondShapePoint, times(1)).getShapeDistTraveled();
-        verify(thirdShapePoint, times(1)).getShapeDistTraveled();
-        verify(fourthShapePoint, times(1)).getShapeDistTraveled();
+        verify(firstShapePoint, times(2)).getShapeDistTraveled();
+        verify(firstShapePoint, times(1)).getShapePtSequence();
+        verify(secondShapePoint, times(2)).getShapeDistTraveled();
+        verify(secondShapePoint, times(1)).getShapePtSequence();
+        verify(thirdShapePoint, times(2)).getShapeDistTraveled();
+        verify(thirdShapePoint, times(1)).getShapePtSequence();
+        verify(fourthShapePoint, times(2)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(1)).getShapePtSequence();
 
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(firstShapePoint, secondShapePoint, thirdShapePoint,
@@ -75,12 +79,16 @@ class ValidateShapeIncreasingDistanceTest {
 
         final ShapePoint firstShapePoint = mock(ShapePoint.class);
         when(firstShapePoint.getShapeDistTraveled()).thenReturn(5f);
+        when(firstShapePoint.getShapePtSequence()).thenReturn(1);
         final ShapePoint secondShapePoint = mock(ShapePoint.class);
         when(secondShapePoint.getShapeDistTraveled()).thenReturn(null);
+        when(secondShapePoint.getShapePtSequence()).thenReturn(2);
         final ShapePoint thirdShapePoint = mock(ShapePoint.class);
         when(thirdShapePoint.getShapeDistTraveled()).thenReturn(null);
+        when(thirdShapePoint.getShapePtSequence()).thenReturn(3);
         final ShapePoint fourthShapePoint = mock(ShapePoint.class);
         when(fourthShapePoint.getShapeDistTraveled()).thenReturn(20f);
+        when(fourthShapePoint.getShapePtSequence()).thenReturn(4);
 
         final TreeMap<Integer, ShapePoint> shape = new TreeMap<>();
         shape.put(1, firstShapePoint);
@@ -89,15 +97,17 @@ class ValidateShapeIncreasingDistanceTest {
         shape.put(4, fourthShapePoint);
 
         final String shapeId = "shape id";
-        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance(mockResultRepo);
+        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance();
 
-        underTest.execute(shape, shapeId);
+        underTest.execute(shape, shapeId, mockResultRepo);
 
 
-        verify(firstShapePoint, times(1)).getShapeDistTraveled();
+        verify(firstShapePoint, times(2)).getShapeDistTraveled();
+        verify(firstShapePoint, times(1)).getShapePtSequence();
         verify(secondShapePoint, times(1)).getShapeDistTraveled();
         verify(thirdShapePoint, times(1)).getShapeDistTraveled();
-        verify(fourthShapePoint, times(1)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(2)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(1)).getShapePtSequence();
 
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(firstShapePoint, secondShapePoint, thirdShapePoint,
@@ -112,12 +122,16 @@ class ValidateShapeIncreasingDistanceTest {
 
         final ShapePoint firstShapePoint = mock(ShapePoint.class);
         when(firstShapePoint.getShapeDistTraveled()).thenReturn(5f);
+        when(firstShapePoint.getShapePtSequence()).thenReturn(1);
         final ShapePoint secondShapePoint = mock(ShapePoint.class);
         when(secondShapePoint.getShapeDistTraveled()).thenReturn(10f);
+        when(secondShapePoint.getShapePtSequence()).thenReturn(2);
         final ShapePoint thirdShapePoint = mock(ShapePoint.class);
         when(thirdShapePoint.getShapeDistTraveled()).thenReturn(15f);
+        when(thirdShapePoint.getShapePtSequence()).thenReturn(3);
         final ShapePoint fourthShapePoint = mock(ShapePoint.class);
         when(fourthShapePoint.getShapeDistTraveled()).thenReturn(13f);
+        when(fourthShapePoint.getShapePtSequence()).thenReturn(4);
 
         final TreeMap<Integer, ShapePoint> shape = new TreeMap<>();
         shape.put(1, firstShapePoint);
@@ -126,14 +140,18 @@ class ValidateShapeIncreasingDistanceTest {
         shape.put(4, fourthShapePoint);
 
         final String shapeId = "shape id";
-        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance(mockResultRepo);
+        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance();
 
-        underTest.execute(shape, shapeId);
+        underTest.execute(shape, shapeId, mockResultRepo);
 
-        verify(firstShapePoint, times(1)).getShapeDistTraveled();
-        verify(secondShapePoint, times(1)).getShapeDistTraveled();
-        verify(thirdShapePoint, times(1)).getShapeDistTraveled();
-        verify(fourthShapePoint, times(1)).getShapeDistTraveled();
+        verify(firstShapePoint, times(2)).getShapeDistTraveled();
+        verify(firstShapePoint, times(1)).getShapePtSequence();
+        verify(secondShapePoint, times(2)).getShapeDistTraveled();
+        verify(secondShapePoint, times(1)).getShapePtSequence();
+        verify(thirdShapePoint, times(2)).getShapeDistTraveled();
+        verify(thirdShapePoint, times(1)).getShapePtSequence();
+        verify(fourthShapePoint, times(2)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(1)).getShapePtSequence();
 
         final ArgumentCaptor<DecreasingShapeDistanceNotice> captor =
                 ArgumentCaptor.forClass(DecreasingShapeDistanceNotice.class);
@@ -165,12 +183,16 @@ class ValidateShapeIncreasingDistanceTest {
 
         final ShapePoint firstShapePoint = mock(ShapePoint.class);
         when(firstShapePoint.getShapeDistTraveled()).thenReturn(5f);
+        when(firstShapePoint.getShapePtSequence()).thenReturn(1);
         final ShapePoint secondShapePoint = mock(ShapePoint.class);
         when(secondShapePoint.getShapeDistTraveled()).thenReturn(null);
+        when(secondShapePoint.getShapePtSequence()).thenReturn(2);
         final ShapePoint thirdShapePoint = mock(ShapePoint.class);
         when(thirdShapePoint.getShapeDistTraveled()).thenReturn(null);
+        when(thirdShapePoint.getShapePtSequence()).thenReturn(3);
         final ShapePoint fourthShapePoint = mock(ShapePoint.class);
         when(fourthShapePoint.getShapeDistTraveled()).thenReturn(2f);
+        when(fourthShapePoint.getShapePtSequence()).thenReturn(4);
 
         final TreeMap<Integer, ShapePoint> shape = new TreeMap<>();
         shape.put(1, firstShapePoint);
@@ -179,14 +201,16 @@ class ValidateShapeIncreasingDistanceTest {
         shape.put(4, fourthShapePoint);
 
         final String shapeId = "shape id";
-        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance(mockResultRepo);
+        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance();
 
-        underTest.execute(shape, shapeId);
+        underTest.execute(shape, shapeId, mockResultRepo);
 
-        verify(firstShapePoint, times(1)).getShapeDistTraveled();
+        verify(firstShapePoint, times(2)).getShapeDistTraveled();
+        verify(firstShapePoint, times(1)).getShapePtSequence();
         verify(secondShapePoint, times(1)).getShapeDistTraveled();
         verify(thirdShapePoint, times(1)).getShapeDistTraveled();
-        verify(fourthShapePoint, times(1)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(2)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(1)).getShapePtSequence();
 
         final ArgumentCaptor<DecreasingShapeDistanceNotice> captor =
                 ArgumentCaptor.forClass(DecreasingShapeDistanceNotice.class);
@@ -218,12 +242,16 @@ class ValidateShapeIncreasingDistanceTest {
 
         final ShapePoint firstShapePoint = mock(ShapePoint.class);
         when(firstShapePoint.getShapeDistTraveled()).thenReturn(5f);
+        when(firstShapePoint.getShapePtSequence()).thenReturn(1);
         final ShapePoint secondShapePoint = mock(ShapePoint.class);
         when(secondShapePoint.getShapeDistTraveled()).thenReturn(10f);
+        when(secondShapePoint.getShapePtSequence()).thenReturn(2);
         final ShapePoint thirdShapePoint = mock(ShapePoint.class);
         when(thirdShapePoint.getShapeDistTraveled()).thenReturn(10f);
+        when(thirdShapePoint.getShapePtSequence()).thenReturn(3);
         final ShapePoint fourthShapePoint = mock(ShapePoint.class);
         when(fourthShapePoint.getShapeDistTraveled()).thenReturn(22f);
+        when(fourthShapePoint.getShapePtSequence()).thenReturn(4);
 
         final TreeMap<Integer, ShapePoint> shape = new TreeMap<>();
         shape.put(1, firstShapePoint);
@@ -232,14 +260,18 @@ class ValidateShapeIncreasingDistanceTest {
         shape.put(4, fourthShapePoint);
 
         final String shapeId = "shape id";
-        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance(mockResultRepo);
+        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance();
 
-        underTest.execute(shape, shapeId);
+        underTest.execute(shape, shapeId, mockResultRepo);
 
-        verify(firstShapePoint, times(1)).getShapeDistTraveled();
-        verify(secondShapePoint, times(1)).getShapeDistTraveled();
-        verify(thirdShapePoint, times(1)).getShapeDistTraveled();
-        verify(fourthShapePoint, times(1)).getShapeDistTraveled();
+        verify(firstShapePoint, times(2)).getShapeDistTraveled();
+        verify(firstShapePoint, times(1)).getShapePtSequence();
+        verify(secondShapePoint, times(2)).getShapeDistTraveled();
+        verify(secondShapePoint, times(1)).getShapePtSequence();
+        verify(thirdShapePoint, times(2)).getShapeDistTraveled();
+        verify(thirdShapePoint, times(1)).getShapePtSequence();
+        verify(fourthShapePoint, times(2)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(1)).getShapePtSequence();
 
         final ArgumentCaptor<DecreasingShapeDistanceNotice> captor =
                 ArgumentCaptor.forClass(DecreasingShapeDistanceNotice.class);
@@ -271,12 +303,16 @@ class ValidateShapeIncreasingDistanceTest {
 
         final ShapePoint firstShapePoint = mock(ShapePoint.class);
         when(firstShapePoint.getShapeDistTraveled()).thenReturn(5f);
+        when(firstShapePoint.getShapePtSequence()).thenReturn(1);
         final ShapePoint secondShapePoint = mock(ShapePoint.class);
         when(secondShapePoint.getShapeDistTraveled()).thenReturn(null);
+        when(secondShapePoint.getShapePtSequence()).thenReturn(2);
         final ShapePoint thirdShapePoint = mock(ShapePoint.class);
         when(thirdShapePoint.getShapeDistTraveled()).thenReturn(null);
+        when(thirdShapePoint.getShapePtSequence()).thenReturn(3);
         final ShapePoint fourthShapePoint = mock(ShapePoint.class);
         when(fourthShapePoint.getShapeDistTraveled()).thenReturn(5f);
+        when(fourthShapePoint.getShapePtSequence()).thenReturn(4);
 
         final TreeMap<Integer, ShapePoint> shape = new TreeMap<>();
         shape.put(1, firstShapePoint);
@@ -285,14 +321,16 @@ class ValidateShapeIncreasingDistanceTest {
         shape.put(4, fourthShapePoint);
 
         final String shapeId = "shape id";
-        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance(mockResultRepo);
+        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance();
 
-        underTest.execute(shape, shapeId);
+        underTest.execute(shape, shapeId, mockResultRepo);
 
-        verify(firstShapePoint, times(1)).getShapeDistTraveled();
+        verify(firstShapePoint, times(2)).getShapeDistTraveled();
+        verify(firstShapePoint, times(1)).getShapePtSequence();
         verify(secondShapePoint, times(1)).getShapeDistTraveled();
         verify(thirdShapePoint, times(1)).getShapeDistTraveled();
-        verify(fourthShapePoint, times(1)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(2)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(1)).getShapePtSequence();
 
         final ArgumentCaptor<DecreasingShapeDistanceNotice> captor =
                 ArgumentCaptor.forClass(DecreasingShapeDistanceNotice.class);
@@ -324,12 +362,16 @@ class ValidateShapeIncreasingDistanceTest {
 
         final ShapePoint firstShapePoint = mock(ShapePoint.class);
         when(firstShapePoint.getShapeDistTraveled()).thenReturn(10f);
+        when(firstShapePoint.getShapePtSequence()).thenReturn(1);
         final ShapePoint secondShapePoint = mock(ShapePoint.class);
         when(secondShapePoint.getShapeDistTraveled()).thenReturn(5f);
+        when(secondShapePoint.getShapePtSequence()).thenReturn(2);
         final ShapePoint thirdShapePoint = mock(ShapePoint.class);
         when(thirdShapePoint.getShapeDistTraveled()).thenReturn(15f);
+        when(thirdShapePoint.getShapePtSequence()).thenReturn(3);
         final ShapePoint fourthShapePoint = mock(ShapePoint.class);
         when(fourthShapePoint.getShapeDistTraveled()).thenReturn(20f);
+        when(fourthShapePoint.getShapePtSequence()).thenReturn(4);
 
         final TreeMap<Integer, ShapePoint> shape = new TreeMap<>();
         shape.put(1, firstShapePoint);
@@ -338,14 +380,18 @@ class ValidateShapeIncreasingDistanceTest {
         shape.put(4, fourthShapePoint);
 
         final String shapeId = "shape id";
-        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance(mockResultRepo);
+        final ValidateShapeIncreasingDistance underTest = new ValidateShapeIncreasingDistance();
 
-        underTest.execute(shape, shapeId);
+        underTest.execute(shape, shapeId, mockResultRepo);
 
-        verify(firstShapePoint, times(1)).getShapeDistTraveled();
-        verify(secondShapePoint, times(1)).getShapeDistTraveled();
-        verify(thirdShapePoint, times(1)).getShapeDistTraveled();
-        verify(fourthShapePoint, times(1)).getShapeDistTraveled();
+        verify(firstShapePoint, times(2)).getShapeDistTraveled();
+        verify(firstShapePoint, times(1)).getShapePtSequence();
+        verify(secondShapePoint, times(2)).getShapeDistTraveled();
+        verify(secondShapePoint, times(1)).getShapePtSequence();
+        verify(thirdShapePoint, times(2)).getShapeDistTraveled();
+        verify(thirdShapePoint, times(1)).getShapePtSequence();
+        verify(fourthShapePoint, times(2)).getShapeDistTraveled();
+        verify(fourthShapePoint, times(1)).getShapePtSequence();
 
         final ArgumentCaptor<DecreasingShapeDistanceNotice> captor =
                 ArgumentCaptor.forClass(DecreasingShapeDistanceNotice.class);

@@ -65,7 +65,7 @@ public class ShapeBasedCrossValidator {
                             .get()
                             .getShapeId();
                     validateShapeUsage.execute(resultRepo, shapeId, tripShapeIdCollection);
-                    validateShapeIncreasingDistance.execute(shape, shapeId);
+                    validateShapeIncreasingDistance.execute(shape, shapeId, resultRepo);
                 });
     }
 }

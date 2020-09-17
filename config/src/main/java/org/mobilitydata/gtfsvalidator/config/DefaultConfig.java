@@ -420,6 +420,6 @@ public class DefaultConfig {
                 resultRepo,
                 logger,
                 new ValidateShapeUsage(),
-                new ValidateShapeIncreasingDistance(resultRepo));
+                new ValidateShapeIncreasingDistance());
     }
 }

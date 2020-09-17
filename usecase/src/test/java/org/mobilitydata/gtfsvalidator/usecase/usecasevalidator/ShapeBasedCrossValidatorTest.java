@@ -78,6 +78,7 @@ class ShapeBasedCrossValidatorTest {
                 ArgumentMatchers.eq("shape id"), ArgumentMatchers.eq(mockTripShapeIdCollection));
 
         verify(mockE058, times(1)).execute(
-                ArgumentMatchers.eq(innerMap), ArgumentMatchers.eq("shape id"));
+                ArgumentMatchers.eq(innerMap), ArgumentMatchers.eq("shape id"),
+                ArgumentMatchers.eq(mockResultRepo));
     }
 }

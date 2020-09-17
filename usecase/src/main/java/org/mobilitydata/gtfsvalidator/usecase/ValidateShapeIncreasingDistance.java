@@ -20,32 +20,34 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DecreasingShapeDistanceNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This use case checks that `shape_dist_traveled` increase must increase along with `shape_pt_sequence` of rows from
  * GTFS shapes.txt.
  */
 public class ValidateShapeIncreasingDistance {
-    final ValidationResultRepository resultRepo;
-
-    public ValidateShapeIncreasingDistance(final ValidationResultRepository resultRepo) {
-        this.resultRepo = resultRepo;
-    }
 
     /**
      * @param shape   map storing all shape point information for a given `shape_id`
      * @param shapeId id of the shape to process
      */
     public void execute(final Map<Integer, ShapePoint> shape,
-                        final String shapeId) {
+                        final String shapeId,
+                        final ValidationResultRepository resultRepo) {
         // get previous shape point relevant information
         final var previousShapePointData = new Object() {
             Float shapeDistTraveled = null;
             Integer shapePtSequence = null;
         };
-        shape.forEach((shapePtSequence, shapePoint) -> {
+        final List<ShapePoint> shapePointCollection = shape.values().stream()
+                .filter(shapePoint -> shapePoint.getShapeDistTraveled() != null)
+                .collect(Collectors.toList());
+        shapePointCollection.forEach(shapePoint -> {
             final Float shapeDistTraveled = shapePoint.getShapeDistTraveled();
+            final int shapePtSequence = shapePoint.getShapePtSequence();
             if (shapeDistTraveled != null && previousShapePointData.shapeDistTraveled != null) {
                 if (previousShapePointData.shapeDistTraveled >= shapeDistTraveled) {
                     resultRepo.addNotice(
@@ -58,11 +60,11 @@ public class ValidateShapeIncreasingDistance {
                     );
                 }
             }
-            // to exclude any row where field `shape_dist_traveled` is not provided
-            if (shapeDistTraveled != null) {
-                previousShapePointData.shapeDistTraveled = shapeDistTraveled;
-                previousShapePointData.shapePtSequence = shapePtSequence;
-            }
+            previousShapePointData.shapeDistTraveled = shapeDistTraveled;
+            previousShapePointData.shapePtSequence = shapePtSequence;
+//            // to exclude any row where field `shape_dist_traveled` is not provided
+//            if (shapeDistTraveled != null) {
+//            }
         });
     }
 }
