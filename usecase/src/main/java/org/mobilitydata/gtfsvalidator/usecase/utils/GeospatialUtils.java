@@ -20,7 +20,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShapeNotice;
 
 import java.util.List;
 import java.util.Map;
@@ -53,9 +53,9 @@ public interface GeospatialUtils {
      *                    and stops tested in this method execution will be added to this testedCache.
      * @return a list of E052 errors, one for each stop that is too far from the trip shape
      */
-    List<StopTooFarFromTripShape> checkStopsWithinTripShape(Trip trip,
-                                                            SortedMap<Integer, StopTime> stopTimes,
-                                                            SortedMap<Integer, ShapePoint> shape,
-                                                            Map<String, LocationBase> stops,
-                                                            Set<String> testedCache);
+    List<StopTooFarFromTripShapeNotice> checkStopsWithinTripShape(Trip trip,
+                                                                  SortedMap<Integer, StopTime> stopTimes,
+                                                                  SortedMap<Integer, ShapePoint> shape,
+                                                                  Map<String, LocationBase> stops,
+                                                                  Set<String> testedCache);
 }

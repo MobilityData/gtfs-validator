@@ -358,7 +358,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final StopTooFarFromTripShape toExport) throws IOException {
+    public void export(final StopTooFarFromTripShapeNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 

@@ -28,7 +28,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.StopOrPlatform;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShapeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 
 import java.util.*;
@@ -89,12 +89,12 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
      *                    and stops tested in this method execution will be added to this testedCache.
      * @return a list of E052 errors, one for each stop that is too far from the trip shapePoints
      */
-    public List<StopTooFarFromTripShape> checkStopsWithinTripShape(Trip trip,
-                                                                   SortedMap<Integer, StopTime> stopTimes,
-                                                                   SortedMap<Integer, ShapePoint> shapePoints,
-                                                                   Map<String, LocationBase> stops,
-                                                                   Set<String> testedCache) {
-        List<StopTooFarFromTripShape> errors = new ArrayList<>();
+    public List<StopTooFarFromTripShapeNotice> checkStopsWithinTripShape(Trip trip,
+                                                                         SortedMap<Integer, StopTime> stopTimes,
+                                                                         SortedMap<Integer, ShapePoint> shapePoints,
+                                                                         Map<String, LocationBase> stops,
+                                                                         Set<String> testedCache) {
+        List<StopTooFarFromTripShapeNotice> errors = new ArrayList<>();
         if (trip == null || stopTimes == null || stopTimes.isEmpty() || shapePoints == null || shapePoints.isEmpty()) {
             // Nothing to do - return empty list
             return errors;
@@ -126,7 +126,7 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
             testedCache.add(trip.getShapeId() + stop.getStopId());
             org.locationtech.spatial4j.shape.Point p = getShapeFactory().pointXY(stop.getStopLon(), stop.getStopLat());
             if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
-                errors.add(new StopTooFarFromTripShape(
+                errors.add(new StopTooFarFromTripShapeNotice(
                         "shapes.txt",
                         stopTime.getStopId(),
                         stopTime.getStopSequence(),

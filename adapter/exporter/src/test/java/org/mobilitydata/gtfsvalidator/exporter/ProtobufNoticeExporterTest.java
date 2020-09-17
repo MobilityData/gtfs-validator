@@ -2198,7 +2198,7 @@ class ProtobufNoticeExporterTest {
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
         underTest.export(
-                new StopTooFarFromTripShape(
+                new StopTooFarFromTripShapeNotice(
                         "shapes.txt",
                         "1234",
                         1,

@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShapeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
@@ -63,7 +63,7 @@ public class ValidateStopTooFarFromTripShape {
     public void execute() {
         logger.info("Validating rule 'E052 - Stop too far from trip shape'");
 
-        final List<StopTooFarFromTripShape> errors = new ArrayList<>();
+        final List<StopTooFarFromTripShapeNotice> errors = new ArrayList<>();
 
         // Cache for previously tested shape_id and stop_id pairs - we don't need to test them more than once
         final Set<String> testedCache = new HashSet<>();
@@ -75,7 +75,7 @@ public class ValidateStopTooFarFromTripShape {
                 return;
             }
             // Check for possible E052 errors for this combination of stop times and shape points for this trip_id
-            List<StopTooFarFromTripShape> errorsForTrip = geospatialUtils.checkStopsWithinTripShape(trip,
+            List<StopTooFarFromTripShapeNotice> errorsForTrip = geospatialUtils.checkStopsWithinTripShape(trip,
                     tripStopTimes,
                     dataRepo.getShapeById(trip.getShapeId()),
                     dataRepo.getStopAll(),

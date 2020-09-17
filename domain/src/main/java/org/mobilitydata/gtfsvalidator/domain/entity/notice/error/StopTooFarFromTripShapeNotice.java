@@ -5,10 +5,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class StopTooFarFromTripShape extends ErrorNotice {
+public class StopTooFarFromTripShapeNotice extends ErrorNotice {
 
-    public StopTooFarFromTripShape(final String filename, final String stopId, final int stopSequence,
-                                   final String tripId, final String shapeId, final double stopShapeThreshold) {
+    public StopTooFarFromTripShapeNotice(final String filename, final String stopId, final int stopSequence,
+                                         final String tripId, final String shapeId, final double stopShapeThreshold) {
         super(filename, E_052,
                 "Stop too far from trip shape",
                 "stop_id " + stopId + " is more than " + stopShapeThreshold + " meters from shape_id " + shapeId +

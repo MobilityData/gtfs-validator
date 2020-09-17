@@ -24,7 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.StopOrPlatform;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShapeNotice;
 
 import java.util.*;
 
@@ -142,7 +142,7 @@ public class GeospatialUtilsImplTest {
         // Entities are keyed on shape_pt_sequence of GTFS file shapes.txt
         SortedMap<Integer, ShapePoint> points = new TreeMap<>(Map.of(1, pt1, 2, pt2, 3, pt3, 4, pt4, 5, pt5));
 
-        List<StopTooFarFromTripShape> errorList =
+        List<StopTooFarFromTripShapeNotice> errorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
         assertEquals(0, errorList.size());
     }
@@ -246,12 +246,12 @@ public class GeospatialUtilsImplTest {
         // Entities are keyed on shape_pt_sequence of GTFS file shapes.txt
         SortedMap<Integer, ShapePoint> points = new TreeMap<>(Map.of(1, pt1, 2, pt2, 3, pt3, 4, pt4, 5, pt5));
 
-        List<StopTooFarFromTripShape> errorList =
+        List<StopTooFarFromTripShapeNotice> errorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
 
         assertEquals(1, errorList.size());
 
-        StopTooFarFromTripShape notice = errorList.get(0);
+        StopTooFarFromTripShapeNotice notice = errorList.get(0);
         assertEquals(E_052, notice.getCode());
         assertEquals("Stop too far from trip shape", notice.getTitle());
         assertEquals(stopId3, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
@@ -365,18 +365,18 @@ public class GeospatialUtilsImplTest {
         // The testedCache will get populated with combination of each tested shapeId+stopId
         Set<String> testedCache = new HashSet<>();
 
-        List<StopTooFarFromTripShape> trip1ErrorList =
+        List<StopTooFarFromTripShapeNotice> trip1ErrorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip1, stopTimes, points, stopPerId, testedCache);
 
         assertEquals(1, trip1ErrorList.size());
 
-        StopTooFarFromTripShape notice = trip1ErrorList.get(0);
+        StopTooFarFromTripShapeNotice notice = trip1ErrorList.get(0);
         assertEquals(E_052, notice.getCode());
         assertEquals("Stop too far from trip shape", notice.getTitle());
         assertEquals(stopId3, notice.getNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE));
 
         // Validate the 2nd trip - no new errors should be added, because the shapeId+stopId combination has already been flagged
-        List<StopTooFarFromTripShape> trip2ErrorList =
+        List<StopTooFarFromTripShapeNotice> trip2ErrorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip1, stopTimes, points, stopPerId, testedCache);
         assertEquals(0, trip2ErrorList.size());
     }
@@ -447,7 +447,7 @@ public class GeospatialUtilsImplTest {
         // Map containing Stop entities. Entities are keyed on GTFS stops.txt stop_id
         final Map<String, LocationBase> stopPerId = new HashMap<>(Map.of(stopId1, stop1, stopId2, stop2, stopId3, stop3));
 
-        List<StopTooFarFromTripShape> errorList =
+        List<StopTooFarFromTripShapeNotice> errorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip1, stopTimes, null, stopPerId, new HashSet<>());
 
         assertEquals(0, errorList.size());
@@ -552,7 +552,7 @@ public class GeospatialUtilsImplTest {
         // Entities are keyed on shape_pt_sequence of GTFS file shapes.txt
         SortedMap<Integer, ShapePoint> points = new TreeMap<>(Map.of(1, pt1, 2, pt2, 3, pt3, 4, pt4, 5, pt5));
 
-        List<StopTooFarFromTripShape> errorList =
+        List<StopTooFarFromTripShapeNotice> errorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
 
         assertEquals(0, errorList.size());
@@ -657,7 +657,7 @@ public class GeospatialUtilsImplTest {
         // Entities are keyed on shape_pt_sequence of GTFS file shapes.txt
         SortedMap<Integer, ShapePoint> points = new TreeMap<>(Map.of(1, pt1, 2, pt2, 3, pt3, 4, pt4, 5, pt5));
 
-        List<StopTooFarFromTripShape> errorList =
+        List<StopTooFarFromTripShapeNotice> errorList =
                 GEO_UTILS.checkStopsWithinTripShape(trip, stopTimes, points, stopPerId, new HashSet<>());
 
         assertEquals(0, errorList.size());

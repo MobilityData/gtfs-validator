@@ -24,7 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.StopOrPlatform;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShape;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShapeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
@@ -243,7 +243,7 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
         final Logger mockLogger = mock(Logger.class);
         final GeospatialUtils mockGeoUtil = mock(GeospatialUtils.class);
         Set<String> testedCache = new HashSet<>();
-        StopTooFarFromTripShape stopTooFarFromTripShape = new StopTooFarFromTripShape(
+        StopTooFarFromTripShapeNotice stopTooFarFromTripShapeNotice = new StopTooFarFromTripShapeNotice(
                 "shapes.txt",
                 stopId3,
                 3,
@@ -255,7 +255,7 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
                 stopTimes,
                 points,
                 stopPerId,
-                testedCache)).thenReturn(List.of(stopTooFarFromTripShape));
+                testedCache)).thenReturn(List.of(stopTooFarFromTripShapeNotice));
 
         final ValidateStopTooFarFromTripShape underTest =
                 new ValidateStopTooFarFromTripShape(mockDataRepo, mockResultRepo,
@@ -271,12 +271,12 @@ class ValidateStopTooFarFromTripShapeNoticeTest {
         verify(mockDataRepo, times(1)).getTripById(tripId);
         verify(mockDataRepo, times(1)).getStopAll();
 
-        final ArgumentCaptor<StopTooFarFromTripShape> captor =
-                ArgumentCaptor.forClass(StopTooFarFromTripShape.class);
+        final ArgumentCaptor<StopTooFarFromTripShapeNotice> captor =
+                ArgumentCaptor.forClass(StopTooFarFromTripShapeNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final List<StopTooFarFromTripShape> noticeList = captor.getAllValues();
+        final List<StopTooFarFromTripShapeNotice> noticeList = captor.getAllValues();
 
         assertEquals(1, noticeList.size());
         assertEquals("shapes.txt", noticeList.get(0).getFilename());

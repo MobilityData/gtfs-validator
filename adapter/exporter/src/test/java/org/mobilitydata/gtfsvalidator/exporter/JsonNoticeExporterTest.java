@@ -945,8 +945,8 @@ class JsonNoticeExporterTest {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        StopTooFarFromTripShape toExport =
-                new StopTooFarFromTripShape(
+        StopTooFarFromTripShapeNotice toExport =
+                new StopTooFarFromTripShapeNotice(
                         "shapes.txt",
                         "1234",
                         1,
