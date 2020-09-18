@@ -415,7 +415,12 @@ public class DefaultConfig {
     }
 
     public ShapeBasedCrossValidator shapeBasedCrossValidator() {
-        return new ShapeBasedCrossValidator(gtfsDataRepository, resultRepo, logger, new ValidateShapeUsage());
+        return new ShapeBasedCrossValidator(
+                gtfsDataRepository,
+                resultRepo,
+                logger,
+                new ValidateShapeUsage(),
+                new ValidateShapeIncreasingDistance());
     }
 
     public ValidateStopTooFarFromTripShape validateStopTooFarFromTripShape() {

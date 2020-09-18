@@ -97,6 +97,10 @@ public abstract class Notice {
     public static final String KEY_STOP_TIME_SHAPE_DIST_TRAVELED = "stopTimeShapeDistTraveled";
     public static final String KEY_STOP_TIME_PREVIOUS_STOP_SEQUENCE = "previousStopSequence";
     public static final String KEY_STOP_TIME_PREVIOUS_SHAPE_DIST_TRAVELED = "stopTimeConflictingShapeDistTraveled";
+    public static final String KEY_SHAPE_PT_SEQUENCE = "shapePtSequence";
+    public static final String KEY_SHAPE_DIST_TRAVELED = "shapeDistTraveled";
+    public static final String KEY_SHAPE_PREVIOUS_SHAPE_PT_SEQUENCE = "previousShapePtSequence";
+    public static final String KEY_SHAPE_PREVIOUS_SHAPE_DIST_TRAVELED = "previousShapeDistTraveled";
 
     private final String filename;
     private final int code;

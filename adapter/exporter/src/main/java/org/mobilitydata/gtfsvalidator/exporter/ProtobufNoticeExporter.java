@@ -980,10 +980,24 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setOtherCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE)))
                 .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_STOP_SEQUENCE)))
                 .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_SHAPE_DIST_TRAVELED)))
+                .setAltEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_SHAPE_DIST_TRAVELED)))
+                .setParentEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_STOP_SEQUENCE)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final DecreasingShapeDistanceNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
+                .setEntityId(toExport.getEntityId())
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PT_SEQUENCE)))
+                .setValue(String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_DIST_TRAVELED)))
                 .setAltEntityName(
-                        String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_SHAPE_DIST_TRAVELED)))
+                        String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PREVIOUS_SHAPE_PT_SEQUENCE)))
                 .setParentEntityName(
-                        String.valueOf(toExport.getNoticeSpecific(KEY_STOP_TIME_PREVIOUS_STOP_SEQUENCE)))
+                        String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PREVIOUS_SHAPE_DIST_TRAVELED)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

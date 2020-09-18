@@ -52,9 +52,11 @@ public class NoticeMemoryConsumptionTest {
 
         logInformation(totalMemoryInBytes, freeMemoryInBytes, noticesCount);
 
+        long usedMemory = totalMemoryInBytes - freeMemoryInBytes;
+
         // assert used memory is less than the average used memory (in bytes) while taking a safety margin (given by
         // SAFETY_BUFFER_FACTOR) into account
-        assertTrue(totalMemoryInBytes - freeMemoryInBytes < maxMemoryLimit * safetyBufferFactor);
+        assertTrue(usedMemory < maxMemoryLimit * safetyBufferFactor);
     }
 
     @BeforeEach
