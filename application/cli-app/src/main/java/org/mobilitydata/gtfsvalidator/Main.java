@@ -184,7 +184,7 @@ public class Main {
                     }
                 });
 
-                config.processParsedStopAll().execute(preprocessedStopByStopId);
+                config.processParsedStopAll().execute(preprocessedStopByStopId, filenameListToProcess);
                 preprocessedStopByStopId.clear();
 
                 config.validateRouteShortNameLength().execute();

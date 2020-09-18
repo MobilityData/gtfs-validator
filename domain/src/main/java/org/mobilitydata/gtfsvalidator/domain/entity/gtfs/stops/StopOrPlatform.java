@@ -93,9 +93,9 @@ public class StopOrPlatform extends LocationBase {
             return this;
         }
 
-        public EntityBuildResult<?> build() {
+        public EntityBuildResult<?> build(final List<String> filenameListToProcess) {
             if (stopId == null || stopName == null || stopLat == null || stopLon == null
-                    || wheelchairBoarding == INVALID_VALUE) {
+                    || wheelchairBoarding == INVALID_VALUE || isFareRuleProvided(filenameListToProcess) && zoneId == null) {
                 if (stopId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_id", null));
                 }
@@ -111,6 +111,9 @@ public class StopOrPlatform extends LocationBase {
                 if (wheelchairBoarding == INVALID_VALUE) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("stops.txt",
                             "wheelchair_boarding", stopId, originalWheelchairBoarding));
+                }
+                if (isFareRuleProvided(filenameListToProcess) && zoneId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "zone_id", stopId));
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {

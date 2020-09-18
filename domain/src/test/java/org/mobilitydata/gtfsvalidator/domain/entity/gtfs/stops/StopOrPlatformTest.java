@@ -69,7 +69,8 @@ class StopOrPlatformTest {
                 .stopTimezone(null)
                 .childrenList(null);
 
-        final EntityBuildResult<?> buildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
 
         assertTrue(buildResult.getData() instanceof StopOrPlatform);
 
@@ -106,7 +107,8 @@ class StopOrPlatformTest {
                 .stopTimezone(STOP_TIMEZONE)
                 .childrenList(new ArrayList<>());
 
-        final EntityBuildResult<?> buildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
 
         assertTrue(buildResult.getData() instanceof StopOrPlatform);
 
@@ -143,7 +145,8 @@ class StopOrPlatformTest {
                 .stopTimezone(STOP_TIMEZONE)
                 .childrenList(null);
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> entityBuildResult = underTest.build(filenameListToProcess);
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
         // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
@@ -174,7 +177,8 @@ class StopOrPlatformTest {
                 .stopTimezone(STOP_TIMEZONE)
                 .childrenList(null);
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> entityBuildResult = underTest.build(filenameListToProcess);
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
         // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
@@ -205,7 +209,8 @@ class StopOrPlatformTest {
                 .stopTimezone(STOP_TIMEZONE)
                 .childrenList(null);
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> entityBuildResult = underTest.build(filenameListToProcess);
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
         // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
@@ -236,7 +241,8 @@ class StopOrPlatformTest {
                 .stopTimezone(STOP_TIMEZONE)
                 .childrenList(null);
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> entityBuildResult = underTest.build(filenameListToProcess);
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
         // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
@@ -267,7 +273,8 @@ class StopOrPlatformTest {
                 .stopTimezone(STOP_TIMEZONE)
                 .childrenList(null);
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> entityBuildResult = underTest.build(filenameListToProcess);
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
         // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
@@ -280,5 +287,164 @@ class StopOrPlatformTest {
         assertEquals(WHEELCHAIR_BOARDING, notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STOP_ID, notice.getEntityId());
         assertEquals(5, notice.getNoticeSpecific(KEY_ENUM_VALUE));
+    }
+
+    @Test
+    public void fareRulesNotProvidedAndNullZoneIdShouldNotGenerateNotice() {
+        underTest.parentStation(null)
+                .wheelchairBoarding(null)
+                .platformCode(null)
+                .stopId(STOP_ID)
+                .stopName(STOP_NAME)
+                .stopLat(STOP_LAT)
+                .stopLon(STOP_LON)
+                .stopCode(null)
+                .stopDesc(null)
+                .zoneId(null)
+                .stopUrl(null)
+                .stopTimezone(null)
+                .childrenList(null);
+
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
+
+        assertTrue(buildResult.getData() instanceof StopOrPlatform);
+
+        final StopOrPlatform toCheck = (StopOrPlatform) buildResult.getData();
+
+        assertNull(toCheck.getParentStation());
+        assertEquals(WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING, toCheck.getWheelchairBoarding());
+        assertNull(toCheck.getPlatformCode());
+        assertEquals(STOP_ID, toCheck.getStopId());
+        assertEquals(STOP_NAME, toCheck.getStopName());
+        assertEquals(STOP_LAT, toCheck.getStopLat());
+        assertEquals(STOP_LON, toCheck.getStopLon());
+        assertNull(toCheck.getStopCode());
+        assertNull(toCheck.getStopDesc());
+        assertNull(toCheck.getZoneId());
+        assertNull(toCheck.getStopUrl());
+        assertNull(toCheck.getStopTimezone());
+        assertNull(toCheck.getChildren());
+    }
+
+    @Test
+    public void fareRulesNotProvidedAndNotNullZoneIdShouldNotGenerateNotice() {
+        underTest.parentStation(null)
+                .wheelchairBoarding(null)
+                .platformCode(null)
+                .stopId(STOP_ID)
+                .stopName(STOP_NAME)
+                .stopLat(STOP_LAT)
+                .stopLon(STOP_LON)
+                .stopCode(null)
+                .stopDesc(null)
+                .zoneId(ZONE_ID)
+                .stopUrl(null)
+                .stopTimezone(null)
+                .childrenList(null);
+
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
+
+        assertTrue(buildResult.getData() instanceof StopOrPlatform);
+
+        final StopOrPlatform toCheck = (StopOrPlatform) buildResult.getData();
+
+        assertNull(toCheck.getParentStation());
+        assertEquals(WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING, toCheck.getWheelchairBoarding());
+        assertNull(toCheck.getPlatformCode());
+        assertEquals(STOP_ID, toCheck.getStopId());
+        assertEquals(STOP_NAME, toCheck.getStopName());
+        assertEquals(STOP_LAT, toCheck.getStopLat());
+        assertEquals(STOP_LON, toCheck.getStopLon());
+        assertNull(toCheck.getStopCode());
+        assertNull(toCheck.getStopDesc());
+        assertEquals(ZONE_ID, toCheck.getZoneId());
+        assertNull(toCheck.getStopUrl());
+        assertNull(toCheck.getStopTimezone());
+        assertNull(toCheck.getChildren());
+    }
+
+    @Test
+    public void fareRulesProvidedAndNotNullZoneIdShouldNotGenerateNotice() {
+        underTest.parentStation(null)
+                .wheelchairBoarding(null)
+                .platformCode(null)
+                .stopId(STOP_ID)
+                .stopName(STOP_NAME)
+                .stopLat(STOP_LAT)
+                .stopLon(STOP_LON)
+                .stopCode(null)
+                .stopDesc(null)
+                .zoneId(ZONE_ID)
+                .stopUrl(null)
+                .stopTimezone(null)
+                .childrenList(null);
+
+        final List<String> filenameListToProcess = List.of("fare_rules.txt");
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
+
+        assertTrue(buildResult.getData() instanceof StopOrPlatform);
+
+        final StopOrPlatform toCheck = (StopOrPlatform) buildResult.getData();
+
+        assertNull(toCheck.getParentStation());
+        assertEquals(WheelchairBoarding.UNKNOWN_WHEELCHAIR_BOARDING, toCheck.getWheelchairBoarding());
+        assertNull(toCheck.getPlatformCode());
+        assertEquals(STOP_ID, toCheck.getStopId());
+        assertEquals(STOP_NAME, toCheck.getStopName());
+        assertEquals(STOP_LAT, toCheck.getStopLat());
+        assertEquals(STOP_LON, toCheck.getStopLon());
+        assertNull(toCheck.getStopCode());
+        assertNull(toCheck.getStopDesc());
+        assertEquals(ZONE_ID, toCheck.getZoneId());
+        assertNull(toCheck.getStopUrl());
+        assertNull(toCheck.getStopTimezone());
+        assertNull(toCheck.getChildren());
+    }
+
+    @Test
+    public void fareRulesProvidedAndNullZoneIdShouldGenerateNotice() {
+        underTest.parentStation(null)
+                .wheelchairBoarding(null)
+                .platformCode(null)
+                .stopId(STOP_ID)
+                .stopName(STOP_NAME)
+                .stopLat(STOP_LAT)
+                .stopLon(STOP_LON)
+                .stopCode(null)
+                .stopDesc(null)
+                .zoneId(null)
+                .stopUrl(null)
+                .stopTimezone(null)
+                .childrenList(null);
+
+        final List<String> filenameListToProcess = List.of("fare_rules.txt");
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
+
+        assertTrue(buildResult.getData() instanceof ArrayList);
+
+        // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
+        //noinspection unchecked
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) buildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("stops.txt", notice.getFilename());
+        assertEquals(ZONE_ID, notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals(STOP_ID, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
+    }
+
+    @Test
+    public void isFareRulesProvidedShouldReturnTrueIfFileHasBeenProvided() {
+        final LocationBase.LocationBaseBuilder stopOrPlatformBuilder = new BoardingArea.BoardingAreaBuilder();
+        assertTrue(stopOrPlatformBuilder.isFareRuleProvided(List.of("fare_rules.txt")));
+    }
+
+    @Test
+    public void isFareRulesProvidedShouldReturnFalseIfFileHasNotBeenProvided() {
+        final LocationBase.LocationBaseBuilder stopOrPlatformBuilder = new BoardingArea.BoardingAreaBuilder();
+        assertFalse(stopOrPlatformBuilder.isFareRuleProvided(List.of("file.txt", "other_file.txt")));
     }
 }

@@ -30,6 +30,7 @@ import java.util.List;
  */
 public abstract class LocationBase extends GtfsEntity {
 
+    private static final String FARE_RULES_TXT = "fare_rules.txt";
     private @NotNull
     final String stopId;
     private final String stopCode;
@@ -181,6 +182,10 @@ public abstract class LocationBase extends GtfsEntity {
             childrenIdList = null;
             noticeCollection.clear();
             return this;
+        }
+
+        protected boolean isFareRuleProvided(final List<String> filenameListToProcess) {
+            return filenameListToProcess.contains(FARE_RULES_TXT);
         }
     }
 }

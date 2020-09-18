@@ -63,7 +63,8 @@ class BoardingAreaTest {
                 .stopTimezone(null)
                 .childrenList(null);
 
-        final EntityBuildResult<?> buildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
 
         assertTrue(buildResult.getData() instanceof BoardingArea);
 
@@ -96,7 +97,8 @@ class BoardingAreaTest {
                 .stopTimezone(STOP_TIMEZONE)
                 .childrenList(new ArrayList<>());
 
-        final EntityBuildResult<?> buildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
 
         assertTrue(buildResult.getData() instanceof BoardingArea);
 
@@ -129,7 +131,8 @@ class BoardingAreaTest {
                 .stopTimezone(STOP_TIMEZONE)
                 .childrenList(new ArrayList<>());
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> entityBuildResult = underTest.build(filenameListToProcess);
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
         // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
@@ -158,7 +161,8 @@ class BoardingAreaTest {
                 .stopTimezone(STOP_TIMEZONE)
                 .childrenList(new ArrayList<>());
 
-        final EntityBuildResult<?> entityBuildResult = underTest.build();
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> entityBuildResult = underTest.build(filenameListToProcess);
         assertTrue(entityBuildResult.getData() instanceof ArrayList);
 
         // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
@@ -171,5 +175,148 @@ class BoardingAreaTest {
         assertEquals(STOP_ID, notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals("no id", notice.getEntityId());
         assertEquals(1, noticeCollection.size());
+    }
+
+    @Test
+    public void fareRulesNotProvidedAndNullZoneIdShouldNotGenerateNotice() {
+        underTest.parentStation(PARENT_STATION)
+                .stopId(STOP_ID)
+                .stopName(STOP_NAME)
+                .stopLat(STOP_LAT)
+                .stopLon(STOP_LON)
+                .stopCode(null)
+                .stopDesc(null)
+                .zoneId(null)
+                .stopUrl(null)
+                .stopTimezone(null)
+                .childrenList(null);
+
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
+
+        assertTrue(buildResult.getData() instanceof BoardingArea);
+
+        final BoardingArea toCheck = (BoardingArea) buildResult.getData();
+
+        assertEquals(PARENT_STATION, toCheck.getParentStation());
+        assertEquals(STOP_ID, toCheck.getStopId());
+        assertEquals(STOP_NAME, toCheck.getStopName());
+        assertEquals(STOP_LAT, toCheck.getStopLat());
+        assertEquals(STOP_LON, toCheck.getStopLon());
+        assertNull(toCheck.getStopCode());
+        assertNull(toCheck.getStopDesc());
+        assertNull(toCheck.getZoneId());
+        assertNull(toCheck.getStopUrl());
+        assertNull(toCheck.getStopTimezone());
+        assertNull(toCheck.getChildren());
+    }
+
+    @Test
+    public void fareRulesNotProvidedAndNonNullZoneIdShouldNotGenerateNotice() {
+        underTest.parentStation(PARENT_STATION)
+                .stopId(STOP_ID)
+                .stopName(STOP_NAME)
+                .stopLat(STOP_LAT)
+                .stopLon(STOP_LON)
+                .stopCode(null)
+                .stopDesc(null)
+                .zoneId(ZONE_ID)
+                .stopUrl(null)
+                .stopTimezone(null)
+                .childrenList(null);
+
+        final List<String> filenameListToProcess = new ArrayList<>();
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
+
+        assertTrue(buildResult.getData() instanceof BoardingArea);
+
+        final BoardingArea toCheck = (BoardingArea) buildResult.getData();
+
+        assertEquals(PARENT_STATION, toCheck.getParentStation());
+        assertEquals(STOP_ID, toCheck.getStopId());
+        assertEquals(STOP_NAME, toCheck.getStopName());
+        assertEquals(STOP_LAT, toCheck.getStopLat());
+        assertEquals(STOP_LON, toCheck.getStopLon());
+        assertNull(toCheck.getStopCode());
+        assertNull(toCheck.getStopDesc());
+        assertEquals(ZONE_ID, toCheck.getZoneId());
+        assertNull(toCheck.getStopUrl());
+        assertNull(toCheck.getStopTimezone());
+        assertNull(toCheck.getChildren());
+    }
+
+    @Test
+    public void fareRulesProvidedAndNotNullZoneIdShouldNotGenerateNotice() {
+        underTest.parentStation(PARENT_STATION)
+                .stopId(STOP_ID)
+                .stopName(STOP_NAME)
+                .stopLat(STOP_LAT)
+                .stopLon(STOP_LON)
+                .stopCode(null)
+                .stopDesc(null)
+                .zoneId(ZONE_ID)
+                .stopUrl(null)
+                .stopTimezone(null)
+                .childrenList(null);
+
+        final List<String> filenameListToProcess = List.of("fare_rules.txt");
+        final EntityBuildResult<?> buildResult = underTest.build(filenameListToProcess);
+
+        final BoardingArea toCheck = (BoardingArea) buildResult.getData();
+
+        assertEquals(PARENT_STATION, toCheck.getParentStation());
+        assertEquals(STOP_ID, toCheck.getStopId());
+        assertEquals(STOP_NAME, toCheck.getStopName());
+        assertEquals(STOP_LAT, toCheck.getStopLat());
+        assertEquals(STOP_LON, toCheck.getStopLon());
+        assertNull(toCheck.getStopCode());
+        assertNull(toCheck.getStopDesc());
+        assertEquals(ZONE_ID, toCheck.getZoneId());
+        assertNull(toCheck.getStopUrl());
+        assertNull(toCheck.getStopTimezone());
+        assertNull(toCheck.getChildren());
+    }
+
+    @Test
+    public void fareRulesProvidedAndNullZoneIdShouldGenerateNotice() {
+        underTest.parentStation(PARENT_STATION)
+                .stopId(STOP_ID)
+                .stopName(STOP_NAME)
+                .stopLat(STOP_LAT)
+                .stopLon(STOP_LON)
+                .stopCode(null)
+                .stopDesc(null)
+                .zoneId(null)
+                .stopUrl(null)
+                .stopTimezone(null)
+                .childrenList(null);
+
+        final List<String> filenameListToProcess = List.of("fare_rules.txt");
+        final EntityBuildResult<?> entityBuildResult = underTest.build(filenameListToProcess);
+
+        assertTrue(entityBuildResult.getData() instanceof ArrayList);
+
+        // to avoid lint regarding cast, the test is designed so that method .getData() returns a list of notices.
+        //noinspection unchecked
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+
+        assertEquals("stops.txt", notice.getFilename());
+        assertEquals(STOP_ID, notice.getEntityId());
+        assertEquals(ZONE_ID, notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals(1, noticeCollection.size());
+    }
+
+    @Test
+    public void isFareRulesProvidedShouldReturnTrueIfFileHasBeenProvided() {
+        final LocationBase.LocationBaseBuilder boardingAreaBuilder = new BoardingArea.BoardingAreaBuilder();
+        assertTrue(boardingAreaBuilder.isFareRuleProvided(List.of("fare_rules.txt")));
+    }
+
+    @Test
+    public void isFareRulesProvidedShouldReturnFalseIfFileHasNotBeenProvided() {
+        final LocationBase.LocationBaseBuilder boardingAreaBuilder = new BoardingArea.BoardingAreaBuilder();
+        assertFalse(boardingAreaBuilder.isFareRuleProvided(List.of("file.txt", "other_file.txt")));
     }
 }

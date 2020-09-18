@@ -102,7 +102,7 @@ public class ProcessParsedStopAll {
      *
      * @param parsedEntityByStopId a map of entities to be processed
      */
-    public void execute(final Map<String, ParsedEntity> parsedEntityByStopId) {
+    public void execute(final Map<String, ParsedEntity> parsedEntityByStopId, final List<String> filenameListToProcess) {
         Map<String, List<String>> childrenPerStationId = new HashMap<>();
 
         // first we iterate through all to resolve children
@@ -179,7 +179,7 @@ public class ProcessParsedStopAll {
                             .stopTimezone(stopTimezone)
                             .childrenList(childrenPerStationId.get(stopId));
 
-                    stopEntityBuildResult = stopOrPlatformBuilder.build();
+                    stopEntityBuildResult = stopOrPlatformBuilder.build(filenameListToProcess);
                     break;
                 }
                 case STATION: {
@@ -279,7 +279,7 @@ public class ProcessParsedStopAll {
                             .stopTimezone(stopTimezone)
                             .childrenList(childrenPerStationId.get(stopId));
 
-                    stopEntityBuildResult = genericNodeBuilder.build();
+                    stopEntityBuildResult = genericNodeBuilder.build(filenameListToProcess);
                     break;
                 }
                 case BOARDING_AREA: {
@@ -312,7 +312,7 @@ public class ProcessParsedStopAll {
                             .stopTimezone(stopTimezone)
                             .childrenList(childrenPerStationId.get(stopId));
 
-                    stopEntityBuildResult = boardingAreaBuilder.build();
+                    stopEntityBuildResult = boardingAreaBuilder.build(filenameListToProcess);
                     break;
                 }
             }

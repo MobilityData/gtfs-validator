@@ -60,13 +60,16 @@ public class GenericNode extends LocationBase {
             return this;
         }
 
-        public EntityBuildResult<?> build() {
-            if (stopId == null || parentStation == null) {
+        public EntityBuildResult<?> build(List<String> filenameListToProcess) {
+            if (stopId == null || parentStation == null || isFareRuleProvided(filenameListToProcess) && zoneId == null) {
                 if (stopId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "stop_id", null));
                 }
                 if (parentStation == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "parent_station", stopId));
+                }
+                if (isFareRuleProvided(filenameListToProcess) && zoneId == null) {
+                    noticeCollection.add(new MissingRequiredValueNotice("stops.txt", "zone_id", stopId));
                 }
                 return new EntityBuildResult<>(noticeCollection);
             } else {

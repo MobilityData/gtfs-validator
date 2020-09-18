@@ -78,7 +78,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         @SuppressWarnings("rawtypes") final EntityBuildResult mockFailBuildResult = mock(EntityBuildResult.class);
 
@@ -120,7 +120,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, mockParsedStopOrPlatform);
         fakePreprocessedStopMap.put(PARENT_ID, mockParent);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final InOrder inOrder = inOrder(mockStopOrPlatformBuilder, mockGtfsDataRepo, mockParsedStopOrPlatform);
 
@@ -163,7 +163,7 @@ class ProcessParsedStopAllTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
-        inOrder.verify(mockStopOrPlatformBuilder, times(1)).build();
+        inOrder.verify(mockStopOrPlatformBuilder, times(1)).build(new ArrayList<>());
         inOrder.verify(mockGtfsDataRepo,
                 times(1)).addStop(ArgumentMatchers.eq(mockStopOrPlatform));
         verify(mockGtfsDataRepo, times(1)).getAgencyCount();
@@ -216,7 +216,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockParsedStation);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final InOrder inOrder = inOrder(mockStationBuilder, mockGtfsDataRepo, mockParsedStation);
 
@@ -324,7 +324,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockParsedEntrance);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final InOrder inOrder = inOrder(mockEntranceBuilder, mockGtfsDataRepo, mockParsedEntrance);
 
@@ -389,7 +389,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
         //noinspection unchecked
-        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericNodeBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
 
         @SuppressWarnings("rawtypes") final EntityBuildResult mockFailBuildResult = mock(EntityBuildResult.class);
@@ -431,7 +431,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockParsedGenericNode);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final InOrder inOrder = inOrder(mockGenericNodeBuilder, mockGtfsDataRepo, mockParsedGenericNode);
 
@@ -469,7 +469,7 @@ class ProcessParsedStopAllTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
-        inOrder.verify(mockGenericNodeBuilder, times(1)).build();
+        inOrder.verify(mockGenericNodeBuilder, times(1)).build(new ArrayList<>());
         inOrder.verify(mockGtfsDataRepo,
                 times(1)).addStop(ArgumentMatchers.eq(mockGenericNode));
 
@@ -494,7 +494,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(true);
 
         //noinspection unchecked
-        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBoardingAreaBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
 
         @SuppressWarnings("rawtypes") final EntityBuildResult mockFailBuildResult = mock(EntityBuildResult.class);
@@ -503,7 +503,7 @@ class ProcessParsedStopAllTest {
         when(mockFailBuildResult.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockFailBuildResult);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockFailBuildResult);
 
         when(mockParsedBoardingArea.getEntityId()).thenReturn(CHILD_ID);
         when(mockParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
@@ -536,7 +536,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockParsedBoardingArea);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final InOrder inOrder = inOrder(mockBoardingAreaBuilder, mockGtfsDataRepo, mockParsedBoardingArea);
 
@@ -574,7 +574,7 @@ class ProcessParsedStopAllTest {
         //noinspection ResultOfMethodCallIgnored
         verify(mockGenericObject, times(1)).getData();
 
-        inOrder.verify(mockBoardingAreaBuilder, times(1)).build();
+        inOrder.verify(mockBoardingAreaBuilder, times(1)).build(new ArrayList<>());
         inOrder.verify(mockGtfsDataRepo,
                 times(1)).addStop(ArgumentMatchers.eq(mockBoardingArea));
 
@@ -601,7 +601,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.getData()).thenReturn(mockNoticeCollection);
 
         //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(mockParsedStop.getEntityId()).thenReturn(CHILD_ID);
         when(mockParsedStop.get(STOP_NAME)).thenReturn(STOP_NAME);
@@ -628,7 +628,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockParsedStop);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         //noinspection ResultOfMethodCallIgnored
         verify(mockParsedStop, times(2)).getEntityId();
@@ -664,7 +664,7 @@ class ProcessParsedStopAllTest {
         verify(mockBuilder,
                 times(1)).stopTimezone(ArgumentMatchers.eq(STOP_TIMEZONE));
         verify(mockBuilder, times(1)).childrenList(ArgumentMatchers.isNull());
-        verify(mockBuilder, times(1)).build();
+        verify(mockBuilder, times(1)).build(new ArrayList<>());
 
 
         verify(mockGenericObject, times(1)).isSuccess();
@@ -692,7 +692,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.getData()).thenReturn(mockStop);
 
         //noinspection unchecked
-        when(mockBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         when(mockGtfsDataRepo.addStop(mockStop)).thenReturn(null);
 
         when(mockParsedStop.getEntityId()).thenReturn(CHILD_ID);
@@ -720,7 +720,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockParsedStop);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockParsedStop, times(2)).getEntityId();
         verify(mockParsedStop, times(1)).get(ArgumentMatchers.eq(LOCATION_TYPE));
@@ -760,7 +760,7 @@ class ProcessParsedStopAllTest {
         verify(mockBuilder,
                 times(1)).stopTimezone(ArgumentMatchers.eq(STOP_TIMEZONE));
         verify(mockBuilder, times(1)).childrenList(ArgumentMatchers.isNull());
-        verify(mockBuilder, times(1)).build();
+        verify(mockBuilder, times(1)).build(new ArrayList<>());
 
         verify(mockGenericObject, times(1)).isSuccess();
         verify(mockGenericObject, times(1)).getData();
@@ -789,7 +789,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         final ParsedEntity mockChild0 = mock(ParsedEntity.class);
         final ParsedEntity mockChild1 = mock(ParsedEntity.class);
@@ -824,7 +824,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(mockParent0.getEntityId(), mockParent0);
         fakePreprocessedStopMap.put(mockParent1.getEntityId(), mockParent1);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockStopOrPlatformBuilder, times(1)).childrenList(
                 ArgumentMatchers.eq(List.of(mockChild0.getEntityId(), mockChild1.getEntityId()))
@@ -846,7 +846,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(mockParent.getEntityId()).thenReturn(PARENT_ID);
         when(mockChild.get(PARENT_STATION)).thenReturn(PARENT_ID);
@@ -867,7 +867,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, mockChild);
         fakePreprocessedStopMap.put(PARENT_ID, mockParent);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockParent, times(2)).get(ArgumentMatchers.eq(WHEELCHAIR_BOARDING));
         verify(mockChild, times(1)).get(ArgumentMatchers.eq(WHEELCHAIR_BOARDING));
@@ -887,7 +887,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(mockParent.getEntityId()).thenReturn(PARENT_ID);
         when(mockChild.get(PARENT_STATION)).thenReturn(PARENT_ID);
@@ -908,7 +908,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, mockChild);
         fakePreprocessedStopMap.put(PARENT_ID, mockParent);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockParent, times(2)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
         verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
@@ -931,7 +931,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(mockAgency.getAgencyTimezone()).thenReturn("AGENCY timezone");
         when(mockGtfsDataRepo.getAgencyCount()).thenReturn(1);
@@ -950,7 +950,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockChild);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
 
@@ -970,7 +970,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(mockChild.get(STOP_TIMEZONE)).thenReturn("CHILD timezone");
 
@@ -987,7 +987,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockChild);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
 
@@ -1010,7 +1010,7 @@ class ProcessParsedStopAllTest {
         //noinspection unchecked
         when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(mockParent.getEntityId()).thenReturn(PARENT_ID);
         when(mockChild.get(PARENT_STATION)).thenReturn(PARENT_ID);
@@ -1032,7 +1032,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, mockChild);
         fakePreprocessedStopMap.put(PARENT_ID, mockParent);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockParent, times(2)).get(ArgumentMatchers.eq(WHEELCHAIR_BOARDING));
         verify(mockChild, times(1)).get(ArgumentMatchers.eq(WHEELCHAIR_BOARDING));
@@ -1076,7 +1076,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, mockChild);
         fakePreprocessedStopMap.put(PARENT_ID, mockParent);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockParent, times(2)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
         verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
@@ -1114,7 +1114,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockParsedStation);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<StationWithParentStationNotice> captor =
                 ArgumentCaptor.forClass(StationWithParentStationNotice.class);
@@ -1162,7 +1162,7 @@ class ProcessParsedStopAllTest {
         Map<String, ParsedEntity> fakePreprocessedStopMap = new HashMap<>();
         fakePreprocessedStopMap.put(CHILD_ID, mockChild);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
 
@@ -1181,7 +1181,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericNodeBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(mockChild.get(LOCATION_TYPE)).thenReturn(3);
         when(mockParent.get(LOCATION_TYPE)).thenReturn(3);
@@ -1205,7 +1205,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, mockChild);
         fakePreprocessedStopMap.put(PARENT_ID, mockParent);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockParent, times(2)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
         verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
@@ -1225,7 +1225,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBoardingAreaBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(mockChild.get(LOCATION_TYPE)).thenReturn(4);
         when(mockParent.get(LOCATION_TYPE)).thenReturn(4);
@@ -1249,7 +1249,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, mockChild);
         fakePreprocessedStopMap.put(PARENT_ID, mockParent);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         verify(mockParent, times(2)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
         verify(mockChild, times(1)).get(ArgumentMatchers.eq(STOP_TIMEZONE));
@@ -1270,7 +1270,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedStopOrPlatform.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
@@ -1292,7 +1292,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedStopOrPlatform);
         fakePreprocessedStopMap.put(PARENT_ID, parentStopOrPlatform);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1322,7 +1322,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         //noinspection unchecked
         when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
 
@@ -1346,7 +1346,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedStopOrPlatform);
         fakePreprocessedStopMap.put(PARENT_ID, parentEntrance);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1376,9 +1376,9 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         //noinspection unchecked
-        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericNodeBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedStopOrPlatform.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
@@ -1400,7 +1400,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedStopOrPlatform);
         fakePreprocessedStopMap.put(PARENT_ID, parentGenericNode);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1430,9 +1430,9 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         //noinspection unchecked
-        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBoardingAreaBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedStopOrPlatform.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedStopOrPlatform.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_STOP_OR_PLATFORM);
@@ -1454,7 +1454,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedStopOrPlatform);
         fakePreprocessedStopMap.put(PARENT_ID, parentEntrance);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1484,7 +1484,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         //noinspection unchecked
         when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
 
@@ -1508,7 +1508,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedEntrance);
         fakePreprocessedStopMap.put(PARENT_ID, parentStopOrPlatform);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1558,7 +1558,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedEntrance);
         fakePreprocessedStopMap.put(PARENT_ID, parentParsedEntrance);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1590,7 +1590,7 @@ class ProcessParsedStopAllTest {
         //noinspection unchecked
         when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
         //noinspection unchecked
-        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericNodeBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedEntrance.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
@@ -1612,7 +1612,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedEntrance);
         fakePreprocessedStopMap.put(PARENT_ID, parentGenericNode);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1644,7 +1644,7 @@ class ProcessParsedStopAllTest {
         //noinspection unchecked
         when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
         //noinspection unchecked
-        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBoardingAreaBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedEntrance.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedEntrance.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_ENTRANCE);
@@ -1666,7 +1666,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedEntrance);
         fakePreprocessedStopMap.put(PARENT_ID, parentParsedBoardingArea);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1696,9 +1696,9 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockStopOrPlatformBuilder.build()).thenReturn(mockGenericObject);
+        when(mockStopOrPlatformBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         //noinspection unchecked
-        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericNodeBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedGenericNode.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
@@ -1720,7 +1720,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedGenericNode);
         fakePreprocessedStopMap.put(PARENT_ID, parentParsedStopOrPlatform);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1752,7 +1752,7 @@ class ProcessParsedStopAllTest {
         //noinspection unchecked
         when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
         //noinspection unchecked
-        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericNodeBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedGenericNode.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
@@ -1774,7 +1774,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedGenericNode);
         fakePreprocessedStopMap.put(PARENT_ID, parentParsedEntrance);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1802,7 +1802,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericNodeBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedGenericNode.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
@@ -1824,7 +1824,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedGenericNode);
         fakePreprocessedStopMap.put(PARENT_ID, parentGenericNode);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1854,9 +1854,9 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericNodeBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         //noinspection unchecked
-        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBoardingAreaBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedGenericNode.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedGenericNode.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_GENERIC_NODE);
@@ -1878,7 +1878,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedGenericNode);
         fakePreprocessedStopMap.put(PARENT_ID, parentParsedBoardingArea);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1908,7 +1908,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBoardingAreaBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         //noinspection unchecked
         when(mockStationBuilder.build()).thenReturn(mockGenericObject);
 
@@ -1932,7 +1932,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedBoardingArea);
         fakePreprocessedStopMap.put(PARENT_ID, parentParsedStation);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -1962,7 +1962,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBoardingAreaBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         //noinspection unchecked
         when(mockEntranceBuilder.build()).thenReturn(mockGenericObject);
 
@@ -1986,7 +1986,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedBoardingArea);
         fakePreprocessedStopMap.put(PARENT_ID, parentParsedEntrance);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -2016,9 +2016,9 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBoardingAreaBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
         //noinspection unchecked
-        when(mockGenericNodeBuilder.build()).thenReturn(mockGenericObject);
+        when(mockGenericNodeBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedBoardingArea.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
@@ -2040,7 +2040,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedBoardingArea);
         fakePreprocessedStopMap.put(PARENT_ID, parentParsedGenericNode);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
@@ -2068,7 +2068,7 @@ class ProcessParsedStopAllTest {
         when(mockGenericObject.isSuccess()).thenReturn(false);
 
         //noinspection unchecked
-        when(mockBoardingAreaBuilder.build()).thenReturn(mockGenericObject);
+        when(mockBoardingAreaBuilder.build(new ArrayList<>())).thenReturn(mockGenericObject);
 
         when(childParsedBoardingArea.getEntityId()).thenReturn(CHILD_ID);
         when(childParsedBoardingArea.get(LOCATION_TYPE)).thenReturn(LOCATION_TYPE_BOARDING_AREA);
@@ -2090,7 +2090,7 @@ class ProcessParsedStopAllTest {
         fakePreprocessedStopMap.put(CHILD_ID, childParsedBoardingArea);
         fakePreprocessedStopMap.put(PARENT_ID, parentParsedBoardingArea);
 
-        underTest.execute(fakePreprocessedStopMap);
+        underTest.execute(fakePreprocessedStopMap, new ArrayList<>());
 
         final ArgumentCaptor<ParentStationInvalidLocationTypeNotice> captor =
                 ArgumentCaptor.forClass(ParentStationInvalidLocationTypeNotice.class);
