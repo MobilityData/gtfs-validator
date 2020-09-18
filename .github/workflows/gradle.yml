@@ -22,21 +22,21 @@ jobs:
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
       - name: Run validator on MBTA data
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.2.2.jar -u https://transitfeeds.com/p/mbta/64/20200531/download -i input.zip -e input -o output -abort_on_error false
+        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar -u https://transitfeeds.com/p/mbta/64/20200531/download -i input.zip -e input -o output -abort_on_error false
       - name: Generate javadoc
         run: ./gradlew aggregateJavadocs
       - name: Persist jar
         uses: actions/upload-artifact@v2
         with:
-          name: v1.2.2
-          path: application/cli-app/build/libs/gtfs-validator-v1.2.2.jar
+          name: v1.3.0-SNAPSHOT
+          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar
       - name: Persist test report
         uses: actions/upload-artifact@v2
         with:
-          name: v1.2.2_tests
+          name: v1.3.0-SNAPSHOT_tests
           path: build/reports/allTests/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
-          name: v1.2.2_javadoc
+          name: v1.3.0-SNAPSHOT_javadoc
           path: build/docs/javadoc/
