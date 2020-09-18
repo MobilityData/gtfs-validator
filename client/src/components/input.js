@@ -19,7 +19,6 @@ import {Input} from 'semantic-ui-react'
 
 const InputField = (props) => <Input placeholder={props.placeHolderText}
                                      style={{width: "80%", fontSize: '50%'}}
-
-/>
+                                     id={props.id}/>
 
 export default InputField

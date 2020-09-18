@@ -21,6 +21,14 @@ import InputField from "./components/input";
 import FittedButton from "./components/button";
 
 function App() {
+
+  async function onClick() {
+    alert(document.getElementById("command-line-input").value);
+    let response = await fetch('http://localhost:8080/report');
+    let body = await response.text();
+    console.log(body);
+  }
+
   return (
       <div className="App">
         <header className="App-header">
@@ -29,7 +37,7 @@ function App() {
             <InputField placeHolderText="Enter command line here" id="command-line-input" type="text"/>
           </p>
           <p className="launch-button-container">
-            <FittedButton description="Launch validation process"/>
+            <FittedButton description="Launch validation process" method={onClick}/>
           </p>
           <p>
             <a
