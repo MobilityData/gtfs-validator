@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
+import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mockito.ArgumentMatchers;
 
 import java.io.IOException;
@@ -2176,6 +2177,54 @@ class ProtobufNoticeExporterTest {
                 .setEntityId(ArgumentMatchers.eq("trip_id"));
         verify(mockBuilder, times(1))
                 .setType(ArgumentMatchers.eq(TYPE_TRIP_WITH_NO_USABLE_STOPS));
+        verify(mockBuilder, times(1)).build();
+        verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
+    }
+
+    @Test
+    void exportStopTooFarFromTripShapeNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+        GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
+                mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
+
+        GtfsValidationOutputProto.GtfsProblem mockProblem = mock(GtfsValidationOutputProto.GtfsProblem.class);
+
+        when(mockBuilder.build()).thenReturn(mockProblem);
+
+        OutputStream mockStream = mock(OutputStream.class);
+
+        ProtobufNoticeExporter.ProtobufOutputStreamGenerator mockStreamGenerator =
+                mock(ProtobufNoticeExporter.ProtobufOutputStreamGenerator.class);
+        when(mockStreamGenerator.getStream()).thenReturn(mockStream);
+
+        ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
+        underTest.export(
+                new StopTooFarFromTripShapeNotice(
+                        "1234",
+                        1,
+                        "A",
+                        "ZYX",
+                        GeospatialUtils.TRIP_BUFFER_METERS));
+
+        verify(mockBuilder, times(1)).clear();
+        verify(mockBuilder, times(1)).setCsvFileName(
+                ArgumentMatchers.eq("shapes.txt"));
+        verify(mockBuilder, times(1)).setSeverity(
+                ArgumentMatchers.eq(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR));
+        verify(mockBuilder, times(1)).setAltValue(
+                ArgumentMatchers.eq("stop_id"));
+        verify(mockBuilder, times(1)).setCsvKeyName(
+                ArgumentMatchers.eq("trip_id"));
+        verify(mockBuilder, times(1)).setOtherCsvFileName(
+                ArgumentMatchers.eq("1234"));
+        verify(mockBuilder, times(1)).setOtherCsvKeyName(
+                ArgumentMatchers.eq("A"));
+        verify(mockBuilder, times(1)).setAltEntityName(
+                ArgumentMatchers.eq("shape_id"));
+        verify(mockBuilder, times(1)).setAltEntityId(
+                ArgumentMatchers.eq("ZYX"));
+        verify(mockBuilder, times(1)).setEntityValue(
+                ArgumentMatchers.eq(String.valueOf(GeospatialUtils.TRIP_BUFFER_METERS)));
+
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }

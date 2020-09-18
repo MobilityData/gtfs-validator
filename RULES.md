@@ -52,6 +52,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E049](#E049) | Backwards time travel between stops in `stop_times.txt` |
 | [E050](#E050) | Trips must be used in `stop_times.txt` |
 | [E051](#E051) | Trips must have more than one stop to be usable |
+| [E052](#E052) | Stop too far from trip shape |
 | [E053](#E053) | Trip frequencies overlap |
 | [E054](#E054) | Block trips must not have overlapping stop times |
 | [E055](#E055) | Mismatching feed and agency language fields |
@@ -320,6 +321,15 @@ Trips must be referred to at least once in `stop_times.txt`.
 ### E051 - Trips must have more than one stop to be usable
 
 A trip must visit more than one stop in `stop_times.txt` to be usable by passengers for boarding and alighting.
+
+<a name="E052"/>
+
+### E052 - Stop too far from trip shape
+
+Per GTFS Best Practices, route alignments (in `shapes.txt`) should be within 100 meters of stop locations which a trip serves.
+
+#### References:
+* [GTFS Best Practices shapes.txt](https://gtfs.org/best-practices/#shapestxt)
 
 <a name="E053"/>
 
