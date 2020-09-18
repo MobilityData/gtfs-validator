@@ -358,6 +358,11 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final StopTooFarFromTripShapeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final MissingCalendarAndCalendarDateFilesNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }

@@ -132,7 +132,7 @@ public interface GtfsDataRepository {
      * @return an immutable map of shape points from shapes.txt related to the id provided as parameter; which
      * represents a shape object. The returned map is ordered by shape_pt_sequence.
      */
-    Map<Integer, ShapePoint> getShapeById(final String shapeId);
+    SortedMap<Integer, ShapePoint> getShapeById(final String shapeId);
 
     /**
      * Return an immutable map representing all records from shapes.txt. The key values for the returned map are
@@ -141,7 +141,7 @@ public interface GtfsDataRepository {
      *
      * @return an immutable map representing all records from shapes.txt
      */
-    Map<String, Map<Integer, ShapePoint>> getShapeAll();
+    Map<String, SortedMap<Integer, ShapePoint>> getShapeAll();
 
     /**
      * Add a {@link StopTime} representing a row from stop_times.txt to this {@link GtfsDataRepository}.

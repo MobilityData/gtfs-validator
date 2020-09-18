@@ -422,4 +422,8 @@ public class DefaultConfig {
                 new ValidateShapeUsage(),
                 new ValidateShapeIncreasingDistance());
     }
+
+    public ValidateStopTooFarFromTripShape validateStopTooFarFromTripShape() {
+        return new ValidateStopTooFarFromTripShape(gtfsDataRepository, resultRepo, geoUtils, logger);
+    }
 }
