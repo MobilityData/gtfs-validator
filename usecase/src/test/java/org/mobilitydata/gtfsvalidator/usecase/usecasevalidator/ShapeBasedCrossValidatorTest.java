@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeIncreasingDistance;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeUsage;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -58,9 +59,10 @@ class ShapeBasedCrossValidatorTest {
 
         final Logger mockLogger = mock(Logger.class);
         final ValidateShapeUsage mockE038 = mock(ValidateShapeUsage.class);
+        final ValidateShapeIncreasingDistance mockE058 = mock(ValidateShapeIncreasingDistance.class);
 
         final ShapeBasedCrossValidator underTest =
-                new ShapeBasedCrossValidator(mockDataRepo, mockResultRepo, mockLogger, mockE038);
+                new ShapeBasedCrossValidator(mockDataRepo, mockResultRepo, mockLogger, mockE038, mockE058);
 
         underTest.execute();
 
@@ -74,5 +76,9 @@ class ShapeBasedCrossValidatorTest {
 
         verify(mockE038, times(1)).execute(ArgumentMatchers.eq(mockResultRepo),
                 ArgumentMatchers.eq("shape id"), ArgumentMatchers.eq(mockTripShapeIdCollection));
+
+        verify(mockE058, times(1)).execute(
+                ArgumentMatchers.eq(innerMap), ArgumentMatchers.eq("shape id"),
+                ArgumentMatchers.eq(mockResultRepo));
     }
 }
