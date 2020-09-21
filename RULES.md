@@ -6,22 +6,25 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 
 | Error ID      | Error Title         |
 |---------------|---------------------------|
-| [E001](#E001) | Missing required field | 
-| [E003](#E003) | | 
-| [E004](#E004) | | 
-| [E006](#E006) | | 
-| [E009](#E009) | | 
-| [E010](#E010) | | 
-| [E011](#E011) | | 
-| [E012](#E012) | |
-| [E013](#E013) | |
-| [E015](#E015) | |
-| [E016](#E016) | | 
-| [E017](#E017) | |
-| [E018](#E018) | | 
-| [E019](#E019) | | 
-| [E020](#E020) | | 
-| [E021](#E021) | | 
+| [E001](#E001) | Missing required `field` | 
+| [E003](#E003) | Missing required `file` | 
+| [E004](#E004) | Invalid csv row length | 
+| [E005](#E005) | Cannot parse `integer` | 
+| [E006](#E006) | Cannot parse `float` | 
+| [E007](#E007) | Cannot `download` archive | 
+| [E008](#E008) | Cannot `unzip` archive | 
+| [E010](#E010) | `Integer` field value out of range | 
+| [E011](#E011) | `Float` field value out of range | 
+| [E012](#E012) | Invalid `url` field value |
+| [E013](#E013) | Invalid `timezone` field value |
+| [E014](#E014) | Invalid `color` field value |
+| [E015](#E015) | Missing required `value` | 
+| [E016](#E016) | Invalid `time` value | 
+| [E017](#E017) | Cannot parse `date` |
+| [E018](#E018) | Invalid `currency code` | 
+| [E019](#E019) | Illegal field value combination | 
+| [E020](#E020) | Duplicated entity | 
+| [E021](#E021) | Unexpected `enum` value | 
 | [E022](#E022) | Invalid language code | 
 | [E023](#E023) | Invalid email | 
 | [E024](#E024) | Same name and description for route | 
@@ -64,10 +67,10 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 
 | Warning ID    | Warning Title             |
 |---------------|---------------------------|
-| [W001](#W001) | | 
+| [W001](#W001) | Input zip archive contains folder | 
 | [W002](#W002) | Non standard field name | 
-| [W003](#W003) | | 
-| [W004](#W004) | | 
+| [W003](#W003) | Non ascii or non printable char in `id` | 
+| [W004](#W004) | Extra `file` found | 
 | [W005](#W005) | Route short name too long |
 | [W006](#W006) | Missing route short name |
 | [W007](#W007) | Missing route long name |
@@ -86,7 +89,133 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 
 ### E001 - Missing required field
 
-A field marked as `required` is missing 
+A field marked as `required` is missing.
+
+<a name="E003"/>
+
+### E003 - Missing required file
+
+A file marked as `required` is missing.
+
+<a name="E004"/>
+
+### E004 - Invalid csv row length
+
+A csv file row length does not match header row length.
+
+<a name="E005"/>
+
+### E005 - Cannot parse integer
+
+Value of a field with type `integer` could not be parsed as such.
+
+<a name="E006"/>
+
+### E006 - Cannot parse float
+
+Value of a field with type `float` could not be parsed as such.
+
+<a name="E007"/>
+
+### E007 - Cannot download archive
+
+An error happened when trying to download gtfs archive from network.
+
+<a name="E008"/>
+
+### E008 - Cannot unzip archive
+
+An error happened when trying to unzip gtfs archive.
+
+<a name="E010"/>
+
+### E010 - Integer field value out of range
+
+Value of field with type `integer` is out of range.
+
+<a name="E011"/>
+
+### E011 - Float field value out of range
+
+Value of field with type `float` is out of range.
+
+<a name="E012"/>
+
+### E012 - Invalid url field value
+
+Value of field with type `url` is not valid.
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E013"/>
+
+### E013 - Invalid timezone field value
+
+Value of field with type `timezone` is not valid.
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E014"/>
+
+### E014 - Invalid color field value
+
+Value of field with type `color` is not valid.
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E015"/>
+
+### E015 - Missing required value
+
+A value marked as `required` is missing.
+
+<a name="E016"/>
+
+### E016 - Invalid color field value
+
+Value of field with type `time` is not valid.
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E017"/>
+
+### E017 - Cannot parse date
+
+Value of a field with type `date` could not be parsed as such.
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E018"/>
+
+### E018 - Invalid currency code
+
+Value of field with type `currency code` is not valid.
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E019"/>
+
+### E019 - Invalid field combination
+
+Definition of some fields is not valid under the GTFS specification```
+
+<a name="E020"/>
+
+### E020 - Duplicated entity
+
+Some gtfs entity defined multiple times in dataset.
+
+<a name="E021"/>
+
+### E021 - Unexpected enum value
+
+Value of field with type `enum` is unexpected.
 
 <a name="E022"/>
 
@@ -245,7 +374,7 @@ According to spec
 - _Entrance/exit_ or _generic node_ can only have _Station_ as parent
 - _Boarding Area_ can only have _Platform_ as parent 
 
-Any other combination raise this error
+Any other combination raise this error.
 
 #### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
@@ -254,7 +383,7 @@ Any other combination raise this error
 
 ### E042 - Station stop (`location_type` = 2) has a parent stop
 
-Field `parent_station` must be empty when `location_type` is 2
+Field `parent_station` must be empty when `location_type` is 2.
 
 #### References:
 * [stops.txt specification](http://gtfs.org/reference/static/#stopstxt)
@@ -269,7 +398,7 @@ A file cannot contain the same header value twice (i.e., duplicated column of da
 
 ### E044 - Missing trip edge `arrival_time` and `departure_time`
 
-First and last stop of a trip must define both fields
+First and last stop of a trip must define both fields.
 
 <a name="E045"/>
 
@@ -284,7 +413,7 @@ The `departure_time` must not precede the `arrival_time` in `stop_times.txt` if 
 
 ### E046 - Fast travel between stops in `stop_times.txt`
 
-Calculated speed between stops is too fast (>150 kmh) 
+Calculated speed between stops is too fast (>150 kmh).
 
 <a name="E047"/>
 
@@ -308,7 +437,7 @@ The `end_time` must not precede the `start_time` in `frequencies.txt`.
 
 ### E049 - Backwards time travel between stops in `stop_times.txt`
 
-For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence
+For a given `trip_id`, the `arrival_time` of (n+1)-th stoptime in sequence must not precede the `departure_time` of n-th stoptime in sequence.
  
  <a name="E050"/>
 
@@ -388,11 +517,29 @@ Stop times in a trip should have increasing distance.
 
 # Warnings
 
+<a name="W001"/>
+
+### W001 - Input zip archive contains folder
+
+A gtfs zip archive cannot contain a folder.
+
 <a name="W002"/>
 
 ### W002 - Non standard field name
 
-A field not defined in the specification was found. It will be ignored.
+Field not defined in the specification found. It will be ignored.
+
+<a name="W003"/>
+
+### W003 - Non ascii or non printable char in id
+
+A value of filed with type `id` contains non ascii or non printable characters. This is not recommended.
+
+<a name="W004"/>
+
+### W004 - Extra file found
+
+File not defined in the specification found. It will be ignored.
 
 <a name="W005"/>
 
