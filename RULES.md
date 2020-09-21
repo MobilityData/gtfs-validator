@@ -9,7 +9,7 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E001](#E001) | Missing required `field` | 
 | [E003](#E003) | Missing required `file` | 
 | [E004](#E004) | Invalid csv row length | 
-| [E006](#E005) | Cannot parse `integer` | 
+| [E005](#E005) | Cannot parse `integer` | 
 | [E009](#E006) | Cannot parse `float` | 
 | [E010](#E007) | Cannot `download` archive | 
 | [E010](#E008) | Cannot `unzip` archive | 
