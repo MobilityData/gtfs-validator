@@ -6,22 +6,25 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 
 | Error ID      | Error Title         |
 |---------------|---------------------------|
-| [E001](#E001) | Missing required field | 
-| [E003](#E003) | | 
-| [E004](#E004) | | 
-| [E006](#E006) | | 
-| [E009](#E009) | | 
-| [E010](#E010) | | 
-| [E011](#E011) | | 
-| [E012](#E012) | |
-| [E013](#E013) | |
-| [E015](#E015) | |
-| [E016](#E016) | | 
-| [E017](#E017) | |
-| [E018](#E018) | | 
-| [E019](#E019) | | 
-| [E020](#E020) | | 
-| [E021](#E021) | | 
+| [E001](#E001) | Missing required `field` | 
+| [E003](#E003) | Missing required `file`| 
+| [E004](#E004) | Invalid csv row length| 
+| [E006](#E005) | Cannot parse `integer`| 
+| [E009](#E006) | Cannot parse `float`| 
+| [E010](#E007) | Cannot `download` archive| 
+| [E010](#E008) | Cannot `unzip` archive| 
+| [E010](#E010) | `Integer` field value out of range| 
+| [E011](#E011) | `Float` field value out of range| 
+| [E012](#E012) | Invalid `url` field value|
+| [E013](#E013) | Invalid `timezone` field value|
+| [E015](#E014) | Invalid `color` field value|
+| [E016](#E015) | Missing required `value`| 
+| [E016](#E016) | Invalid `time` value| 
+| [E017](#E017) | Cannot parse `date`|
+| [E018](#E018) | Invalid `currency code`| 
+| [E019](#E019) | Illegal field value combination| 
+| [E020](#E020) | Duplicated entity| 
+| [E021](#E021) | Unexpected `enum` value| 
 | [E022](#E022) | Invalid language code | 
 | [E023](#E023) | Invalid email | 
 | [E024](#E024) | Same name and description for route | 
@@ -86,7 +89,133 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 
 ### E001 - Missing required field
 
-A field marked as `required` is missing 
+A field marked as `required` is missing
+
+<a name="E003"/>
+
+### E003 - Missing required file
+
+A file marked as `required` is missing
+
+<a name="E004"/>
+
+### E004 - Invalid csv row length
+
+A csv file row length does not match header row length
+
+<a name="E005"/>
+
+### E005 - Cannot parse integer
+
+Value of a field with type `integer` could not be parsed as such
+
+<a name="E006"/>
+
+### E006 - Cannot parse float
+
+Value of a field with type `float` could not be parsed as such
+
+<a name="E007"/>
+
+### E007 - Cannot download archive
+
+An error happened when trying to download gtfs archive from network
+
+<a name="E008"/>
+
+### E008 - Cannot unzip archive
+
+An error happened when trying to unzip gtfs archive
+
+<a name="E010"/>
+
+### E010 - Integer field value out of range
+
+Value of field with type `integer` is out of range
+
+<a name="E011"/>
+
+### E011 - Float field value out of range
+
+Value of field with type `float` is out of range
+
+<a name="E012"/>
+
+### E012 - Invalid url field value
+
+Value of field with type `url` is not valid
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E013"/>
+
+### E013 - Invalid timezone field value
+
+Value of field with type `timezone` is not valid
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E014"/>
+
+### E014 - Invalid color field value
+
+Value of field with type `color` is not valid
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E015"/>
+
+### E015 - Missing required value
+
+A value marked as `required` is missing
+
+<a name="E016"/>
+
+### E016 - Invalid color field value
+
+Value of field with type `time` is not valid
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E017"/>
+
+### E017 - Cannot parse date
+
+Value of a field with type `date` could not be parsed as such
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E018"/>
+
+### E018 - Invalid currency code
+
+Value of field with type `currency code` is not valid
+
+#### References:
+* [Field Types Description](http://gtfs.org/reference/static/#field-types)
+
+<a name="E019"/>
+
+### E019 - Invalid field combination
+
+Some fields defined in such a way that cannot be valid under the gtfs specification
+
+<a name="E020"/>
+
+### E020 - Duplicated entity
+
+Some gtfs entity defined multiple times in dataset
+
+<a name="E021"/>
+
+### E021 - Unexpected enum value
+
+Value of field with type `enum` is unexpected
 
 <a name="E022"/>
 
