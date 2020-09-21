@@ -10,15 +10,15 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E003](#E003) | Missing required `file` | 
 | [E004](#E004) | Invalid csv row length | 
 | [E005](#E005) | Cannot parse `integer` | 
-| [E009](#E006) | Cannot parse `float` | 
-| [E010](#E007) | Cannot `download` archive | 
-| [E010](#E008) | Cannot `unzip` archive | 
+| [E006](#E006) | Cannot parse `float` | 
+| [E007](#E007) | Cannot `download` archive | 
+| [E008](#E008) | Cannot `unzip` archive | 
 | [E010](#E010) | `Integer` field value out of range | 
 | [E011](#E011) | `Float` field value out of range | 
 | [E012](#E012) | Invalid `url` field value |
 | [E013](#E013) | Invalid `timezone` field value |
-| [E015](#E014) | Invalid `color` field value |
-| [E016](#E015) | Missing required `value` | 
+| [E014](#E014) | Invalid `color` field value |
+| [E015](#E015) | Missing required `value` | 
 | [E016](#E016) | Invalid `time` value | 
 | [E017](#E017) | Cannot parse `date` |
 | [E018](#E018) | Invalid `currency code` | 
@@ -203,7 +203,7 @@ Value of field with type `currency code` is not valid.
 
 ### E019 - Invalid field combination
 
-Some fields defined in such a way that cannot be valid under the gtfs specification.
+Definition of some fields is not valid under the GTFS specification```
 
 <a name="E020"/>
 
