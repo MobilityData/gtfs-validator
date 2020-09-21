@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "@testing-library/jest-dom": "4.2.4",
+    "@testing-library/react": "9.3.2",
+    "@testing-library/user-event": "7.1.2",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
     "react-scripts": "3.4.3",
-    "semantic-ui-css": "^2.4.1"
+    "request": "2.88.2",
+    "semantic-ui-css": "2.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -33,7 +34,8 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "latest",
-    "semantic-ui-react": "^1.2.1"
-  }
+    "react-scripts": "3.4.3",
+    "semantic-ui-react": "1.2.1"
+  },
+  "proxy": "http://localhost:8080"
 }
