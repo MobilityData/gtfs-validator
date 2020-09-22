@@ -16,19 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator;
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ValidatorRunner implements ApplicationRunner {
+public class ValidatorRunner {
     public static void main(String[] args) {
         SpringApplication.run(ValidatorRunner.class, args);
-    }
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-
     }
 }
