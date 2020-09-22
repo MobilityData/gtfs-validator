@@ -15,25 +15,35 @@
  */
 
 plugins {
-    id 'org.springframework.boot' version '2.3.2.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'java'
+    id("com.github.node-gradle.node") version "2.2.4"
 }
 
-version 'unspecified'
+apply plugin: "java"
+apply plugin: "com.github.node-gradle.node"
 
-repositories {
-    mavenCentral()
+node {
+    version = "12.9.1"
+    download = true
 }
 
-dependencies {
-    implementation project(':client')
+task bundle(type: NpmTask, dependsOn: npmInstall) {
+    args = ['run', 'build']
+}
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter'
+task uiTest(type: NpmTask) {
+    environment = ['CI': 'true']
+    args = ['run', 'test']
+}
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+task run(type: NpmTask) {
+    args = ['start']
+}
+
+task webjar(type: Jar) {
+    from(fileTree("build")) {
+        into "META-INF/resources"
     }
 }
+check.dependsOn(test)
+jar.dependsOn(bundle)
+jar.finalizedBy('webjar')
