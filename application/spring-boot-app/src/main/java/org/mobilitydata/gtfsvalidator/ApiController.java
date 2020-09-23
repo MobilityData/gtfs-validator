@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,7 +31,6 @@ public class ApiController {
         this.serviceManager = serviceManager;
     }
 
-    @CrossOrigin(origins = "http://localhost:8090")
     @RequestMapping(value = "/report", method = RequestMethod.GET)
     @ResponseBody
     public String getReport() throws IOException {
