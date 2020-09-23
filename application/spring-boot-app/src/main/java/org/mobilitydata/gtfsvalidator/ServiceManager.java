@@ -27,6 +27,7 @@ public class ServiceManager {
 
     public String getReport() throws IOException {
         // to modify with path from InMemoryExecParamRepository
+        // test to be implemented once request on InMemoryExecParamRepository is implemented
         return Files.readString(Path.of("/Users/lionel/IdeaProjects/gtfs-validator/output/results.json"));
     }
 }
