@@ -32,7 +32,7 @@ public class ApiController {
         this.serviceManager = serviceManager;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "http://localhost:8090")
     @RequestMapping(value = "/report", method = RequestMethod.GET)
     @ResponseBody
     public String getReport() throws IOException {

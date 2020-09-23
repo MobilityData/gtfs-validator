@@ -24,7 +24,7 @@ function App() {
 
   async function onClick() {
     alert(document.getElementById("command-line-input").value);
-    let response = await fetch('http://localhost:8080/report');
+    let response = await fetch('http://localhost:8090/report');
     let body = await response.text();
     console.log(body);
   }
