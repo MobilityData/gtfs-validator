@@ -40,10 +40,10 @@ jobs:
       - name: Persist test report
         uses: actions/upload-artifact@v2
         with:
-          name: v1.2.2-SNAPSHOT_tests
+          name: v1.3.0-SNAPSHOT_tests
           path: build/reports/allTests/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
-          name: v1.2.2-SNAPSHOT_javadoc
+          name: v1.3.0-SNAPSHOT_javadoc
           path: build/docs/javadoc/
