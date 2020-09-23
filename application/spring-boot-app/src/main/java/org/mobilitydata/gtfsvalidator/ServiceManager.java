@@ -30,6 +30,6 @@ public class ServiceManager {
 
     public String getReport() throws IOException {
         // to modify with path from InMemoryExecParamRepository
-        return Files.readString(Path.of("/Users/lionel/IdeaProjects/gtfs-validator/output/results.json"));
+        return Files.readString(Path.of("output/results.json"));
     }
 }
