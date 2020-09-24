@@ -35,21 +35,27 @@ function App() {
   }
 
   const onDrop = useCallback(acceptedFiles => {
-    console.log(acceptedFiles);
-    var reader = new FileReader();
-    reader.readAsText(acceptedFiles[0])
-    reader.onload = function () {
-      alert("File successfully loaded")
-      // var test = document.getElementById("json-content")
-      var obj = JSON.parse(reader.result);
-      console.log(obj.help)
-      // test.innerHTML = ""
-      ReactDOM.render(<JsonRenderer data={obj} htmlId='json-content'/>,
-          document.getElementById('json-content'));
-
-      return reader.result;
+    const fileReader = new FileReader();
+    fileReader.readAsText(acceptedFiles[0])
+    fileReader.onload = function () {
+      alert("File successfully imported")
+      displayJsonData(JSON.parse(fileReader.result), "json-content");
+      reviewExecParamConfigFileContent(fileReader.result)
     }
   }, []);
+
+  function displayJsonData(jsonData, htmlDocumentId) {
+    ReactDOM.render(
+        <JsonRenderer data={jsonData} htmlId={htmlDocumentId}/>,
+        document.getElementById(htmlDocumentId)
+    );
+  }
+
+  async function reviewExecParamConfigFileContent(execParamConfigFileAsString) {
+    let response = await fetch('http://localhost:8090/actions' + execParamConfigFileAsString);
+    let body = await response.text();
+    console.log(body);
+  }
 
   return (
       <div className="App">
