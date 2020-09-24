@@ -18,13 +18,11 @@ import React, {useCallback} from "react";
 import logo from './logo.png';
 import './App.css';
 import FittedButton from "./components/button";
-import ZipDropzone from "./components/zipDropzone";
 import JsonDropZone from "./components/jsonDropzone";
+import JsonRenderer from "./components/json-renderer";
+import ReactDOM from 'react-dom';
 
 function App() {
-
-  async function loadArchive() {
-  }
 
   async function loadConfigFile() {
   }
@@ -37,11 +35,18 @@ function App() {
   }
 
   const onDrop = useCallback(acceptedFiles => {
+    console.log(acceptedFiles);
     var reader = new FileReader();
     reader.readAsText(acceptedFiles[0])
     reader.onload = function () {
       alert("File successfully loaded")
-      console.log(reader.result);
+      // var test = document.getElementById("json-content")
+      var obj = JSON.parse(reader.result);
+      console.log(obj.help)
+      // test.innerHTML = ""
+      ReactDOM.render(<JsonRenderer data={obj} htmlId='json-content'/>,
+          document.getElementById('json-content'));
+
       return reader.result;
     }
   }, []);
@@ -50,14 +55,8 @@ function App() {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
-          <ZipDropzone onDrop={onDrop} accept={"application/zip"}/>
-          <p className="launch-button-container">
-            <FittedButton description="Load GTFS archive" method={loadArchive}/>
-          </p>
           <JsonDropZone id="gtfsarchive" onDrop={onDrop} accept={"application/json"}/>
-          <p className="launch-button-container">
-            <FittedButton description="Load configuration file" method={loadConfigFile}/>
-          </p>
+          <div id="json-content"></div>
           <p className="launch-button-container">
             <FittedButton description="Validate" method={validate}/>
           </p>
