@@ -14,50 +14,58 @@
  *  limitations under the License.
  */
 
-import React from 'react';
+import React, {useCallback} from "react";
 import logo from './logo.png';
 import './App.css';
-import InputField from "./components/input";
 import FittedButton from "./components/button";
+import ZipDropzone from "./components/zipDropzone";
+import JsonDropZone from "./components/jsonDropzone";
 
 function App() {
 
-  async function onClick() {
+  async function loadArchive() {
+  }
+
+  async function loadConfigFile() {
+  }
+
+  async function validate() {
     alert(document.getElementById("command-line-input").value);
     let response = await fetch('http://localhost:8090/report');
     let body = await response.text();
     console.log(body);
   }
 
+  const onDrop = useCallback(acceptedFiles => {
+    var reader = new FileReader();
+    reader.readAsText(acceptedFiles[0])
+    reader.onload = function () {
+      alert("File successfully loaded")
+      console.log(reader.result);
+      return reader.result;
+    }
+  }, []);
+
   return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
-          <p className="command-line-container">
-            <InputField placeHolderText="Enter command line here" id="command-line-input" type="text"/>
+          <ZipDropzone onDrop={onDrop} accept={"application/zip"}/>
+          <p className="launch-button-container">
+            <FittedButton description="Load GTFS archive" method={loadArchive}/>
+          </p>
+          <JsonDropZone id="gtfsarchive" onDrop={onDrop} accept={"application/json"}/>
+          <p className="launch-button-container">
+            <FittedButton description="Load configuration file" method={loadConfigFile}/>
           </p>
           <p className="launch-button-container">
-            <FittedButton description="Launch validation process" method={onClick}/>
+            <FittedButton description="Validate" method={validate}/>
           </p>
           <p>
-            <a
-                className="App-link"
-                href="https://mobilitydata.org"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              MobilityData
-            </a>
+            <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
           </p>
           <p>
-            <a
-                className="App-link"
-                href="https://github.com/MobilityData/gtfs-validator"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              Project documentation
-            </a>
+            <a className="App-link" href="https://github.com/MobilityData/gtfs-validator">Project documentation</a>
           </p>
         </header>
       </div>

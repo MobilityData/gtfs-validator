@@ -13,6 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+.text-center {
+    width: 1000px;
+    height: 200px;
+    border-style: dashed;
+    border-width: 6px;
+    border-color: #0287F7;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #FFFFFF;
+    color: #636C7F;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropzone-content {
+    line-height: 200px;
+    vertical-align: middle;
+    text-align: center;
+}
 
 .App {
     text-align: center;
@@ -46,7 +65,6 @@
 .App-link {
     color: #61dafb;
     font-size: calc(2vmin);
-
 }
 
 @keyframes App-logo-spin {

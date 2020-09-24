@@ -8,6 +8,7 @@
     "@testing-library/user-event": "7.1.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-dropzone": "11.2.0",
     "react-scripts": "3.4.3",
     "request": "2.88.2",
     "semantic-ui-css": "2.4.1"
