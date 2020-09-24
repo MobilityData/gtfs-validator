@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class ApiControllerTest {
+class GtfsValidatorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
