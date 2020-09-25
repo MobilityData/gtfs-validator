@@ -17,7 +17,7 @@
 import React from "react";
 import {useDropzone} from "react-dropzone";
 
-const JsonDropZone = ({onDrop, accept, id}) => {
+const JsonDropzone = ({onDrop, accept, id}) => {
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
         accept,
@@ -39,4 +39,4 @@ const JsonDropZone = ({onDrop, accept, id}) => {
     );
 };
 
-export default JsonDropZone;
+export default JsonDropzone;
