@@ -9,6 +9,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-dropzone": "11.2.0",
+    "react-json-prettify": "^0.2.0",
     "react-scripts": "3.4.3",
     "request": "2.88.2",
     "semantic-ui-css": "2.4.1"
