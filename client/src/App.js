@@ -21,6 +21,7 @@ import FittedButton from "./components/button";
 import JsonDropZone from "./components/jsonDropzone";
 import JsonRenderer from "./components/json-renderer";
 import ReactDOM from 'react-dom';
+import JsonBeautyfier from "./components/jsonPrettyfier";
 
 function App() {
 
@@ -40,7 +41,7 @@ function App() {
     fileReader.onload = function () {
       alert("File successfully imported")
       displayJsonData(JSON.parse(fileReader.result), "json-content");
-      reviewExecParamConfigFileContent(fileReader.result)
+      reviewExecParamConfigFileContent(fileReader.result.toString())
     }
   }, []);
 
@@ -52,9 +53,22 @@ function App() {
   }
 
   async function reviewExecParamConfigFileContent(execParamConfigFileAsString) {
-    let response = await fetch('http://localhost:8090/actions' + execParamConfigFileAsString);
+    let response = await fetch('http://localhost:8090/actions/initconfig/' + execParamConfigFileAsString);
     let body = await response.text();
     console.log(body);
+  }
+
+  async function validateFeed() {
+    let response = await fetch('http://localhost:8090/actions/runvalidator');
+    let body = await response.text();
+    ReactDOM.render(
+        <p>{body}</p>,
+        document.getElementById("validation"))
+    let reportResponse = await fetch('http://localhost:8090/actions/getreportcontent');
+    let reportBody = await reportResponse.text();
+    ReactDOM.render(
+        <JsonBeautyfier data={JSON.parse(reportBody)}/>,
+        document.getElementById("report"))
   }
 
   return (
@@ -62,10 +76,12 @@ function App() {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
           <JsonDropZone id="gtfsarchive" onDrop={onDrop} accept={"application/json"}/>
-          <div id="json-content"></div>
+          <div id="json-content"/>
           <p className="launch-button-container">
-            <FittedButton description="Validate" method={validate}/>
+            <FittedButton description="Validate" method={validateFeed}/>
           </p>
+          <p id="validation"/>
+          <p id="report" className="report"/>
           <p>
             <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
           </p>
