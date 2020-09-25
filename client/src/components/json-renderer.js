@@ -28,7 +28,7 @@ const JsonRenderer = (props) => {
                         <tr key={i}>
                             <td>{key}</td>
                             <td>
-                                {(props.data[key] == null ? "null" : (props.data[key] === false ? "false" : "true"))}
+                                {props.data[key].toString()}
                             </td>
                         </tr>
                     ))
