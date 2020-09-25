@@ -19,8 +19,6 @@ package org.mobilitydata.gtfsvalidator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("actions")
 @Component
@@ -44,8 +42,8 @@ public class GtfsValidatorController {
 
     @GetMapping("/getreportcontent")
     @ResponseBody
-    public String getReportContent() throws IOException {
-        return serviceManager.getReportContent();
+    public String getPathToReport() {
+        return serviceManager.getPathToReport();
     }
 
     @GetMapping("/check")
@@ -53,11 +51,6 @@ public class GtfsValidatorController {
         return serviceManager.checkExecParamInit();
     }
 
-    @GetMapping("/report")
-    @ResponseBody
-    public String getReport() throws IOException {
-        return serviceManager.getReport();
-    }
 
     @GetMapping("/{jsonAsString}")
     @ResponseBody

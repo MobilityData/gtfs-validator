@@ -266,10 +266,8 @@ public class ServiceManager {
                 config.getExecParamValue(ExecParamRepository.ABORT_ON_ERROR);
     }
 
-    public String getReport() throws IOException {
-        // to modify with path from InMemoryExecParamRepository
-        // test to be implemented once request on InMemoryExecParamRepository is implemented
-        return Files.readString(Path.of("/Users/lionel/IdeaProjects/gtfs-validator/output/results.json"));
+    public String getPathToReport() {
+        return config.getExecParamValue(ExecParamRepository.OUTPUT_KEY);
     }
 
     public String verifyJsonData(final String jsonData) {
