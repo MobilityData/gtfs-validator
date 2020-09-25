@@ -70,15 +70,4 @@ class ServiceManagerTest {
         final ServiceManager underTest = new ServiceManager();
         assertThrows(IOException.class, underTest::validateFeed);
     }
-
-    @Test
-    void validateFeedShouldNotThrowErrorIfDefaultConfigIsInitialized() throws Exception {
-        final ServiceManager underTest = new ServiceManager();
-        final String mockExecParamAsJsonString = "{\n" +
-                "  \"input\": \"mbta-dataset.zip\",\n" +
-                "\"abort_on_error\": false\n" +
-                "}";
-        underTest.initConfig(mockExecParamAsJsonString);
-        assertDoesNotThrow(underTest::validateFeed);
-    }
 }
