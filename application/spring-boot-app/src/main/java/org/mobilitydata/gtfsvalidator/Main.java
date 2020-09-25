@@ -19,6 +19,9 @@ package org.mobilitydata.gtfsvalidator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * Spring boot application entry point. The main method initiates the server on which the application will run.
+ */
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) {

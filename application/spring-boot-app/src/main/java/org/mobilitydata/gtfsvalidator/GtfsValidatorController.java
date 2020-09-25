@@ -30,31 +30,23 @@ public class GtfsValidatorController {
     }
 
     @GetMapping("/initconfig/{jsonAsString}")
-    public void initConfig(@PathVariable("jsonAsString") final String execParamAsJsonString) {
+    public void initConfig(@PathVariable("jsonAsString") final String execParamAsJsonString) throws Exception {
         serviceManager.initConfig(execParamAsJsonString);
     }
 
     @GetMapping("/runvalidator")
     @ResponseBody
     public String validateFeed() {
-        return serviceManager.validateFeed();
+        try {
+            return serviceManager.validateFeed();
+        } catch (Exception e) {
+            return e.getMessage();
+        }
     }
 
     @GetMapping("/getreportcontent")
     @ResponseBody
     public String getPathToReport() {
         return serviceManager.getPathToReport();
-    }
-
-    @GetMapping("/check")
-    public String checkExecParamInit() {
-        return serviceManager.checkExecParamInit();
-    }
-
-
-    @GetMapping("/{jsonAsString}")
-    @ResponseBody
-    public String verifyJsonData(@PathVariable("jsonAsString") String jsonAsString) {
-        return serviceManager.verifyJsonData(jsonAsString);
     }
 }

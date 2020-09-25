@@ -26,8 +26,6 @@ import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorExcepti
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,14 +36,47 @@ public class ServiceManager {
     private final Logger logger = LogManager.getLogger();
     private DefaultConfig config;
 
-    public void initConfig(final String execParamAsString) {
-        this.config = new DefaultConfig.Builder()
-                .execParamAsString(execParamAsString)
-                .logger(logger)
-                .build();
+    /**
+     * Initiates the {@code DefaultConfig} needed to proceed to GTFS archive validation. {@link DefaultConfig} is
+     * instantiate from a set of execution parameters provided by the user via interaction with the web ui.
+     *
+     * @param execParamAsString the set of execution parameters as a Json string
+     * @return null (for requirement of the testing framework)
+     */
+    public String initConfig(final String execParamAsString) throws Exception {
+        try {
+            this.config = new DefaultConfig.Builder()
+                    .execParamAsString(execParamAsString)
+                    .logger(logger)
+                    .build();
+        } catch (Exception e) {
+            if (execParamAsString == null) {
+                throw (new IOException("Configuration file not provided"));
+            } else {
+                throw e;
+            }
+        }
+        return null;
     }
 
-    public String validateFeed() {
+    /**
+     * Checks if DefaultConfig has been initialized i.e execution parameter configuration file has been provided by user
+     *
+     * @return true if the user provided configuration file, else returns false.
+     */
+    public boolean isConfigInit() {
+        return config != null;
+    }
+
+    /**
+     * Run all use cases needed to validate a GTFS archive. Returns a String representing the validation status
+     *
+     * @return the validation status as a String
+     */
+    public String validateFeed() throws IOException {
+        if (!isConfigInit()) {
+            throw (new IOException("Configuration file not provided"));
+        }
         try {
             // use case will inspect parameters and decide if help menu should be displayed or not
             if (!config.printHelp().execute()) {
@@ -231,7 +262,7 @@ public class ServiceManager {
             }
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
-            return "An exception occurred: " + e;
+            throw new IOException("An exception occurred: " + e);
 
         } catch (TooManyValidationErrorException e) {
             logger.error("Error detected -- ABORTING");
@@ -242,35 +273,22 @@ public class ServiceManager {
 
                 logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
                         " to continue on errors");
-                return "Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
-                        " to continue on errors";
+                return "Validation process aborted. Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
+                        " to continue on errors. Check validation report for more details.";
             } catch (IOException ioException) {
                 logger.error("An exception occurred: " + e);
-                return "An exception occurred: " + e;
+                throw new IOException("An exception occurred: " + e);
             }
         }
         return null;
     }
 
-    public String getReportContent() throws IOException {
-        return Files.readString(Path.of("/Users/lionel/IdeaProjects/gtfs-validator/output/results.json"));
-    }
-
-    public String checkExecParamInit() {
-        return config.getExecParamValue(ExecParamRepository.HELP_KEY) +
-                config.getExecParamValue(ExecParamRepository.EXTRACT_KEY) +
-                config.getExecParamValue(ExecParamRepository.OUTPUT_KEY) +
-                config.getExecParamValue(ExecParamRepository.URL_KEY) +
-                config.getExecParamValue(ExecParamRepository.INPUT_KEY) +
-                config.getExecParamValue(ExecParamRepository.EXCLUSION_KEY) +
-                config.getExecParamValue(ExecParamRepository.ABORT_ON_ERROR);
-    }
-
+    /**
+     * Returns path to validation report
+     *
+     * @return the path to the validation report
+     */
     public String getPathToReport() {
         return config.getExecParamValue(ExecParamRepository.OUTPUT_KEY);
-    }
-
-    public String verifyJsonData(final String jsonData) {
-        return jsonData;
     }
 }

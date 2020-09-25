@@ -18,18 +18,18 @@ package org.mobilitydata.gtfsvalidator;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -43,14 +43,36 @@ class GtfsValidatorControllerTest {
     private ServiceManager mockServiceManager;
 
     @Test
-    void getMappingShouldReturnValidationReport() throws Exception {
-        when(mockServiceManager.getReport()).thenReturn("report value as string");
+    void initConfigShouldCallServiceManagerInitConfigMethod() throws Exception {
+        when(mockServiceManager.initConfig(anyString())).thenReturn(null);
 
-        final MvcResult mvcResult = mockMvc
-                .perform(MockMvcRequestBuilders.get("/report"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/actions/initconfig/jsonAsString"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
-        final String expectedValidationReport = "report value as string";
-        assertEquals(expectedValidationReport, mvcResult.getResponse().getContentAsString());
+        verify(mockServiceManager, times(1))
+                .initConfig(ArgumentMatchers.eq("jsonAsString"));
+        verifyNoMoreInteractions(mockServiceManager);
+    }
+
+    @Test
+    void validateFeedShouldCallServiceManagerValidateFeedMethod() throws Exception {
+        when(mockServiceManager.validateFeed()).thenReturn("validation status");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/actions/runvalidator/"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+        verify(mockServiceManager, times(1)).validateFeed();
+        verifyNoMoreInteractions(mockServiceManager);
+    }
+
+    @Test
+    void getPathToReportShouldCallServiceManagerGetPathToReport() throws Exception {
+        when(mockServiceManager.getPathToReport()).thenReturn("path to validation report");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/actions/getreportcontent/"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+        verify(mockServiceManager, times(1)).getPathToReport();
+        verifyNoMoreInteractions(mockServiceManager);
     }
 }
