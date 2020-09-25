@@ -16,17 +16,41 @@
 
 package org.mobilitydata.gtfsvalidator;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @RestController
 @RequestMapping("actions")
+@Component
 public class GtfsValidatorController {
     private final ServiceManager serviceManager;
 
-    public GtfsValidatorController(ServiceManager serviceManager) {
+    public GtfsValidatorController(final ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
+    }
+
+    @GetMapping("/initconfig/{jsonAsString}")
+    public void initConfig(@PathVariable("jsonAsString") final String execParamAsJsonString) {
+        serviceManager.initConfig(execParamAsJsonString);
+    }
+
+    @GetMapping("/runvalidator")
+    @ResponseBody
+    public String validateFeed() {
+        return serviceManager.validateFeed();
+    }
+
+    @GetMapping("/getreportcontent")
+    @ResponseBody
+    public String getReportContent() throws IOException {
+        return serviceManager.getReportContent();
+    }
+
+    @GetMapping("/check")
+    public String checkExecParamInit() {
+        return serviceManager.checkExecParamInit();
     }
 
     @GetMapping("/report")
@@ -35,10 +59,9 @@ public class GtfsValidatorController {
         return serviceManager.getReport();
     }
 
-    @GetMapping("/{id}/{deu}")
+    @GetMapping("/{jsonAsString}")
     @ResponseBody
-    public String getId(@PathVariable("id") String id,
-                        @PathVariable("deu") String deu) {
-        return id + deu;
+    public String verifyJsonData(@PathVariable("jsonAsString") String jsonAsString) {
+        return serviceManager.verifyJsonData(jsonAsString);
     }
 }

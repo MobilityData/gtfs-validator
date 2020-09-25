@@ -460,4 +460,8 @@ public class DefaultConfig {
                 new ValidateShapeUsage(),
                 new ValidateShapeIncreasingDistance());
     }
+
+    public String getExecParamValue(final String execParamKey) {
+        return execParamRepo.getExecParamValue(execParamKey);
+    }
 }

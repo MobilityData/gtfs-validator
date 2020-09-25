@@ -37,7 +37,12 @@ repositories {
 }
 
 dependencies {
-    implementation project(':client')
+    implementation(
+            project(':config'),
+            project(':client'),
+            project(':domain'),
+            project(':usecase'),
+    )
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter'
     testCompile group: 'junit', name: 'junit', version: '4.12'
