@@ -11,16 +11,18 @@ This command-line tool written in Java that performs the following steps:
 
 # Prerequisites
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
-1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from a [workflow execution](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster)
+1. Download the latest gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from a [workflow execution](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster)
 
 # Usage
+
+## cli-app usage
 
 ### Validate a locally stored GTFS dataset
 
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -i relative/path/to/zipped_dataset -o relative/output/path -e relative/extraction/path -x enumeration_of_files_to_exclude_from_validation_process
+java -jar gtfs-validator-v1.3.0_cli.jar -i relative/path/to/zipped_dataset -o relative/output/path -e relative/extraction/path -x enumeration_of_files_to_exclude_from_validation_process
 ```
 
 ...which will:
@@ -31,7 +33,7 @@ java -jar gtfs-validator-v1.1.0.jar -i relative/path/to/zipped_dataset -o relati
 #### Example: Validate GTFS dataset while specifying extraction, input, and output directories
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -i gtfs-dataset.zip -o output_folder -e extraction_folder
+java -jar gtfs-validator-v1.3.0_cli.jar -i gtfs-dataset.zip -o output_folder -e extraction_folder
 ```
 
 In order, this command line will:
@@ -43,7 +45,7 @@ In order, this command line will:
 #### Example: Validate a subset of a GTFS dataset.
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -i gtfs-dataset.zip  -x fare_attributes.txt,attributions.txt
+java -jar gtfs-validator-v1.3.0_cli.jar -i gtfs-dataset.zip  -x fare_attributes.txt,attributions.txt
 ```
 
 In order, this command line will:
@@ -59,7 +61,7 @@ In order, this command line will:
 Sample usage:
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -u url/to/dataset -o relative/output/path -e relative/extraction/path -i input.zip
+java -jar gtfs-validator-v1.3.0_cli.jar -u url/to/dataset -o relative/output/path -e relative/extraction/path -i input.zip
 ```
 
 ...which will:
@@ -70,7 +72,7 @@ java -jar gtfs-validator-v1.1.0.jar -u url/to/dataset -o relative/output/path -e
 #### Example: Validate a GTFS dataset and export the validation result as proto files
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -u url/to/dataset -o output_folder -e extraction_folder -i local-dataset.zip -p
+java -jar gtfs-validator-v1.3.0_cli.jar -u url/to/dataset -o output_folder -e extraction_folder -i local-dataset.zip -p
 ```
 
 In order, this command line will:
@@ -81,7 +83,7 @@ In order, this command line will:
 #### Example: Validate a GTFS dataset without specifying command arguments or providing configuration file
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar
+java -jar gtfs-validator-v1.3.0_cli.jar
 ```
 
 In order, this command line will:
@@ -93,10 +95,10 @@ In order, this command line will:
 For a list of all available commands, use `--help`:
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar --help
+java -jar gtfs-validator-v1.3.0_cli.jar --help
 ```
 
-## Software configuration
+### Software configuration
 
 Execution parameters are configurable through command-line or via a configuration file `execution-parameters.json`. 
 By default, if no command-line is provided the validation process will look for execution parameters in user configurable configuration file `execution-parameters.json`.
@@ -109,7 +111,7 @@ Sample usage:
 The two following sample usages are equivalent, provided that `execution-parameters.json` file is located in the working directory:
 
 ``` 
-java -jar gtfs-validator-v1.1.0.jar -e relative/extraction/path -o relative/output/path -i relative/path/to/zipped_dataset -x agency.txt,routes.txt
+java -jar gtfs-validator-v1.3.0_cli.jar -e relative/extraction/path -o relative/output/path -i relative/path/to/zipped_dataset -x agency.txt,routes.txt
 ```
 ```
 {
@@ -122,6 +124,31 @@ java -jar gtfs-validator-v1.1.0.jar -e relative/extraction/path -o relative/outp
 
 Note that you'll need to change the above JAR file name to whatever [release version](https://github.com/MobilityData/gtfs-validator/releases) you download.
 
+## spring-boot-app usage
+
+A second implementation of `gtfs-validator` uses [`SpringBoot`](https://spring.io/projects/spring-boot) framework and a user interface (based on [`React`](https://reactjs.org/)).
+
+### Run the application
+
+```
+java -jar gtfs-validator-v1.3.0_web.jar 
+```
+
+Which will:
+1. Launch server side of application on port `8090`
+1. Launch client side of the application on port `8090`
+
+Open your favorite browser and go to `http://localhost:8090` the user interface of the application should be displayed as follows:
+![User Interface](url to image.jpg)
+
+
+1. Drag and drop your configuration in the area indicated for this purpose
+1. Click on validate
+
+The validation report will be generated and saved at the default location or the path specified via the configuration file's `output` field.
+See [configuration section](https://github.com/MobilityData/gtfs-validator#software-configuration) for more details regarding software configuration.
+
+
 # Architecture
 
 We use [clean architecture principles](https://medium.com/slalom-build/clean-architecture-with-java-11-f78bba431041) to implement this validator, which modularizes the project.
@@ -131,6 +158,8 @@ Some important modules:
 * [Use cases](usecase) - Business logic 
 * [Adapters](adapter) - Convertors (e.g., parsers and exporters)
 * [application/cli-app](application/cli-app) - The main command-line application
+* [application/spring-boot-app](application/spring-boot-app) - The spring boot implementation of the application
+* [Client](client) - The web layer used to interact with the [spring-boot-app](application/spring-boot-app) 
 
 # Tests
 
