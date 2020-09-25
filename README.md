@@ -139,7 +139,7 @@ Which will:
 1. Launch client side of the application on port `8090`
 
 Open your favorite browser and go to `http://localhost:8090` the user interface of the application should be displayed as follows:
-![User Interface](url to image.jpg)
+![User Interface](https://user-images.githubusercontent.com/35747326/94287969-e985ff80-ff24-11ea-97bd-c57a2383db9d.png)
 
 
 1. Drag and drop your configuration in the area indicated for this purpose
