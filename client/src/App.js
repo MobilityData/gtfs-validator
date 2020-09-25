@@ -17,23 +17,15 @@
 import React, {useCallback} from "react";
 import logo from './logo.png';
 import './App.css';
-import FittedButton from "./components/button";
-import JsonDropZone from "./components/jsonDropzone";
-import JsonRenderer from "./components/json-renderer";
+import FittedButton from "./components/NiceButton";
+import JsonDropzone from "./components/JsonDropzone";
+import JsonRenderer from "./components/JsonRenderer";
 import ReactDOM from 'react-dom';
-import JsonBeautyfier from "./components/jsonPrettyfier";
+import {initConfig, validateFeed} from "./helper/ApiRequest"
+
+import {Port} from "./helper/Constants.js";
 
 function App() {
-
-  async function loadConfigFile() {
-  }
-
-  async function validate() {
-    alert(document.getElementById("command-line-input").value);
-    let response = await fetch('http://localhost:8090/report');
-    let body = await response.text();
-    console.log(body);
-  }
 
   const onDrop = useCallback(acceptedFiles => {
     const fileReader = new FileReader();
@@ -41,7 +33,7 @@ function App() {
     fileReader.onload = function () {
       alert("File successfully imported")
       displayJsonData(JSON.parse(fileReader.result), "json-content");
-      reviewExecParamConfigFileContent(fileReader.result.toString())
+      initConfig(Port(), fileReader.result.toString())
     }
   }, []);
 
@@ -52,35 +44,16 @@ function App() {
     );
   }
 
-  async function reviewExecParamConfigFileContent(execParamConfigFileAsString) {
-    let response = await fetch('http://localhost:8090/actions/initconfig/' + execParamConfigFileAsString);
-    let body = await response.text();
-    console.log(body);
-  }
-
-  async function validateFeed() {
-    let response = await fetch('http://localhost:8090/actions/runvalidator');
-    let body = await response.text();
-    ReactDOM.render(
-        <p>{body}</p>,
-        document.getElementById("validation"))
-    let reportResponse = await fetch('http://localhost:8090/actions/getreportcontent');
-    let reportBody = await reportResponse.text();
-    ReactDOM.render(
-        <JsonBeautyfier data={JSON.parse(reportBody)}/>,
-        document.getElementById("report"))
-  }
-
   return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
-          <JsonDropZone id="gtfsarchive" onDrop={onDrop} accept={"application/json"}/>
+          <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"}/>
           <div id="json-content"/>
           <p className="launch-button-container">
             <FittedButton description="Validate" method={validateFeed}/>
           </p>
-          <p id="validation"/>
+          <p id="validation-status"/>
           <p id="report" className="report"/>
           <p>
             <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
