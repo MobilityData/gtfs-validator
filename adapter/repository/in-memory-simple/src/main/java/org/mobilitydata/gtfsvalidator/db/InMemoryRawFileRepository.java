@@ -16,13 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -66,22 +65,16 @@ public class InMemoryRawFileRepository implements RawFileRepository {
     @Override
     public List<String> getActualHeadersForFile(RawFileInfo file) {
         File csvFile = new File(file.getPath() + File.separator + file.getFilename());
-        CsvMapper mapper = new CsvMapper();
-        CsvSchema schema = CsvSchema.emptySchema().withHeader();
 
-        List<String> toReturn = new ArrayList<>();
+        CsvParserSettings parserSettings = new CsvParserSettings();
+        parserSettings.setLineSeparatorDetectionEnabled(true);
+        parserSettings.setHeaderExtractionEnabled(true);
 
-        try {
-            ((CsvSchema) (mapper.readerFor(Map.class)
-                    .with(schema)
-                    .readValues(csvFile).getParser().getSchema())).iterator()
-                    .forEachRemaining(column -> toReturn.add(column.getName()));
-        } catch (IOException e) {
-            //TODO: this should go back up to use case level so it can be properly reported
-            return Collections.emptyList();
-        }
+        CsvParser parser = new CsvParser(parserSettings);
 
-        return toReturn;
+        var itResult = parser.iterateRecords(csvFile);
+
+        return Arrays.asList(itResult.getContext().headers().clone());
     }
 
     /**
@@ -103,10 +96,6 @@ public class InMemoryRawFileRepository implements RawFileRepository {
     @Override
     public Optional<RawEntityProvider> getProviderForFile(RawFileInfo file) {
 
-        try {
-            return Optional.of(new FromFileRawEntityProvider(file));
-        } catch (IOException e) {
-            return Optional.empty();
-        }
+        return Optional.of(new FromFileRawEntityProvider(file));
     }
 }

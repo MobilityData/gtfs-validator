@@ -16,16 +16,16 @@
 
 package org.mobilitydata.gtfsvalidator.db;
 
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.univocity.parsers.common.ParsingContext;
+import com.univocity.parsers.common.ResultIterator;
+import com.univocity.parsers.common.record.Record;
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Provides methods to perform operations on rows of a GTFS CSV file. Includes feature to transform a row of a GTFS
@@ -33,23 +33,24 @@ import java.util.Map;
  * This is called in {@link InMemoryRawFileRepository} to retrieve the data provider for a specific GTFS CSV file.
  */
 public class FromFileRawEntityProvider implements RawFileRepository.RawEntityProvider {
-    private final MappingIterator<Map<String, String>> dataSource;
+    private final ResultIterator<Record, ParsingContext> dataSource;
     private final int headerCount;
 
-    public FromFileRawEntityProvider(RawFileInfo file) throws IOException {
+    public FromFileRawEntityProvider(RawFileInfo file) {
+
         File csvFile = new File(file.getPath() + File.separator + file.getFilename());
-        CsvMapper mapper = new CsvMapper();
-        CsvSchema schema = CsvSchema.emptySchema().withHeader();
 
-        dataSource = mapper.readerFor(Map.class)
-                .with(schema)
-                .readValues(csvFile);
+        CsvParserSettings parserSettings = new CsvParserSettings();
+        parserSettings.setLineSeparatorDetectionEnabled(true);
+        parserSettings.setHeaderExtractionEnabled(true);
 
-        final int[] headerCountArray = {0};
+        CsvParser parser = new CsvParser(parserSettings);
 
-        ((CsvSchema) (dataSource.getParser().getSchema())).iterator().forEachRemaining(column -> ++headerCountArray[0]);
+        var itResult = parser.iterateRecords(csvFile);
 
-        headerCount = headerCountArray[0];
+        headerCount = itResult.getContext().headers().length;
+
+        dataSource = itResult.iterator();
     }
 
     /**
@@ -69,7 +70,7 @@ public class FromFileRawEntityProvider implements RawFileRepository.RawEntityPro
      */
     @Override
     public RawEntity getNext() {
-        return new RawEntity(dataSource.next(), dataSource.getCurrentLocation().getLineNr());
+        return new RawEntity(dataSource.next().toFieldMap(), (int) dataSource.getContext().currentLine());
     }
 
     /**
