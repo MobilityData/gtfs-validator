@@ -14,6 +14,51 @@
  *  limitations under the License.
  */
 
+#json-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#json-table td, #json-table th {
+    border: 1px solid #ddd;
+    line-height: 25px;
+    padding: 8px;
+}
+
+#json-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+    color: #636C7F;
+}
+
+#json-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #90A2FF;
+    color: white;
+}
+
+.text-center {
+    width: 1000px;
+    height: 200px;
+    border-style: dashed;
+    border-width: 6px;
+    border-color: #90A2FF;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #FFFFFF;
+    color: #636C7F;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropzone-content {
+    line-height: 200px;
+    vertical-align: middle;
+    text-align: center;
+}
+
 .App {
     text-align: center;
 }
@@ -30,6 +75,7 @@
 
 .launch-button-container {
     width: 60%;
+    margin-top: 20px;
 }
 
 .App-header {
@@ -46,7 +92,6 @@
 .App-link {
     color: #61dafb;
     font-size: calc(2vmin);
-
 }
 
 @keyframes App-logo-spin {

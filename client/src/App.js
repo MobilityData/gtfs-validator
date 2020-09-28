@@ -14,50 +14,73 @@
  *  limitations under the License.
  */
 
-import React from 'react';
+import React, {useCallback} from "react";
 import logo from './logo.png';
 import './App.css';
-import InputField from "./components/input";
-import FittedButton from "./components/button";
+import FittedButton from "./components/NiceButton";
+import JsonDropzone from "./components/JsonDropzone";
+import JsonRenderer from "./components/JsonRenderer";
+import ReactDOM from 'react-dom';
+import {initConfig, validateFeed} from "./helper/ApiRequest"
+
+import {Port} from "./helper/Constants.js";
 
 function App() {
 
-  async function onClick() {
-    alert(document.getElementById("command-line-input").value);
-    let response = await fetch('http://localhost:8090/report');
-    let body = await response.text();
-    console.log(body);
+  const onDrop = useCallback(acceptedFiles => {
+    clearHTML();
+    deleteReportDiv();
+    const fileReader = new FileReader();
+    fileReader.readAsText(acceptedFiles[0])
+    fileReader.onload = function () {
+      displayJsonData(JSON.parse(fileReader.result), "json-content");
+      initConfig(Port(), JSON.parse(fileReader.result))
+    }
+  }, []);
+
+  function displayJsonData(jsonData, htmlDocumentId) {
+    ReactDOM.render(
+        <JsonRenderer data={jsonData} htmlId={htmlDocumentId}/>,
+        document.getElementById(htmlDocumentId)
+    );
+  }
+
+  function clearHTML() {
+    document.getElementById("display-result-button").style.visibility = "hidden";
+    document.getElementById("validation-status").style.visibility = "hidden";
+  }
+
+  function deleteTable() {
+    document.getElementById("json-content").style.visibility = "hidden";
+  }
+
+  function deleteReportDiv() {
+    document.getElementById("display-result-button").style.visibility = "hidden";
   }
 
   return (
       <div className="App">
+        <script>
+          clearHTML();
+          deleteTable();
+          deleteReportDiv();
+        </script>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
-          <p className="command-line-container">
-            <InputField placeHolderText="Enter command line here" id="command-line-input" type="text"/>
-          </p>
+          <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"}/>
+          <div id="json-content"/>
           <p className="launch-button-container">
-            <FittedButton description="Launch validation process" method={onClick}/>
+            <FittedButton description="Validate" method={validateFeed}/>
+          </p>
+          <p id="validation-status"/>
+          <p id="display-result-button" className="launch-button-container"/>
+          <p id="progress-circles"/>
+          <p id="display-result-button" className="launch-button-container"/>
+          <p>
+            <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
           </p>
           <p>
-            <a
-                className="App-link"
-                href="https://mobilitydata.org"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              MobilityData
-            </a>
-          </p>
-          <p>
-            <a
-                className="App-link"
-                href="https://github.com/MobilityData/gtfs-validator"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-              Project documentation
-            </a>
+            <a className="App-link" href="https://github.com/MobilityData/gtfs-validator">Project documentation</a>
           </p>
         </header>
       </div>

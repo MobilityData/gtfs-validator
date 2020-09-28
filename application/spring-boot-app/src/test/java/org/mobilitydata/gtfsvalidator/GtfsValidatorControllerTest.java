@@ -24,17 +24,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class ApiControllerTest {
+class GtfsValidatorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,14 +41,37 @@ class ApiControllerTest {
     private ServiceManager mockServiceManager;
 
     @Test
-    void getMappingShouldReturnValidationReport() throws Exception {
-        when(mockServiceManager.getReport()).thenReturn("report value as string");
+    void initConfigShouldCallServiceManagerInitConfigMethod() throws Exception {
+//        when(mockServiceManager.initConfig(anyString())).thenReturn(null);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/actions/initconfig"))
+//                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+//
+//        verify(mockServiceManager, times(1))
+//                .initConfig(ArgumentMatchers.eq("jsonAsString"));
+//        verifyNoMoreInteractions(mockServiceManager);
+        //todo: update with postmapping syntax
+    }
 
-        final MvcResult mvcResult = mockMvc
-                .perform(MockMvcRequestBuilders.get("/report"))
+    @Test
+    void validateFeedShouldCallServiceManagerValidateFeedMethod() throws Exception {
+        when(mockServiceManager.runValidator()).thenReturn("validation status");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/actions/runvalidator/"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
-        final String expectedValidationReport = "report value as string";
-        assertEquals(expectedValidationReport, mvcResult.getResponse().getContentAsString());
+        verify(mockServiceManager, times(1)).runValidator();
+        verifyNoMoreInteractions(mockServiceManager);
+    }
+
+    @Test
+    void displayReportInDefaultTextEditorShouldCallDisplayReportInDefaultTextEditor() throws Exception {
+        when(mockServiceManager.displayReportInDefaultTextEditor()).thenReturn("no content");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/actions/displayreportindefaulttexteditor/"))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+
+        verify(mockServiceManager, times(1)).displayReportInDefaultTextEditor();
+        verifyNoMoreInteractions(mockServiceManager);
     }
 }

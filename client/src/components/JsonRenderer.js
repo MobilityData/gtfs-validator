@@ -15,20 +15,27 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
-import 'semantic-ui-css/semantic.min.css'
 
-ReactDOM.render(
-    <React.StrictMode>
-        <App/>
-    </React.StrictMode>,
-    document.getElementById('root')
-);
+const JsonRenderer = (props) => {
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+    return (
+        <div>
+            <table id="json-table">
+                <th>Execution parameter</th>
+                <th>Value</th>
+                {
+                    Object.keys(props.data).map((key, i) => (
+                        <tr key={i}>
+                            <td>{key}</td>
+                            <td>
+                                {props.data[key].toString()}
+                            </td>
+                        </tr>
+                    ))
+                }
+            </table>
+        </div>
+    )
+}
+
+export default JsonRenderer;

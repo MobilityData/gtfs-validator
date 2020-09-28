@@ -16,24 +16,15 @@
 
 package org.mobilitydata.gtfsvalidator;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.IOException;
-
-@Controller
-public class ApiController {
-    private final ServiceManager serviceManager;
-
-    public ApiController(ServiceManager serviceManager) {
-        this.serviceManager = serviceManager;
-    }
-
-    @RequestMapping(value = "/report", method = RequestMethod.GET)
-    @ResponseBody
-    public String getReport() throws IOException {
-        return serviceManager.getReport();
+/**
+ * Spring boot application entry point. The main method initiates the server on which the application will run.
+ */
+@SpringBootApplication
+public class Main {
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
     }
 }

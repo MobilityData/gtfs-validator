@@ -3,11 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.3.2",
     "@testing-library/user-event": "7.1.2",
+    "axios": "^0.20.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-dropzone": "11.2.0",
+    "react-json-prettify": "^0.2.0",
     "react-scripts": "3.4.3",
     "request": "2.88.2",
     "semantic-ui-css": "2.4.1"
@@ -15,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -34,7 +38,10 @@
     ]
   },
   "devDependencies": {
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
     "react-scripts": "3.4.3",
+    "react-test-renderer": "^16.13.1",
     "semantic-ui-react": "1.2.1"
   }
 }
