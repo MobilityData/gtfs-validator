@@ -30,6 +30,8 @@ function App() {
   const onDrop = useCallback(acceptedFiles => {
     clearHTML();
     deleteReportDiv();
+    deleteTable();
+    document.getElementById("json-content").style.visibility = "visible";
     const fileReader = new FileReader();
     fileReader.readAsText(acceptedFiles[0])
     fileReader.onload = function () {
