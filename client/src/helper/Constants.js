@@ -16,5 +16,5 @@
 
 export const Port = () => "8090";
 export const RunValidatorCommand = () => "/actions/runvalidator";
-export const GetReportContentCommand = () => "/actions/runvalidator";
+export const GetReportContentCommand = () => "/actions/displayreportindefaulttexteditor";
 export const InitConfigCommand = () => "/actions/initconfig/";

@@ -19,6 +19,8 @@ package org.mobilitydata.gtfsvalidator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("actions")
 @Component
@@ -29,24 +31,28 @@ public class GtfsValidatorController {
         this.serviceManager = serviceManager;
     }
 
-    @GetMapping("/initconfig/{jsonAsString}")
-    public void initConfig(@PathVariable("jsonAsString") final String execParamAsJsonString) throws Exception {
-        serviceManager.initConfig(execParamAsJsonString);
+    @PostMapping("initconfig/")
+    public String initConfig(@RequestBody final String execParamAsJsonString) throws Exception {
+        try {
+            return serviceManager.initConfig(execParamAsJsonString);
+        } catch (IOException e) {
+            return e.getMessage();
+        }
     }
 
     @GetMapping("/runvalidator")
     @ResponseBody
-    public String validateFeed() {
+    public String runValidator() {
         try {
-            return serviceManager.validateFeed();
+            return serviceManager.runValidator();
         } catch (Exception e) {
             return e.getMessage();
         }
     }
 
-    @GetMapping("/getreportcontent")
+    @GetMapping("/displayreportindefaulttexteditor")
     @ResponseBody
-    public String getPathToReport() {
-        return serviceManager.getPathToReport();
+    public String displayReportInDefaultTextEditor() throws IOException {
+        return serviceManager.displayReportInDefaultTextEditor();
     }
 }

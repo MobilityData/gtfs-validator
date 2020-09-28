@@ -73,7 +73,7 @@ public class ServiceManager {
      *
      * @return the validation status as a String
      */
-    public String validateFeed() throws IOException {
+    public String runValidator() throws IOException {
         if (!isConfigInit()) {
             throw (new IOException("Configuration file not provided"));
         }
@@ -284,11 +284,13 @@ public class ServiceManager {
     }
 
     /**
-     * Returns path to validation report
+     * Executes shell command to open validation report in default text editor. Returns null.
      *
-     * @return the path to the validation report
+     * @return null and executes shell command to open validation report in default text editor
      */
-    public String getPathToReport() {
-        return config.getExecParamValue(ExecParamRepository.OUTPUT_KEY);
+    public String displayReportInDefaultTextEditor() throws IOException {
+        final Runtime runTime = Runtime.getRuntime();
+        runTime.exec("open -t " + config.getExecParamValue(ExecParamRepository.OUTPUT_KEY) + "/results.json");
+        return null;
     }
 }

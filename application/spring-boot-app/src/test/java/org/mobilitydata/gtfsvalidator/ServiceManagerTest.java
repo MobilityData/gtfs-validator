@@ -68,6 +68,6 @@ class ServiceManagerTest {
     @Test
     void validateFeedShouldThrowErrorIfDefaultConfigIsNotInitialized() {
         final ServiceManager underTest = new ServiceManager();
-        assertThrows(IOException.class, underTest::validateFeed);
+        assertThrows(IOException.class, underTest::runValidator);
     }
 }

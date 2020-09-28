@@ -15,23 +15,50 @@
  */
 
 import ReactDOM from "react-dom";
-import JsonBeautyfier from "../components/JsonBeautyfier";
 import React from "react";
+import axios from 'axios';
+
 import {GetReportContentCommand, InitConfigCommand, Port, RunValidatorCommand} from "./Constants";
+import FittedButton from "../components/NiceButton";
+import CircularIndeterminate from "../components/CircularProgress";
 
 export async function initConfig(port, execParamConfigFileAsString) {
-    await fetch('http://localhost:' + Port() + InitConfigCommand() + execParamConfigFileAsString);
+    axios.post('http://localhost:' + Port() + InitConfigCommand(), execParamConfigFileAsString)
+        .then((res) => {
+            console.log(res.data)
+        }).catch((error) => {
+        console.log(error)
+    });
 }
 
 export async function validateFeed() {
-    let response = await fetch('http://localhost:' + Port() + RunValidatorCommand());
-    let body = await response.text();
     ReactDOM.render(
-        <p>{body}</p>,
-        document.getElementById("validation-status"))
-    let reportResponse = await fetch('http://localhost:' + Port() + GetReportContentCommand());
-    let reportBody = await reportResponse.text();
-    ReactDOM.render(
-        <JsonBeautyfier data={JSON.parse(reportBody)}/>,
-        document.getElementById("report"))
+        <CircularIndeterminate/>,
+        document.getElementById("progress-circles"));
+    document.getElementById("progress-circles").style.visibility = "visible";
+    axios.get('http://localhost:' + Port() + RunValidatorCommand())
+        .then((res) => {
+            ReactDOM.render(
+                <p className="launch-button-container">
+                    <FittedButton description="Display validation report" method={displayValidationReport}/>
+                </p>,
+                document.getElementById("display-result-button"));
+            document.getElementById("progress-circles").style.visibility = "hidden";
+            document.getElementById("validation-status").style.visibility = "visible";
+            document.getElementById("display-result-button").style.visibility = "visible";
+            ReactDOM.render(
+                <p>{res.data}</p>,
+                document.getElementById("validation-status"));
+        }).catch((error) => {
+        console.log(error)
+    });
+}
+
+export async function displayValidationReport() {
+    axios.get('http://localhost:' + Port() + GetReportContentCommand())
+        .then((res) => {
+            console.log("report opened in text edit");
+        }).catch((error) => {
+        console.log(error)
+    });
 }

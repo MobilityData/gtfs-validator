@@ -56,23 +56,23 @@ class GtfsValidatorControllerTest {
 
     @Test
     void validateFeedShouldCallServiceManagerValidateFeedMethod() throws Exception {
-        when(mockServiceManager.validateFeed()).thenReturn("validation status");
+        when(mockServiceManager.runValidator()).thenReturn("validation status");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/actions/runvalidator/"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
-        verify(mockServiceManager, times(1)).validateFeed();
+        verify(mockServiceManager, times(1)).runValidator();
         verifyNoMoreInteractions(mockServiceManager);
     }
 
     @Test
-    void getPathToReportShouldCallServiceManagerGetPathToReport() throws Exception {
-        when(mockServiceManager.getPathToReport()).thenReturn("path to validation report");
+    void displayReportInDefaultTextEditorShouldCallDisplayReportInDefaultTextEditor() throws Exception {
+        when(mockServiceManager.displayReportInDefaultTextEditor()).thenReturn("no content");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/actions/getreportcontent/"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/actions/displayreportindefaulttexteditor/"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
-        verify(mockServiceManager, times(1)).getPathToReport();
+        verify(mockServiceManager, times(1)).displayReportInDefaultTextEditor();
         verifyNoMoreInteractions(mockServiceManager);
     }
 }

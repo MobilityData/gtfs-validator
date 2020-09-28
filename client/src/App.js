@@ -28,12 +28,13 @@ import {Port} from "./helper/Constants.js";
 function App() {
 
   const onDrop = useCallback(acceptedFiles => {
+    clearHTML();
+    deleteReportDiv();
     const fileReader = new FileReader();
     fileReader.readAsText(acceptedFiles[0])
     fileReader.onload = function () {
-      alert("File successfully imported")
       displayJsonData(JSON.parse(fileReader.result), "json-content");
-      initConfig(Port(), fileReader.result.toString())
+      initConfig(Port(), JSON.parse(fileReader.result))
     }
   }, []);
 
@@ -44,8 +45,26 @@ function App() {
     );
   }
 
+  function clearHTML() {
+    document.getElementById("display-result-button").style.visibility = "hidden";
+    document.getElementById("validation-status").style.visibility = "hidden";
+  }
+
+  function deleteTable() {
+    document.getElementById("json-content").style.visibility = "hidden";
+  }
+
+  function deleteReportDiv() {
+    document.getElementById("display-result-button").style.visibility = "hidden";
+  }
+
   return (
       <div className="App">
+        <script>
+          clearHTML();
+          deleteTable();
+          deleteReportDiv();
+        </script>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
           <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"}/>
@@ -54,7 +73,9 @@ function App() {
             <FittedButton description="Validate" method={validateFeed}/>
           </p>
           <p id="validation-status"/>
-          <p id="report" className="report"/>
+          <p id="display-result-button" className="launch-button-container"/>
+          <p id="progress-circles"/>
+          <p id="display-result-button" className="launch-button-container"/>
           <p>
             <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
           </p>
