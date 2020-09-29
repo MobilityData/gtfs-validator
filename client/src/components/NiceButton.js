@@ -17,6 +17,6 @@
 import React from 'react'
 import {Button} from 'semantic-ui-react'
 
-const FittedButton = (props) => <Button fluid id={props.id} onClick={props.method}>{props.description}</Button>
+const NiceButton = (props) => <Button fluid id={props.id} onClick={props.method}>{props.description}</Button>
 
-export default FittedButton
+export default NiceButton

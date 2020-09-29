@@ -17,7 +17,7 @@
 import React, {useCallback} from "react";
 import ReactDOM from 'react-dom';
 
-import FittedButton from "./components/NiceButton";
+import NiceButton from "./components/NiceButton";
 import JsonDropzone from "./components/JsonDropzone";
 import JsonRenderer from "./components/JsonRenderer";
 import JsonExampleAccordion from "./components/JsonExampleAccordion";
@@ -78,12 +78,12 @@ function App() {
           <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"}/>
           <div id="json-content"/>
           <p className="launch-button-container">
-            <FittedButton id="validate-button" description="Validate" method={validateFeed}/>
+            <NiceButton id="validate-button" description="Validate" method={validateFeed}/>
           </p>
           <p id="progress-circles"/>
           <p id="validation-status"/>
           <div id="display-result-button" className="launch-button-container">
-            <FittedButton description="Display validation report" method={displayValidationReport}/>
+            <NiceButton description="Display validation report" method={displayValidationReport}/>
           </div>
           <p>
             <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
