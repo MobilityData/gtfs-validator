@@ -24,6 +24,7 @@ import ReactDOM from 'react-dom';
 import {displayValidationReport, initConfig, validateFeed} from "./helper/ApiRequest"
 
 import {Port} from "./helper/Constants.js";
+import AccordionExampleStyled from "./components/JsonExampleAccordion";
 
 function App() {
 
@@ -71,6 +72,7 @@ function App() {
       <div className="App" onLoad={deleteDisplayValidationReportButton}>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
+          <AccordionExampleStyled className="json-example-container"/>
           <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"}/>
           <div id="json-content"/>
           <p className="launch-button-container">

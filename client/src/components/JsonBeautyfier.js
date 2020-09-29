@@ -20,7 +20,7 @@ import React from "react";
 const JsonBeautyfier = (props) => {
 
     return (
-        <JSONPretty json={props.data}/>
+        <JSONPretty id={props.id} json={props.data} className={props.className}/>
     );
 };
 export default JsonBeautyfier;
