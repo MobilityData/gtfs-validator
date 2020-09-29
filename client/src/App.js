@@ -69,11 +69,6 @@ function App() {
 
   return (
       <div className="App" onLoad={deleteDisplayValidationReportButton}>
-        <script>
-          clearHTML();
-          deleteTable();
-          deleteDisplayValidationReportButton();
-        </script>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
           <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"}/>
