@@ -258,7 +258,7 @@ public class ServiceManager {
 
                 config.exportResultAsFile().execute();
 
-                return "Validation successfully executed";
+                return "Validation success";
             }
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
