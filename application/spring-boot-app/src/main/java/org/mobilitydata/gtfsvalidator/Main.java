@@ -27,10 +27,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) {
-
         final Logger logger = LogManager.getLogger();
         logger.info("Application start success. Open http://localhost:8090 in browser to display interface.");
         SpringApplication.run(Main.class, args);
-
     }
 }
