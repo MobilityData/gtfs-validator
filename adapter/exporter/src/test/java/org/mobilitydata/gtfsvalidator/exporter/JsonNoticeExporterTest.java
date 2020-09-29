@@ -37,7 +37,7 @@ class JsonNoticeExporterTest {
     void exportBeginWriteStartObjectAndResultArray() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
 
         underTest.exportBegin();
 
@@ -52,7 +52,7 @@ class JsonNoticeExporterTest {
     void exportEndWriteEndArrayEndObjectAndFlush() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
 
         underTest.exportEnd();
 
@@ -62,12 +62,28 @@ class JsonNoticeExporterTest {
         inOrder.verify(mockGenerator, times(1)).flush();
     }
 
+    @Test
+    void exportWithBeautifyOptionSetToTrueShouldUsePrettyPrinter() {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+        new JsonNoticeExporter(mockGenerator, true);
+
+        verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+    }
+
+    @Test
+    void exportWithBeautifyOptionSetToTrueShouldNotUsePrettyPrinter() {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+        new JsonNoticeExporter(mockGenerator, false);
+
+        verifyNoInteractions(mockGenerator);
+    }
 
     @Test
     void exportNonStandardHeaderNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         NonStandardHeaderNotice toExport = new NonStandardHeaderNotice(FILENAME, "extra");
         underTest.export(toExport);
 
@@ -79,7 +95,8 @@ class JsonNoticeExporterTest {
     void exportInputZipContainsFolderNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         InputZipContainsFolderNotice toExport = new InputZipContainsFolderNotice(FILENAME, "extraFolder");
         underTest.export(toExport);
 
@@ -91,7 +108,8 @@ class JsonNoticeExporterTest {
     void exportNonAsciiOrNonPrintableCharNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         NonAsciiOrNonPrintableCharNotice toExport = new NonAsciiOrNonPrintableCharNotice(
                 FILENAME,
                 "field_name",
@@ -108,7 +126,8 @@ class JsonNoticeExporterTest {
     void exportCannotDownloadArchiveFromNetworkNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         CannotDownloadArchiveFromNetworkNotice toExport = new CannotDownloadArchiveFromNetworkNotice(
                 new URL("https://mobilitydata.org")
         );
@@ -122,7 +141,8 @@ class JsonNoticeExporterTest {
     void exportCannotParseFloatNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         CannotParseFloatNotice toExport = new CannotParseFloatNotice(
                 FILENAME,
                 "field_name",
@@ -138,7 +158,8 @@ class JsonNoticeExporterTest {
     void exportCannotParseIntegerNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         CannotParseIntegerNotice toExport = new CannotParseIntegerNotice(
                 FILENAME,
                 "field_name",
@@ -155,7 +176,8 @@ class JsonNoticeExporterTest {
     void exportCannotUnzipInputArchiveNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         CannotUnzipInputArchiveNotice toExport = new CannotUnzipInputArchiveNotice(FILENAME);
         underTest.export(toExport);
 
@@ -167,7 +189,8 @@ class JsonNoticeExporterTest {
     void exportFloatFieldValueOutOfRangeNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         FloatFieldValueOutOfRangeNotice toExport = new FloatFieldValueOutOfRangeNotice(
                 FILENAME,
                 "field_name",
@@ -184,7 +207,8 @@ class JsonNoticeExporterTest {
     void exportIntegerFieldValueOutOfRangeNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         IntegerFieldValueOutOfRangeNotice toExport = new IntegerFieldValueOutOfRangeNotice(
                 FILENAME,
                 "field_name",
@@ -201,7 +225,8 @@ class JsonNoticeExporterTest {
     void exportInvalidRowLengthNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         InvalidRowLengthNotice toExport = new InvalidRowLengthNotice(
                 FILENAME, 666, 10, 8
         );
@@ -215,7 +240,8 @@ class JsonNoticeExporterTest {
     void exportInvalidTimezoneNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         InvalidTimezoneNotice toExport = new InvalidTimezoneNotice(
                 FILENAME,
                 "field_name",
@@ -232,7 +258,8 @@ class JsonNoticeExporterTest {
     void exportInvalidUrlNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         InvalidUrlNotice toExport = new InvalidUrlNotice(
                 FILENAME,
                 "field_name",
@@ -249,7 +276,8 @@ class JsonNoticeExporterTest {
     void exportMissingHeaderNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         MissingHeaderNotice toExport = new MissingHeaderNotice(FILENAME, "missing_header");
         underTest.export(toExport);
 
@@ -261,7 +289,8 @@ class JsonNoticeExporterTest {
     void exportDuplicatedHeaderNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         DuplicatedHeaderNotice toExport = new DuplicatedHeaderNotice(FILENAME, "duplicated_header");
         underTest.export(toExport);
 
@@ -273,7 +302,8 @@ class JsonNoticeExporterTest {
     void exportMissingRequiredFileNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         MissingRequiredFileNotice toExport = new MissingRequiredFileNotice(FILENAME);
         underTest.export(toExport);
 
@@ -285,7 +315,8 @@ class JsonNoticeExporterTest {
     void exportMissingRequiredValueNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         MissingRequiredValueNotice toExport = new MissingRequiredValueNotice(
                 FILENAME,
                 "field_name",
@@ -301,7 +332,8 @@ class JsonNoticeExporterTest {
     void exportMissingTripEdgeStopTimeNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         MissingTripEdgeStopTimeNotice toExport = new MissingTripEdgeStopTimeNotice(
                 "filed_name",
                 "trip_id_XXX",
@@ -317,7 +349,8 @@ class JsonNoticeExporterTest {
     void exportInvalidColorNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         CannotParseColorNotice toExport = new CannotParseColorNotice(
                 FILENAME,
                 "field_name",
@@ -334,7 +367,8 @@ class JsonNoticeExporterTest {
     void exportExtraFileFoundNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         ExtraFileFoundNotice toExport = new ExtraFileFoundNotice(FILENAME);
         underTest.export(toExport);
 
@@ -346,7 +380,8 @@ class JsonNoticeExporterTest {
     void exportInvalidTimeNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         InvalidTimeNotice toExport = new InvalidTimeNotice(FILENAME, "field_name", "time_value",
                 "entity_id");
         underTest.export(toExport);
@@ -359,7 +394,8 @@ class JsonNoticeExporterTest {
     void exportCannotParseDateNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         CannotParseDateNotice toExport = new CannotParseDateNotice(FILENAME, "field_name", 0,
                 "raw_value");
         underTest.export(toExport);
@@ -373,7 +409,8 @@ class JsonNoticeExporterTest {
 
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         InvalidCurrencyCodeNotice toExport = new InvalidCurrencyCodeNotice(FILENAME, "field_name", "entity_id",
                 "currency_code");
         underTest.export(toExport);
@@ -386,7 +423,8 @@ class JsonNoticeExporterTest {
     void exportUnexpectedEnumValueNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         UnexpectedEnumValueNotice toExport = new UnexpectedEnumValueNotice(FILENAME, "field_name",
                 "entity_id", 2);
         underTest.export(toExport);
@@ -399,7 +437,8 @@ class JsonNoticeExporterTest {
     void exportIllegalFieldValueCombinationNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         IllegalFieldValueCombinationNotice toExport = new IllegalFieldValueCombinationNotice(FILENAME, "field_name",
                 "conflicting_field_name", "entity_id");
         underTest.export(toExport);
@@ -412,7 +451,8 @@ class JsonNoticeExporterTest {
     void exportDuplicatedEntityNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         DuplicatedEntityNotice toExport = new DuplicatedEntityNotice(FILENAME, "field_name",
                 "entity_id");
         underTest.export(toExport);
@@ -425,7 +465,8 @@ class JsonNoticeExporterTest {
     void exportInvalidLangNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         InvalidLangNotice toExport = new InvalidLangNotice(FILENAME, "field_name",
                 "entity_id", "lang_value");
         underTest.export(toExport);
@@ -438,7 +479,8 @@ class JsonNoticeExporterTest {
     void exportInvalidEmailNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         InvalidEmailNotice toExport = new InvalidEmailNotice(FILENAME, "field_name",
                 "entity_id", "email_value");
         underTest.export(toExport);
@@ -451,7 +493,8 @@ class JsonNoticeExporterTest {
     void exportRouteDescriptionEqualsNameNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         SameNameAndDescriptionForRouteNotice toExport = new SameNameAndDescriptionForRouteNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
@@ -463,7 +506,8 @@ class JsonNoticeExporterTest {
     void exportRouteColorAndTextContrastNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         RouteColorAndTextInsufficientContrastNotice toExport = new RouteColorAndTextInsufficientContrastNotice(FILENAME,
                 "entity_id",
                 0d);
@@ -477,7 +521,8 @@ class JsonNoticeExporterTest {
     void exportRouteShortNameTooLongNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         RouteShortNameTooLongNotice toExport = new RouteShortNameTooLongNotice(FILENAME, "entity_id", "13");
         underTest.export(toExport);
 
@@ -489,7 +534,8 @@ class JsonNoticeExporterTest {
     void exportInvalidRouteTypeNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         InvalidRouteTypeNotice toExport = new InvalidRouteTypeNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
@@ -501,7 +547,8 @@ class JsonNoticeExporterTest {
     void exportMissingBothRouteNamesNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         MissingShortAndLongNameForRouteNotice toExport = new MissingShortAndLongNameForRouteNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
@@ -513,7 +560,8 @@ class JsonNoticeExporterTest {
     void exportMissingRouteShortNameNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         MissingRouteShortNameNotice toExport = new MissingRouteShortNameNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
@@ -525,7 +573,8 @@ class JsonNoticeExporterTest {
     void exportMissingRouteLongNameNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         MissingRouteLongNameNotice toExport = new MissingRouteLongNameNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
@@ -537,7 +586,8 @@ class JsonNoticeExporterTest {
     void exportRouteLongNameEqualsShortNameNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         RouteLongNameEqualsShortNameNotice toExport = new RouteLongNameEqualsShortNameNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
@@ -549,7 +599,8 @@ class JsonNoticeExporterTest {
     void exportRouteLongNameContainsShortNameNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         RouteLongNameContainsShortNameNotice toExport = new RouteLongNameContainsShortNameNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
@@ -561,7 +612,8 @@ class JsonNoticeExporterTest {
     void exportCalendarEndDateBeforeStartDateShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         CalendarEndDateBeforeStartDateNotice toExport = new CalendarEndDateBeforeStartDateNotice(
                 FILENAME,
                 "wkend",
@@ -578,7 +630,7 @@ class JsonNoticeExporterTest {
     void exportMissingAgencyIdNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final MissingAgencyIdNotice toExport = new MissingAgencyIdNotice("agency_name", "entity id");
         underTest.export(toExport);
 
@@ -590,7 +642,7 @@ class JsonNoticeExporterTest {
     void exportInconsistentAgencyTimezoneNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final InconsistentAgencyTimezoneNotice toExport = new InconsistentAgencyTimezoneNotice(2,
                 "set of inconsistent timezone");
         underTest.export(toExport);
@@ -603,7 +655,7 @@ class JsonNoticeExporterTest {
     void exportAgencyIdNotFoundNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final InvalidAgencyIdNotice toExport = new InvalidAgencyIdNotice("filename", "field name",
                 "entity id");
         underTest.export(toExport);
@@ -616,7 +668,7 @@ class JsonNoticeExporterTest {
     void exportNonExistingAgencyIdNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final AgencyIdNotFoundNotice toExport = new AgencyIdNotFoundNotice("filename", "field name",
                 "entity id");
         underTest.export(toExport);
@@ -629,7 +681,7 @@ class JsonNoticeExporterTest {
     void exportRouteIdNotFoundNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final RouteIdNotFoundNotice toExport = new RouteIdNotFoundNotice("filename", "entity id",
                 "route id", "field name");
         underTest.export(toExport);
@@ -642,7 +694,7 @@ class JsonNoticeExporterTest {
     void exportServiceIdNotFoundNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final ServiceIdNotFoundNotice toExport = new ServiceIdNotFoundNotice("filename", "field name",
                 "entity id", "service id");
         underTest.export(toExport);
@@ -655,7 +707,7 @@ class JsonNoticeExporterTest {
     void exportShapeIdNotfoundNoticeShouldWriteObject() throws IOException {
         final JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final ShapeIdNotFoundNotice toExport =
                 new ShapeIdNotFoundNotice("filename", "field name",
                         "composite key first part",
@@ -672,7 +724,7 @@ class JsonNoticeExporterTest {
     void exportTripIdNotFoundNoticeShouldWriteObject() throws IOException {
         final JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final TripIdNotFoundNotice toExport =
                 new TripIdNotFoundNotice("filename",
                         "field name",
@@ -691,7 +743,7 @@ class JsonNoticeExporterTest {
     void exportNotUsedShapeNoticeShouldWriteObject() throws IOException {
         final JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final ShapeNotUsedNotice toExport = new ShapeNotUsedNotice(
                 "entity id",
                 "field name");
@@ -705,7 +757,8 @@ class JsonNoticeExporterTest {
     void exportFeedInfoStartDateAfterEndDateNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         FeedInfoStartDateAfterEndDateNotice toExport =
                 new FeedInfoStartDateAfterEndDateNotice("feed_info.txt",
                         "start date",
@@ -726,7 +779,7 @@ class JsonNoticeExporterTest {
     void exportFeedInfoExpiresInLessThan7DaysNoticeShouldWriteObject() throws IOException {
         final JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final FeedInfoExpiresInLessThan7DaysNotice toExport =
                 new FeedInfoExpiresInLessThan7DaysNotice("feed_info.txt",
                         "current date",
@@ -748,7 +801,7 @@ class JsonNoticeExporterTest {
     void exportFeedInfoExpiresInLessThan30DaysNoticeShouldWriteObject() throws IOException {
         final JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final FeedInfoExpiresInLessThan30DaysNotice toExport =
                 new FeedInfoExpiresInLessThan30DaysNotice("feed_info.txt",
                         "current date",
@@ -770,7 +823,7 @@ class JsonNoticeExporterTest {
     void exportMissingFeedEndDateNoticeShouldWriteObject() throws IOException {
         final JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final MissingFeedEndDateNotice toExport = new MissingFeedEndDateNotice("feed_info.txt",
                 "feed_end_date",
                 "feed_publisher_name",
@@ -789,7 +842,7 @@ class JsonNoticeExporterTest {
     void exportMissingFeedStartDateNoticeShouldWriteObject() throws IOException {
         final JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        final JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
         final MissingFeedStartDateNotice toExport =
                 new MissingFeedStartDateNotice("feed_info.txt",
                         "feed_start_date",
@@ -809,7 +862,8 @@ class JsonNoticeExporterTest {
     void exportStopTimeArrivalTimeAfterDepartureTimeNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         StopTimeArrivalTimeAfterDepartureTimeNotice toExport =
                 new StopTimeArrivalTimeAfterDepartureTimeNotice("stop_times.txt",
                         "arrival_time",
@@ -826,7 +880,8 @@ class JsonNoticeExporterTest {
     void exportFastTravelBetweenStopsNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         FastTravelBetweenStopsNotice toExport =
                 new FastTravelBetweenStopsNotice("trip_id__value",
                         187.0f,
@@ -841,7 +896,8 @@ class JsonNoticeExporterTest {
     void exportEmptyFileErrorNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         EmptyFileErrorNotice toExport =
                 new EmptyFileErrorNotice("filename");
         underTest.export(toExport);
@@ -854,7 +910,8 @@ class JsonNoticeExporterTest {
     void exportEmptyFileWarningNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         EmptyFileWarningNotice toExport =
                 new EmptyFileWarningNotice("filename");
         underTest.export(toExport);
@@ -867,7 +924,8 @@ class JsonNoticeExporterTest {
     void exportFrequencyStartTimeAfterEndTimeNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         FrequencyStartTimeAfterEndTimeNotice toExport =
                 new FrequencyStartTimeAfterEndTimeNotice("frequencies.txt",
                         "arrival_time",
@@ -883,7 +941,8 @@ class JsonNoticeExporterTest {
     void exportOverlappingTripFrequenciesNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         OverlappingTripFrequenciesNotice toExport =
                 new OverlappingTripFrequenciesNotice("1234",
                         "arrival time value",
@@ -900,7 +959,8 @@ class JsonNoticeExporterTest {
     void exportBackwardsTimeTravelInStopNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         BackwardsTimeTravelInStopNotice toExport =
                 new BackwardsTimeTravelInStopNotice("stop_times.txt",
                         5,
@@ -917,7 +977,8 @@ class JsonNoticeExporterTest {
     void exportTripNotUsedNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         TripNotUsedNotice toExport =
                 new TripNotUsedNotice("trip_id");
         underTest.export(toExport);
@@ -930,7 +991,8 @@ class JsonNoticeExporterTest {
     void exportUnusableTripNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         UnusableTripNotice toExport =
                 new UnusableTripNotice("trip_id");
         underTest.export(toExport);
@@ -943,7 +1005,8 @@ class JsonNoticeExporterTest {
     void exportMissingCalendarAndCalendarDateFilesNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         MissingCalendarAndCalendarDateFilesNotice toExport =
                 new MissingCalendarAndCalendarDateFilesNotice();
         underTest.export(toExport);
@@ -956,7 +1019,8 @@ class JsonNoticeExporterTest {
     void exportBlockTripsWithOverlappingStopTimesNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         BlockTripsWithOverlappingStopTimesNotice toExport =
                 new BlockTripsWithOverlappingStopTimesNotice("trip id value", "07:00",
                         "10:00", "previous trip id value", "08:00",
@@ -972,7 +1036,8 @@ class JsonNoticeExporterTest {
     void exportFeedInfoLangAgencyLangMismatchNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         FeedInfoLangAgencyLangMismatchNotice toExport =
                 new FeedInfoLangAgencyLangMismatchNotice("agency id value", "agency name value"
                         , "agency lang value", "feed info lang value");
@@ -986,7 +1051,8 @@ class JsonNoticeExporterTest {
     void exportDuplicateRouteLongNameNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         DuplicateRouteLongNameNotice toExport =
                 new DuplicateRouteLongNameNotice("123", "456", "duplicate" +
                         " route long name");
@@ -1000,7 +1066,8 @@ class JsonNoticeExporterTest {
     void exportDuplicateRouteShortNameNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         DuplicateRouteShortNameNotice toExport =
                 new DuplicateRouteShortNameNotice("123", "456", "duplicate" +
                         " route short name");
@@ -1014,7 +1081,8 @@ class JsonNoticeExporterTest {
     void exportDuplicateRouteLongNameRouteShortNameCombinationNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         DuplicateRouteLongNameRouteShortNameCombinationNotice toExport =
                 new DuplicateRouteLongNameRouteShortNameCombinationNotice("123", "456",
                         "duplicate route long name",
@@ -1029,7 +1097,8 @@ class JsonNoticeExporterTest {
     void exportDecreasingStopTimeDistanceErrorNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         DecreasingStopTimeDistanceNotice toExport =
                 new DecreasingStopTimeDistanceNotice("12350", 2, 5f,
                         22, 3f);
@@ -1043,7 +1112,8 @@ class JsonNoticeExporterTest {
     void exportDecreasingShapeDistanceNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
+
         DecreasingShapeDistanceNotice toExport =
                 new DecreasingShapeDistanceNotice("12350", 22, 5f,
                         2, 50f);

@@ -14,22 +14,36 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.usecase.port;
-
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-
-import java.io.IOException;
-import java.util.Collection;
-
-/**
- * This hold contains notices generated during the validation process.
- */
-public interface ValidationResultRepository {
-
-    Notice addNotice(Notice newNotice) throws TooManyValidationErrorException;
-
-    Collection<Notice> getAll();
-
-    NoticeExporter getExporter(boolean outputAsProto, String outputPath, boolean isPretty) throws IOException;
+plugins {
+    id("com.github.node-gradle.node") version "2.2.4"
 }
+
+apply plugin: "java"
+apply plugin: "com.github.node-gradle.node"
+
+node {
+    version = "12.9.1"
+    download = true
+}
+
+task bundle(type: NpmTask, dependsOn: npmInstall) {
+    args = ['run', 'build']
+}
+
+task uiTest(type: NpmTask) {
+    environment = ['CI': 'true']
+    args = ['run', 'test']
+}
+
+task run(type: NpmTask) {
+    args = ['start']
+}
+
+task webjar(type: Jar) {
+    from(fileTree("build")) {
+        into "META-INF/resources"
+    }
+}
+check.dependsOn(test)
+jar.dependsOn(bundle)
+jar.finalizedBy('webjar')

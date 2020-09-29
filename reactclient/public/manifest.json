@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "gtfs-validator",
+  "name": "gtfs-validator-v1.3.0-SNAPSHOT",
   "icons": [
     {
       "src": "favicon.ico",

@@ -14,11 +14,15 @@
  *  limitations under the License.
  */
 
-import React from 'react'
-import {Input} from 'semantic-ui-react'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import 'semantic-ui-css/semantic.min.css'
 
-const InputField = (props) => <Input placeholder={props.placeHolderText}
-                                     style={{width: "80%", fontSize: '50%'}}
-                                     id={props.id}/>
-
-export default InputField
+ReactDOM.render(
+    <React.StrictMode>
+        <App/>
+    </React.StrictMode>,
+    document.getElementById('root')
+);

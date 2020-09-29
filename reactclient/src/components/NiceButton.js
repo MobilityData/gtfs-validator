@@ -14,46 +14,9 @@
  *  limitations under the License.
  */
 
-.App {
-    text-align: center;
-}
+import React from 'react'
+import {Button} from 'semantic-ui-react'
 
-.App-logo {
-    height: 60%;
-    width: 60%;
-    pointer-events: none;
-}
+const NiceButton = (props) => <Button fluid id={props.id} onClick={props.method}>{props.description}</Button>
 
-.command-line-container {
-    width: 100%;
-}
-
-.launch-button-container {
-    width: 60%;
-}
-
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-}
-
-.App-link {
-    color: #61dafb;
-    font-size: calc(2vmin);
-
-}
-
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
+export default NiceButton

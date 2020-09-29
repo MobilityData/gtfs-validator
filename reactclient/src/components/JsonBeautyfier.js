@@ -14,21 +14,13 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator;
+import JSONPretty from 'react-json-prettify';
+import React from "react";
 
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+const JsonBeautyfier = (props) => {
 
-@SpringBootApplication
-public class ValidatorRunner implements ApplicationRunner {
-    public static void main(String[] args) {
-        SpringApplication.run(ValidatorRunner.class, args);
-    }
-
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-
-    }
-}
+    return (
+        <JSONPretty id={props.id} json={props.data} className={props.className}/>
+    );
+};
+export default JsonBeautyfier;
