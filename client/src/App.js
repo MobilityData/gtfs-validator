@@ -32,11 +32,18 @@ function App() {
     deleteDisplayValidationReportButton();
     deleteTable();
     document.getElementById("json-content").style.visibility = "visible";
+    if (!document.getElementById("json-config-file").hasAttribute("disabled")) {
+      document.getElementById("validate-button").removeAttribute("disabled");
+    }
     const fileReader = new FileReader();
     fileReader.readAsText(acceptedFiles[0])
     fileReader.onload = function () {
-      displayJsonData(JSON.parse(fileReader.result), "json-content");
-      initConfig(Port(), JSON.parse(fileReader.result))
+      if (!document.getElementById("json-config-file").hasAttribute("disabled")) {
+        displayJsonData(JSON.parse(fileReader.result), "json-content");
+        initConfig(Port(), JSON.parse(fileReader.result))
+      } else {
+        alert("Process already running, please wait for completion.")
+      }
     }
   }, []);
 
@@ -72,7 +79,7 @@ function App() {
           <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"}/>
           <div id="json-content"/>
           <p className="launch-button-container">
-            <FittedButton description="Validate" method={validateFeed}/>
+            <FittedButton id="validate-button" description="Validate" method={validateFeed}/>
           </p>
           <p id="validation-status"/>
           <p id="progress-circles"/>

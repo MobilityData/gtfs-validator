@@ -35,6 +35,8 @@ export async function validateFeed() {
         <CircularIndeterminate/>,
         document.getElementById("progress-circles"));
     document.getElementById("progress-circles").style.visibility = "visible";
+    document.getElementById("validate-button").setAttribute("disabled", "");
+    document.getElementById("json-config-file").setAttribute("disabled", "true");
     axios.get('http://localhost:' + Port() + RunValidatorCommand())
         .then((response) => {
             document.getElementById("display-result-button").style.visibility = "visible";
@@ -44,6 +46,7 @@ export async function validateFeed() {
             ReactDOM.render(
                 <p>{response.data}</p>,
                 document.getElementById("validation-status"));
+            document.getElementById("json-config-file").removeAttribute("disabled");
         }).catch((error) => {
         console.log(error)
     });
