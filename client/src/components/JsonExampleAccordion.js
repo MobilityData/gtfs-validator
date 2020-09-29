@@ -20,7 +20,7 @@ import JsonBeautyfier from "./JsonBeautyfier";
 import localJson from "../data/json-examples/local-example.json";
 import networkJson from "../data/json-examples/network-example.json";
 
-export default class AccordionExampleStyled extends Component {
+export default class JsonExampleAccordion extends Component {
     state = {activeIndex: 0}
 
     handleClick = (e, titleProps) => {
