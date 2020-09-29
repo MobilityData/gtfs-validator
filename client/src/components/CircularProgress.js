@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         '& > * + *': {
-            marginLeft: theme.spacing(2),
+            marginLeft: theme.spacing(3),
         },
     },
 }));

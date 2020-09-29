@@ -21,42 +21,42 @@ import localJson from "../data/json-examples/local-example.json";
 import networkJson from "../data/json-examples/network-example.json";
 
 export default class JsonExampleAccordion extends Component {
-    state = {activeIndex: 0}
+    state = {activeItemIndex: 0}
 
     handleClick = (e, titleProps) => {
         const {index} = titleProps
-        const {activeIndex} = this.state
-        const newIndex = activeIndex === index ? -1 : index
+        const {activeItemIndex} = this.state
+        const newIndex = activeItemIndex === index ? -1 : index
 
         this.setState({activeIndex: newIndex})
     }
 
     render() {
-        const {activeIndex} = this.state;
+        const {activeItemIndex} = this.state;
         return (
             <Accordion styled id="json-example" className="json-example-container">
                 <Accordion.Title
-                    active={activeIndex === 0}
+                    active={activeItemIndex === 0}
                     index={0}
                     onClick={this.handleClick}
                     className="json-example-tile"
                 >
                     <Icon name='dropdown'/>
                     Example of configuration file using URL to remote GTFS archive </Accordion.Title>
-                <Accordion.Content active={activeIndex === 0}>
+                <Accordion.Content active={activeItemIndex === 0}>
                     <JsonBeautyfier id="json-example" data={localJson} className="json-example"/>
 
                 </Accordion.Content>
 
                 <Accordion.Title
-                    active={activeIndex === 1}
+                    active={activeItemIndex === 1}
                     index={1}
                     onClick={this.handleClick}
                 >
                     <Icon name='dropdown'/>
                     Example of configuration file using locally stored GTFS archive
                 </Accordion.Title>
-                <Accordion.Content active={activeIndex === 1}>
+                <Accordion.Content active={activeItemIndex === 1}>
                     <JsonBeautyfier id="json-example" data={networkJson} className="json-example"/>
                 </Accordion.Content>
             </Accordion>
