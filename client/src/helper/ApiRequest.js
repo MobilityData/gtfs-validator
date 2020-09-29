@@ -19,7 +19,6 @@ import React from "react";
 import axios from 'axios';
 
 import {GetReportContentCommand, InitConfigCommand, Port, RunValidatorCommand} from "./Constants";
-import FittedButton from "../components/NiceButton";
 import CircularIndeterminate from "../components/CircularProgress";
 
 export async function initConfig(port, execParamConfigFileAsString) {
@@ -37,17 +36,13 @@ export async function validateFeed() {
         document.getElementById("progress-circles"));
     document.getElementById("progress-circles").style.visibility = "visible";
     axios.get('http://localhost:' + Port() + RunValidatorCommand())
-        .then((res) => {
-            ReactDOM.render(
-                <p className="launch-button-container">
-                    <FittedButton description="Display validation report" method={displayValidationReport}/>
-                </p>,
-                document.getElementById("display-result-button"));
+        .then((response) => {
+            document.getElementById("display-result-button").style.visibility = "visible";
             document.getElementById("progress-circles").style.visibility = "hidden";
             document.getElementById("validation-status").style.visibility = "visible";
             document.getElementById("display-result-button").style.visibility = "visible";
             ReactDOM.render(
-                <p>{res.data}</p>,
+                <p>{response.data}</p>,
                 document.getElementById("validation-status"));
         }).catch((error) => {
         console.log(error)

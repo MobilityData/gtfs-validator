@@ -21,7 +21,7 @@ import FittedButton from "./components/NiceButton";
 import JsonDropzone from "./components/JsonDropzone";
 import JsonRenderer from "./components/JsonRenderer";
 import ReactDOM from 'react-dom';
-import {initConfig, validateFeed} from "./helper/ApiRequest"
+import {displayValidationReport, initConfig, validateFeed} from "./helper/ApiRequest"
 
 import {Port} from "./helper/Constants.js";
 
@@ -29,7 +29,7 @@ function App() {
 
   const onDrop = useCallback(acceptedFiles => {
     clearHTML();
-    deleteReportDiv();
+    deleteDisplayValidationReportButton();
     deleteTable();
     document.getElementById("json-content").style.visibility = "visible";
     const fileReader = new FileReader();
@@ -56,16 +56,16 @@ function App() {
     document.getElementById("json-content").style.visibility = "hidden";
   }
 
-  function deleteReportDiv() {
+  function deleteDisplayValidationReportButton() {
     document.getElementById("display-result-button").style.visibility = "hidden";
   }
 
   return (
-      <div className="App">
+      <div className="App" onLoad={deleteDisplayValidationReportButton}>
         <script>
           clearHTML();
           deleteTable();
-          deleteReportDiv();
+          deleteDisplayValidationReportButton();
         </script>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
@@ -75,9 +75,10 @@ function App() {
             <FittedButton description="Validate" method={validateFeed}/>
           </p>
           <p id="validation-status"/>
-          <p id="display-result-button" className="launch-button-container"/>
           <p id="progress-circles"/>
-          <p id="display-result-button" className="launch-button-container"/>
+          <div id="display-result-button" className="launch-button-container">
+            <FittedButton description="Display validation report" method={displayValidationReport}/>
+          </div>
           <p>
             <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
           </p>

@@ -14,6 +14,11 @@
  *  limitations under the License.
  */
 
+#button-container {
+    width: 60%;
+    margin-top: 20px;
+}
+
 #json-table {
     border-collapse: collapse;
     width: 100%;
