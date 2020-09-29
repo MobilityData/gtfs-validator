@@ -33,13 +33,15 @@ java -jar gtfs-validator-v1.3.0_cli.jar -i relative/path/to/zipped_dataset -o re
 #### Example: Validate GTFS dataset while specifying extraction, input, and output directories
 
 ``` 
-java -jar gtfs-validator-v1.3.0_cli.jar -i gtfs-dataset.zip -o output_folder -e extraction_folder
+java -jar gtfs-validator-v1.3.0_cli.jar -i gtfs-dataset.zip -o output_folder -e extraction_folder -b true
 ```
 
 In order, this command line will:
  1. Search for a zipped GTFS dataset name `gtfs-dataset.zip` located in the working directory
  1. Extract its content to a directory named `extraction_folder`
- 1. Validate the GTFS data and output the results to the directory named `output_folder`. This folder will contain a single `.json` file with information related to the validation process. 
+ 1. Validate the GTFS data and output the results to the directory named `output_folder`. This folder will contain a single `.json` file with information related to the validation process.
+ 1. The generated `.json` file will be beautified as option `-b` or `--beautify`  has been provided and set to `true`. Note that if this argument is not specified, the validator will by default generate a beautyfied version of the validation report. 
+ 
 
 
 #### Example: Validate a subset of a GTFS dataset.
@@ -53,8 +55,8 @@ In order, this command line will:
  1. Create a directory named `input` 
  1. Extract the content of `gtfs-dataset.zip` to the directory created at step 2
  1. Create a directory names `output`
- 1. Exclude files `fare_attributes.txt` and `attributions.txt` from the the validation process. But also the files that rely on them: `translations.txt` and `fare_rules.txt`
- 1. Validate the GTFS data and output the results to the directory created at step 4. This folder will contain a single `.json` file with information related to the validation process. 
+ 1. Exclude files `fare_attributes.txt` and `attributions.txt` from the validation process. But also the files that rely on them: `translations.txt` and `fare_rules.txt`
+ 1. Validate the GTFS data and output the results to the directory created at step 4. This folder will contain a single `.json` file with information related to the validation process.
 
 ### Validate a GTFS dataset stored on a remote server
 
@@ -149,7 +151,6 @@ The entire valdiation process can be monitored in the Terminal:
 The validation report will be generated and saved at the default location or the path specified via the configuration file's `output` field.
 The validation report can be displayed by a simple click on the `Display validation report` button, which will automatically open your default tet editor with the content of the validation report. 
 See [configuration section](https://github.com/MobilityData/gtfs-validator#software-configuration) for more details regarding software configuration.
-
 
 # Architecture
 
