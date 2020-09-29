@@ -15,16 +15,18 @@
  */
 
 import React, {useCallback} from "react";
-import logo from './logo.png';
-import './App.css';
+import ReactDOM from 'react-dom';
+
 import FittedButton from "./components/NiceButton";
 import JsonDropzone from "./components/JsonDropzone";
 import JsonRenderer from "./components/JsonRenderer";
-import ReactDOM from 'react-dom';
-import {displayValidationReport, initConfig, validateFeed} from "./helper/ApiRequest"
+import JsonExampleAccordion from "./components/JsonExampleAccordion";
 
+import './App.css';
+import logo from './logo.png';
+
+import {displayValidationReport, initConfig, validateFeed} from "./helper/ApiRequest"
 import {Port} from "./helper/Constants.js";
-import AccordionExampleStyled from "./components/JsonExampleAccordion";
 
 function App() {
 
@@ -72,7 +74,7 @@ function App() {
       <div className="App" onLoad={deleteDisplayValidationReportButton}>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
-          <AccordionExampleStyled className="json-example-container"/>
+          <JsonExampleAccordion className="json-example-container"/>
           <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"}/>
           <div id="json-content"/>
           <p className="launch-button-container">
