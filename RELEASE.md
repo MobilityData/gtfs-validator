@@ -74,11 +74,13 @@ If everything looks ok, you can create the new release in GitHub. Tag the code i
 ### 3. Prepare for the next development cycle
 
 Increment the `version` in the various `build.gradle` files and add the `-SNAPSHOT` qualifier. 
-
 For example, if the version you just released is `1.3.0`, change the `version` to `1.3.0-SNAPSHOT`.
 
 Update the GitHub CI [config file](https://github.com/MobilityData/gtfs-validator/blob/master/.github/workflows/gradle.yml) to point to the new `SNAPSHOT` version in
-both `Run validator on MBTA data` and `upload artifacts` steps
+both `Run validator on MBTA data` and `upload artifacts` steps.
+The version number also needs to be bumped in [`manifest.json`](https://github.com/MobilityData/gtfs-validator/blob/package-web-app-as-jar/reactclient/public/manifest.json)
+ and [`index.html`]((https://github.com/MobilityData/gtfs-validator/blob/package-web-app-as-jar/reactclient/public/index.html)) files of the react layer.
+
 
 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
 

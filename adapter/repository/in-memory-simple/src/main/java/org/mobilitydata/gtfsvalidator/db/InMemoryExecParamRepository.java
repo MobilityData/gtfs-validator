@@ -257,7 +257,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 if (hasExecParam(BEAUTIFY_KEY) && hasExecParamValue(BEAUTIFY_KEY)) {
                     return getExecParamByKey(BEAUTIFY_KEY).getValue().get(0);
                 } else {
-                    // otherwise use default value. Note that it is not allowed to use key `abort_on_error` without
+                    // otherwise use default value. Note that it is not allowed to use key `beautify` without
                     // specifying a boolean as argument
                     return defaultValue.get(0);
                 }
