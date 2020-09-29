@@ -58,6 +58,16 @@
     color: white;
 }
 
+#json-content {
+    max-width: 60%;
+    font-size: 16px;
+}
+
+#validation-status {
+    max-width: 94%;
+    font-size: 16px;
+}
+
 .text-center {
     width: 1000px;
     height: 200px;

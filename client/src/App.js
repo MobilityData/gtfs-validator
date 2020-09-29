@@ -78,8 +78,8 @@ function App() {
           <p className="launch-button-container">
             <FittedButton id="validate-button" description="Validate" method={validateFeed}/>
           </p>
-          <p id="validation-status"/>
           <p id="progress-circles"/>
+          <p id="validation-status"/>
           <div id="display-result-button" className="launch-button-container">
             <FittedButton description="Display validation report" method={displayValidationReport}/>
           </div>
