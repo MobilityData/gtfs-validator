@@ -139,13 +139,15 @@ Which will:
 1. Launch client side of the application on port `8090`
 
 Open your favorite browser and go to `http://localhost:8090` the user interface of the application should be displayed as follows:
-![User Interface](https://user-images.githubusercontent.com/35747326/94287969-e985ff80-ff24-11ea-97bd-c57a2383db9d.png)
-
+![User Interface](https://user-images.githubusercontent.com/35747326/94601198-1efe5600-0261-11eb-8acb-0376021cc448.png)
+The entire valdiation process can be monitored in the Terminal:  
+![User Interface](https://user-images.githubusercontent.com/35747326/94601197-1e65bf80-0261-11eb-8ff9-0d71688d4530.png)
 
 1. Drag and drop your configuration in the area indicated for this purpose
 1. Click on validate
 
 The validation report will be generated and saved at the default location or the path specified via the configuration file's `output` field.
+The validation report can be displayed by a simple click on the `Display validation report` button, which will automatically open your default tet editor with the content of the validation report. 
 See [configuration section](https://github.com/MobilityData/gtfs-validator#software-configuration) for more details regarding software configuration.
 
 
