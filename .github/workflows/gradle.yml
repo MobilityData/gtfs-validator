@@ -43,6 +43,10 @@ jobs:
     name: Build and push Docker image to GitHub Packages
     runs-on: ubuntu-latest
     steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Package jar with Gradle
+        run: ./gradlew shadowJar
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v2
         with:
