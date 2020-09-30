@@ -44,7 +44,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         final LocalDate mockEndDate = mock(LocalDate.class);
         when(mockFeedInfo.getFeedStartDate()).thenReturn(mockStartDate);
         when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
-        when(mockStartDate.isBefore(mockEndDate)).thenReturn(false);
+        when(mockStartDate.isBefore(mockEndDate)).thenReturn(true);
 
         final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
         mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
@@ -84,7 +84,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
         when(mockFeedInfo.getFeedPublisherUrl()).thenReturn("feed publisher url");
         when(mockFeedInfo.getFeedLang()).thenReturn("feed lang");
-        when(mockStartDate.isBefore(mockEndDate)).thenReturn(true);
+        when(mockStartDate.isBefore(mockEndDate)).thenReturn(false);
 
         final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
         mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
@@ -165,7 +165,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
     // suppressed warning regarding ignored result of method since it is not necessary here
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void feedInfoWithStartButWithoutEndDateShouldNotGenerateNotice() {
+    void feedInfoWithStartDateButWithoutEndDateShouldNotGenerateNotice() {
         final FeedInfo mockFeedInfo = mock(FeedInfo.class);
         final LocalDate mockStartDate = mock(LocalDate.class);
         when(mockFeedInfo.getFeedStartDate()).thenReturn(mockStartDate);
