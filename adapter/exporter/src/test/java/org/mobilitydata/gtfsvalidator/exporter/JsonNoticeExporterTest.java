@@ -1025,7 +1025,7 @@ class JsonNoticeExporterTest {
 
     @Test
     void exportStopTooFarFromTripShapeShouldWriteObject() throws IOException {
-        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+        JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         StopTooFarFromTripShapeNotice toExport =
@@ -1038,6 +1038,7 @@ class JsonNoticeExporterTest {
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
         verifyNoMoreInteractions(mockGenerator);
     }
 
