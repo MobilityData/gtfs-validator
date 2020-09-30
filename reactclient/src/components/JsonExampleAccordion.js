@@ -24,11 +24,11 @@ export default class JsonExampleAccordion extends Component {
     state = {activeItemIndex: 0}
 
     handleClick = (e, titleProps) => {
-        const {index} = titleProps
+        const {index: itemIndex} = titleProps
         const {activeIndex: activeItemIndex} = this.state
-        const newIndex = activeItemIndex === index ? -1 : index
+        const newItemIndex = activeItemIndex === itemIndex ? -1 : itemIndex
 
-        this.setState({activeIndex: newIndex})
+        this.setState({activeIndex: newItemIndex})
     }
 
     render() {
