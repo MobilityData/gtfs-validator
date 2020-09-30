@@ -265,4 +265,23 @@ class RouteTest {
         assertEquals(27, notice.getCode());
         assertEquals(STRING_TEST_VALUE, notice.getEntityId());
     }
+
+    @Test
+    void createRouteWithNullAgencyIdShouldNotGenerateNotice() {
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(null)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(1)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof Route);
+    }
 }
