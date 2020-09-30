@@ -25,38 +25,38 @@ export default class JsonExampleAccordion extends Component {
 
     handleClick = (e, titleProps) => {
         const {index} = titleProps
-        const {activeItemIndex} = this.state
+        const {activeIndex: activeItemIndex} = this.state
         const newIndex = activeItemIndex === index ? -1 : index
 
         this.setState({activeIndex: newIndex})
     }
 
     render() {
-        const {activeItemIndex} = this.state;
+        const {activeIndex} = this.state
         return (
             <Accordion styled id="json-example" className="json-example-container">
                 <Accordion.Title
-                    active={activeItemIndex === 0}
+                    active={activeIndex === 0}
                     index={0}
                     onClick={this.handleClick}
                     className="json-example-tile"
                 >
                     <Icon name='dropdown'/>
                     Example of configuration file using URL to remote GTFS archive </Accordion.Title>
-                <Accordion.Content active={activeItemIndex === 0}>
+                <Accordion.Content active={activeIndex === 0}>
                     <JsonBeautyfier id="json-example" data={localJson} className="json-example"/>
 
                 </Accordion.Content>
 
                 <Accordion.Title
-                    active={activeItemIndex === 1}
+                    active={activeIndex === 1}
                     index={1}
                     onClick={this.handleClick}
                 >
                     <Icon name='dropdown'/>
                     Example of configuration file using locally stored GTFS archive
                 </Accordion.Title>
-                <Accordion.Content active={activeItemIndex === 1}>
+                <Accordion.Content active={activeIndex === 1}>
                     <JsonBeautyfier id="json-example" data={networkJson} className="json-example"/>
                 </Accordion.Content>
             </Accordion>
