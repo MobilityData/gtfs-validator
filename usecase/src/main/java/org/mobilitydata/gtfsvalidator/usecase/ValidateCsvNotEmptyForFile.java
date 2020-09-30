@@ -66,7 +66,7 @@ public class ValidateCsvNotEmptyForFile {
      * a {@link EmptyFileWarningNotice} is added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E_039 & W_009 - Empty file'" + System.lineSeparator());
+        logger.info("Validating rule 'E_039 & W_009 - Empty file'");
         if (rawFileRepo.getActualHeadersForFile(rawFileInfo).size() == 0) {
             resultRepo.addNotice(new EmptyFileErrorNotice(rawFileInfo.getFilename()));
         } else {
