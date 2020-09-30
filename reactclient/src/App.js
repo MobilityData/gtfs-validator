@@ -15,63 +15,44 @@
  */
 
 import React, {useCallback} from "react";
-import ReactDOM from 'react-dom';
 
 import NiceButton from "./components/NiceButton";
 import JsonDropzone from "./components/JsonDropzone";
-import JsonRenderer from "./components/JsonRenderer";
 import JsonExampleAccordion from "./components/JsonExampleAccordion";
 
 import './App.css';
 import logo from './logo.png';
 
 import {displayValidationReport, initConfig, validateFeed} from "./helper/ApiRequest"
-import {Port} from "./helper/Constants.js";
+import {displayJsonData, enableElement, hasAttribute, hideItem} from "./helper/DomInteractions";
+import {Port} from "./helper/Constants";
+
 
 function App() {
-
   const onDrop = useCallback(acceptedFiles => {
-    clearHTML();
-    deleteDisplayValidationReportButton();
-    deleteTable();
-    document.getElementById("json-content").style.visibility = "visible";
-    if (!document.getElementById("json-config-file").hasAttribute("disabled")) {
-      document.getElementById("validate-button").removeAttribute("disabled");
+    if (!hasAttribute("json-config-file", "disabled")) {
+      enableElement("validate-button");
+    } else {
+      hideItem("display-result-button");
     }
     const fileReader = new FileReader();
     fileReader.readAsText(acceptedFiles[0])
     fileReader.onload = function () {
-      if (!document.getElementById("json-config-file").hasAttribute("disabled")) {
+      if (!hasAttribute("json-config-file", "disabled")) {
+        console.log(hasAttribute("json-config-file", "disabled"))
         displayJsonData(JSON.parse(fileReader.result), "json-content");
         initConfig(Port(), JSON.parse(fileReader.result))
+        hideItem("validation-status");
+        hideItem("display-result-button");
       } else {
+        console.log(hasAttribute("json-config-file", "disabled"))
         alert("Process already running, please wait for completion.")
       }
     }
   }, []);
 
-  function displayJsonData(jsonData, htmlDocumentId) {
-    ReactDOM.render(
-        <JsonRenderer data={jsonData} htmlId={htmlDocumentId}/>,
-        document.getElementById(htmlDocumentId)
-    );
-  }
-
-  function clearHTML() {
-    document.getElementById("display-result-button").style.visibility = "hidden";
-    document.getElementById("validation-status").style.visibility = "hidden";
-  }
-
-  function deleteTable() {
-    document.getElementById("json-content").style.visibility = "hidden";
-  }
-
-  function deleteDisplayValidationReportButton() {
-    document.getElementById("display-result-button").style.visibility = "hidden";
-  }
-
   return (
-      <div className="App" onLoad={deleteDisplayValidationReportButton}>
+      <div className="App" onLoad={() => hideItem("display-result-button")}>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
           <JsonExampleAccordion className="json-example-container"/>

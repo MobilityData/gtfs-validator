@@ -20,6 +20,7 @@ import axios from 'axios';
 
 import {GetReportContentCommand, InitConfigCommand, Port, RunValidatorCommand} from "./Constants";
 import CircularIndeterminate from "../components/CircularProgress";
+import {disableElement, enableElement, hideItem, showItem} from "./DomInteractions";
 
 export async function initConfig(port, execParamConfigFileAsString) {
     axios.post('http://localhost:' + Port() + InitConfigCommand(), execParamConfigFileAsString)
@@ -34,19 +35,20 @@ export async function validateFeed() {
     ReactDOM.render(
         <CircularIndeterminate/>,
         document.getElementById("progress-circles"));
-    document.getElementById("progress-circles").style.visibility = "visible";
-    document.getElementById("validate-button").setAttribute("disabled", "");
-    document.getElementById("json-config-file").setAttribute("disabled", "true");
+    showItem("progress-circles");
+    disableElement("validate-button");
+    disableElement("json-config-file");
     axios.get('http://localhost:' + Port() + RunValidatorCommand())
         .then((response) => {
-            document.getElementById("display-result-button").style.visibility = "visible";
-            document.getElementById("progress-circles").style.visibility = "hidden";
-            document.getElementById("validation-status").style.visibility = "visible";
-            document.getElementById("display-result-button").style.visibility = "visible";
+            hideItem("progress-circles");
+            showItem("display-result-button");
+            showItem("validation-status");
+            showItem("display-result-button");
             ReactDOM.render(
                 <p>{response.data}</p>,
-                document.getElementById("validation-status"));
-            document.getElementById("json-config-file").removeAttribute("disabled");
+                document.getElementById("validation-status")
+            );
+            enableElement("json-config-file")
         }).catch((error) => {
         console.log(error)
     });
