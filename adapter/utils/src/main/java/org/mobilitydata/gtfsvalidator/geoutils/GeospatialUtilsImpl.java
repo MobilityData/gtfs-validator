@@ -19,8 +19,19 @@ package org.mobilitydata.gtfsvalidator.geoutils;
 import org.locationtech.spatial4j.distance.DistanceCalculator;
 import org.locationtech.spatial4j.distance.DistanceUtils;
 import org.locationtech.spatial4j.shape.Point;
+import org.locationtech.spatial4j.shape.Shape;
 import org.locationtech.spatial4j.shape.ShapeFactory;
+import org.locationtech.spatial4j.shape.SpatialRelation;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.ShapePoint;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.BoardingArea;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.LocationBase;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.StopOrPlatform;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.StopTooFarFromTripShapeNotice;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
+
+import java.util.*;
 
 import static org.locationtech.spatial4j.context.SpatialContext.GEO;
 
@@ -29,6 +40,9 @@ import static org.locationtech.spatial4j.context.SpatialContext.GEO;
  */
 public class GeospatialUtilsImpl implements GeospatialUtils {
     private static GeospatialUtilsImpl GEO_UTILS = null;
+
+    // Spatial operation buffer values
+    public static final double TRIP_BUFFER_DEGREES = DistanceUtils.KM_TO_DEG * (TRIP_BUFFER_METERS / 1000.0d);
 
     private GeospatialUtilsImpl() {
     }
@@ -64,7 +78,69 @@ public class GeospatialUtilsImpl implements GeospatialUtils {
     }
 
     /**
+     * Returns a list of E052 errors for the given input, one for each stop that is too far from the trip shapePoints
+     *
+     * @param trip          Trip for this GTFS trip
+     * @param stopTimes     a map of StopTimes for a trip, sorted by stop_sequence
+     * @param shapePoints   a map of ShapePoints for a trip, sorted by shape_pt_sequence
+     * @param stopsByStopId a map of all stops (keyed on stop_id), needed to obtain the latitude and longitude for each stop
+     * @param testedCache   a cache for previously tested shape_id and stop_id pairs (keyed on shape_id+stop_id). If the
+     *                      combination of shape_id and stop_id appears in this set, we shouldn't test it again. Shapes
+     *                      and stops tested in this method execution will be added to this testedCache.
+     * @return a list of E052 errors, one for each stop that is too far from the trip shapePoints
+     */
+    public List<StopTooFarFromTripShapeNotice> checkStopsWithinTripShape(final Trip trip,
+                                                                         final SortedMap<Integer, StopTime> stopTimes,
+                                                                         final SortedMap<Integer, ShapePoint> shapePoints,
+                                                                         final Map<String, LocationBase> stopsByStopId,
+                                                                         final Set<String> testedCache) {
+        List<StopTooFarFromTripShapeNotice> errors = new ArrayList<>();
+        if (trip == null || stopTimes == null || stopTimes.isEmpty() || shapePoints == null || shapePoints.isEmpty()) {
+            // Nothing to do - return empty list
+            return errors;
+        }
+
+        // Create a polyline from the GTFS shapes data
+        ShapeFactory.LineStringBuilder lineBuilder = getShapeFactory().lineString();
+        shapePoints.forEach((integer, shapePoint) -> lineBuilder.pointXY(shapePoint.getShapePtLon(), shapePoint.getShapePtLat()));
+        Shape shapeLine = lineBuilder.build();
+
+        // Create the buffered version of the trip as a polygon
+        Shape shapeBuffer = shapeLine.getBuffered(TRIP_BUFFER_DEGREES, shapeLine.getContext());
+
+        // Check if each stop is within the buffer polygon
+        stopTimes.forEach((stopSequence, stopTime) -> {
+            LocationBase stop = stopsByStopId.get(stopTime.getStopId());
+            if (stop == null || stop.getStopLat() == null || stop.getStopLon() == null) {
+                // Lat/lon are optional for location_type 4 - skip to the next stop if they aren't provided
+                return;
+            }
+            if (!(stop instanceof StopOrPlatform) && !(stop instanceof BoardingArea)) {
+                // This rule only applies to stops of location_type 0 and 4 - skip to next stop
+                return;
+            }
+            if (testedCache.contains(trip.getShapeId() + stop.getStopId())) {
+                // We've already tested this combination of shape ID and stop ID - skip to next stop
+                return;
+            }
+            testedCache.add(trip.getShapeId() + stop.getStopId());
+            org.locationtech.spatial4j.shape.Point p = getShapeFactory().pointXY(stop.getStopLon(), stop.getStopLat());
+            if (!shapeBuffer.relate(p).equals(SpatialRelation.CONTAINS)) {
+                errors.add(new StopTooFarFromTripShapeNotice(
+                        stopTime.getStopId(),
+                        stopTime.getStopSequence(),
+                        trip.getTripId(),
+                        trip.getShapeId(),
+                        TRIP_BUFFER_METERS));
+            }
+        });
+
+        return errors;
+    }
+
+    /**
      * Method returning a {@code ShapeFactory}
+     *
      * @return a {@link ShapeFactory}
      */
     private static ShapeFactory getShapeFactory() {

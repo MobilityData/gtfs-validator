@@ -461,6 +461,10 @@ public class DefaultConfig {
                 new ValidateShapeIncreasingDistance());
     }
 
+    public ValidateStopTooFarFromTripShape validateStopTooFarFromTripShape() {
+        return new ValidateStopTooFarFromTripShape(gtfsDataRepository, resultRepo, geoUtils, logger);
+    }
+
     public String getExecParamValue(final String execParamKey) {
         return execParamRepo.getExecParamValue(execParamKey);
     }

@@ -137,6 +137,9 @@ public interface NoticeExporter {
 
     void export(final UnusableTripNotice unusableTripNotice) throws IOException;
 
+    void export(final StopTooFarFromTripShapeNotice stopTooFarFromTripShapeNotice)
+            throws IOException;
+
     void export(final MissingCalendarAndCalendarDateFilesNotice missingCalendarAndCalendarDateFilesNotice) throws IOException;
 
     void export(final OverlappingTripFrequenciesNotice overlappingTripFrequenciesNotice) throws IOException;

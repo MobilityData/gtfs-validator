@@ -117,7 +117,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing Shape Entities. A shape is a actually a collection of ShapePoint.
     // Entities are mapped on the values found in column shape_id  and shape_pt_sequence of GTFS file shapes.txt
-    private final Map<String, Map<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
+    private final Map<String, SortedMap<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
 
     // Map containing StopTime entities. Entities are mapped on a composite key made of the values found in the columns
     // of GTFS file stop_times.txt:
@@ -812,7 +812,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                     return null;
                 }
             } else {
-                final Map<Integer, ShapePoint> innerMap = new TreeMap<>();
+                final SortedMap<Integer, ShapePoint> innerMap = new TreeMap<>();
                 innerMap.put(newShapePoint.getShapePtSequence(), newShapePoint);
                 shapePerIdShapePtSequence.put(shapeId, innerMap);
             }
@@ -831,8 +831,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * represents a shape object. The returned map is ordered by shape_pt_sequence.
      */
     @Override
-    public Map<Integer, ShapePoint> getShapeById(final String shapeId) {
-        return Collections.unmodifiableMap(shapePerIdShapePtSequence.get(shapeId));
+    public SortedMap<Integer, ShapePoint> getShapeById(final String shapeId) {
+        return Collections.unmodifiableSortedMap(shapePerIdShapePtSequence.get(shapeId));
     }
 
     /**
@@ -843,7 +843,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * @return an immutable map representing all records from shapes.txt
      */
     @Override
-    public Map<String, Map<Integer, ShapePoint>> getShapeAll() {
+    public Map<String, SortedMap<Integer, ShapePoint>> getShapeAll() {
         return Collections.unmodifiableMap(shapePerIdShapePtSequence);
     }
 

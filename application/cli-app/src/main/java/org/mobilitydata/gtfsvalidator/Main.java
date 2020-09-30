@@ -91,7 +91,8 @@ public class Main {
                 final Map<String, ParsedEntity> preprocessedStopByStopId = new HashMap<>();
 
                 filenameListToProcess.forEach(filename -> {
-                    logger.info("Validate CSV structure and field types for file: " + filename);
+                    logger.info(System.lineSeparator() + System.lineSeparator() +
+                            "Validate CSV structure and field types for file: " + filename);
                     config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
@@ -210,6 +211,7 @@ public class Main {
                 config.validateTripUsage().execute();
                 config.validateTripNumberOfStops().execute();
                 config.validateFrequencyStartTimeBeforeEndTime().execute();
+                config.validateStopTooFarFromTripShape().execute();
                 config.validateFrequencyOverlap().execute();
                 config.validateNoOverlappingStopTimeInTripBlock().execute();
                 config.validateAgencyLangAndFeedInfoFeedLangMatch().execute();

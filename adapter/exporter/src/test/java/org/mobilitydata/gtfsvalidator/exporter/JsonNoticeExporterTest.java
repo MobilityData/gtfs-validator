@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
+import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
@@ -1019,6 +1020,24 @@ class JsonNoticeExporterTest {
 
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportStopTooFarFromTripShapeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        StopTooFarFromTripShapeNotice toExport =
+                new StopTooFarFromTripShapeNotice(
+                        "1234",
+                        1,
+                        "A",
+                        "ZYX",
+                        GeospatialUtils.TRIP_BUFFER_METERS);
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
