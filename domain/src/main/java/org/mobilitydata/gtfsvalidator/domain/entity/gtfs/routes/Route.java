@@ -278,7 +278,7 @@ public class Route extends GtfsEntity {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() throws IllegalArgumentException {
-            if (routeId == null || routeType == null || agencyId.isBlank() ||
+            if (routeId == null || routeType == null || (agencyId != null && agencyId.isBlank()) ||
                     (!isPresentName(routeLongName) && !isPresentName(routeShortName))) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
@@ -292,7 +292,7 @@ public class Route extends GtfsEntity {
                     noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
                             routeId, originalRouteTypeInteger));
                 }
-                if (agencyId.isBlank()) {
+                if (agencyId != null && agencyId.isBlank()) {
                     noticeCollection.add(
                             new InvalidAgencyIdNotice("routes.txt", "agency_id", routeId));
                 }
