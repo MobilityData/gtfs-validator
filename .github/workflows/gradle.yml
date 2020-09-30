@@ -50,11 +50,11 @@ jobs:
           java-version: 1.11
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
-      - name: Push to GitHub Packages
+      - name: Push to GitHub Container Registry
         uses: docker/build-push-action@v1
         with:
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          registry: docker.pkg.github.com
+          password: ${{ secrets.CR_PAT }}
+          registry: ghcr.io
           repository: mobilitydata/gtfs-validator/gtfs-validator-image
           tag_with_ref: true
