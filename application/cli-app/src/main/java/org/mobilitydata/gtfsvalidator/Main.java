@@ -92,7 +92,8 @@ public class Main {
                 final Map<String, ParsedEntity> preprocessedStopByStopId = new HashMap<>();
 
                 filenameListToProcess.forEach(filename -> {
-                    logger.info(System.lineSeparator() + "Validate CSV structure and field types for file: " + filename);
+                    logger.info(System.lineSeparator() + System.lineSeparator() +
+                            "Validate CSV structure and field types for file: " + filename);
                     config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
