@@ -8,9 +8,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK 1.11
@@ -40,3 +38,16 @@ jobs:
         with:
           name: v1.3.0-SNAPSHOT_javadoc
           path: build/docs/javadoc/
+
+  push_to_registry:
+    name: Build and push Docker image to GitHub Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v2
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: mobilitydata/gtfs-validator/gtfs-validator-image
+          tag_with_ref: true
