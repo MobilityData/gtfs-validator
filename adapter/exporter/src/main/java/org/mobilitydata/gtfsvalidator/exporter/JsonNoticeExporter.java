@@ -25,6 +25,8 @@ import java.io.IOException;
 
 public class JsonNoticeExporter implements NoticeExporter {
     private final JsonGenerator jsonGenerator;
+    public static final String FILE_EXTENSION = ".json";
+    public static final Boolean DEFAULT_IS_PRETTY = true;
 
     public JsonNoticeExporter(final JsonGenerator generator,
                               final boolean isPretty) {
@@ -35,7 +37,9 @@ public class JsonNoticeExporter implements NoticeExporter {
         }
     }
 
-    public static final String FILE_EXTENSION = ".json";
+    public JsonNoticeExporter(final JsonGenerator generator) {
+        this(generator, DEFAULT_IS_PRETTY);
+    }
 
     @Override
     public String getExtension() {
