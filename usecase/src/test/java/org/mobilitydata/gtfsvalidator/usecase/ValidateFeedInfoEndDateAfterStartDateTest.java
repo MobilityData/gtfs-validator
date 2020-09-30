@@ -107,7 +107,6 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         verify(mockFeedInfo, times(1)).getFeedStartDate();
         verify(mockFeedInfo, times(1)).getFeedPublisherUrl();
         verify(mockFeedInfo, times(1)).getFeedLang();
-
         verify(mockStartDate, times(1)).isBefore(mockEndDate);
 
         final ArgumentCaptor<FeedInfoStartDateAfterEndDateNotice> captor =
@@ -126,6 +125,10 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         assertEquals("feed publisher name", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_FIRST_VALUE));
         assertEquals("feed publisher url", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_SECOND_VALUE));
         assertEquals("feed lang", noticeList.get(0).getNoticeSpecific(Notice.KEY_COMPOSITE_KEY_THIRD_VALUE));
+        assertEquals(String.format("`feed_end_date`: `%s` precedes `feed_start_date`: `%s` in file `%s`" +
+                        " for entity with composite id: `%s`: `%s` -- `%s`: `%s` -- `%s`: `%s`.",
+                "end date", "start date", "feed_info.txt", "feed_publisher_name", "feed publisher name",
+                "feed_publisher_url", "feed publisher url", "feed_lang", "feed lang"), noticeList.get(0).getDescription());
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockResultRepo, mockFeedInfo, mockStartDate, mockEndDate);
     }
 
@@ -187,7 +190,6 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
                 " and `feed_end_date` out of order");
 
         verify(mockDataRepo, times(1)).getFeedInfoAll();
-
         verify(mockFeedInfo, times(1)).getFeedStartDate();
         verify(mockFeedInfo, times(1)).getFeedEndDate();
 
