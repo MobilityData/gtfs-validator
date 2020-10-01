@@ -1,4 +1,4 @@
-# gtfs-validator [![Java CI](https://github.com/MobilityData/gtfs-validator/workflows/Java%20CI/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Java+CI%22) [![Join the gtfs-validator chat](https://mobilitydata-io.herokuapp.com/badge.svg)](https://mobilitydata-io.herokuapp.com/)
+# gtfs-validator # gtfs-validator [![Build and test](https://github.com/MobilityData/gtfs-validator/workflows/Gradle%20build%20and%20test/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Java+CI%22) ![Docker image](https://github.com/MobilityData/gtfs-validator/workflows/Docker%20image/badge.svg) [![Join the gtfs-validator chat](https://mobilitydata-io.herokuapp.com/badge.svg)](https://mobilitydata-io.herokuapp.com/)
 
 A static [General Transit Feed Specification (GTFS)](http://gtfs.org/reference/static/) feed validator
 
