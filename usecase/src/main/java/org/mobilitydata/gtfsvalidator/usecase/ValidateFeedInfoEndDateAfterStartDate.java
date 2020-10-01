@@ -61,7 +61,7 @@ public class ValidateFeedInfoEndDateAfterStartDate {
             final LocalDate feedStartDate = feedInfo.getFeedStartDate();
             final LocalDate feedEndDate = feedInfo.getFeedEndDate();
             if (feedStartDate != null && feedEndDate != null) {
-                if (feedStartDate.isBefore(feedEndDate)) {
+                if (feedEndDate.isBefore(feedStartDate)) {
                     resultRepo.addNotice(
                             new FeedInfoStartDateAfterEndDateNotice(
                                     "feed_info.txt",
