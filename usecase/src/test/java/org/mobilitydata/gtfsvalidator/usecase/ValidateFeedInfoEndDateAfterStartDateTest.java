@@ -44,7 +44,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         final LocalDate mockEndDate = mock(LocalDate.class);
         when(mockFeedInfo.getFeedStartDate()).thenReturn(mockStartDate);
         when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
-        when(mockStartDate.isBefore(mockEndDate)).thenReturn(true);
+        when(mockEndDate.isBefore(mockStartDate)).thenReturn(false);
 
         final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
         mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
@@ -66,7 +66,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         verify(mockFeedInfo, times(1)).getFeedEndDate();
         verify(mockFeedInfo, times(1)).getFeedStartDate();
 
-        verify(mockStartDate, times(1)).isBefore(mockEndDate);
+        verify(mockEndDate, times(1)).isBefore(mockStartDate);
         verifyNoInteractions(mockResultRepo);
         verifyNoMoreInteractions(mockDataRepo, mockLogger, mockFeedInfo, mockStartDate, mockEndDate);
     }
@@ -84,7 +84,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         when(mockFeedInfo.getFeedEndDate()).thenReturn(mockEndDate);
         when(mockFeedInfo.getFeedPublisherUrl()).thenReturn("feed publisher url");
         when(mockFeedInfo.getFeedLang()).thenReturn("feed lang");
-        when(mockStartDate.isBefore(mockEndDate)).thenReturn(false);
+        when(mockEndDate.isBefore(mockStartDate)).thenReturn(true);
 
         final Map<String, FeedInfo> mockFeedInfoCollection = new HashMap<>();
         mockFeedInfoCollection.put("feed publisher name", mockFeedInfo);
@@ -107,7 +107,7 @@ class ValidateFeedInfoEndDateAfterStartDateTest {
         verify(mockFeedInfo, times(1)).getFeedStartDate();
         verify(mockFeedInfo, times(1)).getFeedPublisherUrl();
         verify(mockFeedInfo, times(1)).getFeedLang();
-        verify(mockStartDate, times(1)).isBefore(mockEndDate);
+        verify(mockEndDate, times(1)).isBefore(mockStartDate);
 
         final ArgumentCaptor<FeedInfoStartDateAfterEndDateNotice> captor =
                 ArgumentCaptor.forClass(FeedInfoStartDateAfterEndDateNotice.class);
