@@ -13,7 +13,16 @@ This command-line tool written in Java that performs the following steps:
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
 1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from a [workflow execution](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster)
 
+OR
+
+1. Install [Docker](https://www.docker.com)
+2. Retrieve an image from our [package page](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator)
+
 # Usage
+
+## Docker image
+
+After attaching a terminal to the running container, you can follow the instructions of the next sections, passing commands directly from the root directory
 
 ### Validate a locally stored GTFS dataset
 
