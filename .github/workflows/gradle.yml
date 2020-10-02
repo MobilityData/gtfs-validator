@@ -17,8 +17,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Run test
+      - name: Run cli and server test
         run: ./gradlew testReport
+     - name: Run ui tests
+        run: npm run test
       - name: Package cli application jar with Gradle
         run: ./gradlew shadowJar
       - name: Package web application jar with Gradle
