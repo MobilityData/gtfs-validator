@@ -25,44 +25,44 @@ import static org.junit.jupiter.api.Assertions.*;
 class ServiceManagerTest {
 
     @Test
-    void initConfigShouldCreateDefaultConfigViaBuilder() throws Exception {
+    void initializeConfigShouldCreateDefaultConfigViaBuilder() throws Exception {
         final ServiceManager underTest = new ServiceManager();
         final String mockExecParamAsJsonString = "{\n" +
                 "  \"input\": \"mbta-dataset.zip\",\n" +
                 "\"abort_on_error\": false\n" +
                 "}";
-        assertNull(underTest.initConfig(mockExecParamAsJsonString));
+        assertNull(underTest.initializeConfig(mockExecParamAsJsonString));
     }
 
     @Test
-    void initConfigShouldThrowExceptionIfConfigFileNotProvided() {
+    void initializeConfigShouldThrowExceptionIfConfigFileNotProvided() {
         final ServiceManager underTest = new ServiceManager();
-        final Exception exception = assertThrows(IOException.class, () -> underTest.initConfig(null));
+        final Exception exception = assertThrows(IOException.class, () -> underTest.initializeConfig(null));
         assertEquals("Configuration file not provided", exception.getMessage());
     }
 
     @Test
-    void isConfigInitShouldReturnTrueIfConfigFileIsProvided() throws Exception {
+    void isConfigInitializedShouldReturnTrueIfConfigFileIsProvided() throws Exception {
         final ServiceManager underTest = new ServiceManager();
         final String mockExecParamAsJsonString = "{\n" +
                 "  \"input\": \"mbta-dataset.zip\",\n" +
                 "\"abort_on_error\": false\n" +
                 "}";
-        underTest.initConfig(mockExecParamAsJsonString);
-        assertTrue(underTest.isConfigInit());
+        underTest.initializeConfig(mockExecParamAsJsonString);
+        assertTrue(underTest.isConfigInitialized());
     }
 
     @Test
-    void isConfigInitShouldReturnFalseIfConfigFileIsNotInitialized() {
+    void isConfigInitializedShouldReturnFalseIfConfigIsNotInitiated() {
         final ServiceManager underTest = new ServiceManager();
-        assertFalse(underTest.isConfigInit());
+        assertFalse(underTest.isConfigInitialized());
     }
 
     @Test
-    void isConfigInitShouldReturnFalseIfConfigFileIsNotProvided() {
+    void isConfigInitializedShouldReturnFalseIfConfigFileIsNotProvided() {
         final ServiceManager underTest = new ServiceManager();
-        assertThrows(IOException.class, () -> underTest.initConfig(null));
-        assertFalse(underTest.isConfigInit());
+        assertThrows(IOException.class, () -> underTest.initializeConfig(null));
+        assertFalse(underTest.isConfigInitialized());
     }
 
     @Test

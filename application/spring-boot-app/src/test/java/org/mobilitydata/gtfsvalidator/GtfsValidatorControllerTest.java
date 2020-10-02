@@ -40,18 +40,18 @@ class GtfsValidatorControllerTest {
     @MockBean
     private ServiceManager mockServiceManager;
 
-    @Test
-    void initConfigShouldCallServiceManagerInitConfigMethod() throws Exception {
-//        when(mockServiceManager.initConfig(anyString())).thenReturn(null);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get("/actions/initconfig"))
+//    @Test
+//    void initConfigShouldCallServiceManagerInitConfigMethod() throws Exception {
+//        when(mockServiceManager.initializeConfig("jsonAsString")).thenReturn(null);
+//        mockMvc.perform(MockMvcRequestBuilders.post("/actions/initialize/")
+//                .contentType(MediaType.ALL))
 //                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
-//
+////
 //        verify(mockServiceManager, times(1))
-//                .initConfig(ArgumentMatchers.eq("jsonAsString"));
+//                .initializeConfig(ArgumentMatchers.eq("jsonAsString"));
 //        verifyNoMoreInteractions(mockServiceManager);
-        //todo: update with postmapping syntax
-    }
+//        //todo: update with postmapping syntax
+//    }
 
     @Test
     void validateFeedShouldCallServiceManagerValidateFeedMethod() throws Exception {
@@ -65,13 +65,13 @@ class GtfsValidatorControllerTest {
     }
 
     @Test
-    void displayReportInDefaultTextEditorShouldCallDisplayReportInDefaultTextEditor() throws Exception {
-        when(mockServiceManager.displayReportInDefaultTextEditor()).thenReturn("no content");
+    void openReportShouldCallServiceManageOpenReportMethod() throws Exception {
+        when(mockServiceManager.openReport()).thenReturn("no content");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/actions/displayreportindefaulttexteditor/"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/actions/openreport/"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
-        verify(mockServiceManager, times(1)).displayReportInDefaultTextEditor();
+        verify(mockServiceManager, times(1)).openReport();
         verifyNoMoreInteractions(mockServiceManager);
     }
 }

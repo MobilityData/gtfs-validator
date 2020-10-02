@@ -43,7 +43,7 @@ public class ServiceManager {
      * @param execParamAsString the set of execution parameters as a Json string
      * @return null (for requirement of the testing framework)
      */
-    public String initConfig(final String execParamAsString) throws Exception {
+    public String initializeConfig(final String execParamAsString) throws Exception {
         try {
             this.config = new DefaultConfig.Builder()
                     .execParamAsString(execParamAsString)
@@ -64,7 +64,7 @@ public class ServiceManager {
      *
      * @return true if the user provided configuration file, else returns false.
      */
-    public boolean isConfigInit() {
+    public boolean isConfigInitialized() {
         return config != null;
     }
 
@@ -74,7 +74,7 @@ public class ServiceManager {
      * @return the validation status as a String
      */
     public String runValidator() throws IOException {
-        if (!isConfigInit()) {
+        if (!isConfigInitialized()) {
             throw (new IOException("Configuration file not provided"));
         }
         try {
@@ -288,7 +288,7 @@ public class ServiceManager {
      *
      * @return null and executes shell command to open validation report in default text editor
      */
-    public String displayReportInDefaultTextEditor() throws IOException {
+    public String openReport() throws IOException {
         final Runtime runTime = Runtime.getRuntime();
         runTime.exec("open -t " + config.getExecParamValue(ExecParamRepository.OUTPUT_KEY) + "/results.json");
         return null;

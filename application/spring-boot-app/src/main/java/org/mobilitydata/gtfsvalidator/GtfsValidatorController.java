@@ -31,10 +31,10 @@ public class GtfsValidatorController {
         this.serviceManager = serviceManager;
     }
 
-    @PostMapping("initconfig/")
-    public String initConfig(@RequestBody final String execParamAsJsonString) throws Exception {
+    @PostMapping("initialize/")
+    public String initialize(@RequestBody final String execParamAsJsonString) throws Exception {
         try {
-            return serviceManager.initConfig(execParamAsJsonString);
+            return serviceManager.initializeConfig(execParamAsJsonString);
         } catch (IOException e) {
             return e.getMessage();
         }
@@ -50,9 +50,9 @@ public class GtfsValidatorController {
         }
     }
 
-    @GetMapping("/displayreportindefaulttexteditor")
+    @GetMapping("/openreport")
     @ResponseBody
-    public String displayReportInDefaultTextEditor() throws IOException {
-        return serviceManager.displayReportInDefaultTextEditor();
+    public String openReport() throws IOException {
+        return serviceManager.openReport();
     }
 }
