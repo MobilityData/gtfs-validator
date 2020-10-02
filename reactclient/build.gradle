@@ -26,6 +26,10 @@ node {
     download = true
 }
 
+task removeNodeModuleDirectory(type: Delete) {
+    delete "node_modules"
+}
+
 task bundle(type: NpmTask, dependsOn: npmInstall) {
     args = ['run', 'build']
 }
