@@ -10,6 +10,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./reactclient
 
     steps:
       - uses: actions/checkout@v1
@@ -21,6 +23,7 @@ jobs:
         run: ./gradlew testReport
       - name: Run ui tests
         run: npm run test
+        working-directory: ${{env.working-directory}}
       - name: Package cli application jar with Gradle
         run: ./gradlew shadowJar
       - name: Package web application jar with Gradle
