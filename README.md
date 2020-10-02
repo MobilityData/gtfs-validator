@@ -167,9 +167,14 @@ Some important modules:
 # Tests
 
 To run tests: 
-
+1. CLI and server tests
 ```
 ./gradlew check
+```
+1. UI tests
+```
+cd reactclient/
+npm test
 ```
 
 # License
