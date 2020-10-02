@@ -19,7 +19,7 @@ jobs:
           java-version: 1.11
       - name: Run cli and server tests
         run: ./gradlew testReport
-     - name: Run ui tests
+      - name: Run ui tests
         run: npm run test
       - name: Package cli application jar with Gradle
         run: ./gradlew shadowJar
