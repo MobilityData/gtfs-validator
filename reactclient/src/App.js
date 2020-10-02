@@ -27,7 +27,6 @@ import {displayValidationReport, initConfig, validateFeed} from "./helper/ApiReq
 import {displayJsonData, enableElement, hasAttribute, hideItem} from "./helper/DomInteractions";
 import {Port} from "./helper/Constants";
 
-
 function App() {
   const onDrop = useCallback(acceptedFiles => {
     if (!hasAttribute("json-config-file", "disabled")) {
