@@ -52,6 +52,11 @@ jobs:
         with:
           name: v1.3.0-SNAPSHOT_reactclient_tests
           path: reactclient/test-reports/
+      - name: Persist react client test coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_reactclient_tests
+          path: reactclient/coverage/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:

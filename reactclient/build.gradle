@@ -31,12 +31,12 @@ task removeNodeModuleDirectory(type: Delete) {
 }
 
 task bundle(type: NpmTask, dependsOn: npmInstall) {
-    args = ['run', 'build', '--', '-u']
+    args = ['run', 'build']
 }
 
 task uiTest(type: NpmTask) {
     environment = ['CI': 'true']
-    args = ['run', 'test']
+    args = ['run', 'test', '--', '--coverage']
 }
 
 task run(type: NpmTask) {
