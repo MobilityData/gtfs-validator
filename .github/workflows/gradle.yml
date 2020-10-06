@@ -45,12 +45,12 @@ jobs:
       - name: Persist server test report
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_server_tests
+          name: java-tests-v1.3.0
           path: build/reports/allTests/
       - name: Persist react client test report
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_reactclient_tests
+          name: js-tests-v1.3.0
           path: reactclient/test-reports/
       - name: Persist react client test coverage report
         uses: actions/upload-artifact@v2
