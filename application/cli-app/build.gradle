@@ -29,7 +29,7 @@ jar {
     manifest {
         attributes('Implementation-Title': rootProject.name,
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.mobilitydata.gtfsvalidator.Main',
+                'Main-Class': 'org.mobilitydata.gtfsvalidator.cliapp.Main',
                 'Multi-Release': 'true')
     }
 }
