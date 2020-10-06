@@ -19,12 +19,16 @@ import NiceButton from "../NiceButton";
 import renderer from 'react-test-renderer';
 
 describe('NiceButton', () => {
+    let mockOnClick;
+    beforeAll(() => {
+        mockOnClick = jest.fn();
+    });
+
     it('should be defined', () => {
         expect(NiceButton).toBeDefined();
     });
 
     it('should render correctly', () => {
-        let mockOnClick = jest.fn();
         const tree = renderer.create(
             <NiceButton id='id value' onClick={mockOnClick} description="description value"/>
         ).toJSON();
@@ -32,7 +36,6 @@ describe('NiceButton', () => {
     });
 
     it('should call function when button is clicked', () => {
-        let mockOnClick = jest.fn();
         const tree = renderer.create(
             <NiceButton id='id value' onClick={mockOnClick} description="description value"/>
         );

@@ -19,11 +19,11 @@ import JsonRenderer from "../JsonRenderer";
 import renderer from 'react-test-renderer';
 
 describe('JsonRenderer', () => {
-    it('should be defined without data', () => {
+    it('should be defined', () => {
         expect(JsonRenderer).toBeDefined();
     });
 
-    it('should render correctly without data', () => {
+    it('should render correctly with empty data', () => {
         const tree = renderer.create(
             <JsonRenderer data={{}}/>
             ).toJSON();

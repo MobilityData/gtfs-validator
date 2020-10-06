@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`NiceButton should render correctly 1`] = `
+exports[`JsonExampleAccordion should render correctly 1`] = `
 <div
   className="accordion ui styled json-example-container"
   id="json-example"

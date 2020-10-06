@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator;
+package org.mobilitydata.gtfsvalidator.springbootapp;
 
 import org.junit.jupiter.api.Test;
 

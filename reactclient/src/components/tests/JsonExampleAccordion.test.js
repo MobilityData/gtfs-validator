@@ -22,7 +22,8 @@ import localJson from "../../data/json-examples/local-example.json";
 import JsonBeautyfier from "../JsonBeautyfier";
 import networkJson from "../../data/json-examples/network-example.json";
 
-describe('NiceButton', () => {
+describe('JsonExampleAccordion', () => {
+    jest.mock('../JsonBeautyfier')
     it('should be defined', () => {
         expect(JsonExampleAccordion).toBeDefined();
     });
@@ -35,9 +36,11 @@ describe('NiceButton', () => {
     });
 
     it("should have two examples'", () => {
+        jest.mock('../JsonBeautyfier')
         const tree = shallow(
             <JsonExampleAccordion />
         )
+        // let mockFirstExample = mock/
         const firstExample = <JsonBeautyfier id="json-example" data={localJson} className="json-example"/>
         const secondExample = <JsonBeautyfier id="json-example" data={networkJson} className="json-example"/>;
 
@@ -45,6 +48,7 @@ describe('NiceButton', () => {
         expect(tree.contains(secondExample)).toBe(true);
     })
 
+    //FIXME: adapt test to verify that function is called anytime time item is clicked on
     // it("should call function when title item is clicked", () => {
     //     let mockOnClick = jest.fn();
     //     const tree = renderer.create(

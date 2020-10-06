@@ -15,6 +15,7 @@
  */
 
 import React, {useCallback} from "react";
+import axios from "axios";
 
 import NiceButton from "./components/NiceButton";
 import JsonDropzone from "./components/JsonDropzone";
@@ -25,7 +26,7 @@ import logo from './logo.png';
 
 import {displayValidationReport, initConfig, validateFeed} from "./helper/ApiRequest"
 import {displayJsonData, enableElement, hasAttribute, hideItem} from "./helper/DomInteractions";
-import {Port} from "./helper/Constants";
+import {InitConfigCommand, Port} from "./helper/Constants";
 import {useDropzone} from "react-dropzone";
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
       if (!hasAttribute("json-config-file", "disabled")) {
         console.log(hasAttribute("json-config-file", "disabled"))
         displayJsonData(JSON.parse(fileReader.result), "json-content");
-        initConfig(Port(), JSON.parse(fileReader.result))
+        initConfig(axios, Port(), InitConfigCommand(), JSON.parse(fileReader.result))
         hideItem("validation-status");
         hideItem("display-result-button");
       } else {

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator;
+package org.mobilitydata.gtfsvalidator.springbootapp;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +40,7 @@ class GtfsValidatorControllerTest {
     @MockBean
     private ServiceManager mockServiceManager;
 
+    // FIXME: Update method test postmapping
 //    @Test
 //    void initConfigShouldCallServiceManagerInitConfigMethod() throws Exception {
 //        when(mockServiceManager.initializeConfig("jsonAsString")).thenReturn(null);
@@ -50,7 +51,6 @@ class GtfsValidatorControllerTest {
 //        verify(mockServiceManager, times(1))
 //                .initializeConfig(ArgumentMatchers.eq("jsonAsString"));
 //        verifyNoMoreInteractions(mockServiceManager);
-//        //todo: update with postmapping syntax
 //    }
 
     @Test
