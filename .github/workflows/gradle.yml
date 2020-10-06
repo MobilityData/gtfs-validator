@@ -42,11 +42,16 @@ jobs:
         with:
           name: v1.3.0-SNAPSHOT_web
           path: application/spring-boot-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.jar
-      - name: Persist test report
+      - name: Persist server test report
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_tests
+          name: v1.3.0-SNAPSHOT_server_tests
           path: build/reports/allTests/
+      - name: Persist react client test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_reactclient_tests
+          path: reactclient/test-reports/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
