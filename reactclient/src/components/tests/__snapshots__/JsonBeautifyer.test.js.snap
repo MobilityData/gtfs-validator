@@ -169,24 +169,3 @@ exports[`JsonBeautyfier should render correctly without data 1`] = `
   </span>
 </pre>
 `;
-
-exports[`JsonBeautyfier should render correctly without data 2`] = `
-<pre
-  style={
-    Object {
-      "backgroundColor": "rgb(39, 40, 34)",
-      "overflow": "auto",
-    }
-  }
->
-  <span
-    style={
-      Object {
-        "color": "rgb(201, 70, 56)",
-      }
-    }
-  >
-    null
-  </span>
-</pre>
-`;

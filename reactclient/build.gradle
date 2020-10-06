@@ -31,7 +31,7 @@ task removeNodeModuleDirectory(type: Delete) {
 }
 
 task bundle(type: NpmTask, dependsOn: npmInstall) {
-    args = ['run', 'build']
+    args = ['run', 'build', '--', '-u']
 }
 
 task uiTest(type: NpmTask) {
