@@ -15,9 +15,8 @@
  */
 
 import React from "react";
-import {useDropzone} from "react-dropzone";
 
-const JsonDropzone = ({onDrop, accept, id}) => {
+const JsonDropzone = ({onDrop, accept, id, useDropzone}) => {
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
         accept,

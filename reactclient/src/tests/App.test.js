@@ -15,10 +15,10 @@
  */
 
 import React from 'react';
-import App from './App';
 import {shallow} from "enzyme";
-import logo from "./logo.png";
-import JsonExampleAccordion from "./components/JsonExampleAccordion";
+import logo from "../logo.png";
+import JsonExampleAccordion from "../components/JsonExampleAccordion";
+import App from "../App";
 
 test("renders main app without crashing", () => {
   shallow(<App/>);

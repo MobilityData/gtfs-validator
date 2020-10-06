@@ -26,6 +26,7 @@ import logo from './logo.png';
 import {displayValidationReport, initConfig, validateFeed} from "./helper/ApiRequest"
 import {displayJsonData, enableElement, hasAttribute, hideItem} from "./helper/DomInteractions";
 import {Port} from "./helper/Constants";
+import {useDropzone} from "react-dropzone";
 
 function App() {
   const onDrop = useCallback(acceptedFiles => {
@@ -55,7 +56,7 @@ function App() {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
           <JsonExampleAccordion className="json-example-container"/>
-          <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"}/>
+          <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"} useDropzone={useDropzone}/>
           <div id="json-content"/>
           <p className="launch-button-container">
             <NiceButton id="validate-button" description="Validate" method={validateFeed}/>
