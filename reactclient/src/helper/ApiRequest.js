@@ -32,13 +32,13 @@ export async function initConfig(axios, port, initConfigCommand, execParamConfig
 }
 
 export async function validateFeed() {
-    // ReactDOM.render(
-    //     <CircularIndeterminate/>,
-    //     document.getElementById("progress-circles"));
+    ReactDOM.render(
+        <CircularIndeterminate/>,
+        document.getElementById("progress-circles"));
     showItem("progress-circles");
     disableElement("validate-button");
     disableElement("json-config-file");
-    axios.get('http://localhost:' + Port() + RunValidatorCommand())
+        axios.get('http://localhost:' + Port() + RunValidatorCommand())
         .then((response) => {
             hideItem("progress-circles");
             showItem("display-result-button");

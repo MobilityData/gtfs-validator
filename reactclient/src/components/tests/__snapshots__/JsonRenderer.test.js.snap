@@ -45,18 +45,3 @@ exports[`JsonRenderer should render correctly with empty data 1`] = `
   </table>
 </div>
 `;
-
-exports[`JsonRenderer should render correctly without data 1`] = `
-<div>
-  <table
-    id="json-table"
-  >
-    <th>
-      Execution parameter
-    </th>
-    <th>
-      Value
-    </th>
-  </table>
-</div>
-`;
