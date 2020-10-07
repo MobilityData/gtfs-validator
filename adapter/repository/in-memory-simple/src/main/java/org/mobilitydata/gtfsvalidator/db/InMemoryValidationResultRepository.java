@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
+import org.mobilitydata.gtfsvalidator.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
@@ -90,17 +90,20 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     @Override
-    public NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException {
+    public NoticeExporter getExporter(final boolean outputAsProto,
+                                      final String outputPath,
+                                      final boolean isPretty) throws IOException {
         if (outputAsProto) {
             return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder(),
                     new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath));
         } else {
-            return new JsonNoticeExporter(new ObjectMapper().getFactory().createGenerator(
-                    Files.newOutputStream(Paths.get(
-                            outputPath + File.separator + "results" +
-                                    JsonNoticeExporter.FILE_EXTENSION
+            return new JsonNoticeExporter(
+                    new ObjectMapper().getFactory().createGenerator(
+                            Files.newOutputStream(Paths.get(
+                                    outputPath + File.separator + "results" + JsonNoticeExporter.FILE_EXTENSION)
                             )
-                    )));
+                    ),
+                    isPretty);
         }
     }
 }

@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2020. MobilityData IO.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id("com.github.node-gradle.node") version "2.2.4"
+}
+
+apply plugin: "java"
+apply plugin: "com.github.node-gradle.node"
+
+node {
+    version = "12.9.1"
+    download = true
+}
+
+task removeNodeModuleDirectory(type: Delete) {
+    delete "node_modules"
+}
+
+task bundle(type: NpmTask, dependsOn: npmInstall) {
+    args = ['run', 'build']
+}
+
+task uiTest(type: NpmTask) {
+    environment = ['CI': 'true']
+    args = ['run', 'test', '--', '--coverage']
+}
+
+task run(type: NpmTask) {
+    args = ['start']
+}
+
+task webjar(type: Jar) {
+    from(fileTree("build")) {
+        into "META-INF/resources"
+    }
+}
+check.dependsOn(test)
+jar.dependsOn(bundle)
+jar.finalizedBy('webjar')

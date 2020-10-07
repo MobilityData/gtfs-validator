@@ -22,14 +22,14 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version '1.3.0-SNAPSHOT'
+version '1.3.0-SNAPSHOT_cli'
 
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
     manifest {
         attributes('Implementation-Title': rootProject.name,
                 'Implementation-Version': project.version,
-                'Main-Class': 'org.mobilitydata.gtfsvalidator.Main',
+                'Main-Class': 'org.mobilitydata.gtfsvalidator.cliapp.Main',
                 'Multi-Release': 'true')
     }
 }

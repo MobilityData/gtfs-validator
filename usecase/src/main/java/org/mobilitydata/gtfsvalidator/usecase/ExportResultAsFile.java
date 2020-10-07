@@ -50,7 +50,9 @@ public class ExportResultAsFile {
         final String outputPath = execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY);
         final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
 
-        NoticeExporter exporter = resultRepo.getExporter(asProto, outputPath);
+        final NoticeExporter exporter = resultRepo.getExporter(asProto,
+                outputPath,
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.BEAUTIFY_KEY)));
 
         exporter.exportBegin();
 

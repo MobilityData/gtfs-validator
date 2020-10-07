@@ -9,30 +9,53 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./reactclient
+
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Run test
+      - name: Run cli and server tests
         run: ./gradlew testReport
-      - name: Package jar with Gradle
+      - name: Run ui tests
+        run: npm run test
+        working-directory: ${{env.working-directory}}
+      - name: Package cli application jar with Gradle
         run: ./gradlew shadowJar
+      - name: Package web application jar with Gradle
+        run: ./gradlew bootJar
       - name: Run validator on MBTA data
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar -u https://openmobilitydata.org/p/mbta/64/20200531/download -i input.zip -e input -o output -abort_on_error false
+        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i input.zip -e input -o output -abort_on_error false -b false
       - name: Generate javadoc
         run: ./gradlew aggregateJavadocs
-      - name: Persist jar
+      - name: Persist cli jar
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT
-          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar
-      - name: Persist test report
+          name: v1.3.0-SNAPSHOT_cli
+          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
+      - name: Persist web application jar
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_tests
+          name: v1.3.0-SNAPSHOT_web
+          path: application/spring-boot-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.jar
+      - name: Persist server test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: java-tests-v1.3.0
           path: build/reports/allTests/
+      - name: Persist react client test report
+        uses: actions/upload-artifact@v2
+        with:
+          name: js-tests-v1.3.0
+          path: reactclient/test-reports/
+      - name: Persist react client test coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_reactclient_tests
+          path: reactclient/coverage/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:

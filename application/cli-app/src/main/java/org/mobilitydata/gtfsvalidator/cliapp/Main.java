@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator;
+package org.mobilitydata.gtfsvalidator.cliapp;
 
-import com.google.common.base.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
@@ -247,26 +246,16 @@ public class Main {
 
     private static DefaultConfig initConfig(String[] args, Logger logger) {
         String executionParametersAsString = null;
-
         try {
             executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
             logger.info("Configuration file execution-parameters.json found in working directory");
         } catch (IOException e) {
             logger.warn("Configuration file execution-parameters.json not found in working directory");
         }
-
-        if (Strings.isNullOrEmpty(executionParametersAsString) && args.length == 0) {
-            // true when json configuration file is not present and no arguments are provided
-            logger.info("No configuration file nor arguments provided");
-            return new DefaultConfig(executionParametersAsString, logger);
-        } else if (!Strings.isNullOrEmpty(executionParametersAsString) || args.length == 0) {
-            // true when no arguments are provided or when json configuration is provided
-            logger.info("Retrieving execution parameters from execution-parameters.json file");
-            return new DefaultConfig(executionParametersAsString, logger);
-        } else {
-            // true when only arguments are provided
-            logger.info("Retrieving execution parameters from command-line");
-            return new DefaultConfig(args, logger);
-        }
+        final DefaultConfig.Builder configBuilder = new DefaultConfig.Builder();
+        return configBuilder.logger(logger)
+                .args(args)
+                .execParamAsString(executionParametersAsString)
+                .build();
     }
 }
