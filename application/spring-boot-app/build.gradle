@@ -39,7 +39,7 @@ repositories {
 dependencies {
     implementation(
             project(':config'),
-            project(':reactclient'),
+            project(':react-client'),
             project(':domain'),
             project(':usecase'),
     )

@@ -11,7 +11,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      working-directory: ./reactclient
+      working-directory: ./react-client
 
     steps:
       - uses: actions/checkout@v1
@@ -51,12 +51,12 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_reactclient_tests
-          path: reactclient/test-reports/
+          path: react-client/test-reports/
       - name: Persist react client test coverage report
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_reactclient_tests
-          path: reactclient/coverage/
+          path: react-client/coverage/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
