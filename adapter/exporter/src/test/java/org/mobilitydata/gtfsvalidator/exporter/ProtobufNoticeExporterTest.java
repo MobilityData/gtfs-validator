@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.exporter;
 
 import org.junit.jupiter.api.Test;
-import org.mobilitydata.gtfsvalidator.protos.GtfsValidationOutputProto;
+import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
@@ -29,7 +29,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.mobilitydata.gtfsvalidator.protos.GtfsValidationOutputProto.GtfsProblem.Type.*;
+import static org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto.GtfsProblem.Type.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_UNKNOWN_SERVICE_ID;
 import static org.mockito.Mockito.*;
 
