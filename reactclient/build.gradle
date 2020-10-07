@@ -43,11 +43,11 @@ task run(type: NpmTask) {
     args = ['start']
 }
 
-//task webjar(type: Jar) {
-//    from(fileTree("build")) {
-//        into "META-INF/resources"
-//    }
-//}
+task webjar(type: Jar) {
+    from(fileTree("build")) {
+        into "META-INF/resources"
+    }
+}
 check.dependsOn(test)
 jar.dependsOn(bundle)
-//jar.finalizedBy('webjar')
+jar.finalizedBy('webjar')
