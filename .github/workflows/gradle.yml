@@ -19,9 +19,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Run cli and server tests
+      - name: Run Java tests
         run: ./gradlew testReport
-      - name: Run ui tests
+      - name: Run JS tests
         run: npm run test
         working-directory: ${{env.working-directory}}
       - name: Package cli application jar with Gradle
@@ -42,21 +42,16 @@ jobs:
         with:
           name: v1.3.0-SNAPSHOT_web
           path: application/spring-boot-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.jar
-      - name: Persist server test report
+      - name: Persist Java tests report
         uses: actions/upload-artifact@v2
         with:
           name: java-tests-v1.3.0
           path: build/reports/allTests/
-      - name: Persist react client test report
+      - name: Persist JS tests report
         uses: actions/upload-artifact@v2
         with:
           name: js-tests-v1.3.0
           path: reactclient/test-reports/
-      - name: Persist react client test coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_reactclient_tests
-          path: reactclient/coverage/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
