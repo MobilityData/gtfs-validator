@@ -173,7 +173,7 @@ To run tests:
 ```
 1. Run JS tests
 ```
-cd reactclient/
+cd react-client/
 npm test
 ```
 
