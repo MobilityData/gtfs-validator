@@ -78,8 +78,8 @@ For example, if the version you just released is `1.3.0`, change the `version` t
 
 Update the GitHub CI [config file](https://github.com/MobilityData/gtfs-validator/blob/master/.github/workflows/gradle.yml) to point to the new `SNAPSHOT` version in
 both `Run validator on MBTA data` and `upload artifacts` steps.
-The version number also needs to be bumped in [`manifest.json`](https://github.com/MobilityData/gtfs-validator/blob/package-web-app-as-jar/react-client/public/manifest.json)
- and [`index.html`]((https://github.com/MobilityData/gtfs-validator/blob/package-web-app-as-jar/react-client/public/index.html)) files of the react layer.
+The version number also needs to be bumped in [`manifest.json`](https://github.com/MobilityData/gtfs-validator/blob/package-web-app-as-jar/reactclient/public/manifest.json)
+ and [`index.html`]((https://github.com/MobilityData/gtfs-validator/blob/package-web-app-as-jar/reactclient/public/index.html)) files of the react layer.
 
 
 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).

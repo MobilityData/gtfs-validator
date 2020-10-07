@@ -29,4 +29,4 @@ build/
 **/build/
 
 execution-parameters.json
-/react-client/node_modules/
+/reactclient/node_modules/
