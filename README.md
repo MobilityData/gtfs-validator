@@ -162,7 +162,7 @@ Some important modules:
 * [Adapters](adapter) - Convertors (e.g., parsers and exporters)
 * [application/cli-app](application/cli-app) - The main command-line application
 * [application/spring-boot-app](application/spring-boot-app) - The spring boot implementation of the application
-* [reactclient](reactclient) - The web layer used to interact with the [spring-boot-app](application/spring-boot-app) 
+* [react-client](react-client) - The web layer used to interact with the [spring-boot-app](application/spring-boot-app) 
 
 # Tests
 
@@ -173,7 +173,7 @@ To run tests:
 ```
 1. Run JS tests
 ```
-cd reactclient/
+cd react-client/
 npm test
 ```
 
