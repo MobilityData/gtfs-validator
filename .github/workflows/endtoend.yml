@@ -15,6 +15,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
+      - name: Package jar with Gradle
+        run: ./gradlew shadowJar
       - name: Run validator on STM data
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar -u http://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip -i input.zip -e input -o output -abort_on_error false
       - name: Run validator on MBTA data
