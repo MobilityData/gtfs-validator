@@ -24,7 +24,7 @@ jobs:
       - name: Run validator on MBTA data
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i input.zip -e input -o output -abort_on_error false -b false
       - name: Generate jsdoc
-        run: npm install jsdoc && jsdoc -r .
+        run: yarn install --save-dev jsdoc && jsdoc -r .
         working-directory: ${{env.working-directory}}
       - name: Persist cli jar
         uses: actions/upload-artifact@v2
