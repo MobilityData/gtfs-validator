@@ -48,8 +48,13 @@ jobs:
         with:
           name: v1.3.0-SNAPSHOT_javadoc
           path: build/docs/javadoc/
+      - name: Persist js test coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_js_test_coverage
+          path: react-client/test-coverage/
       - name: Persist jsdoc
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_javadoc
+          name: v1.3.0-SNAPSHOT_jsdoc
           path: react-client/out/
