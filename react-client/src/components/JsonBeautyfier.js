@@ -17,6 +17,15 @@
 import JSONPretty from 'react-json-prettify';
 import React from "react";
 
+/**
+ * Used to beautify the content of a Json file
+ * @param props :
+    * - id: DOM element id
+ *  * - className: the class name of the
+ *  * - json: the json data to be transformed
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const JsonBeautyfier = (props) => {
 
     return (

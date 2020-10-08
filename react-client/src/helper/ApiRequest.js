@@ -22,6 +22,14 @@ import {GetReportContentCommand, Port, RunValidatorCommand} from "./Constants";
 import CircularIndeterminate from "../components/CircularProgress";
 import {disableElement, enableElement, hideItem, showItem} from "./DomInteractions";
 
+/**
+ * Sends a request to server to initialize {@code DefaultConfig}
+ * @param axios                        promise based HTTP client for the browser and node.js
+ * @param port                         port to navigate to
+ * @param initConfigCommand            constant that defines the command to
+ * @param execParamConfigFileAsString  content of the execution parameters file provided in the dropzone, as String
+ * @returns {Promise<void>}
+ */
 export async function initConfig(axios, port, initConfigCommand, execParamConfigFileAsString) {
     axios.post('http://localhost:' + port + initConfigCommand, execParamConfigFileAsString)
         .then((res) => {
@@ -31,6 +39,10 @@ export async function initConfig(axios, port, initConfigCommand, execParamConfig
     });
 }
 
+/**
+ * Sends a request to server to validate GTFS feed
+ * @returns {Promise<void>}
+ */
 export async function validateFeed() {
     ReactDOM.render(
         <CircularIndeterminate/>,
@@ -54,6 +66,10 @@ export async function validateFeed() {
     });
 }
 
+/**
+ * Sends a request to server to display the validation report in the default test editor of user
+ * @returns {Promise<void>}
+ */
 export async function displayValidationReport() {
     axios.get('http://localhost:' + Port() + GetReportContentCommand())
         .then((res) => {

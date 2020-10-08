@@ -20,6 +20,10 @@ import JsonBeautyfier from "./JsonBeautyfier";
 import localJson from "../data/json-examples/local-example.json";
 import networkJson from "../data/json-examples/network-example.json";
 
+/**
+ * This class defines a 2-levels accordion that renders (as an Accordion) beautified json files when the title of
+ * their description is clicked
+ */
 export default class JsonExampleAccordion extends Component {
     state = {activeItemIndex: 0}
 

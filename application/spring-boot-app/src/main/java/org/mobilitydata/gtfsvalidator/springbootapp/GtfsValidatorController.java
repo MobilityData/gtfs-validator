@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+/**
+ * Controller ensuring communication with the local web ui. Calls methods defined
+ */
 @RestController
 @RequestMapping("actions")
 @Component

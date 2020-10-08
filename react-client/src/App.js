@@ -29,7 +29,16 @@ import {displayJsonData, enableElement, hasAttribute, hideItem} from "./helper/D
 import {InitConfigCommand, Port} from "./helper/Constants";
 import {useDropzone} from "react-dropzone";
 
+/**
+ * Main object rendered on the one pager
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function App() {
+  /**
+   * Defines what happens when a file is dropped in a dropzone component
+   * @type {function(*): void}
+   */
   const onDrop = useCallback(acceptedFiles => {
     if (!hasAttribute("json-config-file", "disabled")) {
       enableElement("validate-button");

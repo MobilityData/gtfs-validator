@@ -16,8 +16,17 @@
 
 import React from "react";
 
+/**
+ * A Dropzone component
+ * @param onDrop       method triggered when an element is dropped on the zone
+ * @param accept       string specifying the type of file accepted
+ * @param id           DOM element id
+ * @param useDropzone  method triggered to define "drag and drop" behavior variables
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const JsonDropzone = ({onDrop, accept, id, useDropzone}) => {
-    const {getRootProps, getInputProps, isDragActive} = useDropzone({
+    let {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
         accept,
     });

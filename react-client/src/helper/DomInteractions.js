@@ -18,26 +18,54 @@ import ReactDOM from "react-dom";
 import JsonRenderer from "../components/JsonRenderer";
 import React from "react";
 
+/**
+ * Enables a DOM element, if it is a dropzone user can drop files, else if it is a button, user can click on it
+ * @param htmlId id of the DOM element to enable
+ */
 export function enableElement(htmlId) {
     document.getElementById(htmlId).removeAttribute("disabled");
 }
 
+/**
+ * Disables a DOM element, if it is a dropzone user can no longer drop files, else if it is a button, user can no longer
+ * click on it
+ * @param htmlId id of the DOM element to disable
+ */
 export function disableElement(htmlId) {
     document.getElementById(htmlId).setAttribute("disabled", "true");
 }
 
+/**
+ * Hides a DOM element
+ * @param htmlId id of the DOM element to hide
+ */
 export function hideItem(htmlId) {
     document.getElementById(htmlId).style.visibility = "hidden";
 }
 
+/**
+ * Shows a DOM element
+ * @param htmlId id of the DOM element to hide
+ */
 export function showItem(htmlId) {
     document.getElementById(htmlId).style.visibility = "visible";
 }
 
+/**
+ * Returns true if DOM element has an attribute, else returns false
+ * @param htmlId      id of the DOM element
+ * @param attribute   attribute to
+ * @returns {boolean} true if DOM element has an attribute, else returns false
+ */
 export function hasAttribute(htmlId, attribute) {
     return document.getElementById(htmlId).hasAttribute(attribute);
 }
 
+/**
+ * Displays Json file as a 2*n table
+ * @param jsonData        data of the .json file
+ * @param htmlDocumentId  DOM element id
+ */
 export function displayJsonData(jsonData, htmlDocumentId) {
     ReactDOM.render(
         <JsonRenderer data={jsonData} htmlId={htmlDocumentId}/>,

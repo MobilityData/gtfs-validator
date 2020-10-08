@@ -17,6 +17,15 @@
 import React from 'react'
 import {Button} from 'semantic-ui-react'
 
+/**
+ * Customized button
+ * @param props
+ *   - id: DOM element id
+ *   - method: method triggered when onClick event is triggered
+ *   - description: text displayed inside the button
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const NiceButton = (props) => <Button fluid id={props.id} onClick={props.method}>{props.description}</Button>
 
 export default NiceButton

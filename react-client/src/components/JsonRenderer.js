@@ -16,6 +16,13 @@
 
 import React from 'react';
 
+/**
+ * Table in which the execution parameters from the configuration file are displayed
+ * @param props
+ *   - data: the json data
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const JsonRenderer = (props) => {
 
     return (

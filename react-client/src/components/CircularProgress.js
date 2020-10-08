@@ -18,15 +18,11 @@ import React from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-        '& > * + *': {
-            marginLeft: theme.spacing(3),
-        },
-    },
-}));
-
+/**
+ * Progress circle displayed after validation button is clicked
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function CircularIndeterminate() {
     const classes = useStyles();
 
@@ -36,3 +32,12 @@ export default function CircularIndeterminate() {
         </div>
     );
 }
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+        '& > * + *': {
+            marginLeft: theme.spacing(3),
+        },
+    },
+}));

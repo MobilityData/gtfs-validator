@@ -32,6 +32,11 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+/**
+ * This class implements the methods called from {@code GtfsValidatorController}. The methods of this class interact
+ * with the different use cases defined in `usecase` layer via the {@code DefaultConfig} provided in this class
+ * constructor.
+ */
 public class ServiceManager {
     private final Logger logger = LogManager.getLogger();
     private DefaultConfig config;
