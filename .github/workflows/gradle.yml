@@ -19,9 +19,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Run JS tests
-        run: npm run test
-        working-directory: ${{env.working-directory}}
       - name: Package cli application jar with Gradle
         run: ./gradlew shadowJar
       - name: Run validator on MBTA data
