@@ -44,7 +44,7 @@ task run(type: NpmTask) {
 }
 
 jar {
-    from(fileTree("../react-client/build")) {
+    from(fileTree("build")) {
         into "META-INF/resources"
     }
 }
