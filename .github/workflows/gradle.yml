@@ -19,46 +19,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Run cli and server tests
-        run: ./gradlew testReport
-      - name: Run ui tests
-        run: npm run test
-        working-directory: ${{env.working-directory}}
-      - name: Package cli application jar with Gradle
-        run: ./gradlew shadowJar
       - name: Package web application war with Gradle
         run: ./gradlew bootWar
-      - name: Run validator on MBTA data
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://openmobilitydata.org/p/mbta/64/20200531/download -i input.zip -e input -o output -abort_on_error false
-      - name: Generate javadoc
-        run: ./gradlew aggregateJavadocs
-      - name: Persist cli jar
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_cli
-          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
-      - name: Persist web application jar
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_web
-          path: application/spring-boot-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.war
-      - name: Persist server test report
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_server_tests
-          path: build/reports/allTests/
-      - name: Persist react client test report
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_reactclient_tests
-          path: reactclient/test-reports/
-      - name: Persist react client test coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_reactclient_tests
-          path: reactclient/coverage/
-      - name: Persist javadoc
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_javadoc
-          path: build/docs/javadoc/
+
