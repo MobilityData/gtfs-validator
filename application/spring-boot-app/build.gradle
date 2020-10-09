@@ -53,9 +53,10 @@ dependencies {
 }
 
 bootWar {
+    print(System.getProperty("user.dir"))
     task copyDocs(type: War) {
-        from ("../../react-client/build/libs/react-client.jar") {
-            into "META-INF/resources"
+        from ("./build/libs/gtfs-validator.jar") {
+            into "./META-INF/resources"
         }
     }
     // Change the JAR name from spring-boot-app to gtfs-validator
