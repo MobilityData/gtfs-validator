@@ -53,8 +53,8 @@ dependencies {
 }
 
 bootWar {
-    task copyDocs(type: Copy) {
-        from(fileTree("../../react-client/build")) {
+    task copyDocs(type: War) {
+        from ("../../react-client/build/libs/react-client.jar") {
             into "META-INF/resources"
         }
     }
