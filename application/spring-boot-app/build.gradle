@@ -55,7 +55,7 @@ dependencies {
 bootWar {
     print(System.getProperty("user.dir"))
     task copyDocs(type: War) {
-        from ("./build/libs/gtfs-validator.jar") {
+        from ("/home/runner/work/gtfs-validator/gtfs-validator/build/libs/gtfs-validator.jar") { // "/home/runner/work/gtfs-validator/gtfs-validator/react-client/build"
             into "./META-INF/resources"
         }
     }

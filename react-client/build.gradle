@@ -45,8 +45,8 @@ task run(type: NpmTask) {
 
 jar {
     print(System.getProperty("user.dir"))
-    from(fileTree("build")) {
-        into "META-INF/resources"
+    from(fileTree("/home/runner/work/gtfs-validator/gtfs-validator/react-client/build")) {// /home/runner/work/gtfs-validator/gtfs-validator/react-client/build/libs/react-client.jar
+        into "./META-INF/resources"
     }
 }
 check.dependsOn(test)
