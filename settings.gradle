@@ -23,7 +23,6 @@ include 'application:web-app'
 findProject(':application:web-app')?.name = 'web-app'
 include 'application:web-app:react-client'
 findProject(':application:web-app:react-client')?.name = 'react-client'
-include 'spring-server'
 include 'application:web-app:spring-server'
 findProject(':application:web-app:spring-server')?.name = 'spring-server'
 
