@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JsonRenderer should render correctly with data 1`] = `
+<div>
+  <table
+    id="json-table"
+  >
+    <th>
+      Execution parameter
+    </th>
+    <th>
+      Value
+    </th>
+    <tr>
+      <td>
+        key1
+      </td>
+      <td>
+        value1
+      </td>
+    </tr>
+    <tr>
+      <td>
+        key2
+      </td>
+      <td>
+        value2
+      </td>
+    </tr>
+  </table>
+</div>
+`;
+
+exports[`JsonRenderer should render correctly without data 1`] = `
+<div>
+  <table
+    id="json-table"
+  >
+    <th>
+      Execution parameter
+    </th>
+    <th>
+      Value
+    </th>
+  </table>
+</div>
+`;
