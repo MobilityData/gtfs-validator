@@ -10,12 +10,16 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Package web application war with Gradle
+      - name: Run test
+        run: ./gradlew testReport
+      - name: Package jar with Gradle
+        run: ./gradlew shadowJar
+      - name: Package war with gradle
         run: ./gradlew bootWar
-
