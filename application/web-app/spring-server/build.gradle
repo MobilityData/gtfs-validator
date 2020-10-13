@@ -28,7 +28,6 @@ repositories {
     mavenCentral()
 }
 
-
 dependencies {
     implementation(
             project(':config'),
@@ -54,12 +53,6 @@ dependencies {
 }
 
 bootWar {
-    print(System.getProperty("user.dir"))
-    task copyDocs(type: War) {
-        from ("build") {
-            into "./META-INF/resources"
-        }
-    }
     // Change the JAR name from spring-boot-app to gtfs-validator
     archiveBaseName = rootProject.name
     // Remove "-all" from the end of the JAR file name
