@@ -2,9 +2,9 @@ name: Java CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, debug-reset-to-last-working-master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, debug-reset-to-last-working-master ]
 
 jobs:
   build:
