@@ -250,6 +250,18 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                     return defaultValue.get(0);
                 }
             }
+
+            case BEAUTIFY_KEY: {
+                // if command line option is provided with a value then use this value. Example "--beautify true"
+                // or "--beautify false"
+                if (hasExecParam(BEAUTIFY_KEY) && hasExecParamValue(BEAUTIFY_KEY)) {
+                    return getExecParamByKey(BEAUTIFY_KEY).getValue().get(0);
+                } else {
+                    // otherwise use default value. Note that it is not allowed to use key `beautify` without
+                    // specifying a boolean as argument
+                    return defaultValue.get(0);
+                }
+            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }
@@ -300,6 +312,8 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 "Maximum admissible value for field min_width of file pathways.txt");
         options.addOption(ABORT_ON_ERROR, ABORT_ON_ERROR, true,
                 "Stop validation process on first error");
+        options.addOption(String.valueOf(BEAUTIFY_KEY.charAt(1)), BEAUTIFY_KEY, true,
+                "Beautify .json validation report");
 
         // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
         // Other commands only take 1 argument

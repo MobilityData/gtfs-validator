@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.usecase.usecasevalidator;
 
 import org.apache.logging.log4j.Logger;
+import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeIncreasingDistance;
 import org.mobilitydata.gtfsvalidator.usecase.ValidateShapeUsage;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -33,15 +34,18 @@ public class ShapeBasedCrossValidator {
     private final GtfsDataRepository dataRepo;
     private final Logger logger;
     private final ValidateShapeUsage validateShapeUsage;
+    private final ValidateShapeIncreasingDistance validateShapeIncreasingDistance;
 
     public ShapeBasedCrossValidator(final GtfsDataRepository dataRepo,
                                     final ValidationResultRepository resultRepo,
                                     final Logger logger,
-                                    final ValidateShapeUsage validateShapeUsage) {
+                                    final ValidateShapeUsage validateShapeUsage,
+                                    final ValidateShapeIncreasingDistance validateShapeIncreasingDistance) {
         this.resultRepo = resultRepo;
         this.dataRepo = dataRepo;
         this.logger = logger;
         this.validateShapeUsage = validateShapeUsage;
+        this.validateShapeIncreasingDistance = validateShapeIncreasingDistance;
     }
 
     /**
@@ -49,6 +53,7 @@ public class ShapeBasedCrossValidator {
      */
     public void execute() {
         logger.info("Validating rules :'E038 - All shapes should be used in GTFS `trips.txt`");
+        logger.info("Validating rules :'E058 - Decreasing `shape_dist_traveled` in `shapes.txt`");
 
         final Set<String> tripShapeIdCollection = new HashSet<>();
         dataRepo.getTripAll().values()
@@ -60,6 +65,7 @@ public class ShapeBasedCrossValidator {
                             .get()
                             .getShapeId();
                     validateShapeUsage.execute(resultRepo, shapeId, tripShapeIdCollection);
+                    validateShapeIncreasingDistance.execute(shape, shapeId, resultRepo);
                 });
     }
 }

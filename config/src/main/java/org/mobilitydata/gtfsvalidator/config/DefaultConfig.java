@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.config;
 
+import com.google.common.base.Strings;
 import com.google.common.io.Resources;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
@@ -61,7 +62,7 @@ public class DefaultConfig {
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
 
-    public DefaultConfig(final String[] args, final Logger logger) {
+    private DefaultConfig(final String[] args, final Logger logger) {
         this.logger = logger;
 
         execParamRepo = new InMemoryExecParamRepository(
@@ -76,7 +77,7 @@ public class DefaultConfig {
                 Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
     }
 
-    public DefaultConfig(final String executionParametersAsString, final Logger logger) {
+    private DefaultConfig(final String executionParametersAsString, final Logger logger) {
         this.logger = logger;
 
         execParamRepo = new InMemoryExecParamRepository(
@@ -89,6 +90,43 @@ public class DefaultConfig {
 
         resultRepo = new InMemoryValidationResultRepository(
                 Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+    }
+
+    public static class Builder {
+        private Logger logger;
+        private String execParamAsString;
+        private String[] args;
+
+        public Builder execParamAsString(final String execParamAsString) {
+            this.execParamAsString = execParamAsString;
+            return this;
+        }
+
+        public Builder args(final String[] args) {
+            this.args = args;
+            return this;
+        }
+
+        public Builder logger(final Logger logger) {
+            this.logger = logger;
+            return this;
+        }
+
+        public DefaultConfig build() {
+            if (Strings.isNullOrEmpty(execParamAsString) && args.length == 0) {
+                // true when json configuration file is not present and no arguments are provided
+                logger.info("No configuration file nor arguments provided");
+                return new DefaultConfig(execParamAsString, logger);
+            } else if (!Strings.isNullOrEmpty(execParamAsString) || args.length == 0) {
+                // true when no arguments are provided or when json configuration is provided
+                logger.info("Retrieving execution parameters from execution-parameters.json file");
+                return new DefaultConfig(execParamAsString, logger);
+            } else {
+                // true when only arguments are provided
+                logger.info("Retrieving execution parameters from command-line");
+                return new DefaultConfig(args, logger);
+            }
+        }
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -415,6 +453,15 @@ public class DefaultConfig {
     }
 
     public ShapeBasedCrossValidator shapeBasedCrossValidator() {
-        return new ShapeBasedCrossValidator(gtfsDataRepository, resultRepo, logger, new ValidateShapeUsage());
+        return new ShapeBasedCrossValidator(
+                gtfsDataRepository,
+                resultRepo,
+                logger,
+                new ValidateShapeUsage(),
+                new ValidateShapeIncreasingDistance());
+    }
+
+    public String getExecParamValue(final String execParamKey) {
+        return execParamRepo.getExecParamValue(execParamKey);
     }
 }
