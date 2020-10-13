@@ -20,4 +20,15 @@ jobs:
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
       - name: Package spring boot app jar with Gradle
-        run: ./gradlew bootJar
+        run: ./gradlew assemble
+      - name: Persist cli app jar
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT
+          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar
+      - name: Persist spring boot app jar
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT
+          path: application/web-app/spring-server/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.jar
+
