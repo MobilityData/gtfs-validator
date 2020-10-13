@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator;
+package org.mobilitydata.gtfsvalidator.web;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;

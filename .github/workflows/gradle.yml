@@ -11,7 +11,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      working-directory: ./reactclient
+      working-directory: ./application/web-app/react-client
 
     steps:
       - uses: actions/checkout@v1
