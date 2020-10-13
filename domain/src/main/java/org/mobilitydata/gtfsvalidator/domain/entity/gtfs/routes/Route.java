@@ -288,7 +288,7 @@ public class Route extends GtfsEntity {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
                             routeId));
                 }
-                if (!RouteType.isEnumValueValid(originalRouteTypeInteger)) {
+                if (originalRouteTypeInteger != null && !RouteType.isEnumValueValid(originalRouteTypeInteger)) {
                     noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
                             routeId, originalRouteTypeInteger));
                 }
