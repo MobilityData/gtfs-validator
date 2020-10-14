@@ -28,6 +28,7 @@ jobs:
             tar -cvzf v1.3.0-SNAPSHOT_javadoc.tar build/reports/allTests/
       - store_artifacts:
           path: v1.3.0-SNAPSHOT_javadoc.tar
+          destination: v1.3.0-SNAPSHOT_javadoc.tar
 
 workflows:
   version: 2
