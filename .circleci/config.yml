@@ -4,16 +4,16 @@
 #
 version: 2.1
 
-orbs:
-  gradle: circleci/gradle@2.2.0
-
 jobs:
-  testReport:
+  build:
     steps:
-      - gradle/run:
-        command: testReport
+      - checkout
+      - run:
+        command: |
+          ./gradlew shadowJar
 
 workflows:
-  test-package-document:
+  version: 2
+  build_and_test:
     jobs:
-      - testReport
+      - package
