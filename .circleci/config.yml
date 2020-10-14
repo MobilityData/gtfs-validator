@@ -12,23 +12,9 @@ jobs:
             ./gradlew shadowJar
       - store_artifacts:
           path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar
-  test:
-    docker:
-      - image: circleci/openjdk:11
-    steps:
-      # Reuse the workspace from the build job
-      - attach_workspace:
-          at: .
-      - run:
-          name: Package with Gradle
-          command: |
-            ./gradlew testReport
-    
-  
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - package
-      - test
