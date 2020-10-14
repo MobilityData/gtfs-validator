@@ -14,8 +14,5 @@ workflows:
           command: shadowJar
       - gradle/run:
           command: aggregateJavadocs
-      - store_artifacts:
+      - collect_test_results:
           path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar
-          destination: artifact-file
-          
-  
