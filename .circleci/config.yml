@@ -1,24 +1,34 @@
-# Java Gradle CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
 version: 2.1
-
-orbs:
-  gradle: circleci/gradle@2.2.0
 
 jobs:
   package:
     docker:
       - image: circleci/openjdk:11
     steps:
-      - gradle/run:
+      - checkout
+      - run:
           name: Package with Gradle
-          command: shadowJar
- 
+          command: |
+            ./gradlew shadowJar
+      - store_artifacts:
+          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar
+  test:
+    docker:
+      - image: circleci/openjdk:11
+    steps:
+      # Reuse the workspace from the build job
+      - attach_workspace:
+          at: .
+      - run:
+          name: Package with Gradle
+          command: |
+            ./gradlew testReport
+    
+  
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - package
+      - test
