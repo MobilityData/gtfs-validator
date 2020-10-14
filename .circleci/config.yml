@@ -6,7 +6,16 @@ orbs:
   gradle: circleci/gradle@2.2.0
 version: 2.1
 workflows:
-  checkout-build-test:
+  test-package-document:
     jobs:
       - gradle/run:
           command: testReport
+      - gradle/run:
+          command: shadowJar
+      - gradle/run:
+          command: aggregateJavadocs
+      - store_artifacts:
+          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar
+          destination: artifact-file
+          
+  
