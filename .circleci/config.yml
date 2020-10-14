@@ -12,19 +12,8 @@ jobs:
     steps:
       - gradle/run:
         command: testReport
-  package:
-    steps:
-      - gradle/run:
-        command: shadowJar
-  javadoc:
-    steps:
-      - gradle/run:
-        command: aggregateJavadocs
-
 
 workflows:
   test-package-document:
     jobs:
       - testReport
-      - package
-      - javadoc
