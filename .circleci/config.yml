@@ -2,23 +2,24 @@
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
+version: 2.1
+
 orbs:
   gradle: circleci/gradle@2.2.0
-version: 2.1
 
 jobs:
   testReport:
-  steps:
-    - gradle/run:
-          command: testReport
+    steps:
+      - gradle/run:
+        command: testReport
   package:
-  steps:
-    - gradle/run:
-          command: shadowJar
+    steps:
+      - gradle/run:
+        command: shadowJar
   javadoc:
-  steps:
-    - gradle/run:
-          command: aggregateJavadocs
+    steps:
+      - gradle/run:
+        command: aggregateJavadocs
 
 
 workflows:
