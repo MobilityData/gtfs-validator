@@ -7,15 +7,28 @@ version: 2.1
 jobs:
   build:
     docker:
-      - image: circleci/openjdk:11-jdk
+      - image: circleci/openjdk:11
     steps:
       - checkout
       - run:
+          name: Package with Gradle
           command: |
             ./gradlew shadowJar
+  test:
+    steps:
+      # Reuse the workspace from the build job
+      - attach_workspace:
+          at: .
+      - run:
+          name: Package with Gradle
+          command: |
+            ./gradlew testReport
+    
+  
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
+      - test
