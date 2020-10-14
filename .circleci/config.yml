@@ -8,7 +8,7 @@ orbs:
   gradle: circleci/gradle@2.2.0
 
 jobs:
-  package-test-document:
+  package:
     docker:
       - image: circleci/openjdk:11
     steps:
