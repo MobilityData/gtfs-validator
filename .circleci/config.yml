@@ -25,7 +25,7 @@ jobs:
       - run:
           name: Compress test report
           command: |
-            tar -cvzf v1.3.0-SNAPSHOT_javadoc.tar build/reports/allTests/
+            tar -C build/reports/allTests/ -cvf v1.3.0-SNAPSHOT_javadoc.tar .
       - store_artifacts:
           path: v1.3.0-SNAPSHOT_javadoc.tar
           destination: v1.3.0-SNAPSHOT_javadoc.tar
