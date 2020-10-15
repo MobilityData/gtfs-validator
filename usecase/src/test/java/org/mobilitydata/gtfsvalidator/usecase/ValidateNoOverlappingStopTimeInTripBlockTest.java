@@ -45,6 +45,8 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
             (int) -LocalTime.of(5, 0, 0).until(NOON, ChronoUnit.SECONDS);
     private static final int SIX_AM_AS_SECS_BEFORE_NOON =
             (int) -LocalTime.of(6, 0, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int SIX_30_AM_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(6, 30, 0).until(NOON, ChronoUnit.SECONDS);
     private static final int SEVEN_AM_AS_SECS_BEFORE_NOON =
             (int) -LocalTime.of(7, 0, 0).until(NOON, ChronoUnit.SECONDS);
     private static final int SEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON =
@@ -63,14 +65,22 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
             (int) -LocalTime.of(10, 30, 0).until(NOON, ChronoUnit.SECONDS);
     private static final int ELEVEN_AM_03_MIN_AS_SECS_BEFORE_NOON =
             (int) -LocalTime.of(11, 3, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int ELEVEN_AM_10_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(11, 10, 0).until(NOON, ChronoUnit.SECONDS);
     private static final int ELEVEN_AM_15_MIN_AS_SECS_BEFORE_NOON =
             (int) -LocalTime.of(11, 15, 0).until(NOON, ChronoUnit.SECONDS);
     private static final int ELEVEN_AM_16_MIN_AS_SECS_BEFORE_NOON =
             (int) -LocalTime.of(11, 16, 0).until(NOON, ChronoUnit.SECONDS);
     private static final int ELEVEN_AM_20_MIN_AS_SECS_BEFORE_NOON =
             (int) -LocalTime.of(11, 20, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int ELEVEN_AM_28_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(11, 28, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int ELEVEN_AM_34_MIN_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(11, 34, 0).until(NOON, ChronoUnit.SECONDS);
     private static final int ELEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON =
             (int) -LocalTime.of(11, 40, 0).until(NOON, ChronoUnit.SECONDS);
+    private static final int NOON_AM_45_AS_SECS_BEFORE_NOON =
+            (int) -LocalTime.of(12, 45, 0).until(NOON, ChronoUnit.SECONDS);
 
     // suppressed warning regarding ignored result of method, since methods are called in assertions
     @SuppressWarnings("ResultOfMethodCallIgnored")
@@ -1661,7 +1671,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         // | 8      | 11:03       | 11:15         | 103    | 12            |
         // | 8      | 11:16       | 11:20         | 104    | 13            |
         // | 9      | 07:00       | 07:40         | 105    | 14            |
-        // | 9      | 08:20       | 10:00         | 106    | 15            |
+        // | 9      | 07:40       | 07:59         | 106    | 15            |
 
         // trips.txt + stop_times.txt
         // | routeId | tripId | serviceId | blockId | first stop time | last stop time |
@@ -1690,6 +1700,147 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         // - service c is active only on 2020-01-08
         // - service d is active from 2020-08-15 to 2020-08-31 on thursdays
         // all services are active on different days, hence no overlap.
+
+        final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        final Map<String, List<Trip>> mockTripPerBlockIdCollection = new HashMap<>();
+        final List<Trip> mockTripCollection = new ArrayList<>();
+
+        final Trip firstMockTrip = mock(Trip.class);
+        when(firstMockTrip.getTripId()).thenReturn("2");
+        when(firstMockTrip.getServiceId()).thenReturn("a");
+        when(firstMockTrip.getBlockId()).thenReturn("7");
+        when(firstMockTrip.hasSameServiceId(any())).thenReturn(false);
+
+        final Trip secondMockTrip = mock(Trip.class);
+        when(secondMockTrip.getTripId()).thenReturn("5");
+        when(secondMockTrip.getServiceId()).thenReturn("b");
+        when(secondMockTrip.getBlockId()).thenReturn("7");
+        when(secondMockTrip.hasSameServiceId(any())).thenReturn(false);
+
+        final Trip thirdMockTrip = mock(Trip.class);
+        when(thirdMockTrip.getTripId()).thenReturn("8");
+        when(thirdMockTrip.getServiceId()).thenReturn("c");
+        when(thirdMockTrip.getBlockId()).thenReturn("7");
+        when(thirdMockTrip.hasSameServiceId(any())).thenReturn(false);
+
+        final Trip fourthMockTrip = mock(Trip.class);
+        when(thirdMockTrip.getTripId()).thenReturn("9");
+        when(thirdMockTrip.getServiceId()).thenReturn("d");
+        when(thirdMockTrip.getBlockId()).thenReturn("7");
+        when(thirdMockTrip.hasSameServiceId(any())).thenReturn(false);
+
+        mockTripCollection.add(firstMockTrip);
+        mockTripCollection.add(secondMockTrip);
+        mockTripCollection.add(thirdMockTrip);
+        mockTripCollection.add(fourthMockTrip);
+        mockTripPerBlockIdCollection.put("7", mockTripCollection);
+
+        final SortedMap<Integer, StopTime> mockFirstTripStopTimeCollection = new TreeMap<>();
+
+        final StopTime firstTripFirstStopTime = mock(StopTime.class);
+        when(firstTripFirstStopTime.getArrivalTime()).thenReturn(FIVE_AM_AS_SECS_BEFORE_NOON);
+        when(firstTripFirstStopTime.getDepartureTime()).thenReturn(FIVE_AM_AS_SECS_BEFORE_NOON);
+
+        final StopTime firstTripSecondStopTime = mock(StopTime.class);
+        when(firstTripSecondStopTime.getArrivalTime()).thenReturn(SIX_AM_AS_SECS_BEFORE_NOON);
+        when(firstTripSecondStopTime.getDepartureTime()).thenReturn(SIX_30_AM_AS_SECS_BEFORE_NOON);
+
+        mockFirstTripStopTimeCollection.put(8, firstTripFirstStopTime);
+        mockFirstTripStopTimeCollection.put(9, firstTripSecondStopTime);
+
+        final SortedMap<Integer, StopTime> mockSecondTripStopTimeCollection = new TreeMap<>();
+
+        final StopTime secondTripFirstStopTime = mock(StopTime.class);
+        when(secondTripFirstStopTime.getArrivalTime()).thenReturn(SEVEN_AM_AS_SECS_BEFORE_NOON);
+        when(secondTripFirstStopTime.getDepartureTime()).thenReturn(SEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON);
+
+        final StopTime secondTripLastStopTime = mock(StopTime.class);
+        when(secondTripLastStopTime.getArrivalTime()).thenReturn(EIGHT_AM_20_MIN_AS_SECS_BEFORE_NOON);
+        when(secondTripLastStopTime.getDepartureTime()).thenReturn(TEN_AM_AS_SECS_BEFORE_NOON);
+
+        mockSecondTripStopTimeCollection.put(10, secondTripFirstStopTime);
+        mockSecondTripStopTimeCollection.put(11, secondTripLastStopTime);
+
+        final SortedMap<Integer, StopTime> mockThirdTripStopTimeCollection = new TreeMap<>();
+        final StopTime thirdTripFirstStopTime = mock(StopTime.class);
+        when(thirdTripFirstStopTime.getArrivalTime()).thenReturn(ELEVEN_AM_03_MIN_AS_SECS_BEFORE_NOON);
+        when(thirdTripFirstStopTime.getDepartureTime()).thenReturn(ELEVEN_AM_15_MIN_AS_SECS_BEFORE_NOON);
+
+        final StopTime thirdTripLastStopTime = mock(StopTime.class);
+        when(thirdTripLastStopTime.getArrivalTime()).thenReturn(ELEVEN_AM_16_MIN_AS_SECS_BEFORE_NOON);
+        when(thirdTripLastStopTime.getDepartureTime()).thenReturn(ELEVEN_AM_20_MIN_AS_SECS_BEFORE_NOON);
+
+        mockThirdTripStopTimeCollection.put(12, thirdTripFirstStopTime);
+        mockThirdTripStopTimeCollection.put(13, thirdTripLastStopTime);
+
+        final SortedMap<Integer, StopTime> mockFourthTripStopTimeCollection = new TreeMap<>();
+
+        final StopTime fourthTripFirstStopTime = mock(StopTime.class);
+        when(fourthTripFirstStopTime.getArrivalTime()).thenReturn(SEVEN_AM_AS_SECS_BEFORE_NOON);
+        when(fourthTripFirstStopTime.getDepartureTime()).thenReturn(SEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON);
+
+        final StopTime fourthTripLastStopTime = mock(StopTime.class);
+        when(fourthTripLastStopTime.getArrivalTime()).thenReturn(SEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON);
+        when(fourthTripLastStopTime.getDepartureTime()).thenReturn(SEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON);
+
+        mockFourthTripStopTimeCollection.put(14, fourthTripFirstStopTime);
+        mockFourthTripStopTimeCollection.put(15, fourthTripLastStopTime);
+
+        when(mockDataRepo.getAllTripByBlockId()).thenReturn(mockTripPerBlockIdCollection);
+        when(mockDataRepo.getStopTimeByTripId("2")).thenReturn(mockFirstTripStopTimeCollection);
+        when(mockDataRepo.getStopTimeByTripId("5")).thenReturn(mockSecondTripStopTimeCollection);
+        when(mockDataRepo.getStopTimeByTripId("8")).thenReturn(mockThirdTripStopTimeCollection);
+        when(mockDataRepo.getStopTimeByTripId("9")).thenReturn(mockFourthTripStopTimeCollection);
+        when(mockDataRepo.getCalendarAll()).thenReturn(new HashMap<>());
+
+        final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceA = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceB = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceC = new HashMap<>();
+        final CalendarDate firstCalendarDateForServiceA = mock(CalendarDate.class);
+        final CalendarDate secondCalendarDateForServiceA = mock(CalendarDate.class);
+        final CalendarDate calendarDateForServiceB = mock(CalendarDate.class);
+        final CalendarDate calendarDateForServiceC = mock(CalendarDate.class);
+
+        calendarDateCollectionServiceA.put("2020-07-23", firstCalendarDateForServiceA);
+        calendarDateCollectionServiceA.put("2020-08-01", secondCalendarDateForServiceA);
+        calendarDateCollectionServiceB.put("2020-09-04", calendarDateForServiceB);
+        calendarDateCollectionServiceC.put("2020-01-08", calendarDateForServiceC);
+
+        when(firstCalendarDateForServiceA.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
+        when(firstCalendarDateForServiceA.getDate()).thenReturn(LocalDate.of(2020, 7, 23));
+
+        when(secondCalendarDateForServiceA.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
+        when(secondCalendarDateForServiceA.getDate()).thenReturn(LocalDate.of(2020, 8, 1));
+
+        when(calendarDateForServiceB.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
+        when(calendarDateForServiceB.getDate()).thenReturn(LocalDate.of(2020, 9, 4));
+
+        when(calendarDateForServiceC.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
+        when(calendarDateForServiceC.getDate()).thenReturn(LocalDate.of(2020, 1, 8));
+
+        mockCalendarDateCollection.put("a", calendarDateCollectionServiceA);
+        mockCalendarDateCollection.put("b", calendarDateCollectionServiceB);
+        mockCalendarDateCollection.put("c", calendarDateCollectionServiceC);
+        when(mockDataRepo.getCalendarDateAll()).thenReturn(mockCalendarDateCollection);
+
+        final Map<String, Calendar> mockCalendarCollection = new HashMap<>();
+        final Calendar calendarForServiceD = mock(Calendar.class);
+        mockCalendarCollection.put("d", calendarForServiceD);
+        when(mockDataRepo.getCalendarAll()).thenReturn(mockCalendarCollection);
+        when(mockDataRepo.getCalendarByServiceId("d")).thenReturn(calendarForServiceD);
+        when(calendarForServiceD.getStartDate()).thenReturn(LocalDate.of(2020, 8, 15));
+        when(calendarForServiceD.getEndDate()).thenReturn(LocalDate.of(2020, 8, 31));
+
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Logger mockLogger = mock(Logger.class);
+        final TimeUtils mockTimeUtils = mock(TimeUtils.class);
+
+        final ValidateNoOverlappingStopTimeInTripBlock underTest =
+                new ValidateNoOverlappingStopTimeInTripBlock(mockDataRepo, mockResultRepo, mockLogger, mockTimeUtils);
+
+        underTest.execute(); // will produce NPE here because solution as not been implemented yet
+        verifyNoInteractions(mockResultRepo);
     }
 
     @Test
@@ -1739,5 +1890,146 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         // - service c is active only on 2020-01-08
         // - service d is active from 2020-08-01 to 2020-08-31 on thursdays, which includes the only day service c is
         // active
+
+        final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
+        final Map<String, List<Trip>> mockTripPerBlockIdCollection = new HashMap<>();
+        final List<Trip> mockTripCollection = new ArrayList<>();
+
+        final Trip firstMockTrip = mock(Trip.class);
+        when(firstMockTrip.getTripId()).thenReturn("2");
+        when(firstMockTrip.getServiceId()).thenReturn("a");
+        when(firstMockTrip.getBlockId()).thenReturn("7");
+        when(firstMockTrip.hasSameServiceId(any())).thenReturn(false);
+
+        final Trip secondMockTrip = mock(Trip.class);
+        when(secondMockTrip.getTripId()).thenReturn("5");
+        when(secondMockTrip.getServiceId()).thenReturn("b");
+        when(secondMockTrip.getBlockId()).thenReturn("7");
+        when(secondMockTrip.hasSameServiceId(any())).thenReturn(false);
+
+        final Trip thirdMockTrip = mock(Trip.class);
+        when(thirdMockTrip.getTripId()).thenReturn("8");
+        when(thirdMockTrip.getServiceId()).thenReturn("c");
+        when(thirdMockTrip.getBlockId()).thenReturn("7");
+        when(thirdMockTrip.hasSameServiceId(any())).thenReturn(false);
+
+        final Trip fourthMockTrip = mock(Trip.class);
+        when(thirdMockTrip.getTripId()).thenReturn("9");
+        when(thirdMockTrip.getServiceId()).thenReturn("d");
+        when(thirdMockTrip.getBlockId()).thenReturn("7");
+        when(thirdMockTrip.hasSameServiceId(any())).thenReturn(false);
+
+        mockTripCollection.add(firstMockTrip);
+        mockTripCollection.add(secondMockTrip);
+        mockTripCollection.add(thirdMockTrip);
+        mockTripCollection.add(fourthMockTrip);
+        mockTripPerBlockIdCollection.put("7", mockTripCollection);
+
+        final SortedMap<Integer, StopTime> mockFirstTripStopTimeCollection = new TreeMap<>();
+
+        final StopTime firstTripFirstStopTime = mock(StopTime.class);
+        when(firstTripFirstStopTime.getArrivalTime()).thenReturn(FIVE_AM_AS_SECS_BEFORE_NOON);
+        when(firstTripFirstStopTime.getDepartureTime()).thenReturn(FIVE_AM_AS_SECS_BEFORE_NOON);
+
+        final StopTime firstTripSecondStopTime = mock(StopTime.class);
+        when(firstTripSecondStopTime.getArrivalTime()).thenReturn(SIX_AM_AS_SECS_BEFORE_NOON);
+        when(firstTripSecondStopTime.getDepartureTime()).thenReturn(SIX_30_AM_AS_SECS_BEFORE_NOON);
+
+        mockFirstTripStopTimeCollection.put(8, firstTripFirstStopTime);
+        mockFirstTripStopTimeCollection.put(9, firstTripSecondStopTime);
+
+        final SortedMap<Integer, StopTime> mockSecondTripStopTimeCollection = new TreeMap<>();
+
+        final StopTime secondTripFirstStopTime = mock(StopTime.class);
+        when(secondTripFirstStopTime.getArrivalTime()).thenReturn(SEVEN_AM_AS_SECS_BEFORE_NOON);
+        when(secondTripFirstStopTime.getDepartureTime()).thenReturn(SEVEN_AM_40_MIN_AS_SECS_BEFORE_NOON);
+
+        final StopTime secondTripLastStopTime = mock(StopTime.class);
+        when(secondTripLastStopTime.getArrivalTime()).thenReturn(EIGHT_AM_20_MIN_AS_SECS_BEFORE_NOON);
+        when(secondTripLastStopTime.getDepartureTime()).thenReturn(TEN_AM_AS_SECS_BEFORE_NOON);
+
+        mockSecondTripStopTimeCollection.put(10, secondTripFirstStopTime);
+        mockSecondTripStopTimeCollection.put(11, secondTripLastStopTime);
+
+        final SortedMap<Integer, StopTime> mockThirdTripStopTimeCollection = new TreeMap<>();
+        final StopTime thirdTripFirstStopTime = mock(StopTime.class);
+        when(thirdTripFirstStopTime.getArrivalTime()).thenReturn(ELEVEN_AM_03_MIN_AS_SECS_BEFORE_NOON);
+        when(thirdTripFirstStopTime.getDepartureTime()).thenReturn(ELEVEN_AM_15_MIN_AS_SECS_BEFORE_NOON);
+
+        final StopTime thirdTripLastStopTime = mock(StopTime.class);
+        when(thirdTripLastStopTime.getArrivalTime()).thenReturn(ELEVEN_AM_16_MIN_AS_SECS_BEFORE_NOON);
+        when(thirdTripLastStopTime.getDepartureTime()).thenReturn(ELEVEN_AM_20_MIN_AS_SECS_BEFORE_NOON);
+
+        mockThirdTripStopTimeCollection.put(12, thirdTripFirstStopTime);
+        mockThirdTripStopTimeCollection.put(13, thirdTripLastStopTime);
+
+        final SortedMap<Integer, StopTime> mockFourthTripStopTimeCollection = new TreeMap<>();
+
+        final StopTime fourthTripFirstStopTime = mock(StopTime.class);
+        when(fourthTripFirstStopTime.getArrivalTime()).thenReturn(ELEVEN_AM_10_MIN_AS_SECS_BEFORE_NOON);
+        when(fourthTripFirstStopTime.getDepartureTime()).thenReturn(ELEVEN_AM_28_MIN_AS_SECS_BEFORE_NOON);
+
+        final StopTime fourthTripLastStopTime = mock(StopTime.class);
+        when(fourthTripLastStopTime.getArrivalTime()).thenReturn(ELEVEN_AM_34_MIN_AS_SECS_BEFORE_NOON);
+        when(fourthTripLastStopTime.getDepartureTime()).thenReturn(NOON_AM_45_AS_SECS_BEFORE_NOON);
+
+        mockFourthTripStopTimeCollection.put(14, fourthTripFirstStopTime);
+        mockFourthTripStopTimeCollection.put(15, fourthTripLastStopTime);
+
+        when(mockDataRepo.getAllTripByBlockId()).thenReturn(mockTripPerBlockIdCollection);
+        when(mockDataRepo.getStopTimeByTripId("2")).thenReturn(mockFirstTripStopTimeCollection);
+        when(mockDataRepo.getStopTimeByTripId("5")).thenReturn(mockSecondTripStopTimeCollection);
+        when(mockDataRepo.getStopTimeByTripId("8")).thenReturn(mockThirdTripStopTimeCollection);
+        when(mockDataRepo.getStopTimeByTripId("9")).thenReturn(mockFourthTripStopTimeCollection);
+        when(mockDataRepo.getCalendarAll()).thenReturn(new HashMap<>());
+
+        final Map<String, Map<String, CalendarDate>> mockCalendarDateCollection = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceA = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceB = new HashMap<>();
+        final HashMap<String, CalendarDate> calendarDateCollectionServiceC = new HashMap<>();
+        final CalendarDate firstCalendarDateForServiceA = mock(CalendarDate.class);
+        final CalendarDate secondCalendarDateForServiceA = mock(CalendarDate.class);
+        final CalendarDate calendarDateForServiceB = mock(CalendarDate.class);
+        final CalendarDate calendarDateForServiceC = mock(CalendarDate.class);
+
+        calendarDateCollectionServiceA.put("2020-07-23", firstCalendarDateForServiceA);
+        calendarDateCollectionServiceA.put("2020-08-01", secondCalendarDateForServiceA);
+        calendarDateCollectionServiceB.put("2020-09-04", calendarDateForServiceB);
+        calendarDateCollectionServiceC.put("2020-01-08", calendarDateForServiceC);
+
+        when(firstCalendarDateForServiceA.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
+        when(firstCalendarDateForServiceA.getDate()).thenReturn(LocalDate.of(2020, 7, 23));
+
+        when(secondCalendarDateForServiceA.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
+        when(secondCalendarDateForServiceA.getDate()).thenReturn(LocalDate.of(2020, 8, 1));
+
+        when(calendarDateForServiceB.getExceptionType()).thenReturn(ExceptionType.REMOVED_SERVICE);
+        when(calendarDateForServiceB.getDate()).thenReturn(LocalDate.of(2020, 9, 4));
+
+        when(calendarDateForServiceC.getExceptionType()).thenReturn(ExceptionType.ADDED_SERVICE);
+        when(calendarDateForServiceC.getDate()).thenReturn(LocalDate.of(2020, 1, 8));
+
+        mockCalendarDateCollection.put("a", calendarDateCollectionServiceA);
+        mockCalendarDateCollection.put("b", calendarDateCollectionServiceB);
+        mockCalendarDateCollection.put("c", calendarDateCollectionServiceC);
+        when(mockDataRepo.getCalendarDateAll()).thenReturn(mockCalendarDateCollection);
+
+        final Map<String, Calendar> mockCalendarCollection = new HashMap<>();
+        final Calendar calendarForServiceD = mock(Calendar.class);
+        mockCalendarCollection.put("d", calendarForServiceD);
+        when(mockDataRepo.getCalendarAll()).thenReturn(mockCalendarCollection);
+        when(mockDataRepo.getCalendarByServiceId("d")).thenReturn(calendarForServiceD);
+        when(calendarForServiceD.getStartDate()).thenReturn(LocalDate.of(2020, 8, 15));
+        when(calendarForServiceD.getEndDate()).thenReturn(LocalDate.of(2020, 8, 31));
+
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final Logger mockLogger = mock(Logger.class);
+        final TimeUtils mockTimeUtils = mock(TimeUtils.class);
+
+        final ValidateNoOverlappingStopTimeInTripBlock underTest =
+                new ValidateNoOverlappingStopTimeInTripBlock(mockDataRepo, mockResultRepo, mockLogger, mockTimeUtils);
+
+        underTest.execute(); // will produce NPE here because solution as not been implemented yet
+        assertEquals(1, mockResultRepo.getAll().size());
     }
 }
