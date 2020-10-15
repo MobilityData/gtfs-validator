@@ -276,29 +276,9 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
         options.addOption(String.valueOf(HELP_KEY.charAt(0)), HELP_KEY, false, "Print this message");
         options.addOption(String.valueOf(PROTO_KEY.charAt(0)), PROTO_KEY, false,
                 "Export validation results as proto");
-
-        // define options related to GTFS file `pathways.txt`
         options.addOption(String.valueOf(EXCLUSION_KEY.charAt(1)), EXCLUSION_KEY, true,
                 "Exclude files from semantic GTFS validation");
-        options.addOption(PATHWAY_MIN_LENGTH_KEY, PATHWAY_MIN_LENGTH_KEY, true,
-                "Minimum admissible value for field length of file pathways.txt");
-        options.addOption(PATHWAY_MAX_LENGTH_KEY, PATHWAY_MAX_LENGTH_KEY, true,
-                "Maximum admissible value for field length of file pathways.txt");
-        options.addOption(PATHWAY_MIN_TRAVERSAL_TIME_KEY, PATHWAY_MIN_TRAVERSAL_TIME_KEY, true,
-                "Minimum admissible value for field traversal_time of file pathways.txt");
-        options.addOption(PATHWAY_MAX_TRAVERSAL_TIME_KEY, PATHWAY_MAX_TRAVERSAL_TIME_KEY, true,
-                "Maximum admissible value for field traversal_time of file pathways.txt");
-        options.addOption(PATHWAY_MIN_STAIR_COUNT_KEY, PATHWAY_MIN_STAIR_COUNT_KEY, true,
-                "Maximum admissible value for field stair_count of file pathways.txt");
-        options.addOption(PATHWAY_MAX_STAIR_COUNT_KEY, PATHWAY_MAX_STAIR_COUNT_KEY, true,
-                "Maximum admissible value for field stair_count of file pathways.txt");
-        options.addOption(PATHWAY_MAX_SLOPE_KEY, PATHWAY_MAX_LENGTH_KEY, true,
-                "Maximum admissible value for field slope of file pathways.txt");
-        options.addOption(PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY, PATHWAY_MIN_WIDTH_LOWER_BOUND_KEY, true,
-                "Minimum admissible value for field min_width of file pathways.txt");
-        options.addOption(PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY, PATHWAY_MIN_WIDTH_UPPER_BOUND_KEY, true,
-                "Maximum admissible value for field min_width of file pathways.txt");
-        options.addOption(ABORT_ON_ERROR, ABORT_ON_ERROR, true,
+        options.addOption(String.valueOf(ABORT_ON_ERROR.charAt(0)), ABORT_ON_ERROR, true,
                 "Stop validation process on first error");
 
         // Commands --proto and --help take no arguments, contrary to command --exclude that can take multiple arguments
