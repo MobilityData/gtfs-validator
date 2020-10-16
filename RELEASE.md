@@ -17,7 +17,7 @@ both `Run validator on MBTA data` and `upload artifacts` steps
 
 Do the same in Circle-CI [config file](https://github.com/MobilityData/gtfs-validator/blob/master/.circleci/config.yml)
 
-**!! Be wary of preserving postfixes like `_cli` or `web` in some names !!**
+**!! Be wary of preserving postfixes like `_cli` or `_web` in some names !!**
 
 ### 2. Do the release
 
@@ -59,5 +59,4 @@ Update the GitHub CI [config file](https://github.com/MobilityData/gtfs-validato
 Both `Run validator on MBTA data` and `upload artifacts` steps
 
 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
-
 
