@@ -26,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.parser.ApacheExecParamParser;
 import org.mobilitydata.gtfsvalidator.parser.JsonExecParamParser;
 import org.mobilitydata.gtfsvalidator.usecase.ParseAllExecParam;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
-import org.mobilitydata.gtfsvalidator.usecase.port.NotShortEnoughCommandLineOptionLongOptException;
+import org.mobilitydata.gtfsvalidator.usecase.port.CommandLineOptionLongOptExceedsMaxCharNumException;
 
 import java.io.File;
 import java.io.IOException;
@@ -293,12 +293,12 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      *
      * @return the updated collection of available {@code Option} as {@code Options} when {@link ExecParam} with key
      * HELP_KEY="help" is present in the repository.
-     * @throws NotShortEnoughCommandLineOptionLongOptException an exception if {@link Options} will not be legible
-     * after application of {@code HelpFormatter} i.e. {@link Options} defined by developer has too long combination of
-     * opt and longOpt for one {@link Option}.
-     * */
+     * @throws CommandLineOptionLongOptExceedsMaxCharNumException an exception if {@link Options} will not be legible
+     *                                                            after application of {@code HelpFormatter} i.e. {@link Options} defined by developer has too long combination of
+     *                                                            opt and longOpt for one {@link Option}.
+     */
     @Override
-    public Options updateOptions() throws NotShortEnoughCommandLineOptionLongOptException {
+    public Options updateOptions() throws CommandLineOptionLongOptExceedsMaxCharNumException {
         final Options options = getOptions();
         options.addOption(String.valueOf(URL_KEY.charAt(0)), URL_KEY, true,
                 "URL to GTFS zipped archive");
@@ -317,7 +317,7 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
         options.addOption(String.valueOf(ABORT_ON_ERROR.charAt(0)), ABORT_ON_ERROR, true,
                 "Stop validation process on first error");
 
-        checkOptLength(options);
+        validateAllOptionLength(options);
 
         // Commands --proto and --help take no arguments
         // Other commands only take 1 argument
@@ -350,18 +350,18 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      * Throws an exception if {@link Options} will not be legible after application of {@code HelpFormatter} i.e.
      * {@link Options} defined by developer has too long combination of opt and longOpt for one {@link Option}.
      *
-     * @param options  {@link Options} defined by developer
-     * @throws NotShortEnoughCommandLineOptionLongOptException an exception if {@link Options} will not be legible
-     * after application of {@code HelpFormatter} i.e. {@link Options} defined by developer has too long combination of
-     * opt and longOpt for one {@link Option}.
+     * @param options {@link Options} defined by developer
+     * @throws CommandLineOptionLongOptExceedsMaxCharNumException an exception if {@link Options} will not be legible
+     *                                                            after application of {@code HelpFormatter} i.e. {@link Options} defined by developer has too long combination of
+     *                                                            opt and longOpt for one {@link Option}.
      */
-    private void checkOptLength(final Options options) throws NotShortEnoughCommandLineOptionLongOptException{
+    private void validateAllOptionLength(final Options options) throws CommandLineOptionLongOptExceedsMaxCharNumException {
         final List<Option> tooLongOptionCollection = options.getOptions().stream()
                 .filter(option ->
-                        option.getOpt().length()  + option.getLongOpt().length() > MAX_CHARS_NUM)
+                        option.getOpt().length() + option.getLongOpt().length() > MAX_CHARS_NUM)
                 .collect(Collectors.toList());
         if (tooLongOptionCollection.size() != 0) {
-            throw new NotShortEnoughCommandLineOptionLongOptException(
+            throw new CommandLineOptionLongOptExceedsMaxCharNumException(
                     String.format("The combination of Options opt and longOpt Strings must not exceed %d characters",
                             MAX_CHARS_NUM)
             );

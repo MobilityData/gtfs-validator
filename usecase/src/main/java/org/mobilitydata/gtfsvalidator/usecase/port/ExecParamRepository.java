@@ -55,7 +55,7 @@ public interface ExecParamRepository {
 
     Options getOptions();
 
-    Options updateOptions() throws NotShortEnoughCommandLineOptionLongOptException;
+    Options updateOptions() throws CommandLineOptionLongOptExceedsMaxCharNumException;
 
     boolean isEmpty();
 

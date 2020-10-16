@@ -7,7 +7,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.parser.ApacheExecParamParser;
 import org.mobilitydata.gtfsvalidator.parser.JsonExecParamParser;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
-import org.mobilitydata.gtfsvalidator.usecase.port.NotShortEnoughCommandLineOptionLongOptException;
+import org.mobilitydata.gtfsvalidator.usecase.port.CommandLineOptionLongOptExceedsMaxCharNumException;
 import org.mockito.InOrder;
 
 import java.io.File;
@@ -437,7 +437,7 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    void repoShouldThrowExceptionAtInstantiationIfPresenceOfOptionWithTooLongCombinationOfOptAndLongOpt() {
+    void shouldThrowExceptionAtConstructionWhenPresenceOfOptionWithTooLongCombinationOfOptAndLongOpt() {
         final ExecParam mockExecParam = spy(ExecParam.class);
         mockExecParam.setKey(EXCLUSION_KEY);
         mockExecParam.setValue(List.of("file0"));
@@ -451,16 +451,16 @@ class InMemoryExecParamRepositoryTest {
         mockOptions.addOption("tooLongOpt", "veryLooooooongLongOpt", true,
                 "description");
 
-        final Exception exception = assertThrows(NotShortEnoughCommandLineOptionLongOptException.class,
+        final Exception exception = assertThrows(CommandLineOptionLongOptExceedsMaxCharNumException.class,
                 () -> new InMemoryExecParamRepository(mockExecutionParameterFromJson,
-                DEFAULT_EXEC_PARAMETERS, mockLogger, mockOptions));
+                        DEFAULT_EXEC_PARAMETERS, mockLogger, mockOptions));
 
         assertEquals(String.format("The combination of Options opt and longOpt Strings must not exceed %d characters",
                 MAX_CHARS_NUM), exception.getMessage());
     }
 
     @Test
-    void optionsShouldNotHaveTooManyCharacters() {
+    void noExceptionWhenAllOptionHaveLegibleOptAndLongOptCombination() {
         final ExecParam mockExecParam = spy(ExecParam.class);
         mockExecParam.setKey(EXCLUSION_KEY);
         mockExecParam.setValue(List.of("file0"));
