@@ -7,28 +7,28 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Package with Gradle
+          name: Package cli jar with Gradle
           command: |
             ./gradlew shadowJar
       - store_artifacts:
-          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar
-          destination: gtfs-validator-v1.3.0-SNAPSHOT.jar
+          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
+          destination: gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
   test:
     docker:
       - image: circleci/openjdk:11
     steps:
       - checkout
       - run:
-          name: Generate test report
+          name: Run Java tests
           command: |
             ./gradlew testReport
       - run:
-          name: Compress test report
+          name: Compress Java test report
           command: |
-            tar -C build/reports/allTests/ -cvf v1.3.0-SNAPSHOT_tests.tar .
+            tar -C build/reports/allTests/ -cvf v1.3.0-SNAPSHOT_tests_java.tar .
       - store_artifacts:
-          path: v1.3.0-SNAPSHOT_tests.tar
-          destination: v1.3.0-SNAPSHOT_tests.tar
+          path: v1.3.0-SNAPSHOT_tests_java.tar
+          destination: v1.3.0-SNAPSHOT_tests_java.tar
   doc:
     docker:
       - image: circleci/openjdk:11
