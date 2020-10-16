@@ -18,6 +18,6 @@ jobs:
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
       - name: Run validator on STM data
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar -u http://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip -i input.zip -e input -o output -abort_on_error false
+        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u http://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip -i input.zip -e input -o output
       - name: Run validator on MBTA data
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i input.zip -e input -o output -abort_on_error false
+        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i input.zip -e input -o output
