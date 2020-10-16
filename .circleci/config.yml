@@ -50,6 +50,10 @@ workflows:
   version: 2
   package_test_document:
     jobs:
-      - package
       - test
+      - package:
+          requires:
+            - test
       - doc
+          requires:
+            - test
