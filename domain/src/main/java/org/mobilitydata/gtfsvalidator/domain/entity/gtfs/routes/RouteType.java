@@ -50,7 +50,6 @@ public enum RouteType {
      * null or does not match any {@link RouteType} enum item
      */
     static public RouteType fromInt(final Integer fromValue) {
-
         if (fromValue == null) {
             return null;
         }
@@ -66,7 +65,10 @@ public enum RouteType {
      * @param value the integer to associate with this enum values
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
-    static public boolean isEnumValueValid(final int value) {
+    static public boolean isEnumValueValid(final Integer value) {
+        if (value == null) {
+            return false;
+        }
         return Stream.of(RouteType.values())
                 .filter(enumItem -> enumItem.value == value)
                 .findAny()

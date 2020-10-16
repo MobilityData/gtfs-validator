@@ -284,13 +284,14 @@ public class Route extends GtfsEntity {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
                             routeId));
                 }
-                if (originalRouteTypeInteger == null) {
-                    noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
-                            routeId));
-                }
-                if (originalRouteTypeInteger != null && !RouteType.isEnumValueValid(originalRouteTypeInteger)) {
-                    noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
-                            routeId, originalRouteTypeInteger));
+                if (routeType == null) {
+                    if (originalRouteTypeInteger == null) {
+                        noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
+                                routeId));
+                    } else {
+                        noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
+                                routeId, originalRouteTypeInteger));
+                    }
                 }
                 if (agencyId != null && agencyId.isBlank()) {
                     noticeCollection.add(
