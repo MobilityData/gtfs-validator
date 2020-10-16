@@ -25,14 +25,31 @@ jobs:
       - run:
           name: Compress test report
           command: |
-            tar -C build/reports/allTests/ -cvf v1.3.0-SNAPSHOT_javadoc.tar .
+            tar -C build/reports/allTests/ -cvf v1.3.0-SNAPSHOT_tests.tar .
+      - store_artifacts:
+          path: v1.3.0-SNAPSHOT_tests.tar
+          destination: v1.3.0-SNAPSHOT_tests.tar
+  doc:
+    docker:
+      - image: circleci/openjdk:11
+    steps:
+      - checkout
+      - run:
+          name: Generate javadoc
+          command: |
+            ./gradlew aggregateJavadocs
+      - run:
+          name: Compress javadoc
+          command: |
+            tar -C build/docs/javadoc/ -cvf v1.3.0-SNAPSHOT_javadoc.tar .
       - store_artifacts:
           path: v1.3.0-SNAPSHOT_javadoc.tar
           destination: v1.3.0-SNAPSHOT_javadoc.tar
 
 workflows:
   version: 2
-  build_and_test:
+  package_test_document:
     jobs:
       - package
       - test
+      - doc
