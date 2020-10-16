@@ -17,16 +17,20 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_ENUM_VALUE;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class CalendarDateTest {
 
@@ -344,5 +348,105 @@ class CalendarDateTest {
         final int secondCalendarDateHashCode = secondCalendarDate.hashCode();
 
         assertEquals(firstCalendarDateHashCode, secondCalendarDateHashCode);
+    }
+
+    @Test
+    void getDayOfWeekAsStringShouldReturnDayOfWeek() {
+        final String serviceIdValue = "service id";
+        final LocalDate date = LocalDate.of(2020, 10, 16);
+
+        final CalendarDate.CalendarDateBuilder builder = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = builder.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(1)
+                .build();
+        final CalendarDate calendarDate = (CalendarDate) entityBuildResult.getData();
+
+        assertEquals("friday", calendarDate.getDayOfWeekAsString());
+    }
+
+    @Test
+    void isOverlappingShouldReturnFalseWhenServiceIsRemovedOnDate() {
+        final String serviceIdValue = "service id";
+        final LocalDate date = LocalDate.of(2020, 10, 16);
+
+        final CalendarDate.CalendarDateBuilder builder = new CalendarDate.CalendarDateBuilder();
+        final EntityBuildResult<?> entityBuildResult = builder.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(2)
+                .build();
+        final CalendarDate underTest = (CalendarDate) entityBuildResult.getData();
+        final Calendar mockCalendar = mock(Calendar.class);
+        assertFalse(underTest.isOverlapping(mockCalendar));
+    }
+
+    @Test
+    void isOverlappingShouldReturnFalseWhenServiceDayIsBeforeCalendarDateRange() {
+        final String serviceIdValue = "service id";
+        final LocalDate date = LocalDate.of(2020, 10, 16);
+
+        final CalendarDate.CalendarDateBuilder builder = new CalendarDate.CalendarDateBuilder();
+        final EntityBuildResult<?> entityBuildResult = builder.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(1)
+                .build();
+        final CalendarDate underTest = (CalendarDate) entityBuildResult.getData();
+        final Calendar mockCalendar = mock(Calendar.class);
+        when(mockCalendar.getStartDate()).thenReturn(LocalDate.of(2020, 12, 1));
+        when(mockCalendar.getEndDate()).thenReturn(LocalDate.of(2020, 12, 31));
+        assertFalse(underTest.isOverlapping(mockCalendar));
+    }
+
+    @Test
+    void isOverlappingShouldReturnFalseWhenServiceDayIsAfterCalendarDateRange() {
+        final String serviceIdValue = "service id";
+        final LocalDate date = LocalDate.of(2021, 10, 16);
+
+        final CalendarDate.CalendarDateBuilder builder = new CalendarDate.CalendarDateBuilder();
+        final EntityBuildResult<?> entityBuildResult = builder.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(1)
+                .build();
+        final CalendarDate underTest = (CalendarDate) entityBuildResult.getData();
+        final Calendar mockCalendar = mock(Calendar.class);
+        when(mockCalendar.getStartDate()).thenReturn(LocalDate.of(2020, 12, 1));
+        when(mockCalendar.getEndDate()).thenReturn(LocalDate.of(2020, 12, 31));
+        assertFalse(underTest.isOverlapping(mockCalendar));
+    }
+
+    @Test
+    void isOverlappingShouldReturnTrueWhenCalendarOverlaps() {
+        final String serviceIdValue = "service id";
+        final LocalDate date = LocalDate.of(2020, 10, 16);
+
+        final CalendarDate.CalendarDateBuilder builder = new CalendarDate.CalendarDateBuilder();
+        final EntityBuildResult<?> entityBuildResult = builder.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(1)
+                .build();
+        final CalendarDate underTest = (CalendarDate) entityBuildResult.getData();
+        final Calendar mockCalendar = mock(Calendar.class);
+        when(mockCalendar.getStartDate()).thenReturn(LocalDate.of(2020, 10, 1));
+        when(mockCalendar.getEndDate()).thenReturn(LocalDate.of(2020, 10, 31));
+        when(mockCalendar.getDayOfServiceAvailabilityAsStringCollection()).thenReturn(Set.of("monday", "friday"));
+        assertTrue(underTest.isOverlapping(mockCalendar));
+    }
+
+    @Test
+    void isOverlappingShouldReturnFalseWhenCalendarDoesNotOverlap() {
+        final String serviceIdValue = "service id";
+        final LocalDate date = LocalDate.of(2020, 10, 16);
+
+        final CalendarDate.CalendarDateBuilder builder = new CalendarDate.CalendarDateBuilder();
+        final EntityBuildResult<?> entityBuildResult = builder.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(1)
+                .build();
+        final CalendarDate underTest = (CalendarDate) entityBuildResult.getData();
+        final Calendar mockCalendar = mock(Calendar.class);
+        when(mockCalendar.getStartDate()).thenReturn(LocalDate.of(2020, 10, 1));
+        when(mockCalendar.getEndDate()).thenReturn(LocalDate.of(2020, 10, 31));
+        when(mockCalendar.getDayOfServiceAvailabilityAsStringCollection()).thenReturn(Set.of("monday", "tuesday"));
+        assertFalse(underTest.isOverlapping(mockCalendar));
     }
 }

@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
@@ -25,6 +26,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
+import static org.mockito.Mockito.*;
 
 class CalendarTest {
     private static final String FILENAME = "calendar.txt";
@@ -897,5 +899,75 @@ class CalendarTest {
                 .getData();
 
         assertEquals(0, firstCalendar.getOverlappingDays(nonOverlappingCalendar).size());
+    }
+
+    @Test
+    void isOverlappingShouldCallSameMethodFromCalendarDate() {
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+
+        final Calendar calendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(1)
+                .saturday(1)
+                .sunday(1)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 1, 31))
+                .build()
+                .getData();
+
+        final CalendarDate mockCalendarDate = mock(CalendarDate.class);
+
+        calendar.isOverlapping(mockCalendarDate);
+
+        verify(mockCalendarDate, times(1)).isOverlapping(calendar);
+    }
+
+    @Test
+    void isOverlappingShouldReturnTrueWhenCalendarDateOverlaps() {
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+
+        final Calendar calendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(1)
+                .saturday(1)
+                .sunday(1)
+                .startDate(LocalDate.of(2020, 10, 1))
+                .endDate(LocalDate.of(2020, 10, 31))
+                .build()
+                .getData();
+
+        final CalendarDate mockCalendarDate = mock(CalendarDate.class);
+        when(mockCalendarDate.isOverlapping(calendar)).thenReturn(true);
+
+        assertTrue(calendar.isOverlapping(mockCalendarDate));
+    }
+
+    @Test
+    void isOverlappingShouldReturnFalseWhenCalendarDateDoesNotOverlap() {
+        final Calendar.CalendarBuilder underTest = new Calendar.CalendarBuilder();
+
+        final Calendar calendar = (Calendar) underTest.serviceId(SERVICE_ID)
+                .monday(0)
+                .tuesday(0)
+                .wednesday(0)
+                .thursday(0)
+                .friday(0)
+                .saturday(1)
+                .sunday(1)
+                .startDate(LocalDate.of(2020, 10, 1))
+                .endDate(LocalDate.of(2020, 10, 31))
+                .build()
+                .getData();
+
+        final CalendarDate mockCalendarDate = mock(CalendarDate.class);
+        when(mockCalendarDate.isOverlapping(calendar)).thenReturn(false);
+
+        assertFalse(calendar.isOverlapping(mockCalendarDate));
     }
 }

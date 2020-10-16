@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates;
 
 import org.jetbrains.annotations.NotNull;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.EntityBuildResult;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
@@ -183,5 +184,19 @@ public class CalendarDate extends GtfsEntity {
             return false;
         }
         return hashCode() == object.hashCode();
+    }
+
+    public String getDayOfWeekAsString() {
+        return getDate().getDayOfWeek().toString().toLowerCase();
+    }
+
+    public boolean isOverlapping(final Calendar calendar) {
+        if (getExceptionType() == ExceptionType.REMOVED_SERVICE) {
+            return false;
+        }
+        if (getDate().isBefore(calendar.getStartDate()) || getDate().isAfter(calendar.getEndDate())) {
+            return false;
+        }
+        return calendar.getDayOfServiceAvailabilityAsStringCollection().contains(getDayOfWeekAsString());
     }
 }

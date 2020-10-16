@@ -17,15 +17,14 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs;
 
 import org.jetbrains.annotations.NotNull;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.ExceptionType;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.IntegerFieldValueOutOfRangeNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class for all entities defined in calendar.txt. Can not be directly instantiated: user must use
@@ -508,6 +507,10 @@ public class Calendar extends GtfsEntity {
                         startDate.isBefore(otherCalendar.getEndDate()) && endDate.isAfter(otherCalendar.getStartDate());
     }
 
+    public boolean isOverlapping(final CalendarDate calendarDate) {
+        return calendarDate.isOverlapping(this);
+    }
+
     /**
      * Returns the common days of the week of service for this and the provided {@link Calendar}
      *
@@ -535,6 +538,32 @@ public class Calendar extends GtfsEntity {
             toReturn.add(SATURDAY);
         }
         if (isSunday() && otherCalendar.isSunday()) {
+            toReturn.add(SUNDAY);
+        }
+        return toReturn;
+    }
+
+    public Set<String> getDayOfServiceAvailabilityAsStringCollection() {
+        final Set<String> toReturn = new HashSet<>();
+        if (isMonday()) {
+            toReturn.add(MONDAY);
+        }
+        if (isTuesday()) {
+            toReturn.add(TUESDAY);
+        }
+        if (isWednesday()) {
+            toReturn.add(WEDNESDAY);
+        }
+        if (isThursday()) {
+            toReturn.add(THURSDAY);
+        }
+        if (isFriday()) {
+            toReturn.add(FRIDAY);
+        }
+        if (isSaturday()) {
+            toReturn.add(SATURDAY);
+        }
+        if (isSunday()) {
             toReturn.add(SUNDAY);
         }
         return toReturn;
