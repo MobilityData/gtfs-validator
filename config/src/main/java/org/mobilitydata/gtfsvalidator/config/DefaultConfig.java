@@ -261,7 +261,7 @@ public class DefaultConfig {
     }
 
     public ExportResultAsFile exportResultAsFile() {
-        return new ExportResultAsFile(resultRepo, execParamRepo, logger);
+        return new ExportResultAsFile(resultRepo, execParamRepo, gtfsDataRepository, logger);
     }
 
     public LogExecutionInfo logExecutionInfo() {
