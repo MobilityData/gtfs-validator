@@ -71,11 +71,9 @@ public class DownloadArchiveFromNetwork {
             try {
                 final URL sourceUrl = new URL(url);
                 final HttpURLConnection httpConnection = (HttpURLConnection) sourceUrl.openConnection();
-                final int responseCode = httpConnection.getResponseCode();
-                // check response code
-                if (responseCode == HTTP_MOVED_PERM || responseCode == HTTP_MOVED_TEMP) {
+                final String newUrlAsString = httpConnection.getHeaderField("Location");
+                if (newUrlAsString != null) {
                     // use redirection instead of original url
-                    final String newUrlAsString = httpConnection.getHeaderField("Location");
                     final URLConnection connection = new URL(newUrlAsString).openConnection();
                     inputStream = connection.getInputStream();
                 } else {
