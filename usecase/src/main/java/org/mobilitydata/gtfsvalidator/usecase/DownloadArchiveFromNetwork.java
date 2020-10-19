@@ -37,7 +37,8 @@ import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
  * Use case to download archive from network. This is the first step of the validation process.
  */
 public class DownloadArchiveFromNetwork {
-
+    private static final int HTTP_TEMP_REDIRECT = 307;
+    private static final int HTTP_PERM_REDIRECT = 308;
     private final ValidationResultRepository resultRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
@@ -71,9 +72,12 @@ public class DownloadArchiveFromNetwork {
             try {
                 final URL sourceUrl = new URL(url);
                 final HttpURLConnection httpConnection = (HttpURLConnection) sourceUrl.openConnection();
-                final String newUrlAsString = httpConnection.getHeaderField("Location");
-                if (newUrlAsString != null) {
+                final int responseCode = httpConnection.getResponseCode();
+                // check response code
+                if (responseCode == HTTP_MOVED_PERM || responseCode == HTTP_MOVED_TEMP ||
+                        responseCode == HTTP_TEMP_REDIRECT || responseCode == HTTP_PERM_REDIRECT) {
                     // use redirection instead of original url
+                    final String newUrlAsString = httpConnection.getHeaderField("Location");
                     final URLConnection connection = new URL(newUrlAsString).openConnection();
                     inputStream = connection.getInputStream();
                 } else {
