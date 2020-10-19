@@ -832,7 +832,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public SortedMap<Integer, ShapePoint> getShapeById(final String shapeId) {
-        return Collections.unmodifiableSortedMap(shapePerIdShapePtSequence.get(shapeId));
+        try {
+            return Collections.unmodifiableSortedMap(shapePerIdShapePtSequence.get(shapeId));
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     /**
