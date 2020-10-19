@@ -66,12 +66,11 @@ public enum RouteType {
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
     static public boolean isEnumValueValid(final Integer value) {
-        if (value == null) {
+        try {
+            return Stream.of(RouteType.values())
+                    .anyMatch(enumItem -> enumItem.value == value);
+        } catch (NullPointerException e) {
             return false;
         }
-        return Stream.of(RouteType.values())
-                .filter(enumItem -> enumItem.value == value)
-                .findAny()
-                .orElse(null) != null;
     }
 }
