@@ -20,7 +20,7 @@ jobs:
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
       - name: Package spring boot app jar with Gradle
-        run: ./gradlew bootJar
+        run: ./gradlew bootJar --debug
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
