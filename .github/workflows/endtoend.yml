@@ -18,9 +18,9 @@ jobs:
           java-version: 1.11
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
-      - name: Run validator on MBTA data
+      - name: Validate dataset from -- MBTA
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i input.zip -e input -o output
-      - name: Run validator on data from (issue "#399)"
+      - name: Validate dataset from issue #399 --
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u http://www.mst.org/google/google_transit.zip -i input.zip -e input -o output
-      - name: Run validator on data from Orange County Transportation Authority (issue "#398)"
+      - name: Validate dataset from issue #398 -- Orange County Transportation Authority
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://octa.net/current/google_transit.zip -i input.zip -e input -o output
