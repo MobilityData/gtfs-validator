@@ -808,7 +808,7 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
-    void getShapeByIdShouldReturnNullIfShapeIfIsNull() {
+    void getShapeByIdShouldReturnNullIfShapeIdIsNull() {
         final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
         assertNull(underTest.getShapeById(null));
     }
