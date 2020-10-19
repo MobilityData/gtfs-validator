@@ -2,8 +2,8 @@ name: End to end
 
 on:
   push:
-    #branches: [ master ]
-    branches: [ master, fix-npe-routes ]
+    branches: [ master ]
+    #branches: [ master, your-prbranch ]
 
 jobs:
   build:
