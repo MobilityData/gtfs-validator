@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
@@ -27,13 +28,16 @@ import java.io.IOException;
 public class ExportResultAsFile {
     private final ValidationResultRepository resultRepo;
     private final ExecParamRepository execParamRepo;
+    private final GtfsDataRepository gtfsDataRepo;
     private final Logger logger;
 
     public ExportResultAsFile(final ValidationResultRepository resultRepo,
                               final ExecParamRepository execParamRepo,
+                              final GtfsDataRepository gtfsDataRepo,
                               final Logger logger) {
         this.resultRepo = resultRepo;
         this.execParamRepo = execParamRepo;
+        this.gtfsDataRepo = gtfsDataRepo;
         this.logger = logger;
     }
 
@@ -50,7 +54,10 @@ public class ExportResultAsFile {
         final String outputPath = execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY);
         final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
 
-        NoticeExporter exporter = resultRepo.getExporter(asProto, outputPath);
+        NoticeExporter exporter = resultRepo.getExporter(
+                asProto,
+                outputPath,
+                gtfsDataRepo.getFeedPublisherName());
 
         exporter.exportBegin();
 

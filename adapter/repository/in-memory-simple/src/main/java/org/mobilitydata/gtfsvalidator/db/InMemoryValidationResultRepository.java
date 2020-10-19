@@ -32,9 +32,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,6 +44,9 @@ import java.util.stream.Stream;
  * This is created  when creating a new default configuration, all fields being set to their default value.
  */
 public class InMemoryValidationResultRepository implements ValidationResultRepository {
+    private static final String DEFAULT_TIMEZONE_NAME = "America/Montreal";
+    private static final TimeZone DEFAULT_TIMEZONE = SimpleTimeZone.getTimeZone(DEFAULT_TIMEZONE_NAME);
+    private static final ZoneId DEFAULT_TIMEZONE_ID = DEFAULT_TIMEZONE.toZoneId();
     private final List<InfoNotice> infoNoticeList = new ArrayList<>();
     private final List<WarningNotice> warningNoticeList = new ArrayList<>();
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
@@ -90,16 +93,18 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     @Override
-    public NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException {
+    public NoticeExporter getExporter(boolean outputAsProto, String outputPath, final String feedPublisherName)
+            throws IOException {
+        final String timestamp = LocalDateTime.now(DEFAULT_TIMEZONE_ID).toString();
         if (outputAsProto) {
             return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder(),
-                    new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath));
+                    new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath + File.separator +
+                            feedPublisherName + timestamp));
         } else {
             return new JsonNoticeExporter(new ObjectMapper().getFactory().createGenerator(
                     Files.newOutputStream(Paths.get(
-                            outputPath + File.separator + "results" +
-                                    JsonNoticeExporter.FILE_EXTENSION
-                            )
+                            outputPath + File.separator + feedPublisherName + timestamp +
+                                    JsonNoticeExporter.FILE_EXTENSION)
                     )));
         }
     }

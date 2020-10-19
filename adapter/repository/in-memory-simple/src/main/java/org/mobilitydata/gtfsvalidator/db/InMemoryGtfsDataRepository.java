@@ -1017,4 +1017,20 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     public LocationBase getStopById(final String stopId) {
         return stopPerId.get(stopId);
     }
+
+    /**
+     * Returns `feed_info.feed_publisher_name` value if file `feed_info.txt` was provided, otherwise returns an empty
+     * String
+     *
+     * @return `feed_info.feed_publisher_name` value if file `feed_info.txt` was provided, otherwise returns an empty
+     * String
+     */
+    @Override
+    public String getFeedPublisherName() {
+        if (feedInfoPerFeedPublisherName.size() == 0) {
+            return "";
+        } else {
+            return feedInfoPerFeedPublisherName.keySet().stream().findFirst().get();
+        }
+    }
 }

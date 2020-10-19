@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
@@ -40,19 +41,23 @@ class ExportResultAsFileTest {
                 mock(NoticeExporter.class);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final MissingHeaderNotice mockNotice0 = mock(MissingHeaderNotice.class);
         final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
 
-        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), anyString())).thenReturn(mockExporter);
+        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), ArgumentMatchers.anyString(),
+                anyString())).thenReturn(mockExporter);
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
 
-        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY)).thenReturn(mockExecParamRepo.OUTPUT_KEY);
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY))
+                .thenReturn(mockExecParamRepo.OUTPUT_KEY);
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn("false");
         when(mockExecParamRepo.hasExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(false);
 
         Logger mockLogger = mock(Logger.class);
 
-        final ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockLogger);
+        final ExportResultAsFile underTest =
+                new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockLogger);
 
         underTest.execute();
 
@@ -75,7 +80,7 @@ class ExportResultAsFileTest {
         final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
 
         inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(false),
-                ArgumentMatchers.anyString());
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
         inOrder.verify(mockExporter, times(1)).exportBegin();
         inOrder.verify(mockResultRepo, times(1)).getAll();
 
@@ -96,17 +101,19 @@ class ExportResultAsFileTest {
         final MissingHeaderNotice mockNotice0 = mock(MissingHeaderNotice.class);
         final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
 
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY))
                 .thenReturn(mockExecParamRepo.OUTPUT_KEY);
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(String.valueOf(true));
         when(mockExecParamRepo.hasExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(true);
-        when(mockResultRepo.getExporter(ArgumentMatchers.eq(true), ArgumentMatchers.anyString()))
-                .thenReturn(mockExporter);
+        when(mockResultRepo.getExporter(ArgumentMatchers.eq(true), ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyString())).thenReturn(mockExporter);
 
         Logger mockLogger = mock(Logger.class);
-        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockLogger);
+        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo,
+                mockLogger);
 
         underTest.execute();
 
@@ -126,7 +133,7 @@ class ExportResultAsFileTest {
         InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
 
         inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(true),
-                ArgumentMatchers.anyString());
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
         inOrder.verify(mockExporter, times(1)).exportBegin();
         inOrder.verify(mockResultRepo, times(1)).getAll();
 
