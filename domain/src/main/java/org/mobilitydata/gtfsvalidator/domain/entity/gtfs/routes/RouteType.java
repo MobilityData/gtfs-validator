@@ -69,6 +69,10 @@ public enum RouteType {
         try {
             return Stream.of(RouteType.values())
                     .anyMatch(enumItem -> enumItem.value == value);
+            // this is equivalent to
+            // Stream.of(RouteType.values()).filter(enumItem -> enumItem.value == value).findAny().isPresent()
+            // Note that a NPE is thrown by anyMatch when it is called on a null Stream (which happens when `value` is
+            // null). Therefore a try/catch block is required to handle such situation.
         } catch (NullPointerException e) {
             return false;
         }
