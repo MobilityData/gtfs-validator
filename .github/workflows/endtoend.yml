@@ -3,6 +3,7 @@ name: End to end
 on:
   push:
     branches: [ master ]
+    #branches: [ master, your-prbranch ]
 
 jobs:
   build:
@@ -17,7 +18,7 @@ jobs:
           java-version: 1.11
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
-      - name: Run validator on STM data
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u http://www.stm.info/sites/default/files/gtfs/gtfs_stm.zip -i input.zip -e input -o output
       - name: Run validator on MBTA data
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i input.zip -e input -o output
+      - name: Run validator on data from https://github.com/MobilityData/gtfs-validator/issues/399
+        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u http://www.mst.org/google/google_transit.zip -i input.zip -e input -o output
