@@ -89,7 +89,7 @@ public class ServiceManager {
                 config.downloadArchiveFromNetwork().execute();
 
                 config.unzipInputArchive(
-                        config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
+                        config.createPath().execute(ExecParamRepository.EXTRACT_KEY, true))
                         .execute();
 
                 final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
@@ -254,7 +254,7 @@ public class ServiceManager {
                 config.validateRouteShortNameAreUnique().execute();
                 config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
 
-                config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+                config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
                 config.exportResultAsFile().execute();
 
@@ -266,7 +266,7 @@ public class ServiceManager {
 
         } catch (TooManyValidationErrorException e) {
             logger.error("Error detected -- ABORTING");
-            config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+            config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
             try {
                 config.exportResultAsFile().execute();

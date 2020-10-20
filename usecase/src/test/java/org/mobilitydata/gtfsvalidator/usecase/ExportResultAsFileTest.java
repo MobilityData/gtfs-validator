@@ -179,7 +179,7 @@ class ExportResultAsFileTest {
         final Agency mockAgency = mock(Agency.class);
         when(mockAgency.getAgencyName()).thenReturn("Agency Name");
 
-        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), ArgumentMatchers.anyString()))
+        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), ArgumentMatchers.anyString(), ArgumentMatchers.anyBoolean()))
                 .thenReturn(mockExporter);
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
 
@@ -222,7 +222,7 @@ class ExportResultAsFileTest {
         final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo, mockGtfsDataRepo);
         inOrder.verify(mockGtfsDataRepo, times(1)).getFeedPublisherName();
         inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(false),
-                ArgumentMatchers.anyString());
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyBoolean());
         inOrder.verify(mockExporter, times(1)).exportBegin();
         inOrder.verify(mockResultRepo, times(1)).getAll();
 
@@ -232,6 +232,7 @@ class ExportResultAsFileTest {
         verify(mockResultRepo, times(3)).getAll();
 
         verify(mockExporter, times(1)).exportEnd();
+        verify(mockExecParamRepo, times(1)).getExecParamValue(ExecParamRepository.BEAUTIFY_KEY);
         verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo, mockLogger);
     }
 }
