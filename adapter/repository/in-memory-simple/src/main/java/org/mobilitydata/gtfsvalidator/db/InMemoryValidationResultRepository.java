@@ -97,11 +97,11 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
         if (outputAsProto) {
             return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder(),
                     new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath + File.separator +
-                            feedPublisherName + timestamp));
+                            feedPublisherName + "_" + timestamp));
         } else {
             return new JsonNoticeExporter(new ObjectMapper().getFactory().createGenerator(
                     Files.newOutputStream(Paths.get(
-                            outputPath + File.separator + feedPublisherName + timestamp +
+                            outputPath + File.separator + feedPublisherName + "_" + timestamp +
                                     JsonNoticeExporter.FILE_EXTENSION)
                     )));
         }
