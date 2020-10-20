@@ -3,7 +3,7 @@ name: End to end
 on:
   push:
     branches: [ master ]
-    #branches: [ master, validation-report-artifact ]
+    #branches: [ master, your-prbranch ]
 
 jobs:
   run-on-data:
