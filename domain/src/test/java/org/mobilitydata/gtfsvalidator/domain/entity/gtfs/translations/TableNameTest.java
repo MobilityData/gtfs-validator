@@ -18,8 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TableNameTest {
 
@@ -57,5 +56,10 @@ class TableNameTest {
     @Test
     public void createTableNameWithExpectedValueStopTimesShouldNotThrowExceptionAndReturnCorrectRouteType() {
         assertEquals(TableName.STOP_TIMES, TableName.fromString("stop_times"));
+    }
+
+    @Test
+    void isEnumValueValidShouldReturnFalseOnNullValue() {
+        assertFalse(TableName.isEnumValueValid(null));
     }
 }

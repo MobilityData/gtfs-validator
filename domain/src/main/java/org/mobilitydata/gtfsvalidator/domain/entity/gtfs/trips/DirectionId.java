@@ -42,17 +42,14 @@ public enum DirectionId {
      * null or does not match any {@link Trip} enum item
      */
     static public DirectionId fromInt(final Integer fromValue) {
-        if (fromValue == null) {
-            return null;
-        } else if (isEnumValueValid(fromValue)) {
-            // to avoid lint regarding use of method .get() without .isPresent() check. At this step, it is implicit
-            // that if the enum value is valid, there will be a enum matching the value of parameter fromValue.
-            // noinspection OptionalGetWithoutIsPresent
+        try {
             return Stream.of(DirectionId.values())
                     .filter(enumItem -> enumItem.value == fromValue)
                     .findAny()
-                    .get();
-        } else {
+                    .orElse(null);
+            // Note that a NPE is thrown by findAny when it is called on a null Stream (which happens when `value` is
+            // null). Therefore a try/catch block is required to handle such situation.
+        } catch (NullPointerException e) {
             return null;
         }
     }
@@ -64,13 +61,15 @@ public enum DirectionId {
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
     static public boolean isEnumValueValid(final Integer value) {
-        if (value == null) {
-            return true;
-        } else {
+        try {
             return Stream.of(DirectionId.values())
-                    .filter(enumItem -> enumItem.value == value)
-                    .findAny()
-                    .orElse(null) != null;
+                    .anyMatch(enumItem -> enumItem.value == value);
+            // this is equivalent to
+            // Stream.of(DirectionId.values()).filter(enumItem -> enumItem.value == value).findAny().isPresent()
+            // Note that a NPE is thrown by anyMatch when it is called on a null Stream (which happens when `value` is
+            // null). Therefore a try/catch block is required to handle such situation.
+        } catch (NullPointerException e) {
+            return true;
         }
     }
 }

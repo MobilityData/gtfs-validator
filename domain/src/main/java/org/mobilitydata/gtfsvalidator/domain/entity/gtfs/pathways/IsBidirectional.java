@@ -42,13 +42,16 @@ public enum IsBidirectional {
      * null or does not match any {@link IsBidirectional} enum item
      */
     static public IsBidirectional fromInt(final Integer fromValue) {
-        if (fromValue == null) {
+        try {
+            return Stream.of(IsBidirectional.values())
+                    .filter(enumItem -> enumItem.value == fromValue)
+                    .findAny()
+                    .orElse(null);
+            // Note that a NPE is thrown by findAny when it is called on a null Stream (which happens when `value` is
+            // null). Therefore a try/catch block is required to handle such situation.
+        } catch (NullPointerException e) {
             return null;
         }
-        return Stream.of(IsBidirectional.values())
-                .filter(enumItem -> enumItem.value == fromValue)
-                .findAny()
-                .orElse(null);
     }
 
     /**
@@ -58,12 +61,15 @@ public enum IsBidirectional {
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
     static public boolean isEnumValueValid(final Integer value) {
-        if (value == null) {
+        try {
+            return Stream.of(IsBidirectional.values())
+                    .anyMatch(enumItem -> enumItem.value == value);
+            // this is equivalent to
+            // Stream.of(IsBidirectional.values()).filter(enumItem -> enumItem.value == value).findAny().isPresent()
+            // Note that a NPE is thrown by anyMatch when it is called on a null Stream (which happens when `value` is
+            // null). Therefore a try/catch block is required to handle such situation.
+        } catch (NullPointerException e) {
             return false;
         }
-        return Stream.of(IsBidirectional.values())
-                .filter(enumItem -> enumItem.value == value)
-                .findAny()
-                .orElse(null) != null;
     }
 }

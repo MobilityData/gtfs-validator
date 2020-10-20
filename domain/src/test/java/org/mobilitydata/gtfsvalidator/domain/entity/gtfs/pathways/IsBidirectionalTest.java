@@ -18,8 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class IsBidirectionalTest {
 
@@ -43,5 +42,10 @@ class IsBidirectionalTest {
     @Test
     void createIsBidirectionalWithValidValue1ShouldReturnBidirectional() {
         assertEquals(IsBidirectional.BIDIRECTIONAL, IsBidirectional.fromInt(1));
+    }
+
+    @Test
+    void isEnumValueValidShouldReturnFalseOnNullValue() {
+        assertFalse(IsBidirectional.isEnumValueValid(null));
     }
 }
