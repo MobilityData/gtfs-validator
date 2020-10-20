@@ -278,19 +278,21 @@ public class Route extends GtfsEntity {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() throws IllegalArgumentException {
-            if (routeId == null || routeType == null || (agencyId != null && agencyId.isBlank()) ||
+            if (routeId == null || routeType == null || !(RouteType.isEnumValueValid(originalRouteTypeInteger)) ||
+                    (agencyId != null && agencyId.isBlank()) ||
                     (!isPresentName(routeLongName) && !isPresentName(routeShortName))) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
                             routeId));
                 }
-                if (originalRouteTypeInteger == null) {
-                    noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
-                            routeId));
-                }
-                if (!RouteType.isEnumValueValid(originalRouteTypeInteger)) {
-                    noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
-                            routeId, originalRouteTypeInteger));
+                if (routeType == null) {
+                    if (originalRouteTypeInteger == null) {
+                        noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
+                                routeId));
+                    } else {
+                        noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
+                                routeId, originalRouteTypeInteger));
+                    }
                 }
                 if (agencyId != null && agencyId.isBlank()) {
                     noticeCollection.add(

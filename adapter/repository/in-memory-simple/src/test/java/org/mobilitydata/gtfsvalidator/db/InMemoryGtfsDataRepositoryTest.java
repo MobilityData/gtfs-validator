@@ -808,6 +808,12 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void getShapeByIdShouldReturnNullIfShapeIdIsNull() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        assertNull(underTest.getShapeById(null));
+    }
+
+    @Test
     void addShapePointShouldMaintainOrder() {
         final ShapePoint firstShapePointInSequence = mock(ShapePoint.class);
         when(firstShapePointInSequence.getShapeId()).thenReturn("test id00");
