@@ -24,3 +24,8 @@ jobs:
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u http://www.mst.org/google/google_transit.zip -i input.zip -e input -o output
       - name: Validate dataset from issue 398 -- Orange County Transportation Authority
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://octa.net/current/google_transit.zip -i input.zip -e input -o output
+      - name: Persist reports
+          uses: actions/upload-artifact@v2
+          with:
+            name: validation_report_all
+            path: output/
