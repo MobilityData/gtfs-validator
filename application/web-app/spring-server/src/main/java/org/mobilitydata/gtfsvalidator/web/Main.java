@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.web;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -25,6 +27,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) {
+        final Logger logger = LogManager.getLogger();
+        logger.info("Application start success. Open http://localhost:8080 in browser to display interface.");
         SpringApplication.run(Main.class, args);
     }
 }

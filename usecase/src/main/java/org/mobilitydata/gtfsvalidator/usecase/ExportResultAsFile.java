@@ -66,8 +66,8 @@ public class ExportResultAsFile {
 
         NoticeExporter exporter = resultRepo.getExporter(
                 asProto,
-                finalPath
-        );
+                finalPath,
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.BEAUTIFY_KEY)));
 
         exporter.exportBegin();
 

@@ -6,5 +6,6 @@
   "url": null,
   "input": null,
   "exclude": null,
-  "abort_on_error": true
+  "abort_on_error": true,
+  "beautify": true
 }

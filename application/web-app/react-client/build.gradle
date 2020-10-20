@@ -26,13 +26,17 @@ node {
     download = true
 }
 
+task removeNodeModuleDirectory(type: Delete) {
+    delete "node_modules"
+}
+
 task bundle(type: NpmTask, dependsOn: npmInstall) {
     args = ['run', 'build']
 }
 
 task uiTest(type: NpmTask, dependsOn: npmInstall) {
     environment = ['CI': 'true']
-    args = ['run', 'test']
+    args = ['run', 'test', '--', '--coverage']
 }
 
 task run(type: NpmTask) {

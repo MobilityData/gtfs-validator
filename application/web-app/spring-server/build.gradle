@@ -38,7 +38,10 @@ repositories {
 
 dependencies {
     implementation(
-            project(':application:web-app:react-client')
+            project(':application:web-app:react-client'),
+            project(':config'),
+            project(':domain'),
+            project(':usecase')
     )
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter'
