@@ -66,7 +66,7 @@ class InMemoryValidationResultRepositoryTest {
     }
 
     @Test
-    void abortOnErrorRepoShouldThrowOnError() {
+    void abortOnErrorRepoShouldThrowExceptionOnError() {
 
         ErrorNotice errorNotice = new CannotUnzipInputArchiveNotice(TEST_FILE_NAME);
 
