@@ -2,8 +2,8 @@ name: End to end
 
 on:
   push:
-    #branches: [ master ]
-    branches: [ master, validation-report-artifact ]
+    branches: [ master ]
+    #branches: [ master, validation-report-artifact ]
 
 jobs:
   run-on-data:
