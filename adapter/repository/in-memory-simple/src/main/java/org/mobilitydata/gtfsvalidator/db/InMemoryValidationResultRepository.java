@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -95,7 +96,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     @Override
     public NoticeExporter getExporter(boolean outputAsProto, String outputPath, final String feedPublisherName)
             throws IOException {
-        final String timestamp = LocalDateTime.now(DEFAULT_TIMEZONE_ID).toString();
+        final Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID));
         if (outputAsProto) {
             return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder(),
                     new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath + File.separator +
