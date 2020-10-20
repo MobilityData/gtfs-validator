@@ -30,14 +30,14 @@ import java.util.Comparator;
  * triggered after parsing the rows of a specific file. The resultant path is used in the subsequent steps to either
  * unzip the GTFS dataset to validate or to write the validation output results.
  */
-public class CleanOrCreatePath {
+public class CreatePath {
 
     private final ExecParamRepository execParamRepo;
 
     /**
      * @param execParamRepo a repository containing execution parameters
      */
-    public CleanOrCreatePath(final ExecParamRepository execParamRepo) {
+    public CreatePath(final ExecParamRepository execParamRepo) {
         this.execParamRepo = execParamRepo;
     }
 
@@ -47,30 +47,34 @@ public class CleanOrCreatePath {
      *
      * @return a path to the target location
      */
-    public Path execute(String key) {
+    public Path execute(String key, Boolean clearIfExists) {
         final String pathToCleanOrCreate = execParamRepo.getExecParamValue(key);
         Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
         // to empty any already existing directory
         if (Files.exists(toCleanOrCreate)) {
+            if (clearIfExists) {
+                try {
+                    //noinspection ResultOfMethodCallIgnored -- we ignore if deletion went well or not
+                    Files.walk(toCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            // Create the directory
             try {
-                Files.walk(toCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+                Files.createDirectory(toCleanOrCreate);
+            } catch (AccessDeniedException e) {
+                // Wait and try again - Windows can initially block creating a directory immediately after a delete when a file lock exists (#112)
+                try {
+                    Thread.sleep(500);
+                    Files.createDirectory(toCleanOrCreate);
+                } catch (IOException | InterruptedException ex) {
+                    ex.printStackTrace();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        // Create the directory
-        try {
-            Files.createDirectory(toCleanOrCreate);
-        } catch (AccessDeniedException e) {
-            // Wait and try again - Windows can initially block creating a directory immediately after a delete when a file lock exists (#112)
-            try {
-                Thread.sleep(500);
-                Files.createDirectory(toCleanOrCreate);
-            } catch (IOException | InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return toCleanOrCreate;

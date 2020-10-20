@@ -144,8 +144,8 @@ public class DefaultConfig {
         return new DownloadArchiveFromNetwork(resultRepo, execParamRepo, logger);
     }
 
-    public CleanOrCreatePath cleanOrCreatePath() {
-        return new CleanOrCreatePath(execParamRepo);
+    public CreatePath createPath() {
+        return new CreatePath(execParamRepo);
     }
 
     public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) {
