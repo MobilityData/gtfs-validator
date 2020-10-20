@@ -24,20 +24,24 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 public class ExportResultAsFile {
     private final ValidationResultRepository resultRepo;
     private final ExecParamRepository execParamRepo;
     private final GtfsDataRepository gtfsDataRepo;
+    private final Timestamp timestamp;
     private final Logger logger;
 
     public ExportResultAsFile(final ValidationResultRepository resultRepo,
                               final ExecParamRepository execParamRepo,
                               final GtfsDataRepository gtfsDataRepo,
+                              final Timestamp timestamp,
                               final Logger logger) {
         this.resultRepo = resultRepo;
         this.execParamRepo = execParamRepo;
         this.gtfsDataRepo = gtfsDataRepo;
+        this.timestamp = timestamp;
         this.logger = logger;
     }
 
@@ -57,7 +61,9 @@ public class ExportResultAsFile {
         NoticeExporter exporter = resultRepo.getExporter(
                 asProto,
                 outputPath,
-                gtfsDataRepo.getFeedPublisherName());
+                gtfsDataRepo.getFeedPublisherName(),
+                timestamp
+        );
 
         exporter.exportBegin();
 

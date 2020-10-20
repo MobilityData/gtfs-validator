@@ -33,8 +33,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,9 +43,6 @@ import java.util.stream.Stream;
  * This is created  when creating a new default configuration, all fields being set to their default value.
  */
 public class InMemoryValidationResultRepository implements ValidationResultRepository {
-    private static final String DEFAULT_TIMEZONE_NAME = "America/Montreal";
-    private static final TimeZone DEFAULT_TIMEZONE = SimpleTimeZone.getTimeZone(DEFAULT_TIMEZONE_NAME);
-    private static final ZoneId DEFAULT_TIMEZONE_ID = DEFAULT_TIMEZONE.toZoneId();
     private final List<InfoNotice> infoNoticeList = new ArrayList<>();
     private final List<WarningNotice> warningNoticeList = new ArrayList<>();
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
@@ -94,9 +89,11 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     @Override
-    public NoticeExporter getExporter(boolean outputAsProto, String outputPath, final String feedPublisherName)
+    public NoticeExporter getExporter(final boolean outputAsProto,
+                                      final String outputPath,
+                                      final String feedPublisherName,
+                                      final Timestamp timestamp)
             throws IOException {
-        final Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID));
         if (outputAsProto) {
             return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder(),
                     new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath + File.separator +

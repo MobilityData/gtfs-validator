@@ -44,6 +44,11 @@ import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.ABORT_ON_ERROR;
 
@@ -52,6 +57,9 @@ import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.AB
  * process. Hence, this is created before calling the different use case of the validation process in the main method.
  */
 public class DefaultConfig {
+    private static final String DEFAULT_TIMEZONE_NAME = "America/Montreal";
+    private static final TimeZone DEFAULT_TIMEZONE = SimpleTimeZone.getTimeZone(DEFAULT_TIMEZONE_NAME);
+    private static final ZoneId DEFAULT_TIMEZONE_ID = DEFAULT_TIMEZONE.toZoneId();
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
@@ -261,7 +269,11 @@ public class DefaultConfig {
     }
 
     public ExportResultAsFile exportResultAsFile() {
-        return new ExportResultAsFile(resultRepo, execParamRepo, gtfsDataRepository, logger);
+        return new ExportResultAsFile(resultRepo,
+                execParamRepo,
+                gtfsDataRepository,
+                Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
+                logger);
     }
 
     public LogExecutionInfo logExecutionInfo() {

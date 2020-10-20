@@ -29,6 +29,7 @@ import org.mockito.InOrder;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -44,20 +45,22 @@ class ExportResultAsFileTest {
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
         final MissingHeaderNotice mockNotice0 = mock(MissingHeaderNotice.class);
         final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
+        final Timestamp mockTimestamp = mock(Timestamp.class);
 
         when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), ArgumentMatchers.anyString(),
-                anyString())).thenReturn(mockExporter);
+                anyString(), ArgumentMatchers.eq(mockTimestamp))).thenReturn(mockExporter);
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
 
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY))
                 .thenReturn(mockExecParamRepo.OUTPUT_KEY);
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn("false");
         when(mockExecParamRepo.hasExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(false);
+        when(mockGtfsDataRepo.getFeedPublisherName()).thenReturn("feed publisher name");
 
         Logger mockLogger = mock(Logger.class);
 
         final ExportResultAsFile underTest =
-                new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockLogger);
+                new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
 
         underTest.execute();
 
@@ -77,10 +80,11 @@ class ExportResultAsFileTest {
         verify(mockExecParamRepo, times(2))
                 .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.PROTO_KEY));
 
-        final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
 
+        final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo, mockGtfsDataRepo);
+        inOrder.verify(mockGtfsDataRepo, times(1)).getFeedPublisherName();
         inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(false),
-                ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.eq(mockTimestamp));
         inOrder.verify(mockExporter, times(1)).exportBegin();
         inOrder.verify(mockResultRepo, times(1)).getAll();
 
@@ -102,6 +106,7 @@ class ExportResultAsFileTest {
         final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
         final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
         final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final Timestamp mockTimestamp = mock(Timestamp.class);
 
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY))
@@ -109,11 +114,12 @@ class ExportResultAsFileTest {
         when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(String.valueOf(true));
         when(mockExecParamRepo.hasExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(true);
         when(mockResultRepo.getExporter(ArgumentMatchers.eq(true), ArgumentMatchers.anyString(),
-                ArgumentMatchers.anyString())).thenReturn(mockExporter);
+                ArgumentMatchers.anyString(), ArgumentMatchers.eq(mockTimestamp))).thenReturn(mockExporter);
+        when(mockGtfsDataRepo.getFeedPublisherName()).thenReturn("feed publisher name");
 
         Logger mockLogger = mock(Logger.class);
         ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo,
-                mockLogger);
+                mockTimestamp, mockLogger);
 
         underTest.execute();
 
@@ -130,10 +136,11 @@ class ExportResultAsFileTest {
         verify(mockExecParamRepo, times(2))
                 .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.PROTO_KEY));
 
-        InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo);
+        final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo, mockGtfsDataRepo);
+        inOrder.verify(mockGtfsDataRepo, times(1)).getFeedPublisherName();
 
         inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(true),
-                ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.eq(mockTimestamp));
         inOrder.verify(mockExporter, times(1)).exportBegin();
         inOrder.verify(mockResultRepo, times(1)).getAll();
 
