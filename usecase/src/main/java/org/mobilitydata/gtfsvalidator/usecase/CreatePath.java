@@ -63,7 +63,7 @@ public class CreatePath {
 
             return toCleanOrCreate;
         }
-        
+
         // Create the directory
         try {
             Files.createDirectory(toCleanOrCreate);
@@ -78,7 +78,6 @@ public class CreatePath {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         return toCleanOrCreate;
     }
