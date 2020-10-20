@@ -50,7 +50,7 @@ public class ExportResultAsFile {
 
         String reportName = gtfsDataRepo.getFeedPublisherName();
 
-        if (reportName.isEmpty() || reportName.isBlank() && gtfsDataRepo.getAgencyCount() > 0) {
+        if ((reportName.isEmpty() || reportName.isBlank()) && gtfsDataRepo.getAgencyCount() > 0) {
             reportName = gtfsDataRepo.getAgencyAll().values().iterator().next().getAgencyName();
         }
 
