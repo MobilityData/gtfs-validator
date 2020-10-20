@@ -48,11 +48,17 @@ public class ExportResultAsFile {
 
     public void execute() throws IOException {
 
+        String reportName = gtfsDataRepo.getFeedPublisherName();
+
+        if ((reportName.isEmpty() || reportName.isBlank()) && gtfsDataRepo.getAgencyCount() > 0) {
+            reportName = gtfsDataRepo.getAgencyAll().values().iterator().next().getAgencyName();
+        }
+
         final String finalPath =
                 (execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY) +
-                        File.separator + gtfsDataRepo.getFeedPublisherName() + "__" +
+                        File.separator + reportName + "__" +
                         timestamp
-                ).replaceAll("\\s", "_");
+                ).replaceAll("\\s", "_").replaceAll(":", "-");
         final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
 
         if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY))) {

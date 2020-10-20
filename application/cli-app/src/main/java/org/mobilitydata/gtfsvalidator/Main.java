@@ -53,7 +53,7 @@ public class Main {
                 config.downloadArchiveFromNetwork().execute();
 
                 config.unzipInputArchive(
-                        config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
+                        config.createPath().execute(ExecParamRepository.EXTRACT_KEY, true))
                         .execute();
 
                 final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
@@ -220,7 +220,7 @@ public class Main {
                 config.validateRouteShortNameAreUnique().execute();
                 config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
 
-                config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+                config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
                 config.exportResultAsFile().execute();
             }
@@ -228,7 +228,7 @@ public class Main {
             logger.error("An exception occurred: " + e);
         } catch (TooManyValidationErrorException e) {
             logger.error("Error detected -- ABORTING");
-            config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+            config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
             try {
                 config.exportResultAsFile().execute();
