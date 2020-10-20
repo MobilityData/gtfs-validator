@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Agency;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingHeaderNotice;
@@ -31,6 +32,7 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -159,6 +161,75 @@ class ExportResultAsFileTest {
         verify(mockResultRepo, times(3)).getAll();
         verify(mockExecParamRepo, times(2)).getExecParamValue(mockExecParamRepo.PROTO_KEY);
         verify(mockExecParamRepo, times(1)).getExecParamValue(mockExecParamRepo.BEAUTIFY_KEY);
+
+        verify(mockExporter, times(1)).exportEnd();
+        verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo, mockLogger);
+    }
+
+    @Test
+    void agencyNameIfFeedPublisherNameIsNotAvailable() throws IOException {
+        final NoticeExporter mockExporter =
+                mock(NoticeExporter.class);
+        final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+        final ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
+        final GtfsDataRepository mockGtfsDataRepo = mock(GtfsDataRepository.class);
+        final MissingHeaderNotice mockNotice0 = mock(MissingHeaderNotice.class);
+        final CannotUnzipInputArchiveNotice mockNotice1 = mock(CannotUnzipInputArchiveNotice.class);
+        final Timestamp mockTimestamp = mock(Timestamp.class);
+        final Agency mockAgency = mock(Agency.class);
+        when(mockAgency.getAgencyName()).thenReturn("Agency Name");
+
+        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), ArgumentMatchers.anyString()))
+                .thenReturn(mockExporter);
+        when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
+
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.OUTPUT_KEY))
+                .thenReturn(mockExecParamRepo.OUTPUT_KEY);
+        when(mockExecParamRepo.getExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn("false");
+        when(mockExecParamRepo.hasExecParamValue(mockExecParamRepo.PROTO_KEY)).thenReturn(false);
+        when(mockGtfsDataRepo.getFeedPublisherName()).thenReturn("");
+        when(mockGtfsDataRepo.getAgencyCount()).thenReturn(1);
+        when(mockGtfsDataRepo.getAgencyAll()).thenReturn(Map.of("0", mockAgency));
+
+        Logger mockLogger = mock(Logger.class);
+
+        final ExportResultAsFile underTest =
+                new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
+
+        underTest.execute();
+
+        verify(mockExecParamRepo, times(2)).getExecParamValue(mockExecParamRepo.PROTO_KEY);
+
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Results are exported as JSON by default"));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.contains(
+                        "Computed relative path for report file: output/Agency_Name__Mock_for_Timestamp"
+                ));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
+
+        verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
+        verify(mockNotice1, times(1)).export(ArgumentMatchers.eq(mockExporter));
+
+        verify(mockExecParamRepo, times(1))
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.OUTPUT_KEY));
+
+        verify(mockExecParamRepo, times(2))
+                .getExecParamValue(ArgumentMatchers.eq(mockExecParamRepo.PROTO_KEY));
+
+
+        final InOrder inOrder = Mockito.inOrder(mockExporter, mockResultRepo, mockGtfsDataRepo);
+        inOrder.verify(mockGtfsDataRepo, times(1)).getFeedPublisherName();
+        inOrder.verify(mockResultRepo, times(1)).getExporter(ArgumentMatchers.eq(false),
+                ArgumentMatchers.anyString());
+        inOrder.verify(mockExporter, times(1)).exportBegin();
+        inOrder.verify(mockResultRepo, times(1)).getAll();
+
+        verify(mockNotice0, times(1)).export(mockExporter);
+        verify(mockNotice1, times(1)).export(mockExporter);
+
+        verify(mockResultRepo, times(3)).getAll();
 
         verify(mockExporter, times(1)).exportEnd();
         verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo, mockLogger);

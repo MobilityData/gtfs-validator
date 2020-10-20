@@ -1027,7 +1027,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public String getFeedPublisherName() {
-        if (feedInfoPerFeedPublisherName.size() == 0) {
+        if (feedInfoPerFeedPublisherName.isEmpty()) {
             return "";
         } else {
             return feedInfoPerFeedPublisherName.keySet().stream().findFirst().get();
