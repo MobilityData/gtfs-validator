@@ -60,22 +60,25 @@ public class CreatePath {
                     e.printStackTrace();
                 }
             }
-        } else {
-            // Create the directory
-            try {
-                Files.createDirectory(toCleanOrCreate);
-            } catch (AccessDeniedException e) {
-                // Wait and try again - Windows can initially block creating a directory immediately after a delete when a file lock exists (#112)
-                try {
-                    Thread.sleep(500);
-                    Files.createDirectory(toCleanOrCreate);
-                } catch (IOException | InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+            return toCleanOrCreate;
         }
+        
+        // Create the directory
+        try {
+            Files.createDirectory(toCleanOrCreate);
+        } catch (AccessDeniedException e) {
+            // Wait and try again - Windows can initially block creating a directory immediately after a delete when a file lock exists (#112)
+            try {
+                Thread.sleep(500);
+                Files.createDirectory(toCleanOrCreate);
+            } catch (IOException | InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         return toCleanOrCreate;
     }
