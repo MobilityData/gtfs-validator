@@ -58,7 +58,7 @@ public class ExportResultAsFile {
                 (execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY) +
                         File.separator + reportName + "__" +
                         timestamp
-                ).replaceAll("\\s", "_");
+                ).replaceAll("\\s", "_").replaceAll(":", "/");
         final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
 
         if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY))) {
