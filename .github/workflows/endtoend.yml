@@ -6,7 +6,7 @@ on:
     branches: [ master, validation-report-artifact ]
 
 jobs:
-  build:
+  run-on-data:
 
     runs-on: ubuntu-latest
 
