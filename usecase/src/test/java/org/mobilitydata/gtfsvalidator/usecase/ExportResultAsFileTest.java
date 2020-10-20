@@ -69,6 +69,10 @@ class ExportResultAsFileTest {
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Results are exported as JSON by default"));
         verify(mockLogger, times(1))
+                .info(ArgumentMatchers.contains(
+                        "Computed relative path for report file: output/feed_publisher_name__Mock_for_Timestamp"
+                ));
+        verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
 
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));
@@ -124,6 +128,10 @@ class ExportResultAsFileTest {
 
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("-p provided, exporting results as proto"));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.contains(
+                        "Computed relative path for report file: output/feed_publisher_name__Mock_for_Timestamp"
+                ));
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("Exporting validation repo content:" + mockResultRepo.getAll()));
         verify(mockNotice0, times(1)).export(ArgumentMatchers.eq(mockExporter));

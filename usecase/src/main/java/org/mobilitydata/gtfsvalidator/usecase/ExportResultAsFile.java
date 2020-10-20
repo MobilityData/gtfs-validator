@@ -49,8 +49,10 @@ public class ExportResultAsFile {
     public void execute() throws IOException {
 
         final String finalPath =
-                execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY) +
-                        File.separator + gtfsDataRepo.getFeedPublisherName() + "_" + timestamp;
+                (execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY) +
+                        File.separator + gtfsDataRepo.getFeedPublisherName() + "__" +
+                        timestamp
+                ).replaceAll("\\s", "_");
         final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
 
         if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY))) {
