@@ -24,11 +24,11 @@ jobs:
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT
-          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT.jar
+          name: v1.3.0-SNAPSHOT_cli
+          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
       - name: Persist spring boot app jar
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT
+          name: v1.3.0-SNAPSHOT_web
           path: application/web-app/spring-server/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.jar
 
