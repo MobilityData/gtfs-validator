@@ -20,7 +20,7 @@ jobs:
       - name: Run Java tests
         run: ./gradlew testReport
       - name: Run JS tests
-        run: cd application/web-app/react-client && ./gradlew uiTest
+        run: ./gradlew uiTest
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
       - name: Package spring boot app jar with Gradle
