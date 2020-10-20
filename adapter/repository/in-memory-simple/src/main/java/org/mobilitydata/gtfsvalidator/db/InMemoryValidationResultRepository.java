@@ -28,12 +28,12 @@ import org.mobilitydata.gtfsvalidator.exporter.ProtobufNoticeExporter;
 import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -89,20 +89,16 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     @Override
-    public NoticeExporter getExporter(final boolean outputAsProto,
-                                      final String outputPath,
-                                      final String feedPublisherName,
-                                      final Timestamp timestamp)
-            throws IOException {
+    public NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException {
         if (outputAsProto) {
             return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder(),
-                    new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath + File.separator +
-                            feedPublisherName + "_" + timestamp));
+                    new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath));
         } else {
             return new JsonNoticeExporter(new ObjectMapper().getFactory().createGenerator(
-                    Files.newOutputStream(Paths.get(
-                            outputPath + File.separator + feedPublisherName + "_" + timestamp +
-                                    JsonNoticeExporter.FILE_EXTENSION)
+                    Files.newOutputStream(
+                            Paths.get(
+                                    outputPath + JsonNoticeExporter.FILE_EXTENSION
+                            )
                     )));
         }
     }

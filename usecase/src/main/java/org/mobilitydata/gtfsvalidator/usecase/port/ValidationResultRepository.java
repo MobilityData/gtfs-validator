@@ -20,7 +20,6 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.Collection;
 
 /**
@@ -32,6 +31,6 @@ public interface ValidationResultRepository {
 
     Collection<Notice> getAll();
 
-    NoticeExporter getExporter(boolean outputAsProto, String outputPath, String feedPublisherName, Timestamp timestamp)
+    NoticeExporter getExporter(boolean outputAsProto, String outputPath)
             throws IOException;
 }

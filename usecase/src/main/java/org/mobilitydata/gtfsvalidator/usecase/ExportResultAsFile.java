@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 
@@ -47,22 +48,23 @@ public class ExportResultAsFile {
 
     public void execute() throws IOException {
 
+        final String finalPath =
+                execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY) +
+                        File.separator + gtfsDataRepo.getFeedPublisherName() + "_" + timestamp;
+        final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
+
         if (Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY))) {
             logger.info("-p provided, exporting results as proto");
         } else {
             logger.info("Results are exported as JSON by default");
         }
+        logger.info("Computed relative path for report file: " + finalPath);
 
         logger.info("Exporting validation repo content:" + resultRepo.getAll());
 
-        final String outputPath = execParamRepo.getExecParamValue(execParamRepo.OUTPUT_KEY);
-        final boolean asProto = Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.PROTO_KEY));
-
         NoticeExporter exporter = resultRepo.getExporter(
                 asProto,
-                outputPath,
-                gtfsDataRepo.getFeedPublisherName(),
-                timestamp
+                finalPath
         );
 
         exporter.exportBegin();
