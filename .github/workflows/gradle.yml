@@ -40,12 +40,12 @@ jobs:
       - name: Persis Java tests reports
         uses: actions/upload-artifact@v2
         with:
-          name: java-tests-v1.3.0_SNAPSHOT
+          name: java-tests-v1.3.0-SNAPSHOT
           path: build/reports/allTests/
       - name: Persist JS tests report
         uses: actions/upload-artifact@v2
         with:
-          name: js-tests-v1.3.0_SNAPSHOT
+          name: js-tests-v1.3.0-SNAPSHOT
           path: application/web-app/react-client/test-reports/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
