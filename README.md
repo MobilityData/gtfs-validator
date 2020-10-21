@@ -22,7 +22,21 @@ OR
 
 ## Docker image
 
-After attaching a terminal to the running container, you can follow the instructions of the next sections, passing commands directly from the container root directory
+Run the image either in the Docker Dashboard UI (dont forget to bind port 8090) or via this command
+``` 
+docker run -p 8090:8090 ghcr.io/mobilitydata/gtfs-validator:[[[REPLACE_WITH_YOUR_TAG]]]
+```
+
+By default, you will then have access to the web version of the validator at http://localhost:8090/
+
+If you want to use the cli version within Docker, you must first stop the app with the following command
+[[[LNJ help needed]]]
+
+After attaching a terminal to the running container, navigate to the cli jar folder
+``` 
+cd /usr/gtfs-validator/cli-app
+```
+you can then follow the instructions of the next sections
 
 ## cli-app usage
 
