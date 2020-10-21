@@ -28,6 +28,7 @@ import org.mobilitydata.gtfsvalidator.exporter.ProtobufNoticeExporter;
 import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -89,17 +90,19 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     }
 
     @Override
-    public NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException {
+    public NoticeExporter getExporter(final boolean outputAsProto,
+                                      final String outputPath,
+                                      final boolean isPretty) throws IOException {
         if (outputAsProto) {
             return new ProtobufNoticeExporter(GtfsValidationOutputProto.GtfsProblem.newBuilder(),
                     new ProtobufNoticeExporter.ProtobufOutputStreamGenerator(outputPath));
         } else {
-            return new JsonNoticeExporter(new ObjectMapper().getFactory().createGenerator(
-                    Files.newOutputStream(
-                            Paths.get(
-                                    outputPath + JsonNoticeExporter.FILE_EXTENSION
+            return new JsonNoticeExporter(
+                    new ObjectMapper().getFactory().createGenerator(
+                            Files.newOutputStream(Paths.get(outputPath + JsonNoticeExporter.FILE_EXTENSION)
                             )
-                    )));
+                    ),
+                    isPretty);
         }
     }
 }

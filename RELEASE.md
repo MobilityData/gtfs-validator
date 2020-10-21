@@ -1,7 +1,12 @@
 # Release instructions
 
+## cli-app
+
 We create releases from the command-line using the [shadow Gradle plugin](https://github.com/johnrengelman/shadow), which creates a JAR file including all necessary dependencies.
 This task runs automatically on every change in GitHub.
+
+### web-app 
+We create releases of the `web-app` from the command-line using the [bootWar](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/), which creates a WAR file including all necessary dependencies.
 
 ### 0. Open a release branch + PR
 
@@ -24,16 +29,18 @@ Do the same in Circle-CI [config file](https://github.com/MobilityData/gtfs-vali
 Commit and push those changes to your release preparation PR. 
 Locate the .jar file artifact produced by the corresponding GitHub [workflow](https://github.com/MobilityData/gtfs-validator/actions)
 
-This file can then be run from the command-line with the normal Java conventions:
+#### cli-app
+
+This file can then be ran from the command-line with the normal Java conventions:
 
 ```
-java -jar gtfs-validator-v1.1.0.jar -u https://transitfeeds.com/p/mbta/64/latest/download -i input.zip -e input -o output
+java -jar gtfs-validator-v1.3.0_cli.jar -u https://transitfeeds.com/p/mbta/64/latest/download -i input.zip -e input -o output
 ```
 
-This file can also be be run from the command-line with execution parameters coming from file `execution-parameters.json` located in the working directory:
+This file can also be ran from the command-line with execution parameters coming from file `execution-parameters.json` located in the working directory:
 
 ```
-java -jar gtfs-validator-v1.1.0.jar
+java -jar gtfs-validator-v1.3.0_cli.jar
 ```
 
 With file `execution-parameters.json` content: 
@@ -47,13 +54,20 @@ With file `execution-parameters.json` content:
 }
 ```
 
+### web-app
+
+`gtfs-validator-v1.3.0_web.war` is generated. This file can then be ran from the command-line with the normal Java conventions:
+```
+java -jar gtfs-validator-v1.3.0_web.war
+```
+
 If everything looks ok, you can create the new release in GitHub. Tag the code in your PR branch.
 
 ### 3. Prepare for the next development cycle
 
 Increment the `version` in the various `build.gradle` files and add the `-SNAPSHOT` qualifier. 
 
-For example, if the version you just released is `1.1.0`, change the `version` to `1.1.1-SNAPSHOT`.
+For example, if the version you just released is `1.3.0`, change the `version` to `1.3.0-SNAPSHOT`.
 
 Update the GitHub CI [config file](https://github.com/MobilityData/gtfs-validator/blob/master/.github/workflows/gradle.yml) to point to the new `SNAPSHOT` version.
 Both `Run validator on MBTA data` and `upload artifacts` steps

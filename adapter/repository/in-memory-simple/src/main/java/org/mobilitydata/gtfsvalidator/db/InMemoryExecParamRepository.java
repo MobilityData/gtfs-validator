@@ -269,6 +269,18 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                     return defaultValue.get(0);
                 }
             }
+
+            case BEAUTIFY_KEY: {
+                // if command line option is provided with a value then use this value. Example "--beautify true"
+                // or "--beautify false"
+                if (hasExecParam(BEAUTIFY_KEY) && hasExecParamValue(BEAUTIFY_KEY)) {
+                    return getExecParamByKey(BEAUTIFY_KEY).getValue().get(0);
+                } else {
+                    // otherwise use default value. Note that it is not allowed to use key `beautify` without
+                    // specifying a boolean as argument
+                    return defaultValue.get(0);
+                }
+            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }
@@ -316,6 +328,8 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 "Exclude files from semantic GTFS validation");
         options.addOption(String.valueOf(ABORT_ON_ERROR.charAt(0)), ABORT_ON_ERROR, true,
                 "Stop validation process on first error");
+        options.addOption(String.valueOf(BEAUTIFY_KEY.charAt(1)), BEAUTIFY_KEY, true,
+                "Beautify .json validation report");
 
         validateAllOptionLength(options);
 
