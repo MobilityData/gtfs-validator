@@ -18,15 +18,16 @@ plugins {
     id 'org.springframework.boot' version '2.3.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
+    id 'war'
 }
 
 group 'org.mobilitydata'
 version '1.3.0-SNAPSHOT_web'
 
-bootJar {
-    // Change the JAR name from spring-boot-app to gtfs-validator
+bootWar {
+    // Change the WAR name from spring-server to gtfs-validator
     archiveBaseName = rootProject.name
-    // Remove "-all" from the end of the JAR file name
+    // Remove "-all" from the end of the WAR file name
     archiveClassifier = null
     // Add "v" to version to match previous releases
     archiveVersion = "v" + project.version
