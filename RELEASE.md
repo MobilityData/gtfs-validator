@@ -5,8 +5,8 @@
 We create releases from the command-line using the [shadow Gradle plugin](https://github.com/johnrengelman/shadow), which creates a JAR file including all necessary dependencies.
 This task runs automatically on every change in GitHub.
 
-### spring-boot-app 
-We create releases of the `spring-boot-app` from the command-line using the [shadow Gradle plugin](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/src/main/java/org/springframework/boot/gradle/tasks/bundling/BootJar.java), which creates a JAR file including all necessary dependencies.
+### web-app 
+We create releases of the `web-app` from the command-line using the [bootWar](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/), which creates a WAR file including all necessary dependencies.
 
 ### 0. Open a release branch + PR
 
@@ -54,11 +54,11 @@ With file `execution-parameters.json` content:
 }
 ```
 
-### spring-boot-app 
+### web-app
 
-`gtfs-validator-v1.3.0_web.jar` is generated. This file can then be ran from the command-line with the normal Java conventions:
+`gtfs-validator-v1.3.0_web.war` is generated. This file can then be ran from the command-line with the normal Java conventions:
 ```
-java -jar gtfs-validator-v1.3.0_web.jar
+java -jar gtfs-validator-v1.3.0_web.war
 ```
 
 If everything looks ok, you can create the new release in GitHub. Tag the code in your PR branch.

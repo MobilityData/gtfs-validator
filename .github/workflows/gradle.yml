@@ -23,16 +23,16 @@ jobs:
         run: ./gradlew uiTest
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
-      - name: Package spring boot app jar with Gradle
+      - name: Package monolithic web app war with Gradle
         run: ./gradlew bootWar
       - name: Generate Javadoc
         run: ./gradlew aggregateJavadocs
-      - name: Persist cli app JAR
+      - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_cli
           path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
-      - name: Persist web app WAR
+      - name: Persist web app war
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_web

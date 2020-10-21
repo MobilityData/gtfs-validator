@@ -146,7 +146,7 @@ A second implementation of `gtfs-validator` uses [`SpringBoot`](https://spring.i
 ### Run the application
 
 ```
-java -jar gtfs-validator-v1.3.0_web.jar 
+java -jar gtfs-validator-v1.3.0_web.war 
 ```
 
 Which will:
@@ -174,7 +174,8 @@ Some important modules:
 * [Use cases](usecase) - Business logic 
 * [Adapters](adapter) - Convertors (e.g., parsers and exporters)
 * [application/cli-app](application/cli-app) - The main command-line application
-* [application/web-app](application/web-app) - The web app implementation of the application that relies on SpringBoot framework
+* [application/web-app/react-client](application/web-app/react-client) - The local web ui as a React project  
+* [application/web-app/spring-server](application/web-app/spring-server) - The implementation of the application that relies on SpringBoot framework
 
 # Tests
 
