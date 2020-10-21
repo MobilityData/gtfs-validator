@@ -53,7 +53,7 @@ public enum TableName {
                     .filter(enumItem -> enumItem.value.equals(tableName))
                     .findAny()
                     .orElse(null);
-            // Note that a NPE is thrown by findAny when it is called on a null Stream (which happens when `value` is
+            // Note that a NPE is thrown by findAny when it is called on a null Stream (which happens when `tableName` is
             // null). Therefore a try/catch block is required to handle such situation.
         } catch (NullPointerException e) {
             return null;
