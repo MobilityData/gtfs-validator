@@ -29,8 +29,12 @@ docker run -p 8090:8090 ghcr.io/mobilitydata/gtfs-validator:[[[REPLACE_WITH_YOUR
 
 By default, you will then have access to the web version of the validator at http://localhost:8090/
 
-If you want to use the cli version within Docker, you must first stop the app with the following command
-[[[LNJ help needed]]]
+If you want to use the cli version within Docker, you must first stop the web app with the following command
+``` 
+TODO: Could not figure out command.
+```
+
+**Note:** if you don't do it, the cli app will compete for resources within the container
 
 After attaching a terminal to the running container, navigate to the cli jar folder
 ``` 
