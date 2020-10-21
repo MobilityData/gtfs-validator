@@ -57,7 +57,10 @@ export async function validateFeed() {
 export async function displayValidationReport() {
     axios.get('http://localhost:' + Port() + GetReportContentCommand())
         .then((res) => {
-            console.log("report opened in text edit");
+            ReactDOM.render(
+                res.data,
+                document.getElementById("open-validation-dom-element"));
+            showItem("open-validation-dom-element");
         }).catch((error) => {
         console.log(error)
     });

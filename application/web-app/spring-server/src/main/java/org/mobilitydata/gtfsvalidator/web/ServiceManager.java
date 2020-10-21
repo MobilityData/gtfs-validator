@@ -25,11 +25,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ServiceManager {
@@ -254,7 +252,7 @@ public class ServiceManager {
                 config.validateRouteShortNameAreUnique().execute();
                 config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
 
-                config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
+                config.createPath().execute(ExecParamRepository.OUTPUT_KEY, true);
 
                 config.exportResultAsFile().execute();
 
@@ -266,18 +264,19 @@ public class ServiceManager {
 
         } catch (TooManyValidationErrorException e) {
             logger.error("Error detected -- ABORTING");
-            config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
+            config.createPath().execute(ExecParamRepository.OUTPUT_KEY, true);
 
             try {
                 config.exportResultAsFile().execute();
 
                 logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
                         " to continue on errors");
-                return "Validation process aborted. Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
-                        " to continue on errors. Check validation report for more details.";
+                return "Validation process aborted. Set option -" + ExecParamRepository.ABORT_ON_ERROR +
+                        " to false for validation process to continue on errors. Check validation report for" +
+                        " more details.";
             } catch (IOException ioException) {
-                logger.error("An exception occurred: " + e);
-                throw new IOException("An exception occurred: " + e);
+                logger.error("An exception occurred: " + ioException);
+                throw new IOException("An exception occurred: " + ioException);
             }
         }
         return null;
@@ -290,7 +289,20 @@ public class ServiceManager {
      */
     public String openReport() throws IOException {
         final Runtime runTime = Runtime.getRuntime();
-        runTime.exec("open -t " + config.getExecParamValue(ExecParamRepository.OUTPUT_KEY) + "/results.json");
+        final File folder = new File(config.getExecParamValue(ExecParamRepository.OUTPUT_KEY));
+        String filename = null;
+        List<File> directoryContent = Arrays.asList(folder.listFiles());
+        if (directoryContent.isEmpty()) {
+            return "No report was generated at:" + config.getExecParamValue(ExecParamRepository.OUTPUT_KEY) + filename;
+        }
+        for (File file : directoryContent) {
+            if (file.getName().endsWith(".json")) {
+                filename = directoryContent.stream().findFirst().get().getName();
+                runTime.exec("open -t " + config.getExecParamValue(ExecParamRepository.OUTPUT_KEY)
+                        + File.separator + filename);
+                break;
+            }
+        }
         return null;
     }
 }

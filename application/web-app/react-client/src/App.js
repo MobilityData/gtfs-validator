@@ -35,6 +35,7 @@ function App() {
       enableElement("validate-button");
     } else {
       hideItem("display-result-button");
+      hideItem("open-validation-dom-element");
     }
     const fileReader = new FileReader();
     fileReader.readAsText(acceptedFiles[0])
@@ -64,6 +65,7 @@ function App() {
           </p>
           <p id="progress-circles"/>
           <p id="validation-status"/>
+          <p id="open-validation-dom-element"/>
           <div id="display-result-button" className="launch-button-container">
             <NiceButton description="Display validation report" method={displayValidationReport}/>
           </div>

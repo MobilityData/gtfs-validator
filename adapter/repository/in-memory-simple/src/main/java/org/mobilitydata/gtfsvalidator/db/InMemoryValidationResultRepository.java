@@ -99,8 +99,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
         } else {
             return new JsonNoticeExporter(
                     new ObjectMapper().getFactory().createGenerator(
-                            Files.newOutputStream(Paths.get(outputPath + File.separator + "results" +
-                                    JsonNoticeExporter.FILE_EXTENSION)
+                            Files.newOutputStream(Paths.get(outputPath + JsonNoticeExporter.FILE_EXTENSION)
                             )
                     ),
                     isPretty);
