@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
@@ -25,10 +24,10 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.exporter.JsonNoticeExporter;
 import org.mobilitydata.gtfsvalidator.exporter.ProtobufNoticeExporter;
+import org.mobilitydata.gtfsvalidator.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
