@@ -50,7 +50,6 @@ public enum RouteType {
      * null or does not match any {@link RouteType} enum item
      */
     static public RouteType fromInt(final Integer fromValue) {
-
         if (fromValue == null) {
             return null;
         }
@@ -66,10 +65,16 @@ public enum RouteType {
      * @param value the integer to associate with this enum values
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
-    static public boolean isEnumValueValid(final int value) {
-        return Stream.of(RouteType.values())
-                .filter(enumItem -> enumItem.value == value)
-                .findAny()
-                .orElse(null) != null;
+    static public boolean isEnumValueValid(final Integer value) {
+        try {
+            return Stream.of(RouteType.values())
+                    .anyMatch(enumItem -> enumItem.value == value);
+            // this is equivalent to
+            // Stream.of(RouteType.values()).filter(enumItem -> enumItem.value == value).findAny().isPresent()
+            // Note that a NPE is thrown by anyMatch when it is called on a null Stream (which happens when `value` is
+            // null). Therefore a try/catch block is required to handle such situation.
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 }

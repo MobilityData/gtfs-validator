@@ -832,7 +832,11 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public SortedMap<Integer, ShapePoint> getShapeById(final String shapeId) {
-        return Collections.unmodifiableSortedMap(shapePerIdShapePtSequence.get(shapeId));
+        try {
+            return Collections.unmodifiableSortedMap(shapePerIdShapePtSequence.get(shapeId));
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     /**
@@ -1012,5 +1016,21 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public LocationBase getStopById(final String stopId) {
         return stopPerId.get(stopId);
+    }
+
+    /**
+     * Returns `feed_info.feed_publisher_name` value if file `feed_info.txt` was provided, otherwise returns an empty
+     * String
+     *
+     * @return `feed_info.feed_publisher_name` value if file `feed_info.txt` was provided, otherwise returns an empty
+     * String
+     */
+    @Override
+    public String getFeedPublisherName() {
+        if (feedInfoPerFeedPublisherName.isEmpty()) {
+            return "";
+        } else {
+            return feedInfoPerFeedPublisherName.keySet().stream().findFirst().get();
+        }
     }
 }

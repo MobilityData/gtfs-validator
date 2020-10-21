@@ -16,21 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-
-import java.io.IOException;
-import java.util.Collection;
-
 /**
- * This hold contains notices generated during the validation process.
+ * This exception is thrown when the developer creates a new {@code Option} with too long opt and longOpt names
  */
-public interface ValidationResultRepository {
-
-    Notice addNotice(Notice newNotice) throws TooManyValidationErrorException;
-
-    Collection<Notice> getAll();
-
-    NoticeExporter getExporter(boolean outputAsProto, String outputPath)
-            throws IOException;
+public class CommandLineOptionLongOptExceedsMaxCharNumException extends RuntimeException {
+    public CommandLineOptionLongOptExceedsMaxCharNumException(final String message) {
+        super(message);
+    }
 }
