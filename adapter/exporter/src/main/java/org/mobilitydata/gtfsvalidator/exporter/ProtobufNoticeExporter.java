@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.exporter;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
 import org.mobilitydata.gtfsvalidator.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
@@ -998,6 +999,14 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                         String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PREVIOUS_SHAPE_PT_SEQUENCE)))
                 .setParentEntityName(
                         String.valueOf(toExport.getNoticeSpecific(KEY_SHAPE_PREVIOUS_SHAPE_DIST_TRAVELED)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final ValidationProcessInfoNotice validationProcessInfoNotice) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName("not support yet")
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
