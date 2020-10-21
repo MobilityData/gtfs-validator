@@ -1,4 +1,4 @@
-name: Gradle build and test
+name: Java CI
 
 on:
   push:
@@ -8,9 +8,8 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./reactclient
 
     steps:
       - uses: actions/checkout@v1
@@ -18,44 +17,36 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Run cli and server tests
+      - name: Run Java tests
         run: ./gradlew testReport
-      - name: Run ui tests
-        run: npm run test
-        working-directory: ${{env.working-directory}}
-      - name: Package cli application jar with Gradle
+      - name: Run JS tests
+        run: ./gradlew uiTest
+      - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
-      - name: Package web application jar with Gradle
-        run: ./gradlew bootJar
-      - name: Run validator on MBTA data
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i input.zip -e input -o output -abort_on_error false -b false
-      - name: Generate javadoc
+      - name: Package monolithic web app war with Gradle
+        run: ./gradlew bootWar
+      - name: Generate Javadoc
         run: ./gradlew aggregateJavadocs
-      - name: Persist cli jar
+      - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_cli
           path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
-      - name: Persist web application jar
+      - name: Persist web app war
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_web
-          path: application/spring-boot-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.jar
-      - name: Persist server test report
+          path: application/web-app/spring-server/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.war
+      - name: Persis Java tests reports
         uses: actions/upload-artifact@v2
         with:
-          name: java-tests-v1.3.0
+          name: java-tests-v1.3.0-SNAPSHOT
           path: build/reports/allTests/
-      - name: Persist react client test report
+      - name: Persist JS tests report
         uses: actions/upload-artifact@v2
         with:
-          name: js-tests-v1.3.0
-          path: reactclient/test-reports/
-      - name: Persist react client test coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_reactclient_tests
-          path: reactclient/coverage/
+          name: js-tests-v1.3.0-SNAPSHOT
+          path: application/web-app/react-client/test-reports/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:

@@ -186,4 +186,13 @@ public interface GtfsDataRepository {
     LocationBase getStopById(final String stopId);
 
     Map<String, LocationBase> getStopAll();
+
+    /**
+     * Returns `feed_info.feed_publisher_name` value if file `feed_info.txt` was provided, otherwise returns an empty
+     * String
+     *
+     * @return `feed_info.feed_publisher_name` value if file `feed_info.txt` was provided, otherwise returns an empty
+     * String
+     */
+    String getFeedPublisherName();
 }

@@ -1,0 +1,8 @@
+{
+   "extract": "relative/extraction/path",
+   "output": "relative/output/path",
+   "input": "relative/path/to/zipped_dataset",
+   "exclude": "agency.txt,routes.txt",
+   "abort_on_error": true,
+   "beautify": false
+}

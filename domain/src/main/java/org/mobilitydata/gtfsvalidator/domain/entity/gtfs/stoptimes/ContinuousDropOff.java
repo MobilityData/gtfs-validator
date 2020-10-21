@@ -47,7 +47,7 @@ public enum ContinuousDropOff {
      * @return If fromValue is null returns NO_CONTINUOUS_DROP_OFF by default, else returns the
      * enum value matching the {@link Integer} provided in the parameters.
      */
-    static public ContinuousDropOff fromInt(Integer fromValue) {
+    static public ContinuousDropOff fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return NO_CONTINUOUS_DROP_OFF;
         }
@@ -67,12 +67,15 @@ public enum ContinuousDropOff {
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
     static public boolean isEnumValid(final Integer value) {
-        if (value == null) {
+        try {
+            return Stream.of(ContinuousDropOff.values())
+                    .anyMatch(enumItem -> enumItem.value == value);
+            // this is equivalent to
+            // Stream.of(ContinuousDropOff.values()).filter(enumItem -> enumItem.value == value).findAny().isPresent()
+            // Note that a NPE is thrown by anyMatch when it is called on a null Stream (which happens when `value` is
+            // null). Therefore a try/catch block is required to handle such situation.
+        } catch (NullPointerException e) {
             return true;
         }
-        return Stream.of(ContinuousDropOff.values())
-                .filter(enumItem -> enumItem.value == value)
-                .findAny()
-                .orElse(null) != null;
     }
 }

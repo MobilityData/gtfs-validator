@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mobilitydata.gtfsvalidator.usecase.GenerateFilenameListToProcess.AGENCY_TXT;
+import static org.mobilitydata.gtfsvalidator.usecase.GenerateFilenameListToProcess.FEED_INFO_TXT;
 import static org.mockito.Mockito.*;
 
 class GenerateFilenameListToProcessTest {
@@ -87,6 +89,40 @@ class GenerateFilenameListToProcessTest {
 
         final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess(mockLogger);
         assertEquals(List.of("file0", "file1", "file2"), underTest.execute(toExclude, toProcess));
+
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
+                        + toProcess));
+        verifyNoMoreInteractions(mockLogger);
+    }
+
+    @Test
+    void feedInfoFirstIfPresent() {
+        final ArrayList<String> toProcess = new ArrayList<>(List.of(AGENCY_TXT, FEED_INFO_TXT, "file2"));
+        final ArrayList<String> toExclude = new ArrayList<>();
+        final Logger mockLogger = mock(Logger.class);
+
+        final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess(mockLogger);
+        assertEquals(List.of(FEED_INFO_TXT, AGENCY_TXT, "file2"), underTest.execute(toExclude, toProcess));
+
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));
+        verify(mockLogger, times(1))
+                .info(ArgumentMatchers.eq("Will execute validation on the following subset of files: "
+                        + toProcess));
+        verifyNoMoreInteractions(mockLogger);
+    }
+
+    @Test
+    void agencyFirstIfNoFeedInfo() {
+        final ArrayList<String> toProcess = new ArrayList<>(List.of("file0", "file1", AGENCY_TXT));
+        final ArrayList<String> toExclude = new ArrayList<>();
+        final Logger mockLogger = mock(Logger.class);
+
+        final GenerateFilenameListToProcess underTest = new GenerateFilenameListToProcess(mockLogger);
+        assertEquals(List.of(AGENCY_TXT, "file1", "file0"), underTest.execute(toExclude, toProcess));
 
         verify(mockLogger, times(1))
                 .info(ArgumentMatchers.eq("List of filenames to exclude is: " + toExclude));

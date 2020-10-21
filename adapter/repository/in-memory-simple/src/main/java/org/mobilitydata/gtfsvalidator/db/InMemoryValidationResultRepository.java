@@ -17,7 +17,7 @@
 package org.mobilitydata.gtfsvalidator.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.mobilitydata.gtfsvalidator.protos.GtfsValidationOutputProto;
+import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
@@ -99,8 +99,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
         } else {
             return new JsonNoticeExporter(
                     new ObjectMapper().getFactory().createGenerator(
-                            Files.newOutputStream(Paths.get(
-                                    outputPath + File.separator + "results" + JsonNoticeExporter.FILE_EXTENSION)
+                            Files.newOutputStream(Paths.get(outputPath + JsonNoticeExporter.FILE_EXTENSION)
                             )
                     ),
                     isPretty);

@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -49,13 +48,15 @@ public enum TableName {
      * passed as parameter is null or does not match any {@link TableName} enum item.
      */
     static public TableName fromString(final String tableName) {
-        if (tableName == null) {
-            return null;
-        } else {
+        try {
             return Stream.of(TableName.values())
-                    .filter(enumItem -> Objects.equals(enumItem.value, tableName))
+                    .filter(enumItem -> enumItem.value.equals(tableName))
                     .findAny()
                     .orElse(null);
+            // Note that a NPE is thrown by findAny when it is called on a null Stream (which happens when `tableName` is
+            // null). Therefore a try/catch block is required to handle such situation.
+        } catch (NullPointerException e) {
+            return null;
         }
     }
 
@@ -66,12 +67,15 @@ public enum TableName {
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
     static public boolean isEnumValueValid(final String value) {
-        if (value == null) {
+        try {
+            return Stream.of(TableName.values())
+                    .anyMatch(enumItem -> enumItem.value.equals(value));
+            // this is equivalent to
+            // Stream.of(TableName.values()).filter(enumItem -> enumItem.value.equals(value)).findAny().isPresent()
+            // Note that a NPE is thrown by anyMatch when it is called on a null Stream (which happens when `value` is
+            // null). Therefore a try/catch block is required to handle such situation.
+        } catch (NullPointerException e) {
             return false;
         }
-        return Stream.of(TableName.values())
-                .filter(enumItem -> Objects.equals(enumItem.value, value))
-                .findAny()
-                .orElse(null) != null;
     }
 }

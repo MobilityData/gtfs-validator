@@ -11,7 +11,7 @@ This command-line tool written in Java that performs the following steps:
 
 # Prerequisites
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
-1. Download the latest gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from a [workflow execution](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster)
+1. Download the latest gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster) or [Circle-CI Pipelines](https://app.circleci.com/pipelines/github/MobilityData/gtfs-validator?branch=master)
 
 OR
 
@@ -38,6 +38,21 @@ java -jar gtfs-validator-v1.3.0_cli.jar -i relative/path/to/zipped_dataset -o re
  1. Search for a zipped GTFS dataset located at `relative/path/to/zipped_dataset`
  1. Extract the zip content to a directory located at `relative/extraction/path`
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default. The validation process will not be executed on the enumeration of files provided via option `-x` and the files that rely on them.
+ 1. Validate the GTFS data and output the results to the directory named `output_folder`. This folder will contain a single `.json` file with information related to the validation process.
+ 1. The generated `.json` file will be beautified if option `-b` or `--beautify`  has been provided and set to `true`. Note that if this argument is not specified, the validator will by default generate a beautified version of the validation report. 
+
+Note:
+ - *export validation report as `.json` file*: After validating [MBTA's GTFS archive](https://cdn.mbta.com/MBTA_GTFS.zip) on 2020-10-20 at 09:07:48 (America/Montreal timezone), the validation report will be named as follows `MBTA__2020-10-20_09/07/48.442365.json`
+ - *export validation report as `.pb` file*: after validating [MBTA's GTFS archive](https://cdn.mbta.com/MBTA_GTFS.zip) on 2020-10-20 at 09:07:48 (America/Montreal timezone), the validation reports will be named as follows 
+   - `MBTA__2020-10-20_09/07/48.442365-1.pb` 
+   - `MBTA__2020-10-20_09/07/48.442365-2.pb` 
+   - ...
+   - `MBTA__2020-10-20_09/07/48.442365-n.pb` 
+
+**Those names come from concatenating the information found in `feed_info.feed_publisher_name` and the local time of execution seaprated with `__`
+then replacing whitespace character by `_`**
+
+In the case where GTFS file`feed_info.txt`  is not provided, the validation report name would be limited to: `__2020-10-20_09/07/48.442365.json` or `__2020-10-20_09/07/48.442365-1.pb`    
 
 #### Example: Validate GTFS dataset while specifying extraction, input, and output directories
 
@@ -135,14 +150,14 @@ java -jar gtfs-validator-v1.3.0_cli.jar -e relative/extraction/path -o relative/
 
 Note that you'll need to change the above JAR file name to whatever [release version](https://github.com/MobilityData/gtfs-validator/releases) you download.
 
-## spring-boot-app usage
+## web-app usage
 
 A second implementation of `gtfs-validator` uses [`SpringBoot`](https://spring.io/projects/spring-boot) framework and a user interface (based on [`React`](https://reactjs.org/)).
 
 ### Run the application
 
 ```
-java -jar gtfs-validator-v1.3.0_web.jar 
+java -jar gtfs-validator-v1.3.0_web.war 
 ```
 
 Which will:
@@ -170,22 +185,22 @@ Some important modules:
 * [Use cases](usecase) - Business logic 
 * [Adapters](adapter) - Convertors (e.g., parsers and exporters)
 * [application/cli-app](application/cli-app) - The main command-line application
-* [application/spring-boot-app](application/spring-boot-app) - The spring boot implementation of the application
-* [reactclient](reactclient) - The web layer used to interact with the [spring-boot-app](application/spring-boot-app) 
+* [application/web-app/react-client](application/web-app/react-client) - The local web ui as a React project  
+* [application/web-app/spring-server](application/web-app/spring-server) - The implementation of the application that relies on SpringBoot framework
 
 # Tests
 
 To run tests: 
-1. CLI and server tests
+1. Run Java tests
 ```
-./gradlew check
-```
-1. UI tests
-```
-cd reactclient/
-npm test
+$ ./gradlew check
 ```
 
+1. Run JS tests
+```
+$ cd react-client/
+$ npm test
+```
 # License
 
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).

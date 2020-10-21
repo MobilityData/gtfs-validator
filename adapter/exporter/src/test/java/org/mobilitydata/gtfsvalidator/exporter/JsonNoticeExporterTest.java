@@ -95,8 +95,8 @@ class JsonNoticeExporterTest {
         NonStandardHeaderNotice toExport = new NonStandardHeaderNotice(FILENAME, "extra");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -108,8 +108,8 @@ class JsonNoticeExporterTest {
         InputZipContainsFolderNotice toExport = new InputZipContainsFolderNotice(FILENAME, "extraFolder");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -126,8 +126,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -141,8 +141,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -158,8 +158,8 @@ class JsonNoticeExporterTest {
                 "abc");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -176,8 +176,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -189,8 +189,8 @@ class JsonNoticeExporterTest {
         CannotUnzipInputArchiveNotice toExport = new CannotUnzipInputArchiveNotice(FILENAME);
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -207,8 +207,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -225,8 +225,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -240,8 +240,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -258,8 +258,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -276,8 +276,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -289,8 +289,8 @@ class JsonNoticeExporterTest {
         MissingHeaderNotice toExport = new MissingHeaderNotice(FILENAME, "missing_header");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -302,8 +302,8 @@ class JsonNoticeExporterTest {
         DuplicatedHeaderNotice toExport = new DuplicatedHeaderNotice(FILENAME, "duplicated_header");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -315,8 +315,8 @@ class JsonNoticeExporterTest {
         MissingRequiredFileNotice toExport = new MissingRequiredFileNotice(FILENAME);
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -332,8 +332,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -349,8 +349,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -367,8 +367,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -380,8 +380,8 @@ class JsonNoticeExporterTest {
         ExtraFileFoundNotice toExport = new ExtraFileFoundNotice(FILENAME);
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -394,8 +394,8 @@ class JsonNoticeExporterTest {
                 "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -408,8 +408,8 @@ class JsonNoticeExporterTest {
                 "raw_value");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -423,8 +423,8 @@ class JsonNoticeExporterTest {
                 "currency_code");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -437,8 +437,8 @@ class JsonNoticeExporterTest {
                 "entity_id", 2);
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -451,8 +451,8 @@ class JsonNoticeExporterTest {
                 "conflicting_field_name", "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -465,8 +465,8 @@ class JsonNoticeExporterTest {
                 "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -479,8 +479,8 @@ class JsonNoticeExporterTest {
                 "entity_id", "lang_value");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -493,8 +493,8 @@ class JsonNoticeExporterTest {
                 "entity_id", "email_value");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -506,8 +506,8 @@ class JsonNoticeExporterTest {
         SameNameAndDescriptionForRouteNotice toExport = new SameNameAndDescriptionForRouteNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -521,8 +521,8 @@ class JsonNoticeExporterTest {
                 0d);
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -534,8 +534,8 @@ class JsonNoticeExporterTest {
         RouteShortNameTooLongNotice toExport = new RouteShortNameTooLongNotice(FILENAME, "entity_id", "13");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -547,8 +547,8 @@ class JsonNoticeExporterTest {
         InvalidRouteTypeNotice toExport = new InvalidRouteTypeNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -560,8 +560,8 @@ class JsonNoticeExporterTest {
         MissingShortAndLongNameForRouteNotice toExport = new MissingShortAndLongNameForRouteNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -573,8 +573,8 @@ class JsonNoticeExporterTest {
         MissingRouteShortNameNotice toExport = new MissingRouteShortNameNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -586,8 +586,8 @@ class JsonNoticeExporterTest {
         MissingRouteLongNameNotice toExport = new MissingRouteLongNameNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -599,8 +599,8 @@ class JsonNoticeExporterTest {
         RouteLongNameEqualsShortNameNotice toExport = new RouteLongNameEqualsShortNameNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -612,8 +612,8 @@ class JsonNoticeExporterTest {
         RouteLongNameContainsShortNameNotice toExport = new RouteLongNameContainsShortNameNotice(FILENAME, "entity_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -630,8 +630,8 @@ class JsonNoticeExporterTest {
         );
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -643,8 +643,8 @@ class JsonNoticeExporterTest {
         final MissingAgencyIdNotice toExport = new MissingAgencyIdNotice("agency_name", "entity id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -657,8 +657,8 @@ class JsonNoticeExporterTest {
                 "set of inconsistent timezone");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -671,8 +671,8 @@ class JsonNoticeExporterTest {
                 "entity id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -685,8 +685,8 @@ class JsonNoticeExporterTest {
                 "entity id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -699,8 +699,8 @@ class JsonNoticeExporterTest {
                 "route id", "field name");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -713,8 +713,8 @@ class JsonNoticeExporterTest {
                 "entity id", "service id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -731,8 +731,8 @@ class JsonNoticeExporterTest {
                         "composite key second value", "shape id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -751,8 +751,8 @@ class JsonNoticeExporterTest {
                         "trip id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -766,8 +766,8 @@ class JsonNoticeExporterTest {
                 "field name");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -788,8 +788,8 @@ class JsonNoticeExporterTest {
                         "feed lang");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -811,8 +811,8 @@ class JsonNoticeExporterTest {
                         "feed lang");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -834,8 +834,8 @@ class JsonNoticeExporterTest {
                         "feed lang");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -854,8 +854,8 @@ class JsonNoticeExporterTest {
                 "feed lang");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -875,8 +875,8 @@ class JsonNoticeExporterTest {
                         "feed lang");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -893,8 +893,8 @@ class JsonNoticeExporterTest {
                         514);
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -909,8 +909,8 @@ class JsonNoticeExporterTest {
                         List.of(3, 4, 5, 6));
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -923,8 +923,8 @@ class JsonNoticeExporterTest {
                 new EmptyFileErrorNotice("filename");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -937,8 +937,8 @@ class JsonNoticeExporterTest {
                 new EmptyFileWarningNotice("filename");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -954,8 +954,8 @@ class JsonNoticeExporterTest {
                         "trip_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -972,8 +972,8 @@ class JsonNoticeExporterTest {
                         "conflicting end time value");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -990,8 +990,8 @@ class JsonNoticeExporterTest {
                         2);
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1004,8 +1004,8 @@ class JsonNoticeExporterTest {
                 new TripNotUsedNotice("trip_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1018,8 +1018,8 @@ class JsonNoticeExporterTest {
                 new UnusableTripNotice("trip_id");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1037,8 +1037,8 @@ class JsonNoticeExporterTest {
                         GeospatialUtils.TRIP_BUFFER_METERS);
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1051,8 +1051,8 @@ class JsonNoticeExporterTest {
                 new MissingCalendarAndCalendarDateFilesNotice();
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1068,8 +1068,8 @@ class JsonNoticeExporterTest {
 
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1083,8 +1083,8 @@ class JsonNoticeExporterTest {
                         , "agency lang value", "feed info lang value");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1098,8 +1098,8 @@ class JsonNoticeExporterTest {
                         " route long name");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1113,8 +1113,8 @@ class JsonNoticeExporterTest {
                         " route short name");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1129,8 +1129,8 @@ class JsonNoticeExporterTest {
                         "duplicate route short name");
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1144,8 +1144,8 @@ class JsonNoticeExporterTest {
                         22, 3f);
         underTest.export(toExport);
 
-        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
 
@@ -1153,13 +1153,13 @@ class JsonNoticeExporterTest {
     void exportDecreasingShapeDistanceNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
 
-        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator, false);
-
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         DecreasingShapeDistanceNotice toExport =
                 new DecreasingShapeDistanceNotice("12350", 22, 5f,
                         2, 50f);
         underTest.export(toExport);
 
+        verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }

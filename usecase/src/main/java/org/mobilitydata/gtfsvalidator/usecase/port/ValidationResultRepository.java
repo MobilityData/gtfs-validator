@@ -31,5 +31,6 @@ public interface ValidationResultRepository {
 
     Collection<Notice> getAll();
 
-    NoticeExporter getExporter(boolean outputAsProto, String outputPath, boolean isPretty) throws IOException;
+    NoticeExporter getExporter(boolean outputAsProto, String outputPath, boolean isPretty)
+            throws IOException;
 }

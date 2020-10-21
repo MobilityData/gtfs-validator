@@ -1013,7 +1013,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
 
         public OutputStream getStream() throws IOException {
             OutputStream newStream = Files.newOutputStream(Paths.get(
-                    targetPath + File.separator + streamCounter +
+                    targetPath + "-" + streamCounter +
                             ProtobufNoticeExporter.FILE_EXTENSION
             ));
             ++streamCounter;

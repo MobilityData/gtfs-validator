@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2019. MobilityData IO.
+ *  Copyright (c) 2020. MobilityData IO.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.cliapp;
+package org.mobilitydata.gtfsvalidator.web;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,23 +23,58 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.usecase.*;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
+import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
 
-public class Main {
+@Service
+public class ServiceManager {
+    private final Logger logger = LogManager.getLogger();
+    private DefaultConfig config;
 
-    public static void main(String[] args) {
-        final long startTime = System.nanoTime();
-        final Logger logger = LogManager.getLogger();
-        final DefaultConfig config = initConfig(args, logger);
+    /**
+     * Initiates the {@code DefaultConfig} needed to proceed to GTFS archive validation. {@link DefaultConfig} is
+     * instantiate from a set of execution parameters provided by the user via interaction with the web ui.
+     *
+     * @param execParamAsString the set of execution parameters as a Json string
+     * @return null (for requirement of the testing framework)
+     */
+    public String initializeConfig(final String execParamAsString) throws Exception {
+        try {
+            this.config = new DefaultConfig.Builder()
+                    .execParamAsString(execParamAsString)
+                    .logger(logger)
+                    .build();
+        } catch (Exception e) {
+            if (execParamAsString == null) {
+                throw (new IOException("Configuration file not provided"));
+            } else {
+                throw e;
+            }
+        }
+        return null;
+    }
 
+    /**
+     * Checks if DefaultConfig has been initialized i.e execution parameter configuration file has been provided by user
+     *
+     * @return true if the user provided configuration file, else returns false.
+     */
+    public boolean isConfigInitialized() {
+        return config != null;
+    }
+
+    /**
+     * Run all use cases needed to validate a GTFS archive. Returns a String representing the validation status
+     *
+     * @return the validation status as a String
+     */
+    public String runValidator() throws IOException {
+        if (!isConfigInitialized()) {
+            throw (new IOException("Configuration file not provided"));
+        }
         try {
             // use case will inspect parameters and decide if help menu should be displayed or not
             if (!config.printHelp().execute()) {
@@ -52,7 +87,7 @@ public class Main {
                 config.downloadArchiveFromNetwork().execute();
 
                 config.unzipInputArchive(
-                        config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
+                        config.createPath().execute(ExecParamRepository.EXTRACT_KEY, true))
                         .execute();
 
                 final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
@@ -91,8 +126,7 @@ public class Main {
                 final Map<String, ParsedEntity> preprocessedStopByStopId = new HashMap<>();
 
                 filenameListToProcess.forEach(filename -> {
-                    logger.info(System.lineSeparator() + System.lineSeparator() +
-                            "Validate CSV structure and field types for file: " + filename);
+                    logger.info("Validate CSV structure and field types for file: " + filename);
                     config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
@@ -211,7 +245,6 @@ public class Main {
                 config.validateTripUsage().execute();
                 config.validateTripNumberOfStops().execute();
                 config.validateFrequencyStartTimeBeforeEndTime().execute();
-                config.validateStopTooFarFromTripShape().execute();
                 config.validateFrequencyOverlap().execute();
                 config.validateNoOverlappingStopTimeInTripBlock().execute();
                 config.validateAgencyLangAndFeedInfoFeedLangMatch().execute();
@@ -219,43 +252,57 @@ public class Main {
                 config.validateRouteShortNameAreUnique().execute();
                 config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
 
-                config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+                config.createPath().execute(ExecParamRepository.OUTPUT_KEY, true);
 
                 config.exportResultAsFile().execute();
+
+                return "Validation success";
             }
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
+            throw new IOException("An exception occurred: " + e);
+
         } catch (TooManyValidationErrorException e) {
             logger.error("Error detected -- ABORTING");
-            config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+            config.createPath().execute(ExecParamRepository.OUTPUT_KEY, true);
 
             try {
                 config.exportResultAsFile().execute();
 
                 logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
                         " to continue on errors");
+                return "Validation process aborted. Set option -" + ExecParamRepository.ABORT_ON_ERROR +
+                        " to false for validation process to continue on errors. Check validation report for" +
+                        " more details.";
             } catch (IOException ioException) {
-                logger.error("An exception occurred: " + e);
+                logger.error("An exception occurred: " + ioException);
+                throw new IOException("An exception occurred: " + ioException);
             }
         }
-        final long duration = System.nanoTime() - startTime;
-        logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
-                TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
-                TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
+        return null;
     }
 
-    private static DefaultConfig initConfig(String[] args, Logger logger) {
-        String executionParametersAsString = null;
-        try {
-            executionParametersAsString = Files.readString(Paths.get("execution-parameters.json"));
-            logger.info("Configuration file execution-parameters.json found in working directory");
-        } catch (IOException e) {
-            logger.warn("Configuration file execution-parameters.json not found in working directory");
+    /**
+     * Executes shell command to open validation report in default text editor. Returns null.
+     *
+     * @return null and executes shell command to open validation report in default text editor
+     */
+    public String openReport() throws IOException {
+        final Runtime runTime = Runtime.getRuntime();
+        final File folder = new File(config.getExecParamValue(ExecParamRepository.OUTPUT_KEY));
+        String filename = null;
+        List<File> directoryContent = Arrays.asList(folder.listFiles());
+        if (directoryContent.isEmpty()) {
+            return "No report was generated at:" + config.getExecParamValue(ExecParamRepository.OUTPUT_KEY) + filename;
         }
-        final DefaultConfig.Builder configBuilder = new DefaultConfig.Builder();
-        return configBuilder.logger(logger)
-                .args(args)
-                .execParamAsString(executionParametersAsString)
-                .build();
+        for (File file : directoryContent) {
+            if (file.getName().endsWith(".json")) {
+                filename = directoryContent.stream().findFirst().get().getName();
+                runTime.exec("open -t " + config.getExecParamValue(ExecParamRepository.OUTPUT_KEY)
+                        + File.separator + filename);
+                break;
+            }
+        }
+        return null;
     }
 }

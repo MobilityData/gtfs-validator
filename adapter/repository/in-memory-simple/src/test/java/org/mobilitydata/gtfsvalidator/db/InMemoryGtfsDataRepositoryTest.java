@@ -808,6 +808,12 @@ class InMemoryGtfsDataRepositoryTest {
     }
 
     @Test
+    void getShapeByIdShouldReturnNullIfShapeIdIsNull() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        assertNull(underTest.getShapeById(null));
+    }
+
+    @Test
     void addShapePointShouldMaintainOrder() {
         final ShapePoint firstShapePointInSequence = mock(ShapePoint.class);
         when(firstShapePointInSequence.getShapeId()).thenReturn("test id00");
@@ -1066,5 +1072,20 @@ class InMemoryGtfsDataRepositoryTest {
         assertEquals(2, toCheck.size());
         assertTrue(toCheck.containsKey(mockFeedInfo00.getFeedPublisherName()));
         assertTrue(toCheck.containsKey(mockFeedInfo01.getFeedPublisherName()));
+    }
+
+    @Test
+    void shouldReturnEmptyStringWhenFeedInfoIsNotProvided() {
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        assertEquals("", underTest.getFeedPublisherName());
+    }
+
+    @Test
+    void shouldReturnNonEmptyStringWhenFeedInfoIsProvided() {
+        final FeedInfo mockFeedInfo = mock(FeedInfo.class);
+        when(mockFeedInfo.getFeedPublisherName()).thenReturn("feed publisher");
+        final InMemoryGtfsDataRepository underTest = new InMemoryGtfsDataRepository();
+        underTest.addFeedInfo(mockFeedInfo);
+        assertEquals("feed publisher", underTest.getFeedPublisherName());
     }
 }

@@ -4,8 +4,8 @@
 We create releases of the `cli-app` from the command-line using the [shadow Gradle plugin](https://github.com/johnrengelman/shadow), which creates a JAR file including all necessary dependencies.
 This task runs automatically on every change in GitHub.
 
-### spring-boot-app 
-We create releases of the `spring-boot-app` from the command-line using the [shadow Gradle plugin](https://github.com/spring-projects/spring-boot/blob/master/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/src/main/java/org/springframework/boot/gradle/tasks/bundling/BootJar.java), which creates a JAR file including all necessary dependencies.
+### web-app 
+We create releases of the `web-app` from the command-line using the [bootWar](https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/html/), which creates a WAR file including all necessary dependencies.
 This task runs automatically on every change in GitHub.
 
 ### 0. Open a release branch + PR
@@ -20,7 +20,11 @@ For example, if the current version is `1.1.0-SNAPSHOT`, change the `version` to
 Do the same in GitHub CI [config file](https://github.com/MobilityData/gtfs-validator/blob/master/.github/workflows/gradle.yml) for
 both `Run validator on MBTA data` and `upload artifacts` steps
 
+Do the same in Circle-CI [config file](https://github.com/MobilityData/gtfs-validator/blob/master/.circleci/config.yml)
+
 Do the same in [Dockerfile](https://github.com/MobilityData/gtfs-validator/blob/master/Dockerfile)
+
+**!! Be wary of preserving postfixes like `_cli` or `_web` in some names !!**
 
 ### 2. Do the release
 
@@ -35,7 +39,7 @@ Locate the .jar file artifact produced by the corresponding GitHub [workflow](ht
 java -jar gtfs-validator-v1.3.0_cli.jar -u https://transitfeeds.com/p/mbta/64/latest/download -i input.zip -e input -o output
 ```
 
-This file can also be run from the command-line with execution parameters coming from file `execution-parameters.json` located in the working directory:
+This file can also be ran from the command-line with execution parameters coming from file `execution-parameters.json` located in the working directory:
 
 ```
 java -jar gtfs-validator-v1.3.0_cli.jar
@@ -52,23 +56,11 @@ With file `execution-parameters.json` content:
 }
 ```
 
-### spring-boot-app 
+### web-app
 
-`gtfs-validator-v1.3.0_web.jar` is generated. This file can then be ran from the command-line with the normal Java conventions:
-
+`gtfs-validator-v1.3.0_web.war` is generated. This file can then be ran from the command-line with the normal Java conventions:
 ```
-java -jar gtfs-validator-v1.3.0_web.jar
-```
-
-With file `execution-parameters.json` content: 
-
-```
-{
-  "extract": "input",
-  "output": "output",
-  "url": "https://transitfeeds.com/p/mbta/64/latest/download",
-  "input": "input.zip"
-}
+java -jar gtfs-validator-v1.3.0_web.war
 ```
 
 If everything looks ok, you can create the new release in GitHub. Tag the code in your PR branch.
@@ -83,7 +75,5 @@ both `Run validator on MBTA data` and `upload artifacts` steps.
 The version number also needs to be bumped in [`manifest.json`](https://github.com/MobilityData/gtfs-validator/blob/package-web-app-as-jar/reactclient/public/manifest.json)
  and [`index.html`]((https://github.com/MobilityData/gtfs-validator/blob/package-web-app-as-jar/reactclient/public/index.html)) files of the react layer.
 
-
 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
-
 

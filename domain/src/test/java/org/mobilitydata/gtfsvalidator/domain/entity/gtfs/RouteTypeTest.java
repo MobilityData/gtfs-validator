@@ -76,4 +76,9 @@ class RouteTypeTest {
     void shouldReturnTrueForExpectedValue11() {
         assertTrue(RouteType.isEnumValueValid(11));
     }
+
+    @Test
+    void shouldReturnFalseForUnexpectedNullValue() {
+        assertFalse(RouteType.isEnumValueValid(null));
+    }
 }
