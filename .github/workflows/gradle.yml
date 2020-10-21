@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: js-tests-v1.3.0
-          path: react-client/test-reports/
+          path: application/web-app/react-client/test-reports/
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
