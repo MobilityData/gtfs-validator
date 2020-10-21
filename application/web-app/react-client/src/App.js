@@ -24,7 +24,7 @@ import JsonExampleAccordion from "./components/JsonExampleAccordion";
 import './App.css';
 import logo from './logo.png';
 
-import {displayValidationReport, initConfig, validateFeed} from "./helper/ApiRequest"
+import {openReport, initializeConfig, runValidator} from "./helper/ApiRequest"
 import {displayJsonData, enableElement, hasAttribute, hideItem} from "./helper/DomInteractions";
 import {InitConfigCommand, Port} from "./helper/Constants";
 import {useDropzone} from "react-dropzone";
@@ -43,7 +43,7 @@ function App() {
       if (!hasAttribute("json-config-file", "disabled")) {
         console.log(hasAttribute("json-config-file", "disabled"))
         displayJsonData(JSON.parse(fileReader.result), "json-content");
-        initConfig(axios, Port(), InitConfigCommand(), JSON.parse(fileReader.result))
+        initializeConfig(axios, Port(), InitConfigCommand(), JSON.parse(fileReader.result))
         hideItem("validation-status");
         hideItem("display-result-button");
       } else {
@@ -61,13 +61,13 @@ function App() {
           <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"} useDropzone={useDropzone}/>
           <div id="json-content"/>
           <p className="launch-button-container">
-            <NiceButton id="validate-button" description="Validate" method={validateFeed}/>
+            <NiceButton id="validate-button" description="Validate" method={runValidator}/>
           </p>
           <p id="progress-circles"/>
           <p id="validation-status"/>
           <p id="open-validation-dom-element"/>
           <div id="display-result-button" className="launch-button-container">
-            <NiceButton description="Display validation report" method={displayValidationReport}/>
+            <NiceButton description="Display validation report" method={openReport}/>
           </div>
           <p>
             <a className="App-link" href="https://mobilitydata.org">MobilityData</a>

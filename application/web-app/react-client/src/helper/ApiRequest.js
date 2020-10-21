@@ -22,7 +22,7 @@ import {GetReportContentCommand, Port, RunValidatorCommand} from "./Constants";
 import CircularIndeterminate from "../components/CircularProgress";
 import {disableElement, enableElement, hideItem, showItem} from "./DomInteractions";
 
-export async function initConfig(axios, port, initConfigCommand, execParamConfigFileAsString) {
+export async function initializeConfig(axios, port, initConfigCommand, execParamConfigFileAsString) {
     axios.post('http://localhost:' + port + initConfigCommand, execParamConfigFileAsString)
         .then((res) => {
             return res.data;
@@ -31,7 +31,7 @@ export async function initConfig(axios, port, initConfigCommand, execParamConfig
     });
 }
 
-export async function validateFeed() {
+export async function runValidator() {
     ReactDOM.render(
         <CircularIndeterminate/>,
         document.getElementById("progress-circles"));
@@ -54,7 +54,7 @@ export async function validateFeed() {
     });
 }
 
-export async function displayValidationReport() {
+export async function openReport() {
     axios.get('http://localhost:' + Port() + GetReportContentCommand())
         .then((res) => {
             ReactDOM.render(

@@ -14,16 +14,16 @@
  *  limitations under the License.
  */
 
-import {initConfig} from "../ApiRequest.js"
+import {initializeConfig} from "../ApiRequest.js"
 import mockAxios from "axios";
-import {displayValidationReport, validateFeed} from "../ApiRequest";
+import {openReport, runValidator} from "../ApiRequest";
 jest.mock('axios')
 jest.mock('../DomInteractions')
 require("regenerator-runtime");
 
 describe("InitConfig", () => {
     it("should de defined", () => {
-        expect(initConfig).toBeDefined()
+        expect(initializeConfig).toBeDefined()
     })
 
     it("should call post method with correct arguments", () => {
@@ -33,7 +33,7 @@ describe("InitConfig", () => {
                 data: { results: [""] }
             })
         );
-        initConfig(mockAxios, "8090", "/actions/initialize/", "test");
+        initializeConfig(mockAxios, "8090", "/actions/initialize/", "test");
         expect(mockAxios.post).toHaveBeenCalledTimes(1);
         expect(mockAxios.post).toHaveBeenCalledWith("http://localhost:8090/actions/initialize/", "test");
     })
@@ -41,7 +41,7 @@ describe("InitConfig", () => {
 
 describe("ValidateFeed", () => {
     it("should de defined", () => {
-        expect(validateFeed).toBeDefined()
+        expect(runValidator).toBeDefined()
     })
 
     // FIXME: we could not make this one work
@@ -60,7 +60,7 @@ describe("ValidateFeed", () => {
 
 describe("DisplayValidationReport", () => {
     it("should de defined", () => {
-        expect(displayValidationReport).toBeDefined()
+        expect(openReport).toBeDefined()
     })
 
     it("should call get method with correct argument", () => {
@@ -70,7 +70,7 @@ describe("DisplayValidationReport", () => {
                 data: { results: [""] }
             })
         );
-        displayValidationReport()
+        openReport()
         expect(mockAxios.get).toHaveBeenCalledTimes(1);
         expect(mockAxios.get).toHaveBeenCalledWith("http://localhost:8090/actions/openreport");
     })
