@@ -120,4 +120,9 @@ class PathwayModeTest {
     void invalidValue12ShouldReturnFalse() {
         assertFalse(PathwayMode.isEnumValueValid(12));
     }
+
+    @Test
+    void isEnumValueValidShouldReturnFalseOnNullValue() {
+        assertFalse(PathwayMode.isEnumValueValid(null));
+    }
 }
