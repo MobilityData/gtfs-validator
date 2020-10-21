@@ -21,6 +21,8 @@ buildNumber.properties
 
 *.db
 
+META-INF/
+
 ### Gradle ###
 .gradle
 build/
