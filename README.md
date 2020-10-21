@@ -28,6 +28,19 @@ java -jar gtfs-validator-v1.1.0.jar -i relative/path/to/zipped_dataset -o relati
  1. Extract the zip content to a directory located at `relative/extraction/path`
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default. The validation process will not be executed on the enumeration of files provided via option `-x` and the files that rely on them.
 
+Note:
+ - *export validation report as `.json` file*: After validating [MBTA's GTFS archive](https://cdn.mbta.com/MBTA_GTFS.zip) on 2020-10-20 at 09:07:48 (America/Montreal timezone), the validation report will be named as follows `MBTA__2020-10-20_09/07/48.442365.json`
+ - *export validation report as `.pb` file*: after validating [MBTA's GTFS archive](https://cdn.mbta.com/MBTA_GTFS.zip) on 2020-10-20 at 09:07:48 (America/Montreal timezone), the validation reports will be named as follows 
+   - `MBTA__2020-10-20_09/07/48.442365-1.pb` 
+   - `MBTA__2020-10-20_09/07/48.442365-2.pb` 
+   - ...
+   - `MBTA__2020-10-20_09/07/48.442365-n.pb` 
+
+**Those names come from concatenating the information found in `feed_info.feed_publisher_name` and the local time of execution seaprated with `__`
+then replacing whitespace character by `_`**
+
+In the case where GTFS file`feed_info.txt`  is not provided, the validation report name would be limited to: `__2020-10-20_09/07/48.442365.json` or `__2020-10-20_09/07/48.442365-1.pb`    
+
 #### Example: Validate GTFS dataset while specifying extraction, input, and output directories
 
 ``` 
@@ -51,7 +64,7 @@ In order, this command line will:
  1. Create a directory named `input` 
  1. Extract the content of `gtfs-dataset.zip` to the directory created at step 2
  1. Create a directory names `output`
- 1. Exclude files `fare_attributes.txt` and `attributions.txt` from the the validation process. But also the files that rely on them: `translations.txt` and `fare_rules.txt`
+ 1. Exclude files `fare_attributes.txt` and `attributions.txt` from the validation process. But also the files that rely on them: `translations.txt` and `fare_rules.txt`
  1. Validate the GTFS data and output the results to the directory created at step 4. This folder will contain a single `.json` file with information related to the validation process. 
 
 ### Validate a GTFS dataset stored on a remote server
