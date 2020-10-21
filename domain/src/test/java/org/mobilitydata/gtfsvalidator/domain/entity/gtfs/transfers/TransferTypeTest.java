@@ -18,8 +18,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TransferTypeTest {
 
@@ -62,5 +61,10 @@ class TransferTypeTest {
     void createTransferTypeWithInvalidValue15ShouldReturnNull() {
         final int unexpectedValue = 15;
         assertNull(TransferType.fromInt(unexpectedValue));
+    }
+
+    @Test
+    void isEnumValueValidShouldReturnTrueOnNullValue() {
+        assertTrue(TransferType.isEnumValueValid(null));
     }
 }
