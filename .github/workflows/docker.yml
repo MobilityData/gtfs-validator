@@ -1,5 +1,6 @@
 name: Docker image
 
+# INFO: the following could be used if we want to build Docker images only on our releases
 #on:
 #  release:
 #    types: [published]
