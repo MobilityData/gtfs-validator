@@ -48,6 +48,7 @@ import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Set;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
@@ -307,12 +308,14 @@ public class DefaultConfig {
         return new ValidateAgencyLangAndFeedInfoFeedLangMatch(gtfsDataRepository, resultRepo, logger);
     }
 
-    public ExportResultAsFile exportResultAsFile() {
+    public ExportResultAsFile exportResultAsFile(final long startTime, final Set<String> processedFilenameCollection) {
         return new ExportResultAsFile(resultRepo,
                 execParamRepo,
                 gtfsDataRepository,
                 Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
-                logger);
+                logger,
+                startTime,
+                processedFilenameCollection);
     }
 
     public LogExecutionInfo logExecutionInfo() {

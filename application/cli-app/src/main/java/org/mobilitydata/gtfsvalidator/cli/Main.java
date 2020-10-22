@@ -27,10 +27,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorExcepti
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -39,6 +36,7 @@ public class Main {
         final long startTime = System.nanoTime();
         final Logger logger = LogManager.getLogger();
         final DefaultConfig config = initConfig(args, logger);
+        final Set<String> processedFilenameCollection = new HashSet<>();
 
         try {
             // use case will inspect parameters and decide if help menu should be displayed or not
@@ -93,6 +91,7 @@ public class Main {
                 filenameListToProcess.forEach(filename -> {
                     logger.info(System.lineSeparator() + System.lineSeparator() +
                             "Validate CSV structure and field types for file: " + filename);
+                    processedFilenameCollection.add(filename);
                     config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
@@ -221,7 +220,7 @@ public class Main {
 
                 config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
-                config.exportResultAsFile().execute();
+                config.exportResultAsFile(startTime, processedFilenameCollection).execute();
             }
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
@@ -230,12 +229,12 @@ public class Main {
             config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
             try {
-                config.exportResultAsFile().execute();
+                config.exportResultAsFile(startTime, processedFilenameCollection).execute();
 
                 logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
                         " to continue on errors");
             } catch (IOException ioException) {
-                logger.error("An exception occurred: " + e);
+                logger.error("An exception occurred: " + ioException);
             }
         }
         final long duration = System.nanoTime() - startTime;

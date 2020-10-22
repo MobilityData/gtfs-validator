@@ -17,7 +17,6 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.info;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
 
 import java.io.IOException;
@@ -28,21 +27,25 @@ public class ValidationProcessInfoNotice extends InfoNotice {
                                        final int warningNoticeCount,
                                        final int errorNoticeCount,
                                        final String pathOrUrlToGtfsArchive,
-                                       final float gtfsArchiveSizeBeforeUnzipping,
-                                       final float gtfsArchiveSizeAfterUnzipping,
+                                       final long gtfsArchiveSizeBeforeUnzippingByte,
+                                       final long gtfsArchiveSizeAfterUnzippingByte,
                                        final String gtfsValidatorVersion,
                                        final String processedFilenameCollection,
-                                       final int processingTime) {
-        super(null, I_001, null, null, null);
+                                       final long processingTimeSecs) {
+        super(null,
+                I_001,
+                "Info notice",
+                "More information regarding the validation process",
+                null);
         putNoticeSpecific(FEED_PUBLISHER_NAME_OR_AGENCY_NAME, feedPublisherNameOrAgencyName);
         putNoticeSpecific(VALIDATION_TIMESTAMP, validationTimestamp);
         putNoticeSpecific(WARNING_NOTICE_COUNT, warningNoticeCount);
         putNoticeSpecific(ERROR_NOTICE_COUNT, errorNoticeCount);
         putNoticeSpecific(PATH_OR_URL_TO_GTFS_ARCHIVE, pathOrUrlToGtfsArchive);
-        putNoticeSpecific(GTFS_ARCHIVE_SIZE_BEFORE_UNZIPPING, gtfsArchiveSizeBeforeUnzipping);
-        putNoticeSpecific(GTFS_ARCHIVE_SIZE_AFTER_UNZIPPING, gtfsArchiveSizeAfterUnzipping);
+        putNoticeSpecific(GTFS_ARCHIVE_SIZE_BEFORE_UNZIPPING_BYTE, gtfsArchiveSizeBeforeUnzippingByte);
+        putNoticeSpecific(GTFS_ARCHIVE_SIZE_AFTER_UNZIPPING_BYTE, gtfsArchiveSizeAfterUnzippingByte);
         putNoticeSpecific(GTFS_VALIDATOR_VERSION, gtfsValidatorVersion);
-        putNoticeSpecific(PROCESSING_TIME, processingTime);
+        putNoticeSpecific(PROCESSING_TIME_SECS, processingTimeSecs);
         putNoticeSpecific(PROCESSED_FILENAME_COLLECTION, processedFilenameCollection);
     }
 

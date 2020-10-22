@@ -104,4 +104,14 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
                     isPretty);
         }
     }
+
+    @Override
+    public int getWarningNoticeCount() {
+        return warningNoticeList.size();
+    }
+
+    @Override
+    public int getErrorNoticeCount() {
+        return errorNoticeList.size();
+    }
 }
