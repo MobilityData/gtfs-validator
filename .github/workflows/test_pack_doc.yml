@@ -1,4 +1,4 @@
-name: Package Test Document
+name: Test Package Document
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
           name: js-tests-v1.3.0-SNAPSHOT
           path: application/web-app/react-client/test-reports/
 
-  package:
+  pack:
     needs: test
     runs-on: ubuntu-latest
     steps:
