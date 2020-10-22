@@ -7,4 +7,4 @@ WORKDIR /usr/gtfs-validator/web-app
 EXPOSE 8090
 ENTRYPOINT ["java", "-jar", "gtfs-validator-v1.3.0-SNAPSHOT_web.war"]
 
-LABEL org.opencontainers.image.source = https://github.com/MobilityData/gtfs-validator
+LABEL org.opencontainers.image.source https://github.com/MobilityData/gtfs-validator
