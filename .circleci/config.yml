@@ -69,7 +69,7 @@ workflows:
   test_pack_doc:
     jobs:
       - test
-      - package:
+      - pack:
           requires:
             - test
       - doc:
