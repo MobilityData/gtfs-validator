@@ -47,15 +47,16 @@ public class CreatePath {
      *
      * @return a path to the target location
      */
-    public Path execute(String key, Boolean clearIfExists) {
+    public Path execute(final String key, final boolean clearIfExists) {
         final String pathToCleanOrCreate = execParamRepo.getExecParamValue(key);
-        Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
+        final Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
         // to empty any already existing directory
         if (Files.exists(toCleanOrCreate)) {
             if (clearIfExists) {
                 try {
                     //noinspection ResultOfMethodCallIgnored -- we ignore if deletion went well or not
                     Files.walk(toCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+                    Files.createDirectory(toCleanOrCreate);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -33,4 +33,8 @@ public interface ValidationResultRepository {
 
     NoticeExporter getExporter(boolean outputAsProto, String outputPath, boolean isPretty)
             throws IOException;
+
+    int getWarningNoticeCount();
+
+    int getErrorNoticeCount();
 }
