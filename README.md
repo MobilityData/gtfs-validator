@@ -1,4 +1,4 @@
-# gtfs-validator [![Build and test](https://github.com/MobilityData/gtfs-validator/workflows/Gradle%20build%20and%20test/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Gradle+build+and+test%22) [![Docker image](https://github.com/MobilityData/gtfs-validator/workflows/Docker%20image/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Docker+image%22) [![Join the gtfs-validator chat](https://mobilitydata-io.herokuapp.com/badge.svg)](https://mobilitydata-io.herokuapp.com/)
+# gtfs-validator [![CircleCI](https://circleci.com/gh/MobilityData/gtfs-validator/tree/master.svg?style=svg)](https://circleci.com/gh/MobilityData/gtfs-validator/tree/master) [![Java CI](https://github.com/MobilityData/gtfs-validator/workflows/Java%20CI/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Java+CI%22) [![Join the gtfs-validator chat](https://mobilitydata-io.herokuapp.com/badge.svg)](https://mobilitydata-io.herokuapp.com/)
 
 A static [General Transit Feed Specification (GTFS)](http://gtfs.org/reference/static/) feed validator
 
@@ -29,14 +29,21 @@ docker run -p 8090:8090 ghcr.io/mobilitydata/gtfs-validator:[[[REPLACE_WITH_YOUR
 
 By default, you will then have access to the web version of the validator at http://localhost:8090/
 
-If you want to use the cli version within Docker, you must first stop the app with the following command
-[[[LNJ help needed]]]
+If you want to use the cli version within Docker, you must first stop the web app with the following command
+``` 
+TODO: Could not figure out command.
+```
+
+**Note:** if you don't do it, the cli app will compete for resources within the container
 
 After attaching a terminal to the running container, navigate to the cli jar folder
 ``` 
 cd /usr/gtfs-validator/cli-app
 ```
 you can then follow the instructions of the next sections
+
+Note: As a convenience, a shell script file is provided in the same directory. It is copied from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
+It can be used to run the validator in an automated way. We do not provide support for local runs of the validator.
 
 ## cli-app usage
 
