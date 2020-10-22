@@ -219,8 +219,8 @@ public class Main {
                 config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
 
                 config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
-
-                config.exportResultAsFile(startTime, processedFilenameCollection).execute();
+                config.generateInfoNotice(startTime, processedFilenameCollection).execute();
+                config.exportResultAsFile().execute();
             }
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
@@ -229,7 +229,8 @@ public class Main {
             config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
             try {
-                config.exportResultAsFile(startTime, processedFilenameCollection).execute();
+                config.generateInfoNotice(startTime, processedFilenameCollection).execute();
+                config.exportResultAsFile().execute();
 
                 logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
                         " to continue on errors");
