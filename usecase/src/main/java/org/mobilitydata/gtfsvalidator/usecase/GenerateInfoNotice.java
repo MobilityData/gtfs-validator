@@ -16,16 +16,14 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.apache.commons.io.FileUtils;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.CustomFileUtils;
 
-import java.io.File;
 import java.sql.Timestamp;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 public class GenerateInfoNotice {
     final static String GTFS_VALIDATOR_VERSION = "v1.3.0-SNAPSHOT";
@@ -33,55 +31,50 @@ public class GenerateInfoNotice {
     private final ExecParamRepository execParamRepo;
     private final GtfsDataRepository gtfsDataRepo;
     private final Timestamp timestamp;
-    private final long startTime;
+    private final long processingTimeSecs;
     private final Set<String> processedFilenameCollection;
-    private final File zippedGtfsArchive;
-    private final File unzippedGtfsArchive;
+    private final CustomFileUtils customFileUtils;
 
     public GenerateInfoNotice(final ValidationResultRepository resultRepo,
                               final ExecParamRepository execParamRepo,
                               final GtfsDataRepository gtfsDataRepo,
                               final Timestamp timestamp,
-                              final long startTime,
+                              final long processingTimeSecs,
                               final Set<String> processedFilenameCollection,
-                              final File zippedGtfsArchive,
-                              final File unzippedGtfsArchive) {
+                              final CustomFileUtils customFileUtils) {
         this.resultRepo = resultRepo;
         this.execParamRepo = execParamRepo;
         this.gtfsDataRepo = gtfsDataRepo;
         this.timestamp = timestamp;
-        this.startTime = startTime;
+        this.processingTimeSecs = processingTimeSecs;
         this.processedFilenameCollection = processedFilenameCollection;
-        this.zippedGtfsArchive = zippedGtfsArchive;
-        this.unzippedGtfsArchive = unzippedGtfsArchive;
+        this.customFileUtils = customFileUtils;
     }
 
     public void execute() {
-        String reportName = gtfsDataRepo.getFeedPublisherName();
+        String feedPublisherNameOrAgencyName = gtfsDataRepo.getFeedPublisherName();
 
-        if ((reportName.isEmpty() || reportName.isBlank()) && gtfsDataRepo.getAgencyCount() > 0) {
-            reportName = gtfsDataRepo.getAgencyAll().values().iterator().next().getAgencyName();
+        if (feedPublisherNameOrAgencyName.isEmpty() || feedPublisherNameOrAgencyName.isBlank()) {
+            if (gtfsDataRepo.getAgencyCount() > 0) {
+                feedPublisherNameOrAgencyName = gtfsDataRepo.getAgencyAll().values().iterator().next().getAgencyName();
+            } else {
+                feedPublisherNameOrAgencyName = "no agency or feed publisher found";
+            }
         }
 
-        final String pathToUnzippedArchive = execParamRepo.getExecParamValue(ExecParamRepository.EXTRACT_KEY);
-        final String pathToRawZip = execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY);
-        final long processingTimeSecs =  TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startTime);
-        final String urlOrPathToGtfsArchive = execParamRepo.hasExecParamValue(ExecParamRepository.URL_KEY)?
-                execParamRepo.getExecParamValue(ExecParamRepository.URL_KEY):
+        final String urlOrPathToGtfsArchive = execParamRepo.hasExecParamValue(ExecParamRepository.URL_KEY) ?
+                execParamRepo.getExecParamValue(ExecParamRepository.URL_KEY) :
                 execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY);
 
-        System.out.println(urlOrPathToGtfsArchive);
-        System.out.println(pathToRawZip);
-        System.out.println(pathToUnzippedArchive);
         resultRepo.addNotice(
                 new ValidationProcessInfoNotice(
-                        reportName,
+                        feedPublisherNameOrAgencyName,
                         timestamp.toString(),
                         resultRepo.getWarningNoticeCount(),
                         resultRepo.getErrorNoticeCount(),
                         urlOrPathToGtfsArchive,
-                        FileUtils.sizeOf(zippedGtfsArchive),
-                        FileUtils.sizeOfDirectory(unzippedGtfsArchive),
+                        customFileUtils.sizeOf(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)),
+                        customFileUtils.sizeOfDirectory(execParamRepo.getExecParamValue(ExecParamRepository.EXTRACT_KEY)),
                         GTFS_VALIDATOR_VERSION,
                         processedFilenameCollection.toString(),
                         processingTimeSecs)

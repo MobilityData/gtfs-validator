@@ -33,6 +33,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.fileutils.CustomFileUtilsImpl;
 import org.mobilitydata.gtfsvalidator.geoutils.GeospatialUtilsImpl;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
@@ -42,7 +43,6 @@ import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.StopTimeValidator
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -317,15 +317,15 @@ public class DefaultConfig {
                 logger);
     }
 
-    public GenerateInfoNotice generateInfoNotice(final long startTime, final Set<String> processedFilenameCollection) {
+    public GenerateInfoNotice generateInfoNotice(final long processingTimeSecs,
+                                                 final Set<String> processedFilenameCollection) {
         return new GenerateInfoNotice(resultRepo,
                 execParamRepo,
                 gtfsDataRepository,
                 Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
-                startTime,
+                processingTimeSecs,
                 processedFilenameCollection,
-                new File(execParamRepo.getExecParamValue(INPUT_KEY)),
-                new File(execParamRepo.getExecParamValue(EXTRACT_KEY))
+                CustomFileUtilsImpl.getInstance()
         );
     }
 
