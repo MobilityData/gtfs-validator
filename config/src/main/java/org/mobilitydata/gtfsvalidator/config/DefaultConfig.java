@@ -42,6 +42,7 @@ import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.StopTimeValidator
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -52,7 +53,7 @@ import java.util.Set;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.ABORT_ON_ERROR;
+import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.*;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -308,14 +309,24 @@ public class DefaultConfig {
         return new ValidateAgencyLangAndFeedInfoFeedLangMatch(gtfsDataRepository, resultRepo, logger);
     }
 
-    public ExportResultAsFile exportResultAsFile(final long startTime, final Set<String> processedFilenameCollection) {
+    public ExportResultAsFile exportResultAsFile() {
         return new ExportResultAsFile(resultRepo,
                 execParamRepo,
                 gtfsDataRepository,
                 Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
-                logger,
+                logger);
+    }
+
+    public GenerateInfoNotice generateInfoNotice(final long startTime, final Set<String> processedFilenameCollection) {
+        return new GenerateInfoNotice(resultRepo,
+                execParamRepo,
+                gtfsDataRepository,
+                Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
                 startTime,
-                processedFilenameCollection);
+                processedFilenameCollection,
+                new File(execParamRepo.getExecParamValue(INPUT_KEY)),
+                new File(execParamRepo.getExecParamValue(EXTRACT_KEY))
+        );
     }
 
     public LogExecutionInfo logExecutionInfo() {
