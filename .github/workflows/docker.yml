@@ -33,7 +33,7 @@ jobs:
       - name: Prepare
         id: prep
         run: |
-          DOCKER_IMAGE=ghcr.io/${{ github.repository_owner }}/gtfs-validator
+          DOCKER_IMAGE=ghcr.io/mobilitydata/gtfs-validator
           VERSION=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
