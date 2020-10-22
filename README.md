@@ -42,6 +42,9 @@ cd /usr/gtfs-validator/cli-app
 ```
 you can then follow the instructions of the next sections
 
+Note: As a convenience, a shell script file is provided in the same directory. It is copied from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
+It can be used to run the validator in an automated way. We do not provide support for local runs of the validator.
+
 ## cli-app usage
 
 ### Validate a locally stored GTFS dataset
