@@ -13,7 +13,37 @@ This command-line tool written in Java that performs the following steps:
 1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
 1. Download the latest gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster) or [Circle-CI Pipelines](https://app.circleci.com/pipelines/github/MobilityData/gtfs-validator?branch=master)
 
+OR
+
+1. Install [Docker](https://www.docker.com)
+2. Retrieve an image from our [package page](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator)
+
 # Usage
+
+## Docker image
+
+Run the image either in the Docker Dashboard UI (dont forget to bind port 8090) or via this command
+``` 
+docker run -p 8090:8090 ghcr.io/mobilitydata/gtfs-validator:[[[REPLACE_WITH_YOUR_TAG]]]
+```
+
+By default, you will then have access to the web version of the validator at http://localhost:8090/
+
+If you want to use the cli version within Docker, you must first stop the web app with the following command
+``` 
+TODO: Could not figure out command.
+```
+
+**Note:** if you don't do it, the cli app will compete for resources within the container
+
+After attaching a terminal to the running container, navigate to the cli jar folder
+``` 
+cd /usr/gtfs-validator/cli-app
+```
+you can then follow the instructions of the next sections
+
+Note: As a convenience, a shell script file is provided in the same directory. It is copied from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
+It can be used to run the validator in an automated way. We do not provide support for local runs of the validator.
 
 ## cli-app usage
 
@@ -54,7 +84,9 @@ java -jar gtfs-validator-v1.3.0_cli.jar -i gtfs-dataset.zip -o output_folder -e 
 In order, this command line will:
  1. Search for a zipped GTFS dataset name `gtfs-dataset.zip` located in the working directory
  1. Extract its content to a directory named `extraction_folder`
- 1. Validate the GTFS data and output the results to the directory named `output_folder`. This folder will contain a single `.json` file with information related to the validation process. 
+ 1. Validate the GTFS data and output the results to the directory named `output_folder`. This folder will contain a single `.json` file with information related to the validation process.
+ 1. The generated `.json` file will be beautified if option `-b` or `--beautify`  has been provided and set to `true`. Note that if this argument is not specified, the validator will by default generate a beautified version of the validation report. 
+ 
 
 
 #### Example: Validate a subset of a GTFS dataset.
@@ -69,7 +101,7 @@ In order, this command line will:
  1. Extract the content of `gtfs-dataset.zip` to the directory created at step 2
  1. Create a directory names `output`
  1. Exclude files `fare_attributes.txt` and `attributions.txt` from the validation process. But also the files that rely on them: `translations.txt` and `fare_rules.txt`
- 1. Validate the GTFS data and output the results to the directory created at step 4. This folder will contain a single `.json` file with information related to the validation process. 
+ 1. Validate the GTFS data and output the results to the directory created at step 4. This folder will contain a single `.json` file with information related to the validation process.
 
 ### Validate a GTFS dataset stored on a remote server
 
