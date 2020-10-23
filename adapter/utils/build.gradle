@@ -33,6 +33,9 @@ dependencies {
             project(':domain'),
             project(':usecase')
     )
+    //File operations
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    implementation 'com.google.guava:guava:28.1-jre'
 
     // Spatial operations
     implementation 'org.locationtech.spatial4j:spatial4j:0.7'
