@@ -2,8 +2,8 @@ name: End to end
 
 on:
   push:
-    branches: [ master ]
-    #branches: [ master, your-prbranch ]
+    #branches: [ master ]
+    branches: [ master, Cristhian-GitHub-thebus-honolulu ]
 
 jobs:
   run-on-data:
@@ -18,8 +18,8 @@ jobs:
           java-version: 1.11
       - name: Package jar with Gradle
         run: ./gradlew shadowJar
-      #- name: Validate dataset from -- [[[ACRONYM]]]
-      #  run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u [[[DATASET_PUBLIC_URL]]] -i [[[ACRONYM]]].zip -e input -o output
+      - name: Validate dataset from -- TheBus
+        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u http://webapps.thebus.org/transitdata/Production/google_transit.zip -i TheBus.zip -e input -o output
       - name: Validate dataset from -- MBTA
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i mbta.zip -e input -o output
       - name: Validate dataset from issue 399 -- Monterey-Salinas Transit
