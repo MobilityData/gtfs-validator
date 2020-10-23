@@ -7,24 +7,30 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CustomFileUtilsImplTest {
 
-    @Test
-    void shouldReturnSizeOfFile() {
-        assertEquals(1125,
-                CustomFileUtilsImpl.getInstance().sizeOf(Resources.getResource("mockFile.txt").getPath()),
-                50);
-        assertEquals(2063,
-                CustomFileUtilsImpl.getInstance().sizeOf(Resources.getResource("mockFile2.txt").getPath()),
-                50);
-
-        assertEquals(2580,
-                CustomFileUtilsImpl.getInstance().sizeOf(Resources.getResource("mockFile3.txt").getPath()),
-                50);
+    private void fileOrDirectorySizeTest(final String filename, final int expectedSizeByte, final int bufferByte) {
+    //noinspection UnstableApiUsage
+        assertEquals(expectedSizeByte,
+                CustomFileUtilsImpl.getInstance().sizeOf(Resources.getResource(filename).getPath()),
+                bufferByte);
     }
 
     @Test
-    void shouldReturnSizeOfDirectory() {
-        assertEquals(5768,
-                CustomFileUtilsImpl.getInstance().sizeOf(Resources.getResource("mockDirectory").getPath()),
-                150);
+    void shouldMatchSizeOfMockFile() {
+        fileOrDirectorySizeTest("mockFile.txt", 1125, 50);
+    }
+
+    @Test
+    void shouldMatchSizeOfMockFile2() {
+        fileOrDirectorySizeTest("mockFile2.txt", 2063, 50);
+    }
+
+    @Test
+    void shouldMatchSizeOfMockFile3() {
+        fileOrDirectorySizeTest("mockFile3.txt", 2580, 50);
+    }
+
+    @Test
+    void shouldMatchSizeOfMockDirectory() {
+        fileOrDirectorySizeTest("mockDirectory.txt", 5768, 150);
     }
 }
