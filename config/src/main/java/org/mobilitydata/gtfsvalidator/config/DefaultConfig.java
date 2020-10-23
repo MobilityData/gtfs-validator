@@ -33,6 +33,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.fileutils.CustomFileUtilsImpl;
 import org.mobilitydata.gtfsvalidator.geoutils.GeospatialUtilsImpl;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
@@ -42,16 +43,18 @@ import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.StopTimeValidator
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Set;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
-import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.ABORT_ON_ERROR;
+import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.*;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
@@ -313,6 +316,21 @@ public class DefaultConfig {
                 gtfsDataRepository,
                 Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
                 logger);
+    }
+
+    public GenerateInfoNotice generateInfoNotice(final long processingTimeSecs,
+                                                 final Set<String> processedFilenameCollection) {
+        return new GenerateInfoNotice(
+                resultRepo,
+                execParamRepo,
+                gtfsDataRepository,
+                Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
+                processingTimeSecs,
+                processedFilenameCollection,
+                CustomFileUtilsImpl.getInstance(),
+                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)),
+                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.EXTRACT_KEY))
+        );
     }
 
     public LogExecutionInfo logExecutionInfo() {
