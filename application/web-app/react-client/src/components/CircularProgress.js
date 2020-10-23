@@ -27,7 +27,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function CircularIndeterminate() {
+/**
+ * Progress circle displayed after validation button is clicked
+ * @returns {JSX.Element} the DOM element to be rendered
+ * @constructor
+ */
+function CircularIndeterminate() {
     const classes = useStyles();
 
     return (
@@ -36,3 +41,5 @@ export default function CircularIndeterminate() {
         </div>
     );
 }
+
+export default CircularIndeterminate;

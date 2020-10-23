@@ -14,7 +14,30 @@
  *  limitations under the License.
  */
 
+/**
+ * Default port to be use
+ * @returns {string} the default port to be used
+ * @constructor
+ */
 export const Port = () => "8090";
+
+/**
+ * The command to run the validator
+ * @returns {string} the command to run the validator
+ * @constructor
+ */
 export const RunValidatorCommand = () => "/actions/runvalidator";
-export const GetReportContentCommand = () => "/actions/openreport";
+
+/**
+ * The command to open the validation report
+ * @returns {string} the  command to open the validation report
+ * @constructor
+ */
+export const OpenReportContentCommand = () => "/actions/openreport";
+
+/**
+ * the command to initialize the gtfs-validator DefaultConfig
+ * @returns {string}
+ * @constructor
+ */
 export const InitConfigCommand = () => "/actions/initialize/";

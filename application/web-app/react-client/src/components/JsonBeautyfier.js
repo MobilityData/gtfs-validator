@@ -17,10 +17,18 @@
 import JSONPretty from 'react-json-prettify';
 import React from "react";
 
-const JsonBeautyfier = (props) => {
+/**
+ * Used to beautify the content of a Json file
+ * @param id {String} DOM element id
+ * @param data {JSON} the JSON data to be beautified
+ * @param className {String} the class name of the DOM element
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const JsonBeautyfier = ({id, data, className}) => {
 
     return (
-        <JSONPretty id={props.id} json={props.data} className={props.className}/>
+        <JSONPretty id={id} json={data} className={className}/>
     );
 };
 export default JsonBeautyfier;
