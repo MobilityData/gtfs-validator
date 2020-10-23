@@ -72,3 +72,9 @@ jobs:
           path: build/docs/javadoc/
       - name: Generate jsdoc
         run: cd ./application/web-app/react-client/src && jsdoc . -r
+      - name: Persist jsdoc
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_jsdoc
+          path: application/web-app/react-client/out/
+
