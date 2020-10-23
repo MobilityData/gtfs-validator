@@ -70,3 +70,5 @@ jobs:
         with:
           name: v1.3.0-SNAPSHOT_javadoc
           path: build/docs/javadoc/
+      - name: Generate jsdoc
+        run: cd ./application/web-app/react-client/src && jsdoc . -r
