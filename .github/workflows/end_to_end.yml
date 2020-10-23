@@ -2,8 +2,8 @@ name: End to end
 
 on:
   push:
-    branches: [ master ]
-    #branches: [ master, your-prbranch ]
+    #branches: [ master ]
+    branches: [ master, f8full-collect dataset ]
 
 jobs:
   run-on-data:
@@ -20,6 +20,11 @@ jobs:
         run: ./gradlew shadowJar
       - name: Validate dataset from -- MBTA
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i input.zip -e input -o output
+      - name: Persist MBTA dataset
+        uses: actions/upload-artifact@v2
+        with:
+          name: MBTA_dataset
+          path: input/*.zip
       - name: Validate dataset from issue 399 -- Monterey-Salinas Transit
         run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u http://www.mst.org/google/google_transit.zip -i input.zip -e input -o output
       - name: Validate dataset from issue 398 -- Orange County Transportation Authority
