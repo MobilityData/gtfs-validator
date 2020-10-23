@@ -66,4 +66,9 @@ class ExceptionTypeTest {
     void validValue2ShouldReturnFalse() {
         assertTrue(ExceptionType.isEnumValueValid(2));
     }
+
+    @Test
+    void isEnumValueValidShouldReturnFalseOnNullValue() {
+        assertFalse(ExceptionType.isEnumValueValid(null));
+    }
 }
