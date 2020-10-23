@@ -3,7 +3,7 @@ name: End to end
 on:
   push:
     #branches: [ master ]
-    branches: [ master, f8full-collect dataset ]
+    branches: [ master, f8full-collect-dataset ]
 
 jobs:
   run-on-data:
