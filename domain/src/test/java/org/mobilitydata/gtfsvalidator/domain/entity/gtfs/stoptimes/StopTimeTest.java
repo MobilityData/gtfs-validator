@@ -412,7 +412,7 @@ class StopTimeTest {
     }
 
     @Test
-    void createStopTimeWithNullArrivalTimeAndExactTimeShouldGenerateNotice (){
+    void createStopTimeWithNullArrivalTimeAndExactTimeShouldGenerateNotice() {
         final StopTime.StopTimeBuilder builder = new StopTime.StopTimeBuilder();
         builder.tripId(TRIP_ID)
                 .arrivalTime(null)
@@ -509,7 +509,7 @@ class StopTimeTest {
     }
 
     @Test
-    void stopTimeShouldBeComparableByStopSequenceAscending(){
+    void stopTimeShouldBeComparableByStopSequenceAscending() {
         final StopTime.StopTimeBuilder builder = new StopTime.StopTimeBuilder();
         builder.tripId(TRIP_ID)
                 .arrivalTime(ARRIVAL_TIME)

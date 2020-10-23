@@ -32,34 +32,41 @@ import java.util.List;
  * Base class for all entities defined in translations.txt
  */
 public class Translation extends GtfsEntity {
-    @NotNull private final TableName tableName;
-    @NotNull private final String fieldName;
-    @NotNull private final String language;
-    @NotNull private final String translation;
-    @Nullable private final String recordId;
-    @Nullable private final String recordSubId;
-    @Nullable private final String fieldValue;
+    @NotNull
+    private final TableName tableName;
+    @NotNull
+    private final String fieldName;
+    @NotNull
+    private final String language;
+    @NotNull
+    private final String translation;
+    @Nullable
+    private final String recordId;
+    @Nullable
+    private final String recordSubId;
+    @Nullable
+    private final String fieldValue;
 
     /**
      * Class for all entities defined in translations.txt
      *
-     * @param tableName    defines the table that contains the field to be translated
-     * @param fieldName    name of the field to be translated
-     * @param language     language of translation
-     * @param translation  translated value
-     * @param recordId     defines the record that corresponds to the field to be translated
-     * @param recordSubId  helps the record that contains the field to be translated when the table doesn’t have a
-     *                     unique ID
-     * @param fieldValue   instead of defining which record should be translated by using record_id and record_sub_id,
-     *                     this field can be used to define the value which should be translated
+     * @param tableName   defines the table that contains the field to be translated
+     * @param fieldName   name of the field to be translated
+     * @param language    language of translation
+     * @param translation translated value
+     * @param recordId    defines the record that corresponds to the field to be translated
+     * @param recordSubId helps the record that contains the field to be translated when the table doesn’t have a
+     *                    unique ID
+     * @param fieldValue  instead of defining which record should be translated by using record_id and record_sub_id,
+     *                    this field can be used to define the value which should be translated
      */
     private Translation(@NotNull final TableName tableName,
-                          @NotNull final String fieldName,
-                          @NotNull final String language,
-                          @NotNull final String translation,
-                          @Nullable final String recordId,
-                          @Nullable final String recordSubId,
-                          @Nullable final String fieldValue) {
+                        @NotNull final String fieldName,
+                        @NotNull final String language,
+                        @NotNull final String translation,
+                        @Nullable final String recordId,
+                        @Nullable final String recordSubId,
+                        @Nullable final String fieldValue) {
         this.tableName = tableName;
         this.fieldName = fieldName;
         this.language = language;
@@ -69,31 +76,38 @@ public class Translation extends GtfsEntity {
         this.fieldValue = fieldValue;
     }
 
-    @NotNull public TableName getTableName() {
+    @NotNull
+    public TableName getTableName() {
         return tableName;
     }
 
-    @NotNull public String getFieldName() {
+    @NotNull
+    public String getFieldName() {
         return fieldName;
     }
 
-    @NotNull public String getLanguage() {
+    @NotNull
+    public String getLanguage() {
         return language;
     }
 
-    @NotNull public String getTranslation() {
+    @NotNull
+    public String getTranslation() {
         return translation;
     }
 
-    @Nullable public String getRecordId() {
+    @Nullable
+    public String getRecordId() {
         return recordId;
     }
 
-    @Nullable public String getRecordSubId() {
+    @Nullable
+    public String getRecordSubId() {
         return recordSubId;
     }
 
-    @Nullable public String getFieldValue() {
+    @Nullable
+    public String getFieldValue() {
         return fieldValue;
     }
 
@@ -115,7 +129,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field tableName and returns this
          *
-         * @param tableName  defines the table that contains the field to be translated
+         * @param tableName defines the table that contains the field to be translated
          * @return builder for future object creation
          */
         public TranslationBuilder tableName(@NotNull final String tableName) {
@@ -127,7 +141,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field fieldName and returns this
          *
-         * @param fieldName  name of the field to be translated
+         * @param fieldName name of the field to be translated
          * @return builder for future object creation
          */
         public TranslationBuilder fieldName(@NotNull final String fieldName) {
@@ -138,7 +152,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field language and returns this
          *
-         * @param language  language of translation
+         * @param language language of translation
          * @return builder for future object creation
          */
         public TranslationBuilder language(@NotNull final String language) {
@@ -149,7 +163,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field translation and returns this
          *
-         * @param translation  translated value
+         * @param translation translated value
          * @return builder for future object creation
          */
         public TranslationBuilder translation(@NotNull final String translation) {
@@ -160,7 +174,7 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field recordId and returns this
          *
-         * @param recordId  defines the record that corresponds to the field to be translated
+         * @param recordId defines the record that corresponds to the field to be translated
          * @return builder for future object creation
          */
         public TranslationBuilder recordId(@Nullable final String recordId) {
@@ -171,8 +185,8 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field recordSubId and returns this
          *
-         * @param recordSubId  helps the record that contains the field to be translated when the table doesn’t have a
-         *                     unique ID
+         * @param recordSubId helps the record that contains the field to be translated when the table doesn’t have a
+         *                    unique ID
          * @return builder for future object creation
          */
         public TranslationBuilder recordSubId(@Nullable final String recordSubId) {
@@ -183,8 +197,8 @@ public class Translation extends GtfsEntity {
         /**
          * Sets field fieldValue and returns this
          *
-         * @param fieldValue  instead of defining which record should be translated by using record_id and
-         *                    record_sub_id, this field can be used to define the value which should be translated
+         * @param fieldValue instead of defining which record should be translated by using record_id and
+         *                   record_sub_id, this field can be used to define the value which should be translated
          * @return builder for future object creation
          */
         // suppressed warning: order of method calls triggers this warning.
@@ -206,11 +220,11 @@ public class Translation extends GtfsEntity {
             // statements can be true.
             //noinspection ConstantConditions
             if (tableName == null || fieldName == null || language == null || translation == null ||
-                    (recordId  != null && tableName==TableName.FEED_INFO) ||
+                    (recordId != null && tableName == TableName.FEED_INFO) ||
                     (recordId != null && fieldValue != null) ||
                     (recordId == null && fieldValue == null && tableName != TableName.FEED_INFO) ||
                     (recordSubId != null && fieldValue != null) ||
-                    (recordSubId == null && tableName==TableName.STOP_TIMES && recordId != null) ||
+                    (recordSubId == null && tableName == TableName.STOP_TIMES && recordId != null) ||
                     (tableName == TableName.FEED_INFO && (recordId != null || recordSubId != null || fieldValue != null))
             ) {
                 if (tableName == null) {
@@ -219,7 +233,7 @@ public class Translation extends GtfsEntity {
                                 "table_name", "table_name",
                                 "field_name", "language",
                                 "translation", originalTableName, fieldName, language, translation));
-                    } else if (!TableName.isEnumValueValid(originalTableName)){
+                    } else if (!TableName.isEnumValueValid(originalTableName)) {
                         noticeCollection.add(new UnexpectedEnumValueNotice("translations.txt",
                                 "table_name", originalTableName,
                                 "table_name", "field_name",
@@ -245,7 +259,7 @@ public class Translation extends GtfsEntity {
                             "field_name", "language",
                             "translation", originalTableName, fieldName, language, translation));
                 }
-                if (tableName==TableName.FEED_INFO) {
+                if (tableName == TableName.FEED_INFO) {
                     if (recordId != null) {
                         noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                                 "record_id", "table_name",
@@ -253,15 +267,14 @@ public class Translation extends GtfsEntity {
                                 "field_name", "language",
                                 "translation", originalTableName, fieldName, language,
                                 translation));
-                    } else if (recordSubId != null){
+                    } else if (recordSubId != null) {
                         noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                                 "record_sub_id", "table_name",
                                 "table_name",
                                 "field_name", "language",
                                 "translation", originalTableName, fieldName, language,
                                 translation));
-                    }
-                    else if (fieldValue != null) {
+                    } else if (fieldValue != null) {
                         noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                                 "field_value", "table_name",
                                 "table_name",
@@ -271,7 +284,7 @@ public class Translation extends GtfsEntity {
                     }
                 }
                 if (tableName != TableName.FEED_INFO && ((recordId != null && fieldValue != null) ||
-                        (recordId == null && fieldValue == null))){
+                        (recordId == null && fieldValue == null))) {
                     noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                             "record_id", "field_value",
                             "table_name",
@@ -285,7 +298,7 @@ public class Translation extends GtfsEntity {
                             "field_name", "language",
                             "translation", originalTableName, fieldName, language, translation));
                 }
-                if (recordSubId == null && tableName==TableName.STOP_TIMES && recordId != null) {
+                if (recordSubId == null && tableName == TableName.STOP_TIMES && recordId != null) {
                     noticeCollection.add(new IllegalFieldValueCombinationNotice("translations.txt",
                             "record_sub_id", "table_name",
                             "table_name",
@@ -301,6 +314,7 @@ public class Translation extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null
          */
         public TranslationBuilder clear() {

@@ -1,0 +1,77 @@
+version: 2.1
+
+jobs:
+  pack:
+    docker:
+      - image: circleci/openjdk:11
+    steps:
+      - checkout
+      - run:
+          name: Package cli jar with Gradle
+          command: |
+            ./gradlew shadowJar
+      - run:
+          name: Package web war with Gradle
+          command: |
+            ./gradlew bootWar
+      - store_artifacts:
+          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
+          destination: gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
+      - store_artifacts:
+          path: application/web-app/spring-server/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.war
+          destination: gtfs-validator-v1.3.0-SNAPSHOT_web.war
+  test:
+    docker:
+      - image: circleci/openjdk:11
+    steps:
+      - checkout
+      - run:
+          name: Run Java tests
+          command: |
+            ./gradlew testReport
+      - run:
+          name: Compress Java test report
+          command: |
+            tar -C build/reports/allTests/ -cvf java-tests-v1.3.0-SNAPSHOT.tar .
+      - run:
+          name: Run JS tests
+          command: |
+            ./gradlew uiTest
+      - run:
+          name: Compress JS test report
+          command: |
+            tar -C application/web-app/react-client/test-reports/ -cvf js-tests-v1.3.0-SNAPSHOT.tar .
+      - store_artifacts:
+          path: java-tests-v1.3.0-SNAPSHOT.tar
+          destination: java-tests-v1.3.0-SNAPSHOT.tar
+      - store_artifacts:
+          path: js-tests-v1.3.0-SNAPSHOT.tar
+          destination: js-tests-v1.3.0-SNAPSHOT.tar
+  doc:
+    docker:
+      - image: circleci/openjdk:11
+    steps:
+      - checkout
+      - run:
+          name: Generate javadoc
+          command: |
+            ./gradlew aggregateJavadocs
+      - run:
+          name: Compress javadoc
+          command: |
+            tar -C build/docs/javadoc/ -cvf v1.3.0-SNAPSHOT_javadoc.tar .
+      - store_artifacts:
+          path: v1.3.0-SNAPSHOT_javadoc.tar
+          destination: v1.3.0-SNAPSHOT_javadoc.tar
+
+workflows:
+  version: 2
+  test_pack_doc:
+    jobs:
+      - test
+      - pack:
+          requires:
+            - test
+      - doc:
+          requires:
+            - test

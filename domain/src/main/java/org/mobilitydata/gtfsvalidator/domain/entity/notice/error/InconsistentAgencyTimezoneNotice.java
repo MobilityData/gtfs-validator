@@ -15,6 +15,7 @@
  */
 
 package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
+
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
@@ -27,7 +28,7 @@ public class InconsistentAgencyTimezoneNotice extends ErrorNotice {
 
     public InconsistentAgencyTimezoneNotice(final int distinctTimezoneCount,
                                             final String conflictingTimezoneCollection) {
-        super("agency.txt",E_030,
+        super("agency.txt", E_030,
                 "Different values for field `agency_timezone`",
                 distinctTimezoneCount + " values for field `agency_timezone` found in file `agency.txt`: "
                         + conflictingTimezoneCollection,

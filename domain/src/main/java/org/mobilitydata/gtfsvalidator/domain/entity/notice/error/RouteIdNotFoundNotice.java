@@ -24,8 +24,11 @@ import java.io.IOException;
 public class RouteIdNotFoundNotice extends ErrorNotice {
     public RouteIdNotFoundNotice(final String filename, final String entityId, final String routeId,
                                  final String fieldName) {
-        super(filename, E_033, "Non existing `route_id`", "Trip with `trip_id`: "+ entityId + " refers" +
-                " to non-existing route from file `routes.txt` with " + "`route_id`: " + routeId + "`.", entityId);
+        super(filename,
+                E_033,
+                "Value of field `service_id` should exist in GTFS `routes.txt`",
+                "Trip with `trip_id`: " + entityId + " refers" +
+                        " to non-existing route from file `routes.txt` with " + "`route_id`: " + routeId + "`.", entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_UNKNOWN_ROUTE_ID, routeId);
     }

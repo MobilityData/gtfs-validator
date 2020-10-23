@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotConstructDataProviderNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -42,7 +42,7 @@ class ParseSingleRowForFileTest {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
         when(mockProvider.hasNext()).thenReturn(true, true, true, false);
-        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey", "testValue"), 0);
         when(mockProvider.getNext()).thenReturn(testRawEntity);
 
         GtfsSpecRepository.RawEntityParser mockParser = mock(GtfsSpecRepository.RawEntityParser.class);
@@ -85,11 +85,11 @@ class ParseSingleRowForFileTest {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
         when(mockProvider.hasNext()).thenReturn(true);
-        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey", "testValue"), 0);
         when(mockProvider.getNext()).thenReturn(testRawEntity);
 
         GtfsSpecRepository.RawEntityParser mockParser = mock(GtfsSpecRepository.RawEntityParser.class);
-        ErrorNotice testNotice = new CannotConstructDataProviderNotice("testName");
+        ErrorNotice testNotice = new MissingHeaderNotice("testName", "testHeader");
         when(mockParser.validateNonStringTypes(any(RawEntity.class))).thenReturn(List.of(testNotice, testNotice, testNotice));
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
@@ -119,12 +119,12 @@ class ParseSingleRowForFileTest {
         verify(mockParser, times(3)).parse(any(RawEntity.class));
         verify(mockProvider, times(3)).hasNext();
         verify(mockProvider, times(3)).getNext();
-        verify(mockResultRepo, times(9)).addNotice(any(CannotConstructDataProviderNotice.class));
+        verify(mockResultRepo, times(9)).addNotice(any(MissingHeaderNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo, mockParser, mockProvider);
     }
 
     @Test
-    void providerErrorShouldGenerateNotice() {
+    void providerErrorShouldBeIgnored() {
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.empty());
@@ -145,7 +145,6 @@ class ParseSingleRowForFileTest {
         InOrder inOrder = Mockito.inOrder(mockFileRepo, mockResultRepo);
 
         inOrder.verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
-        inOrder.verify(mockResultRepo, times(1)).addNotice(any(CannotConstructDataProviderNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockSpecRepo, mockResultRepo);
     }
 

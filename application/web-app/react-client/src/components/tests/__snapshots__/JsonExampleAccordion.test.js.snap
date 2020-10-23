@@ -1,0 +1,787 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JsonExampleAccordion should render correctly 1`] = `
+<div
+  className="accordion ui styled json-example-container"
+  id="json-example"
+>
+  <div
+    className="title json-example-tile"
+    onClick={[Function]}
+  >
+    <i
+      aria-hidden="true"
+      className="dropdown icon"
+      onClick={[Function]}
+    />
+    Example of configuration file using URL to remote GTFS archive 
+  </div>
+  <div
+    className="content"
+  >
+    <pre
+      style={
+        Object {
+          "backgroundColor": "rgb(39, 40, 34)",
+          "overflow": "auto",
+        }
+      }
+    >
+      <span
+        style={
+          Object {
+            "color": "rgb(129, 211, 204)",
+          }
+        }
+      >
+        {
+      </span>
+      <div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              extract
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(242, 152, 59)",
+                }
+              }
+            >
+              relative/extraction/path
+            </span>
+            "
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              output
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(242, 152, 59)",
+                }
+              }
+            >
+              relative/output/path
+            </span>
+            "
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              input
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(242, 152, 59)",
+                }
+              }
+            >
+              relative/path/to/zipped_dataset
+            </span>
+            "
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              exclude
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(242, 152, 59)",
+                }
+              }
+            >
+              agency.txt,routes.txt
+            </span>
+            "
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              abort_on_error
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            true
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              beautify
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            false
+          </span>
+          
+        </div>
+      </div>
+      <span
+        style={
+          Object {
+            "color": "rgb(129, 211, 204)",
+          }
+        }
+      >
+        
+        }
+      </span>
+    </pre>
+  </div>
+  <div
+    className="title"
+    onClick={[Function]}
+  >
+    <i
+      aria-hidden="true"
+      className="dropdown icon"
+      onClick={[Function]}
+    />
+    Example of configuration file using locally stored GTFS archive
+  </div>
+  <div
+    className="content"
+  >
+    <pre
+      style={
+        Object {
+          "backgroundColor": "rgb(39, 40, 34)",
+          "overflow": "auto",
+        }
+      }
+    >
+      <span
+        style={
+          Object {
+            "color": "rgb(129, 211, 204)",
+          }
+        }
+      >
+        {
+      </span>
+      <div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              extract
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(242, 152, 59)",
+                }
+              }
+            >
+              relative/extraction/path
+            </span>
+            "
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              output
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(242, 152, 59)",
+                }
+              }
+            >
+              relative/output/path
+            </span>
+            "
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              url
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(242, 152, 59)",
+                }
+              }
+            >
+              url/to/dataset
+            </span>
+            "
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              exclude
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(242, 152, 59)",
+                }
+              }
+            >
+              agency.txt,routes.txt
+            </span>
+            "
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              abort_on_error
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            true
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            ,
+          </span>
+        </div>
+        <div>
+          <span>
+              
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(201, 70, 56)",
+                }
+              }
+            >
+              beautify
+            </span>
+            "
+            <span
+              style={
+                Object {
+                  "color": "rgb(129, 211, 204)",
+                }
+              }
+            >
+              :
+            </span>
+             
+          </span>
+          <span
+            style={
+              Object {
+                "color": "rgb(129, 211, 204)",
+              }
+            }
+          >
+            false
+          </span>
+          
+        </div>
+      </div>
+      <span
+        style={
+          Object {
+            "color": "rgb(129, 211, 204)",
+          }
+        }
+      >
+        
+        }
+      </span>
+    </pre>
+  </div>
+</div>
+`;

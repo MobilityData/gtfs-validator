@@ -95,12 +95,12 @@ public class FeedInfo extends GtfsEntity {
     }
 
     @Nullable
-    public LocalDate getStartDate() {
+    public LocalDate getFeedStartDate() {
         return feedStartDate;
     }
 
     @Nullable
-    public LocalDate getEndDate() {
+    public LocalDate getFeedEndDate() {
         return feedEndDate;
     }
 
@@ -254,6 +254,7 @@ public class FeedInfo extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public FeedInfoBuilder clear() {

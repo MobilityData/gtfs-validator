@@ -319,6 +319,7 @@ public class Trip extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public TripBuilder clear() {
@@ -338,5 +339,9 @@ public class Trip extends GtfsEntity {
             noticeCollection.clear();
             return this;
         }
+    }
+
+    public boolean hasSameServiceId(final Trip otherTrip) {
+        return serviceId.equals(otherTrip.getServiceId());
     }
 }

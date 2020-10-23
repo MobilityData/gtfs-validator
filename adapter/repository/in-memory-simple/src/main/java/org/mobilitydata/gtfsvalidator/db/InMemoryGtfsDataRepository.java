@@ -21,15 +21,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.Calendar;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.CalendarDate;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.fareattributes.FareAttribute;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.frequencies.Frequency;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.pathways.Pathway;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
+import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stops.LocationBase;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -47,15 +48,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Map containing Trip entities. Entities are mapped on the value found in column trip_id of GTFS file trips.txt
     private final Map<String, Trip> tripPerId = new HashMap<>();
 
+    // Map containing Trip entities. Entities are mapped on the value found in column block_id of GTFS file trips.txt
+    private final Map<String, List<Trip>> tripPerBlockId = new HashMap<>();
+
     // Map containing Calendar entities. Entities are mapped on the value found in column service_id of GTFS file
     // calendar.txt.
     private final Map<String, Calendar> calendarPerServiceId = new HashMap<>();
 
-    // CalendarDate entities container. Entities are mapped on key resulting from the concatenation of the values
-    // contained in the following columns (found in calendar_dates.txt gtfs file):
-    // - service_id
-    // - date
-    private final Map<String, CalendarDate> calendarDatePerServiceIdAndDate = new HashMap<>();
+    // CalendarDate entities container. The key for the outer map is the calendar_dates.txt service_id, with the key for
+    // the inner map being the calendar_dates.txt date field
+    private final Map<String, Map<String, CalendarDate>> calendarDatePerServiceIdAndDate = new HashMap<>();
 
     // Map containing Level entities. Entities are mapped on the value found in column level_id of GTFS file levels.txt
     private final Map<String, Level> levelPerId = new HashMap<>();
@@ -82,6 +84,17 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // Example of key after composition: fare_idroute_idorigin_iddestination_idcontains_id
     private final Map<String, FareRule> fareRuleCollection = new HashMap<>();
 
+    // Map containing Frequency entities. Entities are mapped on a composite key made of the values found in the
+    // columns of GTFS file frequencies.txt:
+    // - trip_id
+    // - start_time
+    // Example of key after composition: trip_idstart_time
+    private final Map<String, Frequency> frequencyPerTripIdStartTime = new HashMap<>();
+
+    // Map containing Frequency entities. Entities are mapped on trip_id value. For each trip_id, Frequency entities are
+    // stored based on their trip_id value.
+    private final Map<String, List<Frequency>> frequencyPerTripId = new HashMap<>();
+
     // Map containing Pathway entities. Entities are mapped on the value found in column pathway_id of GTFS file
     // pathways.txt
     private final Map<String, Pathway> pathwayPerId = new HashMap<>();
@@ -104,7 +117,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
 
     // Map containing Shape Entities. A shape is a actually a collection of ShapePoint.
     // Entities are mapped on the values found in column shape_id  and shape_pt_sequence of GTFS file shapes.txt
-    private final Map<String, Map<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
+    private final Map<String, SortedMap<Integer, ShapePoint>> shapePerIdShapePtSequence = new HashMap<>();
 
     // Map containing StopTime entities. Entities are mapped on a composite key made of the values found in the columns
     // of GTFS file stop_times.txt:
@@ -116,6 +129,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     // language of GTFS file translations.txt.
     private final Map<String, Map<String, Map<String, Translation>>> translationPerTableName = new HashMap<>();
 
+    // Map containing Stop entities. Entities are mapped on the value found in column stop_id of GTFS file stops.txt
+    private final Map<String, LocationBase> stopPerId = new HashMap<>();
+
     /**
      * Add an Agency representing a row from agency.txt to this. Return the entity added to the repository if the
      * uniqueness constraint of agency based on agency_id is respected, if this requirement is not met, returns null.
@@ -125,17 +141,40 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * respected, if this requirement is not met returns null.
      */
     @Override
-    public Agency addAgency(@NotNull final Agency newAgency) throws IllegalArgumentException {
+    public Agency addAgency(@NotNull final Agency newAgency, final Agency.AgencyBuilder builder)
+            throws IllegalArgumentException {
+        // todo: implement early fail when adding agency with agency_id already in data repository
         //noinspection ConstantConditions
-        if (newAgency != null) {
-            if (agencyPerId.containsKey(newAgency.getAgencyId())) {
-                return null;
-            } else {
-                agencyPerId.put(newAgency.getAgencyId(), newAgency);
-                return newAgency;
-            }
-        } else {
+        if (newAgency == null) {
             throw new IllegalArgumentException("Cannot add null agency to data repository");
+        } else {
+            final String agencyId = newAgency.getAgencyId();
+            if (agencyId == null) {
+                if (getAgencyCount() > 1) {
+                    final Agency replacementAgency = (Agency) builder
+                            .clear()
+                            .agencyId(Agency.AgencyBuilder.DEFAULT_AGENCY_ID)
+                            .agencyEmail(newAgency.getAgencyEmail())
+                            .agencyFareUrl(newAgency.getAgencyUrl())
+                            .agencyLang(newAgency.getAgencyLang())
+                            .agencyName(newAgency.getAgencyName())
+                            .agencyPhone(newAgency.getAgencyPhone())
+                            .agencyUrl(newAgency.getAgencyUrl())
+                            .build()
+                            .getData();
+                    return addAgency(replacementAgency, builder);
+                } else {
+                    agencyPerId.put(agencyId, newAgency);
+                    return newAgency;
+                }
+            } else {
+                if (agencyPerId.containsKey(agencyId)) {
+                    return null;
+                } else {
+                    agencyPerId.put(agencyId, newAgency);
+                    return newAgency;
+                }
+            }
         }
     }
 
@@ -151,13 +190,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return an immutable collection of Agency objects representing all the rows from agency.txt
+     * Return an immutable map of Agency objects representing all the rows from agency.txt. Entities are mapped on field
+     * `agency_id` of file `agency.txt`. Note that if a record from `
      *
-     * @return a immutable collection of Agency objects representing all the rows from agency.txt
+     * @return a immutable map of Agency objects representing all the rows from agency.txt
      */
     @Override
-    public Collection<Agency> getAgencyAll() {
-        return Collections.unmodifiableCollection(agencyPerId.values());
+    public Map<String, Agency> getAgencyAll() {
+        return Collections.unmodifiableMap(agencyPerId);
     }
 
     /**
@@ -194,13 +234,15 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return a collection of Route objects representing all the rows from routes.txt
+     * Return an unmodifiable map of Route objects representing all the rows from routes.txt. Entities are mapped on
+     * value of field route_id of file `routes.txt`.
      *
-     * @return a collection of Route objects representing all the rows from routes.txt
+     * @return an unmodifiable map of Route objects representing all the rows from routes.txt. Entities are mapped on
+     * value of field route_id of file `routes.txt`.
      */
     @Override
-    public Collection<Route> getRouteAll() {
-        return routePerId.values();
+    public Map<String, Route> getRouteAll() {
+        return Collections.unmodifiableMap(routePerId);
     }
 
     /**
@@ -231,6 +273,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
             } else {
                 final String tripId = newTrip.getTripId();
                 tripPerId.put(tripId, newTrip);
+                final String blockId = newTrip.getBlockId();
+                if (blockId != null) {
+                    if (tripPerBlockId.containsKey(blockId)) {
+                        tripPerBlockId.get(blockId).add(newTrip);
+                    } else {
+                        final List<Trip> tripCollection = new ArrayList<>();
+                        tripCollection.add(newTrip);
+                        tripPerBlockId.put(blockId, tripCollection);
+                    }
+                }
                 return newTrip;
             }
         } else {
@@ -250,15 +302,26 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return an immutable collection of Trip objects representing all the rows from trips.txt
+     * Return an immutable map of Trip objects representing all the rows from trips.txt. Entities are mapped on trip_id
+     * of file `trips.txt`.
      *
-     * @return an immutable collection of Trip objects representing all the rows from trips.txt
+     * @return an immutable map of Trip objects representing all the rows from trips.txt. Entities are mapped on trip_id
+     * of file `trips.txt`
      */
     @Override
-    public Collection<Trip> getTripAll() {
-        return Collections.unmodifiableCollection(tripPerId.values());
+    public Map<String, Trip> getTripAll() {
+        return Collections.unmodifiableMap(tripPerId);
     }
 
+    /**
+     * Return an immutable map of {@link Trip} grouped by blockId value
+     *
+     * @return an immutable map of {@link Trip} grouped by blockId value
+     */
+    @Override
+    public Map<String, List<Trip>> getAllTripByBlockId() {
+        return Collections.unmodifiableMap(tripPerBlockId);
+    }
 
     /**
      * Add a CalendarDate representing a row from calendar_dates.txt to this. Return the entity added to the repository
@@ -275,10 +338,19 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
         // not be
         //noinspection ConstantConditions
         if (newCalendarDate != null) {
-            if (calendarDatePerServiceIdAndDate.containsKey(newCalendarDate.getCalendarDateMappingKey())) {
-                return null;
+            final String serviceId = newCalendarDate.getServiceId();
+            final String dateAsString = newCalendarDate.getDate().toString();
+            if (calendarDatePerServiceIdAndDate.containsKey(serviceId)) {
+                if (calendarDatePerServiceIdAndDate.get(serviceId).containsKey(dateAsString)) {
+                    return null;
+                } else {
+                    calendarDatePerServiceIdAndDate.get(serviceId).put(dateAsString, newCalendarDate);
+                    return newCalendarDate;
+                }
             } else {
-                calendarDatePerServiceIdAndDate.put(newCalendarDate.getCalendarDateMappingKey(), newCalendarDate);
+                final Map<String, CalendarDate> innerMap = new HashMap<>();
+                innerMap.put(dateAsString, newCalendarDate);
+                calendarDatePerServiceIdAndDate.put(serviceId, innerMap);
                 return newCalendarDate;
             }
         } else {
@@ -287,16 +359,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return the CalendarDate representing a row from calendar_dates.txt related to the id provided as parameter
+     * Return an immutable collection of {@code CalendarDate} objects representing all the rows from calendar_dates.txt.
+     * Entities are mapped on service_id and date in a nested map.
      *
-     * @param serviceId  first part of the composite key used to map rows from calendar_dates.txt
-     * @param date       second part of the composite key used to map rows from calendar_dates.txt
-     * @return the CalendarDate representing a row from calendar_dates.txt related to the composite key provided as
-     * parameter
+     * @return a immutable collection of {@code CalendarDate} objects representing all the rows from calendar_dates.txt.
+     * Entities are mapped on service_id and date in a nested map.
      */
-    @Override
-    public CalendarDate getCalendarDateByServiceIdDate(final String serviceId, final LocalDate date) {
-        return calendarDatePerServiceIdAndDate.get(serviceId + date.toString());
+    public Map<String, Map<String, CalendarDate>> getCalendarDateAll() {
+        return Collections.unmodifiableMap(calendarDatePerServiceIdAndDate);
     }
 
     /**
@@ -371,13 +441,13 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
-     * Return a collection of Calendar objects representing all the rows from calendar.txt
+     * Return an unmodifiable collection of Calendar objects representing all the rows from calendar.txt
      *
-     * @return a collection of Calendar objects representing all the rows from calendar.txt
+     * @return an unmodifiable collection of Calendar objects representing all the rows from calendar.txt
      */
     @Override
-    public Collection<Calendar> getCalendarAll() {
-        return calendarPerServiceId.values();
+    public Map<String, Calendar> getCalendarAll() {
+        return Collections.unmodifiableMap(calendarPerServiceId);
     }
 
     /**
@@ -420,15 +490,14 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the Transfer representing a row from transfers.txt related to the composite key provided as parameter.
      *
      * @param fromStopId first part of the composite key: identifies a stop or station where a connection between
-     *                   routes begins. Querying on {@param fromStopId}, the method will will only return records
-     *                   containing {@param fromStopId} in the from_stop_id column of transfers.txt GTFS file. This
-     *                   method will not return any records where {@param fromStopId} is in the to_stop_id column of the
+     *                   routes begins. Querying on {fromStopId}, the method will will only return records
+     *                   containing {fromStopId} in the from_stop_id column of transfers.txt GTFS file. This
+     *                   method will not return any records where {fromStopId} is in the to_stop_id column of the
      *                   same pre-mentioned GTFS file.
-     *
      * @param toStopId   second part of the composite key: identifies a stop or station where a connection between
-     *                   routes ends. Querying on {@param toStopId}, the method will will only return records
-     *                   containing {@param toStopId} in the to_stop_id column of transfers.txt GTFS file. This
-     *                   method will not return any records where {@param toStopId} is in the from_stop_id column
+     *                   routes ends. Querying on {toStopId}, the method will will only return records
+     *                   containing {toStopId} in the to_stop_id column of transfers.txt GTFS file. This
+     *                   method will not return any records where {toStopId} is in the from_stop_id column
      *                   of the same pre-mentioned GTFS file.
      * @return the Transfer representing a row from transfers.txt related to the composite key provided as parameter
      */
@@ -469,6 +538,16 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     @Override
     public FeedInfo getFeedInfoByFeedPublisherName(final String feedPublisherName) {
         return feedInfoPerFeedPublisherName.get(feedPublisherName);
+    }
+
+    /**
+     * Returns an unmodifiable  collection of {@link FeedInfo} entities
+     *
+     * @return an unmodifiable  collection of {@link FeedInfo} entities
+     */
+    @Override
+    public Map<String, FeedInfo> getFeedInfoAll() {
+        return Collections.unmodifiableMap(feedInfoPerFeedPublisherName);
     }
 
     /**
@@ -561,6 +640,79 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
     }
 
     /**
+     * Add a Frequency representing a row from frequencies.txt to this {@code GtfsDataRepository}.
+     * Return the entity added to the repository if the uniqueness constraint on rows from frequencies.txt
+     * is respected, if this requirement is not met, returns null.
+     *
+     * @param newFrequency the internal representation of a row from frequencies.txt to be added to the
+     *                     repository.
+     * @return the entity added to the repository if the uniqueness constraint of frequency based on rows from
+     * frequencies.txt is respected, if this requirement is not met returns null.
+     * @throws IllegalArgumentException if the argument is null
+     */
+    @Override
+    public Frequency addFrequency(final Frequency newFrequency) throws IllegalArgumentException {
+        if (newFrequency != null) {
+            final String key = newFrequency.getFrequencyMappingKey();
+            if (frequencyPerTripIdStartTime.containsKey(key)) {
+                return null;
+            } else {
+                final String tripId = newFrequency.getTripId();
+                frequencyPerTripIdStartTime.put(key, newFrequency);
+                if (frequencyPerTripId.containsKey(tripId)) {
+                    frequencyPerTripId.get(tripId).add(newFrequency);
+                } else {
+                    final List<Frequency> frequencyCollection = new ArrayList<>();
+                    frequencyCollection.add(newFrequency);
+                    frequencyPerTripId.put(tripId, frequencyCollection);
+                }
+                return newFrequency;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null frequency to data repository");
+        }
+    }
+
+    /**
+     * Return the Frequency representing a row from frequencies.txt related to the id provided as parameter
+     *
+     * @param tripId    1st part of the composite key: identifies a fare class
+     * @param startTime 2nd part of the composite key: identifies a route associated with the fare class
+     * @return the Frequency representing a row from frequencies.txt related to the id provided as parameter
+     */
+    @Override
+    public Frequency getFrequency(final String tripId, final Integer startTime) {
+        return frequencyPerTripIdStartTime.get(Frequency.getFrequencyMappingKey(tripId, startTime));
+    }
+
+    /**
+     * Return an unmodifiable map of Frequency objects from `frequencies.txt`. Entities are mapped on value of trip_id
+     * of file `frequencies.txt`. Each trip_id may include multiple {@link Frequency} entries, therefore, a list of
+     * these entries is returned.
+     *
+     * @return an unmodifiable map of Frequency objects from `frequencies.txt`. Entities are mapped on value of trip_id
+     * of `frequencies.txt`. Each trip_id may include multiple {@link Frequency} entries, therefore, a list of these
+     * entries is returned.
+     */
+    @Override
+    public Map<String, List<Frequency>> getFrequencyAllByTripId() {
+        return Collections.unmodifiableMap(frequencyPerTripId);
+    }
+
+    /**
+     * Return an unmodifiable map of Frequency objects representing all the rows from frequencies.txt. Entities are
+     * mapped on values of fields trip_id and start_time of file `frequencies.txt`. This composite key is generated via
+     * method @see #Frequency#getFrequencyMappingKey().
+     *
+     * @return an unmodifiable map of Frequency objects representing all the rows from frequencies.txt. Entities are
+     * mapped on values of fields trip_id and start_time of file `frequencies.txt`. This composite key is generated via
+     * method @see #Frequency#getFrequencyMappingKey()
+     */
+    public Map<String, Frequency> getFrequencyAll() {
+        return Collections.unmodifiableMap(frequencyPerTripIdStartTime);
+    }
+
+    /**
      * Add a Pathway representing a row from pathways.txt to this {@link GtfsDataRepository}.
      * Return the entity added to the repository if the uniqueness constraint of route based on pathway_id is respected,
      * if this requirement is not met, returns null.
@@ -641,8 +793,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                       final String tripId, final String organizationName, final boolean isProducer,
                                       final boolean isOperator, final boolean isAuthority, final String attributionUrl,
                                       final String attributionEmail, final String attributionPhone) {
-        return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId,agencyId,routeId,tripId ,
-                organizationName,isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
+        return attributionCollection.get(Attribution.getAttributionMappingKey(attributionId, agencyId, routeId, tripId,
+                organizationName, isProducer, isOperator, isAuthority, attributionUrl, attributionEmail,
                 attributionPhone));
     }
 
@@ -671,7 +823,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                     return null;
                 }
             } else {
-                final Map<Integer, ShapePoint> innerMap = new TreeMap<>();
+                final SortedMap<Integer, ShapePoint> innerMap = new TreeMap<>();
                 innerMap.put(newShapePoint.getShapePtSequence(), newShapePoint);
                 shapePerIdShapePtSequence.put(shapeId, innerMap);
             }
@@ -686,12 +838,28 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * a shape object. The returned map is ordered by shape_pt_sequence.
      *
      * @param shapeId the key from shapes.txt related to the Route to be returned
-     * @return  an immutable map of shape points from shapes.txt related to the id provided as parameter; which
+     * @return an immutable map of shape points from shapes.txt related to the id provided as parameter; which
      * represents a shape object. The returned map is ordered by shape_pt_sequence.
      */
     @Override
-    public Map<Integer, ShapePoint> getShapeById(final String shapeId) {
-        return Collections.unmodifiableMap(shapePerIdShapePtSequence.get(shapeId));
+    public SortedMap<Integer, ShapePoint> getShapeById(final String shapeId) {
+        try {
+            return Collections.unmodifiableSortedMap(shapePerIdShapePtSequence.get(shapeId));
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Return an immutable map representing all records from shapes.txt. The key values for the returned map are
+     * shape_id and the value is another map, which keys are shape_pt_sequence and values are {@link ShapePoint}.
+     * Note that those are ordered by ascending shape_pt_sequence.
+     *
+     * @return an immutable map representing all records from shapes.txt
+     */
+    @Override
+    public Map<String, SortedMap<Integer, ShapePoint>> getShapeAll() {
+        return Collections.unmodifiableMap(shapePerIdShapePtSequence);
     }
 
     /**
@@ -709,9 +877,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      */
     @Override
     public StopTime addStopTime(final StopTime newStopTime) throws IllegalArgumentException {
-        if(newStopTime!=null) {
-            final String tripId  = newStopTime.getTripId();
-            final Integer stopSequence  = newStopTime.getStopSequence();
+        if (newStopTime != null) {
+            final String tripId = newStopTime.getTripId();
+            final Integer stopSequence = newStopTime.getStopSequence();
             if (stopTimePerTripIdStopSequence.containsKey(tripId)) {
                 if (!stopTimePerTripIdStopSequence.get(tripId).containsKey(stopSequence)) {
                     stopTimePerTripIdStopSequence.get(tripId).put(stopSequence, newStopTime);
@@ -733,12 +901,23 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter.
      * The returned map is ordered by stop_sequence
      *
-     * @param tripId  identifies a trip
-     * @return  an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
+     * @param tripId identifies a trip
+     * @return an immutable map of {@link StopTime} from stop_times.txt related to the trip_id provided as parameter
      */
     @Override
-    public Map<Integer, StopTime> getStopTimeByTripId(final String tripId) {
-        return Collections.unmodifiableMap(stopTimePerTripIdStopSequence.get(tripId));
+    public SortedMap<Integer, StopTime> getStopTimeByTripId(final String tripId) {
+        return Collections.unmodifiableSortedMap(stopTimePerTripIdStopSequence.get(tripId));
+    }
+
+    /**
+     * Return an immutable map representing all records from stop_times.txt. The key values for the returned map are
+     * trip_id and the value is another map, which keys are stop_sequence and values are {@link StopTime}. Note that
+     * those are ordered by ascending stop_sequence.
+     *
+     * @return an immutable map representing all records from stop_times.txt
+     */
+    public Map<String, TreeMap<Integer, StopTime>> getStopTimeAll() {
+        return Collections.unmodifiableMap(stopTimePerTripIdStopSequence);
     }
 
     /**
@@ -746,8 +925,8 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
      * respected. If this requirement is not met, returns null.
      *
-     * @param newTranslationTable  the internal representation of a row from translations.txt to be added to the
-     *                             repository
+     * @param newTranslationTable the internal representation of a row from translations.txt to be added to the
+     *                            repository
      * @return the entity added to the repository if the uniqueness constraint on rows from translations.txt is
      * respected. If this requirement is not met, returns null,
      * @throws IllegalArgumentException if the argument is null
@@ -766,7 +945,7 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                         translationPerTableName.get(tableName).get(fieldName).put(language, newTranslationTable);
                     }
                 } else {
-                    final Map<String, Translation> firstLevelMap= new TreeMap<>();
+                    final Map<String, Translation> firstLevelMap = new TreeMap<>();
                     final Map<String, Map<String, Translation>> secondLevelMap = new TreeMap<>();
                     secondLevelMap.put(language, firstLevelMap);
                     translationPerTableName.put(fieldName, secondLevelMap);
@@ -788,9 +967,9 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
      * Return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
      * provided as parameter
      *
-     * @param tableName   the name of the table to retrieve translations from
-     * @param fieldName  the name of the field to be translated
-     * @param language    the language of translation
+     * @param tableName the name of the table to retrieve translations from
+     * @param fieldName the name of the field to be translated
+     * @param language  the language of translation
      * @return the list of {@link Translation} from translations.txt related to the table_name, field_value and language
      * provided as parameter
      */
@@ -799,5 +978,70 @@ public class InMemoryGtfsDataRepository implements GtfsDataRepository {
                                                                    final String fieldName,
                                                                    final String language) {
         return translationPerTableName.get(tableName).get(fieldName).get(language);
+    }
+
+    /**
+     * Add a stop representing a row from stops.txt to this {@link GtfsDataRepository}. Return the entity added to the
+     * repository if the uniqueness constraint of stop based on stop_id is respected. Otherwise returns null.
+     *
+     * @param newStop the internal representation. A subclass of {@link LocationBase}
+     *                of a row from stops.txt to be added to the repository.
+     * @return the entity added to the repository if the uniqueness constraint of stop based on stop_id is
+     * respected. Otherwise returns null.
+     * @throws IllegalArgumentException if the given parameter is null
+     */
+    @Override
+    public LocationBase addStop(final LocationBase newStop) throws IllegalArgumentException {
+        if (newStop != null) {
+            final String stopId = newStop.getStopId();
+            if (stopPerId.containsKey(stopId)) {
+                return null;
+            } else {
+                stopPerId.put(stopId, newStop);
+                return newStop;
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot add null stop to data repository");
+        }
+    }
+
+    /**
+     * Return an immutable map of {@link LocationBase} objects representing all the rows from stops.txt,
+     * with stop_id as the key
+     *
+     * @return an immutable map of {@link LocationBase} objects representing all the rows from stops.txt,
+     * with stop_id as the key
+     */
+    @Override
+    public Map<String, LocationBase> getStopAll() {
+        return Collections.unmodifiableMap(stopPerId);
+    }
+
+    /**
+     * Return the {@link LocationBase} representing a row from stops.txt related to the id provided as parameter
+     *
+     * @param stopId the stop_id from stops.txt related to the {@link LocationBase} to be returned
+     * @return the {@link LocationBase} representing a row from stops.txt related to the id provided as parameter.
+     * Null if the id couldn't be found.
+     */
+    @Override
+    public LocationBase getStopById(final String stopId) {
+        return stopPerId.get(stopId);
+    }
+
+    /**
+     * Returns `feed_info.feed_publisher_name` value if file `feed_info.txt` was provided, otherwise returns an empty
+     * String
+     *
+     * @return `feed_info.feed_publisher_name` value if file `feed_info.txt` was provided, otherwise returns an empty
+     * String
+     */
+    @Override
+    public String getFeedPublisherName() {
+        if (feedInfoPerFeedPublisherName.isEmpty()) {
+            return "";
+        } else {
+            return feedInfoPerFeedPublisherName.keySet().stream().findFirst().get();
+        }
     }
 }

@@ -26,12 +26,20 @@ import java.io.IOException;
 public class JsonNoticeExporter implements NoticeExporter {
 
     private final JsonGenerator jsonGenerator;
+    public static final String FILE_EXTENSION = ".json";
+    public static final Boolean DEFAULT_IS_PRETTY = true;
 
-    public JsonNoticeExporter(final JsonGenerator generator) {
-        this.jsonGenerator = generator;
+    public JsonNoticeExporter(final JsonGenerator generator, final boolean isPretty) {
+        if (isPretty) {
+            this.jsonGenerator = generator.useDefaultPrettyPrinter();
+        } else {
+            this.jsonGenerator = generator;
+        }
     }
 
-    public static final String FILE_EXTENSION = ".json";
+    public JsonNoticeExporter(final JsonGenerator generator) {
+        this(generator, DEFAULT_IS_PRETTY);
+    }
 
     @Override
     public String getExtension() {
@@ -64,11 +72,6 @@ public class JsonNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(final NonAsciiOrNonPrintableCharNotice toExport) throws IOException {
-        jsonGenerator.writeObject(toExport);
-    }
-
-    @Override
-    public void export(final CannotConstructDataProviderNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
@@ -123,6 +126,21 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final EmptyFileErrorNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final EmptyFileWarningNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicatedHeaderNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final MissingRequiredFileNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
@@ -133,7 +151,12 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final InvalidColorNotice toExport) throws IOException {
+    public void export(final MissingTripEdgeStopTimeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final CannotParseColorNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
@@ -254,6 +277,141 @@ public class JsonNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(final AgencyIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ShapeIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final TripIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ShapeNotUsedNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ServiceIdNotFoundNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoStartDateAfterEndDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoExpiresInLessThan7DaysNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoExpiresInLessThan30DaysNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingFeedEndDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingFeedStartDateNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final StationWithParentStationNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ParentStationInvalidLocationTypeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final StopTimeArrivalTimeAfterDepartureTimeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FastTravelBetweenStopsNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FrequencyStartTimeAfterEndTimeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final BackwardsTimeTravelInStopNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final TripNotUsedNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final UnusableTripNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final StopTooFarFromTripShapeNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final MissingCalendarAndCalendarDateFilesNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final OverlappingTripFrequenciesNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final BlockTripsWithOverlappingStopTimesNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final FeedInfoLangAgencyLangMismatchNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteLongNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteShortNameNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DuplicateRouteLongNameRouteShortNameCombinationNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DecreasingStopTimeDistanceNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final DecreasingShapeDistanceNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

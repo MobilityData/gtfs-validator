@@ -21,12 +21,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteIdNotFound
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.util.HashSet;
 import java.util.Set;
 
- /**
+/**
  * Use case for E033 to validate that all records of `trips.txt` refer to an existing {@code Route} from file
-  * `routes.txt`
+ * `routes.txt`
  */
 public class ValidateTripRouteId {
     private final GtfsDataRepository dataRepo;
@@ -46,25 +45,21 @@ public class ValidateTripRouteId {
         this.logger = logger;
     }
 
-     /**
-      * Use case execution method: Checks if `route_id` of a trip refers to a record from file `routes.txt`. A new
-      * notice is generated each time this condition is false.
-      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
-      */
+    /**
+     * Use case execution method: Checks if `route_id` of a trip refers to a record from file `routes.txt`. A new
+     * notice is generated each time this condition is false.
+     * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
+     */
     public void execute() {
-        logger.info("Validating rule E033 - `route_id` not found" + System.lineSeparator());
-        final Set<String> routeIdCollection = new HashSet<>();
-        dataRepo.getRouteAll().forEach(route -> routeIdCollection.add(route.getRouteId()));
-        dataRepo.getTripAll()
-                .forEach(trip -> {
-                    if (!routeIdCollection.contains(trip.getRouteId())) {
-                        resultRepo.addNotice(
-                                new RouteIdNotFoundNotice("trips.txt",
-                                        trip.getTripId(),
-                                        trip.getRouteId(),
-                                        "route_id")
-                        );
-                    }
-                });
+        logger.info("Validating rule E033 - `route_id` not found");
+        final Set<String> routeIdCollection = dataRepo.getRouteAll().keySet();
+        dataRepo.getTripAll().values().stream()
+                .filter(trip -> !routeIdCollection.contains(trip.getRouteId()))
+                .forEach(trip -> resultRepo.addNotice(
+                        new RouteIdNotFoundNotice("trips.txt",
+                                trip.getTripId(),
+                                trip.getRouteId(),
+                                "route_id")
+                ));
     }
 }

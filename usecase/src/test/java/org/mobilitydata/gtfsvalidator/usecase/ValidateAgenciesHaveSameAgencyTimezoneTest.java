@@ -25,8 +25,9 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -43,8 +44,12 @@ class ValidateAgenciesHaveSameAgencyTimezoneTest {
         when(mockAgency01.getAgencyId()).thenReturn("agency id 01");
         when(mockAgency01.getAgencyTimezone()).thenReturn("timezone");
 
+        final Map<String, Agency> mockAgencyCollection = new HashMap<>();
+        mockAgencyCollection.put("agency id 00", mockAgency00);
+        mockAgencyCollection.put("agency id 01", mockAgency01);
+
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getAgencyAll()).thenReturn(new ArrayList<>(List.of(mockAgency00, mockAgency01)));
+        when(mockDataRepo.getAgencyAll()).thenReturn(mockAgencyCollection);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
@@ -52,19 +57,19 @@ class ValidateAgenciesHaveSameAgencyTimezoneTest {
                 new ValidateAgenciesHaveSameAgencyTimezone(mockDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
-        final InOrder inOrder = inOrder(mockDataRepo, mockResultRepo, mockLogger, mockAgency00, mockAgency01);
 
-        inOrder.verify(mockLogger, times(1))
-                .info("Validating rule 'E030 - Different 'agency_timezone'" + System.lineSeparator());
+        verify(mockLogger, times(1))
+                .info("Validating rule 'E030 - Different 'agency_timezone'");
 
-        inOrder.verify(mockDataRepo, times(1)).getAgencyAll();
+        verify(mockDataRepo, times(1)).getAgencyAll();
         // suppress warning regarding ignored result of method since it is not necessary here.
         //noinspection ResultOfMethodCallIgnored
-        inOrder.verify(mockAgency00, times(1)).getAgencyTimezone();
+        verify(mockAgency00, times(1)).getAgencyTimezone();
         // suppress warning regarding ignored result of method since it is not necessary here.
         //noinspection ResultOfMethodCallIgnored
-        inOrder.verify(mockAgency01, times(1)).getAgencyTimezone();
-        verifyNoMoreInteractions(mockDataRepo, mockResultRepo, mockLogger, mockAgency00, mockAgency01);
+        verify(mockAgency01, times(1)).getAgencyTimezone();
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockAgency00, mockAgency01);
     }
 
     @Test
@@ -77,7 +82,12 @@ class ValidateAgenciesHaveSameAgencyTimezoneTest {
         when(mockAgency01.getAgencyTimezone()).thenReturn("timezone 01");
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getAgencyAll()).thenReturn(new ArrayList<>(List.of(mockAgency00, mockAgency01)));
+
+        final Map<String, Agency> mockAgencyCollection = new HashMap<>();
+        mockAgencyCollection.put("agency id 00", mockAgency00);
+        mockAgencyCollection.put("agency id 01", mockAgency01);
+
+        when(mockDataRepo.getAgencyAll()).thenReturn(mockAgencyCollection);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
@@ -85,18 +95,17 @@ class ValidateAgenciesHaveSameAgencyTimezoneTest {
                 new ValidateAgenciesHaveSameAgencyTimezone(mockDataRepo, mockResultRepo, mockLogger);
 
         underTest.execute();
-        final InOrder inOrder = inOrder(mockDataRepo, mockResultRepo, mockLogger, mockAgency00, mockAgency01);
 
-        inOrder.verify(mockLogger, times(1))
-                .info("Validating rule 'E030 - Different 'agency_timezone'" + System.lineSeparator());
+        verify(mockLogger, times(1))
+                .info("Validating rule 'E030 - Different 'agency_timezone'");
 
-        inOrder.verify(mockDataRepo, times(1)).getAgencyAll();
+        verify(mockDataRepo, times(1)).getAgencyAll();
         // suppress warning regarding ignored result of method since it is not necessary here.
         //noinspection ResultOfMethodCallIgnored
-        inOrder.verify(mockAgency00, times(1)).getAgencyTimezone();
+        verify(mockAgency00, times(1)).getAgencyTimezone();
         // suppress warning regarding ignored result of method since it is not necessary here.
         //noinspection ResultOfMethodCallIgnored
-        inOrder.verify(mockAgency01, times(1)).getAgencyTimezone();
+        verify(mockAgency01, times(1)).getAgencyTimezone();
 
         final ArgumentCaptor<InconsistentAgencyTimezoneNotice> captor =
                 ArgumentCaptor.forClass(InconsistentAgencyTimezoneNotice.class);
@@ -122,7 +131,11 @@ class ValidateAgenciesHaveSameAgencyTimezoneTest {
         when(mockAgency00.getAgencyTimezone()).thenReturn("timezone 00");
 
         final GtfsDataRepository mockDataRepo = mock(GtfsDataRepository.class);
-        when(mockDataRepo.getAgencyAll()).thenReturn(new ArrayList<>(List.of(mockAgency00)));
+
+        final Map<String, Agency> mockAgencyCollection = new HashMap<>();
+        mockAgencyCollection.put("agency id 00", mockAgency00);
+
+        when(mockDataRepo.getAgencyAll()).thenReturn(mockAgencyCollection);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         final Logger mockLogger = mock(Logger.class);
 
@@ -133,12 +146,14 @@ class ValidateAgenciesHaveSameAgencyTimezoneTest {
         final InOrder inOrder = inOrder(mockDataRepo, mockResultRepo, mockLogger, mockAgency00);
 
         inOrder.verify(mockLogger, times(1))
-                .info("Validating rule 'E030 - Different 'agency_timezone'" + System.lineSeparator());
+                .info("Validating rule 'E030 - Different 'agency_timezone'");
 
         inOrder.verify(mockDataRepo, times(1)).getAgencyAll();
         // suppress warning regarding ignored result of method since it is not necessary here.
         //noinspection ResultOfMethodCallIgnored
         inOrder.verify(mockAgency00, times(1)).getAgencyTimezone();
-        verifyNoMoreInteractions(mockDataRepo, mockResultRepo, mockLogger, mockAgency00);
+
+        verifyNoInteractions(mockResultRepo);
+        verifyNoMoreInteractions(mockDataRepo, mockLogger, mockAgency00);
     }
 }

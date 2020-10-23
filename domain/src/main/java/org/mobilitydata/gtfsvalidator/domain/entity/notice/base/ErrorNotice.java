@@ -20,7 +20,7 @@ public abstract class ErrorNotice extends Notice {
     private static final String level = "ERROR";
 
     protected static final int E_001 = 1;
-    protected static final int E_002 = 2;
+    // protected static final int E_002 = 2; // RESERVED - was CannotConstructDataProviderNotice
     protected static final int E_003 = 3;
     protected static final int E_004 = 4;
     protected static final int E_005 = 5;
@@ -52,7 +52,32 @@ public abstract class ErrorNotice extends Notice {
     protected static final int E_031 = 31;
     protected static final int E_032 = 32;
     protected static final int E_033 = 33;
+    protected static final int E_034 = 34;
     protected static final int E_035 = 35;
+    protected static final int E_036 = 36;
+    protected static final int E_037 = 37;
+    protected static final int E_038 = 38;
+    protected static final int E_039 = 39;
+    protected static final int E_040 = 40;
+    protected static final int E_041 = 41;
+    protected static final int E_042 = 42;
+    protected static final int E_043 = 43;
+    protected static final int E_044 = 44;
+    protected static final int E_045 = 45;
+    protected static final int E_046 = 46;
+    protected static final int E_047 = 47;
+    protected static final int E_048 = 48;
+    protected static final int E_049 = 49;
+    protected static final int E_050 = 50;
+    protected static final int E_051 = 51;
+    // E052 is executed in the adapter module, so this is @VisibleForTesting
+    public static final int E_052 = 52;
+    protected static final int E_053 = 53;
+    protected static final int E_054 = 54;
+    protected static final int E_055 = 55;
+    protected static final int E_056 = 56;
+    protected static final int E_057 = 57;
+    protected static final int E_058 = 58;
 
     public ErrorNotice(final String filename,
                        final int code,

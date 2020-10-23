@@ -47,7 +47,7 @@ public enum ContinuousPickup {
      * @return If fromValue is null returns NO_CONTINUOUS_PICKUP by default, else returns the
      * enum value matching the {@link Integer} provided in the parameters.
      */
-    static public ContinuousPickup fromInt(Integer fromValue) {
+    static public ContinuousPickup fromInt(final Integer fromValue) {
         if (fromValue == null) {
             return NO_CONTINUOUS_PICKUP;
         }
@@ -67,12 +67,15 @@ public enum ContinuousPickup {
      * @return true if the integer passed as parameter is expected for this enum, otherwise returns false
      */
     static public boolean isEnumValid(final Integer value) {
-        if (value==null) {
+        try {
+            return Stream.of(ContinuousPickup.values())
+                    .anyMatch(enumItem -> enumItem.value == value);
+            // this is equivalent to
+            // Stream.of(ContinuousPickup.values()).filter(enumItem -> enumItem.value == value).findAny().isPresent()
+            // Note that a NPE is thrown by anyMatch when it is called on a null Stream (which happens when `value` is
+            // null). Therefore a try/catch block is required to handle such situation.
+        } catch (NullPointerException e) {
             return true;
         }
-        return Stream.of(ContinuousPickup.values())
-                .filter(enumItem -> enumItem.value == value)
-                .findAny()
-                .orElse(null) != null;
     }
 }

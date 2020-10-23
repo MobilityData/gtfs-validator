@@ -19,7 +19,6 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotConstructDataProviderNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidRowLengthNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -36,7 +35,7 @@ class ValidateAllRowLengthForFileTest {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
         when(mockProvider.hasNext()).thenReturn(true, true, true, true, false);
-        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey", "testValue"), 0);
         when(mockProvider.getNext()).thenReturn(testRawEntity);
         when(mockProvider.getHeaderCount()).thenReturn(testRawEntity.size());
 
@@ -67,8 +66,8 @@ class ValidateAllRowLengthForFileTest {
     void invalidRowsShouldGenerateError() {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
-        when(mockProvider.hasNext()).thenReturn(true,  true, true, false);
-        RawEntity testRawEntity = new RawEntity(Map.of("testKey","testValue"), 0);
+        when(mockProvider.hasNext()).thenReturn(true, true, true, false);
+        RawEntity testRawEntity = new RawEntity(Map.of("testKey", "testValue"), 0);
         when(mockProvider.getNext()).thenReturn(testRawEntity);
         int testFakeSize = testRawEntity.size() + 2;
         when(mockProvider.getHeaderCount()).thenReturn(testRawEntity.size(), testFakeSize, testFakeSize);
@@ -97,7 +96,7 @@ class ValidateAllRowLengthForFileTest {
     }
 
     @Test
-    void dataProviderConstructionIssueShouldGenerateError() {
+    void dataProviderConstructionIssueShouldBeIgnored() {
 
         RawFileRepository mockFileRepo = mock(RawFileRepository.class);
         when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.empty());
@@ -115,7 +114,6 @@ class ValidateAllRowLengthForFileTest {
         underTest.execute();
 
         verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
-        verify(mockResultRepo, times(1)).addNotice(any(CannotConstructDataProviderNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockResultRepo);
     }
 }

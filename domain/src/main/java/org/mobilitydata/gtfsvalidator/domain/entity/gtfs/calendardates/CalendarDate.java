@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumV
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class for all entities defined in calendar_dates.txt. Can not be directly instantiated: user must use the
@@ -146,6 +147,7 @@ public class CalendarDate extends GtfsEntity {
 
         /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public CalendarDateBuilder clear() {
@@ -159,11 +161,27 @@ public class CalendarDate extends GtfsEntity {
     }
 
     /**
-     * Returns a composite key for this {@link CalendarDate}
+     * Generates an hash code for this {@link CalendarDate} based on service_id and date fields
      *
-     * @return a composite key for this {@link CalendarDate}
+     * @return an hash code for this {@link CalendarDate} based on service_id and date fields
      */
-    public String getCalendarDateMappingKey() {
-        return getServiceId() + getDate().toString();
+    @Override
+    public int hashCode() {
+        return Objects.hash(serviceId.hashCode(), date.hashCode());
+    }
+
+    /**
+     * Determines if two {@link CalendarDate} are equal based on their hash codes
+     *
+     * @param object other {@link CalendarDate} to compare
+     * @return true if the two {@link CalendarDate} are equals (i.e {@link CalendarDate have same hash codes}),
+     * otherwise returns false.
+     */
+    @Override
+    public boolean equals(final Object object) {
+        if (getClass() != object.getClass()) {
+            return false;
+        }
+        return hashCode() == object.hashCode();
     }
 }

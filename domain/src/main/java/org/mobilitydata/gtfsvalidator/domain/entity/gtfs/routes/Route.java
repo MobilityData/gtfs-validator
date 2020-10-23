@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.GtfsEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidAgencyIdNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingRequiredValueNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.MissingShortAndLongNameForRouteNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumValueNotice;
 
 import java.util.ArrayList;
@@ -277,22 +278,29 @@ public class Route extends GtfsEntity {
          * are met. Otherwise, method returns an entity representing a list of notices.
          */
         public EntityBuildResult<?> build() throws IllegalArgumentException {
-            if (routeId == null || routeType == null || agencyId.isBlank()) {
+            if (routeId == null || routeType == null || !(RouteType.isEnumValueValid(originalRouteTypeInteger)) ||
+                    (agencyId != null && agencyId.isBlank()) ||
+                    (!isPresentName(routeLongName) && !isPresentName(routeShortName))) {
                 if (routeId == null) {
                     noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_id",
                             routeId));
                 }
-                if (originalRouteTypeInteger == null) {
-                    noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
-                            routeId));
+                if (routeType == null) {
+                    if (originalRouteTypeInteger == null) {
+                        noticeCollection.add(new MissingRequiredValueNotice("routes.txt", "route_type",
+                                routeId));
+                    } else {
+                        noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
+                                routeId, originalRouteTypeInteger));
+                    }
                 }
-                if (!RouteType.isEnumValueValid(originalRouteTypeInteger)) {
-                    noticeCollection.add(new UnexpectedEnumValueNotice("routes.txt", "route_type",
-                            routeId, originalRouteTypeInteger));
-                }
-                if (agencyId.isBlank()) {
+                if (agencyId != null && agencyId.isBlank()) {
                     noticeCollection.add(
-                            new InvalidAgencyIdNotice( "routes.txt", "agency_id", routeId));
+                            new InvalidAgencyIdNotice("routes.txt", "agency_id", routeId));
+                }
+                // checks if at least one of name fields is provided
+                if (!isPresentName(routeLongName) && !isPresentName(routeShortName)) {
+                    noticeCollection.add(new MissingShortAndLongNameForRouteNotice("routes.txt", routeId));
                 }
                 return new EntityBuildResult(noticeCollection);
             } else {
@@ -302,7 +310,16 @@ public class Route extends GtfsEntity {
         }
 
         /**
+         * @param routeName a name of a Route
+         * @return true if this Route name is not missing or empty, false if not.
+         */
+        private boolean isPresentName(final String routeName) {
+            return routeName != null && !routeName.isBlank();
+        }
+
+        /**
          * Method to reset all fields of builder. Returns builder with all fields set to null.
+         *
          * @return builder with all fields set to null;
          */
         public RouteBuilder clear() {

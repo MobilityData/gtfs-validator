@@ -1,20 +1,20 @@
 package org.mobilitydata.gtfsvalidator.db;
 
+import org.apache.commons.cli.Options;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.ExecParam;
 import org.mobilitydata.gtfsvalidator.parser.ApacheExecParamParser;
 import org.mobilitydata.gtfsvalidator.parser.JsonExecParamParser;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.CommandLineOptionLongOptExceedsMaxCharNumException;
 import org.mockito.InOrder;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.*;
 import static org.mockito.Mockito.*;
 
 class InMemoryExecParamRepositoryTest {
@@ -25,9 +25,12 @@ class InMemoryExecParamRepositoryTest {
     @Test
     void addExecParamWithNullKeyShouldThrowException() {
         final ExecParam mockExecParam = mock(ExecParam.class);
-
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"null\": \"test\",\n" +
+                "}";
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.addExecParam(mockExecParam));
 
@@ -40,10 +43,15 @@ class InMemoryExecParamRepositoryTest {
         final ExecParam mockExecParam = spy(ExecParam.class);
         mockExecParam.setKey("unhandled key");
 
-        final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"test\": \"test\",\n" +
+                "}";
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.addExecParam(mockExecParam));
+        final Logger mockLogger = mock(Logger.class);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
+
+        final Exception exception = assertThrows(IllegalArgumentException.class, () -> underTest.addExecParam(mockExecParam));
 
         assertEquals("Execution parameter with key: unhandled key found in configuration file is not handled",
                 exception.getMessage());
@@ -55,7 +63,12 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam.setKey(ExecParamRepository.EXTRACT_KEY);
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"input\": \"test\",\n" +
+                "}";
+
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         final ExecParam toCheck = underTest.addExecParam(mockExecParam);
 
@@ -80,7 +93,12 @@ class InMemoryExecParamRepositoryTest {
         doReturn(ExecParamRepository.OUTPUT_KEY).when(mockExecParam1).getKey();
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"help\": \"test\",\n" +
+                "  \"output\": \"test\",\n" +
+                "}";
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -100,7 +118,13 @@ class InMemoryExecParamRepositoryTest {
         doReturn(ExecParamRepository.OUTPUT_KEY).when(mockExecParam1).getKey();
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"help\": \"test\",\n" +
+                "  \"output\": \"test\",\n" +
+                "}";
+
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -123,7 +147,13 @@ class InMemoryExecParamRepositoryTest {
         doReturn(ExecParamRepository.OUTPUT_KEY).when(mockExecParam1).getKey();
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"help\": \"test\",\n" +
+                "  \"output\": \"test\",\n" +
+                "}";
+
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -142,7 +172,12 @@ class InMemoryExecParamRepositoryTest {
         doReturn(ExecParamRepository.OUTPUT_KEY).when(mockExecParam1).getKey();
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"help\": \"test\",\n" +
+                "  \"output\": \"test\",\n" +
+                "}";
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -152,54 +187,27 @@ class InMemoryExecParamRepositoryTest {
     }
 
     @Test
-    void provideCmdLineOptionAndZeroJsonConfigFileShouldReturnApacheExecParamParser() {
-        final String[] mockArgument = new String[1];
+    void getParserForStringArrayShouldReturnApacheExecParamParser() {
+        final String[] mockArgument = {"argKey"};
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockArgument,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
-        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(null,
-                mockArgument, mockLogger);
+        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockArgument);
         assertTrue(toCheck instanceof ApacheExecParamParser);
     }
 
     @Test
-    void provideZeroCmdLineOptionAndOneValidJsonConfigFileShouldReturnJsonExecParamParser() {
-        final String[] mockArgument = new String[0];
-        final String mockJsonConfigFile = "{\n" +
-                "  \"key_test\": \"value_test\"\n" +
+    void getParserForOneValidJsonConfigFileShouldReturnJsonExecParamParser() {
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"output\": \"value_test\"\n" +
                 "}";
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
-
-        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockJsonConfigFile, mockArgument, mockLogger);
-        assertTrue(toCheck instanceof JsonExecParamParser);
-    }
-
-    @Test
-    void provideZeroCmdLineOptionAndZeroValidJsonConfigFileShouldReturnJsonExecParamParser() {
-        final String[] mockArgument = new String[0];
-        final String mockJsonConfigFile = null;
-
-        final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
-
-        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockJsonConfigFile, mockArgument, mockLogger);
-        assertTrue(toCheck instanceof JsonExecParamParser);
-    }
-
-    @Test
-    void provideBothCmdLineOptionAndValidJsonConfigFileShouldReturnJsonExecParamParser() {
-        final String[] mockArgument = new String[3];
-        final String mockJsonConfigFile = "{\n" +
-                "  \"key_test\": \"value_test\"\n" +
-                "}";
-
-        final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
-
-        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockJsonConfigFile, mockArgument, mockLogger);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final ExecParamRepository.ExecParamParser toCheck = underTest.getParser(mockExecutionParameterFromJson);
         assertTrue(toCheck instanceof JsonExecParamParser);
     }
 
@@ -217,8 +225,13 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam0.setKey(ExecParamRepository.EXTRACT_KEY);
         mockExecParam0.setValue(List.of("input value"));
 
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"output\": \"value_test\"\n" +
+                "}";
+
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -237,8 +250,13 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam1.setKey(ExecParamRepository.EXTRACT_KEY);
         mockExecParam0.setValue(List.of("input value"));
 
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -249,7 +267,7 @@ class InMemoryExecParamRepositoryTest {
         assertEquals(System.getProperty("user.dir") + File.separator + "output",
                 underTest.getExecParamValue(ExecParamRepository.OUTPUT_KEY));
         assertEquals("false", underTest.getExecParamValue(ExecParamRepository.PROTO_KEY));
-        assertEquals("null", underTest.getExecParamValue(ExecParamRepository.URL_KEY));
+        assertEquals("null", underTest.getExecParamValue(URL_KEY));
     }
 
     @Test
@@ -275,18 +293,22 @@ class InMemoryExecParamRepositoryTest {
         mockOutputOption.setKey(ExecParamRepository.OUTPUT_KEY);
 
         final ExecParam mockUrlOption = mock(ExecParam.class);
-        when(mockUrlOption.getKey()).thenReturn(ExecParamRepository.URL_KEY);
+        when(mockUrlOption.getKey()).thenReturn(URL_KEY);
         when(mockUrlOption.getValue()).thenReturn(null);
-        mockUrlOption.setKey(ExecParamRepository.URL_KEY);
+        mockUrlOption.setKey(URL_KEY);
 
         final ExecParam mockExclusionOption = mock(ExecParam.class);
-        when(mockExclusionOption.getKey()).thenReturn(ExecParamRepository.EXCLUSION_KEY);
+        when(mockExclusionOption.getKey()).thenReturn(EXCLUSION_KEY);
         when(mockExclusionOption.getValue()).thenReturn(null);
-        mockExclusionOption.setKey(ExecParamRepository.EXCLUSION_KEY);
+        mockExclusionOption.setKey(EXCLUSION_KEY);
 
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockProtoOption);
         underTest.addExecParam(mockHelpOption);
@@ -300,8 +322,8 @@ class InMemoryExecParamRepositoryTest {
                 underTest.getExecParamValue(ExecParamRepository.EXTRACT_KEY));
         assertEquals(System.getProperty("user.dir") + File.separator + "output",
                 underTest.getExecParamValue(ExecParamRepository.OUTPUT_KEY));
-        assertEquals("null", underTest.getExecParamValue(ExecParamRepository.URL_KEY));
-        assertNull(underTest.getExecParamValue(ExecParamRepository.EXCLUSION_KEY));
+        assertEquals("null", underTest.getExecParamValue(URL_KEY));
+        assertNull(underTest.getExecParamValue(EXCLUSION_KEY));
     }
 
     @Test
@@ -315,7 +337,11 @@ class InMemoryExecParamRepositoryTest {
         mockExecParam1.setValue(List.of("output"));
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -335,7 +361,11 @@ class InMemoryExecParamRepositoryTest {
         doReturn(ExecParamRepository.OUTPUT_KEY).when(mockExecParam1).getKey();
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
@@ -355,8 +385,11 @@ class InMemoryExecParamRepositoryTest {
         doReturn(ExecParamRepository.OUTPUT_KEY).when(mockExecParam1).getKey();
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
-
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
         underTest.addExecParam(mockExecParam0);
         underTest.addExecParam(mockExecParam1);
 
@@ -366,32 +399,162 @@ class InMemoryExecParamRepositoryTest {
     @Test
     void getExecParamOnExclusionKeyShouldReturnListOfSeveralStringsAsString() {
         final ExecParam mockExecParam = spy(ExecParam.class);
-        mockExecParam.setKey(ExecParamRepository.EXCLUSION_KEY);
+        mockExecParam.setKey(EXCLUSION_KEY);
         mockExecParam.setValue(List.of("file0", "file1", "file2"));
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam);
 
-        assertTrue(underTest.hasExecParam(ExecParamRepository.EXCLUSION_KEY));
-        assertTrue(underTest.hasExecParamValue(ExecParamRepository.EXCLUSION_KEY));
-        assertEquals("[file0, file1, file2]", underTest.getExecParamValue(ExecParamRepository.EXCLUSION_KEY));
+        assertTrue(underTest.hasExecParam(EXCLUSION_KEY));
+        assertTrue(underTest.hasExecParamValue(EXCLUSION_KEY));
+        assertEquals("[file0, file1, file2]", underTest.getExecParamValue(EXCLUSION_KEY));
     }
 
     @Test
     void getExecParamOnExclusionKeyShouldReturnListOfSingleStringAsString() {
         final ExecParam mockExecParam = spy(ExecParam.class);
-        mockExecParam.setKey(ExecParamRepository.EXCLUSION_KEY);
+        mockExecParam.setKey(EXCLUSION_KEY);
         mockExecParam.setValue(List.of("file0"));
 
         final Logger mockLogger = mock(Logger.class);
-        final ExecParamRepository underTest = new InMemoryExecParamRepository(DEFAULT_EXEC_PARAMETERS, mockLogger);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger);
 
         underTest.addExecParam(mockExecParam);
 
-        assertTrue(underTest.hasExecParam(ExecParamRepository.EXCLUSION_KEY));
-        assertTrue(underTest.hasExecParamValue(ExecParamRepository.EXCLUSION_KEY));
-        assertEquals("[file0]", underTest.getExecParamValue(ExecParamRepository.EXCLUSION_KEY));
+        assertTrue(underTest.hasExecParam(EXCLUSION_KEY));
+        assertTrue(underTest.hasExecParamValue(EXCLUSION_KEY));
+        assertEquals("[file0]", underTest.getExecParamValue(EXCLUSION_KEY));
+    }
+
+    @Test
+    void shouldThrowExceptionAtConstructionWhenPresenceOfOptionWithTooLongCombinationOfOptAndLongOpt() {
+        final ExecParam mockExecParam = spy(ExecParam.class);
+        mockExecParam.setKey(EXCLUSION_KEY);
+        mockExecParam.setValue(List.of("file0"));
+
+        final Logger mockLogger = mock(Logger.class);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+
+        final Options mockOptions = new Options();
+        mockOptions.addOption("tooLongOpt", "veryLooooooongLongOpt", true,
+                "description");
+
+        final Exception exception = assertThrows(CommandLineOptionLongOptExceedsMaxCharNumException.class,
+                () -> new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                        DEFAULT_EXEC_PARAMETERS, mockLogger, mockOptions));
+
+        assertEquals(String.format("The combination of Options opt and longOpt Strings must not exceed %d characters",
+                MAX_CHARS_NUM), exception.getMessage());
+    }
+
+    @Test
+    void noExceptionWhenAllOptionHaveLegibleOptAndLongOptCombination() {
+        final ExecParam mockExecParam = spy(ExecParam.class);
+        mockExecParam.setKey(EXCLUSION_KEY);
+        mockExecParam.setValue(List.of("file0"));
+
+        final Logger mockLogger = mock(Logger.class);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+
+        final Options mockOptions = new Options();
+        mockOptions.addOption("a", "aShortLongOpt", true,
+                "description");
+
+        assertDoesNotThrow(() -> { new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger, mockOptions);
+        });
+    }
+
+    @Test
+    void getOptionsShouldReturnOptions() {
+        final ExecParam mockExecParam = spy(ExecParam.class);
+        mockExecParam.setKey(EXCLUSION_KEY);
+        mockExecParam.setValue(List.of("file0"));
+
+        final Logger mockLogger = mock(Logger.class);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+
+        final Options mockOptions = new Options();
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger, mockOptions);
+
+        assertEquals(mockOptions, underTest.getOptions());
+        assertEquals(8, mockOptions.getOptions().size());
+
+    }
+
+    @Test
+    void getOptionsShouldSetArgsToZeroForHelpKey() {
+        final ExecParam mockExecParam = spy(ExecParam.class);
+        mockExecParam.setKey(EXCLUSION_KEY);
+        mockExecParam.setValue(List.of("file0"));
+
+        final Logger mockLogger = mock(Logger.class);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+
+        final Options mockOptions = new Options();
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger, mockOptions);
+
+        assertEquals(0, underTest.getOptions().getOption(String.valueOf(HELP_KEY.charAt(0))).getArgs());
+    }
+
+    @Test
+    void getOptionsShouldSetArgsToZeroForProtoKey() {
+        final ExecParam mockExecParam = spy(ExecParam.class);
+        mockExecParam.setKey(EXCLUSION_KEY);
+        mockExecParam.setValue(List.of("file0"));
+
+        final Logger mockLogger = mock(Logger.class);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+
+        final Options mockOptions = new Options();
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger, mockOptions);
+
+        assertEquals(0, underTest.getOptions().getOption(String.valueOf(PROTO_KEY.charAt(0))).getArgs());
+    }
+
+    @Test
+    void getOptionsShouldSetArgsToOneForAllKeyExceptHelpAndProto() {
+        final ExecParam mockExecParam = spy(ExecParam.class);
+        mockExecParam.setKey(EXCLUSION_KEY);
+        mockExecParam.setValue(List.of("file0"));
+
+        final Logger mockLogger = mock(Logger.class);
+        final String mockExecutionParameterFromJson = "{\n" +
+                "  \"zipinput\": \"value_test\"\n" +
+                "}";
+
+        final Options mockOptions = new Options();
+        final ExecParamRepository underTest = new InMemoryExecParamRepository(mockExecutionParameterFromJson,
+                DEFAULT_EXEC_PARAMETERS, mockLogger, mockOptions);
+
+        assertEquals(1, underTest.getOptions().getOption(String.valueOf(EXTRACT_KEY.charAt(0))).getArgs());
+        assertEquals(1, underTest.getOptions().getOption(String.valueOf(OUTPUT_KEY.charAt(0))).getArgs());
+        assertEquals(1, underTest.getOptions().getOption(String.valueOf(URL_KEY.charAt(0))).getArgs());
+        assertEquals(1, underTest.getOptions().getOption(String.valueOf(INPUT_KEY.charAt(0))).getArgs());
+        assertEquals(1, underTest.getOptions().getOption(String.valueOf(EXCLUSION_KEY.charAt(1))).getArgs());
+        assertEquals(1, underTest.getOptions().getOption(String.valueOf(ABORT_ON_ERROR.charAt(0))).getArgs());
     }
 }

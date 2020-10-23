@@ -355,7 +355,7 @@ class PathwayTest {
     }
 
     @Test
-    public void createPathwayWithNegativeStairCountShouldGenerateNotice() {
+    public void createPathwayWithZeroStairCountShouldGenerateNotice() {
         final Pathway.PathwayBuilder underTest = new Pathway.PathwayBuilder();
 
         final EntityBuildResult<?> entityBuildResult = underTest.pathwayId(PATHWAY_ID)
@@ -365,7 +365,7 @@ class PathwayTest {
                 .isBidirectional(1)
                 .length(10.0f)
                 .traversalTime(5)
-                .stairCount(-3)
+                .stairCount(0)
                 .maxSlope(0.20f)
                 .minWidth(30f)
                 .signpostedAs("test")
@@ -383,9 +383,9 @@ class PathwayTest {
         assertEquals(FILENAME, notice.getFilename());
         assertEquals("stair_count", notice.getNoticeSpecific(Notice.KEY_FIELD_NAME));
         assertEquals(PATHWAY_ID, notice.getEntityId());
-        assertEquals(-3, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
+        assertEquals(0, notice.getNoticeSpecific(Notice.KEY_ACTUAL_VALUE));
         assertEquals(0, notice.getNoticeSpecific(Notice.KEY_RANGE_MIN));
-        assertEquals(Integer.MAX_VALUE, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
+        assertEquals(0, notice.getNoticeSpecific(Notice.KEY_RANGE_MAX));
 
         assertEquals(1, noticeCollection.size());
     }

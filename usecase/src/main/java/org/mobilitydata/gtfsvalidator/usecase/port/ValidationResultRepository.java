@@ -27,9 +27,10 @@ import java.util.Collection;
  */
 public interface ValidationResultRepository {
 
-    Notice addNotice(Notice newNotice);
+    Notice addNotice(Notice newNotice) throws TooManyValidationErrorException;
 
     Collection<Notice> getAll();
 
-    NoticeExporter getExporter(boolean outputAsProto, String outputPath) throws IOException;
+    NoticeExporter getExporter(boolean outputAsProto, String outputPath, boolean isPretty)
+            throws IOException;
 }

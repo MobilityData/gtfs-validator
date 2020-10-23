@@ -143,9 +143,13 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
      * Returns the schema for a given GTFS CSV file
      *
      * @param fileInfo information about the file to process: location and expected content
-     * @return the schema corresponding to the file associated to {@param fileInfo}
+     * @return the schema corresponding to the file associated to {@param fileInfo}, null otherwise
      */
     private GtfsSpecificationProto.CsvSpecProto getSpecForFile(RawFileInfo fileInfo) {
+        if (fileInfo == null || fileInfo.getFilename() == null) {
+            return null;
+        }
+
         return inMemoryGTFSSpec.getCsvspecList().stream()
                 .filter(spec -> fileInfo.getFilename().equals(spec.getFilename()))
                 .findAny()
@@ -168,7 +172,8 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                 file,
                 FloatValidator.getInstance(),
                 IntegerValidator.getInstance(),
-                DateValidator.getInstance());
+                DateValidator.getInstance(),
+                new RegexValidator(VALID_COLOR_REGEX_PATTERN));
     }
 
     /**
@@ -192,7 +197,6 @@ public class InMemoryGtfsSpecRepository implements GtfsSpecRepository {
                     new UrlValidator(VALID_URL_SCHEMES),
                     new Bcp47Validator(),
                     EmailValidator.getInstance(),
-                    new RegexValidator(VALID_COLOR_REGEX_PATTERN),
                     new RegexValidator(VALID_TIME_REGEXP_PATTERN),
                     // Uses IANA timezone database shipped with JDK
                     // to update without updating JDK see

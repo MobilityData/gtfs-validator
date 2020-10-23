@@ -52,10 +52,10 @@ public class ValidateAgenciesHaveSameAgencyTimezone {
      * {@code ValidationResultRepository} provided in the constructor
      */
     public void execute() {
-        logger.info("Validating rule 'E030 - Different 'agency_timezone'" + System.lineSeparator());
+        logger.info("Validating rule 'E030 - Different 'agency_timezone'");
         final Set<String> timezoneCollection = new HashSet<>();
         dataRepo.getAgencyAll()
-                .forEach(agency -> timezoneCollection.add(agency.getAgencyTimezone()));
+                .forEach((agencyId, agency) -> timezoneCollection.add(agency.getAgencyTimezone()));
         if (timezoneCollection.size() > 1) {
             resultRepo.addNotice(
                     new InconsistentAgencyTimezoneNotice(timezoneCollection.size(), timezoneCollection.toString())

@@ -5,5 +5,7 @@
   "proto": false,
   "url": null,
   "input": null,
-  "exclude": null
+  "exclude": null,
+  "abort_on_error": true,
+  "beautify": true
 }

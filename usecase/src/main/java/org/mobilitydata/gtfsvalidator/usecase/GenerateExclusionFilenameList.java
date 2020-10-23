@@ -51,24 +51,22 @@ public class GenerateExclusionFilenameList {
                 execParamRepo.getExecParamValue(ExecParamRepository.EXCLUSION_KEY);
         final ArrayList<String> toExcludeFromValidation =
                 rawFilenameListToExcludeAsString != null ?
-                new ArrayList<>(List.of(rawFilenameListToExcludeAsString
-                        .replace("[", "")
-                        .replace("]", "")
-                        .split(",")))
-                : null;
+                        new ArrayList<>(List.of(rawFilenameListToExcludeAsString
+                                .replace("[", "")
+                                .replace("]", "")
+                                .split(",")))
+                        : null;
 
         final List<String> gtfsFilenameList = new ArrayList<>();
         gtfsFilenameList.addAll(gtfsSpecRepo.getRequiredFilenameList());
         gtfsFilenameList.addAll(gtfsSpecRepo.getOptionalFilenameList());
 
-        if(toExcludeFromValidation == null){
-            logger.info("No file to exclude -- will execute validation process on all files"+System.lineSeparator());
+        if (toExcludeFromValidation == null) {
+            logger.info("No file to exclude -- will execute validation process on all files");
             return new ArrayList<>();
-        }
-        else if (!gtfsFilenameList.containsAll(toExcludeFromValidation)) {
+        } else if (!gtfsFilenameList.containsAll(toExcludeFromValidation)) {
             logger.info("Some file requested to be excluded is not defined by the official GTFS specification: "
-                    + toExcludeFromValidation + " -- will execute validation process on all files"+
-                    System.lineSeparator());
+                    + toExcludeFromValidation + " -- will execute validation process on all files");
             toExcludeFromValidation.clear();
         }
         final RelationshipDescriptor root = gtfsSpecRepo.getGtfsRelationshipDescriptor();

@@ -17,12 +17,9 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
-import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.routes.Route;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.RouteColorAndTextInsufficientContrastNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
-
-import java.util.Collection;
 
 /**
  * Use case to validate that a Route color contrast with a Route text color.
@@ -50,12 +47,16 @@ public class ValidateRouteColorAndTextContrast {
      * This notice is then added to the {@link ValidationResultRepository} provided in the constructor.
      */
     public void execute() {
-        logger.info("Validating rule 'E025 - Insufficient route color contrast'"+ System.lineSeparator());
-        Collection<Route> routes = dataRepo.getRouteAll();
-        routes.stream()
+        logger.info("Validating rule 'E025 - Insufficient route color contrast'");
+        dataRepo.getRouteAll().values().stream()
                 .filter(route -> !areContrasting(route.getRouteColor(), route.getRouteTextColor()))
-                .forEach(route -> resultRepo.addNotice(new RouteColorAndTextInsufficientContrastNotice("routes.txt",
-                        route.getRouteId(), contrast(route.getRouteColor(), route.getRouteTextColor()))));
+                .forEach(route -> resultRepo.addNotice(
+                        new RouteColorAndTextInsufficientContrastNotice("routes.txt",
+                                route.getRouteId(),
+                                contrast(route.getRouteColor(),
+                                        route.getRouteTextColor())
+                        )
+                ));
     }
 
     /**

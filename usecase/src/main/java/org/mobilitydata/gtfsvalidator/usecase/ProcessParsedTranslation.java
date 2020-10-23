@@ -52,7 +52,7 @@ public class ProcessParsedTranslation {
      * This use case also adds a {@code DuplicatedEntityNotice} to said repository if the uniqueness constraint on
      * translation entities is not respected.
      *
-     * @param validatedTranslation  entity to be processed and added to the GTFS data repository
+     * @param validatedTranslation entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedTranslation) throws IllegalArgumentException {
         final String tableName = (String) validatedTranslation.get("table_name");

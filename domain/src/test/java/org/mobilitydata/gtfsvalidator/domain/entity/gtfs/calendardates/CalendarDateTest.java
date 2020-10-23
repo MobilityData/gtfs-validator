@@ -24,8 +24,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.UnexpectedEnumV
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_ENUM_VALUE;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.KEY_FIELD_NAME;
 
@@ -146,16 +145,204 @@ class CalendarDateTest {
         assertEquals(1, noticeCollection.size());
     }
 
+    // suppressed warning, will keep the current implementation for legibility
+    @SuppressWarnings("SimplifiableAssertion")
     @Test
-    void getCalendarDateKeyShouldReturnConcatenatedStringFieldValues() {
+    void equalsShouldReturnFalseWhenCalendarDatesHaveDifferentServiceIdAndSameDate() {
         final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id 0")
+                .date(LocalDate.now())
+                .exceptionType(1)
+                .build();
+        final CalendarDate firstCalendarDate = (CalendarDate) entityBuildResult.getData();
+
+        entityBuildResult = underTest.serviceId("different service id")
+                .date(LocalDate.now())
+                .exceptionType(2)
+                .build();
+        final CalendarDate secondCalendarDate = (CalendarDate) entityBuildResult.getData();
+
+        assertFalse(firstCalendarDate.equals(secondCalendarDate));
+        assertFalse(secondCalendarDate.equals(firstCalendarDate));
+    }
+
+    // suppressed warning, will keep the current implementation for legibility
+    @SuppressWarnings("SimplifiableAssertion")
+    @Test
+    void equalsShouldReturnFalseWhenCalendarDatesHaveSameServiceIdAndDifferentDate() {
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id 0")
+                .date(LocalDate.now())
+                .exceptionType(1)
+                .build();
+        final CalendarDate firstCalendarDate = (CalendarDate) entityBuildResult.getData();
+
+        entityBuildResult = underTest.serviceId("service id 0")
+                .date(LocalDate.now().plusDays(5))
+                .exceptionType(2)
+                .build();
+        final CalendarDate secondCalendarDate = (CalendarDate) entityBuildResult.getData();
+
+        assertFalse(firstCalendarDate.equals(secondCalendarDate));
+        assertFalse(secondCalendarDate.equals(firstCalendarDate));
+    }
+
+    // suppressed warning, will keep the current implementation for legibility
+    @SuppressWarnings("SimplifiableAssertion")
+    @Test
+    void equalsShouldReturnFalseWhenCalendarDatesHaveDifferentServiceIdAndDate() {
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id 0")
+                .date(LocalDate.now())
+                .exceptionType(1)
+                .build();
+        final CalendarDate firstCalendarDate = (CalendarDate) entityBuildResult.getData();
+
+        entityBuildResult = underTest.serviceId("different service id 0")
+                .date(LocalDate.now().plusDays(5))
+                .exceptionType(2)
+                .build();
+        final CalendarDate secondCalendarDate = (CalendarDate) entityBuildResult.getData();
+
+        assertFalse(firstCalendarDate.equals(secondCalendarDate));
+        assertFalse(secondCalendarDate.equals(firstCalendarDate));
+    }
+
+    // suppressed warning, will keep the current implementation for legibility
+    @SuppressWarnings("SimplifiableAssertion")
+    @Test
+    void equalsShouldReturnTrueWhenCalendarDateHaeSameServiceIdAndDate() {
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id 0")
+                .date(LocalDate.now())
+                .exceptionType(1)
+                .build();
+        final CalendarDate firstCalendarDate = (CalendarDate) entityBuildResult.getData();
+
+        entityBuildResult = underTest.serviceId("service_id 0")
+                .date(LocalDate.now())
+                .exceptionType(2)
+                .build();
+        final CalendarDate secondCalendarDate = (CalendarDate) entityBuildResult.getData();
+
+        assertTrue(firstCalendarDate.equals(secondCalendarDate));
+        assertTrue(secondCalendarDate.equals(firstCalendarDate));
+    }
+
+    // suppressed warning, will keep the current implementation for legibility
+    @SuppressWarnings({"EqualsWithItself", "SimplifiableAssertion"})
+    @Test
+    void equalsShouldReturnTrueWhenComparingCalendarDateToItself() {
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id 0")
+                .date(LocalDate.now())
+                .exceptionType(1)
+                .build();
+        final CalendarDate calendarDate = (CalendarDate) entityBuildResult.getData();
+
+        assertTrue(calendarDate.equals(calendarDate));
+    }
+
+    @Test
+    void calendarDateWithDifferentServiceIdAndDateShouldHaveDifferentHashCodes() {
+        final String serviceIdValue = "service id";
+        final String differentServiceIdValue = "different service id";
+
         final LocalDate date = LocalDate.now();
-        final EntityBuildResult<?> entityBuildResult = underTest.serviceId("service_id")
+        final LocalDate differentDate = LocalDate.now().plusDays(3);
+
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = underTest.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(1)
+                .build();
+        final CalendarDate calendarDate = (CalendarDate) entityBuildResult.getData();
+
+        final int firstCalendarDateHashCode = calendarDate.hashCode();
+
+        entityBuildResult = underTest.serviceId(differentServiceIdValue)
+                .date(differentDate)
+                .exceptionType(2)
+                .build();
+        final CalendarDate secondCalendarDate = (CalendarDate) entityBuildResult.getData();
+        final int secondCalendarDateHashCode = secondCalendarDate.hashCode();
+
+        assertNotEquals(firstCalendarDateHashCode, secondCalendarDateHashCode);
+    }
+
+    @Test
+    void calendarDatesWithDifferentServiceIdAndSameDateShouldHaveDifferentHashCodes() {
+        final String serviceIdValue = "service id";
+        final String differentServiceIdValue = "different service id";
+
+        final LocalDate date = LocalDate.now();
+
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = underTest.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(1)
+                .build();
+        final CalendarDate calendarDate = (CalendarDate) entityBuildResult.getData();
+
+        final int firstCalendarDateHashCode = calendarDate.hashCode();
+
+        entityBuildResult = underTest.serviceId(differentServiceIdValue)
                 .date(date)
                 .exceptionType(2)
                 .build();
+        final CalendarDate secondCalendarDate = (CalendarDate) entityBuildResult.getData();
+        final int secondCalendarDateHashCode = secondCalendarDate.hashCode();
 
+        assertNotEquals(firstCalendarDateHashCode, secondCalendarDateHashCode);
+    }
+
+    @Test
+    void calendarDatesWithSameServiceIdAndDifferentDatesShouldHaveDifferentHashCodes() {
+        final String serviceIdValue = "service id";
+
+        final LocalDate date = LocalDate.now();
+        final LocalDate differentDate = LocalDate.now().plusDays(4);
+
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = underTest.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(1)
+                .build();
         final CalendarDate calendarDate = (CalendarDate) entityBuildResult.getData();
-        assertEquals("service_id" + date.toString(), calendarDate.getCalendarDateMappingKey());
+
+        final int firstCalendarDateHashCode = calendarDate.hashCode();
+
+        entityBuildResult = underTest.serviceId(serviceIdValue)
+                .date(differentDate)
+                .exceptionType(2)
+                .build();
+        final CalendarDate secondCalendarDate = (CalendarDate) entityBuildResult.getData();
+        final int secondCalendarDateHashCode = secondCalendarDate.hashCode();
+
+        assertNotEquals(firstCalendarDateHashCode, secondCalendarDateHashCode);
+    }
+
+    @Test
+    void calendarDatesWithSameServiceIdAndDateShouldHaveSameHashCodes() {
+        final String serviceIdValue = "service id";
+        final LocalDate date = LocalDate.now();
+
+        final CalendarDate.CalendarDateBuilder underTest = new CalendarDate.CalendarDateBuilder();
+        EntityBuildResult<?> entityBuildResult = underTest.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(1)
+                .build();
+        final CalendarDate calendarDate = (CalendarDate) entityBuildResult.getData();
+
+        final int firstCalendarDateHashCode = calendarDate.hashCode();
+
+        entityBuildResult = underTest.serviceId(serviceIdValue)
+                .date(date)
+                .exceptionType(2)
+                .build();
+        final CalendarDate secondCalendarDate = (CalendarDate) entityBuildResult.getData();
+        final int secondCalendarDateHashCode = secondCalendarDate.hashCode();
+
+        assertEquals(firstCalendarDateHashCode, secondCalendarDateHashCode);
     }
 }
