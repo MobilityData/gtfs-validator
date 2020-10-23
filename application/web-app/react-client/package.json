@@ -23,7 +23,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate-docs": "jsdoc -c docconfig.json"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -50,7 +51,7 @@
     "enzyme-adapter-react-16": "1.15.5",
     "identity-obj-proxy": "3.0.0",
     "jest-html-reporter": "3.2.0",
-    "jsdoc": "^3.6.6",
+    "jsdoc": "3.6.6",
     "react-scripts": "3.4.3",
     "react-test-renderer": "16.13.1",
     "semantic-ui-react": "1.2.1"
