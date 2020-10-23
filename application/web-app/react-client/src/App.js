@@ -69,6 +69,7 @@ function App() {
           <div id="display-result-button" className="launch-button-container">
             <NiceButton description="Display validation report" method={openReport}/>
           </div>
+// todo: add container for report 
           <p>
             <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
           </p>
