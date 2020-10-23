@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.domain.entity.notice;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
 import java.io.IOException;
@@ -158,4 +159,6 @@ public interface NoticeExporter {
     void export(final DecreasingStopTimeDistanceNotice decreasingStopTimeDistanceErrorNotice) throws IOException;
 
     void export(final DecreasingShapeDistanceNotice decreasingShapeDistanceNotice) throws IOException;
+
+    void export(final ValidationProcessInfoNotice validationProcessInfoNotice) throws IOException;
 }
