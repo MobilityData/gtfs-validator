@@ -16,7 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.utils;
 
+import java.nio.file.Path;
+
 public interface CustomFileUtils {
-    long sizeOf(final String pathToFile);
-    long sizeOfDirectory(final String pathToDirectory);
+    long sizeOf(final Path pathToFile);
+    long sizeOfDirectory(final Path pathToDirectory);
 }

@@ -20,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.CustomFileUtils;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public class CustomFileUtilsImpl implements CustomFileUtils {
     private static CustomFileUtilsImpl CUSTOM_FILE_UTILS = null;
@@ -40,22 +41,22 @@ public class CustomFileUtilsImpl implements CustomFileUtils {
     }
 
     /**
-     * Returns the size of a file given its path as a string
+     * Returns the size of a file given its path
      * @param pathToFile  the path to the file as String
-     * @return the size of a file given its path as a string
+     * @return the size of a file given its path
      */
     @Override
-    public long sizeOf(final String pathToFile) {
-        return FileUtils.sizeOf(new File(pathToFile));
+    public long sizeOf(final Path pathToFile) {
+        return FileUtils.sizeOf(new File(pathToFile.toString()));
     }
 
     /**
-     * Returns the size of a directory given its path as a string
+     * Returns the size of a directory given its path
      * @param pathToDirectory  the path to the directory as String
-     * @return the size of a directory given its path as a string
+     * @return the size of a directory given its path
      */
     @Override
-    public long sizeOfDirectory(final String pathToDirectory) {
-        return FileUtils.sizeOfDirectory(new File(pathToDirectory));
+    public long sizeOfDirectory(final Path pathToDirectory) {
+        return FileUtils.sizeOfDirectory(new File(pathToDirectory.toString()));
     }
 }

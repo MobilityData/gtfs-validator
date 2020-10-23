@@ -3,34 +3,45 @@ package org.mobilitydata.gtfsvalidator.fileutils;
 import org.junit.jupiter.api.Test;
 import com.google.common.io.Resources;
 
+import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CustomFileUtilsImplTest {
 
-    private void fileOrDirectorySizeTest(final String filename, final int expectedSizeByte, final int bufferByte) {
+    private void fileSizeTest(final Path pathToFile, final int expectedSizeByte, final int bufferByte) {
     //noinspection UnstableApiUsage
         assertEquals(expectedSizeByte,
-                CustomFileUtilsImpl.getInstance().sizeOf(Resources.getResource(filename).getPath()),
+                CustomFileUtilsImpl.getInstance().sizeOf(
+                        Path.of(Resources.getResource(pathToFile.toString()).getPath())
+                ),
                 bufferByte);
     }
 
     @Test
     void shouldMatchSizeOfMockFile() {
-        fileOrDirectorySizeTest("mockFile.txt", 1125, 50);
+        fileSizeTest(Path.of("./mockDirectory/mockFile.txt"), 1125, 50);
     }
 
     @Test
     void shouldMatchSizeOfMockFile2() {
-        fileOrDirectorySizeTest("mockFile2.txt", 2063, 50);
+        fileSizeTest(Path.of("./mockDirectory/mockFile2.txt"), 2063, 50);
     }
 
     @Test
     void shouldMatchSizeOfMockFile3() {
-        fileOrDirectorySizeTest("mockFile3.txt", 2580, 50);
+        fileSizeTest(Path.of("./mockDirectory/mockFile3.txt"), 2580, 50);
     }
 
     @Test
     void shouldMatchSizeOfMockDirectory() {
-        fileOrDirectorySizeTest("mockDirectory.txt", 5768, 150);
+        assertEquals(5768,
+                CustomFileUtilsImpl.getInstance().sizeOfDirectory(
+                Path.of(Resources.getResource("mockDirectory").getPath())));
+    }
+
+    @Test
+    void shouldMathSizeOfZipFile() {
+        fileSizeTest(Path.of("./mockZippedFile.zip"), 2156, 50);
     }
 }

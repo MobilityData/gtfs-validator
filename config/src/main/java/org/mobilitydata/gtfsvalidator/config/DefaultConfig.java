@@ -320,13 +320,16 @@ public class DefaultConfig {
 
     public GenerateInfoNotice generateInfoNotice(final long processingTimeSecs,
                                                  final Set<String> processedFilenameCollection) {
-        return new GenerateInfoNotice(resultRepo,
+        return new GenerateInfoNotice(
+                resultRepo,
                 execParamRepo,
                 gtfsDataRepository,
                 Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
                 processingTimeSecs,
                 processedFilenameCollection,
-                CustomFileUtilsImpl.getInstance()
+                CustomFileUtilsImpl.getInstance(),
+                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)),
+                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.EXTRACT_KEY))
         );
     }
 

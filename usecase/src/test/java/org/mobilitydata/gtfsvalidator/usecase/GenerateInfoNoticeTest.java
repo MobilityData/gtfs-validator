@@ -25,6 +25,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.usecase.utils.CustomFileUtils;
 import org.mockito.ArgumentCaptor;
 
+import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,13 +59,16 @@ class GenerateInfoNoticeTest {
         final Set<String> mockProcessedFilenameCollection = mock(Set.class);
         when(mockProcessedFilenameCollection.toString()).thenReturn("processed filename collection as String");
 
+        final Path mockInputPath = mock(Path.class);
+        final Path mockExtractPath = mock(Path.class);
+        when(mockInputPath.toString()).thenReturn("");
         final CustomFileUtils mockCustomFileUtils = mock(CustomFileUtils.class);
-        when(mockCustomFileUtils.sizeOf(anyString())).thenReturn(56L);
-        when(mockCustomFileUtils.sizeOfDirectory(anyString())).thenReturn(89L);
+        when(mockCustomFileUtils.sizeOf(mockInputPath)).thenReturn(56L);
+        when(mockCustomFileUtils.sizeOfDirectory(mockExtractPath)).thenReturn(89L);
 
         final GenerateInfoNotice underTest =
                 new GenerateInfoNotice(mockResultRepo, mockExecParamRepo, mockDataRepo, mockTimestamp,
-                        mockProcessingTime, mockProcessedFilenameCollection, mockCustomFileUtils);
+                        mockProcessingTime, mockProcessedFilenameCollection, mockCustomFileUtils, mockInputPath, mockExtractPath);
 
         underTest.execute();
 
@@ -120,13 +124,16 @@ class GenerateInfoNoticeTest {
         final Set<String> mockProcessedFilenameCollection = mock(Set.class);
         when(mockProcessedFilenameCollection.toString()).thenReturn("processed filename collection as String");
 
+        final Path mockInputPath = mock(Path.class);
+        final Path mockExtractPath = mock(Path.class);
+        when(mockInputPath.toString()).thenReturn("");
         final CustomFileUtils mockCustomFileUtils = mock(CustomFileUtils.class);
-        when(mockCustomFileUtils.sizeOf(anyString())).thenReturn(56L);
-        when(mockCustomFileUtils.sizeOfDirectory(anyString())).thenReturn(89L);
+        when(mockCustomFileUtils.sizeOf(mockInputPath)).thenReturn(56L);
+        when(mockCustomFileUtils.sizeOfDirectory(mockExtractPath)).thenReturn(89L);
 
         final GenerateInfoNotice underTest =
                 new GenerateInfoNotice(mockResultRepo, mockExecParamRepo, mockDataRepo, mockTimestamp,
-                        mockProcessingTime, mockProcessedFilenameCollection, mockCustomFileUtils);
+                        mockProcessingTime, mockProcessedFilenameCollection, mockCustomFileUtils, mockInputPath, mockExtractPath);
 
         underTest.execute();
 
@@ -177,13 +184,16 @@ class GenerateInfoNoticeTest {
         final Set<String> mockProcessedFilenameCollection = mock(Set.class);
         when(mockProcessedFilenameCollection.toString()).thenReturn("processed filename collection as String");
 
+        final Path mockInputPath = mock(Path.class);
+        final Path mockExtractPath = mock(Path.class);
+        when(mockInputPath.toString()).thenReturn("");
         final CustomFileUtils mockCustomFileUtils = mock(CustomFileUtils.class);
-        when(mockCustomFileUtils.sizeOf(anyString())).thenReturn(56L);
-        when(mockCustomFileUtils.sizeOfDirectory(anyString())).thenReturn(89L);
+        when(mockCustomFileUtils.sizeOf(mockInputPath)).thenReturn(56L);
+        when(mockCustomFileUtils.sizeOfDirectory(mockExtractPath)).thenReturn(89L);
 
         final GenerateInfoNotice underTest =
                 new GenerateInfoNotice(mockResultRepo, mockExecParamRepo, mockDataRepo, mockTimestamp,
-                        mockProcessingTime, mockProcessedFilenameCollection, mockCustomFileUtils);
+                        mockProcessingTime, mockProcessedFilenameCollection, mockCustomFileUtils, mockInputPath, mockExtractPath);
 
         underTest.execute();
 
@@ -240,13 +250,16 @@ class GenerateInfoNoticeTest {
         final Set<String> mockProcessedFilenameCollection = mock(Set.class);
         when(mockProcessedFilenameCollection.toString()).thenReturn("processed filename collection as String");
 
+        final Path mockInputPath = mock(Path.class);
+        final Path mockExtractPath = mock(Path.class);
+        when(mockInputPath.toString()).thenReturn("");
         final CustomFileUtils mockCustomFileUtils = mock(CustomFileUtils.class);
-        when(mockCustomFileUtils.sizeOf(anyString())).thenReturn(56L);
-        when(mockCustomFileUtils.sizeOfDirectory(anyString())).thenReturn(89L);
+        when(mockCustomFileUtils.sizeOf(mockInputPath)).thenReturn(56L);
+        when(mockCustomFileUtils.sizeOfDirectory(mockExtractPath)).thenReturn(89L);
 
         final GenerateInfoNotice underTest =
                 new GenerateInfoNotice(mockResultRepo, mockExecParamRepo, mockDataRepo, mockTimestamp,
-                        mockProcessingTime, mockProcessedFilenameCollection, mockCustomFileUtils);
+                        mockProcessingTime, mockProcessedFilenameCollection, mockCustomFileUtils, mockInputPath, mockExtractPath);
 
         underTest.execute();
 

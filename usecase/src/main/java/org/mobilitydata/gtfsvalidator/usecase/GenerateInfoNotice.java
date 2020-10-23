@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.usecase.utils.CustomFileUtils;
 
+import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -34,6 +35,9 @@ public class GenerateInfoNotice {
     private final long processingTimeSecs;
     private final Set<String> processedFilenameCollection;
     private final CustomFileUtils customFileUtils;
+    private final Path inputPath;
+    private final Path extractPath;
+
 
     public GenerateInfoNotice(final ValidationResultRepository resultRepo,
                               final ExecParamRepository execParamRepo,
@@ -41,7 +45,9 @@ public class GenerateInfoNotice {
                               final Timestamp timestamp,
                               final long processingTimeSecs,
                               final Set<String> processedFilenameCollection,
-                              final CustomFileUtils customFileUtils) {
+                              final CustomFileUtils customFileUtils,
+                              final Path inputPath,
+                              final Path extractPath) {
         this.resultRepo = resultRepo;
         this.execParamRepo = execParamRepo;
         this.gtfsDataRepo = gtfsDataRepo;
@@ -49,6 +55,8 @@ public class GenerateInfoNotice {
         this.processingTimeSecs = processingTimeSecs;
         this.processedFilenameCollection = processedFilenameCollection;
         this.customFileUtils = customFileUtils;
+        this.inputPath = inputPath;
+        this.extractPath = extractPath;
     }
 
     public void execute() {
@@ -73,8 +81,8 @@ public class GenerateInfoNotice {
                         resultRepo.getWarningNoticeCount(),
                         resultRepo.getErrorNoticeCount(),
                         urlOrPathToGtfsArchive,
-                        customFileUtils.sizeOf(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)),
-                        customFileUtils.sizeOfDirectory(execParamRepo.getExecParamValue(ExecParamRepository.EXTRACT_KEY)),
+                        customFileUtils.sizeOf(inputPath),
+                        customFileUtils.sizeOfDirectory(extractPath),
                         GTFS_VALIDATOR_VERSION,
                         processedFilenameCollection.toString(),
                         processingTimeSecs)
