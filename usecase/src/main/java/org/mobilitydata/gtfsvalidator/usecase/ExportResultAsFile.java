@@ -47,7 +47,6 @@ public class ExportResultAsFile {
     }
 
     public void execute() throws IOException {
-
         String reportName = gtfsDataRepo.getFeedPublisherName();
 
         if ((reportName.isEmpty() || reportName.isBlank()) && gtfsDataRepo.getAgencyCount() > 0) {
@@ -70,7 +69,7 @@ public class ExportResultAsFile {
 
         logger.info("Exporting validation repo content:" + resultRepo.getAll());
 
-        NoticeExporter exporter = resultRepo.getExporter(
+        final NoticeExporter exporter = resultRepo.getExporter(
                 asProto,
                 finalPath,
                 Boolean.parseBoolean(execParamRepo.getExecParamValue(execParamRepo.BEAUTIFY_KEY)));

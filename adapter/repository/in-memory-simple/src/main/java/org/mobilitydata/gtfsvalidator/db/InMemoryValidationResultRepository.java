@@ -28,7 +28,6 @@ import org.mobilitydata.gtfsvalidator.exporter.ProtobufNoticeExporter;
 import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -104,5 +103,15 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
                     ),
                     isPretty);
         }
+    }
+
+    @Override
+    public int getWarningNoticeCount() {
+        return warningNoticeList.size();
+    }
+
+    @Override
+    public int getErrorNoticeCount() {
+        return errorNoticeList.size();
     }
 }
