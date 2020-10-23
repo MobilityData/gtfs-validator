@@ -22,12 +22,12 @@ jobs:
       - name: Persist Java tests reports
         uses: actions/upload-artifact@v2
         with:
-          name: java-tests-v1.3.0-SNAPSHOT
+          name: v1.3.0-SNAPSHOT_java_test_report
           path: build/reports/allTests/
       - name: Persist JS tests report
         uses: actions/upload-artifact@v2
         with:
-          name: js-tests-v1.3.0-SNAPSHOT
+          name: v1.3.0-SNAPSHOT_js_test_report
           path: application/web-app/react-client/test-reports/
 
   pack:
