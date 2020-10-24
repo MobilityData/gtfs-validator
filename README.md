@@ -55,10 +55,14 @@ If the workflow run crashes or something doesn't look right in the validation re
 # Prerequisites
 
 1. Install [Docker](https://www.docker.com)
-1. Retrieve an image from our [package page](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator)
-For snapshot versions of the master branch, the command would be
-`docker pull ghcr.io/mobilitydata/gtfs-validator:master`
-1.Run the image either in the Docker Dashboard UI (dont forget to bind port 8090) or via this command
+1. Retrieve an image from our [package page](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator).
+For snapshot versions of the master branch
+``` 
+docker pull ghcr.io/mobilitydata/gtfs-validator:master
+```
+- we also provide images of our tagged version starting with `v1.3.0`
+
+3. Run the image either in the Docker Dashboard UI (dont forget to bind port 8090) or via this command
 ``` 
 docker run -p 8090:8090 ghcr.io/mobilitydata/gtfs-validator:[[[REPLACE_WITH_YOUR_TAG]]]
 ```
@@ -78,7 +82,7 @@ cd /usr/gtfs-validator/cli-app
 ```
 you can then follow the instructions of the next sections
 
-Note: As a convenience, a shell script file is provided in the same directory. It is copied from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
+Note: As a convenience, a `shell script` file is provided in the same directory. It is copied from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
 It can be used to run the validator in an automated way. Only community based support is provided for local runs of the validator.
 
 ## via Java on your local computer
