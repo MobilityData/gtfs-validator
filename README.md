@@ -250,9 +250,9 @@ See [configuration section](https://github.com/MobilityData/gtfs-validator#softw
 We use [clean architecture principles](https://medium.com/slalom-build/clean-architecture-with-java-11-f78bba431041) to implement this validator, which modularizes the project.
 
 Some important modules:
-* [Domain](domain/src/main/java/org/mobilitydata/gtfsvalidator/domain) - Entity classes
-* [Use cases](usecase/src/main/java/org/mobilitydata/gtfsvalidator/usecase) - Business logic 
-* [Adapter](adapter) - Convertors (e.g., parsers and exporters)
+* [domain](domain/src/main/java/org/mobilitydata/gtfsvalidator/domain) - Entity classes
+* [use cases](usecase/src/main/java/org/mobilitydata/gtfsvalidator/usecase) - Business logic 
+* [adapter](adapter) - Convertors (e.g., parsers and exporters)
 * [application/cli-app](application/cli-app) - The main command-line application
 * [application/web-app/react-client](application/web-app/react-client) - The local web ui as a React project  
 * [application/web-app/spring-server](application/web-app/spring-server) - The implementation of the application that relies on SpringBoot framework
