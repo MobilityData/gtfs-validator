@@ -18,7 +18,7 @@ This command-line tool written in Java that performs the following steps:
 ## via GitHub Actions - run the validator on any gtfs archive available on a public url
 
 ## TLDR;
-Fork this repository, open a PR on master within it, edit the file `.github/workflows/end_to_end.yml` following instructions on lines 5, 6, 21-26 and **push** on your PR branch. 
+Fork this repository, open a PR on master within it, edit the file `.github/workflows/end_to_end.yml` following instructions on lines 5, 6, 21-26 and **push** on your PR branch. Name your branch from the agency/authority/publisher of the feed you are testing.
 You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. The validation report is collected as a run artifact in the Actions tab of your fork repository on GitHub.
 
 If the workflow run crashes or something doesn't look right in the validation report json file, **please see the [Contribute](#Contribute) section, we may be able to help!**
@@ -33,7 +33,7 @@ If the workflow run crashes or something doesn't look right in the validation re
 1. clic the *crayon* icon to enter edit mode
 1. **comment** line 5 by adding a `#` at the beginning. *It should turn grey when commented out*
 1. **uncomment** line 6 by removing the `#` character
-1. on line 6, **replace** `your-prbranch` by something significant like `ilovegtfs-stm` for GitHub handle `ilovegtfs` if you were adding a dataset from *Société de Transport de Montréal*
+1. on line 6, **replace** `your-prbranch` by something significant like `societe-de-transport-de-montreal` if you were adding a dataset from *STM*
 1. copy your branch name in your clipboard, you'll need it in a moment
 1. uncomment line 25 by removing the `#` character
 1. on line 25, **replace** `[[[ACRONYM]]]` by some name for the Agency/publisher
