@@ -12,20 +12,54 @@ This command-line tool written in Java that performs the following steps:
 1. Checks files integrity, numeric type parsing and ranges as well as string format according to the [GTFS specification](http://gtfs.org/reference/static/#field-types) using [this schema file](https://github.com/MobilityData/gtfs-validator/blob/v1.1.0/adapter/repository/in-memory-simple/src/main/resources/gtfs_spec.asciipb)
 1. Performs basic GTFS business rule validation *(work-in-progress)*
 
-# Prerequisites
-1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
-1. Download the latest gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster) or [Circle-CI Pipelines](https://app.circleci.com/pipelines/github/MobilityData/gtfs-validator?branch=master)
-
-OR
-
-1. Install [Docker](https://www.docker.com)
-2. Retrieve an image from our [package page](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator)
-
 # Usage
 
-## Docker image
+## via GitHub Actions - run the validator on any gtfs archive available on a public url
 
-Run the image either in the Docker Dashboard UI (dont forget to bind port 8090) or via this command
+## TLDR;
+Fork this repository, open a PR on master within it, edit the file `.github/workflows/end_to_end.yml` following instructions on lines 5, 6, 21-26 and **push** on your PR branch. You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. 
+
+If the workflow run crashes, **please let us know**
+
+
+## longer version - step by step through GitHub web UI (screenshots coming soon)
+1. go to https://github.com/MobilityData/gtfs-validator
+
+1. click on the `fork` button on the top right corner
+
+1. validate and wait for the fork creation
+1. go to your fork (something like https://github.com/YOUR_USERNAME/gtfs-validator)
+1. navigate to `.github/workflows/end_to_end.yml`
+1. clic the *crayon* icon to enter edit mode
+1. clic on the *green* `Start commit` button on the right of the page
+1. **select the option ` Create a new branch for this commit and start a pull request.`**
+1. edit the branch name to something significant like `username-stm` if by example your GitHub handle is `username` and you were adding a dataset from *Société de Transport de Montréal*
+1. copy your branch name in your clipboard
+1. paste your branch name on line 6, **replacing** `your-prbranch`
+1. uncomment line 6 by removing the `#` character
+1. comment line 5 by adding a `#` at the beginning. *It should turn grey when commented out*
+1. uncomment line 25 by removing the `#` character
+1. on line 25, **replace** `[[[ACRONYM]]]` by some name for the Agency/publisher
+1. uncomment line 26 by removing the `#` character
+1. on line 26, **replace** `[[[ACRONYM]]]` in `[[[ACRONYM]]].zip` by some name for the Agency/publisher. **keep the .zip extension intact**
+1. on line 26, **replace** `[[[DATASET_PUBLIC_URL]]]` by a public url pointing to a gtfs zip archive
+1. clic the *green* `Start commit` again
+1. clic the *green* `Propose changes` button
+1. on the next screen, clic `Create pull request`
+
+You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added.
+
+If the workflow run crashes, **please let us know**
+
+## via Docker image
+
+# Prerequisites
+
+1. Install [Docker](https://www.docker.com)
+1. Retrieve an image from our [package page](https://github.com/orgs/MobilityData/packages/container/package/gtfs-validator)
+For snapshot versions of the master branch, the command would be
+`docker pull ghcr.io/mobilitydata/gtfs-validator:master`
+1.Run the image either in the Docker Dashboard UI (dont forget to bind port 8090) or via this command
 ``` 
 docker run -p 8090:8090 ghcr.io/mobilitydata/gtfs-validator:[[[REPLACE_WITH_YOUR_TAG]]]
 ```
@@ -47,6 +81,13 @@ you can then follow the instructions of the next sections
 
 Note: As a convenience, a shell script file is provided in the same directory. It is copied from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
 It can be used to run the validator in an automated way. We do not provide support for local runs of the validator.
+
+## via Java on your local computer
+
+# Prerequisites
+
+1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
+1. Download the latest gtfs-validator JAR (cli or web) file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster) or [Circle-CI Pipelines](https://app.circleci.com/pipelines/github/MobilityData/gtfs-validator?branch=master)
 
 ## cli-app usage
 
