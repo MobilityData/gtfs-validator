@@ -79,7 +79,7 @@ cd /usr/gtfs-validator/cli-app
 you can then follow the instructions of the next sections
 
 Note: As a convenience, a shell script file is provided in the same directory. It is copied from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
-It can be used to run the validator in an automated way. We do not provide support for local runs of the validator.
+It can be used to run the validator in an automated way. Only community based support is provided for local runs of the validator.
 
 ## via Java on your local computer
 
@@ -284,3 +284,5 @@ If you have followed instructions in the [Usage via GitHub Actions](#tldr) and h
 1. fill in a title and the requested information for your PR
 1. use the dropddown on the *green* `Create pull request` button to select **Create draft pull request**
 1. clic the *green* `Draft pull request` button
+
+While we welcome all contributions, our [members and sponsors](https://mobilitydata.org/members/) see their PRs and issues prioritized.
