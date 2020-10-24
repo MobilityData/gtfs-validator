@@ -51,6 +51,10 @@ You should now see the workflow `End to end / run-on-data` start automatically i
 
 If the workflow run crashes, **please let us know**
 
+## run the run-on-data step locally on a Docker enabled machine
+
+TODO
+
 ## via Docker image
 
 # Prerequisites
