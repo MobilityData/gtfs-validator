@@ -33,7 +33,7 @@ If the workflow run crashes or something doesn't look right in the validation re
 1. clic the *crayon* icon to enter edit mode
 1. **comment** line 5 by adding a `#` at the beginning. *It should turn grey when commented out*
 1. **uncomment** line 6 by removing the `#` character
-1. on line 6, **replace** `your-prbranch` by something significant like `ilovegtfs-stm` if for example your GitHub handle is `ilovegtfs` and you were adding a dataset from *Société de Transport de Montréal*
+1. on line 6, **replace** `your-prbranch` by something significant like `ilovegtfs-stm` for GitHub handle `ilovegtfs` if you were adding a dataset from *Société de Transport de Montréal*
 1. copy your branch name in your clipboard, you'll need it in a moment
 1. uncomment line 25 by removing the `#` character
 1. on line 25, **replace** `[[[ACRONYM]]]` by some name for the Agency/publisher
@@ -277,12 +277,14 @@ If you have followed instructions in the [Usage via GitHub Actions](#tldr) and h
 1. select the `Pull requests` tab
 1. clic the *green* `New pull request` button
 1. in the `Compare changes` section, clic the *blue* link **compare across forks.**
-1. on the **left** of the `←` *base repository:* should be `MobilityData/gtfs-validator` and *base:* be `master`
-1. on the **right** of the `←` use the first dropdown to change *head repository:* to your forked one (like `ilovetramways/gtfs-validator` if for example your GitHub handle is `ilovetramways`)
-1. on the **right** of the `←` use the second dropdown to change *compare:* to **the branch in your fork containing the changes you made to end_to_end.yml that led to an issue**
+1. on the **left** side of the `←` *base repository:* should be `MobilityData/gtfs-validator` and *base:* be `master`
+1. on the **right** side of the `←` use the first dropdown to change *head repository:* to your forked one (like `ilovetramways/gtfs-validator` for GitHub handle `ilovetramways`)
+1. on the **right** side of the `←` use the second dropdown to change *compare:* to **the branch in your fork containing the changes you made to end_to_end.yml that led to an issue**
 1. clic the *green* `Create pull request` button
 1. fill in a title and the requested information for your PR
 1. use the dropddown on the *green* `Create pull request` button to select **Create draft pull request**
 1. clic the *green* `Draft pull request` button
+
+Then we're all set, thk you very very much! The end to end workflow will run on the newly created PR in our repository and automatically collect all relevant information. We will follow up directly in the PR
 
 While we welcome all contributions, our [members and sponsors](https://mobilitydata.org/members/) see their PRs and issues prioritized.
