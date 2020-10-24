@@ -68,6 +68,7 @@ docker run -p 8090:8090 ghcr.io/mobilitydata/gtfs-validator:[[[REPLACE_WITH_YOUR
 ```
 
 By default, you will then have access to the web version of the validator at http://localhost:8090/
+See [Web app usage](#web-app-usage)
 
 If you want to use the cli version within Docker, you must first stop the web app with the following command
 ``` 
@@ -83,7 +84,7 @@ cd /usr/gtfs-validator/cli-app
 you can then follow the instructions of the next sections
 
 Note: As a convenience, a `shell script` file is provided in the same directory. It is copied from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
-It can be used to run the validator in an automated way. Only community based support is provided for local runs of the validator.
+It can be used to run the validator in an automated way via Java on your local computer. Only community based support is provided for local runs of the validator.
 
 ## via Java on your local computer
 
