@@ -3,53 +3,52 @@
 [![Test Package Document](https://github.com/MobilityData/gtfs-validator/workflows/Test%20Package%20Document/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Test+Package+Document%22) [![Docker image](https://github.com/MobilityData/gtfs-validator/workflows/Docker%20image/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22Docker+image%22) [![End to end](https://github.com/MobilityData/gtfs-validator/workflows/End%20to%20end/badge.svg)](https://github.com/MobilityData/gtfs-validator/actions?query=workflow%3A%22End+to+end%22) [![CircleCI](https://circleci.com/gh/MobilityData/gtfs-validator/tree/master.svg?style=svg)](https://circleci.com/gh/MobilityData/gtfs-validator/tree/master)
 
 
-A static [General Transit Feed Specification (GTFS)](http://gtfs.org/reference/static/) feed validator
+A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator
 
 # Introduction
 
 This command-line tool written in Java that performs the following steps:
 1. Loads input GTFS zip file from a URL or disk
-1. Checks files integrity, numeric type parsing and ranges as well as string format according to the [GTFS specification](http://gtfs.org/reference/static/#field-types) using [this schema file](https://github.com/MobilityData/gtfs-validator/blob/v1.1.0/adapter/repository/in-memory-simple/src/main/resources/gtfs_spec.asciipb)
-1. Performs basic GTFS business rule validation *(work-in-progress)*
+1. Checks files integrity, numeric type parsing and ranges as well as string format according to the [GTFS Schedule specification](https://gtfs.mobilitydata.org/spec/gtfs-schedule#h.hc443y62gb8c)
+1. Performs basic GTFS business rule validation
+1. Performs advanced GTFS business rule validation *(work-in-progress)*
 
 # Usage
 
 ## via GitHub Actions - run the validator on any gtfs archive available on a public url
 
 ## TLDR;
-Fork this repository, open a PR on master within it, edit the file `.github/workflows/end_to_end.yml` following instructions on lines 5, 6, 21-26 and **push** on your PR branch. You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. 
+Fork this repository, open a PR on master within it, edit the file `.github/workflows/end_to_end.yml` following instructions on lines 5, 6, 21-26 and **push** on your PR branch. 
+You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. The validation report is collected as a run artifact in the Actions tab of your fork repository on GitHub.
 
-If the workflow run crashes, **please let us know**
-
+If the workflow run crashes or something doesn't look right in the validation report json file, **please see the [Contribute](#Contribute) section, we may be able to help!**
 
 ## longer version - step by step through GitHub web UI (screenshots coming soon)
 1. go to https://github.com/MobilityData/gtfs-validator
 
 1. click on the `fork` button on the top right corner
-
 1. validate and wait for the fork creation
 1. go to your fork (something like https://github.com/YOUR_USERNAME/gtfs-validator)
 1. navigate to `.github/workflows/end_to_end.yml`
 1. clic the *crayon* icon to enter edit mode
-1. clic on the *green* `Start commit` button on the right of the page
-1. **select the option ` Create a new branch for this commit and start a pull request.`**
-1. edit the branch name to something significant like `username-stm` if by example your GitHub handle is `username` and you were adding a dataset from *Société de Transport de Montréal*
-1. copy your branch name in your clipboard
-1. paste your branch name on line 6, **replacing** `your-prbranch`
-1. uncomment line 6 by removing the `#` character
-1. comment line 5 by adding a `#` at the beginning. *It should turn grey when commented out*
+1. **comment** line 5 by adding a `#` at the beginning. *It should turn grey when commented out*
+1. **uncomment** line 6 by removing the `#` character
+1. on line 6, **replace** `your-prbranch` by something significant like `ilovegtfs-stm` if for example your GitHub handle is `ilovegtfs` and you were adding a dataset from *Société de Transport de Montréal*
+1. copy your branch name in your clipboard, you'll need it in a moment
 1. uncomment line 25 by removing the `#` character
 1. on line 25, **replace** `[[[ACRONYM]]]` by some name for the Agency/publisher
 1. uncomment line 26 by removing the `#` character
-1. on line 26, **replace** `[[[ACRONYM]]]` in `[[[ACRONYM]]].zip` by some name for the Agency/publisher. **keep the .zip extension intact**
-1. on line 26, **replace** `[[[DATASET_PUBLIC_URL]]]` by a public url pointing to a gtfs zip archive
-1. clic the *green* `Start commit` again
+1. on line 26, **replace** `[[[ACRONYM]]]` in `[[[ACRONYM]]].zip` by what you put down in step 12 - **NO SPACES OR SPECIAL CHARACTERS -- keep the .zip extension intact**
+1. on line 26, **replace** `[[[DATASET_PUBLIC_URL]]]` by a public url pointing to a [GTFS Schedule](https://gtfs.mobilitydata.org/spec/gtfs-schedule) zip archive
+1. clic on the *green* `Start commit` button on the right of the page
+1. **select the option ` Create a new branch for this commit and start a pull request.`**
+1. paste your branch name to **replace** the proposed default
 1. clic the *green* `Propose changes` button
 1. on the next screen, clic `Create pull request`
 
-You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added.
+You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. The validation report is collected as a run artifact in the Actions tab of your fork repository on GitHub.
 
-If the workflow run crashes, **please let us know**
+If the workflow run crashes or something doesn't look right in the validation report json file, **please see the [Contribute](#Contribute) section, we may be able to help!**
 
 ## via Docker image
 
@@ -269,3 +268,19 @@ $ npm test
 # License
 
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
+
+
+# Contribute
+
+If you have followed instructions in the [Usage via GitHub Actions](#tldr) and have a fork with an open PR on your master branch, you've already done most of the work! Complete the following instructions to send us all the relevant information so we can diagnose and fix the issue.
+1. go to https://github.com/MobilityData/gtfs-validator
+1. select the `Pull requests` tab
+1. clic the *green* `New pull request` button
+1. in the `Compare changes` section, clic the *blue* link **compare across forks.**
+1. on the **left** of the `←` *base repository:* should be `MobilityData/gtfs-validator` and *base:* be `master`
+1. on the **right** of the `←` use the first dropdown to change *head repository:* to your forked one (like `ilovetramways/gtfs-validator` if for example your GitHub handle is `ilovetramways`)
+1. on the **right** of the `←` use the second dropdown to change *compare:* to **the branch in your fork containing the changes you made to end_to_end.yml that led to an issue**
+1. clic the *green* `Create pull request` button
+1. fill in a title and the requested information for your PR
+1. use the dropddown on the *green* `Create pull request` button to select **Create draft pull request**
+1. clic the *green* `Draft pull request` button
