@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import React, {useCallback} from "react";
+import React, {useCallback} from "react"
 import axios from "axios";
 
 import NiceButton from "./components/NiceButton";
