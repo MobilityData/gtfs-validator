@@ -50,7 +50,7 @@ public class RelationshipDescriptorMakerTest {
         assertEquals(mockRelationshipDescriptor, toCheck.getChildren().get(1));
 
         verify(mockChild0, times(1)).toGtfsTreeRootNode();
-        verify(mockChild0, times(1)).toGtfsTreeRootNode();
+        verify(mockChild1, times(1)).toGtfsTreeRootNode();
 
         verifyNoMoreInteractions(mockChild0, mockChild1, mockRelationshipDescriptor);
     }
