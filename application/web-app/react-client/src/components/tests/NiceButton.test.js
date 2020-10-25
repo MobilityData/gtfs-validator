@@ -40,6 +40,6 @@ describe('NiceButton', () => {
             <NiceButton id='id value' onClick={mockOnClick} description="description value"/>
         );
         tree.root.props.onClick();
-        expect(mockOnClick).toHaveBeenCalledTimes(1);
+        expect(mockOnClick).toHaveBeenCalledTimes(10);
     });
 });
