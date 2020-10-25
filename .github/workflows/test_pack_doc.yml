@@ -19,12 +19,12 @@ jobs:
         run: ./gradlew testReport
       - name: Run JS tests
         run: ./gradlew uiTest
-      - name: Persist Successfull Java tests reports
+      - name: Persist **Successfull** Java tests reports
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_java_test_report
           path: build/reports/allTests/
-      - name: Persist Successfull Java tests reports
+      - name: Persist **Failed** Java tests reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
