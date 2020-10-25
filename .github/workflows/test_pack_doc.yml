@@ -23,6 +23,8 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Run Java tests
         uses: eskatos/gradle-command-action@v1
+        env:
+          versionName: test-version-name
         with:
           arguments: testReport
       - name: Persist **Successfull** Java tests merged report
