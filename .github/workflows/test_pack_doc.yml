@@ -19,12 +19,26 @@ jobs:
         run: ./gradlew testReport
       - name: Run JS tests
         run: ./gradlew uiTest
-      - name: Persist Java tests reports
-        if: ${{ always() }}
+      - name: Persist Successfull Java tests reports
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_java_test_report
           path: build/reports/allTests/
+      - name: Persist Successfull Java tests reports
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_java_test_report
+          path: |
+            adapter/exporter/build/reports/tests/
+            adapter/parser/build/reports/tests/
+            adapter/repository/in-memory-simple/build/reports/tests/
+            adapter/tree/build/reports/tests/
+            adapter/utils/build/reports/tests/
+            adapter/validator/build/reports/tests/
+            application/web-app/spring-server/build/reports/tests/
+            domain/build/reports/tests/
+            usecase/build/reports/tests/
       - name: Persist JS tests report
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
