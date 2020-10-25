@@ -63,10 +63,21 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Generate Javadoc
+      - name: Build jsdoc
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: ./application/web-app/react-client/src/
+          recurse: true
+          output_dir: build/docs/jsdoc/
+      - name: Build Javadoc
         run: ./gradlew aggregateJavadocs
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_javadoc
           path: build/docs/javadoc/
+      - name: Persist jsdoc
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_jsdoc
+          path: build/docs/jsdoc/

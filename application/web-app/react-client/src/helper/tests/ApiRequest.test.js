@@ -14,16 +14,15 @@
  *  limitations under the License.
  */
 
-import {initializeConfig} from "../ApiRequest.js"
+import ApiRequestExecutor from "../ApiRequestExecutor";
 import mockAxios from "axios";
-import {openReport, runValidator} from "../ApiRequest";
 jest.mock('axios')
-jest.mock('../DomInteractions')
+jest.mock('../DomInteractionsExecutor')
 require("regenerator-runtime");
 
 describe("InitConfig", () => {
     it("should de defined", () => {
-        expect(initializeConfig).toBeDefined()
+        expect(ApiRequestExecutor.initializeConfig).toBeDefined()
     })
 
     it("should call post method with correct arguments", () => {
@@ -33,7 +32,7 @@ describe("InitConfig", () => {
                 data: { results: [""] }
             })
         );
-        initializeConfig(mockAxios, "8090", "/actions/initialize/", "test");
+        ApiRequestExecutor.initializeConfig(mockAxios, "8090", "/actions/initialize/", "test");
         expect(mockAxios.post).toHaveBeenCalledTimes(1);
         expect(mockAxios.post).toHaveBeenCalledWith("http://localhost:8090/actions/initialize/", "test");
     })
@@ -41,7 +40,7 @@ describe("InitConfig", () => {
 
 describe("ValidateFeed", () => {
     it("should de defined", () => {
-        expect(runValidator).toBeDefined()
+        expect(ApiRequestExecutor.runValidator).toBeDefined()
     })
 
     // FIXME: we could not make this one work
@@ -60,7 +59,7 @@ describe("ValidateFeed", () => {
 
 describe("DisplayValidationReport", () => {
     it("should de defined", () => {
-        expect(openReport).toBeDefined()
+        expect(ApiRequestExecutor.openReport).toBeDefined()
     })
 
     it("should call get method with correct argument", () => {
@@ -70,7 +69,7 @@ describe("DisplayValidationReport", () => {
                 data: { results: [""] }
             })
         );
-        openReport()
+        ApiRequestExecutor.openReport()
         expect(mockAxios.get).toHaveBeenCalledTimes(1);
         expect(mockAxios.get).toHaveBeenCalledWith("http://localhost:8090/actions/openreport");
     })

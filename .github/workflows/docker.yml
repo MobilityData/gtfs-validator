@@ -43,7 +43,7 @@ jobs:
           fi
           TAGS="${DOCKER_IMAGE}:${VERSION}"
           if [ "${{ github.event_name }}" = "push" ]; then
-            TAGS="$TAGS,${DOCKER_IMAGE}:sha-${GITHUB_SHA::8}"
+            TAGS="${DOCKER_IMAGE}:sha-${GITHUB_SHA::8},$TAGS"
           fi
           echo ::set-output name=version::${VERSION}
           echo ::set-output name=tags::${TAGS}
@@ -71,7 +71,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ steps.prep.outputs.tags }}
-          labels: |
-            org.opencontainers.image.source=${{ github.event.repository.clone_url }}
+          labels: | 
+            org.opencontainers.image.source=https://github.com/mobilitydata/gtfs-validator.git
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
+# should be org.opencontainers.image.source=${{ github.event.repository.clone_url }} but caps in MobilityData seem to break something

@@ -20,10 +20,18 @@ import JsonBeautyfier from "./JsonBeautyfier";
 import localJson from "../data/json-examples/local-example.json";
 import networkJson from "../data/json-examples/network-example.json";
 
+/**
+ * This class defines a 2-levels accordion that renders (as an Accordion) beautified json files when the title of
+ * their description is clicked
+ */
 export default class JsonExampleAccordion extends Component {
     state = {activeItemIndex: 0}
 
-    handleClick = (e, titleProps) => {
+    /**
+     * Defines action when `onclick` event is triggered
+     * @param titleProps {string} the title of the accordion section
+     */
+    handleClick = (titleProps) => {
         const {index: itemIndex} = titleProps
         const {activeIndex: activeItemIndex} = this.state
         const newItemIndex = activeItemIndex === itemIndex ? -1 : itemIndex
@@ -31,6 +39,10 @@ export default class JsonExampleAccordion extends Component {
         this.setState({activeIndex: newItemIndex})
     }
 
+    /**
+     * Renders the DOM element
+     * @returns {JSX.Element} the DOM element to be rendered
+     */
     render() {
         const {activeIndex} = this.state
         return (
