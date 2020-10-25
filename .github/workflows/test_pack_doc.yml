@@ -23,7 +23,7 @@ jobs:
           elif [[ $GITHUB_REF == refs/pull/* ]]; then
             VERSION_TAG=pr-${{ github.event.number }}
           fi
-          if [ "${{ github.event_name }}" = "push" ] && [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/}]; then
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
             VERSION_TAG=${VERSION_TAG}:sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
           VERSION_NAME=${VERSION_NAME}:${VERSION_TAG}
