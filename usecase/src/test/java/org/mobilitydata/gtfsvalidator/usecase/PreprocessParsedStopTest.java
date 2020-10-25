@@ -89,7 +89,7 @@ class PreprocessParsedStopTest {
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
         DuplicatedEntityNotice notice = captor.getValue();
-        assertEquals("stops__.txt", notice.getFilename());
+        assertEquals("stops.txt", notice.getFilename());
         assertEquals(STOP_ID, notice.getNoticeSpecific(KEY_FIELD_NAME));
         assertEquals(STOP_ID, notice.getEntityId());
 
