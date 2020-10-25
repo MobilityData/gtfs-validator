@@ -17,6 +17,12 @@ jobs:
           java-version: 1.11
       - name: Run Java tests
         run: ./gradlew testReport
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Run JS tests
         run: ./gradlew uiTest
       - name: Persist Java tests reports
@@ -41,6 +47,12 @@ jobs:
           java-version: 1.11
       - name: Package cli app jar with Gradle
         run: ./gradlew shadowJar
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Package web app war with Gradle
         run: ./gradlew bootWar
       - name: Persist cli app jar
@@ -63,6 +75,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Build jsdoc
         uses: andstor/jsdoc-action@v1
         with:
