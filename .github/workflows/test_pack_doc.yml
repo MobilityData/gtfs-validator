@@ -19,30 +19,6 @@ jobs:
         run: ./gradlew testReport
       - name: Run JS tests
         run: ./gradlew uiTest
-      - name: Persist Java tests reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_java_test_report
-          path: build/reports/allTests/
-      - name: Persist JS tests report
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_js_test_report
-          path: application/web-app/react-client/test-reports/
-
-  pack:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Set up JDK 1.11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.11
-      - name: Package cli app jar with Gradle
-        run: ./gradlew shadowJar
-      - name: Package web app war with Gradle
-        run: ./gradlew bootWar
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
@@ -53,9 +29,21 @@ jobs:
         with:
           name: v1.3.0-SNAPSHOT_web
           path: application/web-app/spring-server/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.war
+      - name: Persist Java tests reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_java_test_report
+          path: build/reports/allTests/
+      - name: Persist JS tests report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_js_test_report
+          path: application/web-app/react-client/test-reports/
 
   doc:
-    needs: test
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
