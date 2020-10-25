@@ -33,8 +33,8 @@ jobs:
           path: application/web-app/react-client/test-reports/
 
   pack:
-    runs-on: ubuntu-latest
     needs: [test]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - name: Set up JDK 1.11
