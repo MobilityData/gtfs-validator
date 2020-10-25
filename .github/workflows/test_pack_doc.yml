@@ -17,13 +17,6 @@ jobs:
           java-version: 1.11
       - name: Run Java tests
         run: ./gradlew testReport
-      - name: Run JS tests
-        run: ./gradlew uiTest
-      - name: Persist **Successfull** Java tests reports
-        uses: actions/upload-artifact@v2
-        with:
-          name: v1.3.0-SNAPSHOT_java_test_report
-          path: build/reports/allTests/
       - name: Persist **Failed** Java tests reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
@@ -39,6 +32,13 @@ jobs:
             application/web-app/spring-server/build/reports/tests/
             domain/build/reports/tests/
             usecase/build/reports/tests/
+      - name: Run JS tests
+        run: ./gradlew uiTest
+      - name: Persist **Successfull** Java tests reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: v1.3.0-SNAPSHOT_java_test_report
+          path: build/reports/allTests/
       - name: Persist JS tests report
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
