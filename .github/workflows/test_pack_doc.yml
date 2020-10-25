@@ -11,6 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_NAME=gtfs-validator-
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=pr-${{ github.event.number }}
+          fi
+          if [ "${{ github.event_name }}" = "push" ] && [ $VERSION_TAG != ${GITHUB_REF#refs/tags/}]; then
+            VERSION_TAG="${VERSION_TAG}:sha-${GITHUB_SHA::8}-SNAPSHOT"
+          fi
+          VERSION_NAME="${VERSION_NAME}:${VERSION_TAG}"
+          echo ::set-output name=versionName::${VERSION_NAME}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          $VERSION_NAME > version-name.txt
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
@@ -24,7 +43,7 @@ jobs:
       - name: Run Java tests
         uses: eskatos/gradle-command-action@v1
         env:
-          versionName: test-version-name
+          versionName: ${{ steps.prep.outputs.versionName }}
         with:
           arguments: testReport
       - name: Persist **Successfull** Java tests merged report
