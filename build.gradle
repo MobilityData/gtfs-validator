@@ -28,8 +28,8 @@ apply plugin: 'nebula-aggregate-javadocs'
 
 // a task to run all tests and combine them in one report
 task testReport(type: TestReport) {
-    print("System.getenv("versionName"): " + System.getenv("CI"))
-    print("System.getenv("versionName"): " + System.getenv("versionName"))
+    print("System.getenv(\"versionName\"): " + System.getenv("CI"))
+    print("System.getenv(\"versionName\"): " + System.getenv("versionName"))
     destinationDir = file("$buildDir/reports/allTests")
     // Combine all 'test' task results into a single HTML report
     reportOn subprojects.collect { it.tasks.withType(Test) }
