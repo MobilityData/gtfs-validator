@@ -13,6 +13,7 @@ jobs:
       - uses: actions/checkout@v1
       - name: Prepare version name
         id: prep
+        shell: bash
         run: |
           VERSION_NAME=gtfs-validator-
           VERSION_TAG=edge
@@ -27,6 +28,8 @@ jobs:
             VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
           VERSION_NAME=${VERSION_NAME}${VERSION_TAG}
+          ${VERSION_NAME} > version-name.txt
+          
           echo ::set-output name=versionName::${VERSION_NAME}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
@@ -48,13 +51,13 @@ jobs:
       - name: Persist **Successfull** Java tests merged report
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_java_test_report
+          name: ${{ steps.prep.outputs.versionName }}_java_test_report
           path: build/reports/allTests/
       - name: Persist **Failed** Java tests unmerged reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_java_test_report
+          name: ${{ steps.prep.outputs.versionName }}_java_test_report
           path: |
             adapter/exporter/build/reports/tests/
             adapter/parser/build/reports/tests/
@@ -74,7 +77,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_js_test_report
+          name: ${{ steps.prep.outputs.versionName }}_js_test_report
           path: application/web-app/react-client/test-reports/
 
   pack:
