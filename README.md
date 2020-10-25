@@ -83,8 +83,8 @@ cd /usr/gtfs-validator/cli-app
 ```
 you can then follow the instructions of the next sections
 
-Note: As a convenience, a `shell script` file is provided in the same directory. It is copied from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
-It can be used to run the validator in an automated way via Java on your local computer. Only community based support is provided for local runs of the validator.
+Note: As a convenience, a `shell script` file is provided in the same directory. It is [copied in the Docker image](https://github.com/MobilityData/gtfs-validator/blob/253bc9ccb019ca98bad1f429d91bc4fe03b8020d/Dockerfile#L3) from [end_to_end.sh](https://github.com/MobilityData/gtfs-validator/blob/master/application/cli-app/scripts/end_to_end.sh)
+It can be used to run the validator in an automated way *via Java on your local computer* as described in the next section. Only **community based support** is provided for local runs of the validator.
 
 ## via Java on your local computer
 
@@ -223,7 +223,7 @@ Note that you'll need to change the above JAR file name to whatever [release ver
 
 A second implementation of `gtfs-validator` uses [`SpringBoot`](https://spring.io/projects/spring-boot) framework and a user interface (based on [`React`](https://reactjs.org/)).
 
-### Run the application
+### Run the application via Java on your local computer
 
 ```
 java -jar gtfs-validator-v1.3.0_web.war 
