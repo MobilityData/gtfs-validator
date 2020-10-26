@@ -50,6 +50,7 @@
     "enzyme-adapter-react-16": "1.15.5",
     "identity-obj-proxy": "3.0.0",
     "jest-html-reporter": "3.2.0",
+    "react-json-view": "1.19.1",
     "react-scripts": "3.4.3",
     "react-test-renderer": "16.13.1",
     "semantic-ui-react": "1.2.1"
