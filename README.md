@@ -49,6 +49,7 @@ You should now see the workflow `End to end / run-on-data` start automatically i
 
 If the workflow run crashes or something doesn't look right in the validation report json file, **please see the [Contribute](#Contribute) section, we may be able to help!**
 
+
 ## via Docker image
 
 # Prerequisites
@@ -59,7 +60,7 @@ For snapshot versions of the master branch
 ``` 
 docker pull ghcr.io/mobilitydata/gtfs-validator:master
 ```
-- we also provide images of our tagged version starting with `v1.3.0`
+- we also provide images of our tagged versions starting with `v1.3.0`
 
 3. Run the image either in the Docker Dashboard UI (dont forget to bind port 8090) or via this command
 ``` 
@@ -272,7 +273,9 @@ Some important modules:
 * [application/web-app/react-client](application/web-app/react-client) - The local web ui as a React project  
 * [application/web-app/spring-server](application/web-app/spring-server) - The implementation of the application that relies on SpringBoot framework
 
-# Tests
+# Run Tests locally
+
+## Unitary
 
 To run tests: 
 1. Run Java tests
@@ -285,6 +288,50 @@ $ ./gradlew check
 $ cd react-client/
 $ npm test
 ```
+
+## End to end
+
+### via `run-on-data` GitHub workflow job
+
+There is a way to locally execute the [`run-on-data` job of the end_to_end GitHub workflow](https://github.com/MobilityData/gtfs-validator/blob/24d58c8ee76af00aa3ab413b218b4a8e2cfafc4b/.github/workflows/end_to_end.yml#L9)
+
+You need Docker to be installed
+
+Install [act](https://github.com/nektos/act)
+```
+brew install act
+```
+
+In the repo root folder
+```
+act -j run-on-data
+```
+
+Note: we run into a [know issue](nektos/act#329) of `act` when trying to collect artifacts
+```
+[End to end/run-on-data]   ❗  ::error::Unable to get ACTIONS_RUNTIME_TOKEN env variable
+```
+
+.zip dataset files and .json validation report files still are available **within the Docker image (`docker exec -it`) ** for manual collection
+```
+MacBook-Pro-de-Fabrice:~ fabricev$ docker exec -it b22cf048e47ad10c65be3071dd14dad999dbcf59531a2e31326733c05d861048 /bin/sh; exit
+# ls
+ADDING_NEW_RULES.md  build.gradle		      mst.zip
+Dockerfile	     config			      null
+LICENSE		     domain			      octa.zip
+MTBA.zip	     gradle			      one_empty_gtfs_file.zip
+README.md	     gradlew			      output
+RELEASE.md	     gradlew.bat		      settings.gradle
+RULES.md	     input			      usecase
+adapter		     mbta.zip
+application	     mixed_empty_full_gtfs_files.zip
+# cd output
+# ls
+MBTA__2020-10-26_08-51-29.211229.json
+MST__2020-10-26_08-51-39.835092.json
+Orange_County_Transportation_Authority__2020-10-26_08-52-19.024739.json
+```
+
 # License
 
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
