@@ -71,12 +71,19 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: uiTest
+      - name: Build JS test coverage report
+        run: cd application/web-app/react-client jest--collect-coverage
       - name: Persist JS tests report
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
           name: Test report - JavaScript -- ${{ steps.prep.outputs.versionTag }}
           path: application/web-app/react-client/test-reports/
+      - name: Persist JS tests coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test coverage report - JavaScript -- ${{ steps.prep.outputs.versionTag }}
+          path: application/web-app/react-client/coverage/
 
   pack:
     needs: [test]
