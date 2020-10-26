@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
   release:
-    types: [ created ]
+    types: [ prereleased, released ]
 
 jobs:
   test:
@@ -77,6 +77,11 @@ jobs:
         with:
           name: Test report - JavaScript -- ${{ steps.prep.outputs.versionTag }}
           path: application/web-app/react-client/test-reports/
+      - name: Persist JS tests coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test coverage report - JavaScript -- ${{ steps.prep.outputs.versionTag }}
+          path: application/web-app/react-client/build/coverage
 
   pack:
     needs: [test]
