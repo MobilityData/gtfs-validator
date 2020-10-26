@@ -52,7 +52,7 @@ jobs:
           path: js-tests-v1.3.0-SNAPSHOT.tar
           destination: js-tests-v1.3.0-SNAPSHOT.tar
       - store_artifacts:
-          path: js-tests-v1.3.0-SNAPSHOT.tar
+          path: js-tests-coverage-v1.3.0-SNAPSHOT.tar
           destination: js-tests-coverage-v1.3.0-SNAPSHOT.tar
   doc:
     docker:
