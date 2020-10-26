@@ -2,8 +2,8 @@ name: End to end
 
 on:
   push:
-    branches: [ master ] #<-- comment this line
-    #branches: [ master, your-prbranch ] #<-- uncomment this line, replace your-prbranch by the name of the agency/publisher
+    #branches: [ master ] #<-- comment this line
+    branches: [ master, allow-transfers-to-be-blank-in-fare_attrbutes ] #<-- uncomment this line, replace your-prbranch by the name of the agency/publisher
 
 jobs:
   run-on-data:
@@ -52,6 +52,8 @@ jobs:
         run: java -jar application/cli-app/build/libs/*.jar -u http://www.mst.org/google/google_transit.zip -i mst.zip -e input -o output
       - name: Validate dataset from issue 398 -- Orange County Transportation Authority
         run: java -jar application/cli-app/build/libs/*.jar -u https://octa.net/current/google_transit.zip -i octa.zip -e input -o output
+      - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
+        run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest -i stge.zip -e input -o output
       - name: Persist datasets
         uses: actions/upload-artifact@v2
         with:
