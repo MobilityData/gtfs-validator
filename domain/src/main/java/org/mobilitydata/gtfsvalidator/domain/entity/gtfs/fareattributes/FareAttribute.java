@@ -214,6 +214,7 @@ public class FareAttribute extends GtfsEntity {
          * @return {@link EntityBuildResult} representing a row from fare_attributes.txt if the requirements from the
          * official GTFS specification are met. Otherwise, method returns a collection pf notices specifying the issues.
          */
+        // TODO: implement fix for #400
         public EntityBuildResult<?> build() {
             if (price == null || price < 0 || fareId == null || currencyType == null ||
                     !PaymentMethod.isEnumValueValid(originalPaymentMethodInteger) ||
