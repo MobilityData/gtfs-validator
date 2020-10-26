@@ -18,7 +18,7 @@ This command-line tool written in Java that performs the following steps:
 ## via GitHub Actions - run the validator on any gtfs archive available on a public url
 
 ## TLDR;
-Fork this repository, open a PR on master within it, edit the file `.github/workflows/end_to_end.yml` following instructions on lines 5, 6, 21-26 and **push** on your PR branch. Name your branch from the agency/authority/publisher of the feed you are testing.
+Fork this repository, open a PR on master within it, edit the file `.github/workflows/end_to_end.yml` following instructions on lines 5, 6, 46-48 and **push** on your PR branch. Name your branch from the agency/authority/publisher of the feed you are testing.
 You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. The validation report is collected as a run artifact in the Actions tab of your fork repository on GitHub.
 
 If the workflow run crashes or something doesn't look right in the validation report json file, **please see the [Contribute](#Contribute) section, we may be able to help!**
@@ -27,22 +27,21 @@ If the workflow run crashes or something doesn't look right in the validation re
 1. go to https://github.com/MobilityData/gtfs-validator
 
 1. click on the `fork` button on the top right corner
-1. validate and wait for the fork creation
-1. go to your fork (something like https://github.com/YOUR_USERNAME/gtfs-validator)
+1. wait for the fork creation, you should now see your fork (https://github.com/YOUR_USERNAME/gtfs-validator)
 1. navigate to `.github/workflows/end_to_end.yml`
 1. clic the *crayon* icon to enter edit mode
-1. **comment** line 5 by adding a `#` at the beginning. *It should turn grey when commented out*
-1. **uncomment** line 6 by removing the `#` character
+1. **comment** line 5 by adding a `#` at the beginning, right before `branches:`. *It should turn grey when commented out*
+1. **uncomment** line 6 by removing the first `#` character
 1. on line 6, **replace** `your-prbranch` by something significant like `societe-de-transport-de-montreal` if you were adding a dataset from *STM*
-1. copy your branch name in your clipboard, you'll need it in a moment
-1. uncomment line 25 by removing the `#` character
-1. on line 25, **replace** `[[[ACRONYM]]]` by some name for the Agency/publisher
-1. uncomment line 26 by removing the `#` character
-1. on line 26, **replace** `[[[ACRONYM]]]` in `[[[ACRONYM]]].zip` by what you put down in step 12 - **NO SPACES OR SPECIAL CHARACTERS -- keep the .zip extension intact**
-1. on line 26, **replace** `[[[DATASET_PUBLIC_URL]]]` by a public url pointing to a [GTFS Schedule](https://gtfs.mobilitydata.org/spec/gtfs-schedule) zip archive
+1. **keep it around** as you'll need it in *step 18.*
+1. uncomment line 46 by removing the `#` character
+1. on line 46, **replace** `ACRONYM` by some acronym for the Agency/publisher
+1. uncomment line 47 by removing the `#` character
+1. on line 47, **replace** `[[[ACRONYM]]]` in `[[[ACRONYM]]].zip` by what you put down in step 12 - **NO SPACES OR SPECIAL CHARACTERS -- keep the .zip extension intact**
+1. on line 47, **replace** `DATASET_PUBLIC_URL` by a public url pointing to a [GTFS Schedule](https://gtfs.mobilitydata.org/spec/gtfs-schedule) zip archive
 1. clic on the *green* `Start commit` button on the right of the page
 1. **select the option ` Create a new branch for this commit and start a pull request.`**
-1. paste your branch name to **replace** the proposed default
+1. **replace** the proposed default branch name by what you got from *step 10.*
 1. clic the *green* `Propose changes` button
 1. on the next screen, clic `Create pull request`
 
