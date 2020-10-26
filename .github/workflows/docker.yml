@@ -2,8 +2,8 @@ name: Docker image
 
 on:
   push:
-    branches: [ master ]
-    #branches: [ master, pr-branch ]
+    #branches: [ master ]
+    branches: [ master, report-in-docker-web-ui ]
   release:
     types: [ prereleased, released ]
 
