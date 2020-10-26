@@ -22,7 +22,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version '1.3.0-SNAPSHOT_cli'
+version "${System.getenv("versionName")}_cli"
 
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title

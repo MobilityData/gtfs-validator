@@ -22,7 +22,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version '1.3.0-SNAPSHOT_web'
+version "${System.getenv("versionName")}_web"
 
 bootWar {
     // Change the WAR name from spring-server to gtfs-validator
