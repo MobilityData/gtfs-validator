@@ -15,14 +15,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Run Java tests
-        run: ./gradlew testReport
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: testReport
       - name: Run JS tests
-        run: ./gradlew uiTest
+        if: ${{ always() }} #we still want js test report if Java tests failed
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: uiTest
   build_push:
     needs: test
     name: Build and push Docker image
@@ -48,14 +78,40 @@ jobs:
           echo ::set-output name=version::${VERSION}
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          GRADLE_VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            GRADLE_VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            GRADLE_VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            GRADLE_VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${GRADLE_VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            GRADLE_VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=gradleVersionTag::${GRADLE_VERSION_TAG}
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Package cli app jar with Gradle
-        run: ./gradlew shadowJar
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.gradleVersionTag }}
+        with:
+          arguments: shadowJar
       - name: Package web app war with Gradle
-        run: ./gradlew bootWar
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.gradleVersionTag }}
+        with:
+          arguments: bootWar
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to GitHub Container Registry
