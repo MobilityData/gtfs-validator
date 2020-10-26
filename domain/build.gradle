@@ -19,7 +19,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version "${System.getenv("versionName")}"
+version "${System.getenv("versionTag")}"
 
 sourceCompatibility = JavaVersion.VERSION_11
 

@@ -14,7 +14,6 @@ jobs:
       - name: Prepare version name
         id: prep
         run: |
-          VERSION_NAME=gtfs-validator
           VERSION_TAG=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
@@ -24,10 +23,9 @@ jobs:
             VERSION_TAG=pr-${{ github.event.number }}
           fi
           if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
-            VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
-          VERSION_NAME=${VERSION_NAME}-${VERSION_TAG}
-          echo ::set-output name=versionName::${VERSION_NAME}
+          echo ::set-output name=versionTag::${VERSION_TAG}
           #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
@@ -42,19 +40,19 @@ jobs:
       - name: Run Java tests
         uses: eskatos/gradle-command-action@v1
         env:
-          versionName: ${{ steps.prep.outputs.versionName }}
+          versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: testReport
       - name: Persist **Successfull** Java tests merged report
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.prep.outputs.versionName }}_java_test_report
+          name: ${{ steps.prep.outputs.versionTag }}_java_test_report
           path: build/reports/allTests/
       - name: Persist **Failed** Java tests unmerged reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.prep.outputs.versionName }}_java_test_report
+          name: ${{ steps.prep.outputs.versionTag }}_java_test_report
           path: |
             adapter/exporter/build/reports/tests/
             adapter/parser/build/reports/tests/
@@ -87,7 +85,6 @@ jobs:
       - name: Prepare version name
         id: prep
         run: |
-          VERSION_NAME=gtfs-validator
           VERSION_TAG=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
@@ -97,10 +94,9 @@ jobs:
             VERSION_TAG=pr-${{ github.event.number }}
           fi
           if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
-            VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
-          VERSION_NAME=${VERSION_NAME}-${VERSION_TAG}
-          echo ::set-output name=versionName::${VERSION_NAME}
+          echo ::set-output name=versionTag::${VERSION_TAG}
           #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
@@ -115,25 +111,25 @@ jobs:
       - name: Package cli app jar with Gradle
         uses: eskatos/gradle-command-action@v1
         env:
-          versionName: ${{ steps.prep.outputs.versionName }}
+          versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
       - name: Package web app war with Gradle
         uses: eskatos/gradle-command-action@v1
         env:
-          versionName: ${{ steps.prep.outputs.versionName }}
+          versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: bootWar
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_cli
-          path: application/cli-app/build/libs/${{ steps.prep.outputs.versionName }}_cli.jar
+          path: application/cli-app/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
       - name: Persist web app war
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_web
-          path: application/web-app/spring-server/build/libs/${{ steps.prep.outputs.versionName }}_web.war
+          path: application/web-app/spring-server/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_web.war
 
   doc:
     needs: [test]
@@ -143,7 +139,6 @@ jobs:
       - name: Prepare version name
         id: prep
         run: |
-          VERSION_NAME=gtfs-validator
           VERSION_TAG=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
@@ -153,10 +148,9 @@ jobs:
             VERSION_TAG=pr-${{ github.event.number }}
           fi
           if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
-            VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
-          VERSION_NAME=${VERSION_NAME}-${VERSION_TAG}
-          echo ::set-output name=versionName::${VERSION_NAME}
+          echo ::set-output name=versionTag::${VERSION_TAG}
           #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
@@ -177,16 +171,16 @@ jobs:
       - name: Build Javadoc
         uses: eskatos/gradle-command-action@v1
         env:
-          versionName: ${{ steps.prep.outputs.versionName }}
+          versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: aggregateJavadocs
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.prep.outputs.versionName }}_javadoc
+          name: ${{ steps.prep.outputs.versionTag }}_javadoc
           path: build/docs/javadoc/
       - name: Persist jsdoc
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.prep.outputs.versionName }}_jsdoc
+          name: ${{ steps.prep.outputs.versionTag }}_jsdoc
           path: build/docs/jsdoc/

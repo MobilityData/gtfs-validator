@@ -22,7 +22,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version "${System.getenv("versionName")}_web"
+version "${System.getenv("versionTag")}_web"
 
 bootWar {
     // Change the WAR name from spring-server to gtfs-validator
@@ -30,7 +30,7 @@ bootWar {
     // Remove "-all" from the end of the WAR file name
     archiveClassifier = null
     // Add "v" to version to match previous releases
-    archiveVersion = "v" + project.version
+    archiveVersion = project.version
 }
 
 repositories {
