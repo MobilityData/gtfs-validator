@@ -8,7 +8,7 @@ name: Docker image
 on:
   push:
     branches: [ master ]
-    #branches: [ master, your-prbranch ]
+    #branches: [ master, pr-branch ]
 
 jobs:
   test:
