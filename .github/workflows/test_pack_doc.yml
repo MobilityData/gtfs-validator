@@ -72,7 +72,7 @@ jobs:
         with:
           arguments: uiTest
       - name: Build JS test coverage report
-        run: cd application/web-app/react-client jest--collect-coverage
+        run: cd application/web-app/react-client && jest--collect-coverage
       - name: Persist JS tests report
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
