@@ -13,7 +13,6 @@ jobs:
       - uses: actions/checkout@v1
       - name: Prepare version name
         id: prep
-        shell: bash
         run: |
           VERSION_NAME=gtfs-validator-
           VERSION_TAG=edge
@@ -28,10 +27,8 @@ jobs:
             VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
           VERSION_NAME=${VERSION_NAME}${VERSION_TAG}
-          ${VERSION_NAME} > version-name.txt
-          
           echo ::set-output name=versionName::${VERSION_NAME}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
@@ -71,6 +68,8 @@ jobs:
       - name: Run JS tests
         if: ${{ always() }} #we still want js test report if Java tests failed
         uses: eskatos/gradle-command-action@v1
+        env:
+          versionName: ${{ steps.prep.outputs.versionName }}
         with:
           arguments: uiTest
       - name: Persist JS tests report
@@ -85,6 +84,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_NAME=gtfs-validator-
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          VERSION_NAME=${VERSION_NAME}${VERSION_TAG}
+          echo ::set-output name=versionName::${VERSION_NAME}
+          #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
@@ -97,28 +114,50 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       - name: Package cli app jar with Gradle
         uses: eskatos/gradle-command-action@v1
+        env:
+          versionName: ${{ steps.prep.outputs.versionName }}
         with:
           arguments: shadowJar
       - name: Package web app war with Gradle
         uses: eskatos/gradle-command-action@v1
+        env:
+          versionName: ${{ steps.prep.outputs.versionName }}
         with:
           arguments: bootWar
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_cli
-          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
+          path: application/cli-app/build/libs/${{ steps.prep.outputs.versionName }}_cli.jar
       - name: Persist web app war
         uses: actions/upload-artifact@v2
         with:
           name: v1.3.0-SNAPSHOT_web
-          path: application/web-app/spring-server/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.war
+          path: application/web-app/spring-server/build/libs/${{ steps.prep.outputs.versionName }}_web.war
 
   doc:
     needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_NAME=gtfs-validator-
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          VERSION_NAME=${VERSION_NAME}${VERSION_TAG}
+          echo ::set-output name=versionName::${VERSION_NAME}
+          #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
@@ -137,15 +176,17 @@ jobs:
           output_dir: build/docs/jsdoc/
       - name: Build Javadoc
         uses: eskatos/gradle-command-action@v1
+        env:
+          versionName: ${{ steps.prep.outputs.versionName }}
         with:
           arguments: aggregateJavadocs
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_javadoc
+          name: ${{ steps.prep.outputs.versionName }}_javadoc
           path: build/docs/javadoc/
       - name: Persist jsdoc
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_jsdoc
+          name: ${{ steps.prep.outputs.versionName }}_jsdoc
           path: build/docs/jsdoc/
