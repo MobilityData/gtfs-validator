@@ -71,6 +71,6 @@ describe("DisplayValidationReport", () => {
         );
         ApiRequestExecutor.displayReport()
         expect(mockAxios.get).toHaveBeenCalledTimes(1);
-        expect(mockAxios.get).toHaveBeenCalledWith("http://localhost:8090/actions/openreport");
+        expect(mockAxios.get).toHaveBeenCalledWith("http://localhost:8090/actions/displayreport");
     })
 })
