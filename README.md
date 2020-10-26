@@ -244,6 +244,22 @@ The validation report will be generated and saved at the default location or the
 The validation report can be displayed by a simple click on the `Display validation report` button, which will automatically open your default text editor with the content of the validation report. 
 See [configuration section](https://github.com/MobilityData/gtfs-validator#software-configuration) for more details regarding software configuration.
 
+#### Run the web-app in development mode
+     
+```
+$ yarn start
+```
+
+This command runs the app in the development mode.
+Note that this command should be ran in [/application/web-app/react-client/](https://github.com/MobilityData/gtfs-validator/tree/master/application/web-app/react-client)
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+The development page will reload if you edit the React project.
+
+You will also be able to see any lint errors in the console. 
+
+You can refer to [this documentation](https://github.com/MobilityData/gtfs-validator/blob/master/application/web-app/react-client/README.md) for more information regarding the React implementation of the web-app.
+
 # Architecture
 
 We use [clean architecture principles](https://medium.com/slalom-build/clean-architecture-with-java-11-f78bba431041) to implement this validator, which modularizes the project.
