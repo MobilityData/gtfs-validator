@@ -2,8 +2,8 @@ name: Docker image
 
 on:
   push:
-#    branches: [ master ]
-    branches: [ master, allow-transfers-to-be-blank-in-fare_attributes ]
+    branches: [ master ]
+    #branches: [ master, pr-branch ]
   release:
     types: [ prereleased, released ]
 
