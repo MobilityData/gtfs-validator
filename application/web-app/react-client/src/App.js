@@ -42,6 +42,7 @@ function App() {
   const onDrop = useCallback(acceptedFiles => {
     if (!DomInteractionExecutor.hasAttribute("json-config-file", "disabled")) {
       DomInteractionExecutor.enableElement("validate-button");
+      DomInteractionExecutor.hideItem("validation-report-view-container");
     } else {
       DomInteractionExecutor.hideItem("display-result-button");
       DomInteractionExecutor.hideItem("open-validation-dom-element");
@@ -56,7 +57,6 @@ function App() {
         DomInteractionExecutor.hideItem("validation-status");
         DomInteractionExecutor.hideItem("display-result-button");
       } else {
-        console.log(DomInteractionExecutor.hasAttribute("json-config-file", "disabled"))
         alert("Process already running, please wait for completion.")
       }
     }
@@ -76,9 +76,9 @@ function App() {
           <p id="validation-status"/>
           <p id="open-validation-dom-element"/>
           <div id="display-result-button" className="launch-button-container">
-            <NiceButton description="Display validation report" method={ApiRequestExecutor.openReport}/>
+            <NiceButton description="Display validation report" method={ApiRequestExecutor.displayReport}/>
           </div>
-{/* // todo: add container for report */}
+          <p id="validation-report-view-container"/>
           <p>
             <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
           </p>

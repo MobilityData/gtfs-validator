@@ -18,9 +18,10 @@ import ReactDOM from "react-dom";
 import React from "react";
 import axios from 'axios';
 
-import {OpenReportContentCommand, Port, RunValidatorCommand} from "./Constants";
+import {DisplayReportContentCommand, Port, RunValidatorCommand} from "./Constants";
 import CircularIndeterminate from "../components/CircularProgress";
 import DomInteractionExecutor from "./DomInteractionsExecutor";
+import ValidationReportViewer from "../components/ValidationReportViewer";
 require("regenerator-runtime");
 
 /**
@@ -29,7 +30,7 @@ require("regenerator-runtime");
 class ApiRequestExecutor {
     /**
      * Sends a request to server to initialize gtfs-validator DefaultConfig
-     * @param axios {AxiosStatic}                   promise based HTTP client for the browser and node.js
+     * @param axios {axios}                         promise based HTTP client for the browser and node.js
      * @param port {string}                         port to navigate to
      * @param initConfigCommand {string}            constant that defines the command to
      * @param execParamConfigFileAsString {string}  content of the execution parameters file provided in the dropzone,
@@ -73,16 +74,20 @@ class ApiRequestExecutor {
     }
 
     /**
-     * Sends a request to server to display the validation report in the default text editor of user
+     * Sends a request to server to display the validation report in the browser
      * @returns {Promise<void>}
      */
-    static async openReport() {
-        axios.get('http://localhost:' + Port() + OpenReportContentCommand())
+    static async displayReport() {
+        axios.get('http://localhost:' + Port() + DisplayReportContentCommand())
             .then((res) => {
                 ReactDOM.render(
-                    res.data,
-                    document.getElementById("open-validation-dom-element"));
-                DomInteractionExecutor.showItem("open-validation-dom-element");
+                    <ValidationReportViewer
+                        id="validation-report-view"
+                        jsonData={res.data}
+                        theme="summerfruit:inverted"/>,
+                    document.getElementById("validation-report-view-container")
+                );
+                DomInteractionExecutor.showItem("validation-report-view-container");
             }).catch((error) => {
             console.log(error)
         });

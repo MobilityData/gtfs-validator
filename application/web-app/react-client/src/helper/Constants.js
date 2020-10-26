@@ -33,7 +33,7 @@ export const RunValidatorCommand = () => "/actions/runvalidator";
  * @returns {string} the  command to open the validation report
  * @constructor
  */
-export const OpenReportContentCommand = () => "/actions/openreport";
+export const DisplayReportContentCommand = () => "/actions/displayreport";
 
 /**
  * the command to initialize the gtfs-validator DefaultConfig

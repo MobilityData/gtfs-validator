@@ -59,7 +59,7 @@ describe("ValidateFeed", () => {
 
 describe("DisplayValidationReport", () => {
     it("should de defined", () => {
-        expect(ApiRequestExecutor.openReport).toBeDefined()
+        expect(ApiRequestExecutor.displayReport).toBeDefined()
     })
 
     it("should call get method with correct argument", () => {
@@ -69,7 +69,7 @@ describe("DisplayValidationReport", () => {
                 data: { results: [""] }
             })
         );
-        ApiRequestExecutor.openReport()
+        ApiRequestExecutor.displayReport()
         expect(mockAxios.get).toHaveBeenCalledTimes(1);
         expect(mockAxios.get).toHaveBeenCalledWith("http://localhost:8090/actions/openreport");
     })

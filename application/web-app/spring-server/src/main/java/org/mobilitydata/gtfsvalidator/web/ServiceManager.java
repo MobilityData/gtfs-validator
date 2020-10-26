@@ -27,12 +27,17 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ServiceManager {
+    final long startTime = System.nanoTime();
     private final Logger logger = LogManager.getLogger();
     private DefaultConfig config;
+    private final Set<String> processedFilenameCollection = new HashSet<>();
 
     /**
      * Initiates the {@code DefaultConfig} needed to proceed to GTFS archive validation. {@link DefaultConfig} is
@@ -127,6 +132,7 @@ public class ServiceManager {
 
                 filenameListToProcess.forEach(filename -> {
                     logger.info("Validate CSV structure and field types for file: " + filename);
+                    processedFilenameCollection.add(filename);
                     config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
@@ -254,6 +260,9 @@ public class ServiceManager {
 
                 config.createPath().execute(ExecParamRepository.OUTPUT_KEY, true);
 
+                config.generateInfoNotice(
+                        TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
+                        processedFilenameCollection).execute();
                 config.exportResultAsFile().execute();
 
                 return "Validation success";
@@ -267,6 +276,9 @@ public class ServiceManager {
             config.createPath().execute(ExecParamRepository.OUTPUT_KEY, true);
 
             try {
+                config.generateInfoNotice(
+                        TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
+                        processedFilenameCollection).execute();
                 config.exportResultAsFile().execute();
 
                 logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
@@ -283,12 +295,11 @@ public class ServiceManager {
     }
 
     /**
-     * Executes shell command to open validation report in default text editor. Returns null.
+     * Returns the validation report
      *
-     * @return null and executes shell command to open validation report in default text editor
+     * @return the validation report
      */
-    public String openReport() throws IOException {
-        final Runtime runTime = Runtime.getRuntime();
+    public String displayReport() throws IOException {
         final File folder = new File(config.getExecParamValue(ExecParamRepository.OUTPUT_KEY));
         String filename = null;
         List<File> directoryContent = Arrays.asList(folder.listFiles());
@@ -298,9 +309,9 @@ public class ServiceManager {
         for (File file : directoryContent) {
             if (file.getName().endsWith(".json")) {
                 filename = directoryContent.stream().findFirst().get().getName();
-                runTime.exec("open -t " + config.getExecParamValue(ExecParamRepository.OUTPUT_KEY)
-                        + File.separator + filename);
-                break;
+                return Files.readString(
+                        Path.of(config.getExecParamValue(ExecParamRepository.OUTPUT_KEY) +
+                                File.separator + filename));
             }
         }
         return null;
