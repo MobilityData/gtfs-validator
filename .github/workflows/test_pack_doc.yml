@@ -46,13 +46,13 @@ jobs:
       - name: Persist **Successfull** Java tests merged report
         uses: actions/upload-artifact@v2
         with:
-          name: Test report - Java
+          name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
           path: build/reports/allTests/
       - name: Persist **Failed** Java tests unmerged reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
-          name: Test report - Java
+          name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
           path: |
             adapter/exporter/build/reports/tests/
             adapter/parser/build/reports/tests/
@@ -67,14 +67,14 @@ jobs:
         if: ${{ always() }} #we still want js test report if Java tests failed
         uses: eskatos/gradle-command-action@v1
         env:
-          versionName: ${{ steps.prep.outputs.versionName }}
+          versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: uiTest
       - name: Persist JS tests report
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: Test report - JavaScript
+          name: Test report - JavaScript -- ${{ steps.prep.outputs.versionTag }}
           path: application/web-app/react-client/test-reports/
 
   pack:
@@ -123,12 +123,12 @@ jobs:
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
-          name: Application - cli executable .jar
+          name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
           path: application/cli-app/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
       - name: Persist web app war
         uses: actions/upload-artifact@v2
         with:
-          name: Application - web executable .war (Spring&React)
+          name: Application - web executable .war (Spring&React) -- ${{ steps.prep.outputs.versionTag }}
           path: application/web-app/spring-server/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_web.war
 
   doc:
@@ -177,10 +177,10 @@ jobs:
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
-          name: Documentation - Javadoc
+          name: Documentation - javadoc -- ${{ steps.prep.outputs.versionTag }}
           path: build/docs/javadoc/
       - name: Persist jsdoc
         uses: actions/upload-artifact@v2
         with:
-          name: Documentation - jsdoc
+          name: Documentation - jsdoc -- ${{ steps.prep.outputs.versionTag }}
           path: build/docs/jsdoc/
