@@ -24,51 +24,61 @@ import JsonExampleAccordion from "./components/JsonExampleAccordion";
 import './App.css';
 import logo from './logo.png';
 
-import {openReport, initializeConfig, runValidator} from "./helper/ApiRequest"
-import {displayJsonData, enableElement, hasAttribute, hideItem} from "./helper/DomInteractions";
+import ApiRequestExecutor from "./helper/ApiRequestExecutor";
+import DomInteractionExecutor from "./helper/DomInteractionsExecutor";
 import {InitConfigCommand, Port} from "./helper/Constants";
 import {useDropzone} from "react-dropzone";
 
+/**
+ * Main object rendered on the one pager
+ * @returns {JSX.Element} the DOM element to be rendered
+ * @constructor
+ */
 function App() {
+  /**
+   * Defines actions when a file is dropped in a dropzone component
+   * @type {function(*): void}
+   */
   const onDrop = useCallback(acceptedFiles => {
-    if (!hasAttribute("json-config-file", "disabled")) {
-      enableElement("validate-button");
+    if (!DomInteractionExecutor.hasAttribute("json-config-file", "disabled")) {
+      DomInteractionExecutor.enableElement("validate-button");
+      DomInteractionExecutor.hideItem("validation-report-view-container");
     } else {
-      hideItem("display-result-button");
-      hideItem("open-validation-dom-element");
+      DomInteractionExecutor.hideItem("display-result-button");
+      DomInteractionExecutor.hideItem("open-validation-dom-element");
     }
     const fileReader = new FileReader();
     fileReader.readAsText(acceptedFiles[0])
     fileReader.onload = function () {
-      if (!hasAttribute("json-config-file", "disabled")) {
-        console.log(hasAttribute("json-config-file", "disabled"))
-        displayJsonData(JSON.parse(fileReader.result), "json-content");
-        initializeConfig(axios, Port(), InitConfigCommand(), JSON.parse(fileReader.result))
-        hideItem("validation-status");
-        hideItem("display-result-button");
+      if (!DomInteractionExecutor.hasAttribute("json-config-file", "disabled")) {
+        console.log(DomInteractionExecutor.hasAttribute("json-config-file", "disabled"))
+        DomInteractionExecutor.displayJsonData(JSON.parse(fileReader.result), "json-content");
+        ApiRequestExecutor.initializeConfig(axios, Port(), InitConfigCommand(), JSON.parse(fileReader.result))
+        DomInteractionExecutor.hideItem("validation-status");
+        DomInteractionExecutor.hideItem("display-result-button");
       } else {
-        console.log(hasAttribute("json-config-file", "disabled"))
         alert("Process already running, please wait for completion.")
       }
     }
   }, []);
 
   return (
-      <div className="App" onLoad={() => hideItem("display-result-button")}>
+      <div className="App" onLoad={() => DomInteractionExecutor.hideItem("display-result-button")}>
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
           <JsonExampleAccordion className="json-example-container"/>
           <JsonDropzone id="json-config-file" onDrop={onDrop} accept={"application/json"} useDropzone={useDropzone}/>
           <div id="json-content"/>
           <p className="launch-button-container">
-            <NiceButton id="validate-button" description="Validate" method={runValidator}/>
+            <NiceButton id="validate-button" description="Validate" method={ApiRequestExecutor.runValidator}/>
           </p>
           <p id="progress-circles"/>
           <p id="validation-status"/>
           <p id="open-validation-dom-element"/>
           <div id="display-result-button" className="launch-button-container">
-            <NiceButton description="Display validation report" method={openReport}/>
+            <NiceButton description="Display validation report" method={ApiRequestExecutor.displayReport}/>
           </div>
+          <p id="validation-report-view-container"/>
           <p>
             <a className="App-link" href="https://mobilitydata.org">MobilityData</a>
           </p>

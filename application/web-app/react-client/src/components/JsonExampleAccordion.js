@@ -20,9 +20,18 @@ import JsonBeautyfier from "./JsonBeautyfier";
 import localJson from "../data/json-examples/local-example.json";
 import networkJson from "../data/json-examples/network-example.json";
 
+/**
+ * This class defines a 2-levels accordion that renders (as an Accordion) beautified json files when the title of
+ * their description is clicked
+ */
 export default class JsonExampleAccordion extends Component {
     state = {activeItemIndex: 0}
 
+    /**
+     * Defines action when `onclick` event is triggered
+     * @param e {event}           event triggering dropdown actions
+     * @param titleProps {string} the title of the accordion section
+     */
     handleClick = (e, titleProps) => {
         const {index: itemIndex} = titleProps
         const {activeIndex: activeItemIndex} = this.state
@@ -31,6 +40,10 @@ export default class JsonExampleAccordion extends Component {
         this.setState({activeIndex: newItemIndex})
     }
 
+    /**
+     * Renders the DOM element
+     * @returns {JSX.Element} the DOM element to be rendered
+     */
     render() {
         const {activeIndex} = this.state
         return (
@@ -44,7 +57,7 @@ export default class JsonExampleAccordion extends Component {
                     <Icon name='dropdown'/>
                     Example of configuration file using URL to remote GTFS archive </Accordion.Title>
                 <Accordion.Content active={activeIndex === 0}>
-                    <JsonBeautyfier id="json-example" data={localJson} className="json-example"/>
+                    <JsonBeautyfier id="json-example" data={networkJson} className="json-example"/>
 
                 </Accordion.Content>
 
@@ -57,7 +70,7 @@ export default class JsonExampleAccordion extends Component {
                     Example of configuration file using locally stored GTFS archive
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === 1}>
-                    <JsonBeautyfier id="json-example" data={networkJson} className="json-example"/>
+                    <JsonBeautyfier id="json-example" data={localJson} className="json-example"/>
                 </Accordion.Content>
             </Accordion>
         )

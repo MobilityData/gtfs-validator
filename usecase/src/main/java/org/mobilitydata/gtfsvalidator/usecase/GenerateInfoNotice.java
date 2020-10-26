@@ -27,7 +27,7 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 public class GenerateInfoNotice {
-    final static String GTFS_VALIDATOR_VERSION = "v1.3.0-SNAPSHOT";
+    final static String GTFS_VALIDATOR_VERSION = "TODO";
     private final ValidationResultRepository resultRepo;
     private final ExecParamRepository execParamRepo;
     private final GtfsDataRepository gtfsDataRepo;

@@ -14,21 +14,28 @@
  *  limitations under the License.
  */
 
-import JSONPretty from 'react-json-prettify';
 import React from "react";
+import ReactJson from 'react-json-view'
 
 /**
- * Used to beautify the content of a Json file
- * @param id {String} DOM element id
- * @param data {JSON} the JSON data to be beautified
- * @param className {String} the class name of the DOM element
+ * A component to view the content of the validation report
+ * @param id {string} id of the DOM element to be rendered
+ * @param jsonData {JSON}  JSON data to be formatted
+ * @param theme {string} theme of component
  * @returns {JSX.Element}
  * @constructor
  */
-const JsonBeautyfier = ({id, data, className}) => {
-
+const ValidationReportViewer = ({id, jsonData, theme}) => {
     return (
-        <JSONPretty id={id} json={data} className={className}/>
+        <ReactJson
+            id={id}
+            src={jsonData}
+            theme={theme}
+            indentWidth={8}
+            collapsed={2}
+            iconStyle="triangle"
+            displayDataTypes={false}/>
     );
 };
-export default JsonBeautyfier;
+
+export default ValidationReportViewer;
