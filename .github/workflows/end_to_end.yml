@@ -2,8 +2,8 @@ name: End to end
 
 on:
   push:
-    #branches: [ master ] #<-- comment this line
-    branches: [ master, allow-transfers-to-be-blank-in-fare_attrbutes ] #<-- uncomment this line, replace your-prbranch by the name of the agency/publisher
+    branches: [ master ] #<-- comment this line
+    #branches: [ master, your-prbranch ] #<-- uncomment this line, replace your-prbranch by the name of the agency/publisher
 
 jobs:
   run-on-data:
