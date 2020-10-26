@@ -18,9 +18,9 @@ jobs:
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
           elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION_TAG=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
           elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION_TAG=pr-${{ github.event.number }}
+            VERSION_TAG=-pr-${{ github.event.number }}
           fi
           if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
             VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
@@ -74,7 +74,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.prep.outputs.versionName }}_js_test_report
+          name: ${{ steps.prep.outputs.versionTag }}_js_test_report
           path: application/web-app/react-client/test-reports/
 
   pack:
@@ -89,9 +89,9 @@ jobs:
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
           elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION_TAG=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
           elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION_TAG=pr-${{ github.event.number }}
+            VERSION_TAG=-pr-${{ github.event.number }}
           fi
           if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
             VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
@@ -123,12 +123,12 @@ jobs:
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_cli
+          name: ${{ steps.prep.outputs.versionTag }}_cli
           path: application/cli-app/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
       - name: Persist web app war
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_web
+          name: ${{ steps.prep.outputs.versionTag }}_web
           path: application/web-app/spring-server/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_web.war
 
   doc:
@@ -143,9 +143,9 @@ jobs:
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
           elif [[ $GITHUB_REF == refs/heads/* ]]; then
-            VERSION_TAG=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
           elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            VERSION_TAG=pr-${{ github.event.number }}
+            VERSION_TAG=-pr-${{ github.event.number }}
           fi
           if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
             VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
