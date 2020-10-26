@@ -14,6 +14,13 @@
  *  limitations under the License.
  */
 
+#validation-report-view-container {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 13px;
+    width: 60%;
+}
+
 #open-validation-dom-element {
     color: red;
 }
@@ -68,7 +75,7 @@
 }
 
 #validation-status {
-    max-width: 94%;
+    max-width: 60%;
     font-size: 16px;
 }
 
@@ -118,7 +125,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /*justify-content: center;*/
     font-size: calc(10px + 2vmin);
     color: white;
 }
@@ -126,13 +132,4 @@
 .App-link {
     color: #61dafb;
     font-size: calc(2vmin);
-}
-
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
 }

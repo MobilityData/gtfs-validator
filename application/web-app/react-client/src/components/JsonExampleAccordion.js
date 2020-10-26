@@ -29,9 +29,10 @@ export default class JsonExampleAccordion extends Component {
 
     /**
      * Defines action when `onclick` event is triggered
+     * @param e {event}           event triggering dropdown actions
      * @param titleProps {string} the title of the accordion section
      */
-    handleClick = (titleProps) => {
+    handleClick = (e, titleProps) => {
         const {index: itemIndex} = titleProps
         const {activeIndex: activeItemIndex} = this.state
         const newItemIndex = activeItemIndex === itemIndex ? -1 : itemIndex
@@ -56,7 +57,7 @@ export default class JsonExampleAccordion extends Component {
                     <Icon name='dropdown'/>
                     Example of configuration file using URL to remote GTFS archive </Accordion.Title>
                 <Accordion.Content active={activeIndex === 0}>
-                    <JsonBeautyfier id="json-example" data={localJson} className="json-example"/>
+                    <JsonBeautyfier id="json-example" data={networkJson} className="json-example"/>
 
                 </Accordion.Content>
 
@@ -69,7 +70,7 @@ export default class JsonExampleAccordion extends Component {
                     Example of configuration file using locally stored GTFS archive
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === 1}>
-                    <JsonBeautyfier id="json-example" data={networkJson} className="json-example"/>
+                    <JsonBeautyfier id="json-example" data={localJson} className="json-example"/>
                 </Accordion.Content>
             </Accordion>
         )
