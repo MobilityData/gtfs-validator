@@ -2,8 +2,8 @@ name: End to end
 
 on:
   push:
-    branches: [ master ]
-    #branches: [ master, your-prbranch ]
+    #branches: [ master ]
+    branches: [ master, github-test-pack-artifact-sharing ]
 
 jobs:
   run-on-data:
@@ -12,6 +12,22 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
+          #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
@@ -22,18 +38,20 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Package jar with Gradle
+      - name: Package cli app jar with Gradle
         uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
       #- name: Validate dataset from -- [[[ACRONYM]]]
-      #  run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u [[[DATASET_PUBLIC_URL]]] -i [[[ACRONYM]]].zip -e input -o output
+      #  run: java -jar application/cli-app/build/libs/*.jar -u [[[DATASET_PUBLIC_URL]]] -i [[[ACRONYM]]].zip -e input -o output
       - name: Validate dataset from -- MBTA
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i mbta.zip -e input -o output
+        run: java -jar application/cli-app/build/libs/*.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i mbta.zip -e input -o output
       - name: Validate dataset from issue 399 -- Monterey-Salinas Transit
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u http://www.mst.org/google/google_transit.zip -i mst.zip -e input -o output
+        run: java -jar application/cli-app/build/libs/*.jar -u http://www.mst.org/google/google_transit.zip -i mst.zip -e input -o output
       - name: Validate dataset from issue 398 -- Orange County Transportation Authority
-        run: java -jar application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar -u https://octa.net/current/google_transit.zip -i octa.zip -e input -o output
+        run: java -jar application/cli-app/build/libs/*.jar -u https://octa.net/current/google_transit.zip -i octa.zip -e input -o output
       - name: Persist datasets
         uses: actions/upload-artifact@v2
         with:
