@@ -1174,6 +1174,7 @@ csvspec: {
     value_required: false
     type: { type: INTEGER }
     intmin: 0
+    intmax: 2
     # The maximum number of transfers (excluding block transfers)
     # that are possible with this fare; unlimited if empty.
     # The public GTFS spec limits this value to at most 2, but there is no
