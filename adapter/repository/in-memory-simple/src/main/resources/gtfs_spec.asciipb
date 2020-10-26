@@ -1171,7 +1171,7 @@ csvspec: {
     field_number: 7
     name: "transfers"
     required: true
-    value_required: true
+    value_required: false
     type: { type: INTEGER }
     intmin: 0
     # The maximum number of transfers (excluding block transfers)
