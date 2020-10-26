@@ -31,7 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice.*;
 import static org.mockito.Mockito.*;
 
@@ -90,7 +91,7 @@ class GenerateInfoNoticeTest {
         assertEquals(mockExecParamRepo.URL_KEY, notice.getNoticeSpecific(PATH_OR_URL_TO_GTFS_ARCHIVE));
         assertEquals(56L, notice.getNoticeSpecific(GTFS_ARCHIVE_SIZE_BEFORE_UNZIPPING_BYTE));
         assertEquals(89L, notice.getNoticeSpecific(GTFS_ARCHIVE_SIZE_AFTER_UNZIPPING_BYTE));
-        assertEquals("v1.3.0-SNAPSHOT", notice.getNoticeSpecific(GTFS_VALIDATOR_VERSION));
+        assertEquals("TODO", notice.getNoticeSpecific(GTFS_VALIDATOR_VERSION));
         assertEquals(500000L, notice.getNoticeSpecific(PROCESSING_TIME_SECS));
         assertEquals(mockProcessedFilenameCollection.toString(),
                 notice.getNoticeSpecific(PROCESSED_FILENAME_COLLECTION));
@@ -155,7 +156,7 @@ class GenerateInfoNoticeTest {
         assertEquals(mockExecParamRepo.URL_KEY, notice.getNoticeSpecific(PATH_OR_URL_TO_GTFS_ARCHIVE));
         assertEquals(56L, notice.getNoticeSpecific(GTFS_ARCHIVE_SIZE_BEFORE_UNZIPPING_BYTE));
         assertEquals(89L, notice.getNoticeSpecific(GTFS_ARCHIVE_SIZE_AFTER_UNZIPPING_BYTE));
-        assertEquals("v1.3.0-SNAPSHOT", notice.getNoticeSpecific(GTFS_VALIDATOR_VERSION));
+        assertEquals("TODO", notice.getNoticeSpecific(GTFS_VALIDATOR_VERSION));
         assertEquals(500000L, notice.getNoticeSpecific(PROCESSING_TIME_SECS));
         assertEquals(mockProcessedFilenameCollection.toString(),
                 notice.getNoticeSpecific(PROCESSED_FILENAME_COLLECTION));
@@ -216,7 +217,7 @@ class GenerateInfoNoticeTest {
         assertEquals(mockExecParamRepo.URL_KEY, notice.getNoticeSpecific(PATH_OR_URL_TO_GTFS_ARCHIVE));
         assertEquals(56L, notice.getNoticeSpecific(GTFS_ARCHIVE_SIZE_BEFORE_UNZIPPING_BYTE));
         assertEquals(89L, notice.getNoticeSpecific(GTFS_ARCHIVE_SIZE_AFTER_UNZIPPING_BYTE));
-        assertEquals("v1.3.0-SNAPSHOT", notice.getNoticeSpecific(GTFS_VALIDATOR_VERSION));
+        assertEquals("TODO", notice.getNoticeSpecific(GTFS_VALIDATOR_VERSION));
         assertEquals(500000L, notice.getNoticeSpecific(PROCESSING_TIME_SECS));
         assertEquals(mockProcessedFilenameCollection.toString(),
                 notice.getNoticeSpecific(PROCESSED_FILENAME_COLLECTION));
@@ -282,7 +283,7 @@ class GenerateInfoNoticeTest {
         assertEquals(mockExecParamRepo.URL_KEY, notice.getNoticeSpecific(PATH_OR_URL_TO_GTFS_ARCHIVE));
         assertEquals(56L, notice.getNoticeSpecific(GTFS_ARCHIVE_SIZE_BEFORE_UNZIPPING_BYTE));
         assertEquals(89L, notice.getNoticeSpecific(GTFS_ARCHIVE_SIZE_AFTER_UNZIPPING_BYTE));
-        assertEquals("v1.3.0-SNAPSHOT", notice.getNoticeSpecific(GTFS_VALIDATOR_VERSION));
+        assertEquals("TODO", notice.getNoticeSpecific(GTFS_VALIDATOR_VERSION));
         assertEquals(500000L, notice.getNoticeSpecific(PROCESSING_TIME_SECS));
         assertEquals(mockProcessedFilenameCollection.toString(),
                 notice.getNoticeSpecific(PROCESSED_FILENAME_COLLECTION));

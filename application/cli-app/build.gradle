@@ -22,7 +22,7 @@ plugins {
 }
 
 group 'org.mobilitydata'
-version '1.3.0-SNAPSHOT_cli'
+version "${System.getenv("versionTag")}_cli"
 
 jar {
     // Add the manifest within the JAR, using gtfs-validator as the title
@@ -44,7 +44,7 @@ shadowJar {
     // Remove "-all" from the end of the JAR file name
     archiveClassifier = null
     // Add "v" to version to match previous releases
-    archiveVersion = "v" + project.version
+    archiveVersion = project.version
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
