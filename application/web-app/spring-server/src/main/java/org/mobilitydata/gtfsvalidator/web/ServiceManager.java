@@ -297,7 +297,7 @@ public class ServiceManager {
     /**
      * Returns the validation report
      *
-     * @return the validation report
+     * @return the validation report as a JSON string
      */
     public String displayReport() throws IOException {
         final File folder = new File(config.getExecParamValue(ExecParamRepository.OUTPUT_KEY));
