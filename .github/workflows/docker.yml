@@ -124,7 +124,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ steps.prep.outputs.tags }}
-          labels: | 
+          labels: |
             org.opencontainers.image.source=https://github.com/mobilitydata/gtfs-validator.git
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
