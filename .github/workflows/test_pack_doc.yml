@@ -14,7 +14,7 @@ jobs:
       - name: Prepare version name
         id: prep
         run: |
-          VERSION_NAME=gtfs-validator-
+          VERSION_NAME=gtfs-validator
           VERSION_TAG=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
@@ -26,7 +26,7 @@ jobs:
           if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
             VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
-          VERSION_NAME=${VERSION_NAME}${VERSION_TAG}
+          VERSION_NAME=${VERSION_NAME}-${VERSION_TAG}
           echo ::set-output name=versionName::${VERSION_NAME}
           #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
@@ -87,7 +87,7 @@ jobs:
       - name: Prepare version name
         id: prep
         run: |
-          VERSION_NAME=gtfs-validator-
+          VERSION_NAME=gtfs-validator
           VERSION_TAG=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
@@ -99,7 +99,7 @@ jobs:
           if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
             VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
-          VERSION_NAME=${VERSION_NAME}${VERSION_TAG}
+          VERSION_NAME=${VERSION_NAME}-${VERSION_TAG}
           echo ::set-output name=versionName::${VERSION_NAME}
           #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
@@ -143,7 +143,7 @@ jobs:
       - name: Prepare version name
         id: prep
         run: |
-          VERSION_NAME=gtfs-validator-
+          VERSION_NAME=gtfs-validator
           VERSION_TAG=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION_TAG=${GITHUB_REF#refs/tags/}
@@ -155,7 +155,7 @@ jobs:
           if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
             VERSION_TAG=${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
           fi
-          VERSION_NAME=${VERSION_NAME}${VERSION_TAG}
+          VERSION_NAME=${VERSION_NAME}-${VERSION_TAG}
           echo ::set-output name=versionName::${VERSION_NAME}
           #echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
       - name: Set up JDK 1.11
