@@ -50,9 +50,9 @@ public class GtfsValidatorController {
         }
     }
 
-    @GetMapping("/openreport")
+    @GetMapping("/displayreport")
     @ResponseBody
-    public String openReport() throws IOException {
-        return serviceManager.openReport();
+    public String displayReport() throws IOException {
+        return serviceManager.displayReport();
     }
 }

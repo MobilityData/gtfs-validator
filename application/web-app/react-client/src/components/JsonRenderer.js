@@ -16,7 +16,13 @@
 
 import React from 'react';
 
-const JsonRenderer = (props) => {
+/**
+ * Table in which the execution parameters from the configuration file are displayed
+ * @param data {JSON} the JSON data to format as a table
+ * @returns {JSX.Element} the DOM element to be rendered
+ * @constructor
+ */
+const JsonRenderer = ({data}) => {
 
     return (
         <div>
@@ -24,11 +30,11 @@ const JsonRenderer = (props) => {
                 <th>Execution parameter</th>
                 <th>Value</th>
                 {
-                    Object.keys(props.data).map((key, i) => (
+                    Object.keys(data).map((key, i) => (
                         <tr key={i}>
                             <td>{key}</td>
                             <td>
-                                {props.data[key].toString()}
+                                {data[key].toString()}
                             </td>
                         </tr>
                     ))

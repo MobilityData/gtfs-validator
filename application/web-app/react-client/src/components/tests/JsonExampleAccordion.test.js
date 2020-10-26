@@ -40,12 +40,11 @@ describe('JsonExampleAccordion', () => {
         const tree = shallow(
             <JsonExampleAccordion />
         )
-        // let mockFirstExample = mock/
-        const firstExample = <JsonBeautyfier id="json-example" data={localJson} className="json-example"/>
-        const secondExample = <JsonBeautyfier id="json-example" data={networkJson} className="json-example"/>;
+        const localExample = <JsonBeautyfier id="json-example" data={localJson} className="json-example"/>
+        const networkExample = <JsonBeautyfier id="json-example" data={networkJson} className="json-example"/>;
 
-        expect(tree.contains(firstExample)).toBe(true);
-        expect(tree.contains(secondExample)).toBe(true);
+        expect(tree.contains(localExample)).toBe(true);
+        expect(tree.contains(networkExample)).toBe(true);
     })
 
     //FIXME: adapt test to verify that function is called anytime time item is clicked on

@@ -5,68 +5,181 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  release:
+    types: [ created ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Run Java tests
-        run: ./gradlew testReport
-      - name: Run JS tests
-        run: ./gradlew uiTest
-      - name: Persist Java tests reports
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: testReport
+      - name: Persist **Successfull** Java tests merged report
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_java_test_report
+          name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
           path: build/reports/allTests/
-      - name: Persist JS tests report
+      - name: Persist **Failed** Java tests unmerged reports
+        if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_js_test_report
+          name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
+          path: |
+            adapter/exporter/build/reports/tests/
+            adapter/parser/build/reports/tests/
+            adapter/repository/in-memory-simple/build/reports/tests/
+            adapter/tree/build/reports/tests/
+            adapter/utils/build/reports/tests/
+            adapter/validator/build/reports/tests/
+            application/web-app/spring-server/build/reports/tests/
+            domain/build/reports/tests/
+            usecase/build/reports/tests/
+      - name: Run JS tests
+        if: ${{ always() }} #we still want js test report if Java tests failed
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: uiTest
+      - name: Persist JS tests report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test report - JavaScript -- ${{ steps.prep.outputs.versionTag }}
           path: application/web-app/react-client/test-reports/
 
   pack:
-    needs: test
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
       - name: Package cli app jar with Gradle
-        run: ./gradlew shadowJar
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: shadowJar
       - name: Package web app war with Gradle
-        run: ./gradlew bootWar
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: bootWar
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_cli
-          path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
+          name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
+          path: application/cli-app/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
       - name: Persist web app war
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_web
-          path: application/web-app/spring-server/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.war
+          name: Application - web executable .war (Spring&React) -- ${{ steps.prep.outputs.versionTag }}
+          path: application/web-app/spring-server/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_web.war
 
   doc:
-    needs: test
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
       - name: Set up JDK 1.11
         uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Generate Javadoc
-        run: ./gradlew aggregateJavadocs
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Build jsdoc
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: ./application/web-app/react-client/src/
+          recurse: true
+          output_dir: build/docs/jsdoc/
+      - name: Build Javadoc
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: aggregateJavadocs
       - name: Persist javadoc
         uses: actions/upload-artifact@v2
         with:
-          name: v1.3.0-SNAPSHOT_javadoc
+          name: Documentation - javadoc -- ${{ steps.prep.outputs.versionTag }}
           path: build/docs/javadoc/
+      - name: Persist jsdoc
+        uses: actions/upload-artifact@v2
+        with:
+          name: Documentation - jsdoc -- ${{ steps.prep.outputs.versionTag }}
+          path: build/docs/jsdoc/

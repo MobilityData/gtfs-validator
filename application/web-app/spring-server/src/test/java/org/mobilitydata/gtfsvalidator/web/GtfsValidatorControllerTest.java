@@ -66,12 +66,12 @@ class GtfsValidatorControllerTest {
 
     @Test
     void openReportShouldCallServiceManageOpenReportMethod() throws Exception {
-        when(mockServiceManager.openReport()).thenReturn("no content");
+        when(mockServiceManager.displayReport()).thenReturn("no content");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/actions/openreport/"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/actions/displayreport/"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
 
-        verify(mockServiceManager, times(1)).openReport();
+        verify(mockServiceManager, times(1)).displayReport();
         verifyNoMoreInteractions(mockServiceManager);
     }
 }

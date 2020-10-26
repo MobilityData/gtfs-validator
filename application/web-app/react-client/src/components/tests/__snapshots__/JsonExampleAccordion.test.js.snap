@@ -180,7 +180,7 @@ exports[`JsonExampleAccordion should render correctly 1`] = `
                 }
               }
             >
-              input
+              url
             </span>
             "
             <span
@@ -209,7 +209,7 @@ exports[`JsonExampleAccordion should render correctly 1`] = `
                 }
               }
             >
-              relative/path/to/zipped_dataset
+              url/to/dataset
             </span>
             "
           </span>
@@ -569,7 +569,7 @@ exports[`JsonExampleAccordion should render correctly 1`] = `
                 }
               }
             >
-              url
+              input
             </span>
             "
             <span
@@ -598,7 +598,7 @@ exports[`JsonExampleAccordion should render correctly 1`] = `
                 }
               }
             >
-              url/to/dataset
+              relative/path/to/zipped_dataset
             </span>
             "
           </span>
