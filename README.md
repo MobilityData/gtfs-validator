@@ -295,7 +295,7 @@ $ npm test
 
 There is a way to locally execute the [`run-on-data` job of the end_to_end GitHub workflow](https://github.com/MobilityData/gtfs-validator/blob/24d58c8ee76af00aa3ab413b218b4a8e2cfafc4b/.github/workflows/end_to_end.yml#L9)
 
-You need Docker installed
+You need Docker to be installed
 
 Install [act](https://github.com/nektos/act)
 ```
@@ -331,11 +331,6 @@ MBTA__2020-10-26_08-51-29.211229.json
 MST__2020-10-26_08-51-39.835092.json
 Orange_County_Transportation_Authority__2020-10-26_08-52-19.024739.json
 ```
-
-
-
-
-
 
 # License
 
