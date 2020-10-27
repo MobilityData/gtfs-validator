@@ -1,6 +1,6 @@
 ---
 name: Any other issue
-about: For all other issues
+about: 2. For all other issues
 title: "I need support from the community to..."
 labels: 'community'
 assignees: ''
