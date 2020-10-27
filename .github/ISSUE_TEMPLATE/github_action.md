@@ -14,4 +14,5 @@ Instructions on how to fork and open a PR to run the validator are visible [here
 Fill this section with more details about the issue you encountered. Especially the step number you couldn't complete successfully. 
 A member of our team will assist you.
 
-Note: while we will provide support for everyone, our [members and sponsors](https://mobilitydata.org/members/)
+Note: while we provide support for everyone, our [members and sponsors](https://mobilitydata.org/members/) see their issues prioritized.
+
