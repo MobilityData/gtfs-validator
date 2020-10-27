@@ -39,7 +39,7 @@ If the workflow run crashes or something doesn't look right in the validation re
 1. on line 44, **replace** `DATASET_PUBLIC_URL` by a *public url* pointing to a [GTFS Schedule](https://gtfs.mobilitydata.org/spec/gtfs-schedule) zip archive
 1. **clic** on the *green* `Start commit` button on the right of the page
 1. **select the option ` Create a new branch for this commit and start a pull request.`**
-1. **replace** the proposed default branch name by what you got from *step 10.*
+1. **replace** the proposed default branch name by what you got from *step 6.* Note that the branch name must exactly match the line 5 text (e.g., `societe-de-transport-de-montreal`).
 1. **clic** the *green* `Propose changes` button
 1. on the next screen, **clic** `Create pull request`
 
