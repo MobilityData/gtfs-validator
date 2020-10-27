@@ -7,12 +7,11 @@ assignees: 'fabrice-v'
 
 ---
 
-**How to instructions**
-Instructions on how to fork and open a PR to run the validator are visible [here](https://github.com/MobilityData/gtfs-validator#via-github-actions---run-the-validator-on-any-gtfs-archive-available-on-a-public-url)
+**How to**
+Instructions on how to fork and open a PR to run the validator are visible [here](https://github.com/MobilityData/gtfs-validator#longer-version---step-by-step-through-github-web-ui-screenshots-coming-soon)
 
 **Issue encountered**
-Fill this section with more details about the issue you encountered. Especially the step number you couldn't complete successfully. 
-A member of our team will assist you.
+Provide as much details as possible of the problem you are encountering along with the details on he step number you couldn't complete successfully. A memeber of our team will assist you.
 
-Note: while we provide support for everyone, our [members and sponsors](https://mobilitydata.org/members/) see their issues prioritized.
+Note: We are happy to provide support to the entire community, however our [members and sponsors](https://mobilitydata.org/members/) have their issues prioritized as a benefit of their membership.
 
