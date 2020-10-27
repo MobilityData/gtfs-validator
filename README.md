@@ -31,7 +31,7 @@ If the workflow run crashes or something doesn't look right in the validation re
 1. **navigate** to `.github/workflows/end_to_end.yml`
 1. **clic** the *crayon* icon to enter edit mode
 1. on line 5, **replace** `transport-agency-name` by something significant like `societe-de-transport-de-montreal` if you were adding a dataset from *STM*
-1. **keep it around** as you'll need it in *step 18.*
+1. **keep it around** as you'll need it in *step 15.*
 1. **uncomment** line 43 by removing the `#` character
 1. on line 43, **replace** `ACRONYM` by some acronym for the Agency/publisher, in our example that would be `STM`
 1. **uncomment** line 44 by removing the `#` character
@@ -39,7 +39,7 @@ If the workflow run crashes or something doesn't look right in the validation re
 1. on line 44, **replace** `DATASET_PUBLIC_URL` by a *public url* pointing to a [GTFS Schedule](https://gtfs.mobilitydata.org/spec/gtfs-schedule) zip archive
 1. **clic** on the *green* `Start commit` button on the right of the page
 1. **select the option ` Create a new branch for this commit and start a pull request.`**
-1. **replace** the proposed default branch name by what you got from *step 6.* Note that the branch name must exactly match the line 5 text (e.g., `societe-de-transport-de-montreal`).
+1. **replace** the proposed default branch name by what you got from *step 7.* Note that the branch name must exactly match the line 5 text (e.g., `societe-de-transport-de-montreal`).
 1. **clic** the *green* `Propose changes` button
 1. on the next screen, **clic** `Create pull request`
 
