@@ -2,14 +2,11 @@ name: End to end
 
 on:
   push:
-    branches: [ master ] #<-- comment this line
-    #branches: [ master, your-prbranch ] #<-- uncomment this line, replace your-prbranch by the name of the agency/publisher
+    branches: [ master,  transport-agency-name] #<-- replace transport-agency-name by the name of the agency/publisher
 
 jobs:
   run-on-data:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v1
       - name: Prepare version name
