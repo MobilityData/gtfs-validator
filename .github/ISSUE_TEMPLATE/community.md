@@ -1,5 +1,5 @@
 ---
-name: Any other issue
+name: 2. Any other issue
 about: For all other issues
 title: "I need support from the community to..."
 labels: 'community'
