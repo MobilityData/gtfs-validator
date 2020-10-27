@@ -1,5 +1,5 @@
 ---
-name: GitHub Action related (fork and pr)
+name: 0. GitHub Action related (fork and pr)
 about: For issues related to running the validator on GitHub
 title: "I need support from MobilityData to..."
 labels: 'GitHub Action'
