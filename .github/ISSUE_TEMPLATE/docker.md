@@ -1,5 +1,5 @@
 ---
-name: 0. Docker related
+name: 1. Docker related
 about: For issues related to running the validator in Docker
 title: "I need support from MobilityData to..."
 labels: 'docker'
