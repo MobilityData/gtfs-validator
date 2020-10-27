@@ -7,11 +7,10 @@ assignees: 'fabrice-v'
 
 ---
 
-**How to instructions**
+**How to**
 Instructions on how to run the validator in Docker are visible [here](https://github.com/MobilityData/gtfs-validator/blob/master/README.md#via-docker-image)
 
 **Issue encountered**
-Fill this section with more details about the issue you encountered. Especially the tags of the image you used 
-A member of our team will assist you.
+Provide as much details as possible of the problem you are encountering along with the tags of the image you used. A memeber of our team will assist you. ![image](https://user-images.githubusercontent.com/55884852/97317843-9ebc1800-1841-11eb-9dc2-41ff2be624e8.png)
 
-Note: while we provide support for everyone, our [members and sponsors](https://mobilitydata.org/members/) see their issues prioritized.
+Note: We are happy to provide support to the entire community, however our [members and sponsors](https://mobilitydata.org/members/) have their issues prioritized as a privilege of their membership.
