@@ -8,8 +8,8 @@ assignees: ''
 ---
 
 **Issue encountered**
-Fill this section with more details about the issue you encountered that would help a member of the community provide support.
+Fill this section with more details about the issue you encountered that would help a member of the community to provide support.
 
-For example, if you're scared of the GitHub Action or Docker runs, you can ask for help opening a PR by providing just the public url to your GTFS Schedule zip archive.
+For example, if you're not familiar on how GitHub Action or Docker runs, you can ask for help by creating this issue and providing the public URL to your GTFS Schedule zip archive.
 
-Note: Please do not tag MobilityData staff. We may select issues and provide support on them.
+Note: MobilityData staff is aware of all issues opened, therefore there is no need for you to tag us directly.
