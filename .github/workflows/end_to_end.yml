@@ -41,7 +41,7 @@ jobs:
         with:
           arguments: shadowJar
       - name: Validate dataset from -- THB #<-- uncomment this line, replace ACRONYM by the name of the agency/publisher acronym
-        run: java -jar application/cli-app/build/libs/*.jar -u https://openmobilitydata.org/p/thebus-honolulu -i THB.zip -e input -o output #<-- uncomment this line, 
+        run: java -jar application/cli-app/build/libs/*.jar -u http://webapps.thebus.org/transitdata/Production/google_transit.zip -i THB.zip -e input -o output #<-- uncomment this line, 
 #replace ACRONYM and [[[ACRONYM]]] by the agency/publisher acronym. Also replace DATASET_PUBLIC_URL by a public link to a GTFS Schedule zip archive
       - name: Validate dataset from -- MBTA
         run: java -jar application/cli-app/build/libs/*.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i mbta.zip -e input -o output
