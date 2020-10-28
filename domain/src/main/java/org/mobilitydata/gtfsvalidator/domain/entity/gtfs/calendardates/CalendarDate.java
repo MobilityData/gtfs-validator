@@ -184,4 +184,5 @@ public class CalendarDate extends GtfsEntity {
         }
         return hashCode() == object.hashCode();
     }
+    // TODO: rework this to fix #401
 }
