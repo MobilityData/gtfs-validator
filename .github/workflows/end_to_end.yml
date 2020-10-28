@@ -52,7 +52,7 @@ jobs:
       - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
         run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download -i stge.zip -e input -o output
       - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
-        run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download -i bart.zip -e input -o output
+        run: java -jar application/cli-app/build/libs/*.jar -u http://www.bart.gov/dev/schedules/google_transit.zip -i bart.zip -e input -o output
       - name: Persist datasets
         uses: actions/upload-artifact@v2
         with:
