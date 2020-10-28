@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master,  the-honolulu-bus] #<-- replace transport-agency-name by the name of the agency/publisher
+    branches: [ master,  the-honolulu-bus]
 
 jobs:
   run-on-data:
