@@ -1845,6 +1845,7 @@ class ValidateNoOverlappingStopTimeInTripBlockTest {
         assertEquals(1, mockResultRepo.getAll().size());
     }
 
+    @Test
     void infoNoticeShouldBeGeneratedAndAddedToResultRepoWhenFirstTripRefersToCalendarDateAndSecondRefersToCalendar() {
         // trips.txt
         // | routeId | tripId | serviceId  | blockId |
