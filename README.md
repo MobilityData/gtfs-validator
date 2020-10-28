@@ -26,12 +26,12 @@ If the workflow run crashes or something doesn't look right in the validation re
 ## longer version - step by step through GitHub web UI (screenshots coming soon)
 1. go to https://github.com/MobilityData/gtfs-validator
 
-1. **clic** on the `fork` button on the *top right corner*
+1. **click** on the `fork` button on the *top right corner*
 1. **wait** for the fork creation, you should now see your fork (https://github.com/YOUR_USERNAME/gtfs-validator)
 1. **navigate** to `.github/workflows/end_to_end.yml`
-1. **clic** the *crayon* icon to enter edit mode
+1. **click** the *crayon* icon to enter edit mode
 1. on line 5, **replace** `transport-agency-name` by something significant like `societe-de-transport-de-montreal` if you were adding a dataset from *STM*
-1. **keep it around** as you'll need it in *step 18.*
+1. **keep it around** as you'll need it in *step 15.*
 1. **uncomment** line 43 by removing the `#` character
 1. on line 43, **replace** `ACRONYM` by some acronym for the Agency/publisher, in our example that would be `STM`
 1. **uncomment** line 44 by removing the `#` character
@@ -39,9 +39,9 @@ If the workflow run crashes or something doesn't look right in the validation re
 1. on line 44, **replace** `DATASET_PUBLIC_URL` by a *public url* pointing to a [GTFS Schedule](https://gtfs.mobilitydata.org/spec/gtfs-schedule) zip archive
 1. **clic** on the *green* `Start commit` button on the right of the page
 1. **select the option ` Create a new branch for this commit and start a pull request.`**
-1. **replace** the proposed default branch name by what you got from *step 10.*
-1. **clic** the *green* `Propose changes` button
-1. on the next screen, **clic** `Create pull request`
+1. **replace** the proposed default branch name by what you got from *step 7.* Note that the branch name must exactly match the line 5 text (e.g., `societe-de-transport-de-montreal`).
+1. **click** the *green* `Propose changes` button
+1. on the next screen, **click** `Create pull request`
 
 You should now see the workflow `End to end / run-on-data` start automatically in your PR checks, running the validator on the dataset you just added. The validation report is collected as a run artifact in the Actions tab of your fork repository on GitHub.
 
@@ -346,10 +346,9 @@ If you have followed instructions in the [Usage via GitHub Actions](#tldr) and h
 1. on the **right** side of the `←` use the first dropdown to **change** *head repository:* to your forked one (like `ilovetramways/gtfs-validator` for GitHub handle `ilovetramways`)
 1. on the **right** side of the `←` use the second dropdown to **change** *compare:* to **the branch in your fork containing the changes you made to end_to_end.yml that led to an issue**
 1. **click** the *green* `Create pull request` button
-1. **fill in** a title, and the requested information for your PR
 1. use the dropdown on the *green* `Create pull request` button to **select `Create draft pull request`**
 1. **click** the *green* `Draft pull request` button
 
-Then we're all set, thk you very very much! The end to end workflow will run on the newly created PR in our repository and automatically collect all relevant information. We will follow up directly in the PR
+Then we're all set, thk you very very much! The end to end workflow will run on the newly created PR in our repository and automatically collect all relevant information. We take care of everything from then and will follow up directly in the PR.
 
 While we welcome all contributions, our [members and sponsors](https://mobilitydata.org/members/) see their PRs and issues prioritized.
