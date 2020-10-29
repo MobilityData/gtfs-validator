@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.exporter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
 import java.io.IOException;
@@ -26,12 +27,20 @@ import java.io.IOException;
 public class JsonNoticeExporter implements NoticeExporter {
 
     private final JsonGenerator jsonGenerator;
+    public static final String FILE_EXTENSION = ".json";
+    public static final Boolean DEFAULT_IS_PRETTY = true;
 
-    public JsonNoticeExporter(final JsonGenerator generator) {
-        this.jsonGenerator = generator;
+    public JsonNoticeExporter(final JsonGenerator generator, final boolean isPretty) {
+        if (isPretty) {
+            this.jsonGenerator = generator.useDefaultPrettyPrinter();
+        } else {
+            this.jsonGenerator = generator;
+        }
     }
 
-    public static final String FILE_EXTENSION = ".json";
+    public JsonNoticeExporter(final JsonGenerator generator) {
+        this(generator, DEFAULT_IS_PRETTY);
+    }
 
     @Override
     public String getExtension() {
@@ -404,6 +413,11 @@ public class JsonNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(final DecreasingShapeDistanceNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final ValidationProcessInfoNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }

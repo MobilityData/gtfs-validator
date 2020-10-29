@@ -102,6 +102,38 @@ class RouteTest {
     }
 
     @Test
+    public void createRouteWithNullRouteTypeShouldGenerateMissingRequiredValueNotice() {
+        final Route.RouteBuilder underTest = new Route.RouteBuilder();
+
+        final EntityBuildResult<?> entityBuildResult = underTest.routeId(STRING_TEST_VALUE)
+                .agencyId(STRING_TEST_VALUE)
+                .routeShortName(STRING_TEST_VALUE)
+                .routeLongName(STRING_TEST_VALUE)
+                .routeDesc(STRING_TEST_VALUE)
+                .routeType(null)
+                .routeUrl(STRING_TEST_VALUE)
+                .routeColor(STRING_TEST_VALUE)
+                .routeTextColor(STRING_TEST_VALUE)
+                .routeSortOrder(INT_TEST_VALUE)
+                .build();
+
+        assertTrue(entityBuildResult.getData() instanceof List);
+        //noinspection unchecked to avoid lint
+        final List<MissingRequiredValueNotice> noticeCollection =
+                (List<MissingRequiredValueNotice>) entityBuildResult.getData();
+
+        assertEquals(1, noticeCollection.size());
+
+        final MissingRequiredValueNotice notice = noticeCollection.get(0);
+        assertEquals("routes.txt", notice.getFilename());
+        assertEquals("ERROR", notice.getLevel());
+        assertEquals(15, notice.getCode());
+        assertEquals("route_type", notice.getNoticeSpecific(KEY_FIELD_NAME));
+        assertEquals(STRING_TEST_VALUE, notice.getEntityId());
+        assertEquals(1, noticeCollection.size());
+    }
+
+    @Test
     public void createRouteWithValidValuesForFieldShouldNotGenerateNotice() {
         final Route.RouteBuilder underTest = new Route.RouteBuilder();
 

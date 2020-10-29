@@ -30,14 +30,14 @@ import java.util.Comparator;
  * triggered after parsing the rows of a specific file. The resultant path is used in the subsequent steps to either
  * unzip the GTFS dataset to validate or to write the validation output results.
  */
-public class CleanOrCreatePath {
+public class CreatePath {
 
     private final ExecParamRepository execParamRepo;
 
     /**
      * @param execParamRepo a repository containing execution parameters
      */
-    public CleanOrCreatePath(final ExecParamRepository execParamRepo) {
+    public CreatePath(final ExecParamRepository execParamRepo) {
         this.execParamRepo = execParamRepo;
     }
 
@@ -47,17 +47,24 @@ public class CleanOrCreatePath {
      *
      * @return a path to the target location
      */
-    public Path execute(String key) {
+    public Path execute(final String key, final boolean clearIfExists) {
         final String pathToCleanOrCreate = execParamRepo.getExecParamValue(key);
-        Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
+        final Path toCleanOrCreate = Path.of(pathToCleanOrCreate);
         // to empty any already existing directory
         if (Files.exists(toCleanOrCreate)) {
-            try {
-                Files.walk(toCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (clearIfExists) {
+                try {
+                    //noinspection ResultOfMethodCallIgnored -- we ignore if deletion went well or not
+                    Files.walk(toCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+                    Files.createDirectory(toCleanOrCreate);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+
+            return toCleanOrCreate;
         }
+
         // Create the directory
         try {
             Files.createDirectory(toCleanOrCreate);

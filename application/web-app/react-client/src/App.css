@@ -1,0 +1,135 @@
+/*
+ *  Copyright (c) 2020. MobilityData IO.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+#validation-report-view-container {
+    margin-top: 20px;
+    text-align: left;
+    font-size: 13px;
+    width: 60%;
+}
+
+#open-validation-dom-element {
+    color: red;
+}
+
+.json-example-container {
+    text-align: left;
+}
+
+#json-example {
+    text-align: left;
+    width: 94%;
+    font-size: 15px;
+}
+
+.json-example-title {
+    text-align: left;
+    font-size: 15px;
+}
+
+#button-container {
+    width: 60%;
+    margin-top: 20px;
+}
+
+#json-table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#json-table td, #json-table th {
+    border: 1px solid #ddd;
+    line-height: 25px;
+    padding: 8px;
+}
+
+#json-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+    color: #636C7F;
+}
+
+#json-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #90A2FF;
+    color: white;
+}
+
+#json-content {
+    max-width: 60%;
+    font-size: 16px;
+}
+
+#validation-status {
+    max-width: 60%;
+    font-size: 16px;
+}
+
+.text-center {
+    width: 1000px;
+    height: 200px;
+    border-style: dashed;
+    border-width: 6px;
+    border-color: #90A2FF;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #FFFFFF;
+    color: #636C7F;
+    justify-content: center;
+    align-items: center;
+}
+
+.dropzone-content {
+    line-height: 200px;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    height: 60%;
+    width: 60%;
+    pointer-events: none;
+}
+
+.command-line-container {
+    width: 100%;
+}
+
+.launch-button-container {
+    width: 60%;
+    margin-top: 20px;
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+    font-size: calc(2vmin);
+}

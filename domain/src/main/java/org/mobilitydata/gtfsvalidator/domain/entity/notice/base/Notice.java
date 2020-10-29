@@ -101,6 +101,16 @@ public abstract class Notice {
     public static final String KEY_SHAPE_DIST_TRAVELED = "shapeDistTraveled";
     public static final String KEY_SHAPE_PREVIOUS_SHAPE_PT_SEQUENCE = "previousShapePtSequence";
     public static final String KEY_SHAPE_PREVIOUS_SHAPE_DIST_TRAVELED = "previousShapeDistTraveled";
+    public static final String FEED_PUBLISHER_NAME_OR_AGENCY_NAME = "feedPublisherNameOrAgencyName";
+    public static final String VALIDATION_TIMESTAMP = "validationTimestamp";
+    public static final String WARNING_NOTICE_COUNT = "warningNoticeCount";
+    public static final String ERROR_NOTICE_COUNT = "errorNoticeCount";
+    public static final String PATH_OR_URL_TO_GTFS_ARCHIVE = "pathOrUrlToGtfsArchive";
+    public static final String GTFS_ARCHIVE_SIZE_BEFORE_UNZIPPING_BYTE = "gtfsArchiveSizeBeforeUnzippingByte";
+    public static final String GTFS_ARCHIVE_SIZE_AFTER_UNZIPPING_BYTE = "gtfsArchiveSizeAfterUnzippingByte";
+    public static final String GTFS_VALIDATOR_VERSION = "gtfsValidatorVersion";
+    public static final String PROCESSING_TIME_SECS = "processingTimeSecs";
+    public static final String PROCESSED_FILENAME_COLLECTION = "processedFilenameCollection";
 
     private final String filename;
     private final int code;

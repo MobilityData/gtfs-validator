@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  package:
+  pack:
     docker:
       - image: circleci/openjdk:11
     steps:
@@ -10,9 +10,16 @@ jobs:
           name: Package cli jar with Gradle
           command: |
             ./gradlew shadowJar
+      - run:
+          name: Package web war with Gradle
+          command: |
+            ./gradlew bootWar
       - store_artifacts:
           path: application/cli-app/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
           destination: gtfs-validator-v1.3.0-SNAPSHOT_cli.jar
+      - store_artifacts:
+          path: application/web-app/spring-server/build/libs/gtfs-validator-v1.3.0-SNAPSHOT_web.war
+          destination: gtfs-validator-v1.3.0-SNAPSHOT_web.war
   test:
     docker:
       - image: circleci/openjdk:11
@@ -25,10 +32,28 @@ jobs:
       - run:
           name: Compress Java test report
           command: |
-            tar -C build/reports/allTests/ -cvf v1.3.0-SNAPSHOT_tests_java.tar .
+            tar -C build/reports/allTests/ -cvf java-tests-v1.3.0-SNAPSHOT.tar .
+      - run:
+          name: Run JS tests
+          command: |
+            ./gradlew uiTest
+      - run:
+          name: Compress JS test report
+          command: |
+            tar -C application/web-app/react-client/test-reports/ -cvf js-tests-v1.3.0-SNAPSHOT.tar .
+      - run:
+          name: Compress JS test coverage report
+          command: |
+            tar -C application/web-app/react-client/build/coverage -cvf js-tests-coverage-v1.3.0-SNAPSHOT.tar .
       - store_artifacts:
-          path: v1.3.0-SNAPSHOT_tests_java.tar
-          destination: v1.3.0-SNAPSHOT_tests_java.tar
+          path: java-tests-v1.3.0-SNAPSHOT.tar
+          destination: java-tests-v1.3.0-SNAPSHOT.tar
+      - store_artifacts:
+          path: js-tests-v1.3.0-SNAPSHOT.tar
+          destination: js-tests-v1.3.0-SNAPSHOT.tar
+      - store_artifacts:
+          path: js-tests-coverage-v1.3.0-SNAPSHOT.tar
+          destination: js-tests-coverage-v1.3.0-SNAPSHOT.tar
   doc:
     docker:
       - image: circleci/openjdk:11
@@ -48,10 +73,10 @@ jobs:
 
 workflows:
   version: 2
-  package_test_document:
+  test_pack_doc:
     jobs:
       - test
-      - package:
+      - pack:
           requires:
             - test
       - doc:

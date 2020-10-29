@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator;
+package org.mobilitydata.gtfsvalidator.cli;
 
-import com.google.common.base.Strings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.config.DefaultConfig;
@@ -28,10 +27,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorExcepti
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -40,6 +36,7 @@ public class Main {
         final long startTime = System.nanoTime();
         final Logger logger = LogManager.getLogger();
         final DefaultConfig config = initConfig(args, logger);
+        final Set<String> processedFilenameCollection = new HashSet<>();
 
         try {
             // use case will inspect parameters and decide if help menu should be displayed or not
@@ -53,7 +50,7 @@ public class Main {
                 config.downloadArchiveFromNetwork().execute();
 
                 config.unzipInputArchive(
-                        config.cleanOrCreatePath().execute(ExecParamRepository.EXTRACT_KEY))
+                        config.createPath().execute(ExecParamRepository.EXTRACT_KEY, true))
                         .execute();
 
                 final ArrayList<String> filenameListToExclude = config.generateExclusionFilenameList().execute();
@@ -94,6 +91,7 @@ public class Main {
                 filenameListToProcess.forEach(filename -> {
                     logger.info(System.lineSeparator() + System.lineSeparator() +
                             "Validate CSV structure and field types for file: " + filename);
+                    processedFilenameCollection.add(filename);
                     config.validateCsvNotEmptyForFile(filename).execute();
                     config.validateHeadersForFile(filename).execute();
                     config.validateAllRowLengthForFile(filename).execute();
@@ -220,23 +218,28 @@ public class Main {
                 config.validateRouteShortNameAreUnique().execute();
                 config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
 
-                config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
-
+                config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
+                config.generateInfoNotice(
+                        TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
+                        processedFilenameCollection).execute();
                 config.exportResultAsFile().execute();
             }
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
         } catch (TooManyValidationErrorException e) {
             logger.error("Error detected -- ABORTING");
-            config.cleanOrCreatePath().execute(ExecParamRepository.OUTPUT_KEY);
+            config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
             try {
+                config.generateInfoNotice(
+                        TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
+                        processedFilenameCollection).execute();
                 config.exportResultAsFile().execute();
 
                 logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
                         " to continue on errors");
             } catch (IOException ioException) {
-                logger.error("An exception occurred: " + e);
+                logger.error("An exception occurred: " + ioException);
             }
         }
         final long duration = System.nanoTime() - startTime;
@@ -254,19 +257,10 @@ public class Main {
         } catch (IOException e) {
             logger.warn("Configuration file execution-parameters.json not found in working directory");
         }
-
-        if (Strings.isNullOrEmpty(executionParametersAsString) && args.length == 0) {
-            // true when json configuration file is not present and no arguments are provided
-            logger.info("No configuration file nor arguments provided");
-            return new DefaultConfig(executionParametersAsString, logger);
-        } else if (!Strings.isNullOrEmpty(executionParametersAsString) || args.length == 0) {
-            // true when no arguments are provided or when json configuration is provided
-            logger.info("Retrieving execution parameters from execution-parameters.json file");
-            return new DefaultConfig(executionParametersAsString, logger);
-        } else {
-            // true when only arguments are provided
-            logger.info("Retrieving execution parameters from command-line");
-            return new DefaultConfig(args, logger);
-        }
+        final DefaultConfig.Builder configBuilder = new DefaultConfig.Builder();
+        return configBuilder.logger(logger)
+                .args(args)
+                .execParamAsString(executionParametersAsString)
+                .build();
     }
 }

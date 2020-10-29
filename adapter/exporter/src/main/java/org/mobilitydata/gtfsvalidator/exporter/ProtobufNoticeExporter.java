@@ -16,13 +16,13 @@
 
 package org.mobilitydata.gtfsvalidator.exporter;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -1002,6 +1002,14 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .writeTo(streamGenerator.getStream());
     }
 
+    @Override
+    public void export(final ValidationProcessInfoNotice validationProcessInfoNotice) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName("not support yet")
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
     public static class ProtobufOutputStreamGenerator {
         private final String targetPath;
         private final List<OutputStream> openedStreamCollection = new ArrayList<>();
@@ -1013,7 +1021,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
 
         public OutputStream getStream() throws IOException {
             OutputStream newStream = Files.newOutputStream(Paths.get(
-                    targetPath + File.separator + streamCounter +
+                    targetPath + "-" + streamCounter +
                             ProtobufNoticeExporter.FILE_EXTENSION
             ));
             ++streamCounter;

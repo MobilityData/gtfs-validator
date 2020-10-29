@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.config;
 
+import com.google.common.base.Strings;
 import com.google.common.io.Resources;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +33,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.transfers.Transfer;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.translations.Translation;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
+import org.mobilitydata.gtfsvalidator.fileutils.CustomFileUtilsImpl;
 import org.mobilitydata.gtfsvalidator.geoutils.GeospatialUtilsImpl;
 import org.mobilitydata.gtfsvalidator.timeutils.TimeUtilsImpl;
 import org.mobilitydata.gtfsvalidator.usecase.*;
@@ -41,17 +43,27 @@ import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.StopTimeValidator
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Set;
+import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
-import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.ABORT_ON_ERROR;
+import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.*;
 
 /**
  * Configuration calling use cases for the execution of the validation process. This is necessary for the validation
  * process. Hence, this is created before calling the different use case of the validation process in the main method.
  */
 public class DefaultConfig {
+    private static final String DEFAULT_TIMEZONE_NAME = "America/Montreal";
+    private static final TimeZone DEFAULT_TIMEZONE = SimpleTimeZone.getTimeZone(DEFAULT_TIMEZONE_NAME);
+    private static final ZoneId DEFAULT_TIMEZONE_ID = DEFAULT_TIMEZONE.toZoneId();
     private final RawFileRepository rawFileRepo = new InMemoryRawFileRepository();
     private final ValidationResultRepository resultRepo;
     private final GtfsDataRepository gtfsDataRepository = new InMemoryGtfsDataRepository();
@@ -61,7 +73,7 @@ public class DefaultConfig {
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
 
-    public DefaultConfig(final String[] args, final Logger logger) {
+    private DefaultConfig(final String[] args, final Logger logger) {
         this.logger = logger;
 
         execParamRepo = new InMemoryExecParamRepository(
@@ -76,7 +88,7 @@ public class DefaultConfig {
                 Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
     }
 
-    public DefaultConfig(final String executionParametersAsString, final Logger logger) {
+    private DefaultConfig(final String executionParametersAsString, final Logger logger) {
         this.logger = logger;
 
         execParamRepo = new InMemoryExecParamRepository(
@@ -90,6 +102,44 @@ public class DefaultConfig {
         resultRepo = new InMemoryValidationResultRepository(
                 Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
     }
+
+    public static class Builder {
+        private Logger logger;
+        private String execParamAsString;
+        private String[] args;
+
+        public Builder execParamAsString(final String execParamAsString) {
+            this.execParamAsString = execParamAsString;
+            return this;
+        }
+
+        public Builder args(final String[] args) {
+            this.args = args;
+            return this;
+        }
+
+        public Builder logger(final Logger logger) {
+            this.logger = logger;
+            return this;
+        }
+
+        public DefaultConfig build() {
+            if (Strings.isNullOrEmpty(execParamAsString) && args.length == 0) {
+                // true when json configuration file is not present and no arguments are provided
+                logger.info("No configuration file nor arguments provided");
+                return new DefaultConfig(execParamAsString, logger);
+            } else if (!Strings.isNullOrEmpty(execParamAsString) || args.length == 0) {
+                // true when no arguments are provided or when json configuration is provided
+                logger.info("Retrieving execution parameters from execution-parameters.json file");
+                return new DefaultConfig(execParamAsString, logger);
+            } else {
+                // true when only arguments are provided
+                logger.info("Retrieving execution parameters from command-line");
+                return new DefaultConfig(args, logger);
+            }
+        }
+    }
+
 
     @SuppressWarnings("UnstableApiUsage")
     private String loadDefaultParameter() {
@@ -136,8 +186,8 @@ public class DefaultConfig {
         return new DownloadArchiveFromNetwork(resultRepo, execParamRepo, logger);
     }
 
-    public CleanOrCreatePath cleanOrCreatePath() {
-        return new CleanOrCreatePath(execParamRepo);
+    public CreatePath createPath() {
+        return new CreatePath(execParamRepo);
     }
 
     public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) {
@@ -261,7 +311,26 @@ public class DefaultConfig {
     }
 
     public ExportResultAsFile exportResultAsFile() {
-        return new ExportResultAsFile(resultRepo, execParamRepo, logger);
+        return new ExportResultAsFile(resultRepo,
+                execParamRepo,
+                gtfsDataRepository,
+                Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
+                logger);
+    }
+
+    public GenerateInfoNotice generateInfoNotice(final long processingTimeSecs,
+                                                 final Set<String> processedFilenameCollection) {
+        return new GenerateInfoNotice(
+                resultRepo,
+                execParamRepo,
+                gtfsDataRepository,
+                Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),
+                processingTimeSecs,
+                processedFilenameCollection,
+                CustomFileUtilsImpl.getInstance(),
+                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)),
+                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.EXTRACT_KEY))
+        );
     }
 
     public LogExecutionInfo logExecutionInfo() {
@@ -425,5 +494,9 @@ public class DefaultConfig {
 
     public ValidateStopTooFarFromTripShape validateStopTooFarFromTripShape() {
         return new ValidateStopTooFarFromTripShape(gtfsDataRepository, resultRepo, geoUtils, logger);
+    }
+
+    public String getExecParamValue(final String execParamKey) {
+        return execParamRepo.getExecParamValue(execParamKey);
     }
 }
