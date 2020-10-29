@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.exporter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.UnsupportedGtfsStructureNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mockito.ArgumentMatchers;
@@ -1157,6 +1158,22 @@ class JsonNoticeExporterTest {
         DecreasingShapeDistanceNotice toExport =
                 new DecreasingShapeDistanceNotice("12350", 22, 5f,
                         2, 50f);
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportUnsupportedGtfsStructureNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        UnsupportedGtfsStructureNotice toExport =
+                new UnsupportedGtfsStructureNotice("first trip id value",
+                        "other trip id value", "first trip service id value",
+                        "other trip service id value");
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();

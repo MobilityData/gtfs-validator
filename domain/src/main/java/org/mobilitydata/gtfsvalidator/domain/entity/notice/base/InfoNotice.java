@@ -20,6 +20,7 @@ package org.mobilitydata.gtfsvalidator.domain.entity.notice.base;
 public abstract class InfoNotice extends Notice {
     private static final String level = "INFO";
     protected static final int I_001 = 1;
+    protected static final int I_002 = 2;
 
     public InfoNotice(final String filename,
                       final int code,

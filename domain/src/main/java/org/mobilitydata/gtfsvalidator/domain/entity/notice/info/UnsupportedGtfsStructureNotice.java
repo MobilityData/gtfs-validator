@@ -22,14 +22,22 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
 import java.io.IOException;
 
 public class UnsupportedGtfsStructureNotice extends InfoNotice {
-    public UnsupportedGtfsStructureNotice(final String filename,
-                                          final String otherFilename) {
-        super(filename,
-                I_001,
+    public UnsupportedGtfsStructureNotice(final String tripId,
+                                          final String otherTripId,
+                                          final String serviceId,
+                                          final String otherServiceId) {
+        super("trips.txt",
+                I_002,
                 "Unsupported GTFS structure",
-                "The structure of this GTFS archive is not supported yet",
+                String.format("The structure of this GTFS archive is not supported yet. " +
+                        "Trip with tripId: `%s` and serviceId: `%s`; and" +
+                        "trip with tripId: `%s` and serviceId: `%s` do not both refer to `calendar.txt` or " +
+                        "`calendar_dates.txt.",tripId, serviceId, otherTripId, otherServiceId),
                 null);
-        putNoticeSpecific(KEY_OTHER_FILENAME, otherFilename);
+        putNoticeSpecific(KEY_TRIP_ID, tripId);
+        putNoticeSpecific(KEY_OTHER_TRIP_ID, otherTripId);
+        putNoticeSpecific(KEY_SERVICE_ID, serviceId);
+        putNoticeSpecific(KEY_OTHER_SERVICE_ID, otherServiceId);
     }
 
     @Override
