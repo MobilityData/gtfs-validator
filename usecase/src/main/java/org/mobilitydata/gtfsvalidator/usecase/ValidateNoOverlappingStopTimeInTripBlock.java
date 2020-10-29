@@ -33,7 +33,6 @@ import java.util.*;
 /**
  * Use case to validate that for a given `trip_id` there is no overlapping {@code StopTime}.
  */
-// TODO: modify this file to implement #458
 public class ValidateNoOverlappingStopTimeInTripBlock {
     private final GtfsDataRepository dataRepo;
     private final ValidationResultRepository resultRepo;
