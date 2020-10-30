@@ -28,6 +28,7 @@ repositories {
 }
 
 dependencies {
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
     implementation 'org.jetbrains:annotations:19.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'

@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidRowLengthNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MalformedCsvRowNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -57,12 +58,18 @@ public class ValidateAllRowLengthForFile {
                     while (provider.hasNext()) {
                         RawEntity rawEntity = provider.getNext();
                         if (rawEntity.size() != provider.getHeaderCount()) {
-                            resultRepo.addNotice(new InvalidRowLengthNotice(
-                                    rawFileInfo.getFilename(),
-                                    rawEntity.getIndex(),
-                                    provider.getHeaderCount(),
-                                    rawEntity.size())
-                            );
+                            if (rawEntity.isBlankLine()) {
+                                resultRepo.addNotice(
+                                        new MalformedCsvRowNotice(rawFileInfo.getFilename(), rawEntity.getIndex())
+                                );
+                            } else {
+                                resultRepo.addNotice(new InvalidRowLengthNotice(
+                                        rawFileInfo.getFilename(),
+                                        rawEntity.getIndex(),
+                                        provider.getHeaderCount(),
+                                        rawEntity.size())
+                                );
+                            }
                         }
                     }
                 }

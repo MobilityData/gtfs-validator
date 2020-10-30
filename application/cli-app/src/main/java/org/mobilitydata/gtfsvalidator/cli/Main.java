@@ -99,84 +99,86 @@ public class Main {
                     final ParseSingleRowForFile parseSingleRowForFile = config.parseSingleRowForFile(filename);
                     while (parseSingleRowForFile.hasNext()) {
                         final ParsedEntity parsedEntity = parseSingleRowForFile.execute();
-                        validateGtfsTypes.execute(parsedEntity);
+                        if (parsedEntity != null) {
+                            validateGtfsTypes.execute(parsedEntity);
 
-                        // load gtfs entities into memory
-                        if (filenameListToProcess.contains(filename)) {
-                            switch (filename) {
-                                case "agency.txt": {
-                                    processParsedAgency.execute(parsedEntity);
-                                    break;
-                                }
-                                case "routes.txt": {
-                                    processParsedRoute.execute(parsedEntity);
-                                    break;
-                                }
-                                case "calendar_dates.txt": {
-                                    processCalendarDate.execute(parsedEntity);
-                                    break;
-                                }
-                                case "levels.txt": {
-                                    processParsedLevel.execute(parsedEntity);
-                                    break;
-                                }
-                                case "attributions.txt": {
-                                    processParsedAttribution.execute(parsedEntity);
-                                    break;
-                                }
-                                case "calendar.txt": {
-                                    processParsedCalendar.execute(parsedEntity);
-                                    break;
-                                }
-                                case "trips.txt": {
-                                    processParsedTrip.execute(parsedEntity);
-                                    break;
-                                }
-                                case "transfers.txt": {
-                                    processParsedTransfer.execute(parsedEntity);
-                                    break;
-                                }
-                                case "feed_info.txt": {
-                                    processParsedFeedInfo.execute(parsedEntity);
-                                    break;
-                                }
-                                case "pathways.txt": {
-                                    processParsedPathway.execute(parsedEntity);
-                                    break;
-                                }
-                                case "fare_attributes.txt": {
-                                    processParsedFareAttribute.execute(parsedEntity);
-                                    break;
-                                }
-                                case "fare_rules.txt": {
-                                    processParsedFareRule.execute(parsedEntity);
-                                    break;
-                                }
-                                case "frequencies.txt": {
-                                    processParsedFrequency.execute(parsedEntity);
-                                    break;
-                                }
-                                case "shapes.txt": {
-                                    processParsedShapePoint.execute(parsedEntity);
-                                    break;
-                                }
-                                case "translations.txt": {
-                                    processParsedTranslation.execute(parsedEntity);
-                                    break;
-                                }
-                                case "stop_times.txt": {
-                                    processParsedStopTime.execute(parsedEntity);
-                                    break;
-                                }
-                                case "stops.txt": {
-                                    // rows from stops.txt refer each others
-                                    // building a map of all rows for further processing
-                                    ParsedEntity preprocessedStop = preprocessParsedStop.execute(parsedEntity,
-                                            preprocessedStopByStopId.keySet());
-                                    if (preprocessedStop != null) {
-                                        preprocessedStopByStopId.put(preprocessedStop.getEntityId(), preprocessedStop);
+                            // load gtfs entities into memory
+                            if (filenameListToProcess.contains(filename)) {
+                                switch (filename) {
+                                    case "agency.txt": {
+                                        processParsedAgency.execute(parsedEntity);
+                                        break;
                                     }
-                                    break;
+                                    case "routes.txt": {
+                                        processParsedRoute.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "calendar_dates.txt": {
+                                        processCalendarDate.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "levels.txt": {
+                                        processParsedLevel.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "attributions.txt": {
+                                        processParsedAttribution.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "calendar.txt": {
+                                        processParsedCalendar.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "trips.txt": {
+                                        processParsedTrip.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "transfers.txt": {
+                                        processParsedTransfer.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "feed_info.txt": {
+                                        processParsedFeedInfo.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "pathways.txt": {
+                                        processParsedPathway.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "fare_attributes.txt": {
+                                        processParsedFareAttribute.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "fare_rules.txt": {
+                                        processParsedFareRule.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "frequencies.txt": {
+                                        processParsedFrequency.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "shapes.txt": {
+                                        processParsedShapePoint.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "translations.txt": {
+                                        processParsedTranslation.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "stop_times.txt": {
+                                        processParsedStopTime.execute(parsedEntity);
+                                        break;
+                                    }
+                                    case "stops.txt": {
+                                        // rows from stops.txt refer each others
+                                        // building a map of all rows for further processing
+                                        ParsedEntity preprocessedStop = preprocessParsedStop.execute(parsedEntity,
+                                                preprocessedStopByStopId.keySet());
+                                        if (preprocessedStop != null) {
+                                            preprocessedStopByStopId.put(preprocessedStop.getEntityId(), preprocessedStop);
+                                        }
+                                        break;
+                                    }
                                 }
                             }
                         }

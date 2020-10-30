@@ -16,6 +16,9 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.functors.NotNullPredicate;
+
 import java.util.Map;
 
 /**
@@ -68,5 +71,9 @@ public class RawEntity {
      */
     public int getIndex() {
         return entityIndex;
+    }
+
+    public boolean isBlankLine() {
+        return IterableUtils.matchesAny(contentByHeaderMap.values(), NotNullPredicate.INSTANCE);
     }
 }
