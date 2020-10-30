@@ -161,4 +161,6 @@ public interface NoticeExporter {
     void export(final DecreasingShapeDistanceNotice decreasingShapeDistanceNotice) throws IOException;
 
     void export(final ValidationProcessInfoNotice validationProcessInfoNotice) throws IOException;
+
+    void export(final MalformedCsvRowNotice malformedCsvRowNotice) throws IOException;
 }

@@ -420,4 +420,9 @@ public class JsonNoticeExporter implements NoticeExporter {
     public void export(final ValidationProcessInfoNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
+
+    @Override
+    public void export(MalformedCsvRowNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
 }
