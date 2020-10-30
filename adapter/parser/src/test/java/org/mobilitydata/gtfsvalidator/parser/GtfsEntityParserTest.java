@@ -740,7 +740,7 @@ class GtfsEntityParserTest {
         );
 
         ParsedEntity result = underTest.parse(new RawEntity(
-                Map.of("float_type", ""),
+                Map.of("float_type", "", "other field name", "other value"),
                 0
         ));
 
@@ -891,9 +891,8 @@ class GtfsEntityParserTest {
                 mock(RegexValidator.class)
         );
 
-
         ParsedEntity result = underTest.parse(new RawEntity(
-                Map.of("integer_type", ""),
+                Map.of("integer_type", "", "other field name", "other value"),
                 0
         ));
 
@@ -1014,7 +1013,7 @@ class GtfsEntityParserTest {
         );
 
         ParsedEntity result = underTest.parse(new RawEntity(
-                Map.of("date_type", ""),
+                Map.of("date_type", "", "other field name", "other value"),
                 0
         ));
 

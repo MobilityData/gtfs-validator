@@ -17,8 +17,6 @@
 package org.mobilitydata.gtfsvalidator.parser;
 
 import com.google.common.base.Strings;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.functors.NotNullPredicate;
 import org.apache.commons.validator.routines.DateValidator;
 import org.apache.commons.validator.routines.FloatValidator;
 import org.apache.commons.validator.routines.IntegerValidator;
@@ -220,10 +218,10 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                 }
             }
         });
-        if (CollectionUtils.exists(contentByHeaderMap.values(), NotNullPredicate.INSTANCE)) {
-            return new ParsedEntity(entityId[0], contentByHeaderMap, rawFileInfo);
-        } else {
+        if (toParse.isBlankLine()) {
             throw new MalformedCsvRowException(rawFileInfo.getFilename());
+        } else {
+            return new ParsedEntity(entityId[0], contentByHeaderMap, rawFileInfo);
         }
     }
 }
