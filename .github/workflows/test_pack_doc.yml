@@ -44,12 +44,12 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: testReport
-      - name: Persist **Successfull** Java tests merged report
+      - name: Persist **Passing** Java tests merged report
         uses: actions/upload-artifact@v2
         with:
           name: Test report - Java -- ${{ steps.prep.outputs.versionTag }}
           path: build/reports/allTests/
-      - name: Persist **Failed** Java tests unmerged reports
+      - name: Persist **Failing** Java tests unmerged reports
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
