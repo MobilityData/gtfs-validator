@@ -49,10 +49,10 @@ jobs:
       # STM out until #474 is closed
       #- name: Validate dataset from -- STM
       #  run: java -jar application/cli-app/build/libs/*.jar -u https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download -i stm.zip -e input -o output
-      - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
-        run: java -jar application/cli-app/build/libs/*.jar -u http://www.bart.gov/dev/schedules/google_transit.zip -i bart.zip -e input -o output -x agency.txt
       - name: Validate dataset from -- MBTA
         run: java -jar application/cli-app/build/libs/*.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i mbta.zip -e input -o output
+      - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
+        run: java -jar application/cli-app/build/libs/*.jar -u http://www.bart.gov/dev/schedules/google_transit.zip -i bart.zip -e input -o output
       - name: Validate dataset from issue 399 -- Monterey-Salinas Transit
         run: java -jar application/cli-app/build/libs/*.jar -u http://www.mst.org/google/google_transit.zip -i mst.zip -e input -o output
       - name: Validate dataset from issue 398 -- Orange County Transportation Authority
