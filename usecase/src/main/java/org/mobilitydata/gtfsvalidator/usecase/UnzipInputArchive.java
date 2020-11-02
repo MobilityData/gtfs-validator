@@ -42,7 +42,7 @@ public class UnzipInputArchive {
     private final ValidationResultRepository resultRepo;
     private final Logger logger;
     private final ZipFile inputZip;
-
+    private final RawFileInfo.RawFileInfoBuilder rawFileInfoBuilder;
     /**
      * @param fileRepo       a repository storing information about a GTFS dataset
      * @param zipExtractPath a path pointing to the target directory
@@ -52,12 +52,14 @@ public class UnzipInputArchive {
                              final Path zipExtractPath,
                              final ValidationResultRepository resultRepo,
                              final Logger logger,
-                             final ZipFile inputZip) {
+                             final ZipFile inputZip,
+                             final RawFileInfo.RawFileInfoBuilder rawFileInfoBuilder) {
         this.rawFileRepo = fileRepo;
         this.zipExtractPath = zipExtractPath;
         this.resultRepo = resultRepo;
         this.logger = logger;
         this.inputZip = inputZip;
+        this.rawFileInfoBuilder = rawFileInfoBuilder;
     }
 
     /**
@@ -71,15 +73,14 @@ public class UnzipInputArchive {
 
         final Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();
         zipEntries.asIterator().forEachRemaining(entry -> {
-            if (!entry.getName().startsWith(INVALID_FILENAME_PREFIX_STRING)) {
+            if (!entry.getName().contains(INVALID_FILENAME_PREFIX_STRING)) {
                 try {
                     if (entry.isDirectory()) {
                         resultRepo.addNotice(new InputZipContainsFolderNotice(inputZip.getName(), entry.getName()));
                     } else {
                         final Path fileToCreate = zipExtractPath.resolve(entry.getName());
                         Files.copy(inputZip.getInputStream(entry), fileToCreate);
-                        rawFileRepo.create(
-                                new RawFileInfo.RawFileInfoBuilder()
+                        rawFileRepo.create(rawFileInfoBuilder
                                         .filename(entry.getName())
                                         .path(zipExtractPath.toAbsolutePath().toString())
                                         .build()

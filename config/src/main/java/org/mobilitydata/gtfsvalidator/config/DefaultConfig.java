@@ -197,7 +197,8 @@ public class DefaultConfig {
                 zipExtractPath,
                 resultRepo,
                 logger,
-                new ZipFile(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)));
+                new ZipFile(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)),
+                new RawFileInfo.RawFileInfoBuilder());
     }
 
     public ValidateAllRequiredFilePresence validateAllRequiredFilePresence() {
