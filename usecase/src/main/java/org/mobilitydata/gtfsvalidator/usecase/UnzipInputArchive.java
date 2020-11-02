@@ -42,10 +42,15 @@ public class UnzipInputArchive {
     private final Logger logger;
     private final ZipFile inputZip;
     private final RawFileInfo.RawFileInfoBuilder rawFileInfoBuilder;
+
     /**
-     * @param fileRepo       a repository storing information about a GTFS dataset
-     * @param zipExtractPath a path pointing to the target directory
-     * @param resultRepo     a repository storing information about the validation process
+     *
+     * @param fileRepo            a repository storing information about a GTFS dataset
+     * @param zipExtractPath      a path pointing to the target directory
+     * @param resultRepo          a repository storing information about the validation process
+     * @param logger              a logger to log information regarding the validation process
+     * @param inputZip            the zip file to unzip
+     * @param rawFileInfoBuilder  a builder to used to build {@code RawFileInfo}
      */
     public UnzipInputArchive(final RawFileRepository fileRepo,
                              final Path zipExtractPath,
