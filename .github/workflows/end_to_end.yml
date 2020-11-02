@@ -41,7 +41,7 @@ jobs:
         with:
           arguments: shadowJar
       - name: Validate dataset from -- SMART
-        run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/latest/download -i smart.zip -e input -o output
+        run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/latest/download -i smart.zip -e input -o output -a false
       #- name: Validate dataset from -- ACRONYM #<-- uncomment this line, replace ACRONYM by the name of the agency/publisher acronym
       #  run: java -jar application/cli-app/build/libs/*.jar -u DATASET_PUBLIC_URL -i [[[ACRONYM]]].zip -e input -o output #<-- uncomment this line, 
 #replace ACRONYM and [[[ACRONYM]]] by the agency/publisher acronym. Also replace DATASET_PUBLIC_URL by a public link to a GTFS Schedule zip archive
