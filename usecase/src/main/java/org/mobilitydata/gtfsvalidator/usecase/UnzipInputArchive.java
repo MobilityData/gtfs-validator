@@ -42,6 +42,7 @@ public class UnzipInputArchive {
     private final ValidationResultRepository resultRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
+    private final ZipFile inputZip;
 
     /**
      * @param fileRepo       a repository storing information about a GTFS dataset
@@ -52,12 +53,14 @@ public class UnzipInputArchive {
                              final Path zipExtractPath,
                              final ValidationResultRepository resultRepo,
                              final ExecParamRepository execParamRepo,
-                             final Logger logger) {
+                             final Logger logger,
+                             final ZipFile inputZip) {
         this.rawFileRepo = fileRepo;
         this.zipExtractPath = zipExtractPath;
         this.resultRepo = resultRepo;
         this.execParamRepo = execParamRepo;
         this.logger = logger;
+        this.inputZip = inputZip;
     }
 
     /**
@@ -65,21 +68,18 @@ public class UnzipInputArchive {
      * a {@link CannotUnzipInputArchiveNotice} is generated and added to the {@link ValidationResultRepository} provided
      * in the constructor.
      */
-    public void execute() throws IOException {
+    public void execute() {
 
         logger.info("Unzipping archive");
 
-        final String zipInputPath = execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY);
-        final ZipFile inputZip = new ZipFile(zipInputPath);
-
-        Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();
+        final Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();
         zipEntries.asIterator().forEachRemaining(entry -> {
             if (!entry.getName().startsWith(INVALID_FILENAME_PREFIX_STRING)) {
                 try {
                     if (entry.isDirectory()) {
                         resultRepo.addNotice(new InputZipContainsFolderNotice(inputZip.getName(), entry.getName()));
                     } else {
-                        Path fileToCreate = zipExtractPath.resolve(entry.getName());
+                        final Path fileToCreate = zipExtractPath.resolve(entry.getName());
                         Files.copy(inputZip.getInputStream(entry), fileToCreate);
                         rawFileRepo.create(
                                 new RawFileInfo.RawFileInfoBuilder()
