@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -36,28 +35,35 @@ import java.util.zip.ZipFile;
  * has been downloaded from the network.
  */
 public class UnzipInputArchive {
-
+    private static final String INVALID_FILENAME_PREFIX_STRING = "__MACOSX";
     private final RawFileRepository rawFileRepo;
     private final Path zipExtractPath;
     private final ValidationResultRepository resultRepo;
-    private final ExecParamRepository execParamRepo;
     private final Logger logger;
+    private final ZipFile inputZip;
+    private final RawFileInfo.RawFileInfoBuilder rawFileInfoBuilder;
 
     /**
-     * @param fileRepo       a repository storing information about a GTFS dataset
-     * @param zipExtractPath a path pointing to the target directory
-     * @param resultRepo     a repository storing information about the validation process
+     *
+     * @param fileRepo            a repository storing information about a GTFS dataset
+     * @param zipExtractPath      a path pointing to the target directory
+     * @param resultRepo          a repository storing information about the validation process
+     * @param logger              a logger to log information regarding the validation process
+     * @param inputZip            the zip file to unzip
+     * @param rawFileInfoBuilder  a builder to used to build {@code RawFileInfo}
      */
     public UnzipInputArchive(final RawFileRepository fileRepo,
                              final Path zipExtractPath,
                              final ValidationResultRepository resultRepo,
-                             final ExecParamRepository execParamRepo,
-                             final Logger logger) {
+                             final Logger logger,
+                             final ZipFile inputZip,
+                             final RawFileInfo.RawFileInfoBuilder rawFileInfoBuilder) {
         this.rawFileRepo = fileRepo;
         this.zipExtractPath = zipExtractPath;
         this.resultRepo = resultRepo;
-        this.execParamRepo = execParamRepo;
         this.logger = logger;
+        this.inputZip = inputZip;
+        this.rawFileInfoBuilder = rawFileInfoBuilder;
     }
 
     /**
@@ -65,31 +71,29 @@ public class UnzipInputArchive {
      * a {@link CannotUnzipInputArchiveNotice} is generated and added to the {@link ValidationResultRepository} provided
      * in the constructor.
      */
-    public void execute() throws IOException {
+    public void execute() {
 
         logger.info("Unzipping archive");
 
-        final String zipInputPath = execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY);
-        final ZipFile inputZip = new ZipFile(zipInputPath);
-
-        Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();
+        final Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();
         zipEntries.asIterator().forEachRemaining(entry -> {
-            try {
-                if (entry.isDirectory()) {
-                    resultRepo.addNotice(new InputZipContainsFolderNotice(inputZip.getName(), entry.getName()));
-                } else {
-                    Path fileToCreate = zipExtractPath.resolve(entry.getName());
-                    Files.copy(inputZip.getInputStream(entry), fileToCreate);
-                    rawFileRepo.create(
-                            new RawFileInfo.RawFileInfoBuilder()
-                                    .filename(entry.getName())
-                                    .path(zipExtractPath.toAbsolutePath().toString())
-                                    .build()
-                    );
+            if (!entry.getName().contains(INVALID_FILENAME_PREFIX_STRING)) {
+                try {
+                    if (entry.isDirectory()) {
+                        resultRepo.addNotice(new InputZipContainsFolderNotice(inputZip.getName(), entry.getName()));
+                    } else {
+                        final Path fileToCreate = zipExtractPath.resolve(entry.getName());
+                        Files.copy(inputZip.getInputStream(entry), fileToCreate);
+                        rawFileRepo.create(
+                                rawFileInfoBuilder.filename(entry.getName())
+                                        .path(zipExtractPath.toAbsolutePath().toString())
+                                        .build()
+                        );
+                    }
+                } catch (IOException e) {
+                    //TODO: should CannotUnzipInputArchiveNotice be made a warning instead of an error?
+                    resultRepo.addNotice(new CannotUnzipInputArchiveNotice(inputZip.getName()));
                 }
-            } catch (IOException e) {
-                //TODO: should CannotUnzipInputArchiveNotice be made a warning instead of an error?
-                resultRepo.addNotice(new CannotUnzipInputArchiveNotice(inputZip.getName()));
             }
         });
     }

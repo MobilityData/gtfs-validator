@@ -53,6 +53,7 @@ import java.time.ZoneId;
 import java.util.Set;
 import java.util.SimpleTimeZone;
 import java.util.TimeZone;
+import java.util.zip.ZipFile;
 
 import static org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository.*;
 
@@ -190,8 +191,14 @@ public class DefaultConfig {
         return new CreatePath(execParamRepo);
     }
 
-    public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) {
-        return new UnzipInputArchive(rawFileRepo, zipExtractPath, resultRepo, execParamRepo, logger);
+    public UnzipInputArchive unzipInputArchive(final Path zipExtractPath) throws IOException {
+        return new UnzipInputArchive(
+                rawFileRepo,
+                zipExtractPath,
+                resultRepo,
+                logger,
+                new ZipFile(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)),
+                new RawFileInfo.RawFileInfoBuilder());
     }
 
     public ValidateAllRequiredFilePresence validateAllRequiredFilePresence() {

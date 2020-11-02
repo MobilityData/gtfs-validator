@@ -40,8 +40,9 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
+
       #- name: Validate dataset from -- ACRONYM #<-- uncomment this line, replace ACRONYM by the name of the agency/publisher acronym
-      #  run: java -jar application/cli-app/build/libs/*.jar -u DATASET_PUBLIC_URL -i [[[ACRONYM]]].zip -e input -o output #<-- uncomment this line, 
+      #  run: java -jar application/cli-app/build/libs/*.jar -u DATASET_PUBLIC_URL -i [[[ACRONYM]]].zip -e input -o output #<-- uncomment this line,
 #replace ACRONYM and [[[ACRONYM]]] by the agency/publisher acronym. Also replace DATASET_PUBLIC_URL by a public link to a GTFS Schedule zip archive
       - name: Validate dataset from -- SMART
         run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download -i smart.zip -e input -o output -a false
@@ -50,6 +51,8 @@ jobs:
       #  run: java -jar application/cli-app/build/libs/*.jar -u https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download -i stm.zip -e input -o output
       - name: Validate dataset from -- MBTA
         run: java -jar application/cli-app/build/libs/*.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i mbta.zip -e input -o output
+      - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
+        run: java -jar application/cli-app/build/libs/*.jar -u http://www.bart.gov/dev/schedules/google_transit.zip -i bart.zip -e input -o output
       - name: Validate dataset from issue 399 -- Monterey-Salinas Transit
         run: java -jar application/cli-app/build/libs/*.jar -u http://www.mst.org/google/google_transit.zip -i mst.zip -e input -o output
       - name: Validate dataset from issue 398 -- Orange County Transportation Authority
