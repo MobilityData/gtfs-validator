@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.InputZipContainsFolderNotice;
-import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -80,8 +79,8 @@ public class UnzipInputArchive {
                     } else {
                         final Path fileToCreate = zipExtractPath.resolve(entry.getName());
                         Files.copy(inputZip.getInputStream(entry), fileToCreate);
-                        rawFileRepo.create(rawFileInfoBuilder
-                                        .filename(entry.getName())
+                        rawFileRepo.create(
+                                rawFileInfoBuilder.filename(entry.getName())
                                         .path(zipExtractPath.toAbsolutePath().toString())
                                         .build()
                         );
