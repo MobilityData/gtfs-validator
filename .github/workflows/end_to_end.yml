@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master,  bay-area-rapid-transit] #<-- replace transport-agency-name by the name of the agency/publisher
+    branches: [ master,  transport-agency-name] #<-- replace transport-agency-name by the name of the agency/publisher
 
 jobs:
   run-on-data:
