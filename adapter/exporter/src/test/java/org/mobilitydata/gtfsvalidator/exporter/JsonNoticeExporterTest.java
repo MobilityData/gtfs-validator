@@ -1180,4 +1180,18 @@ class JsonNoticeExporterTest {
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
+
+    @Test
+    void exportMalformedCsvRowNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        MalformedCsvRowNotice toExport =
+                new MalformedCsvRowNotice("filename", 22);
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
 }

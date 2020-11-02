@@ -423,6 +423,11 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(MalformedCsvRowNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
     public void export(final UnsupportedGtfsStructureNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }

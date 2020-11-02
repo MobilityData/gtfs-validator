@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.InvalidRowLengthNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.MalformedCsvRowNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -63,7 +64,7 @@ class ValidateAllRowLengthForFileTest {
     }
 
     @Test
-    void invalidRowsShouldGenerateError() {
+    void rowsWithInvalidLengthShouldGenerateError() {
 
         RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
         when(mockProvider.hasNext()).thenReturn(true, true, true, false);
@@ -92,6 +93,39 @@ class ValidateAllRowLengthForFileTest {
         verify(mockProvider, times(3)).getNext();
         verify(mockProvider, times(5)).getHeaderCount();
         verify(mockResultRepo, times(2)).addNotice(any(InvalidRowLengthNotice.class));
+        verifyNoMoreInteractions(mockFileRepo, mockResultRepo, mockProvider);
+    }
+
+    @Test
+    void blankRowsShouldGenerateWarning() {
+
+        RawFileRepository.RawEntityProvider mockProvider = mock(RawFileRepository.RawEntityProvider.class);
+        when(mockProvider.hasNext()).thenReturn(true, true, true, false);
+        RawEntity testRawEntity = new RawEntity(Map.of("", ""), 0);
+        when(mockProvider.getNext()).thenReturn(testRawEntity);
+        int testFakeSize = testRawEntity.size() + 2;
+        when(mockProvider.getHeaderCount()).thenReturn(testRawEntity.size(), testFakeSize, testFakeSize);
+
+        RawFileRepository mockFileRepo = mock(RawFileRepository.class);
+        when(mockFileRepo.getProviderForFile(any(RawFileInfo.class))).thenReturn(Optional.of(mockProvider));
+
+        ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
+
+        ValidateAllRowLengthForFile underTest = new ValidateAllRowLengthForFile(
+                RawFileInfo.builder()
+                        .filename("test_invalid.tst")
+                        .build(),
+                mockFileRepo,
+                mockResultRepo
+        );
+
+        underTest.execute();
+
+        verify(mockFileRepo, times(1)).getProviderForFile(any(RawFileInfo.class));
+        verify(mockProvider, times(4)).hasNext();
+        verify(mockProvider, times(3)).getNext();
+        verify(mockProvider, times(3)).getHeaderCount();
+        verify(mockResultRepo, times(2)).addNotice(any(MalformedCsvRowNotice.class));
         verifyNoMoreInteractions(mockFileRepo, mockResultRepo, mockProvider);
     }
 
