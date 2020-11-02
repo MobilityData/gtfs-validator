@@ -23,6 +23,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.calendardates.Exception
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.stoptimes.StopTime;
 import org.mobilitydata.gtfsvalidator.domain.entity.gtfs.trips.Trip;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.BlockTripsWithOverlappingStopTimesNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.UnsupportedGtfsStructureNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsDataRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
@@ -256,6 +257,16 @@ public class ValidateNoOverlappingStopTimeInTripBlock {
         // operate on same days
         Calendar tripCalendar = dataRepo.getCalendarByServiceId(trip.getServiceId());
         Calendar unvisitedTripCalendar = dataRepo.getCalendarByServiceId(otherTrip.getServiceId());
+        if (tripCalendar == null || unvisitedTripCalendar == null) {
+            resultRepo.addNotice(
+                    new UnsupportedGtfsStructureNotice(
+                            tripId,
+                            otherTripId,
+                            trip.getServiceId(),
+                            otherTrip.getServiceId()
+                    ));
+            return;
+        }
         // first check if `start_date` and `end_date` overlap for both trips
         if (!tripCalendar.isOverlapping(unvisitedTripCalendar)) {
             return;

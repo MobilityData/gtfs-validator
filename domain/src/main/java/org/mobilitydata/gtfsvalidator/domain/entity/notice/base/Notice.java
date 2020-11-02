@@ -111,6 +111,10 @@ public abstract class Notice {
     public static final String GTFS_VALIDATOR_VERSION = "gtfsValidatorVersion";
     public static final String PROCESSING_TIME_SECS = "processingTimeSecs";
     public static final String PROCESSED_FILENAME_COLLECTION = "processedFilenameCollection";
+    public static final String KEY_TRIP_ID = "tripId";
+    public static final String KEY_OTHER_TRIP_ID = "otherTripId";
+    public static final String KEY_SERVICE_ID = "serviceId";
+    public static final String KEY_OTHER_SERVICE_ID = "otherServiceId";
 
     private final String filename;
     private final int code;

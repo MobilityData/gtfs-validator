@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.exporter;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.UnsupportedGtfsStructureNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
@@ -418,6 +419,11 @@ public class JsonNoticeExporter implements NoticeExporter {
 
     @Override
     public void export(final ValidationProcessInfoNotice toExport) throws IOException {
+        jsonGenerator.writeObject(toExport);
+    }
+
+    @Override
+    public void export(final UnsupportedGtfsStructureNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 }
