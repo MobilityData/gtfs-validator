@@ -40,7 +40,6 @@ public class UnzipInputArchive {
     private final RawFileRepository rawFileRepo;
     private final Path zipExtractPath;
     private final ValidationResultRepository resultRepo;
-    private final ExecParamRepository execParamRepo;
     private final Logger logger;
     private final ZipFile inputZip;
 
@@ -52,13 +51,11 @@ public class UnzipInputArchive {
     public UnzipInputArchive(final RawFileRepository fileRepo,
                              final Path zipExtractPath,
                              final ValidationResultRepository resultRepo,
-                             final ExecParamRepository execParamRepo,
                              final Logger logger,
                              final ZipFile inputZip) {
         this.rawFileRepo = fileRepo;
         this.zipExtractPath = zipExtractPath;
         this.resultRepo = resultRepo;
-        this.execParamRepo = execParamRepo;
         this.logger = logger;
         this.inputZip = inputZip;
     }

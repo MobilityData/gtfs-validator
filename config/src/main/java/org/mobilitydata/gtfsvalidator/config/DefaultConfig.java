@@ -196,7 +196,6 @@ public class DefaultConfig {
                 rawFileRepo,
                 zipExtractPath,
                 resultRepo,
-                execParamRepo,
                 logger,
                 new ZipFile(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)));
     }
