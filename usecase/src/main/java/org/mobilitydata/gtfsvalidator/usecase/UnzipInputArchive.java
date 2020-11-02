@@ -36,7 +36,7 @@ import java.util.zip.ZipFile;
  * has been downloaded from the network.
  */
 public class UnzipInputArchive {
-
+    private static final String INVALID_FILENAME_PREFIX_STRING = "__MACOSX";
     private final RawFileRepository rawFileRepo;
     private final Path zipExtractPath;
     private final ValidationResultRepository resultRepo;
@@ -74,22 +74,24 @@ public class UnzipInputArchive {
 
         Enumeration<? extends ZipEntry> zipEntries = inputZip.entries();
         zipEntries.asIterator().forEachRemaining(entry -> {
-            try {
-                if (entry.isDirectory()) {
-                    resultRepo.addNotice(new InputZipContainsFolderNotice(inputZip.getName(), entry.getName()));
-                } else {
-                    Path fileToCreate = zipExtractPath.resolve(entry.getName());
-                    Files.copy(inputZip.getInputStream(entry), fileToCreate);
-                    rawFileRepo.create(
-                            new RawFileInfo.RawFileInfoBuilder()
-                                    .filename(entry.getName())
-                                    .path(zipExtractPath.toAbsolutePath().toString())
-                                    .build()
-                    );
+            if (!entry.getName().startsWith(INVALID_FILENAME_PREFIX_STRING)) {
+                try {
+                    if (entry.isDirectory()) {
+                        resultRepo.addNotice(new InputZipContainsFolderNotice(inputZip.getName(), entry.getName()));
+                    } else {
+                        Path fileToCreate = zipExtractPath.resolve(entry.getName());
+                        Files.copy(inputZip.getInputStream(entry), fileToCreate);
+                        rawFileRepo.create(
+                                new RawFileInfo.RawFileInfoBuilder()
+                                        .filename(entry.getName())
+                                        .path(zipExtractPath.toAbsolutePath().toString())
+                                        .build()
+                        );
+                    }
+                } catch (IOException e) {
+                    //TODO: should CannotUnzipInputArchiveNotice be made a warning instead of an error?
+                    resultRepo.addNotice(new CannotUnzipInputArchiveNotice(inputZip.getName()));
                 }
-            } catch (IOException e) {
-                //TODO: should CannotUnzipInputArchiveNotice be made a warning instead of an error?
-                resultRepo.addNotice(new CannotUnzipInputArchiveNotice(inputZip.getName()));
             }
         });
     }
