@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.exporter;
 
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.UnsupportedGtfsStructureNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
@@ -1006,6 +1007,20 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     public void export(final ValidationProcessInfoNotice validationProcessInfoNotice) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName("not support yet")
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final UnsupportedGtfsStructureNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityId(toExport.getEntityId())
+                .setAltEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_TRIP_ID)))
+                .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_OTHER_TRIP_ID)))
+                .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_SERVICE_ID)))
+                .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_OTHER_SERVICE_ID)))
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
