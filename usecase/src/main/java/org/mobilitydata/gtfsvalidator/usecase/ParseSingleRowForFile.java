@@ -20,6 +20,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.ParsedEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawEntity;
 import org.mobilitydata.gtfsvalidator.domain.entity.RawFileInfo;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.MalformedCsvRowException;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
@@ -70,14 +71,15 @@ public class ParseSingleRowForFile {
      * @return a parsed row from a GTFS file
      */
     public ParsedEntity execute() {
-        ParsedEntity toReturn = null;
-
-        if (hasNext()) {
-            RawEntity rawEntity = provider.getNext();
-            parser.validateNonStringTypes(rawEntity).forEach(resultRepo::addNotice);
-            toReturn = parser.parse(rawEntity);
+        if (!hasNext()) {
+            return null;
         }
-
-        return toReturn;
+        final RawEntity rawEntity = provider.getNext();
+        parser.validateNonStringTypes(rawEntity).forEach(resultRepo::addNotice);
+        try {
+            return parser.parse(rawEntity);
+        } catch (MalformedCsvRowException e) {
+            return null;
+        }
     }
 }

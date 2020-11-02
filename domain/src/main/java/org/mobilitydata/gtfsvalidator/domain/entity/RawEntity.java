@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.domain.entity;
 
+import org.apache.commons.collections4.IterableUtils;
+
 import java.util.Map;
 
 /**
@@ -68,5 +70,14 @@ public class RawEntity {
      */
     public int getIndex() {
         return entityIndex;
+    }
+
+    /**
+     * Returns true if the raw row is a blank line, otherwise returns false
+     * @return true if the raw row is a blank line, otherwise returns false
+     */
+    public boolean isBlankLine() {
+        return IterableUtils.matchesAll(contentByHeaderMap.values(),
+                (fieldValue) -> fieldValue.isBlank() || fieldValue.isEmpty());
     }
 }

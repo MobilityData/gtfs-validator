@@ -163,5 +163,7 @@ public interface NoticeExporter {
 
     void export(final ValidationProcessInfoNotice validationProcessInfoNotice) throws IOException;
 
+    void export(final MalformedCsvRowNotice malformedCsvRowNotice) throws IOException;
+
     void export(final UnsupportedGtfsStructureNotice unsupportedGtfsStructureNotice) throws IOException;
 }

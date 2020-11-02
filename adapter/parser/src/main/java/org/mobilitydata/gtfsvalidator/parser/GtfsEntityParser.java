@@ -32,6 +32,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseFloa
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotParseIntegerNotice;
 import org.mobilitydata.gtfsvalidator.protos.GtfsSpecificationProto;
 import org.mobilitydata.gtfsvalidator.usecase.port.GtfsSpecRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.MalformedCsvRowException;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -217,7 +218,10 @@ public class GtfsEntityParser implements GtfsSpecRepository.RawEntityParser {
                 }
             }
         });
-
-        return new ParsedEntity(entityId[0], contentByHeaderMap, rawFileInfo);
+        if (toParse.isBlankLine()) {
+            throw new MalformedCsvRowException(rawFileInfo.getFilename());
+        } else {
+            return new ParsedEntity(entityId[0], contentByHeaderMap, rawFileInfo);
+        }
     }
 }
