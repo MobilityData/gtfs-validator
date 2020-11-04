@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 
 import java.io.IOException;
 
+// TODO: implement #392
 public class DuplicateRouteLongNameNotice extends WarningNotice {
     public DuplicateRouteLongNameNotice(final String routeId,
                                         final String conflictingRouteId,
