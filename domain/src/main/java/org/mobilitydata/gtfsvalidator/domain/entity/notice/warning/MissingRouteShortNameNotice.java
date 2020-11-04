@@ -26,7 +26,8 @@ public class MissingRouteShortNameNotice extends WarningNotice {
     public MissingRouteShortNameNotice(final String filename, final String entityId) {
         super(filename, W_006,
                 "Empty `route_short_name`",
-                "Empty `route_short_name` for route with id:" + entityId + "` in file:" + filename + "`",
+                String.format("Empty `route_short_name` for route with `route_id`: `%s` in file: `%s`",
+                        entityId, filename),
                 entityId);
     }
 

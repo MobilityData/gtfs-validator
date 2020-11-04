@@ -688,7 +688,7 @@ class GtfsTypeValidatorTest {
         assertEquals(3, notice.getCode());
         assertEquals("Suspicious id", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Non ascii or non printable character(s) in:`abçé` in field:`type_id` for entity with id:`test_id`",
+        assertEquals("Non ascii or non printable character(s) in: `abçé` in field: `type_id` for entity with id: `test_id`",
                 notice.getDescription());
     }
 
@@ -730,7 +730,7 @@ class GtfsTypeValidatorTest {
         assertEquals("Suspicious id", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
         assertEquals(
-                "Non ascii or non printable character(s) in:`ab\u0003` in field:`type_id` for entity with id:" +
+                "Non ascii or non printable character(s) in: `ab\u0003` in field: `type_id` for entity with id: " +
                         "`test_id`",
                 notice.getDescription());
     }

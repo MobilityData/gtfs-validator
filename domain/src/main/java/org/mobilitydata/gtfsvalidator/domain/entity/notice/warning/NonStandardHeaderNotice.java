@@ -26,7 +26,9 @@ public class NonStandardHeaderNotice extends WarningNotice {
     public NonStandardHeaderNotice(String filename, String extra) {
         super(filename, W_002,
                 "Non standard field name",
-                "Unexpected field name:`" + extra + "` in file:`" + filename + "`",
+                String.format("Unexpected field name: `%s` in file `%s`",
+                        extra,
+                        filename),
                 null);
         putNoticeSpecific(KEY_EXTRA_HEADER_NAME, extra);
     }

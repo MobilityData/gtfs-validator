@@ -26,8 +26,10 @@ public class NonAsciiOrNonPrintableCharNotice extends WarningNotice {
     public NonAsciiOrNonPrintableCharNotice(String filename, String fieldName, String entityId, String idValue) {
         super(filename, W_003,
                 "Suspicious id",
-                "Non ascii or non printable character(s) in:`" + idValue + "` in field:`"
-                        + fieldName + "` for entity with id:`" + entityId + "`",
+                String.format("Non ascii or non printable character(s) in: `%s` in field: `%s` for entity with id: `%s`",
+                        idValue,
+                        fieldName,
+                        entityId),
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
