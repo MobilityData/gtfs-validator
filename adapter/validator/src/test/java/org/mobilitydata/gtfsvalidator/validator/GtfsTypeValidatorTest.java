@@ -216,8 +216,8 @@ class GtfsTypeValidatorTest {
         assertEquals(10, notice.getCode());
         assertEquals("Out of range integer value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid value for field:`integer_with_range` of entity with id:`test_id` -- " +
-                        "min:-6 max:66 actual:67",
+        assertEquals("Invalid value for field: `integer_with_range` of entity with id: `test_id` -- " +
+                        "min: `-6` max: `66` actual: `67`",
                 notice.getDescription());
 
         verify(mockIntegerValidator, times(1)).isInRange(
@@ -300,7 +300,7 @@ class GtfsTypeValidatorTest {
         assertEquals(16, notice.getCode());
         assertEquals("Invalid time", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid time:`001:2:00003` in field:`time_with_regex` for entity with id:`test_id`",
+        assertEquals("Invalid time: `001:2:00003` in field: `time_with_regex` for entity with id: `test_id`.",
                 notice.getDescription());
 
         verify(mockTimeValidator, times(1)).isValid(ArgumentMatchers.eq("001:2:00003"));
@@ -380,7 +380,7 @@ class GtfsTypeValidatorTest {
         assertEquals(12, notice.getCode());
         assertEquals("Invalid url", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid url:`ftp://mobilitydata.org` in field:`type_url` for entity with id:`test_id`",
+        assertEquals("Invalid url: `ftp://mobilitydata.org` in field: `type_url` for entity with id: `test_id`",
                 notice.getDescription());
 
         verify(mockUrlValidator, times(1)).isValid(
@@ -461,7 +461,7 @@ class GtfsTypeValidatorTest {
         assertEquals(23, notice.getCode());
         assertEquals("Invalid email", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid email:info@mobilitydata in field:`type_email` for entity with id:`test_id`",
+        assertEquals("Invalid email: `info@mobilitydata` in field: `type_email` for entity with id: `test_id`",
                 notice.getDescription());
 
         verify(mockEmailValidator, times(1)).isValid(
@@ -542,7 +542,7 @@ class GtfsTypeValidatorTest {
         assertEquals(22, notice.getCode());
         assertEquals("Invalid language code", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid language code:`en_FR` in field:`type_lang` for entity with id:`test_id`",
+        assertEquals("Invalid language code: `en_FR` in field: `type_lang` for entity with id: `test_id`.",
                 notice.getDescription());
 
         verify(mocklangValidator, times(1)).isValid(
@@ -616,7 +616,7 @@ class GtfsTypeValidatorTest {
         assertEquals(13, notice.getCode());
         assertEquals("Invalid timezone", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid timezone:`abc` in field:`type_timezone` for entity with id:`test_id`",
+        assertEquals("Invalid timezone: `abc` in field: `type_timezone` for entity with id: `test_id`.",
                 notice.getDescription());
     }
 
@@ -1283,7 +1283,7 @@ class GtfsTypeValidatorTest {
         assertEquals(18, notice.getCode());
         assertEquals("Invalid currency code", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid currency code: `JAN` in field: `currency_type` for entity with id: `test_id`",
+        assertEquals("Invalid currency code: `JAN` in field: `currency_type` for entity with id: `test_id`.",
                 notice.getDescription());
     }
 

@@ -24,9 +24,14 @@ import java.io.IOException;
 public class InvalidCurrencyCodeNotice extends ErrorNotice {
 
     public InvalidCurrencyCodeNotice(final String filename, final String fieldName, final String entityId,
-                                     String currencyCode) {
-        super(filename, E_018, "Invalid currency code", "Invalid currency code: `" + currencyCode +
-                "` in field: `" + fieldName + "` for entity with id: `" + entityId + "`", entityId);
+                                     final String currencyCode) {
+        super(filename, E_018,
+                "Invalid currency code",
+                String.format("Invalid currency code: `%s` in field: `%s` for entity with id: `%s`.",
+                        currencyCode,
+                        fieldName,
+                        entityId),
+                entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_CURRENCY_CODE, currencyCode);
     }

@@ -26,8 +26,11 @@ public class InvalidAgencyIdNotice extends ErrorNotice {
     public InvalidAgencyIdNotice(final String filename, final String fieldName, final String entityId) {
         super(filename, E_031,
                 "Invalid blank string",
-                "File `" + filename + "` has a blank value for field: `" + fieldName + "` for entity with " +
-                        "id: `" + entityId + "`.", entityId);
+                String.format("File `%s` has a blank value for field: `%s` for entity with id: `%s`",
+                        filename,
+                        fieldName,
+                        entityId),
+        entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
 

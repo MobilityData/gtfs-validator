@@ -26,8 +26,10 @@ public class InvalidTimezoneNotice extends ErrorNotice {
     public InvalidTimezoneNotice(String filename, String fieldName, String entityId, String timezoneValue) {
         super(filename, E_013,
                 "Invalid timezone",
-                "Invalid timezone:`" + timezoneValue + "` in field:`" + fieldName
-                        + "` for entity with id:`" + entityId + "`",
+                String.format("Invalid timezone: `%s` in field: `%s` for entity with id: `%s`.",
+                        timezoneValue,
+                        fieldName,
+                        entityId),
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_TIMEZONE_VALUE, timezoneValue);

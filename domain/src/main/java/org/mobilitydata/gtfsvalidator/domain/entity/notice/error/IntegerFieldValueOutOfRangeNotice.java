@@ -26,8 +26,13 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
                                              final int rangeMin, final int rangeMax, final int actualValue) {
         super(filename, E_010,
                 "Out of range integer value",
-                "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
-                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                String.format("Invalid value for field: `%s` of entity with id: `%s` " +
+                                "-- min: `%s` max: `%s` actual: `%s`",
+                        fieldName,
+                        entityId,
+                        rangeMin,
+                        rangeMax,
+                        actualValue),
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_RANGE_MAX, rangeMax);
@@ -54,11 +59,18 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
                                              final Object compositeKeyFirstValue, final Object compositeKeySecondValue) {
         super(filename, E_010,
                 "Out of range integer value",
-                "Invalid value for field:`" + fieldName
-                        + "` marked as required in entity with composite id: " +
-                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + "--" +
-                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue +
-                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                String.format("Invalid value for field: `%s` of entity with composite id: " +
+                                "`%s: `%s` --`" +
+                                "`%s: `%s``" +
+                                "-- min: `%s` max: `%s` actual: `%s`",
+                        fieldName,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        rangeMin,
+                        rangeMax,
+                        actualValue),
                 null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_RANGE_MAX, rangeMax);

@@ -26,8 +26,10 @@ public class InvalidRowLengthNotice extends ErrorNotice {
     public InvalidRowLengthNotice(String filename, int rowIndex, int expectedLength, int actualLength) {
         super(filename, E_004,
                 "Invalid row length",
-                "Invalid length for row:" + rowIndex +
-                        " -- expected:" + expectedLength + " actual:" + actualLength,
+                String.format("Invalid length for row: `%d` -- expected: `%s` actual: `%s`",
+                        rowIndex,
+                        expectedLength,
+                        actualLength),
                 null);
         putNoticeSpecific(KEY_ROW_INDEX, rowIndex);
         putNoticeSpecific(KEY_EXPECTED_LENGTH, expectedLength);

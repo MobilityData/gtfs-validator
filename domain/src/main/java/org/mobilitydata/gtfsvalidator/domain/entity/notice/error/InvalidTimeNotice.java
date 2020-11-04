@@ -26,8 +26,10 @@ public class InvalidTimeNotice extends ErrorNotice {
     public InvalidTimeNotice(String filename, String fieldName, String entityId, String timeValue) {
         super(filename, E_016,
                 "Invalid time",
-                "Invalid time:`" + timeValue + "` in field:`" + fieldName + "` for entity with id:`" + entityId
-                        + "`",
+                String.format("Invalid time: `%s` in field: `%s` for entity with id: `%s`.",
+                        timeValue,
+                        fieldName,
+                        entityId),
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_TIME_VALUE, timeValue);
