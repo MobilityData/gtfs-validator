@@ -35,13 +35,18 @@ public class FeedInfoExpiresInLessThan7DaysNotice extends ErrorNotice {
         super(fileName,
                 E_040,
                 "Feed expiration date too close",
-                "GTFS dataset should be valid for at least the next 7 days. Current date is: " +
-                        currentDateAsString + "Feed expires: `" + feedEndDateAsString + "`." +
-                        " in field `" + fieldName + "` of file: `" + fileName + "`" +
-                        "for entity with composite id: " +
-                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "` -- " +
-                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "` -- " +
-                        "`" + compositeKeyThirdPart + "`: `" + compositeKeyThirdValue + "`.",
+                String.format("GTFS dataset should be valid for at least the next 7 days. Current date is: `%s`. " +
+                                "Feed expires: `%s` in field `%s` of file `%s` for entity with composite id: \n" +
+                                "`%s`: `%s`\n" +
+                                "`%s`: `%s`\n" +
+                                "`%s`: `%s`. ",
+                        currentDateAsString,
+                        feedEndDateAsString,
+                        fieldName,
+                        fileName,
+                        compositeKeyFirstPart, compositeKeyFirstValue,
+                        compositeKeySecondPart, compositeKeySecondValue,
+                        compositeKeyThirdPart, compositeKeyThirdValue),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);

@@ -25,12 +25,13 @@ import java.util.List;
 public class FastTravelBetweenStopsNotice extends ErrorNotice {
 
     public FastTravelBetweenStopsNotice(final String tripId,
-                                        final float speedkmh,
+                                        final float speedKmh,
                                         final List<Integer> stopSequenceList) {
         super("stop_times.txt", E_046,
                 "Fast travel between stops",
-                "Fast travel detected in trip:`" + tripId + "` over stop sequence:"
-                        + stopSequenceList + ". Calculated speed: " + speedkmh + "kmh",
+                String.format("Fast travel detected in trip: `%s` over stop sequence: `%s`." +
+                                " Calculated speed: `%s` kmh.",
+                        tripId, stopSequenceList, speedKmh),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "trip_id");

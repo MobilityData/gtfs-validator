@@ -26,8 +26,11 @@ public class CannotParseDateNotice extends ErrorNotice {
     public CannotParseDateNotice(String filename, String fieldName, int lineNumber, String rawValue) {
         super(filename, E_017,
                 "Invalid date value",
-                "Value: '" + rawValue + "' of field: " + fieldName +
-                        " with type date can't be parsed in file: " + filename + " at row: " + lineNumber,
+                String.format("Value: `%s` of field: `%s` with type date can't be parsed in file: `%s` at row: `%s`.",
+                        rawValue,
+                        fieldName,
+                        filename,
+                        lineNumber),
                 null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_LINE_NUMBER, lineNumber);

@@ -121,8 +121,8 @@ class GtfsTypeValidatorTest {
         assertEquals(11, notice.getCode());
         assertEquals("Out of range float value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Invalid value for field:`float_with_range` of entity with id:`test_id` -- " +
-                        "min:-6.66 max:66.6 actual:66.7",
+        assertEquals("Invalid value for field: `float_with_range` of entity with id: `test_id` -- " +
+                        "min: `-6.66` max: `66.6` actual: `66.7`",
                 notice.getDescription());
 
         verify(mockFloatValidator, times(1)).isInRange(

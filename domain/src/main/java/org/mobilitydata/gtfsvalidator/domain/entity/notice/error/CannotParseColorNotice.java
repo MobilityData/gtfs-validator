@@ -26,8 +26,10 @@ public class CannotParseColorNotice extends ErrorNotice {
     public CannotParseColorNotice(String filename, String fieldName, int lineNumber, String colorValue) {
         super(filename, E_014,
                 "Invalid color",
-                "Invalid color:`" + colorValue + "` in field:`" + fieldName
-                        + "` at row:`" + lineNumber + "`",
+                String.format("Invalid color: `%s` in field: `%s` at row: `%s`.",
+                        colorValue,
+                        fieldName,
+                        lineNumber),
                 null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COLOR_VALUE, colorValue);

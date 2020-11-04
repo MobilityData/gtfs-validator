@@ -32,8 +32,13 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
             final float actualValue) {
         super(filename, E_011,
                 "Out of range float value",
-                "Invalid value for field:`" + fieldName + "` of entity with id:`" + entityId +
-                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                String.format("Invalid value for field: `%s` of entity with id: `%s`" +
+                                " -- min: `%s` max: `%s` actual: `%s`",
+                        fieldName,
+                        entityId,
+                        rangeMin,
+                        rangeMax,
+                        actualValue),
                 entityId);
         putNoticeSpecific(KEY_RANGE_MIN, rangeMin);
         putNoticeSpecific(KEY_RANGE_MAX, rangeMax);
@@ -66,10 +71,18 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
             final Object compositeKeySecondValue) {
         super(filename, E_011,
                 "Out of range float value",
-                "Invalid value for field:`" + fieldName + "` of entity with composite id: " +
-                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + "--" +
-                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`." +
-                        "` -- min:" + rangeMin + " max:" + rangeMax + " actual:" + actualValue,
+                String.format("Invalid value for field: `%s` of entity with composite id: \n" +
+                                "`%s`: `%s \n" +
+                                "`%s`: `%s \n." +
+                                "min: `%s` max: `%s` actual: `%s`",
+                        fieldName,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        rangeMin,
+                        rangeMax,
+                        actualValue),
                 null);
         putNoticeSpecific(KEY_RANGE_MIN, rangeMin);
         putNoticeSpecific(KEY_RANGE_MAX, rangeMax);

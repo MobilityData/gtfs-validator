@@ -30,8 +30,9 @@ public class InconsistentAgencyTimezoneNotice extends ErrorNotice {
                                             final String conflictingTimezoneCollection) {
         super("agency.txt", E_030,
                 "Different values for field `agency_timezone`",
-                distinctTimezoneCount + " values for field `agency_timezone` found in file `agency.txt`: "
-                        + conflictingTimezoneCollection,
+                String.format("`%s` values for field `agency_timezone` found in file `agency.txt`: `%s`",
+                        distinctTimezoneCount,
+                        conflictingTimezoneCollection),
                 null);
         this.distinctTimezoneCount = distinctTimezoneCount;
         this.conflictingTimezoneCollection = conflictingTimezoneCollection;

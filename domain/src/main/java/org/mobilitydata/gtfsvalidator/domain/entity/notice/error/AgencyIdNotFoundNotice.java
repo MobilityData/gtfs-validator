@@ -26,8 +26,11 @@ public class AgencyIdNotFoundNotice extends ErrorNotice {
         super(filename,
                 E_035,
                 "Value of field `agency_id` does not exist in GTFS `agency.txt",
-                "Field: `" + fieldName + "` for entity from file : `" + filename + "` with id: `" + entityId +
-                        "` does not refer to any record from `agency.txt`",
+                String.format("Field: `%s` for entity from file `%s` with id: `%s` does not refer to any record from " +
+                                "`agency.txt",
+                        fieldName,
+                        filename,
+                        entityId),
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }

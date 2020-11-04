@@ -26,8 +26,12 @@ public class DuplicatedEntityNotice extends ErrorNotice {
     public DuplicatedEntityNotice(final String filename, final String fieldName, final String entityId) {
         super(filename, E_020,
                 "Duplicate entity",
-                "Entity must be unique in file: `" + filename + "` found other entity with same value for " +
-                        "field: " + fieldName + "`", entityId);
+                String.format("Entity must be unique in file: `%s`. Found other entity with same value for " +
+                        "field: `%s` with id: `%s`.",
+                        filename,
+                        fieldName,
+                        entityId),
+                entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
 
@@ -45,10 +49,14 @@ public class DuplicatedEntityNotice extends ErrorNotice {
                                   final Object compositeKeyFirstValue, final Object compositeKeySecondValue) {
         super(filename, E_020,
                 "Duplicate entity",
-                "Entity must be unique in file: `" + filename + "` found other entity with same value for " +
-                        "fields: " +
-                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`.", null);
+                String.format("Entity must be unique in file: `%s`. Found other entity with same value for " +
+                        "fields: \n"+
+                        "`%s`: `%s` \n" +
+                        "`%s`: `%s`.",
+                        filename,
+                        compositeKeyFirstPart, compositeKeyFirstValue,
+                        compositeKeySecondPart, compositeKeySecondValue),
+        null);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
@@ -76,12 +84,18 @@ public class DuplicatedEntityNotice extends ErrorNotice {
                                   final Object compositeKeyThirdValue, final Object compositeKeyFourthValue) {
         super(filename, E_020,
                 "Duplicate entity",
-                "Entity must be unique in file: `" + filename + "` found other entity with same value for " +
-                        "fields: " +
-                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
-                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", null);
+                String.format("Entity must be unique in file: `%s`. Found other entity with same value for " +
+                                "fields:\n"+
+                                "`%s`: `%s`\n" +
+                                "`%s`: `%s`\n " +
+                                "`%s`: `%s`\n " +
+                                "`%s`: `%s`.",
+                        filename,
+                        compositeKeyFirstPart, compositeKeyFirstValue,
+                        compositeKeySecondPart, compositeKeySecondValue,
+                        compositeKeyThirdPart, compositeKeyThirdValue,
+                        compositeKeyFourthPart, compositeKeyFourthValue),
+                        null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
@@ -90,7 +104,6 @@ public class DuplicatedEntityNotice extends ErrorNotice {
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_VALUE, compositeKeyFirstValue);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_VALUE, compositeKeySecondValue);
         putNoticeSpecific(KEY_COMPOSITE_KEY_THIRD_VALUE, compositeKeyThirdValue);
-        putNoticeSpecific(KEY_COMPOSITE_KEY_FOURTH_VALUE, compositeKeyFourthValue);
     }
 
     @Override

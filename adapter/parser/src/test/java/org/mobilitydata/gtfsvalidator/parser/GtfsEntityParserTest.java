@@ -238,8 +238,8 @@ class GtfsEntityParserTest {
         assertEquals(6, notice.getCode());
         assertEquals("Invalid float value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
-        assertEquals("Value: 'NaN' of field: float_type with type float can't be parsed in file: " +
-                "test_filename.tst at row: 0", notice.getDescription());
+        assertEquals("Value: `NaN` of field: `float_type` with type float can't be parsed in file: " +
+                "`test_filename.tst` at row: `0`.", notice.getDescription());
     }
 
     @Test
@@ -283,8 +283,8 @@ class GtfsEntityParserTest {
         assertEquals(6, notice.getCode());
         assertEquals("Invalid float value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
-        assertEquals("Value: 'abc' of field: float_type with type float can't be parsed in file: " +
-                "test_filename.tst at row: 0", notice.getDescription());
+        assertEquals("Value: `abc` of field: `float_type` with type float can't be parsed in file: " +
+                "`test_filename.tst` at row: `0`.", notice.getDescription());
 
         verify(mockFloatValidator, times(1)).isValid(ArgumentMatchers.eq("abc"),
                 (Locale) ArgumentMatchers.any());
@@ -397,8 +397,8 @@ class GtfsEntityParserTest {
         assertEquals(5, notice.getCode());
         assertEquals("Invalid integer value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
-        assertEquals("Value: 'abc' of field: integer_type with type integer can't be parsed in file: " +
-                "test_filename.tst at row: 0", notice.getDescription());
+        assertEquals("Value: `abc` of field: `integer_type` with type integer can't be parsed in file: " +
+                "`test_filename.tst` at row: `0`.", notice.getDescription());
 
         verify(mockIntegerValidator, times(1)).isValid(ArgumentMatchers.eq("abc"),
                 (Locale) ArgumentMatchers.any());
@@ -509,8 +509,8 @@ class GtfsEntityParserTest {
         assertEquals(17, notice.getCode());
         assertEquals("Invalid date value", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
-        assertEquals("Value: 'not_a_date' of field: date_type with type date can't be parsed in file: " +
-                "test_filename.tst at row: 0", notice.getDescription());
+        assertEquals("Value: `not_a_date` of field: `date_type` with type date can't be parsed in file: " +
+                "`test_filename.tst` at row: `0`.", notice.getDescription());
 
         verify(mockDateValidator, times(1)).isValid(
                 ArgumentMatchers.eq("not_a_date"),
@@ -664,7 +664,7 @@ class GtfsEntityParserTest {
         assertEquals(14, notice.getCode());
         assertEquals("Invalid color", notice.getTitle());
         assertEquals("test_filename.tst", notice.getFilename());
-        assertEquals("Invalid color:`E+47` in field:`color_type` at row:`0`", notice.getDescription());
+        assertEquals("Invalid color: `E+47` in field: `color_type` at row: `0`.", notice.getDescription());
 
         verify(mockColorValidator, times(1)).isValid(ArgumentMatchers.eq("E+47"));
     }

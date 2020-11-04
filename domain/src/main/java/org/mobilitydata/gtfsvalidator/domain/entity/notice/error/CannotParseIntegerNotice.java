@@ -26,8 +26,11 @@ public class CannotParseIntegerNotice extends ErrorNotice {
     public CannotParseIntegerNotice(String filename, String fieldName, int lineNumber, String rawValue) {
         super(filename, E_005,
                 "Invalid integer value",
-                "Value: '" + rawValue + "' of field: " + fieldName
-                        + " with type integer can't be parsed in file: " + filename + " at row: " + lineNumber,
+                String.format("Value: `%s` of field: `%s` with type integer can't be parsed in file: `%s` at row: `%s`.",
+                        rawValue,
+                        fieldName,
+                        filename,
+                        lineNumber),
                 null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_LINE_NUMBER, lineNumber);

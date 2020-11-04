@@ -26,7 +26,9 @@ public class DuplicatedHeaderNotice extends ErrorNotice {
     public DuplicatedHeaderNotice(final String filename, final String duplicatedHeaderName) {
         super(filename, E_043,
                 "Field is duplicated",
-                "File `" + filename + " contains duplicated field: `" + duplicatedHeaderName + "`",
+                String.format("File `%s` contains duplicated field: `%s`.",
+                        filename,
+                        duplicatedHeaderName),
                 null);
         putNoticeSpecific(KEY_DUPLICATED_HEADER_NAME, duplicatedHeaderName);
     }

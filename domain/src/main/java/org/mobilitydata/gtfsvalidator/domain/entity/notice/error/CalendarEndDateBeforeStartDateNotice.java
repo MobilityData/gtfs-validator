@@ -12,8 +12,12 @@ public class CalendarEndDateBeforeStartDateNotice extends ErrorNotice {
                                                 final LocalDate endDate) {
         super(filename, E_032,
                 "calendar.txt end_date is before start_date",
-                "Then end_date of " + endDate + " occurs before the start_date of " +
-                        startDate + " for service_id: " + entityId + " in file: " + filename + ".",
+                String.format("The `end_date`: `%s` occurs before `start_date`: `%s` for `service_id`: `%s` " +
+                                "in file `%s`",
+                        endDate,
+                        startDate,
+                        entityId,
+                        filename),
                 entityId);
     }
 

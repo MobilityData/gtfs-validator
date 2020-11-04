@@ -27,8 +27,11 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
                                               final String conflictingFieldName, final String entityId) {
         super(filename, E_019,
                 "Conflicting field values",
-                "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
-                        + "`" + entityId, entityId);
+                String.format("Conflicting field values for field: `%s` and field: `%s` for entity with id `%s`.",
+                        fieldName,
+                        conflictingFieldName,
+                        entityId),
+                entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
     }
@@ -56,12 +59,23 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
                                               final Object compositeKeyThirdValue, final Object compositeKeyFourthValue) {
         super(filename, E_019,
                 "Conflicting field values",
-                "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
-                        + "` for entity with composite id:" +
-                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
-                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", null);
+                String.format("Conflicting field values for field: `%s` and field: `%s` for entity with " +
+                                "composite id: \n " +
+                                "`%s`: `%s`\n" +
+                                "`%s`: `%s`\n" +
+                                "`%s`: `%s`\n" +
+                                "`%s`: `%s`.",
+                        fieldName,
+                        conflictingFieldName,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        compositeKeyThirdPart,
+                        compositeKeyThirdValue,
+                        compositeKeyFourthPart,
+                        compositeKeyFourthValue),
+                null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
@@ -91,9 +105,17 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
                                               final Object compositeKeySecondValue) {
         super(filename, E_019,
                 "Conflicting field values",
-                "Conflicting field values for fields:`" + fieldName + "` and field:`" + conflictingFieldName
-                        + "` for entity with composite id: `" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue
-                        + "`" + "--" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`.", null);
+                String.format("Conflicting field values for field: `%s` and field: `%s` for entity with " +
+                                "composite id: \n " +
+                                "`%s`: `%s`\n" +
+                                "`%s`: `%s`.",
+                        fieldName,
+                        conflictingFieldName,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue),
+                null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_CONFLICTING_FIELD_NAME, conflictingFieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
