@@ -26,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-// TODO: implement #475
+
 public class ExportResultAsFile {
     private final ValidationResultRepository resultRepo;
     private final ExecParamRepository execParamRepo;
