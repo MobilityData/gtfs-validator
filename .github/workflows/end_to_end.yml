@@ -3,7 +3,7 @@ name: End to end
 on:
   push:
     branches: [ master,  transport-agency-name] #<-- replace transport-agency-name by the name of the agency/publisher
-
+# todo: implement #474
 jobs:
   run-on-data:
     runs-on: ubuntu-latest
