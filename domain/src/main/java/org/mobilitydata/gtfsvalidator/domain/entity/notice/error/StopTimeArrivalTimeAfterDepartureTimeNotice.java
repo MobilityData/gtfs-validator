@@ -30,11 +30,13 @@ public class StopTimeArrivalTimeAfterDepartureTimeNotice extends ErrorNotice {
         super("stop_times.txt",
                 E_045,
                 "Fields `arrival_time` and `departure_time` out of order",
-                "`departure_time`: `" + departureTimeAsString + "` precedes `arrival_time`: `" +
-                        arrivalTimeAsString + "` in file `" + filename +
-                        "` for entity with composite id:" +
-                        "`tripId`: `" + tripId + "` -- " +
-                        "`stopSequence`: `" + stopSequence + "`.",
+                String.format("`departure_time`: `%s` precedes `arrival_time`: `%s` in file `%s` for entity" +
+                                " with composite id: (`tripId`=`%s` ; `stopSequence`=`%s`).",
+                        departureTimeAsString,
+                        arrivalTimeAsString,
+                        filename,
+                        tripId,
+                        stopSequence),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "tripId");

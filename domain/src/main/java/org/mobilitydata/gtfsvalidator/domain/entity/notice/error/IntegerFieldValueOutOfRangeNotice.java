@@ -60,9 +60,7 @@ public class IntegerFieldValueOutOfRangeNotice extends ErrorNotice {
         super(filename, E_010,
                 "Out of range integer value",
                 String.format("Invalid value for field: `%s` of entity with composite id: " +
-                                "`%s: `%s` --`" +
-                                "`%s: `%s``" +
-                                "-- min: `%s` max: `%s` actual: `%s`",
+                                "(`%s`=`%s` ; `%s`=`%s`) -- min: `%s` max: `%s` actual: `%s`",
                         fieldName,
                         compositeKeyFirstPart,
                         compositeKeyFirstValue,

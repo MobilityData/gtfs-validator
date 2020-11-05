@@ -33,13 +33,15 @@ public class MissingFeedStartDateNotice extends WarningNotice {
         super("feed_info.txt",
                 W_011,
                 String.format("Missing `%s`", fieldName),
-                String.format("Missing `%s` in file `%s` with composite id: " +
-                                "`%s`: `%s` -- " +
-                                "`%s`: `%s` -- " +
-                                "`%s`: `%s`.", fieldName, fileName,
-                        compositeKeyFirstPart, compositeKeyFirstValue,
-                        compositeKeySecondPart, compositeKeySecondValue,
-                        compositeKeyThirdPart, compositeKeyThirdValue),
+                String.format("Missing `%s` in file `%s` with composite id: (`%s`=`%s` ; `%s`=`%s` ; `%s`=`%s`).",
+                        fieldName,
+                        fileName,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        compositeKeyThirdPart,
+                        compositeKeyThirdValue),
                 null);
 
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);

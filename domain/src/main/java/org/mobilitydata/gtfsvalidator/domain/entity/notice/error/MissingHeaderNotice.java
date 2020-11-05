@@ -26,7 +26,7 @@ public class MissingHeaderNotice extends ErrorNotice {
     public MissingHeaderNotice(final String filename, final String missingHeaderName) {
         super(filename, E_001,
                 "Missing required field",
-                String.format("`%s` is missing required field: `%s`.", filename, missingHeaderName),
+                String.format("GTFS file `%s` is missing required field: `%s`.", filename, missingHeaderName),
                 null);
         putNoticeSpecific(KEY_MISSING_HEADER_NAME, missingHeaderName);
     }

@@ -27,8 +27,10 @@ public class StationWithParentStationNotice extends ErrorNotice {
                                           final String parentId) {
         super("stops.txt", E_042,
                 "Non null `parent_station`",
-                "Stop with id:`" + childId + " is a station (location_type=1) with parent_id:`" +
-                        parentId + "`. Stations cannot have parent stops. Expected null",
+                String.format("Stop with id: `%s` is a station (location_type=1) with parent_id: `%s`." +
+                                " Stations cannot have parent stops. Expected null",
+                        childId,
+                        parentId),
                 childId);
         putNoticeSpecific(KEY_PARENT_ID, parentId);
     }

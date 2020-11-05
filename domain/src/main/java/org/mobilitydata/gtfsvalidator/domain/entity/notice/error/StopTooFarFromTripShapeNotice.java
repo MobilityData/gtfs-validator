@@ -11,8 +11,13 @@ public class StopTooFarFromTripShapeNotice extends ErrorNotice {
                                          final String tripId, final String shapeId, final double stopShapeThreshold) {
         super("shapes.txt", E_052,
                 "Stop too far from trip shape",
-                "stop_id " + stopId + " is more than " + stopShapeThreshold + " meters from shape_id " + shapeId +
-                        " for trip_id " + tripId + " at stop_sequence " + stopSequence,
+                String.format("`stop_id`: `%s` is more than `%s` meters from `shape_id`: `%s` for `trip_id`: `%s` " +
+                                "at stop_sequence: `%s`",
+                        stopId,
+                        stopShapeThreshold,
+                        shapeId,
+                        tripId,
+                        stopSequence),
                 null);
         putNoticeSpecific(KEY_EXPECTED_DISTANCE, stopShapeThreshold);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "stop_id");

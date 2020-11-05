@@ -30,7 +30,7 @@ public class FrequencyStartTimeAfterEndTimeNotice extends ErrorNotice {
                 E_048,
                 "`end_time` after `start_time` in `frequencies.txt`",
                 String.format("`end_time`: `%s` precedes `start_time`: `%s` for entity with composite id: " +
-                                "`tripId`: `%s` -- `startTime`: `%s` in file: `%s`.",
+                                " (`tripId`=`%s` ; `startTime`=`%s`) in file: `%s`.",
                         endTimeAsString,
                         startTimeAsString,
                         tripId,

@@ -32,8 +32,11 @@ public class OverlappingTripFrequenciesNotice extends ErrorNotice {
                 "Overlapping trip frequencies",
                 String.format("Overlapping trip frequencies for trip: `%s`. First period `%s`-`%s` overlaps with" +
                                 " second period: `%s`-`%s`.",
-                        tripId, currentFrequencyStartTime, currentFrequencyEndTime,
-                        previousFrequencyStartTime, previousFrequencyEndTime),
+                        tripId,
+                        currentFrequencyStartTime,
+                        currentFrequencyEndTime,
+                        previousFrequencyStartTime,
+                        previousFrequencyEndTime),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "tripId");

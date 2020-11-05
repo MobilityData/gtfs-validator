@@ -29,15 +29,18 @@ public class RouteColorAndTextInsufficientContrastNotice extends ErrorNotice {
             final double contrastRatio) {
         super(filename, E_025,
                 "`route_color` and `route_text_color` have insufficient contrast",
-                "Contrast ratio should be >= 4.5 but was `" + contrastRatio + "` for route:`" + entityId + "`" +
-                        " in file:`" + filename +
-                        "`. The `route_text_color` and `route_color` should be set to contrasting colors, as they are used " +
-                        "as the text and background color (respectively) for displaying route names.  When left blank, " +
-                        "`route_text_color` defaults to 000000 (black) and `route_color` defaults to FFFFFF (white).  A common " +
-                        "source of issues here is setting `route_color` to a dark color, while leaving `route_text_color` set " +
-                        "to black. In this case, `route_text_color` should be set to a lighter color like FFFFFF to ensure " +
-                        "a legible contrast between the two. The contrast ratio formula used can be found here : " +
-                        "https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-procedure",
+                String.format("Contrast ratio should be >= 4.5 but was `%s` for route: `%s` in file: `%s`." +
+                                " The `route_text_color` and `route_color` should be set to contrasting colors, as" +
+                                " they are used as the text and background color (respectively) for displaying route " +
+                                "names.  When left blank, `route_text_color` defaults to 000000 (black) and " +
+                                "`route_color` defaults to FFFFFF (white).  A common source of issues here is" +
+                                " setting `route_color` to a dark color, while leaving `route_text_color` set to" +
+                                " black. In this case, `route_text_color` should be set to a lighter color like " +
+                                "FFFFFF to ensure a legible contrast between the two. The contrast ratio formula " +
+                                "used can be found here : https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-procedure",
+                        contrastRatio,
+                        entityId,
+                        filename),
                 entityId);
         putNoticeSpecific(KEY_CONTRAST_RATIO, contrastRatio);
     }

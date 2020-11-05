@@ -26,7 +26,7 @@ public class TripNotUsedNotice extends ErrorNotice {
         super("trips.txt",
                 E_050,
                 "Trips must be used in `stop_times.txt`",
-                String.format("`trip_id` %s is unused. Trips in `trips.txt` should be referenced in `stop_times.txt`.",
+                String.format("`trip_id` %s is not used. Trips in `trips.txt` should be referenced in `stop_times.txt`.",
                         tripId),
                 tripId);
     }

@@ -26,8 +26,11 @@ public class MissingAgencyIdNotice extends ErrorNotice {
     public MissingAgencyIdNotice(final String filename, final String entityId) {
         super(filename, E_029,
                 "Missing `agency_id` value",
-                "File `agency.txt` counts more than one record. Missing value for field: `agency_id` in " +
-                        "GTFS file: `" + filename + "`, for entity with id: `" + entityId + "`.", entityId);
+                String.format("File `agency.txt` counts more than one record. Missing value for field: " +
+                        "`agency_id` in GTFS file: `%s` for entity with id: `%s`.",
+                        filename,
+                        entityId),
+                entityId);
     }
 
     /**
@@ -38,8 +41,10 @@ public class MissingAgencyIdNotice extends ErrorNotice {
     public MissingAgencyIdNotice(final String agencyName) {
         super("agency.txt", E_029,
                 "Missing `agency_id` value",
-                "File `agency.txt` counts more than one record. Missing value for field: `agency_id` in " +
-                        "GTFS file: `agency.txt`, for entity with `agency_name`: `" + agencyName + "`.", null);
+                String.format("File `agency.txt` counts more than one record. Missing value for field: " +
+                                "`agency_id` in GTFS file: `agency.txt` for entity with `agency_name`: `%s`.",
+                        agencyName),
+                null);
         putNoticeSpecific(KEY_AGENCY_NAME, agencyName);
     }
 

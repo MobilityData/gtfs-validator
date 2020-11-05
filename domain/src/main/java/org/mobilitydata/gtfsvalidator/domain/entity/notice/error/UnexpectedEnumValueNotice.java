@@ -27,8 +27,12 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
                                      final Object enumValue) {
         super(filename, E_021,
                 "Unexpected enum value",
-                "Invalid value :`" + enumValue + "` - for field:`" + fieldName + "` in file:`" + filename +
-                        "` for entity with id:`" + entityId + "`", entityId);
+                String.format("Invalid value: `%s` for field: `%s` in file: `%s` for entity with id: `%s`.",
+                        enumValue,
+                        fieldName,
+                        filename,
+                        entityId),
+                entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_ENUM_VALUE, enumValue);
     }
@@ -50,9 +54,16 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
                                      final Object compositeKeySecondValue) {
         super(filename, E_021,
                 "Unexpected enum value",
-                "Invalid value :`" + enumValue + "` - for field:`" + fieldName + "` in file:`" + filename +
-                        "` for entity with composite id:`" + compositeKeyFirstValue + "`+`" + compositeKeySecondPart
-                        + "`", null);
+                String.format("Invalid value: `%s` for field: `%s` in file: `%s` for entity with composite id:" +
+                                " (`%s`=`%s` ; `%s`=`%s`).",
+                        enumValue,
+                        fieldName,
+                        filename,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue),
+                null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_ENUM_VALUE, enumValue);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
@@ -84,12 +95,19 @@ public class UnexpectedEnumValueNotice extends ErrorNotice {
                                      final Object compositeKeyThirdValue, final Object compositeKeyFourthValue) {
         super(filename, E_021,
                 "Unexpected enum value",
-                "Invalid value :`" + enumValue + "` - for field:`" + fieldName + "` in file:`" + filename +
-                        "` for entity with composite id:`" +
-                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
-                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.",
+                String.format("Invalid value: `%s` for field: `%s` in file: `%s` for entity with composite id:" +
+                                " (`%s`=`%s` ; `%s`=`%s` ; `%s`=`%s` ; `%s`=`%s`).",
+                        enumValue,
+                        fieldName,
+                        filename,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        compositeKeyThirdPart,
+                        compositeKeyThirdValue,
+                        compositeKeyFourthPart,
+                        compositeKeyFourthValue),
                 null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_ENUM_VALUE, enumValue);

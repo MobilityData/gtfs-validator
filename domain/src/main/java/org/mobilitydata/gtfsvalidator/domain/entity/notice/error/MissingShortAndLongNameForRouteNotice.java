@@ -26,10 +26,12 @@ public class MissingShortAndLongNameForRouteNotice extends ErrorNotice {
     public MissingShortAndLongNameForRouteNotice(final String filename, final String entityId) {
         super(filename, E_027,
                 "Empty `route_short_name` and `route_long_name`",
-                "Empty `route_short_name` and `route_long_name` for route with id:`" + entityId + "` in " +
-                        "file:`" + filename +
-                        "`. Either `route_short_name` or `route_long_name` must be specified, or potentially both if" +
-                        " appropriate.", entityId);
+                String.format("Empty `route_short_name` and `route_long_name` for route with id: `%s` in " +
+                        "file: `%s`. Either `route_short_name` or `route_long_name` must be specified, or" +
+                        " potentially both if appropriate.",
+                        entityId,
+                        filename),
+                entityId);
     }
 
     @Override

@@ -28,10 +28,15 @@ public class ShapeIdNotFoundNotice extends ErrorNotice {
         super(filename,
                 E_034,
                 "Value of field `shape_id` should exist in GTFS `shapes.txt` data",
-                "GTFS file `" + filename + "` (with composite key: `" + compositeKeyFirstPart + "`: " +
-                        "`" + compositeKeySecondPart + "` -- `" + compositeKeyFirstValue + "`: `"
-                        + compositeKeySecondValue + "`) includes GTFS shape_id: `" + shapeId +
-                        "` " + " which does not exist in GTFS data", null);
+                String.format("Entity of GTFS file `%s` with composite key: (`%s`=`%s` ; `%s`=`%s`) " +
+                        "refers to GTFS `shape_id`: `%s`  which does not exist in GTFS data",
+                        filename,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        shapeId),
+                null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);

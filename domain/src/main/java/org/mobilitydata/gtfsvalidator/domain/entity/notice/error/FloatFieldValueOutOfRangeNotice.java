@@ -71,10 +71,8 @@ public class FloatFieldValueOutOfRangeNotice extends ErrorNotice {
             final Object compositeKeySecondValue) {
         super(filename, E_011,
                 "Out of range float value",
-                String.format("Invalid value for field: `%s` of entity with composite id: \n" +
-                                "`%s`: `%s \n" +
-                                "`%s`: `%s \n." +
-                                "min: `%s` max: `%s` actual: `%s`",
+                String.format("Invalid value for field: `%s` of entity with composite id: " +
+                                "(`%s`=`%s ; `%s`=`%s) -- min: `%s` max: `%s` actual: `%s`",
                         fieldName,
                         compositeKeyFirstPart,
                         compositeKeyFirstValue,

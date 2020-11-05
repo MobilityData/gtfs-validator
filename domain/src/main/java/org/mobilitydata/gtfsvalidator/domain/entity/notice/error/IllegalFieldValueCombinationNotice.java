@@ -60,11 +60,7 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
         super(filename, E_019,
                 "Conflicting field values",
                 String.format("Conflicting field values for field: `%s` and field: `%s` for entity with " +
-                                "composite id: \n " +
-                                "`%s`: `%s`\n" +
-                                "`%s`: `%s`\n" +
-                                "`%s`: `%s`\n" +
-                                "`%s`: `%s`.",
+                                "composite id: (`%s`=`%s` ; `%s`=`%s` ; `%s`=`%s` ; `%s`=`%s`).",
                         fieldName,
                         conflictingFieldName,
                         compositeKeyFirstPart,
@@ -106,9 +102,7 @@ public class IllegalFieldValueCombinationNotice extends ErrorNotice {
         super(filename, E_019,
                 "Conflicting field values",
                 String.format("Conflicting field values for field: `%s` and field: `%s` for entity with " +
-                                "composite id: \n " +
-                                "`%s`: `%s`\n" +
-                                "`%s`: `%s`.",
+                                "composite id: (`%s`=`%s` ; `%s`=`%s`).",
                         fieldName,
                         conflictingFieldName,
                         compositeKeyFirstPart,

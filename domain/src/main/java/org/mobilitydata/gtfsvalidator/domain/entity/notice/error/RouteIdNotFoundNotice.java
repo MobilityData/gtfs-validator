@@ -27,8 +27,11 @@ public class RouteIdNotFoundNotice extends ErrorNotice {
         super(filename,
                 E_033,
                 "Value of field `service_id` should exist in GTFS `routes.txt`",
-                "Trip with `trip_id`: " + entityId + " refers" +
-                        " to non-existing route from file `routes.txt` with " + "`route_id`: " + routeId + "`.", entityId);
+                String.format("Trip with `trip_id`: `%s` refers to non-existing route from file `routes.txt` " +
+                        "with `route_id`: `%s`.",
+                        entityId,
+                        routeId),
+                entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_UNKNOWN_ROUTE_ID, routeId);
     }

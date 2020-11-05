@@ -26,8 +26,9 @@ public class ShapeNotUsedNotice extends ErrorNotice {
         super("shapes.txt",
                 E_038,
                 "Unused shape",
-                "All records defined by GTFS `shapes.txt` should be used in `trips.txt`. File `shapes.txt`" +
-                        "defines entity with id: `" + entityId + "`that is not used.",
+                String.format("All records defined by GTFS `shapes.txt` should be used in `trips.txt`. " +
+                                "File `shapes.txt` defines entity with id: `%s` that is not used.",
+                        entityId),
                 entityId);
 
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);

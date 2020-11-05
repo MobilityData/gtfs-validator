@@ -97,7 +97,7 @@ public class NoticeMemoryConsumptionTest {
     @Order(4)
     public void memoryLimitTest_100_000notices() {
         memoryLimitTest(100_000,
-                60_000_000,
+                74_000_000,
                 SAFETY_BUFFER_FACTOR_10_PERCENT);
     }
 

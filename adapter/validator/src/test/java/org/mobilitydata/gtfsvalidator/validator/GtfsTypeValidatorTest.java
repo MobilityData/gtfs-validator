@@ -954,7 +954,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_unspecified` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_unspecified` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(1);
@@ -963,7 +963,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_text` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_text` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(2);
@@ -972,7 +972,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_float` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_float` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(3);
@@ -981,7 +981,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_integer` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_integer` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(4);
@@ -990,7 +990,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_color` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_color` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(5);
@@ -999,7 +999,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_timezone` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_timezone` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(6);
@@ -1008,7 +1008,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_id` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_id` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(7);
@@ -1017,7 +1017,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_url` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_url` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(8);
@@ -1026,7 +1026,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_time` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_time` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(9);
@@ -1035,7 +1035,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_date` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_date` marked as required in entity with id: `test_id`",
                 notice.getDescription());
     }
 
@@ -1162,7 +1162,8 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_unspecified` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_unspecified` marked as required in entity with id: " +
+                        "`test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(1);
@@ -1171,7 +1172,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_text` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_text` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(2);
@@ -1180,7 +1181,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_float` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_float` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(3);
@@ -1189,7 +1190,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_integer` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_integer` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(4);
@@ -1198,7 +1199,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_color` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_color` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(5);
@@ -1207,7 +1208,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_timezone` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_timezone` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(6);
@@ -1216,7 +1217,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_id` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_id` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(7);
@@ -1225,7 +1226,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_url` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_url` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(8);
@@ -1234,7 +1235,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_time` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_time` marked as required in entity with id: `test_id`",
                 notice.getDescription());
 
         notice = new ArrayList<>(result).get(9);
@@ -1243,7 +1244,7 @@ class GtfsTypeValidatorTest {
         assertEquals(15, notice.getCode());
         assertEquals("Missing required value", notice.getTitle());
         assertEquals(TEST_FILE_TST, notice.getFilename());
-        assertEquals("Missing value for field:`type_date` marked as required in entity with id:`test_id`",
+        assertEquals("Missing value for field: `type_date` marked as required in entity with id: `test_id`",
                 notice.getDescription());
     }
 

@@ -32,10 +32,15 @@ public class TripIdNotFoundNotice extends ErrorNotice {
         super(filename,
                 E_037,
                 "Value of field `trip_id` should exist in GTFS `trips.txt`",
-                "GTFS file `" + filename + "` (with composite key: `" + compositeKeyFirstPart + "`: " +
-                        "`" + compositeKeySecondPart + "` -- `" + compositeKeyFirstValue + "`: `"
-                        + compositeKeySecondValue + "`) includes GTFS trip_id: `" + tripId +
-                        "` " + " which does not exist in GTFS data", null);
+                String.format("Entity of GTFS file `%s` with composite key: (`%s`=`%s` ; `%s`=`%s`) includes GTFS" +
+                        "trip_id `%s` which does not exist in GTFS data",
+                        filename,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        tripId),
+                null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);

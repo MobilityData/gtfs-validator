@@ -26,8 +26,9 @@ public class MissingRequiredValueNotice extends ErrorNotice {
     public MissingRequiredValueNotice(final String filename, final String fieldName, final String entityId) {
         super(filename, E_015,
                 "Missing required value",
-                "Missing value for field:`" + fieldName
-                        + "` marked as required in entity with id:`" + entityId + "`",
+                String.format("Missing value for field: `%s` marked as required in entity with id: `%s`",
+                        fieldName,
+                        entityId),
                 entityId);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
     }
@@ -47,10 +48,13 @@ public class MissingRequiredValueNotice extends ErrorNotice {
                                       final Object compositeKeyFirstValue, final Object compositeKeySecondValue) {
         super(filename, E_015,
                 "Missing required value",
-                "Missing value for field:`" + fieldName
-                        + "` marked as required in entity with composite id: " +
-                        "`" + compositeKeyFirstPart + "`: `" + compositeKeyFirstValue + "`" + "--" +
-                        "`" + compositeKeySecondPart + "`: `" + compositeKeySecondValue + "`.",
+                String.format("Missing value for field: `%s` marked as required in entity with composite id: " +
+                                "(`%s`=`%s` ; `%s`=`%s`).",
+                        fieldName,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue),
                 null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
@@ -80,12 +84,18 @@ public class MissingRequiredValueNotice extends ErrorNotice {
                                       final String compositeKeyThirdValue, final String compositeKeyFourthValue) {
         super(filename, E_015,
                 "Missing required value",
-                "Missing value for field:`" + fieldName
-                        + "` marked as required in entity with composite id:`" +
-                        "`" + compositeKeyFirstPart + "`: " + compositeKeyFirstValue + "`" + "--" +
-                        "`" + compositeKeySecondPart + "`: " + compositeKeySecondValue + "`" + "--" +
-                        "`" + compositeKeyThirdPart + "`: " + compositeKeyThirdValue + "`" + "--" +
-                        "`" + compositeKeyFourthPart + "`: " + compositeKeyFourthValue + "`.", null);
+                String.format("Missing value for field: `%s` marked as required in entity with composite id:" +
+                                "(`%s`=`%s` ; `%s`=`%s` ; `%s`=`%s` ; `%s`=`%s`).",
+                        fieldName,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        compositeKeyThirdPart,
+                        compositeKeyThirdValue,
+                        compositeKeyFourthPart,
+                        compositeKeyFourthPart),
+                null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);

@@ -35,12 +35,16 @@ public class FeedInfoStartDateAfterEndDateNotice extends ErrorNotice {
                 E_039,
                 "Fields `feed_start_date` and `feed_end_date` out of order",
                 String.format("`feed_end_date`: `%s` precedes `feed_start_date`: `%s` in file `%s` for entity with" +
-                                " composite id:\n" +
-                                "`%s`: `%s`\n" +
-                                "`%s`: `%s`\n" +
-                                "`%s`: `%s`.",
-                        endDateAsString, startDateAsString, filename, compositeKeyFirstPart, compositeKeyFirstValue,
-                        compositeKeySecondPart, compositeKeySecondValue, compositeKeyThirdPart, compositeKeyThirdValue),
+                                " composite id: (`%s`=`%s` ; `%s`=`%s` ; `%s`=`%s`).",
+                        endDateAsString,
+                        startDateAsString,
+                        filename,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        compositeKeyThirdPart,
+                        compositeKeyThirdValue),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);

@@ -26,10 +26,12 @@ public class MissingTripEdgeStopTimeNotice extends ErrorNotice {
     public MissingTripEdgeStopTimeNotice(final String fieldName, final String tripId, final Integer stopSequence) {
         super("stop_times.txt", E_044,
                 "Missing trip edge stop time value",
-                "Edge of trip with id:`" + tripId + "` is missing value for field:`" + fieldName
-                        + "`. Stop time composite id: " +
-                        "`trip_id`: `" + tripId + "`" + "--" +
-                        "`stop_sequence`: `" + stopSequence + "`.",
+                String.format("Edge of trip with id: `%s` is missing value for field: `%s`. Stop time composite id: " +
+                        "(`trip_id`=`%s` ; `stop_sequence`=`%s`)",
+                        tripId,
+                        fieldName,
+                        tripId,
+                        stopSequence),
                 null);
 
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);

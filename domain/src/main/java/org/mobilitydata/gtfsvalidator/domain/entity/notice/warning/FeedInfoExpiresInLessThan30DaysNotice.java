@@ -37,13 +37,17 @@ public class FeedInfoExpiresInLessThan30DaysNotice extends WarningNotice {
                 "Too close feed expiration date",
                 String.format("If possible, GTFS dataset should be valid for at least the next 30 days. " +
                                 "Current date is: `%s`. Feed expires: `%s` in field `%s` of file `%s` for entity with " +
-                                "composite id: " +
-                                "`%s`: `%s` -- " +
-                                "`%s`: `%s` -- " +
-                                "`%s`: `%s`.", currentDateAsString, feedEndDateAsString, fieldName, fileName,
-                        compositeKeyFirstPart, compositeKeyFirstValue,
-                        compositeKeySecondPart, compositeKeySecondValue,
-                        compositeKeyThirdPart, compositeKeyThirdValue),
+                                "composite id: (`%s`=`%s` ; `%s`=`%s` ; `%s`=`%s`)",
+                        currentDateAsString,
+                        feedEndDateAsString,
+                        fieldName,
+                        fileName,
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        compositeKeyThirdPart,
+                        compositeKeyThirdValue),
                 null);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);
         putNoticeSpecific(KEY_COMPOSITE_KEY_SECOND_PART, compositeKeySecondPart);
