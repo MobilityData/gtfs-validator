@@ -49,8 +49,12 @@ public class ExportResultAsFile {
     public void execute() throws IOException {
         String reportName = gtfsDataRepo.getFeedPublisherName();
 
-        if ((reportName.isEmpty() || reportName.isBlank()) && gtfsDataRepo.getAgencyCount() > 0) {
-            reportName = gtfsDataRepo.getAgencyAll().values().iterator().next().getAgencyName();
+        if (gtfsDataRepo.getAgencyCount() > 0) {
+            if ((reportName.isEmpty() || reportName.isBlank())) {
+                reportName = gtfsDataRepo.getAgencyAll().values().iterator().next().getAgencyName();
+            } else {
+                reportName = reportName + "__" + gtfsDataRepo.getAgencyAll().values().iterator().next().getAgencyName();
+            }
         }
 
         final String finalPath =
