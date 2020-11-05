@@ -14,7 +14,7 @@ public class NoticeMemoryConsumptionTest {
     private static final Logger LOGGER = LogManager.getLogger();
 
     // used to provide a 10% safety margin to avoid instability due to the behavior of the garbage collector
-    private static final float SAFETY_BUFFER_FACTOR_10_PERCENT = 1.10f;
+    private static final float SAFETY_BUFFER_FACTOR_13_PERCENT = 1.13f;
     // used to provide a 11% safety margin to avoid instability due to the behavior of the garbage collector
     private static final float SAFETY_BUFFER_FACTOR_15_PERCENT = 1.15f;
 
@@ -90,7 +90,7 @@ public class NoticeMemoryConsumptionTest {
     public void memoryLimitTest_10_000notices() {
         memoryLimitTest(10_000,
                 15_000_000,
-                SAFETY_BUFFER_FACTOR_10_PERCENT);
+                SAFETY_BUFFER_FACTOR_13_PERCENT);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class NoticeMemoryConsumptionTest {
     public void memoryLimitTest_100_000notices() {
         memoryLimitTest(100_000,
                 74_000_000,
-                SAFETY_BUFFER_FACTOR_10_PERCENT);
+                SAFETY_BUFFER_FACTOR_13_PERCENT);
     }
 
     @Test
@@ -106,6 +106,6 @@ public class NoticeMemoryConsumptionTest {
     public void memoryLimitTest_1_000_000notices() {
         memoryLimitTest(1_000_000,
                 500_000_000,
-                SAFETY_BUFFER_FACTOR_10_PERCENT);
+                SAFETY_BUFFER_FACTOR_13_PERCENT);
     }
 }
