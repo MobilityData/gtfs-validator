@@ -42,6 +42,7 @@ jobs:
           arguments: shadowJar
 
       #- name: Validate dataset from -- ACRONYM #<-- uncomment this line, replace ACRONYM by the name of the agency/publisher acronym
+        #if: ${{ always() }} # we still want job to be executed in case of previous failure
       #  run: java -jar application/cli-app/build/libs/*.jar -u DATASET_PUBLIC_URL -i [[[ACRONYM]]].zip -e input -o output #<-- uncomment this line,
 #replace ACRONYM and [[[ACRONYM]]] by the agency/publisher acronym. Also replace DATASET_PUBLIC_URL by a public link to a GTFS Schedule zip archive
       - name: Validate dataset from -- SMART
