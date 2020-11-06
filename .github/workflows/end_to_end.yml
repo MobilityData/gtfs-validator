@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master,  prevent-worker-from-stopping-on-error] #<-- replace transport-agency-name by the name of the agency/publisher
+    branches: [ master, transport-agency-name] #<-- replace transport-agency-name by the name of the agency/publisher
 # todo: implement #474
 jobs:
   run-on-data:
@@ -47,7 +47,6 @@ jobs:
       - name: Validate dataset from -- SMART
         if: ${{ always() }} # we still want job to be executed in case of previous failure
         run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download -i smart.zip -e input -o output -a false
-      # STM out until #474 is closed
       - name: Validate dataset from -- STM
         if: ${{ always() }} # we still want job to be executed in case of previous failure
         run: java -jar application/cli-app/build/libs/*.jar -u https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download -i stm.zip -e input -o output
