@@ -37,8 +37,8 @@ public class NoticeMemoryConsumptionTest {
                 noticesCount,
                 totalMemoryInBytes / 1_000_000, // converting bytes to megabytes
                 freeMemoryInBytes / 1_000_000, // converting bytes to megabytes
-                (totalMemoryInBytes - freeMemoryInBytes) / 1_000_000), // converting bytes to megabytes
-                maxMemoryLimit * safetyBufferFactor
+                (totalMemoryInBytes - freeMemoryInBytes) / 1_000_000, // converting bytes to megabytes
+                maxMemoryLimit * safetyBufferFactor)
         );
     }
 
