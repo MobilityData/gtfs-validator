@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Run Java tests
           command: |
-            ./gradlew test --debug
+            ./gradlew testReport -i
       - run:
           name: Compress Java test report
           command: |
