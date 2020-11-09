@@ -37,4 +37,6 @@ public interface ValidationResultRepository {
     int getWarningNoticeCount();
 
     int getErrorNoticeCount();
+
+    void flushRepo();
 }

@@ -114,4 +114,11 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     public int getErrorNoticeCount() {
         return errorNoticeList.size();
     }
+
+    @Override
+    public void flushRepo() {
+        errorNoticeList.clear();
+        warningNoticeList.clear();
+        infoNoticeList.clear();
+    }
 }
