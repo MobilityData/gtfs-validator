@@ -42,9 +42,12 @@ public class FeedInfoExpiresInLessThan7DaysNotice extends ErrorNotice {
                         feedEndDateAsString,
                         fieldName,
                         fileName,
-                        compositeKeyFirstPart, compositeKeyFirstValue,
-                        compositeKeySecondPart, compositeKeySecondValue,
-                        compositeKeyThirdPart, compositeKeyThirdValue),
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        compositeKeyThirdPart,
+                        compositeKeyThirdValue),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);

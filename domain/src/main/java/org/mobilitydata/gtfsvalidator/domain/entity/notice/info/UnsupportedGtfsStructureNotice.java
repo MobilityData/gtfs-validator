@@ -32,7 +32,11 @@ public class UnsupportedGtfsStructureNotice extends InfoNotice {
                 String.format("The structure of this GTFS archive is not supported yet. " +
                         "Trip with tripId: `%s` and serviceId: `%s`; and" +
                         "trip with tripId: `%s` and serviceId: `%s` do not both refer to `calendar.txt` or " +
-                        "`calendar_dates.txt.",tripId, serviceId, otherTripId, otherServiceId),
+                        "`calendar_dates.txt.",
+                        tripId,
+                        serviceId,
+                        otherTripId,
+                        otherServiceId),
                 null);
         putNoticeSpecific(KEY_TRIP_ID, tripId);
         putNoticeSpecific(KEY_OTHER_TRIP_ID, otherTripId);

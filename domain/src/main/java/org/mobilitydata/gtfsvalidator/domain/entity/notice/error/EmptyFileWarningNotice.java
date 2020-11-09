@@ -25,7 +25,8 @@ public class EmptyFileWarningNotice extends WarningNotice {
     public EmptyFileWarningNotice(String filename) {
         super(filename, W_009,
                 "Empty optional csv file",
-                String.format("`%s` has headers but not data.", filename),
+                String.format("`%s` has headers but not data.",
+                        filename),
                 null);
     }
 

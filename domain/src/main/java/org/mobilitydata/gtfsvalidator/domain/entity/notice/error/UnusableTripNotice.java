@@ -25,7 +25,8 @@ public class UnusableTripNotice extends ErrorNotice {
     public UnusableTripNotice(final String tripId) {
         super("stop_times.txt", E_051,
                 "Trips must have more than one stop to be usable",
-                String.format("Trip with `trip_id`: `%s` should at least have two stops in stop_times.txt", tripId),
+                String.format("Trip with `trip_id`: `%s` should at least have two stops in stop_times.txt",
+                        tripId),
                 tripId);
     }
 

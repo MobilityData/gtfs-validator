@@ -27,7 +27,9 @@ public class MalformedCsvRowNotice extends WarningNotice {
         super(filename,
                 W_017,
                 "Malformed CSV row",
-                String.format("Line `%d` of GTFS file `%s` is a blank line", rowIndex, filename),
+                String.format("Line `%d` of GTFS file `%s` is a blank line",
+                        rowIndex,
+                        filename),
                 null);
         putNoticeSpecific(KEY_ROW_INDEX, rowIndex);
     }

@@ -33,7 +33,9 @@ public class DuplicateRouteShortNameNotice extends WarningNotice {
                                 " trips of the same route or different directions of the same route." +
                                 " Note that two routes can have the same `route_short_name` if they do not belong to" +
                                 " the same agency.",
-                        routeId, conflictingRouteId, duplicateRouteShortName),
+                        routeId,
+                        conflictingRouteId,
+                        duplicateRouteShortName),
                 conflictingRouteId);
         putNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID, routeId);
         putNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME, duplicateRouteShortName);

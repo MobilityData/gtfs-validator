@@ -25,7 +25,8 @@ public class MissingRequiredFileNotice extends ErrorNotice {
     public MissingRequiredFileNotice(String filename) {
         super(filename, E_003,
                 "Missing required file",
-                String.format("GTFS file `%s` is required.", filename),
+                String.format("GTFS file `%s` is required.",
+                        filename),
                 null);
     }
 

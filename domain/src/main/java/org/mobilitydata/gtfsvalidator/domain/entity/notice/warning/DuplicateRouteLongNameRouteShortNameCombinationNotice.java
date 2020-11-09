@@ -32,7 +32,10 @@ public class DuplicateRouteLongNameRouteShortNameCombinationNotice extends Warni
                 String.format("Routes with `route_id`: `%s` and `%s` have same `route_long_name`: `%s` and " +
                                 "`route_short_name`: `%s`. The combination of these two fields should not be used " +
                                 "more than once",
-                        routeId, conflictingRouteId, duplicateRouteLongName, duplicateRouteShortName),
+                        routeId,
+                        conflictingRouteId,
+                        duplicateRouteLongName,
+                        duplicateRouteShortName),
                 conflictingRouteId);
         putNoticeSpecific(KEY_ROUTE_CONFLICTING_ROUTE_ID, routeId);
         putNoticeSpecific(KEY_ROUTE_DUPLICATE_ROUTE_SHORT_NAME, duplicateRouteShortName);

@@ -31,7 +31,9 @@ public class FastTravelBetweenStopsNotice extends ErrorNotice {
                 "Fast travel between stops",
                 String.format("Fast travel detected in trip: `%s` over stop sequence: `%s`." +
                                 " Calculated speed: `%s` kmh.",
-                        tripId, stopSequenceList, speedKmh),
+                        tripId,
+                        stopSequenceList,
+                        speedKmh),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "trip_id");

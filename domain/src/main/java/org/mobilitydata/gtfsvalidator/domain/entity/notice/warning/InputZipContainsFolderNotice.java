@@ -27,7 +27,9 @@ public class InputZipContainsFolderNotice extends WarningNotice {
         super(filename,
                 W_001,
                 "Non empty folder",
-                String.format("File: `%s` contains folder named: `%s`", filename, folderName),
+                String.format("File: `%s` contains folder named: `%s`",
+                        filename,
+                        folderName),
                 null);
         putNoticeSpecific(KEY_FOLDER_NAME, folderName);
     }

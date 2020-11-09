@@ -32,7 +32,10 @@ public class DecreasingStopTimeDistanceNotice extends ErrorNotice {
                 String.format("`trip_id`: `%s` `stop_sequence`: `%s` has a larger `shape_dist_traveled` (`%s`) than" +
                                 " `stop_sequence`: `%s` (`%s`). `shape_dist_traveled` must increase with" +
                                 " `stop_sequence`.",
-                        tripId, stopSequence, shapeDistTraveled, previousStopSequence,
+                        tripId,
+                        stopSequence,
+                        shapeDistTraveled,
+                        previousStopSequence,
                         previousShapeDistTraveled),
                 null);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, "trip_id");

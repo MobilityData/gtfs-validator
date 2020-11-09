@@ -28,7 +28,8 @@ public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
         super(String.valueOf(url),
                 E_007,
                 "Downloading error",
-                String.format("An error occurred while trying to download archive from network: `%s`", url),
+                String.format("An error occurred while trying to download archive from network: `%s`",
+                        url),
                 null);
         putNoticeSpecific(KEY_URL_VALUE, url);
     }

@@ -87,10 +87,14 @@ public class DuplicatedEntityNotice extends ErrorNotice {
                 String.format("Entity must be unique in file: `%s`. Found other entity with same value for " +
                                 "fields: (`%s`=`%s` ; `%s`=`%s` ; `%s`=`%s` ; `%s`=`%s`)",
                         filename,
-                        compositeKeyFirstPart, compositeKeyFirstValue,
-                        compositeKeySecondPart, compositeKeySecondValue,
-                        compositeKeyThirdPart, compositeKeyThirdValue,
-                        compositeKeyFourthPart, compositeKeyFourthValue),
+                        compositeKeyFirstPart,
+                        compositeKeyFirstValue,
+                        compositeKeySecondPart,
+                        compositeKeySecondValue,
+                        compositeKeyThirdPart,
+                        compositeKeyThirdValue,
+                        compositeKeyFourthPart,
+                        compositeKeyFourthValue),
                         null);
         putNoticeSpecific(KEY_FIELD_NAME, fieldName);
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, compositeKeyFirstPart);

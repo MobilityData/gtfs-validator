@@ -32,7 +32,10 @@ public class DecreasingShapeDistanceNotice extends ErrorNotice {
                 String.format("`shape_id`: `%s` `shape_pt_sequence`: `%s` has a larger `shape_dist_traveled` (`%s`) than" +
                                 " `shape_pt_sequence`: `%s` (`%s`). `shape_dist_traveled` must increase with" +
                                 " `shape_pt_sequence`.",
-                        shapeId, shapePtSequence, shapeDistTraveled, previousShapePtSequence,
+                        shapeId,
+                        shapePtSequence,
+                        shapeDistTraveled,
+                        previousShapePtSequence,
                         previousShapeDistTraveled),
                 shapeId);
         putNoticeSpecific(KEY_SHAPE_PT_SEQUENCE, shapePtSequence);

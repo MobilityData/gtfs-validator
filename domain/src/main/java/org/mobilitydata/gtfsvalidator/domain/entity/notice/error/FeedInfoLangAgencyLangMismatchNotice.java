@@ -49,7 +49,8 @@ public class FeedInfoLangAgencyLangMismatchNotice extends ErrorNotice {
                 "Mismatching feed and agency language fields",
                 String.format("`feed_info.feed_lang` is `%s` but `agency.txt` defines more than one " +
                                 "`agency.agency_lang`: `%s`",
-                        feedInfoFeedLang, agencyLangCollection),
+                        feedInfoFeedLang,
+                        agencyLangCollection),
                 null);
         putNoticeSpecific(KEY_FEED_INFO_FEED_LANG, feedInfoFeedLang);
         putNoticeSpecific(KEY_AGENCY_AGENCY_LANG_COLLECTION, agencyLangCollection);

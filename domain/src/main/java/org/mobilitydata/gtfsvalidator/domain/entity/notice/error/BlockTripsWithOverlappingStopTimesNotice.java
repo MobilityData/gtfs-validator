@@ -37,8 +37,13 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ErrorNotice {
                 "Overlapping stop times in trip block",
                 String.format("Trips with `trip_id`: `%s` (first time: `%s`, last time: `%s`)" +
                                 " and `%s` (first time: `%s`, last time: `%s`) from block: `%s` overlap.",
-                        tripId, tripFirstTime, tripLastTime, previousTripId, previousTripFirstTime,
-                        previousTripLastTime, blockId),
+                        tripId,
+                        tripFirstTime,
+                        tripLastTime,
+                        previousTripId,
+                        previousTripFirstTime,
+                        previousTripLastTime,
+                        blockId),
                 tripId);
         putNoticeSpecific(tripId, tripFirstTime, tripLastTime, previousTripId, previousTripFirstTime,
                 previousTripLastTime, blockId, null);
@@ -60,8 +65,14 @@ public class BlockTripsWithOverlappingStopTimesNotice extends ErrorNotice {
                 String.format("Trips with `trip_id`: `%s` (first time: `%s`, last time: `%s`)" +
                                 " and `%s` (first time: `%s`, last time: `%s`) from block: `%s` overlap." +
                                 " Conflicts happen on: %s.",
-                        tripId, tripFirstTime, tripLastTime, previousTripId, previousTripFirstTime,
-                        previousTripLastTime, blockId, conflictingDateCollection),
+                        tripId,
+                        tripFirstTime,
+                        tripLastTime,
+                        previousTripId,
+                        previousTripFirstTime,
+                        previousTripLastTime,
+                        blockId,
+                        conflictingDateCollection),
                 tripId);
 
         putNoticeSpecific(tripId, tripFirstTime, tripLastTime, previousTripId, previousTripFirstTime,

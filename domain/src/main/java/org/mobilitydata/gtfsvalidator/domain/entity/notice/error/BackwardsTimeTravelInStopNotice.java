@@ -30,8 +30,12 @@ public class BackwardsTimeTravelInStopNotice extends ErrorNotice {
         super("stop_times.txt", E_047,
                 "Bad stoptime time combination",
                 String.format("The `arrival_time`: `%s` (`stop_sequence`: `%s`) occurs before `departure_time`:" +
-                                "`%s` (`stop_sequence`: `%s`) in `trip_id`: `%s`", arrivalTimeAsString, stopSequence,
-                        previousStopDepartureTimeAsString, previousStopTimeStopSequence, tripId),
+                                "`%s` (`stop_sequence`: `%s`) in `trip_id`: `%s`",
+                        arrivalTimeAsString,
+                        stopSequence,
+                        previousStopDepartureTimeAsString,
+                        previousStopTimeStopSequence,
+                        tripId),
                 null);
 
         putNoticeSpecific(KEY_COMPOSITE_KEY_FIRST_PART, KEY_STOP_TIME_TRIP_ID);
