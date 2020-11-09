@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
@@ -29,6 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 class InMemoryValidationResultRepositoryTest {
 
@@ -74,5 +76,22 @@ class InMemoryValidationResultRepositoryTest {
 
         assertThrows(TooManyValidationErrorException.class, () ->
                 underTest.addNotice(errorNotice));
+    }
+
+    @Test
+    void flushRepoShouldEmptyAllNoticeCollection() {
+        WarningNotice mockWarningNotice = mock(WarningNotice.class);
+        InfoNotice mockInfoNotice = mock(InfoNotice.class);
+
+        ValidationResultRepository underTest = new InMemoryValidationResultRepository(true);
+
+        underTest.addNotice(mockWarningNotice);
+        underTest.addNotice(mockInfoNotice);
+
+        assertEquals(2, underTest.getAll().size());
+
+        underTest.flushRepo();
+
+        assertEquals(0, underTest.getAll().size());
     }
 }
