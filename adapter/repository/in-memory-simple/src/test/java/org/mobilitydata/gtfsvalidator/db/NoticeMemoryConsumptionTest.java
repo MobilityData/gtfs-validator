@@ -30,13 +30,15 @@ public class NoticeMemoryConsumptionTest {
         }
     }
 
-    private void logInformation(long totalMemoryInBytes, long freeMemoryInBytes, int noticesCount) {
+    private void logInformation(long totalMemoryInBytes, long freeMemoryInBytes, int noticesCount, int maxMemoryLimit,
+                                float safetyBufferFactor) {
         LOGGER.info(String.format("Generating %s notices: Total memory: %s megabytes, Free memory: %s megabytes," +
-                        " Used memory: %s megabytes",
+                        " Used memory: %s megabytes. Max memory limit:  %s",
                 noticesCount,
                 totalMemoryInBytes / 1_000_000, // converting bytes to megabytes
                 freeMemoryInBytes / 1_000_000, // converting bytes to megabytes
-                (totalMemoryInBytes - freeMemoryInBytes) / 1_000_000) // converting bytes to megabytes
+                (totalMemoryInBytes - freeMemoryInBytes) / 1_000_000), // converting bytes to megabytes
+                maxMemoryLimit * safetyBufferFactor
         );
     }
 
@@ -50,7 +52,7 @@ public class NoticeMemoryConsumptionTest {
         long totalMemoryInBytes = Runtime.getRuntime().totalMemory();
         long freeMemoryInBytes = Runtime.getRuntime().freeMemory();
 
-        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticesCount);
+        logInformation(totalMemoryInBytes, freeMemoryInBytes, noticesCount, maxMemoryLimit, safetyBufferFactor);
 
         long usedMemory = totalMemoryInBytes - freeMemoryInBytes;
 
