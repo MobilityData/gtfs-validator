@@ -47,8 +47,8 @@ jobs:
       - name: Validate dataset from -- SMART
         run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download -i smart.zip -e input -o output -a false
       # STM out until #474 is closed
-      #- name: Validate dataset from -- STM
-      #  run: java -jar application/cli-app/build/libs/*.jar -u https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download -i stm.zip -e input -o output
+      - name: Validate dataset from -- STM
+        run: java -jar application/cli-app/build/libs/*.jar -u https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download -i stm.zip -e input -o output
       - name: Validate dataset from -- MBTA
         run: java -jar application/cli-app/build/libs/*.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i mbta.zip -e input -o output
       - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
