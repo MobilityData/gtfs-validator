@@ -506,4 +506,8 @@ public class DefaultConfig {
     public String getExecParamValue(final String execParamKey) {
         return execParamRepo.getExecParamValue(execParamKey);
     }
+
+    public GenerateValidatorCrashNotice generateValidatorCrashNotice() {
+        return new GenerateValidatorCrashNotice(resultRepo);
+    }
 }
