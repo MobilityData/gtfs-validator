@@ -243,19 +243,27 @@ public class Main {
             } catch (IOException ioException) {
                 logger.error(String.format("Could not export results as file: %s", ioException.getMessage()));
             }
-        } catch (OutOfMemoryError e) {
-            config.generateInfoNotice(
-                    TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
-                    processedFilenameCollection)
-                    .execute();
-            config.generateValidatorCrashNotice().execute(e.getMessage());
-            try {
-                config.exportResultAsFile().execute();
-            } catch (IOException ioException) {
-                logger.error(String.format("Could not export results as file: %s", ioException.getMessage()));
-            }
+        } catch (OutOfMemoryError | Exception e) {
+            generateValidatorCrashNotice(startTime, logger, config, processedFilenameCollection, e.getMessage());
         }
         logProcessingTime(logger, System.nanoTime() - startTime);
+    }
+
+    private static void generateValidatorCrashNotice(final long startTime,
+                                                     final Logger logger,
+                                                     final DefaultConfig config,
+                                                     final Set<String> processedFilenameCollection,
+                                                     final String exceptionMessage) {
+        config.generateInfoNotice(
+                TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
+                processedFilenameCollection)
+                .execute();
+        config.generateValidatorCrashNotice().execute(exceptionMessage);
+        try {
+            config.exportResultAsFile().execute();
+        } catch (Exception e) {
+            logger.error(String.format("Could not export results as file: %s", exceptionMessage));
+        }
     }
 
     private static DefaultConfig initConfig(String[] args, Logger logger) {
