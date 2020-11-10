@@ -244,7 +244,7 @@ public class Main {
                 logger.error(String.format("Could not export results as file: %s", ioException.getMessage()));
             }
         } catch (OutOfMemoryError | Exception e) {
-            generateValidatorCrashNotice(startTime, logger, config, processedFilenameCollection, e.getMessage());
+            generateValidatorCrashNotice(startTime, logger, config, processedFilenameCollection, e.getStackTrace().toString());
         }
         logProcessingTime(logger, System.nanoTime() - startTime);
     }
