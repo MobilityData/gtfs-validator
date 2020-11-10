@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidatorCrashNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
 import java.io.IOException;
@@ -1021,6 +1022,14 @@ public class ProtobufNoticeExporter implements NoticeExporter {
                 .setEntityValue(String.valueOf(toExport.getNoticeSpecific(KEY_OTHER_TRIP_ID)))
                 .setEntityName(String.valueOf(toExport.getNoticeSpecific(KEY_SERVICE_ID)))
                 .setCsvKeyName(String.valueOf(toExport.getNoticeSpecific(KEY_OTHER_SERVICE_ID)))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final ValidatorCrashNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName("not support yet")
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
