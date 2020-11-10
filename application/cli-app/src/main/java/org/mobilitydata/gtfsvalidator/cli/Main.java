@@ -241,13 +241,21 @@ public class Main {
                 logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
                         " to continue on errors");
             } catch (IOException ioException) {
-                logger.error("An exception occurred: " + ioException);
+                logger.error(String.format("Could not export results as file: %s", ioException.getMessage()));
+            }
+        } catch (OutOfMemoryError e) {
+            config.generateInfoNotice(
+                    TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
+                    processedFilenameCollection)
+                    .execute();
+            config.generateValidatorCrashNotice().execute(e.getMessage());
+            try {
+                config.exportResultAsFile().execute();
+            } catch (IOException ioException) {
+                logger.error(String.format("Could not export results as file: %s", ioException.getMessage()));
             }
         }
-        final long duration = System.nanoTime() - startTime;
-        logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
-                TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
-                TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
+        logProcessingTime(logger, System.nanoTime() - startTime);
     }
 
     private static DefaultConfig initConfig(String[] args, Logger logger) {
@@ -264,5 +272,11 @@ public class Main {
                 .args(args)
                 .execParamAsString(executionParametersAsString)
                 .build();
+    }
+
+    private static void logProcessingTime(final Logger logger, final long duration) {
+        logger.info("Took " + String.format("%02dh %02dm %02ds", TimeUnit.NANOSECONDS.toHours(duration),
+                TimeUnit.NANOSECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(duration)),
+                TimeUnit.NANOSECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.NANOSECONDS.toMinutes(duration))));
     }
 }
