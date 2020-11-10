@@ -229,7 +229,7 @@ public class Main {
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
         } catch (TooManyValidationErrorException e) {
-            logger.error("Error detected -- ABORTING");
+            logger.error("Error detected during data validation -- ABORTING");
             config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
             try {
