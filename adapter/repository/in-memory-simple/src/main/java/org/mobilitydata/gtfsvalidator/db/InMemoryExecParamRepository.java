@@ -281,17 +281,6 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                     return defaultValue.get(0);
                 }
             }
-            case DEBUG_KEY: {
-                // if command line option is provided with a value then use this value. Example "--beautify true"
-                // or "--beautify false"
-                if (hasExecParam(DEBUG_KEY) && hasExecParamValue(DEBUG_KEY)) {
-                    return getExecParamByKey(DEBUG_KEY).getValue().get(0);
-                } else {
-                    // otherwise use default value. Note that it is not allowed to use key `beautify` without
-                    // specifying a boolean as argument
-                    return defaultValue.get(0);
-                }
-            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }
@@ -341,8 +330,6 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 "Stop validation process on first error");
         options.addOption(String.valueOf(BEAUTIFY_KEY.charAt(1)), BEAUTIFY_KEY, true,
                 "Beautify .json validation report");
-        options.addOption(String.valueOf(DEBUG_KEY.charAt(0)), DEBUG_KEY, true,
-                "Log in debug mode (includes normal stacktrace)");
         validateAllOptionLength(options);
 
         // Commands --proto and --help take no arguments

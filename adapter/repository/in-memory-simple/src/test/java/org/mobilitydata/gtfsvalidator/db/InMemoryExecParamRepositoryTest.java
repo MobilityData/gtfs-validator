@@ -495,7 +495,7 @@ class InMemoryExecParamRepositoryTest {
                 DEFAULT_EXEC_PARAMETERS, mockLogger, mockOptions);
 
         assertEquals(mockOptions, underTest.getOptions());
-        assertEquals(9, mockOptions.getOptions().size());
+        assertEquals(8, mockOptions.getOptions().size());
     }
 
     @Test

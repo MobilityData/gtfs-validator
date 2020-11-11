@@ -36,7 +36,6 @@ public interface ExecParamRepository {
     String EXCLUSION_KEY = "exclude";
     String ABORT_ON_ERROR = "abort_on_error";
     String BEAUTIFY_KEY = "beautify";
-    String DEBUG_KEY = "debug";
     int MAX_CHARS_NUM = 22; // empirically defined
 
     ExecParam getExecParamByKey(final String optionName);
