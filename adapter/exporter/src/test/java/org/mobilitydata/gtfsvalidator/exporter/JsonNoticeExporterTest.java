@@ -1194,4 +1194,47 @@ class JsonNoticeExporterTest {
         verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
         verifyNoMoreInteractions(mockGenerator);
     }
+
+    @Test
+    void exportDatasetTooBigNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        DatasetTooBigNotice toExport =
+                new DatasetTooBigNotice(56, 40);
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportOutOfMemoryNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        OutOfMemoryNotice toExport =
+                new OutOfMemoryNotice(56, 40);
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
+
+    @Test
+    void exportValidatorCrashNoticeShouldWriteObject() throws IOException {
+        JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
+
+        JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
+        ValidatorCrashNotice toExport =
+                new ValidatorCrashNotice("exception message",
+                        "exception stack trace");
+        underTest.export(toExport);
+
+        verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
+        verify(mockGenerator, times(1)).writeObject(ArgumentMatchers.eq(toExport));
+        verifyNoMoreInteractions(mockGenerator);
+    }
 }
