@@ -50,8 +50,11 @@ public class DownloadArchiveFromNetwork {
     private final Path inputPath;
 
     /**
-     * @param resultRepo a repository storing information about the validation process
-     * @param logger     logger used to log relevant information about the downloading process
+     * @param resultRepo       a repository storing information about the validation process
+     * @param execParamRepo    a repository storing all execution parameters and their values
+     * @param logger           logger used to log relevant information about the downloading process
+     * @param customFileUtils  a util class instance to compute size of files and directory
+     * @param inputPath        the path to the input data
      */
     public DownloadArchiveFromNetwork(final ValidationResultRepository resultRepo,
                                       final ExecParamRepository execParamRepo,
@@ -68,7 +71,9 @@ public class DownloadArchiveFromNetwork {
     /**
      * Use case execution method: downloads a GTFS archive at the URL provided in the constructor. If the process fails
      * a {@link CannotDownloadArchiveFromNetworkNotice} is generated and added to the {@link ValidationResultRepository}
-     * provided in the constructor.
+     * provided in the constructor. If the size downloaded zip file is too important, will generate and add a
+     * {@link TooBigDatasetNotice} to the {@link ValidationResultRepository} provided in the constructor.
+     * @throws IOException if archive could be downloaded from network
      */
     public void execute() throws IOException {
         //TODO: does using File class break clean architecture (make business logic dependant on a framework)?
