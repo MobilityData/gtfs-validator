@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master, transport-agency-name] #<-- replace transport-agency-name by the name of the agency/publisher
+    branches: [ master, prevent-worker-from-stoppping-on-error] #<-- replace transport-agency-name by the name of the agency/publisher
 # todo: implement #474
 jobs:
   run-on-data:
@@ -42,38 +42,28 @@ jobs:
           arguments: shadowJar
 
       #- name: Validate dataset from -- ACRONYM #<-- uncomment this line, replace ACRONYM by the name of the agency/publisher acronym
-        #if: ${{ always() }} # we still want job to be executed in case of previous failure
       #  run: java -jar application/cli-app/build/libs/*.jar -u DATASET_PUBLIC_URL -i [[[ACRONYM]]].zip -e input -o output #<-- uncomment this line,
 #replace ACRONYM and [[[ACRONYM]]] by the agency/publisher acronym. Also replace DATASET_PUBLIC_URL by a public link to a GTFS Schedule zip archive
       - name: Validate dataset from -- SMART
-        if: ${{ always() }} # we still want job to be executed in case of previous failure
         run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download -i smart.zip -e input -o output -a false
       - name: Validate dataset from -- STM
-        if: ${{ always() }} # we still want job to be executed in case of previous failure
         run: java -jar application/cli-app/build/libs/*.jar -u https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download -i stm.zip -e input -o output
       - name: Validate dataset from -- MBTA
-        if: ${{ always() }} # we still want job to be executed in case of previous failure
         run: java -jar application/cli-app/build/libs/*.jar -u https://cdn.mbta.com/MBTA_GTFS.zip -i mbta.zip -e input -o output
       - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
-        if: ${{ always() }} # we still want job to be executed in case of previous failure
         run: java -jar application/cli-app/build/libs/*.jar -u http://www.bart.gov/dev/schedules/google_transit.zip -i bart.zip -e input -o output
       - name: Validate dataset from issue 399 -- Monterey-Salinas Transit
-        if: ${{ always() }} # we still want job to be executed in case of previous failure
         run: java -jar application/cli-app/build/libs/*.jar -u http://www.mst.org/google/google_transit.zip -i mst.zip -e input -o output
       - name: Validate dataset from issue 398 -- Orange County Transportation Authority
-        if: ${{ always() }} # we still want job to be executed in case of previous failure
         run: java -jar application/cli-app/build/libs/*.jar -u https://octa.net/current/google_transit.zip -i octa.zip -e input -o output
       - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
-        if: ${{ always() }} # we still want job to be executed in case of previous failure
         run: java -jar application/cli-app/build/libs/*.jar -u http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download -i stge.zip -e input -o output
       - name: Persist datasets
-        if: ${{ always() }} # we still want job to be executed in case of previous failure
         uses: actions/upload-artifact@v2
         with:
           name: dataset_all
           path: ./*.zip
       - name: Persist reports
-        if: ${{ always() }} # we still want job to be executed in case of previous failure
         uses: actions/upload-artifact@v2
         with:
           name: validation_report_all
