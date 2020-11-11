@@ -173,8 +173,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new CannotDownloadArchiveFromNetworkNotice(new URL("https://mobilitydata.org"))
-        );
+        underTest.export(new CannotDownloadArchiveFromNetworkNotice("https://mobilitydata.org"));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1)).setCsvFileName(

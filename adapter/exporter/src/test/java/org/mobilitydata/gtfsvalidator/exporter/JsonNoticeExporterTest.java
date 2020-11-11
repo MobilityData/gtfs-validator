@@ -138,7 +138,7 @@ class JsonNoticeExporterTest {
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
         CannotDownloadArchiveFromNetworkNotice toExport = new CannotDownloadArchiveFromNetworkNotice(
-                new URL("https://mobilitydata.org")
+                "https://mobilitydata.org"
         );
         underTest.export(toExport);
 

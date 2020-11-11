@@ -108,7 +108,7 @@ public class DownloadArchiveFromNetwork {
             } catch (IOException e) {
                 resultRepo.addNotice
                         (new CannotDownloadArchiveFromNetworkNotice(
-                                new URL(url)));
+                                url));
                 throw e;
             }
         }

@@ -24,8 +24,8 @@ import java.net.URL;
 
 public class CannotDownloadArchiveFromNetworkNotice extends ErrorNotice {
 
-    public CannotDownloadArchiveFromNetworkNotice(final URL url) {
-        super(String.valueOf(url),
+    public CannotDownloadArchiveFromNetworkNotice(final String url) {
+        super(url,
                 E_007,
                 "Downloading error",
                 "An error occurred while trying to download archive from network: " + url,
