@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
 
-    public static void main(String[] args) throws Throwable {
+    public static void main(String[] args) {
         final long startTime = System.nanoTime();
         final Logger logger = LogManager.getLogger();
         final DefaultConfig config = initConfig(args, logger);
