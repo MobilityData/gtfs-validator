@@ -58,6 +58,7 @@ public class ProcessParsedStopTime {
      * @param validatedParsedStopTime entity to be processed and added to the GTFS data repository
      */
     public void execute(final ParsedEntity validatedParsedStopTime) {
+        System.gc();
         final String tripId = (String) validatedParsedStopTime.get("trip_id");
         final Integer arrivalTime = timeUtils.convertHHMMSSToIntFromNoonOfDayOfService(
                 (String) validatedParsedStopTime.get("arrival_time"));
