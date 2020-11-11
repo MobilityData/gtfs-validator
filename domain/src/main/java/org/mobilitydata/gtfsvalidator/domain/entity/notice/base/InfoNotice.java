@@ -21,7 +21,6 @@ public abstract class InfoNotice extends Notice {
     private static final String level = "INFO";
     protected static final int I_001 = 1;
     protected static final int I_002 = 2;
-    protected static final int I_003 = 3;
 
     public InfoNotice(final String filename,
                       final int code,
