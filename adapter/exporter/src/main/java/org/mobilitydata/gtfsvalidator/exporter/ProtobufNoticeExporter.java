@@ -22,7 +22,7 @@ import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidatorCrashNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ValidatorCrashNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
 import java.io.IOException;
@@ -1027,6 +1027,16 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
+    public void export(final MalformedCsvRowNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName(toExport.getFilename())
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
+                .setEntityRow((Integer) toExport.getNoticeSpecific(KEY_ROW_INDEX))
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
     public void export(final ValidatorCrashNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName("not support yet")
@@ -1035,11 +1045,17 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final MalformedCsvRowNotice toExport) throws IOException {
+    public void export(final DatasetTooBigNotice toExport) throws IOException {
         protoBuilder.clear()
-                .setCsvFileName(toExport.getFilename())
-                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.WARNING)
-                .setEntityRow((Integer) toExport.getNoticeSpecific(KEY_ROW_INDEX))
+                .setCsvFileName("not support yet")
+                .build()
+                .writeTo(streamGenerator.getStream());
+    }
+
+    @Override
+    public void export(final OutOfMemoryNotice toExport) throws IOException {
+        protoBuilder.clear()
+                .setCsvFileName("not support yet")
                 .build()
                 .writeTo(streamGenerator.getStream());
     }

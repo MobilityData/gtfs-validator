@@ -3,7 +3,6 @@ package org.mobilitydata.gtfsvalidator.domain.entity.notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.UnsupportedGtfsStructureNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidatorCrashNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
 import java.io.IOException;
@@ -169,4 +168,8 @@ public interface NoticeExporter {
     void export(final UnsupportedGtfsStructureNotice unsupportedGtfsStructureNotice) throws IOException;
 
     void export(final ValidatorCrashNotice validatorCrashNotice) throws IOException;
+
+    void export(final DatasetTooBigNotice datasetTooBigNotice) throws IOException;
+
+    void export(final OutOfMemoryNotice outOfMemoryNotice) throws IOException;
 }
