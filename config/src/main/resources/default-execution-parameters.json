@@ -7,6 +7,5 @@
   "input": null,
   "exclude": null,
   "abort_on_error": true,
-  "beautify": true,
-  "debug": false
+  "beautify": true
 }
