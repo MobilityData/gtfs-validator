@@ -1040,6 +1040,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     public void export(final ValidatorCrashNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName("not supported yet")
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -1048,6 +1049,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     public void export(final DatasetTooBigNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName("not supported yet")
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -1056,6 +1058,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     public void export(final OutOfMemoryNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName("not supported yet")
+                .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
