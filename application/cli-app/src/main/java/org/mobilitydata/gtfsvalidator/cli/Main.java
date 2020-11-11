@@ -249,6 +249,11 @@ public class Main {
                     processedFilenameCollection)
                     .execute();
             config.handleFatalCrash().execute(e);
+            try {
+                config.exportResultAsFile().execute();
+            } catch (IOException ioException) {
+                logger.error(String.format("Could not export results as file: %s,", ioException.getMessage()));
+            }
         }
         logProcessingTime(logger, System.nanoTime() - startTime);
     }

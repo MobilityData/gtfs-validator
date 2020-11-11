@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.OutOfMemoryNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ValidatorCrashNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -27,21 +26,15 @@ import java.util.Arrays;
 
 public class HandleFatalCrash {
     private final ValidationResultRepository resultRepo;
-    private final ExportResultAsFile exportResultAsFile;
     private final CustomFileUtils customFileUtils;
     private final Path inputPath;
-    private final Logger logger;
 
     public HandleFatalCrash(final ValidationResultRepository resultRepo,
-                            final ExportResultAsFile exportResultAsFile,
                             final CustomFileUtils customFileUtils,
-                            final Path inputPath,
-                            final Logger logger) {
+                            final Path inputPath) {
         this.resultRepo = resultRepo;
-        this.exportResultAsFile = exportResultAsFile;
         this.customFileUtils = customFileUtils;
         this.inputPath = inputPath;
-        this.logger = logger;
     }
 
     public void execute(final Object exceptionOrError) {
@@ -56,13 +49,6 @@ public class HandleFatalCrash {
                             Arrays.toString(((Throwable) exceptionOrError).getStackTrace())
                     )
             );
-        }
-        try {
-            exportResultAsFile.execute();
-        } catch (Exception e) {
-            logger.error(String.format("Could not export results as file: %s -- stackTrace: %s",
-                    e.getMessage(),
-                    Arrays.toString(e.getStackTrace())));
         }
     }
 }

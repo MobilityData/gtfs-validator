@@ -512,9 +512,7 @@ public class DefaultConfig {
 
     public HandleFatalCrash handleFatalCrash() {
         return new HandleFatalCrash(resultRepo,
-                exportResultAsFile(),
                 CustomFileUtilsImpl.getInstance(),
-                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)),
-                logger);
+                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)));
     }
 }
