@@ -1007,7 +1007,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     @Override
     public void export(final ValidationProcessInfoNotice validationProcessInfoNotice) throws IOException {
         protoBuilder.clear()
-                .setCsvFileName("not support yet")
+                .setCsvFileName("not supported yet")
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -1039,7 +1039,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     @Override
     public void export(final ValidatorCrashNotice toExport) throws IOException {
         protoBuilder.clear()
-                .setCsvFileName("not support yet")
+                .setCsvFileName("not supported yet")
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -1047,7 +1047,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     @Override
     public void export(final DatasetTooBigNotice toExport) throws IOException {
         protoBuilder.clear()
-                .setCsvFileName("not support yet")
+                .setCsvFileName("not supported yet")
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
@@ -1055,7 +1055,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     @Override
     public void export(final OutOfMemoryNotice toExport) throws IOException {
         protoBuilder.clear()
-                .setCsvFileName("not support yet")
+                .setCsvFileName("not supported yet")
                 .build()
                 .writeTo(streamGenerator.getStream());
     }
