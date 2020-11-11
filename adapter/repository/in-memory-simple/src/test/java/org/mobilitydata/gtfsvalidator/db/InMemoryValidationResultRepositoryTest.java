@@ -75,4 +75,24 @@ class InMemoryValidationResultRepositoryTest {
         assertThrows(TooManyValidationErrorException.class, () ->
                 underTest.addNotice(errorNotice));
     }
+
+    @Test
+    void getErrorNoticeCountShouldReturnExactNumberOfErrorNotice() {
+        // TODO
+    }
+
+    @Test
+    void getWarningNoticeCountShouldReturnExactNumberOfWarningNotice() {
+        // TODO
+    }
+
+    @Test
+    void getInfoNoticeCountShouldReturnExactNumberOfInfoNotice() {
+        // TODO
+    }
+
+    @Test
+    void getNoticeCountShouldReturnTotalNumberOfNoticeInRepo() {
+        // TODO
+    }
 }
