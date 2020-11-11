@@ -183,7 +183,11 @@ public class DefaultConfig {
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
-        return new DownloadArchiveFromNetwork(resultRepo, execParamRepo, logger);
+        return new DownloadArchiveFromNetwork(resultRepo,
+                execParamRepo,
+                logger,
+                CustomFileUtilsImpl.getInstance(),
+                Path.of(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)));
     }
 
     public CreatePath createPath() {
@@ -507,6 +511,10 @@ public class DefaultConfig {
     }
 
     public HandleFatalCrash handleFatalCrash() {
-        return new HandleFatalCrash(resultRepo, execParamRepo, exportResultAsFile(), logger);
+        return new HandleFatalCrash(resultRepo,
+                exportResultAsFile(),
+                CustomFileUtilsImpl.getInstance(),
+                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)),
+                logger);
     }
 }
