@@ -37,6 +37,7 @@ public class Main {
         final Logger logger = LogManager.getLogger();
         final DefaultConfig config = initConfig(args, logger);
         final Set<String> processedFilenameCollection = new HashSet<>();
+        config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
 
         try {
             // use case will inspect parameters and decide if help menu should be displayed or not
@@ -219,43 +220,28 @@ public class Main {
                 config.validateRouteLongNameAreUnique().execute();
                 config.validateRouteShortNameAreUnique().execute();
                 config.validateUniqueRouteLongNameRouteShortNameCombination().execute();
-
-                config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
-                config.generateInfoNotice(
-                        TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
-                        processedFilenameCollection).execute();
-                config.exportResultAsFile().execute();
             }
         } catch (IOException e) {
             logger.error("An exception occurred: " + e);
         } catch (TooManyValidationErrorException e) {
             logger.error("Error detected during data validation -- ABORTING");
-            config.createPath().execute(ExecParamRepository.OUTPUT_KEY, false);
-
+            logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
+                    " to continue on errors");
+        } catch (OutOfMemoryError e) {
+            config.handleFatalCrash().execute();
+        } catch (Exception e) {
+            config.handleFatalCrash().execute(e);
+        } finally {
             try {
                 config.generateInfoNotice(
                         TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
                         processedFilenameCollection).execute();
                 config.exportResultAsFile().execute();
-
-                logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
-                        " to continue on errors");
             } catch (IOException ioException) {
                 logger.error(String.format("Could not export results as file: %s", ioException.getMessage()));
             }
-        } catch (OutOfMemoryError | Exception e) {
-            config.generateInfoNotice(
-                    TimeUnit.NANOSECONDS.toHours(System.nanoTime() - startTime),
-                    processedFilenameCollection)
-                    .execute();
-            config.handleFatalCrash().execute(e);
-            try {
-                config.exportResultAsFile().execute();
-            } catch (IOException ioException) {
-                logger.error(String.format("Could not export results as file: %s,", ioException.getMessage()));
-            }
+            logProcessingTime(logger, System.nanoTime() - startTime);
         }
-        logProcessingTime(logger, System.nanoTime() - startTime);
     }
 
     private static DefaultConfig initConfig(String[] args, Logger logger) {
