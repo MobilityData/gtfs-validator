@@ -169,7 +169,7 @@ public interface NoticeExporter {
 
     void export(final ValidatorCrashNotice validatorCrashNotice) throws IOException;
 
-    void export(final DatasetTooBigNotice datasetTooBigNotice) throws IOException;
+    void export(final TooBigDatasetNotice tooBigDatasetNotice) throws IOException;
 
     void export(final OutOfMemoryNotice outOfMemoryNotice) throws IOException;
 }

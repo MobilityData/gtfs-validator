@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotDownloadArchiveFromNetworkNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DatasetTooBigNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.TooBigDatasetNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -102,7 +102,7 @@ public class DownloadArchiveFromNetwork {
                 final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.MEGABYTES);
                 if (RawFileRepository.MAX_RAW_INPUT_SIZE_MEGABYTES < datasetSizeMegaBytes) {
                     resultRepo.addNotice(
-                            new DatasetTooBigNotice(datasetSizeMegaBytes,
+                            new TooBigDatasetNotice(datasetSizeMegaBytes,
                                     RawFileRepository.MAX_RAW_INPUT_SIZE_MEGABYTES));
                 }
             } catch (IOException e) {

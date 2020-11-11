@@ -1196,12 +1196,12 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportDatasetTooBigNoticeShouldWriteObject() throws IOException {
+    void exportTooBigDatasetNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        DatasetTooBigNotice toExport =
-                new DatasetTooBigNotice(56, 40);
+        TooBigDatasetNotice toExport =
+                new TooBigDatasetNotice(56, 40);
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();

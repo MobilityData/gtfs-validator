@@ -1046,7 +1046,7 @@ public class ProtobufNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final DatasetTooBigNotice toExport) throws IOException {
+    public void export(final TooBigDatasetNotice toExport) throws IOException {
         protoBuilder.clear()
                 .setCsvFileName("not supported yet")
                 .setSeverity(GtfsValidationOutputProto.GtfsProblem.Severity.ERROR)

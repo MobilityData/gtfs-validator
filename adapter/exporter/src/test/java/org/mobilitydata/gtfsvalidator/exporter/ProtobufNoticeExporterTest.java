@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.adapter.protos.GtfsValidationOutputProto;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.UnsupportedGtfsStructureNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mockito.ArgumentMatchers;
@@ -2623,7 +2622,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportDatasetTooBigNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportTooBigDatasetNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -2638,7 +2637,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new DatasetTooBigNotice(56, 40));
+        underTest.export(new TooBigDatasetNotice(56, 40));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1))

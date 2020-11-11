@@ -21,11 +21,11 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class DatasetTooBigNotice extends ErrorNotice {
-    public DatasetTooBigNotice(final float datasetSizeMegaBytes, final float maxDatasetSizeMegaBytes) {
+public class TooBigDatasetNotice extends ErrorNotice {
+    public TooBigDatasetNotice(final float datasetSizeMegaBytes, final float maxDatasetSizeMegaBytes) {
         super(null,
                 E_059,
-                "Dataset too big",
+                "Too big dataset",
                 String.format("Dataset could not be processed because of its size: %.2f mb -- max dataset size: %.2f mb.",
                         datasetSizeMegaBytes,
                         maxDatasetSizeMegaBytes),

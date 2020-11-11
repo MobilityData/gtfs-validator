@@ -439,7 +439,7 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final DatasetTooBigNotice toExport) throws IOException {
+    public void export(final TooBigDatasetNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
