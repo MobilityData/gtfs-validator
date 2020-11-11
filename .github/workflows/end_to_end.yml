@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master, prevent-worker-from-stoppping-on-error] #<-- replace transport-agency-name by the name of the agency/publisher
+    branches: [ master, prevent-worker-from-stopping-on-error] #<-- replace transport-agency-name by the name of the agency/publisher
 # todo: implement #474
 jobs:
   run-on-data:
