@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master,  transport-agency-name] #<-- replace transport-agency-name by the name of the agency/publisher
+    branches: [ master,  always-generate-validation-report] #<-- replace transport-agency-name by the name of the agency/publisher
 
 jobs:
   run-on-data:
