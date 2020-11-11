@@ -281,6 +281,17 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                     return defaultValue.get(0);
                 }
             }
+            case DEBUG_KEY: {
+                // if command line option is provided with a value then use this value. Example "--beautify true"
+                // or "--beautify false"
+                if (hasExecParam(DEBUG_KEY) && hasExecParamValue(DEBUG_KEY)) {
+                    return getExecParamByKey(DEBUG_KEY).getValue().get(0);
+                } else {
+                    // otherwise use default value. Note that it is not allowed to use key `beautify` without
+                    // specifying a boolean as argument
+                    return defaultValue.get(0);
+                }
+            }
         }
         throw new IllegalArgumentException("Requested key is not handled");
     }
@@ -367,8 +378,9 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      *
      * @param options {@link Options} defined by developer
      * @throws CommandLineOptionLongOptExceedsMaxCharNumException an exception if {@link Options} will not be legible
-     *                                                            after application of {@code HelpFormatter} i.e. {@link Options} defined by developer has too long combination of
-     *                                                            opt and longOpt for one {@link Option}.
+     *                                                            after application of {@code HelpFormatter} i.e.
+     *                                                            {@link Options} defined by developer has too long
+     *                                                            combination of opt and longOpt for one {@link Option}.
      */
     private void validateAllOptionLength(final Options options) throws CommandLineOptionLongOptExceedsMaxCharNumException {
         final List<Option> tooLongOptionCollection = options.getOptions().stream()
