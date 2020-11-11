@@ -25,8 +25,7 @@ public class OutOfMemoryNotice extends ErrorNotice {
     public OutOfMemoryNotice(final float datasetSizeMegaBytes, final int noticeCount) {
         super(null,
                 E_061,
-                "" +
-                        "Out of memory notice",
+                "Out of memory notice",
                 String.format("Out of memory error might have been raised because dataset was too big " +
                                 "(dataset size: %f mb) or because too many notices were generated (notice count: %d)",
                         datasetSizeMegaBytes,

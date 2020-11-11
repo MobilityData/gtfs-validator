@@ -37,18 +37,17 @@ public class HandleFatalCrash {
         this.inputPath = inputPath;
     }
 
-    public void execute(final Object exceptionOrError) {
-        final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath);
-        final int noticeCount = resultRepo.getErrorNoticeCount() + resultRepo.getWarningNoticeCount() + resultRepo.getInfoNoticeCount();
-        if (exceptionOrError instanceof OutOfMemoryError) {
-            resultRepo.addNotice(new OutOfMemoryNotice(datasetSizeMegaBytes, noticeCount));
-        } else {
-            resultRepo.addNotice(
-                    new ValidatorCrashNotice(
-                            ((Throwable) exceptionOrError).getMessage(),
-                            Arrays.toString(((Throwable) exceptionOrError).getStackTrace())
-                    )
-            );
-        }
+    public void execute() {
+        final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.MEGABYTES);
+        final int noticeCount = resultRepo.getNoticeCount();
+        resultRepo.addNotice(new OutOfMemoryNotice(datasetSizeMegaBytes, noticeCount));
+    }
+
+    public void execute(final Exception exception) {
+        resultRepo.addNotice(
+                new ValidatorCrashNotice(
+                        exception.getMessage(),
+                        Arrays.toString((exception.getStackTrace()))
+                ));
     }
 }
