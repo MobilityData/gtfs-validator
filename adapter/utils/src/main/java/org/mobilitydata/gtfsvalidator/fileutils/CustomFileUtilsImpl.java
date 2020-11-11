@@ -50,6 +50,18 @@ public class CustomFileUtilsImpl implements CustomFileUtils {
         return FileUtils.sizeOf(new File(pathToFile.toString()));
     }
 
+    @Override
+    public long sizeOf(final Path pathToFile, final String unit) {
+        switch (unit) {
+            case MEGABYTES: {
+                return FileUtils.sizeOf(new File(pathToFile.toString()))/FileUtils.ONE_MB;
+            }
+            default: {
+                return sizeOf(pathToFile);
+            }
+        }
+    }
+
     /**
      * Returns the size of a directory given its path
      * @param pathToDirectory  the path to the directory as String
