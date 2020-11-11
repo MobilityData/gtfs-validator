@@ -22,14 +22,17 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
 import java.io.IOException;
 
 public class ValidatorCrashNotice extends InfoNotice {
-    public ValidatorCrashNotice(final String stacktrace) {
+    public ValidatorCrashNotice(final String exceptionMessage, final String exceptionStackTrace) {
         super(null,
                 I_003,
                 "Fatal error",
                 String.format("An exception occurred and the validator could not complete the validation process." +
-                        " See detailed message for more information: %s",
-                        stacktrace),
+                        " See detailed message for more information: %s -- stack trace: %s",
+                        exceptionMessage,
+                        exceptionStackTrace),
                 null);
+        putNoticeSpecific(KEY_EXCEPTION_MESSAGE, exceptionMessage);
+        putNoticeSpecific(KEY_EXCEPTION_STACK_TRACE, exceptionStackTrace);
     }
 
     @Override

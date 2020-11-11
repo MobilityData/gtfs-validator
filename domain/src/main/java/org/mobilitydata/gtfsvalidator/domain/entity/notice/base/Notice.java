@@ -115,6 +115,8 @@ public abstract class Notice {
     public static final String KEY_OTHER_TRIP_ID = "otherTripId";
     public static final String KEY_SERVICE_ID = "serviceId";
     public static final String KEY_OTHER_SERVICE_ID = "otherServiceId";
+    public static final String KEY_EXCEPTION_MESSAGE = "exceptionMessage";
+    public static final String KEY_EXCEPTION_STACK_TRACE = "exceptionStackTrace";
 
     private final String filename;
     private final int code;
