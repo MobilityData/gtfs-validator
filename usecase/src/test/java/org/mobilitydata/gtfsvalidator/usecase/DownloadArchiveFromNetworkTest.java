@@ -31,7 +31,7 @@ class DownloadArchiveFromNetworkTest {
         when(mockExecParamRepo.hasExecParamValue(anyString())).thenReturn(true);
         when(mockExecParamRepo.getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.INPUT_KEY)))
                 .thenReturn(
-                        Path.of("./src/test/resources/download_archive_from_network_test_directory/sample")
+                        Path.of("./src/test/resources/download_archive_from_network_test_directory")
                                 .toString());
         when(mockExecParamRepo.getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.URL_KEY)))
                 .thenReturn("https://octa.net/current/google_transit.zip");
@@ -61,7 +61,7 @@ class DownloadArchiveFromNetworkTest {
 
         // remove created files
         File toDelete = new File(
-                Path.of("./src/test/resources/download_archive_from_network_test_directory/sample").toString());
+                Path.of("./src/test/resources/download_archive_from_network_test_directory").toString());
         assertTrue(toDelete.delete());
     }
 
@@ -72,7 +72,7 @@ class DownloadArchiveFromNetworkTest {
         when(mockExecParamRepo.hasExecParamValue(anyString())).thenReturn(true);
         when(mockExecParamRepo.getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.INPUT_KEY)))
                 .thenReturn(
-                        Path.of("./src/test/resources/download_archive_from_network_test_directory/sample")
+                        Path.of("./src/test/resources/download_archive_from_network_test_directory")
                                 .toString());
         when(mockExecParamRepo.getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.URL_KEY)))
                 .thenReturn("invalid url");
@@ -116,7 +116,7 @@ class DownloadArchiveFromNetworkTest {
         when(mockExecParamRepo.hasExecParamValue(anyString())).thenReturn(true);
         when(mockExecParamRepo.getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.INPUT_KEY)))
                 .thenReturn(
-                        Path.of("./src/test/resources/download_archive_from_network_test_directory/sample")
+                        Path.of("./src/test/resources/download_archive_from_network_test_directory")
                                 .toString());
         when(mockExecParamRepo.getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.URL_KEY)))
                 .thenReturn("https://octa.net/current/google_transit.zip");
@@ -158,7 +158,7 @@ class DownloadArchiveFromNetworkTest {
 
         // remove created files
         File toDelete = new File(
-                Path.of("./src/test/resources/download_archive_from_network_test_directory/sample").toString());
+                Path.of("./src/test/resources/download_archive_from_network_test_directory").toString());
         assertTrue(toDelete.delete());
     }
 
@@ -169,7 +169,7 @@ class DownloadArchiveFromNetworkTest {
         when(mockExecParamRepo.hasExecParamValue(anyString())).thenReturn(true);
         when(mockExecParamRepo.getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.INPUT_KEY)))
                 .thenReturn(
-                        Path.of("./src/test/resources/download_archive_from_network_test_directory/sample")
+                        Path.of("./src/test/resources/download_archive_from_network_test_directory")
                                 .toString());
         when(mockExecParamRepo.getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.URL_KEY)))
                 .thenReturn("https://octa.net/current/google_transit.zip");
@@ -198,7 +198,7 @@ class DownloadArchiveFromNetworkTest {
 
         // remove created files
         File toDelete = new File(
-                Path.of("./src/test/resources/download_archive_from_network_test_directory/sample").toString());
+                Path.of("./src/test/resources/download_archive_from_network_test_directory").toString());
         assertTrue(toDelete.delete());
     }
 }
