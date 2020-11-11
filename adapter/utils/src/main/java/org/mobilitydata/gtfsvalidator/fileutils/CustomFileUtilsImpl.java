@@ -54,7 +54,7 @@ public class CustomFileUtilsImpl implements CustomFileUtils {
     public long sizeOf(final Path pathToFile, final String unit) {
         switch (unit) {
             case MEGABYTES: {
-                return FileUtils.sizeOf(new File(pathToFile.toString()))/FileUtils.ONE_MB;
+                return sizeOf(pathToFile)/FileUtils.ONE_MB;
             }
             default: {
                 return sizeOf(pathToFile);

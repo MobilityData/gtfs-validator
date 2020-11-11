@@ -34,4 +34,14 @@ class CustomFileUtilsImplTest {
     void shouldMathSizeOfZipFile() {
         fileSizeTest(Path.of("./test_file.zip"), 2156);
     }
+
+    @Test
+    void shouldReturnSizeOfFileInBytes() {
+        // TODO
+    }
+
+    @Test
+    void shouldReturnSizeOfFileInMegabytes() {
+        // TODO
+    }
 }
