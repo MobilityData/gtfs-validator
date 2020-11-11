@@ -14,17 +14,18 @@
  *  limitations under the License.
  */
 
-package org.mobilitydata.gtfsvalidator.domain.entity.notice.info;
+package org.mobilitydata.gtfsvalidator.domain.entity.notice.error;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class ValidatorCrashNotice extends InfoNotice {
-    public ValidatorCrashNotice(final String exceptionMessage, final String exceptionStackTrace) {
+public class ValidatorCrashNotice extends ErrorNotice {
+    public ValidatorCrashNotice(final String exceptionMessage,
+                                final String exceptionStackTrace) {
         super(null,
-                I_003,
+                E_060,
                 "Fatal error",
                 String.format("An exception occurred and the validator could not complete the validation process." +
                         " See detailed message for more information: %s -- stack trace: %s",
