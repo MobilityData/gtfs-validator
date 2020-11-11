@@ -330,7 +330,8 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 "Stop validation process on first error");
         options.addOption(String.valueOf(BEAUTIFY_KEY.charAt(1)), BEAUTIFY_KEY, true,
                 "Beautify .json validation report");
-
+        options.addOption(String.valueOf(BEAUTIFY_KEY.charAt(0)), DEBUG_KEY, true,
+                "Log in debug mode (includes normal stacktrace)");
         validateAllOptionLength(options);
 
         // Commands --proto and --help take no arguments
