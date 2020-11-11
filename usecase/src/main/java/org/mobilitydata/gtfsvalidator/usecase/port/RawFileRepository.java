@@ -27,6 +27,7 @@ import java.util.Set;
  * This holds information about a GTFS dataset to validate.
  */
 public interface RawFileRepository {
+    float MAX_RAW_INPUT_SIZE_MEGABYTES = 65f;
 
     RawFileInfo create(RawFileInfo fileInfo);
 
