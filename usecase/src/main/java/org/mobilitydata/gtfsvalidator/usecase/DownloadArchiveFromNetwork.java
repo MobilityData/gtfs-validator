@@ -18,8 +18,11 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotDownloadArchiveFromNetworkNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.DatasetTooBigNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.CustomFileUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +30,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
@@ -42,6 +46,8 @@ public class DownloadArchiveFromNetwork {
     private final ValidationResultRepository resultRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
+    private final CustomFileUtils customFileUtils;
+    private final Path inputPath;
 
     /**
      * @param resultRepo a repository storing information about the validation process
@@ -49,10 +55,14 @@ public class DownloadArchiveFromNetwork {
      */
     public DownloadArchiveFromNetwork(final ValidationResultRepository resultRepo,
                                       final ExecParamRepository execParamRepo,
-                                      final Logger logger) {
+                                      final Logger logger,
+                                      final CustomFileUtils customFileUtils,
+                                      final Path inputPath) {
         this.resultRepo = resultRepo;
         this.execParamRepo = execParamRepo;
         this.logger = logger;
+        this.customFileUtils = customFileUtils;
+        this.inputPath = inputPath;
     }
 
     /**
@@ -89,6 +99,12 @@ public class DownloadArchiveFromNetwork {
                         Paths.get(targetPath),
                         StandardCopyOption.REPLACE_EXISTING
                 );
+                final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.MEGABYTES);
+                if (RawFileRepository.MAX_RAW_INPUT_SIZE_MEGABYTES < datasetSizeMegaBytes) {
+                    resultRepo.addNotice(
+                            new DatasetTooBigNotice(datasetSizeMegaBytes,
+                                    RawFileRepository.MAX_RAW_INPUT_SIZE_MEGABYTES));
+                }
             } catch (IOException e) {
                 resultRepo.addNotice
                         (new CannotDownloadArchiveFromNetworkNotice(
