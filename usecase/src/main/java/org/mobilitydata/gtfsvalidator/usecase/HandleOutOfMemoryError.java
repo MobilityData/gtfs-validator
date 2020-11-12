@@ -17,19 +17,17 @@
 package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.OutOfMemoryNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ValidatorCrashNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mobilitydata.gtfsvalidator.usecase.utils.CustomFileUtils;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 /**
- * Use case to handle fatal exceptions and errors. The goal is to handle these gracefully. On errors and exceptions,
+ * Use case to handle fatal exceptions and errors. The goal is to handle these gracefully. On errors,
  * a notice will be generated to inform the users that something wrong prevent the validator from finishing its
  * execution.
  */
-public class HandleFatalCrash {
+public class HandleOutOfMemoryError {
     private final ValidationResultRepository resultRepo;
     private final CustomFileUtils customFileUtils;
     private final Path inputPath;
@@ -39,9 +37,9 @@ public class HandleFatalCrash {
      * @param customFileUtils  a util class instance to compute size of files and directory
      * @param inputPath        the path to the input data
      */
-    public HandleFatalCrash(final ValidationResultRepository resultRepo,
-                            final CustomFileUtils customFileUtils,
-                            final Path inputPath) {
+    public HandleOutOfMemoryError(final ValidationResultRepository resultRepo,
+                                  final CustomFileUtils customFileUtils,
+                                  final Path inputPath) {
         this.resultRepo = resultRepo;
         this.customFileUtils = customFileUtils;
         this.inputPath = inputPath;
@@ -54,17 +52,5 @@ public class HandleFatalCrash {
         final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.Unit.MEGABYTES);
         final int noticeCount = resultRepo.getNoticeCount();
         resultRepo.addNotice(new OutOfMemoryNotice(datasetSizeMegaBytes, noticeCount));
-    }
-
-    /**
-     * Will add a {@code ValidatorCrashNotice} to the {@code ValidationResultRepository} provided in the constructor
-     * @param exception  the exception that is not handled by the validator
-     */
-    public void execute(final Exception exception) {
-        resultRepo.addNotice(
-                new ValidatorCrashNotice(
-                        exception.getMessage(),
-                        Arrays.toString((exception.getStackTrace()))
-                ));
     }
 }

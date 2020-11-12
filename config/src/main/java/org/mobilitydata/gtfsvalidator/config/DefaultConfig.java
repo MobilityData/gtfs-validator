@@ -510,9 +510,13 @@ public class DefaultConfig {
         return execParamRepo.getExecParamValue(execParamKey);
     }
 
-    public HandleFatalCrash handleFatalCrash() {
-        return new HandleFatalCrash(resultRepo,
+    public HandleOutOfMemoryError handleOutOfMemoryError() {
+        return new HandleOutOfMemoryError(resultRepo,
                 CustomFileUtilsImpl.getInstance(),
                 Path.of(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)));
+    }
+
+    public HandleUnsupportedException handleUnsupportedException() {
+        return new HandleUnsupportedException(resultRepo);
     }
 }

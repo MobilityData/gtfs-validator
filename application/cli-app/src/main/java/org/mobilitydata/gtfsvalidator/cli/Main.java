@@ -228,9 +228,9 @@ public class Main {
             logger.info("Set option -" + ExecParamRepository.ABORT_ON_ERROR + " to false for validation process" +
                     " to continue on errors");
         } catch (OutOfMemoryError e) {
-            config.handleFatalCrash().execute();
+            config.handleOutOfMemoryError().execute();
         } catch (Exception e) {
-            config.handleFatalCrash().execute(e);
+            config.handleUnsupportedException().execute(e);
         } finally {
             try {
                 config.generateInfoNotice(
