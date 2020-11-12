@@ -51,7 +51,7 @@ public class HandleFatalCrash {
      * Will add a {@code OutOfMemoryNotice} to the {@code ValidationResultRepository} provided in the constructor
      */
     public void execute() {
-        final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.MEGABYTES);
+        final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.Unit.MEGABYTES);
         final int noticeCount = resultRepo.getNoticeCount();
         resultRepo.addNotice(new OutOfMemoryNotice(datasetSizeMegaBytes, noticeCount));
     }

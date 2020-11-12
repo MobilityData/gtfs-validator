@@ -104,7 +104,7 @@ public class DownloadArchiveFromNetwork {
                         Paths.get(targetPath),
                         StandardCopyOption.REPLACE_EXISTING
                 );
-                final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.MEGABYTES);
+                final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.Unit.MEGABYTES);
                 if (RawFileRepository.MAX_RAW_INPUT_SIZE_MEGABYTES < datasetSizeMegaBytes) {
                     resultRepo.addNotice(
                             new TooBigDatasetNotice(datasetSizeMegaBytes,

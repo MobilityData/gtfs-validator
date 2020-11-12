@@ -53,14 +53,17 @@ public class CustomFileUtilsImpl implements CustomFileUtils {
 
     /**
      * Returns the size of a file given its path in the specified unit. If no unit is specified, will return the result
-     * in bytes
+     * in the specified unit.
      * @param pathToFile  the path to the file as String
      * @param unit        the unit in which to express the result
      * @return  the size of a file given its path in the specified unit. If no unit is specified, will return the result
-     * in bytes
+     * in the specified unit.
      */
     @Override
-    public long sizeOf(final Path pathToFile, final String unit) {
+    public long sizeOf(final Path pathToFile, final Unit unit) {
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit must be provided");
+        }
         //noinspection SwitchStatementWithTooFewBranches will be updated with other units if needed
         switch (unit) {
             case MEGABYTES: {

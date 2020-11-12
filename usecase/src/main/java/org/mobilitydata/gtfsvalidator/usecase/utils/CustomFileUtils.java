@@ -19,7 +19,13 @@ package org.mobilitydata.gtfsvalidator.usecase.utils;
 import java.nio.file.Path;
 
 public interface CustomFileUtils {
-    String MEGABYTES = "mb";
+    /**
+     * Enum for units of file size
+     */
+    enum Unit {
+        BYTES,
+        MEGABYTES,
+    }
 
     /**
      * Returns the size of a file given its path in bytes
@@ -36,7 +42,7 @@ public interface CustomFileUtils {
      * @return  the size of a file given its path in the specified unit. If no unit is specified, will return the result
      * in bytes
      */
-    long sizeOf(final Path pathToFile, final String unit);
+    long sizeOf(final Path pathToFile, final Unit unit);
 
     /**
      * Returns the size of a directory given its path in bytes

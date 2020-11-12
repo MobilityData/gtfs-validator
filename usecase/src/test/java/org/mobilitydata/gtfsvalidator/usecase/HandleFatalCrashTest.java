@@ -22,7 +22,7 @@ class HandleFatalCrashTest {
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         when(mockResultRepo.getNoticeCount()).thenReturn(5);
         CustomFileUtils mockFileUtils = mock(CustomFileUtils.class);
-        when(mockFileUtils.sizeOf(any(), anyString())).thenReturn(60L);
+        when(mockFileUtils.sizeOf(any(), any())).thenReturn(60L);
         Path mockPath = mock(Path.class);
         HandleFatalCrash underTest = new HandleFatalCrash(mockResultRepo, mockFileUtils, mockPath);
 
@@ -46,7 +46,7 @@ class HandleFatalCrashTest {
         assertEquals(60f, noticeList.get(0).getNoticeSpecific(Notice.KEY_DATASET_SIZE_MEGABYTES));
         assertEquals(5, noticeList.get(0).getNoticeSpecific(Notice.KEY_DATASET_NOTICE_COUNT));
 
-        verify(mockFileUtils, times(1)).sizeOf(mockPath, CustomFileUtils.MEGABYTES);
+        verify(mockFileUtils, times(1)).sizeOf(mockPath, CustomFileUtils.Unit.MEGABYTES);
         verify(mockResultRepo, times(1)).getNoticeCount();
         verifyNoMoreInteractions(mockFileUtils, mockPath, mockResultRepo);
     }

@@ -39,7 +39,7 @@ class DownloadArchiveFromNetworkTest {
         Logger mockLogger = mock(Logger.class);
 
         CustomFileUtils mockFileUtils = mock(CustomFileUtils.class);
-        when(mockFileUtils.sizeOf(any(), anyString())).thenReturn(40L);
+        when(mockFileUtils.sizeOf(any(), any())).thenReturn(40L);
 
         Path mockPath = mock(Path.class);
 
@@ -55,7 +55,7 @@ class DownloadArchiveFromNetworkTest {
                 .hasExecParamValue(ArgumentMatchers.eq(ExecParamRepository.URL_KEY));
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.INPUT_KEY));
-        verify(mockFileUtils, times(1)).sizeOf(mockPath, CustomFileUtils.MEGABYTES);
+        verify(mockFileUtils, times(1)).sizeOf(mockPath, CustomFileUtils.Unit.MEGABYTES);
         verify(mockLogger, times(1)).info("Downloading archive");
         verifyNoMoreInteractions(mockExecParamRepo, mockLogger, mockFileUtils, mockPath);
 
@@ -80,7 +80,7 @@ class DownloadArchiveFromNetworkTest {
         Logger mockLogger = mock(Logger.class);
 
         CustomFileUtils mockFileUtils = mock(CustomFileUtils.class);
-        when(mockFileUtils.sizeOf(any(), anyString())).thenReturn(40L);
+        when(mockFileUtils.sizeOf(any(), any())).thenReturn(40L);
 
         Path mockPath = mock(Path.class);
 
@@ -124,7 +124,7 @@ class DownloadArchiveFromNetworkTest {
         Logger mockLogger = mock(Logger.class);
 
         CustomFileUtils mockFileUtils = mock(CustomFileUtils.class);
-        when(mockFileUtils.sizeOf(any(), anyString())).thenReturn(80L);
+        when(mockFileUtils.sizeOf(any(), any())).thenReturn(80L);
 
         Path mockPath = mock(Path.class);
 
@@ -152,7 +152,7 @@ class DownloadArchiveFromNetworkTest {
                 .hasExecParamValue(ArgumentMatchers.eq(ExecParamRepository.URL_KEY));
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.INPUT_KEY));
-        verify(mockFileUtils, times(1)).sizeOf(mockPath, CustomFileUtils.MEGABYTES);
+        verify(mockFileUtils, times(1)).sizeOf(mockPath, CustomFileUtils.Unit.MEGABYTES);
         verify(mockLogger, times(1)).info("Downloading archive");
         verifyNoMoreInteractions(mockExecParamRepo, mockFileUtils, mockLogger, mockPath, mockResultRepo);
 
@@ -177,7 +177,7 @@ class DownloadArchiveFromNetworkTest {
         Logger mockLogger = mock(Logger.class);
 
         CustomFileUtils mockFileUtils = mock(CustomFileUtils.class);
-        when(mockFileUtils.sizeOf(any(), anyString())).thenReturn(45L);
+        when(mockFileUtils.sizeOf(any(), any())).thenReturn(45L);
 
         Path mockPath = mock(Path.class);
 
@@ -192,7 +192,7 @@ class DownloadArchiveFromNetworkTest {
                 .hasExecParamValue(ArgumentMatchers.eq(ExecParamRepository.URL_KEY));
         verify(mockExecParamRepo, times(1))
                 .getExecParamValue(ArgumentMatchers.eq(ExecParamRepository.INPUT_KEY));
-        verify(mockFileUtils, times(1)).sizeOf(mockPath, CustomFileUtils.MEGABYTES);
+        verify(mockFileUtils, times(1)).sizeOf(mockPath, CustomFileUtils.Unit.MEGABYTES);
         verify(mockLogger, times(1)).info("Downloading archive");
         verifyNoMoreInteractions(mockExecParamRepo, mockFileUtils, mockLogger, mockPath, mockResultRepo);
 
