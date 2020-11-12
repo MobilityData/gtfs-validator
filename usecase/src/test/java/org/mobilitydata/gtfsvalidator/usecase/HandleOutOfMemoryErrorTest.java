@@ -33,7 +33,7 @@ class HandleOutOfMemoryErrorTest {
         final List<OutOfMemoryNotice> noticeList = captor.getAllValues();
 
         assertNull(noticeList.get(0).getFilename());
-        assertEquals("Out of memory notice", noticeList.get(0).getTitle());
+        assertEquals("Out of memory", noticeList.get(0).getTitle());
         assertEquals(
                 String.format("Out of memory error might have been raised because dataset was too big " +
                         "(dataset size: %f mb) or because too many notices were generated (notice count: %d)",
