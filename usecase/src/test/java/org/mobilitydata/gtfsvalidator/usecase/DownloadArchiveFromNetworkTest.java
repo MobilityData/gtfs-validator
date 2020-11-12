@@ -66,7 +66,7 @@ class DownloadArchiveFromNetworkTest {
     }
 
     @Test
-    void invalidUrlShouldGenerateAddCannotDownloadArchiveFromNetworkNoticeToResultRepoAndThrowException() {
+    void invalidUrlShouldGenerateAndAddCannotDownloadArchiveFromNetworkNoticeToResultRepoAndThrowException() {
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         ExecParamRepository mockExecParamRepo = mock(ExecParamRepository.class);
         when(mockExecParamRepo.hasExecParamValue(anyString())).thenReturn(true);
