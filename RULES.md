@@ -529,7 +529,7 @@ An exception occurred, and the validator could not complete the validation proce
 
 <a name="E061"/>
 
-### E060 - Out of memory
+### E061 - Out of memory
 
 An OutOfMemoryError has been raised either because dataset was too big, or because too many notices were generated.
 
