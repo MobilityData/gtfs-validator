@@ -4,7 +4,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotDownloadArchiveFromNetworkNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.TooBigDatasetNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.GtfsDatasetTooBigNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -133,12 +133,12 @@ class DownloadArchiveFromNetworkTest {
 
         underTest.execute();
 
-        final ArgumentCaptor<TooBigDatasetNotice> captor =
-                ArgumentCaptor.forClass(TooBigDatasetNotice.class);
+        final ArgumentCaptor<GtfsDatasetTooBigNotice> captor =
+                ArgumentCaptor.forClass(GtfsDatasetTooBigNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final List<TooBigDatasetNotice> noticeList = captor.getAllValues();
+        final List<GtfsDatasetTooBigNotice> noticeList = captor.getAllValues();
 
         assertNull(noticeList.get(0).getFilename());
         assertEquals(80f, noticeList.get(0).getNoticeSpecific(Notice.KEY_DATASET_SIZE_MEGABYTES));

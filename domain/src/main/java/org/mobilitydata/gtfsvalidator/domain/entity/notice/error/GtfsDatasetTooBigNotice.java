@@ -21,19 +21,17 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
 
 import java.io.IOException;
 
-public class ValidatorCrashNotice extends ErrorNotice {
-    public ValidatorCrashNotice(final String exceptionMessage,
-                                final String exceptionStackTrace) {
+public class GtfsDatasetTooBigNotice extends ErrorNotice {
+    public GtfsDatasetTooBigNotice(final float datasetSizeMegaBytes, final float maxDatasetSizeMegaBytes) {
         super(null,
-                E_060,
-                "Fatal error",
-                String.format("An exception occurred and the validator could not complete the validation process." +
-                        " See detailed message for more information: %s -- stack trace: %s",
-                        exceptionMessage,
-                        exceptionStackTrace),
+                E_059,
+                "GTFS dataset too big",
+                String.format("Dataset could not be processed because of its size: %.2f mb -- max dataset size: %.2f mb.",
+                        datasetSizeMegaBytes,
+                        maxDatasetSizeMegaBytes),
                 null);
-        putNoticeSpecific(KEY_EXCEPTION_MESSAGE, exceptionMessage);
-        putNoticeSpecific(KEY_EXCEPTION_STACK_TRACE, exceptionStackTrace);
+        putNoticeSpecific(KEY_DATASET_SIZE_MEGABYTES, datasetSizeMegaBytes);
+        putNoticeSpecific(KEY_DATASET_MAX_SIZE_MEGABYTES, maxDatasetSizeMegaBytes);
     }
 
     @Override

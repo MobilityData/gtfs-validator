@@ -26,7 +26,6 @@ import org.mockito.ArgumentMatchers;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -2593,7 +2592,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportValidatorCrashNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportFatalInternalErrorNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -2608,7 +2607,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new ValidatorCrashNotice("exception message",
+        underTest.export(new FatalInternalErrorNotice("exception message",
                 "exception stack trace"));
 
         verify(mockBuilder, times(1)).clear();
@@ -2621,7 +2620,7 @@ class ProtobufNoticeExporterTest {
     }
 
     @Test
-    void exportTooBigDatasetNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
+    void exportGtfsDatasetTooBigNoticeShouldMapToCsvProblemAndWriteToStream() throws IOException {
         GtfsValidationOutputProto.GtfsProblem.Builder mockBuilder =
                 mock(GtfsValidationOutputProto.GtfsProblem.Builder.class, RETURNS_SELF);
 
@@ -2636,7 +2635,7 @@ class ProtobufNoticeExporterTest {
         when(mockStreamGenerator.getStream()).thenReturn(mockStream);
 
         ProtobufNoticeExporter underTest = new ProtobufNoticeExporter(mockBuilder, mockStreamGenerator);
-        underTest.export(new TooBigDatasetNotice(56, 40));
+        underTest.export(new GtfsDatasetTooBigNotice(56, 40));
 
         verify(mockBuilder, times(1)).clear();
         verify(mockBuilder, times(1))
@@ -2673,7 +2672,4 @@ class ProtobufNoticeExporterTest {
         verify(mockBuilder, times(1)).build();
         verify(mockProblem, times(1)).writeTo(ArgumentMatchers.eq(mockStream));
     }
-
-
-
 }

@@ -16,7 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase;
 
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ValidatorCrashNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FatalInternalErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.util.Arrays;
@@ -37,12 +37,12 @@ public class HandleUnsupportedException {
     }
 
     /**
-     * Will add a {@code ValidatorCrashNotice} to the {@code ValidationResultRepository} provided in the constructor
+     * Will add a {@code FatalInternalErrorNotice} to the {@code ValidationResultRepository} provided in the constructor
      * @param exception  the exception that is not supported by the validator
      */
     public void execute(final Exception exception) {
         resultRepo.addNotice(
-                new ValidatorCrashNotice(
+                new FatalInternalErrorNotice(
                         exception.getMessage(),
                         Arrays.toString((exception.getStackTrace()))
                 ));

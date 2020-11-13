@@ -62,9 +62,9 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 | [E056](#E056) | Missing `calendar_dates.txt` and `calendar.txt` files |
 | [E057](#E057) | Decreasing `shape_dist_traveled` in `stop_times.txt` |
 | [E058](#E058) | Decreasing `shape_dist_traveled` in `shapes.txt` |
-| [E058](#E059) | Too big dataset |
-| [E058](#E060) | Fatal error |
-| [E058](#E061) | Out of memory |
+| [E059](#E059) | GTFS dataset too big |
+| [E060](#E060) | Fatal internal error -- please report |
+| [E061](#E061) | Out of memory |
 
 ### Table of Warnings
 
@@ -517,15 +517,15 @@ Stop times in a trip should have increasing distance.
 
 <a name="E059"/>
 
-### E059 - Too big dataset
+### E059 - GTFS dataset too big
 
 Dataset could not be processed because of its size: maximum zip file is set to 65MB.
 
 <a name="E060"/>
 
-### E060 - Fatal error
+### E060 - Fatal internal error -- please report
 
-An exception occurred, and the validator could not complete the validation process.
+An exception occurred, and the validator could not complete the validation process. Please report this error.
 
 <a name="E061"/>
 

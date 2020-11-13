@@ -26,7 +26,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.InOrder;
 
 import java.io.IOException;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -1196,12 +1195,12 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportTooBigDatasetNoticeShouldWriteObject() throws IOException {
+    void exportGtfsDatasetTooBigNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        TooBigDatasetNotice toExport =
-                new TooBigDatasetNotice(56, 40);
+        GtfsDatasetTooBigNotice toExport =
+                new GtfsDatasetTooBigNotice(56, 40);
         underTest.export(toExport);
 
         verify(mockGenerator, times(1)).useDefaultPrettyPrinter();
@@ -1224,12 +1223,12 @@ class JsonNoticeExporterTest {
     }
 
     @Test
-    void exportValidatorCrashNoticeShouldWriteObject() throws IOException {
+    void exportFatalInternalErrorNoticeShouldWriteObject() throws IOException {
         JsonGenerator mockGenerator = mock(JsonGenerator.class, RETURNS_SELF);
 
         JsonNoticeExporter underTest = new JsonNoticeExporter(mockGenerator);
-        ValidatorCrashNotice toExport =
-                new ValidatorCrashNotice("exception message",
+        FatalInternalErrorNotice toExport =
+                new FatalInternalErrorNotice("exception message",
                         "exception stack trace");
         underTest.export(toExport);
 

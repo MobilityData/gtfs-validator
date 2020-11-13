@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotDownloadArchiveFromNetworkNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.TooBigDatasetNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.GtfsDatasetTooBigNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
@@ -72,7 +72,7 @@ public class DownloadArchiveFromNetwork {
      * Use case execution method: downloads a GTFS archive at the URL provided in the constructor. If the process fails
      * a {@link CannotDownloadArchiveFromNetworkNotice} is generated and added to the {@link ValidationResultRepository}
      * provided in the constructor. If the size downloaded zip file is too important, will generate and add a
-     * {@link TooBigDatasetNotice} to the {@link ValidationResultRepository} provided in the constructor.
+     * {@link GtfsDatasetTooBigNotice} to the {@link ValidationResultRepository} provided in the constructor.
      * @throws IOException if archive could be downloaded from network
      */
     public void execute() throws IOException {
@@ -107,7 +107,7 @@ public class DownloadArchiveFromNetwork {
                 final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.Unit.MEGABYTES);
                 if (RawFileRepository.MAX_RAW_INPUT_SIZE_MEGABYTES < datasetSizeMegaBytes) {
                     resultRepo.addNotice(
-                            new TooBigDatasetNotice(datasetSizeMegaBytes,
+                            new GtfsDatasetTooBigNotice(datasetSizeMegaBytes,
                                     RawFileRepository.MAX_RAW_INPUT_SIZE_MEGABYTES));
                 }
             } catch (IOException e) {

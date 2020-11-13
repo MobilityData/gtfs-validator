@@ -167,9 +167,9 @@ public interface NoticeExporter {
 
     void export(final UnsupportedGtfsStructureNotice unsupportedGtfsStructureNotice) throws IOException;
 
-    void export(final ValidatorCrashNotice validatorCrashNotice) throws IOException;
+    void export(final FatalInternalErrorNotice fatalInternalErrorNotice) throws IOException;
 
-    void export(final TooBigDatasetNotice tooBigDatasetNotice) throws IOException;
+    void export(final GtfsDatasetTooBigNotice gtfsDatasetTooBigNotice) throws IOException;
 
     void export(final OutOfMemoryNotice outOfMemoryNotice) throws IOException;
 }

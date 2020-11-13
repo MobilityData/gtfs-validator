@@ -2,7 +2,7 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ValidatorCrashNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FatalInternalErrorNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 import org.mockito.ArgumentCaptor;
 
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 
 class HandleUnsupportedExceptionTest {
 @Test
-    void shouldGenerateAndAddValidatorCrashNoticeToResultRepoWhenExceptionIsThrown() {
+    void shouldGenerateAndAddFatalInternalErrorNoticeToResultRepoWhenExceptionIsThrown() {
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
         HandleUnsupportedException underTest = new HandleUnsupportedException(mockResultRepo);
         Exception mockException = mock(Exception.class);
@@ -26,18 +26,19 @@ class HandleUnsupportedExceptionTest {
         when(mockException.getStackTrace()).thenReturn(mockArray);
 
         underTest.execute(mockException);
-        final ArgumentCaptor<ValidatorCrashNotice> captor =
-                ArgumentCaptor.forClass(ValidatorCrashNotice.class);
+        final ArgumentCaptor<FatalInternalErrorNotice> captor =
+                ArgumentCaptor.forClass(FatalInternalErrorNotice.class);
 
         verify(mockResultRepo, times(1)).addNotice(captor.capture());
 
-        final List<ValidatorCrashNotice> noticeList = captor.getAllValues();
+        final List<FatalInternalErrorNotice> noticeList = captor.getAllValues();
 
         assertNull(noticeList.get(0).getFilename());
-        assertEquals("Fatal error", noticeList.get(0).getTitle());
+        assertEquals("Fatal internal error -- please report", noticeList.get(0).getTitle());
         assertEquals(
                 String.format("An exception occurred and the validator could not complete the validation process." +
-                                " See detailed message for more information: %s -- stack trace: %s",
+                                " Please report this error. See detailed message for more information: " +
+                                "%s -- stack trace: %s",
                         "exception message",
                         Arrays.toString(mockArray)),
                 noticeList.get(0).getDescription());

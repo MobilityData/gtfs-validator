@@ -21,7 +21,7 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.*;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.UnsupportedGtfsStructureNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.info.ValidationProcessInfoNotice;
-import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.ValidatorCrashNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.FatalInternalErrorNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.*;
 
 import java.io.IOException;
@@ -434,12 +434,12 @@ public class JsonNoticeExporter implements NoticeExporter {
     }
 
     @Override
-    public void export(final ValidatorCrashNotice toExport) throws IOException {
+    public void export(final FatalInternalErrorNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
     @Override
-    public void export(final TooBigDatasetNotice toExport) throws IOException {
+    public void export(final GtfsDatasetTooBigNotice toExport) throws IOException {
         jsonGenerator.writeObject(toExport);
     }
 
