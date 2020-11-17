@@ -28,8 +28,7 @@ import java.util.Collection;
  */
 public interface ValidationResultRepository {
     int MAX_NOTICE_COUNT = 100;
-    String PATH_TO_TEMP_RESOURCES = "./src/main/resources/temp_report";
-    String TEMP_PATH = Path.of(PATH_TO_TEMP_RESOURCES).toString();
+    Path TEMP_OUTPUT_PATH = Path.of("adapter/repository/in-memory-simple/src/main/resources/report");
 
     Notice addNotice(Notice newNotice) throws TooManyValidationErrorException;
 
@@ -47,6 +46,8 @@ public interface ValidationResultRepository {
     int getNoticeCount();
 
     void flushRepo();
+
+    void tempExport() throws IOException;
 
     int getTempExportCount();
 }
