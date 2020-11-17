@@ -16,11 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
-import com.google.common.io.Resources;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collection;
 
 /**
@@ -28,7 +28,8 @@ import java.util.Collection;
  */
 public interface ValidationResultRepository {
     int MAX_NOTICE_COUNT = 100;
-    String TEMP_PATH = Resources.getResource("./in-memory-simple/src/main/resources/temp_report").toString();
+    String PATH_TO_TEMP_RESOURCES = "./src/main/resources/temp_report";
+    String TEMP_PATH = Path.of(PATH_TO_TEMP_RESOURCES).toString();
 
     Notice addNotice(Notice newNotice) throws TooManyValidationErrorException;
 
