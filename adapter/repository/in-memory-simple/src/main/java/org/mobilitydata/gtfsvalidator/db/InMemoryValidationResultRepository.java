@@ -36,7 +36,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-// todo: implement #483
 /**
  * Holds information about the validation process. Stores notices according to their types. Provides methods to add
  * said notices to the repository and get said notices.
