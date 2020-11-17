@@ -17,13 +17,14 @@ class HandleUnsupportedExceptionTest {
 @Test
     void shouldGenerateAndAddFatalInternalErrorNoticeToResultRepoWhenExceptionIsThrown() {
         ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
-        HandleUnsupportedException underTest = new HandleUnsupportedException(mockResultRepo);
         Exception mockException = mock(Exception.class);
         when(mockException.getMessage()).thenReturn("exception message");
         StackTraceElement mockStackTraceElement = mock(StackTraceElement.class);
         StackTraceElement[] mockArray = {mockStackTraceElement};
 
         when(mockException.getStackTrace()).thenReturn(mockArray);
+
+        HandleUnsupportedException underTest = new HandleUnsupportedException(mockResultRepo);
 
         underTest.execute(mockException);
         final ArgumentCaptor<FatalInternalErrorNotice> captor =

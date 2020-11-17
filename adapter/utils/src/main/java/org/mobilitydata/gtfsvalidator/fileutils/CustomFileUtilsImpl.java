@@ -62,7 +62,7 @@ public class CustomFileUtilsImpl implements CustomFileUtils {
     @Override
     public long sizeOf(final Path pathToFile, final Unit unit) {
         if (unit == null) {
-            throw new IllegalArgumentException("Unit must be provided");
+            throw new IllegalArgumentException("Unit must not be null if provided");
         }
         //noinspection SwitchStatementWithTooFewBranches will be updated with other units if needed
         switch (unit) {

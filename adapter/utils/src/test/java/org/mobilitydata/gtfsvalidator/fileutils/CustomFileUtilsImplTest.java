@@ -64,7 +64,7 @@ class CustomFileUtilsImplTest {
                         null
                 ));
 
-        assertEquals("Unit must be provided", exception.getMessage());
+        assertEquals("Unit must not be null if provided", exception.getMessage());
     }
 
     @Test
