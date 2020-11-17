@@ -79,8 +79,8 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
             try {
                 tempExport();
                 flushRepo();
-                addNotice(newNotice);
                 tempExportCount += 1;
+                addNotice(newNotice);
             } catch (IOException ignored) {
                 // todo: catch this exception to avoid modifying all use case signature
             }

@@ -28,9 +28,8 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class InMemoryValidationResultRepositoryTest {
 
@@ -100,7 +99,16 @@ class InMemoryValidationResultRepositoryTest {
 
     @Test
     void shouldFlushItselfOnTooManyNotices() {
-        // todo
+        WarningNotice mockWarningNotice = mock(WarningNotice.class);
+        ValidationResultRepository underTest =
+                new InMemoryValidationResultRepository(true, false);
+        for (int i = 0; i < 100; i++) {
+            underTest.addNotice(mockWarningNotice);
+        }
+        assertEquals(100, underTest.getNoticeCount());
+
+        underTest.addNotice(mockWarningNotice);
+        assertEquals(1, underTest.getNoticeCount());
     }
 
     @Test
