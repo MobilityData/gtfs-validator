@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.usecase.port;
 
+import com.google.common.io.Resources;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.NoticeExporter;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 
@@ -27,7 +28,7 @@ import java.util.Collection;
  */
 public interface ValidationResultRepository {
     int MAX_NOTICE_COUNT = 100;
-    String TEMP_PATH = "temp_report";
+    String TEMP_PATH = Resources.getResource("./in-memory-simple/src/main/resources/temp_report").toString();
 
     Notice addNotice(Notice newNotice) throws TooManyValidationErrorException;
 
