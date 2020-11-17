@@ -47,4 +47,6 @@ public interface ValidationResultRepository {
     int getNoticeCount();
 
     void flushRepo();
+
+    int getTempExportCount();
 }
