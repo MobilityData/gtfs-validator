@@ -48,6 +48,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
     private final boolean throwExceptionOnError;
     private final boolean asProto;
+    private int tempExportCount = 0;
 
     public InMemoryValidationResultRepository(final boolean throwExceptionOnError,
                                               final boolean asProto) {
@@ -79,6 +80,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
                 tempExport();
                 flushRepo();
                 addNotice(newNotice);
+                tempExportCount += 1;
             } catch (IOException ignored) {
                 // todo: catch this exception to avoid modifying all use case signature
             }
@@ -159,7 +161,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     private void tempExport() throws IOException {
         final NoticeExporter exporter = getExporter(
                 asProto,
-                TEMP_PATH,
+                TEMP_PATH + "_" + tempExportCount,
                 false);
         exporter.exportBegin();
 
