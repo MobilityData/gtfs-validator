@@ -86,7 +86,9 @@ public class DefaultConfig {
         specRepo = new InMemoryGtfsSpecRepository(loadGtfsProtobuf(), loadGtfsRelationshipDescription());
 
         resultRepo = new InMemoryValidationResultRepository(
-                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)),
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(PROTO_KEY))
+        );
     }
 
     private DefaultConfig(final String executionParametersAsString, final Logger logger) {
@@ -101,7 +103,9 @@ public class DefaultConfig {
         specRepo = new InMemoryGtfsSpecRepository(loadGtfsProtobuf(), loadGtfsRelationshipDescription());
 
         resultRepo = new InMemoryValidationResultRepository(
-                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)));
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)),
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(PROTO_KEY))
+        );
     }
 
     public static class Builder {

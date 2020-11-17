@@ -47,9 +47,12 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     private final List<WarningNotice> warningNoticeList = new ArrayList<>();
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
     private final boolean throwExceptionOnError;
+    private final boolean asProto;
 
-    public InMemoryValidationResultRepository(boolean throwExceptionOnError) {
+    public InMemoryValidationResultRepository(final boolean throwExceptionOnError,
+                                              final boolean asProto) {
         this.throwExceptionOnError = throwExceptionOnError;
+        this.asProto = asProto;
     }
 
     /**
@@ -59,18 +62,28 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
      * @return the notice that was added to the repository
      */
     @Override
-    public Notice addNotice(Notice newNotice) throws TooManyValidationErrorException {
-        if (newNotice instanceof InfoNotice) {
-            infoNoticeList.add((InfoNotice) newNotice);
-        } else if (newNotice instanceof WarningNotice) {
-            warningNoticeList.add((WarningNotice) newNotice);
+    public Notice addNotice(final Notice newNotice) throws TooManyValidationErrorException {
+        if (getNoticeCount() < MAX_NOTICE_COUNT) {
+            if (newNotice instanceof InfoNotice) {
+                infoNoticeList.add((InfoNotice) newNotice);
+            } else if (newNotice instanceof WarningNotice) {
+                warningNoticeList.add((WarningNotice) newNotice);
+            } else {
+                errorNoticeList.add((ErrorNotice) newNotice);
+                if (throwExceptionOnError) {
+                    throw new TooManyValidationErrorException();
+                }
+            }
         } else {
-            errorNoticeList.add((ErrorNotice) newNotice);
-            if (throwExceptionOnError) {
-                throw new TooManyValidationErrorException();
+            try {
+                tempExport();
+                flushRepo();
+                addNotice(newNotice);
+            } catch (IOException ignored) {
+                // todo: catch this exception to avoid modifying all use case signature
             }
         }
-        return newNotice;
+    return newNotice;
     }
 
     /**
@@ -115,10 +128,44 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
         return errorNoticeList.size();
     }
 
+    /**
+     * Returns the number of info notices in repository
+     * @return the number of info notices in repository
+     */
+    @Override
+    public int getInfoNoticeCount() {
+        return infoNoticeList.size();
+    }
+
+    /**
+     * Returns the total count of notices in repository
+     * @return the total count of notices in repository
+     */
+    @Override
+    public int getNoticeCount() {
+        return getErrorNoticeCount() + getWarningNoticeCount() + getInfoNoticeCount();
+    }
+
+    /**
+     * Removes all notices from this repository
+     */
     @Override
     public void flushRepo() {
         errorNoticeList.clear();
         warningNoticeList.clear();
         infoNoticeList.clear();
+    }
+
+    private void tempExport() throws IOException {
+        final NoticeExporter exporter = getExporter(
+                asProto,
+                TEMP_PATH,
+                false);
+        exporter.exportBegin();
+
+        for (Notice notice : getAll()) {
+            notice.export(exporter);
+        }
+        exporter.exportEnd();
     }
 }

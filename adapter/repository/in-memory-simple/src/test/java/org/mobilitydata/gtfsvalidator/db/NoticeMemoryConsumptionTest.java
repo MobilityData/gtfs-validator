@@ -42,7 +42,8 @@ public class NoticeMemoryConsumptionTest {
 
     private void memoryLimitTest(int noticesCount, int maxMemoryLimit, float safetyBufferFactor) {
 
-        ValidationResultRepository underTest = new InMemoryValidationResultRepository(false);
+        ValidationResultRepository underTest =
+                new InMemoryValidationResultRepository(false, false);
 
         generateNotices(underTest, noticesCount);
         underTest.getAll();

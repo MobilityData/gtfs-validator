@@ -26,6 +26,8 @@ import java.util.Collection;
  * This hold contains notices generated during the validation process.
  */
 public interface ValidationResultRepository {
+    int MAX_NOTICE_COUNT = 100;
+    String TEMP_PATH = "temp_report";
 
     Notice addNotice(Notice newNotice) throws TooManyValidationErrorException;
 
@@ -37,6 +39,10 @@ public interface ValidationResultRepository {
     int getWarningNoticeCount();
 
     int getErrorNoticeCount();
+
+    int getInfoNoticeCount();
+
+    int getNoticeCount();
 
     void flushRepo();
 }

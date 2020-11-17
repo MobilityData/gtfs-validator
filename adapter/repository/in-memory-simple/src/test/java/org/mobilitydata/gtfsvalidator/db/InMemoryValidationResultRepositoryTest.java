@@ -44,7 +44,8 @@ class InMemoryValidationResultRepositoryTest {
 
         ErrorNotice errorNotice = new CannotUnzipInputArchiveNotice(TEST_FILE_NAME);
 
-        ValidationResultRepository underTest = new InMemoryValidationResultRepository(false);
+        ValidationResultRepository underTest =
+                new InMemoryValidationResultRepository(false, false);
 
         underTest.addNotice(warningNotice);
         assertEquals(1, underTest.getAll().size());
@@ -72,7 +73,8 @@ class InMemoryValidationResultRepositoryTest {
 
         ErrorNotice errorNotice = new CannotUnzipInputArchiveNotice(TEST_FILE_NAME);
 
-        ValidationResultRepository underTest = new InMemoryValidationResultRepository(true);
+        ValidationResultRepository underTest =
+                new InMemoryValidationResultRepository(true, false);
 
         assertThrows(TooManyValidationErrorException.class, () ->
                 underTest.addNotice(errorNotice));
@@ -83,7 +85,8 @@ class InMemoryValidationResultRepositoryTest {
         WarningNotice mockWarningNotice = mock(WarningNotice.class);
         InfoNotice mockInfoNotice = mock(InfoNotice.class);
 
-        ValidationResultRepository underTest = new InMemoryValidationResultRepository(true);
+        ValidationResultRepository underTest =
+                new InMemoryValidationResultRepository(true, false);
 
         underTest.addNotice(mockWarningNotice);
         underTest.addNotice(mockInfoNotice);
@@ -93,5 +96,15 @@ class InMemoryValidationResultRepositoryTest {
         underTest.flushRepo();
 
         assertEquals(0, underTest.getAll().size());
+    }
+
+    @Test
+    void shouldFlushItselfOnTooManyNotices() {
+        // todo
+    }
+
+    @Test
+    void shouldGenerateIntermediateReportsOnTooManyNotices() {
+        // todo
     }
 }
