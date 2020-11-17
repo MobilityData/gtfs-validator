@@ -30,6 +30,7 @@ import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,12 +49,18 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     private final List<ErrorNotice> errorNoticeList = new ArrayList<>();
     private final boolean throwExceptionOnError;
     private final boolean asProto;
+    private final boolean isPretty;
     private int tempExportCount = 0;
+    private final Path tempOutputPath;
 
     public InMemoryValidationResultRepository(final boolean throwExceptionOnError,
-                                              final boolean asProto) {
+                                              final boolean asProto,
+                                              final boolean isPretty,
+                                              final Path tempOutputPath) {
         this.throwExceptionOnError = throwExceptionOnError;
         this.asProto = asProto;
+        this.isPretty = isPretty;
+        this.tempOutputPath = tempOutputPath;
     }
 
     /**
@@ -77,7 +84,6 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
             }
         } else {
             try {
-                tempExportCount += 1;
                 tempExport();
                 flushRepo();
                 addNotice(newNotice);
@@ -158,17 +164,20 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
         infoNoticeList.clear();
     }
 
-    private void tempExport() throws IOException {
-        final NoticeExporter exporter = getExporter(
-                asProto,
-                TEMP_PATH + "_" + getTempExportCount(),
-                false);
-        exporter.exportBegin();
-
-        for (Notice notice : getAll()) {
-            notice.export(exporter);
+    @Override
+    public void tempExport() throws IOException {
+        if (getNoticeCount() != 0) {
+            tempExportCount += 1;
+            final NoticeExporter exporter = getExporter(
+                    asProto,
+                    tempOutputPath.toString() + "_" + getTempExportCount(),
+                    isPretty);
+            exporter.exportBegin();
+            for (Notice notice : getAll()) {
+                notice.export(exporter);
+            }
+            exporter.exportEnd();
         }
-        exporter.exportEnd();
     }
 
     @Override

@@ -43,7 +43,6 @@ import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.StopTimeValidator
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -87,7 +86,9 @@ public class DefaultConfig {
 
         resultRepo = new InMemoryValidationResultRepository(
                 Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)),
-                Boolean.parseBoolean(execParamRepo.getExecParamValue(PROTO_KEY))
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(PROTO_KEY)),
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(BEAUTIFY_KEY)),
+                ValidationResultRepository.TEMP_OUTPUT_PATH
         );
     }
 
@@ -104,7 +105,9 @@ public class DefaultConfig {
 
         resultRepo = new InMemoryValidationResultRepository(
                 Boolean.parseBoolean(execParamRepo.getExecParamValue(ABORT_ON_ERROR)),
-                Boolean.parseBoolean(execParamRepo.getExecParamValue(PROTO_KEY))
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(PROTO_KEY)),
+                Boolean.parseBoolean(execParamRepo.getExecParamValue(BEAUTIFY_KEY)),
+                ValidationResultRepository.TEMP_OUTPUT_PATH
         );
     }
 
@@ -321,8 +324,8 @@ public class DefaultConfig {
         return new ValidateAgencyLangAndFeedInfoFeedLangMatch(gtfsDataRepository, resultRepo, logger);
     }
 
-    public ExportResultAsFile exportResultAsFile() {
-        return new ExportResultAsFile(resultRepo,
+    public ZipValidationReports exportResultAsFile() {
+        return new ZipValidationReports(resultRepo,
                 execParamRepo,
                 gtfsDataRepository,
                 Timestamp.valueOf(LocalDateTime.now(DEFAULT_TIMEZONE_ID)),

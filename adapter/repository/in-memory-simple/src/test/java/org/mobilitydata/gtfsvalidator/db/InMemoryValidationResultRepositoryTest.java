@@ -28,10 +28,11 @@ import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorExcepti
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
 import java.io.File;
+import java.nio.file.Path;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository.PATH_TO_TEMP_RESOURCES;
 import static org.mockito.Mockito.*;
 
 class InMemoryValidationResultRepositoryTest {
@@ -45,9 +46,10 @@ class InMemoryValidationResultRepositoryTest {
         WarningNotice warningNotice = new NonStandardHeaderNotice(TEST_FILE_NAME, "extra");
 
         ErrorNotice errorNotice = new CannotUnzipInputArchiveNotice(TEST_FILE_NAME);
+        Path mockPath = mock(Path.class);
 
         ValidationResultRepository underTest =
-                new InMemoryValidationResultRepository(false, false);
+                new InMemoryValidationResultRepository(false, false, false, mockPath);
 
         underTest.addNotice(warningNotice);
         assertEquals(1, underTest.getAll().size());
@@ -72,11 +74,11 @@ class InMemoryValidationResultRepositoryTest {
 
     @Test
     void abortOnErrorRepoShouldThrowExceptionOnError() {
-
         ErrorNotice errorNotice = new CannotUnzipInputArchiveNotice(TEST_FILE_NAME);
+        Path mockPath = mock(Path.class);
 
         ValidationResultRepository underTest =
-                new InMemoryValidationResultRepository(true, false);
+                new InMemoryValidationResultRepository(true, false, false, mockPath);
 
         assertThrows(TooManyValidationErrorException.class, () ->
                 underTest.addNotice(errorNotice));
@@ -86,9 +88,10 @@ class InMemoryValidationResultRepositoryTest {
     void flushRepoShouldEmptyAllNoticeCollection() {
         WarningNotice mockWarningNotice = mock(WarningNotice.class);
         InfoNotice mockInfoNotice = mock(InfoNotice.class);
+        Path mockPath = mock(Path.class);
 
         ValidationResultRepository underTest =
-                new InMemoryValidationResultRepository(true, false);
+                new InMemoryValidationResultRepository(true, false, false, mockPath);
 
         underTest.addNotice(mockWarningNotice);
         underTest.addNotice(mockInfoNotice);
@@ -103,8 +106,14 @@ class InMemoryValidationResultRepositoryTest {
     @Test
     void shouldFlushItselfOnTooManyNotices() {
         WarningNotice mockWarningNotice = mock(WarningNotice.class);
+        Path testResourcesPath = Path.of(
+                "/Users/lionel/IdeaProjects/gtfs-validator/adapter/repository/in-memory-simple/src/test/resources/temp_report");
+
         ValidationResultRepository underTest =
-                new InMemoryValidationResultRepository(true, false);
+                new InMemoryValidationResultRepository(true,
+                        false,
+                        true,
+                        testResourcesPath);
         for (int i = 0; i < 100; i++) {
             underTest.addNotice(mockWarningNotice);
         }
@@ -114,7 +123,7 @@ class InMemoryValidationResultRepositoryTest {
         assertEquals(1, underTest.getNoticeCount());
 
         // remove created files
-        File toDelete = new File(PATH_TO_TEMP_RESOURCES + "_" + 1 + ".json");
+        File toDelete = new File(testResourcesPath + "_" + 1 + ".json");
         assertTrue(toDelete.delete());
     }
 
@@ -124,19 +133,25 @@ class InMemoryValidationResultRepositoryTest {
                 new DuplicateRouteLongNameNotice("route id value",
                         "conflicting route id value",
                         "duplicate route long name value");
+        Path testResourcesPath = Path.of(
+                "/Users/lionel/IdeaProjects/gtfs-validator/adapter/repository/in-memory-simple/src/test/resources/temp_report");
+
         ValidationResultRepository underTest =
-                new InMemoryValidationResultRepository(true, false);
+                new InMemoryValidationResultRepository(true,
+                        false,
+                        true,
+                        testResourcesPath);
         for (int i = 0; i < 203; i++) {
             underTest.addNotice(mockWarningNotice);
         }
         assertEquals(2, underTest.getTempExportCount());
 
         // remove first created file
-        File toDelete = new File(PATH_TO_TEMP_RESOURCES + "_" + 1 + ".json");
+        File toDelete = new File(testResourcesPath + "_" + 1 + ".json");
         assertTrue(toDelete.delete());
 
         // remove second created files
-        toDelete = new File(PATH_TO_TEMP_RESOURCES + "_" + 2 + ".json");
+        toDelete = new File(testResourcesPath + "_" + 2 + ".json");
         assertTrue(toDelete.delete());
     }
 }
