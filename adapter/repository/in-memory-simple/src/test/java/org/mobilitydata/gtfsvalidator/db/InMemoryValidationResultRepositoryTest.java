@@ -22,13 +22,16 @@ import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.DuplicateRouteLongNameNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.warning.NonStandardHeaderNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.TooManyValidationErrorException;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
 
+import java.io.File;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository.PATH_TO_TEMP_RESOURCES;
 import static org.mockito.Mockito.*;
 
 class InMemoryValidationResultRepositoryTest {
@@ -109,10 +112,31 @@ class InMemoryValidationResultRepositoryTest {
 
         underTest.addNotice(mockWarningNotice);
         assertEquals(1, underTest.getNoticeCount());
+
+        // remove created files
+        File toDelete = new File(PATH_TO_TEMP_RESOURCES + "_" + 1 + ".json");
+        assertTrue(toDelete.delete());
     }
 
     @Test
     void shouldGenerateIntermediateReportsOnTooManyNotices() {
-        // todo
+        DuplicateRouteLongNameNotice mockWarningNotice =
+                new DuplicateRouteLongNameNotice("route id value",
+                        "conflicting route id value",
+                        "duplicate route long name value");
+        ValidationResultRepository underTest =
+                new InMemoryValidationResultRepository(true, false);
+        for (int i = 0; i < 203; i++) {
+            underTest.addNotice(mockWarningNotice);
+        }
+        assertEquals(2, underTest.getTempExportCount());
+
+        // remove first created file
+        File toDelete = new File(PATH_TO_TEMP_RESOURCES + "_" + 1 + ".json");
+        assertTrue(toDelete.delete());
+
+        // remove second created files
+        toDelete = new File(PATH_TO_TEMP_RESOURCES + "_" + 2 + ".json");
+        assertTrue(toDelete.delete());
     }
 }

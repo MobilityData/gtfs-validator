@@ -77,9 +77,9 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
             }
         } else {
             try {
+                tempExportCount += 1;
                 tempExport();
                 flushRepo();
-                tempExportCount += 1;
                 addNotice(newNotice);
             } catch (IOException ignored) {
                 // todo: catch this exception to avoid modifying all use case signature
@@ -161,7 +161,7 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
     private void tempExport() throws IOException {
         final NoticeExporter exporter = getExporter(
                 asProto,
-                TEMP_PATH + "_" + tempExportCount,
+                TEMP_PATH + "_" + getTempExportCount(),
                 false);
         exporter.exportBegin();
 
@@ -169,5 +169,10 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
             notice.export(exporter);
         }
         exporter.exportEnd();
+    }
+
+    @Override
+    public int getTempExportCount() {
+        return tempExportCount;
     }
 }
