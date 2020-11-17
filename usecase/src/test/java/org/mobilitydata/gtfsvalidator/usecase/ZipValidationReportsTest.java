@@ -36,10 +36,12 @@ import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
-class ExportResultAsFileTest {
+class ZipValidationReportsTest {
 
     @Test
     void resultRepoShouldBeExportedAsJsonFile() throws IOException {
+        // todo: move this test to another test class: InMemoryValidationResultRepositoryTest
+
         final NoticeExporter mockExporter =
                 mock(NoticeExporter.class);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -61,8 +63,8 @@ class ExportResultAsFileTest {
 
         Logger mockLogger = mock(Logger.class);
 
-        final ExportResultAsFile underTest =
-                new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
+        final ZipValidationReports underTest =
+                new ZipValidationReports(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
 
         underTest.execute();
 
@@ -107,6 +109,7 @@ class ExportResultAsFileTest {
 
     @Test
     void resultRepoShouldBeExportedAsProtoFile() throws IOException {
+        // todo: move this test to another test class: InMemoryValidationResultRepositoryTest
         final NoticeExporter mockExporter =
                 mock(NoticeExporter.class);
         final ValidationResultRepository mockResultRepo = mock(ValidationResultRepository.class);
@@ -126,7 +129,7 @@ class ExportResultAsFileTest {
         when(mockGtfsDataRepo.getFeedPublisherName()).thenReturn("feed publisher name");
 
         Logger mockLogger = mock(Logger.class);
-        ExportResultAsFile underTest = new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo,
+        ZipValidationReports underTest = new ZipValidationReports(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo,
                 mockTimestamp, mockLogger);
 
         underTest.execute();
@@ -179,7 +182,9 @@ class ExportResultAsFileTest {
         final Agency mockAgency = mock(Agency.class);
         when(mockAgency.getAgencyName()).thenReturn("Agency Name");
 
-        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false), ArgumentMatchers.anyString(), ArgumentMatchers.anyBoolean()))
+        when(mockResultRepo.getExporter(ArgumentMatchers.eq(false),
+                ArgumentMatchers.anyString(),
+                ArgumentMatchers.anyBoolean()))
                 .thenReturn(mockExporter);
         when(mockResultRepo.getAll()).thenReturn(List.of(mockNotice0, mockNotice1));
 
@@ -193,8 +198,8 @@ class ExportResultAsFileTest {
 
         Logger mockLogger = mock(Logger.class);
 
-        final ExportResultAsFile underTest =
-                new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
+        final ZipValidationReports underTest =
+                new ZipValidationReports(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
 
         underTest.execute();
 
@@ -263,8 +268,8 @@ class ExportResultAsFileTest {
 
         Logger mockLogger = mock(Logger.class);
 
-        final ExportResultAsFile underTest =
-                new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
+        final ZipValidationReports underTest =
+                new ZipValidationReports(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
 
         underTest.execute();
 
@@ -330,8 +335,8 @@ class ExportResultAsFileTest {
 
         Logger mockLogger = mock(Logger.class);
 
-        final ExportResultAsFile underTest =
-                new ExportResultAsFile(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
+        final ZipValidationReports underTest =
+                new ZipValidationReports(mockResultRepo, mockExecParamRepo, mockGtfsDataRepo, mockTimestamp, mockLogger);
 
         underTest.execute();
 
@@ -371,5 +376,10 @@ class ExportResultAsFileTest {
         verify(mockExporter, times(1)).exportEnd();
         verify(mockExecParamRepo, times(1)).getExecParamValue(ExecParamRepository.BEAUTIFY_KEY);
         verifyNoMoreInteractions(mockExporter, mockResultRepo, mockExecParamRepo, mockLogger);
+    }
+
+    @Test
+    void shouldZipAllReports() {
+        // todo: implement
     }
 }
