@@ -330,7 +330,6 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
                 "Stop validation process on first error");
         options.addOption(String.valueOf(BEAUTIFY_KEY.charAt(1)), BEAUTIFY_KEY, true,
                 "Beautify .json validation report");
-
         validateAllOptionLength(options);
 
         // Commands --proto and --help take no arguments
@@ -366,8 +365,9 @@ public class InMemoryExecParamRepository implements ExecParamRepository {
      *
      * @param options {@link Options} defined by developer
      * @throws CommandLineOptionLongOptExceedsMaxCharNumException an exception if {@link Options} will not be legible
-     *                                                            after application of {@code HelpFormatter} i.e. {@link Options} defined by developer has too long combination of
-     *                                                            opt and longOpt for one {@link Option}.
+     *                                                            after application of {@code HelpFormatter} i.e.
+     *                                                            {@link Options} defined by developer has too long
+     *                                                            combination of opt and longOpt for one {@link Option}.
      */
     private void validateAllOptionLength(final Options options) throws CommandLineOptionLongOptExceedsMaxCharNumException {
         final List<Option> tooLongOptionCollection = options.getOptions().stream()

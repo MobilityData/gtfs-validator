@@ -37,4 +37,8 @@ public interface ValidationResultRepository {
     int getWarningNoticeCount();
 
     int getErrorNoticeCount();
+
+    int getInfoNoticeCount();
+
+    int getNoticeCount();
 }

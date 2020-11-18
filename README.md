@@ -233,7 +233,7 @@ Which will:
 
 Open your favorite browser and go to `http://localhost:8090` the user interface of the application should be displayed as follows:
 ![User Interface](https://user-images.githubusercontent.com/35747326/94601198-1efe5600-0261-11eb-8acb-0376021cc448.png)
-The entire valdiation process can be monitored in the Terminal:  
+The entire validation process can be monitored in the Terminal:  
 ![User Interface](https://user-images.githubusercontent.com/35747326/94601197-1e65bf80-0261-11eb-8ff9-0d71688d4530.png)
 
 1. Drag and drop your configuration in the area indicated for this purpose

@@ -18,8 +18,11 @@ package org.mobilitydata.gtfsvalidator.usecase;
 
 import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotDownloadArchiveFromNetworkNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.GtfsDatasetTooBigNotice;
 import org.mobilitydata.gtfsvalidator.usecase.port.ExecParamRepository;
+import org.mobilitydata.gtfsvalidator.usecase.port.RawFileRepository;
 import org.mobilitydata.gtfsvalidator.usecase.port.ValidationResultRepository;
+import org.mobilitydata.gtfsvalidator.usecase.utils.CustomFileUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +30,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
@@ -42,23 +46,34 @@ public class DownloadArchiveFromNetwork {
     private final ValidationResultRepository resultRepo;
     private final ExecParamRepository execParamRepo;
     private final Logger logger;
+    private final CustomFileUtils customFileUtils;
+    private final Path inputPath;
 
     /**
-     * @param resultRepo a repository storing information about the validation process
-     * @param logger     logger used to log relevant information about the downloading process
+     * @param resultRepo       a repository storing information about the validation process
+     * @param execParamRepo    a repository storing all execution parameters and their values
+     * @param logger           logger used to log relevant information about the downloading process
+     * @param customFileUtils  a util class instance to compute size of files and directory
+     * @param inputPath        the path to the input data
      */
     public DownloadArchiveFromNetwork(final ValidationResultRepository resultRepo,
                                       final ExecParamRepository execParamRepo,
-                                      final Logger logger) {
+                                      final Logger logger,
+                                      final CustomFileUtils customFileUtils,
+                                      final Path inputPath) {
         this.resultRepo = resultRepo;
         this.execParamRepo = execParamRepo;
         this.logger = logger;
+        this.customFileUtils = customFileUtils;
+        this.inputPath = inputPath;
     }
 
     /**
      * Use case execution method: downloads a GTFS archive at the URL provided in the constructor. If the process fails
      * a {@link CannotDownloadArchiveFromNetworkNotice} is generated and added to the {@link ValidationResultRepository}
-     * provided in the constructor.
+     * provided in the constructor. If the size downloaded zip file is too important, will generate and add a
+     * {@link GtfsDatasetTooBigNotice} to the {@link ValidationResultRepository} provided in the constructor.
+     * @throws IOException if archive could be downloaded from network
      */
     public void execute() throws IOException {
         //TODO: does using File class break clean architecture (make business logic dependant on a framework)?
@@ -89,10 +104,16 @@ public class DownloadArchiveFromNetwork {
                         Paths.get(targetPath),
                         StandardCopyOption.REPLACE_EXISTING
                 );
+                final float datasetSizeMegaBytes = customFileUtils.sizeOf(inputPath, CustomFileUtils.Unit.MEGABYTES);
+                if (RawFileRepository.MAX_RAW_INPUT_SIZE_MEGABYTES < datasetSizeMegaBytes) {
+                    resultRepo.addNotice(
+                            new GtfsDatasetTooBigNotice(datasetSizeMegaBytes,
+                                    RawFileRepository.MAX_RAW_INPUT_SIZE_MEGABYTES));
+                }
             } catch (IOException e) {
                 resultRepo.addNotice
                         (new CannotDownloadArchiveFromNetworkNotice(
-                                new URL(url)));
+                                url));
                 throw e;
             }
         }
