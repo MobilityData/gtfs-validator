@@ -115,6 +115,11 @@ public abstract class Notice {
     public static final String KEY_OTHER_TRIP_ID = "otherTripId";
     public static final String KEY_SERVICE_ID = "serviceId";
     public static final String KEY_OTHER_SERVICE_ID = "otherServiceId";
+    public static final String KEY_EXCEPTION_MESSAGE = "exceptionMessage";
+    public static final String KEY_EXCEPTION_STACK_TRACE = "exceptionStackTrace";
+    public static final String KEY_DATASET_SIZE_MEGABYTES = "datasetSizeMegaBytes";
+    public static final String KEY_DATASET_MAX_SIZE_MEGABYTES = "maxDatasetSizeMegaBytes";
+    public static final String KEY_DATASET_NOTICE_COUNT = "noticeCount";
 
     private final String filename;
     private final int code;

@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.db;
 
 import org.junit.jupiter.api.Test;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.ErrorNotice;
+import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.InfoNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.Notice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.base.WarningNotice;
 import org.mobilitydata.gtfsvalidator.domain.entity.notice.error.CannotUnzipInputArchiveNotice;
@@ -29,6 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 class InMemoryValidationResultRepositoryTest {
 
@@ -74,5 +76,57 @@ class InMemoryValidationResultRepositoryTest {
 
         assertThrows(TooManyValidationErrorException.class, () ->
                 underTest.addNotice(errorNotice));
+    }
+
+    @Test
+    void getErrorNoticeCountShouldReturnExactNumberOfErrorNotice() {
+        ValidationResultRepository underTest = new InMemoryValidationResultRepository(false);
+        assertEquals(0, underTest.getErrorNoticeCount());
+
+        ErrorNotice errorNotice = mock(ErrorNotice.class);
+        underTest.addNotice(errorNotice);
+        assertEquals(1, underTest.getErrorNoticeCount());
+        underTest.addNotice(errorNotice);
+        assertEquals(2, underTest.getErrorNoticeCount());
+    }
+
+    @Test
+    void getWarningNoticeCountShouldReturnExactNumberOfWarningNotice() {
+        ValidationResultRepository underTest = new InMemoryValidationResultRepository(false);
+        assertEquals(0, underTest.getWarningNoticeCount());
+
+        WarningNotice warningNotice = mock(WarningNotice.class);
+        underTest.addNotice(warningNotice);
+        assertEquals(1, underTest.getWarningNoticeCount());
+        underTest.addNotice(warningNotice);
+        assertEquals(2, underTest.getWarningNoticeCount());
+    }
+
+    @Test
+    void getInfoNoticeCountShouldReturnExactNumberOfInfoNotice() {
+        ValidationResultRepository underTest = new InMemoryValidationResultRepository(false);
+        assertEquals(0, underTest.getInfoNoticeCount());
+
+        InfoNotice infoNotice = mock(InfoNotice.class);
+        underTest.addNotice(infoNotice);
+        assertEquals(1, underTest.getInfoNoticeCount());
+        underTest.addNotice(infoNotice);
+        assertEquals(2, underTest.getInfoNoticeCount());
+    }
+
+    @Test
+    void getNoticeCountShouldReturnTotalNumberOfNoticeInRepo() {
+        ValidationResultRepository underTest = new InMemoryValidationResultRepository(false);
+        assertEquals(0, underTest.getNoticeCount());
+
+        InfoNotice infoNotice = mock(InfoNotice.class);
+        WarningNotice warningNotice = mock(WarningNotice.class);
+        ErrorNotice errorNotice = mock(ErrorNotice.class);
+
+        underTest.addNotice(infoNotice);
+        underTest.addNotice(warningNotice);
+        underTest.addNotice(errorNotice);
+
+        assertEquals(3, underTest.getNoticeCount());
     }
 }

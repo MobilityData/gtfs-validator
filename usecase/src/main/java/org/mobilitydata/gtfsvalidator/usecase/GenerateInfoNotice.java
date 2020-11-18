@@ -38,7 +38,18 @@ public class GenerateInfoNotice {
     private final Path inputPath;
     private final Path extractPath;
 
-
+    /**
+     *
+     * @param resultRepo                   a repository storing information about the validation process
+     * @param execParamRepo                a repository storing all execution parameters and their values
+     * @param gtfsDataRepo                 a repository storing the data of a GTFS dataset
+     * @param timestamp                    timestamp at the time of execution of this use case
+     * @param processingTimeSecs           the time spent to process the GTFS archive
+     * @param processedFilenameCollection  the list of files processed so far
+     * @param customFileUtils              a util class instance to compute size of files and directory
+     * @param inputPath                    the path to the zipped input data
+     * @param extractPath                  the path to the unzipped input data
+     */
     public GenerateInfoNotice(final ValidationResultRepository resultRepo,
                               final ExecParamRepository execParamRepo,
                               final GtfsDataRepository gtfsDataRepo,
@@ -59,6 +70,20 @@ public class GenerateInfoNotice {
         this.extractPath = extractPath;
     }
 
+    /**
+     * Will generate and add a {@code ValidationProcessInfoNotice} to the {@code ValidationResultRepository} provided in
+     * the constructor. This notice will contain the following information:
+     * - feed_info.feed_publisher_name or agency.agency_name,
+     * - timestamp at the time of execution of this use case,
+     * - the number of warning notices in the {@link ValidationResultRepository}
+     * - the number of error notices in the {@link ValidationResultRepository}
+     * - the url or the path to the GTFS archive,
+     * - the size of the GTFS archive before unzipping,
+     * - the size of the GTFS archive after unzipping,
+     * - the version of this gtfs-validator,
+     * - the list of files processed so far,
+     * - the time spent to process the GTFS archive.
+     */
     public void execute() {
         String feedPublisherNameOrAgencyName = gtfsDataRepo.getFeedPublisherName();
 

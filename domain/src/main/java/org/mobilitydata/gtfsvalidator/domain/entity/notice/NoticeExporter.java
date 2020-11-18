@@ -166,4 +166,10 @@ public interface NoticeExporter {
     void export(final MalformedCsvRowNotice malformedCsvRowNotice) throws IOException;
 
     void export(final UnsupportedGtfsStructureNotice unsupportedGtfsStructureNotice) throws IOException;
+
+    void export(final FatalInternalErrorNotice fatalInternalErrorNotice) throws IOException;
+
+    void export(final GtfsDatasetTooBigNotice gtfsDatasetTooBigNotice) throws IOException;
+
+    void export(final OutOfMemoryNotice outOfMemoryNotice) throws IOException;
 }

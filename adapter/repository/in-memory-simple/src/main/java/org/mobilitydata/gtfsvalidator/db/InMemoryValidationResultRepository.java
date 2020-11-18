@@ -105,13 +105,39 @@ public class InMemoryValidationResultRepository implements ValidationResultRepos
         }
     }
 
+    /**
+     * Returns the number of warning notices in repository
+     * @return the number of warning notices in repository
+     */
     @Override
     public int getWarningNoticeCount() {
         return warningNoticeList.size();
     }
 
+    /**
+     * Returns the number of error notices in repository
+     * @return the number of error notices in repository
+     */
     @Override
     public int getErrorNoticeCount() {
         return errorNoticeList.size();
+    }
+
+    /**
+     * Returns the number of info notices in repository
+     * @return the number of info notices in repository
+     */
+    @Override
+    public int getInfoNoticeCount() {
+        return infoNoticeList.size();
+    }
+
+    /**
+     * Returns the total count of notices in repository
+     * @return the total count of notices in repository
+     */
+    @Override
+    public int getNoticeCount() {
+        return getErrorNoticeCount() + getWarningNoticeCount() + getInfoNoticeCount();
     }
 }
