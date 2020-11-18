@@ -1,0 +1,120 @@
+package org.mobilitydata.gtfsvalidator.parsing;
+
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
+
+import javax.annotation.Nullable;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Iterator;
+
+/**
+ * Reading support for a CSV file in GTFS feed. The file normally has headers and 0 or several data rows.
+ */
+public class CsvFile implements Iterable<CsvRow> {
+    private final boolean isEmpty;
+    private CsvParser parser;
+    private HashMap<String, Integer> columnIndices = new HashMap<>();
+    private String[] columnNames;
+    private String filename;
+
+    public CsvFile(Reader reader, String filename) {
+        this.filename = filename;
+        CsvParserSettings settings = new CsvParserSettings();
+        settings.getFormat().setLineSeparator("\n");
+        settings.getFormat().setDelimiter(',');
+        settings.setHeaderExtractionEnabled(true);
+        parser = new CsvParser(settings);
+        parser.beginParsing(reader);
+
+        columnNames = parser.getContext().headers();
+        isEmpty = columnNames == null;
+        if (isEmpty) {
+            // Do not leave them as null.
+            columnNames = new String[]{};
+            return;
+        }
+        for (int i = 0; i < columnNames.length; ++i) {
+            columnIndices.putIfAbsent(columnNames[i], i);
+        }
+    }
+
+    /**
+     * Tells if the file is empty, i.e. it has no rows and even no headers.
+     */
+    public boolean isEmpty() {
+        return isEmpty;
+    }
+
+    @Override
+    public Iterator<CsvRow> iterator() {
+        return new CsvFileIterator();
+    }
+
+    /**
+     * Returns the next record or null if not available.
+     */
+    @Nullable
+    public CsvRow nextResult() {
+        String[] columnValues = parser.parseNext();
+        if (columnValues == null) {
+            return null;
+        }
+        return new CsvRow(this, parser.getContext().currentLine(), columnValues);
+    }
+
+    /**
+     * Base name of the file, e.g., "stops.txt".
+     *
+     * @return file name
+     */
+    public String getFileName() {
+        return filename;
+    }
+
+    public String[] getColumnNames() {
+        return columnNames;
+    }
+
+    public int getColumnCount() {
+        return columnNames.length;
+    }
+
+    public int getColumnIndex(String columnName) {
+        return columnIndices.getOrDefault(columnName, -1);
+    }
+
+    @Nullable
+    public String getColumnName(int columnIndex) {
+        if (columnNames == null || columnIndex < 0 || columnIndex >= columnNames.length) {
+            return null;
+        }
+        return columnNames[columnIndex];
+    }
+
+    class CsvFileIterator implements Iterator<CsvRow> {
+        boolean started = false;
+        CsvRow nextRow = null;
+
+        @Override
+        public boolean hasNext() {
+            if (started) {
+                return nextRow != null;
+            }
+            started = true;
+            nextRow = nextResult();
+            return nextRow != null;
+        }
+
+        @Override
+        @Nullable
+        public CsvRow next() {
+            if (!started) {
+                hasNext();
+            }
+            CsvRow out = nextRow;
+            nextRow = nextResult();
+            return out;
+        }
+    }
+}

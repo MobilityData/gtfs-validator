@@ -1,0 +1,140 @@
+package org.mobilitydata.gtfsvalidator.parsing;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.type.GtfsColor;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
+import org.mockito.Mockito;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import static com.google.common.truth.Truth.assertThat;
+
+@RunWith(JUnit4.class)
+public class RowParserTest {
+
+    private RowParser createParser(String s) {
+        NoticeContainer noticeContainer = new NoticeContainer();
+        CsvRow csvRow = Mockito.mock(CsvRow.class);
+        Mockito.when(csvRow.asString(0)).thenReturn(s);
+        RowParser parser = new RowParser(noticeContainer);
+        parser.setRow(csvRow);
+        return parser;
+    }
+
+    @Test
+    public void asUrl() {
+        assertThat(createParser("http://google.com").asUrl(0, true)).isEqualTo("http://google.com");
+
+        assertThat(createParser("invalid").asUrl(0, true)).isNull();
+    }
+
+    @Test
+    public void asBoolean() {
+        assertThat(createParser("0").asBoolean(0, true)).isEqualTo(false);
+        assertThat(createParser("1").asBoolean(0, true)).isEqualTo(true);
+
+        assertThat(createParser("invalid").asBoolean(0, true)).isNull();
+    }
+
+    @Test
+    public void asInteger() {
+        assertThat(createParser("12345").asInteger(0, true)).isEqualTo(12345);
+        assertThat(createParser("12345").asInteger(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(12345);
+        assertThat(createParser("12345").asInteger(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(12345);
+        assertThat(createParser("12345").asInteger(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(12345);
+
+        assertThat(createParser("abc").asInteger(0, true)).isNull();
+    }
+
+    @Test
+    public void asFloat() {
+        assertThat(createParser("1234.5").asFloat(0, true)).isEqualTo(1234.5);
+        assertThat(createParser("1234.5").asFloat(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(1234.5);
+        assertThat(createParser("1234.5").asFloat(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(1234.5);
+        assertThat(createParser("1234.5").asFloat(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(1234.5);
+
+        assertThat(createParser("abc").asFloat(0, true)).isNull();
+    }
+
+    @Test
+    public void asEmail() {
+        assertThat(createParser("no-reply@google.com").asEmail(0, true)).isEqualTo("no-reply@google.com");
+
+        assertThat(createParser("invalid").asEmail(0, true)).isNull();
+    }
+
+    @Test
+    public void asColor() {
+        assertThat(createParser("FFFFFF").asColor(0, true)).isEqualTo(GtfsColor.fromInt(0xffffff));
+        assertThat(createParser("abcdef").asColor(0, true)).isEqualTo(GtfsColor.fromInt(0xabcdef));
+        assertThat(createParser("123456").asColor(0, true)).isEqualTo(GtfsColor.fromInt(0x123456));
+
+        assertThat(createParser("invalid").asColor(0, true)).isNull();
+    }
+
+    @Test
+    public void asCurrencyCode() {
+        assertThat(createParser("USD").asCurrencyCode(0, true).getCurrencyCode()).isEqualTo("USD");
+        assertThat(createParser("AUD").asCurrencyCode(0, true).getCurrencyCode()).isEqualTo("AUD");
+        assertThat(createParser("CAD").asCurrencyCode(0, true).getCurrencyCode()).isEqualTo("CAD");
+
+        assertThat(createParser("invalid").asCurrencyCode(0, true)).isNull();
+    }
+
+    @Test
+    public void asLanguageCode() {
+        assertThat(createParser("ru_RU").asLanguageCode(0, true).getLanguage()).isEqualTo(Locale.forLanguageTag("ru_RU").getLanguage());
+    }
+
+    @Test
+    public void asPhoneNumber() {
+        assertThat(createParser("555-30-12-10").asPhoneNumber(0, true)).isEqualTo("555-30-12-10");
+    }
+
+    @Test
+    public void asDate() {
+        assertThat(createParser("20200901").asDate(0, true)).isEqualTo(GtfsDate.fromLocalDate(LocalDate.of(2020, 9, 1)));
+
+        assertThat(createParser("invalid").asDate(0, true)).isNull();
+    }
+
+    @Test
+    public void asTime() {
+        assertThat(createParser("12:20:30").asTime(0, true)).isEqualTo(GtfsTime.fromHourMinuteSecond(12, 20, 30));
+
+        assertThat(createParser("invalid").asTime(0, true)).isNull();
+    }
+
+    @Test
+    public void asTimezone() {
+        assertThat(createParser("America/Toronto").asTimezone(0, true)).isEqualTo(TimeZone.getTimeZone(ZoneId.of("America/Toronto")));
+
+        assertThat(createParser("invalid").asTimezone(0, true)).isNull();
+    }
+
+    @Test
+    public void asId() {
+        assertThat(createParser("32tgklu34y3k").asId(0, true)).isEqualTo("32tgklu34y3k");
+    }
+
+    @Test
+    public void asLatitude() {
+        assertThat(createParser("32.5").asLatitude(0, true)).isEqualTo(32.5);
+
+        assertThat(createParser("invalid").asLatitude(0, true)).isNull();
+    }
+
+    @Test
+    public void asLongitude() {
+        assertThat(createParser("-32.5").asLongitude(0, true)).isEqualTo(-32.5);
+
+        assertThat(createParser("invalid").asLongitude(0, true)).isNull();
+    }
+}
