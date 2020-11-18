@@ -2,7 +2,7 @@ name: End to end
 
 on:
   push:
-    branches: [ master,  transport-agency-name] #<-- replace transport-agency-name by the name of the agency/publisher
+    branches: [ master, transport-agency-name ] #<-- replace transport-agency-name by the name of the agency/publisher
 
 jobs:
   run-on-data:
@@ -45,10 +45,9 @@ jobs:
       #  run: java -jar application/cli-app/build/libs/*.jar --url DATASET_PUBLIC_URL --input [[[ACRONYM]]].zip --extract pathToExtractedZipContent --output validationResultDirectory #<-- uncomment this line,
 #replace ACRONYM and [[[ACRONYM]]] by the agency/publisher acronym. Also replace DATASET_PUBLIC_URL by a public link to a GTFS Schedule zip archive
       - name: Validate dataset from -- SMART
-        run: java -jar application/cli-app/build/libs/*.jar --url http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download --input smart.zip --extract input --output output --abort_on_error false
-      # STM out until #474 is closed
-      #- name: Validate dataset from -- STM
-      #  run: java -jar application/cli-app/build/libs/*.jar -u https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download -i stm.zip -e input -o output
+        run: java -jar application/cli-app/build/libs/*.jar --url http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download --input smart.zip --extract input --output output
+      - name: Validate dataset from -- STM
+        run: java -jar application/cli-app/build/libs/*.jar -u https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download -i stm.zip -e input -o output
       - name: Validate dataset from -- MBTA
         run: java -jar application/cli-app/build/libs/*.jar --url https://cdn.mbta.com/MBTA_GTFS.zip --input mbta.zip --extract input --output output
       - name: Validate dataset from issue 379 -- Bay Area Rapid Transit

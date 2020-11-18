@@ -23,6 +23,7 @@ import java.io.File;
 import java.nio.file.Path;
 
 public class CustomFileUtilsImpl implements CustomFileUtils {
+    @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"}) // to implement singleton pattern
     private static CustomFileUtilsImpl CUSTOM_FILE_UTILS = null;
 
     private CustomFileUtilsImpl() {
@@ -41,9 +42,9 @@ public class CustomFileUtilsImpl implements CustomFileUtils {
     }
 
     /**
-     * Returns the size of a file given its path
+     * Returns the size of a file given its path in bytes
      * @param pathToFile  the path to the file as String
-     * @return the size of a file given its path
+     * @return the size of a file given its path in bytes
      */
     @Override
     public long sizeOf(final Path pathToFile) {
@@ -51,9 +52,33 @@ public class CustomFileUtilsImpl implements CustomFileUtils {
     }
 
     /**
-     * Returns the size of a directory given its path
+     * Returns the size of a file given its path in the specified unit. If no unit is specified, will return the result
+     * in the specified unit.
+     * @param pathToFile  the path to the file as String
+     * @param unit        the unit in which to express the result
+     * @return  the size of a file given its path in the specified unit. If no unit is specified, will return the result
+     * in the specified unit.
+     */
+    @Override
+    public long sizeOf(final Path pathToFile, final Unit unit) {
+        if (unit == null) {
+            throw new IllegalArgumentException("Unit must not be null if provided");
+        }
+        //noinspection SwitchStatementWithTooFewBranches will be updated with other units if needed
+        switch (unit) {
+            case MEGABYTES: {
+                return sizeOf(pathToFile)/FileUtils.ONE_MB;
+            }
+            default: {
+                return sizeOf(pathToFile);
+            }
+        }
+    }
+
+    /**
+     * Returns the size of a directory given its path in bytes
      * @param pathToDirectory  the path to the directory as String
-     * @return the size of a directory given its path
+     * @return the size of a directory given its path in bytes
      */
     @Override
     public long sizeOfDirectory(final Path pathToDirectory) {

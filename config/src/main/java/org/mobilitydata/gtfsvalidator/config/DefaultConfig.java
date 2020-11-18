@@ -43,7 +43,6 @@ import org.mobilitydata.gtfsvalidator.usecase.usecasevalidator.StopTimeValidator
 import org.mobilitydata.gtfsvalidator.usecase.utils.GeospatialUtils;
 import org.mobilitydata.gtfsvalidator.usecase.utils.TimeUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -184,7 +183,11 @@ public class DefaultConfig {
     }
 
     public DownloadArchiveFromNetwork downloadArchiveFromNetwork() {
-        return new DownloadArchiveFromNetwork(resultRepo, execParamRepo, logger);
+        return new DownloadArchiveFromNetwork(resultRepo,
+                execParamRepo,
+                logger,
+                CustomFileUtilsImpl.getInstance(),
+                Path.of(execParamRepo.getExecParamValue(execParamRepo.INPUT_KEY)));
     }
 
     public CreatePath createPath() {
@@ -505,5 +508,15 @@ public class DefaultConfig {
 
     public String getExecParamValue(final String execParamKey) {
         return execParamRepo.getExecParamValue(execParamKey);
+    }
+
+    public HandleOutOfMemoryError handleOutOfMemoryError() {
+        return new HandleOutOfMemoryError(resultRepo,
+                CustomFileUtilsImpl.getInstance(),
+                Path.of(execParamRepo.getExecParamValue(ExecParamRepository.INPUT_KEY)));
+    }
+
+    public HandleUnsupportedException handleUnsupportedException() {
+        return new HandleUnsupportedException(resultRepo);
     }
 }
