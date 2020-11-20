@@ -17,15 +17,8 @@ is:pr is:closed merged:>2020-07-28 base:master sort:updated-desc
 ```
 2. When the CI is done, drag and drop the artifacts in the pre release assets section. You'll need to manually rename some of the assets for now (see below).
 
-‼️ **NOTE**: The CI `.yml` files should be updated so that the output artifact names don't contain spaces and don't have to be manualy reworked when attached to a release (all space characters are replaced by . characters by GitHub).
+‼️ **TODO**: The CI `.yml` files should be updated so that the output artifact names don't contain spaces and don't have to be manualy reworked when attached to a release (all space characters are replaced by . characters by GitHub).
 
 3. Once everything is ready, simply uncheck the `pre release` box and publish again ✅
-
-
-Prepare a draft release on GitHub and **tag the master branch**
-
-Let the CI run and collect the artifacts
-Add them to the release
-Release
 
 💡 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
