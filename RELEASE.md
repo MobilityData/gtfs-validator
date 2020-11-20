@@ -3,7 +3,7 @@
 ### 1. Do a pre relase
 1. Go to the release section of GitHub
 1. Start a draft release
-1. Put a tag like `v1.3.2` and **specify the master branch as to where to push it**
+1. Create a tag like `v1.3.2` and **use the current master branch**
 1. Leave the release description empty
 1. Check the `this is a pre release checkbox`
 1. Publish the prerelease
@@ -15,11 +15,11 @@
 ```
 is:pr is:closed merged:>2020-07-28 base:master sort:updated-desc 
 ```
-2. When the CI is done, drag and drop the artifacts in the pre release assets section. Unfortunately, some manual work is required on some assets as they are badly named.
+2. When the CI is done, drag and drop the artifacts in the pre release assets section. You'll need to manually rename some of the assets for now (see below).
 
 ‼️ **NOTE**: The CI `.yml` files should be updated so that the output artifact names don't contain spaces and don't have to be manualy reworked when attached to a release (all space characters are replaced by . characters by GitHub).
 
-3. Once everything is ready, simply uncheck the this is a `pre release` and publish again ✅
+3. Once everything is ready, simply uncheck the `pre release` box and publish again ✅
 
 
 Prepare a draft release on GitHub and **tag the master branch**
