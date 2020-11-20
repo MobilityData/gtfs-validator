@@ -1,0 +1,26 @@
+plugins {
+    id 'application'
+    id 'java'
+}
+
+group 'org.mobilitydata'
+version "${System.getenv("versionTag")}"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+mainClassName = 'org.mobilitydata.gtfsvalidator.cli.Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor project(':processor')
+    compileOnly project(':processor')
+    implementation project(':core')
+    implementation 'com.beust:jcommander:1.48'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+    implementation 'com.google.guava:guava:29.0-jre'
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
+    testImplementation "com.google.truth:truth:1.0.1"
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+}
