@@ -3,7 +3,7 @@
 ### 1. Do a pre relase
 1. Go to the release section of GitHub
 1. Start a draft release
-1. Put a tag like v1.3.2 and **specify the master branch as to where to push it**
+1. Put a tag like `v1.3.2` and **specify the master branch as to where to push it**
 1. Leave the release description empty
 1. Check the `this is a pre release checkbox`
 1. Publish the prerelease
