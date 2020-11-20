@@ -26,3 +26,6 @@ is:pr is:closed merged:>2020-07-28 base:master sort:updated-desc
 ![publish](https://user-images.githubusercontent.com/35747326/99821105-99d84480-2b1f-11eb-9661-493966904a11.png)
 
 💡 For more details on versioning, see [Understanding Maven Version Numbers](https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855).
+
+### 3. Remove all intermediate `sha` Docker images added since last release
+1. Find the list of Docker images for this project [here](https://github.com/orgs/MobilityData/packages/container/gtfs-validator/versions)
