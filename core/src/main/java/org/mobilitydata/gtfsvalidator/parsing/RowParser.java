@@ -1,7 +1,9 @@
 package org.mobilitydata.gtfsvalidator.parsing;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -22,6 +24,7 @@ public class RowParser {
     public static final boolean REQUIRED = true;
     public static final boolean OPTIONAL = false;
     private final NoticeContainer noticeContainer;
+    private final GtfsFeedName feedName;
     private final ValueParser<Boolean> booleanParser = new ValueParser("boolean") {
         @Override
         Boolean parseString(String s) {
@@ -123,10 +126,23 @@ public class RowParser {
             return s;
         }
     };
+    private final ValueParser<String> phoneNumberParser = new ValueParser("phone number") {
+        private PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+
+        @Override
+        String parseString(String s) {
+            if (!phoneUtil.isPossibleNumber(s, feedName.getISOAlpha2CountryCode())) {
+                throw new IllegalArgumentException("Invalid phone number " + s);
+            }
+            return s;
+        }
+    };
+
     private CsvRow row;
     private boolean parseErrorsInRow;
 
-    public RowParser(NoticeContainer noticeContainer) {
+    public RowParser(GtfsFeedName feedName, NoticeContainer noticeContainer) {
+        this.feedName = feedName;
         this.noticeContainer = noticeContainer;
     }
 
@@ -175,7 +191,7 @@ public class RowParser {
     }
 
     public String asPhoneNumber(int columnIndex, boolean required) {
-        return asString(columnIndex, required);
+        return phoneNumberParser.parseField(columnIndex, required);
     }
 
     public Locale asLanguageCode(int columnIndex, boolean required) {

@@ -6,6 +6,7 @@ import com.squareup.javapoet.*;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
+import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
@@ -28,11 +29,11 @@ import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_P
 
 /**
  * Generates code for a loader for a GTFS table. The loader creates an instance of a corresponding GTFS container class.
- *
+ * <p>
  * E.g., GtfsStopTableLoader class is generated for "stops.txt".
  */
 public class TableLoaderGenerator {
-    private static int LOG_EVERY_N_ROWS = 200000;
+    private static final int LOG_EVERY_N_ROWS = 200000;
     private final GtfsFileDescriptor fileDescriptor;
     private final GtfsEntityClasses classNames;
 
@@ -125,6 +126,7 @@ public class TableLoaderGenerator {
         MethodSpec.Builder method = MethodSpec.methodBuilder("load")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Reader.class, "reader")
+                .addParameter(GtfsFeedName.class, "feedName")
                 .addParameter(ValidatorLoader.class, "validatorLoader")
                 .addParameter(NoticeContainer.class, "noticeContainer")
                 .returns(ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
@@ -152,7 +154,7 @@ public class TableLoaderGenerator {
         }
         method.addStatement("$T.Builder builder = new $T.Builder()", gtfsEntityType, gtfsEntityType)
                 .addStatement(
-                        "$T rowParser = new $T(noticeContainer)", RowParser.class, RowParser.class)
+                        "$T rowParser = new $T(feedName, noticeContainer)", RowParser.class, RowParser.class)
                 .addStatement("$T entities = new $T<>()", ParameterizedTypeName.get(ClassName.get(List.class),
                         gtfsEntityType), ArrayList.class);
         method.beginControlFlow(

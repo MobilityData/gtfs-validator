@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A validator that handles a single entity and does not need more information.
+ * A {@code ValidatorLoader} object locates all validators registered with {@code @GtfsValidator} annotation and
+ * provides convenient methods to invoke them on a single entity of file.
  */
 public class ValidatorLoader {
     private ListMultimap<Class<? extends GtfsEntity>, SingleEntityValidator<?>> singleEntityValidators = ArrayListMultimap.create();

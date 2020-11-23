@@ -1,6 +1,7 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.JCommander;
+import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
@@ -24,6 +25,8 @@ public class Main {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         GtfsFeedLoader feedLoader = new GtfsFeedLoader();
 
+        GtfsFeedName feedName = GtfsFeedName.parseString(args.feedName);
+        System.out.println("Feed name: " + feedName.getCountryFirstName());
         System.out.println("Input: " + args.input);
         System.out.println("Output: " + args.outputBase);
         System.out.println("Table loaders: " + feedLoader.listTableLoaders());
@@ -34,7 +37,8 @@ public class Main {
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsFeedContainer feedContainer;
         try {
-            feedContainer = feedLoader.load(GtfsInput.createFromPath(args.input), validatorLoader, noticeContainer);
+            feedContainer = feedLoader.load(GtfsInput.createFromPath(args.input), feedName, validatorLoader,
+                    noticeContainer);
         } catch (IOException | InterruptedException exception) {
             exception.printStackTrace();
             return;

@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
@@ -17,6 +18,8 @@ import static com.google.common.truth.Truth.assertThat;
  */
 @RunWith(JUnit4.class)
 public class GtfsLevelTableLoaderTest {
+    private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
+
     @Test
     public void validFile() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
@@ -24,7 +27,7 @@ public class GtfsLevelTableLoaderTest {
                 + "level1,Ground,1\n");
         GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
         NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, validatorLoader, noticeContainer);
+        GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
         assertThat(noticeContainer.getNotices()).isEmpty();
         assertThat(tableContainer.entityCount()).isEqualTo(1);
@@ -44,7 +47,7 @@ public class GtfsLevelTableLoaderTest {
                 + ",Ground,1\n");
         GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
         NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, validatorLoader, noticeContainer);
+        GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
         assertThat(noticeContainer.getNotices()).isNotEmpty();
         assertThat(tableContainer.entityCount()).isEqualTo(0);
@@ -57,7 +60,7 @@ public class GtfsLevelTableLoaderTest {
         Reader reader = new StringReader("");
         GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
         NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, validatorLoader, noticeContainer);
+        GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
         assertThat(noticeContainer.getNotices()).isNotEmpty();
         assertThat(noticeContainer.getNotices().get(0).getClass().getSimpleName()).isEqualTo("EmptyFileNotice");

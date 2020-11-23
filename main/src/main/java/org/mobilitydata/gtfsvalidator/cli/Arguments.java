@@ -15,4 +15,7 @@ public class Arguments {
 
     @Parameter(names = {"-t", "--threads"}, description = "Number of threads to use")
     public int numThreads = 1;
+
+    @Parameter(names = {"-f", "--feed_name"}, description = "Name of the feed, e.g., `nl-openov`")
+    public String feedName;
 }

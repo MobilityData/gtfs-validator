@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import com.google.common.reflect.ClassPath;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
+import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedFile;
@@ -62,7 +63,7 @@ public class GtfsFeedLoader {
         this.numThreads = numThreads;
     }
 
-    public GtfsFeedContainer load(GtfsInput gtfsInput, ValidatorLoader validatorLoader,
+    public GtfsFeedContainer load(GtfsInput gtfsInput, GtfsFeedName feedName, ValidatorLoader validatorLoader,
                                   NoticeContainer noticeContainer) throws IOException, InterruptedException {
         System.out.println("Loading in " + numThreads + " threads");
         ExecutorService exec = Executors.newFixedThreadPool(numThreads);
@@ -74,7 +75,7 @@ public class GtfsFeedLoader {
                 noticeContainer.addNotice(new UnexpectedFile(filename));
             } else {
                 loaderCallables.add(() -> loader.load(
-                        createFileReader(gtfsInput.getFile(filename)), validatorLoader, noticeContainer));
+                        createFileReader(gtfsInput.getFile(filename)), feedName, validatorLoader, noticeContainer));
             }
         }
         ArrayList<GtfsTableContainer> tableContainers = new ArrayList<>();

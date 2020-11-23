@@ -3,6 +3,7 @@ package org.mobilitydata.gtfsvalidator.parsing;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
@@ -19,13 +20,17 @@ import static com.google.common.truth.Truth.assertThat;
 @RunWith(JUnit4.class)
 public class RowParserTest {
 
-    private RowParser createParser(String s) {
+    private RowParser createParser(String feedName, String cellValue) {
         NoticeContainer noticeContainer = new NoticeContainer();
         CsvRow csvRow = Mockito.mock(CsvRow.class);
-        Mockito.when(csvRow.asString(0)).thenReturn(s);
-        RowParser parser = new RowParser(noticeContainer);
+        Mockito.when(csvRow.asString(0)).thenReturn(cellValue);
+        RowParser parser = new RowParser(GtfsFeedName.parseString(feedName), noticeContainer);
         parser.setRow(csvRow);
         return parser;
+    }
+
+    private RowParser createParser(String cellValue) {
+        return createParser("au-sydney-buses", cellValue);
     }
 
     @Test
@@ -95,7 +100,10 @@ public class RowParserTest {
 
     @Test
     public void asPhoneNumber() {
-        assertThat(createParser("555-30-12-10").asPhoneNumber(0, true)).isEqualTo("555-30-12-10");
+        assertThat(createParser("us-feed", "(650) 253-0000").asPhoneNumber(0, true)).isEqualTo("(650) 253-0000");
+        assertThat(createParser("ch-feed", "044 668 18 00").asPhoneNumber(0, true)).isEqualTo("044 668 18 00");
+
+        assertThat(createParser("au-feed", "invalid").asPhoneNumber(0, true)).isNull();
     }
 
     @Test
