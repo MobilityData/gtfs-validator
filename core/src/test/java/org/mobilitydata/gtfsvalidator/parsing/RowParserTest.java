@@ -116,6 +116,7 @@ public class RowParserTest {
     @Test
     public void asTime() {
         assertThat(createParser("12:20:30").asTime(0, true)).isEqualTo(GtfsTime.fromHourMinuteSecond(12, 20, 30));
+        assertThat(createParser("24:20:30").asTime(0, true)).isEqualTo(GtfsTime.fromHourMinuteSecond(24, 20, 30));
 
         assertThat(createParser("invalid").asTime(0, true)).isNull();
     }
@@ -136,13 +137,19 @@ public class RowParserTest {
     public void asLatitude() {
         assertThat(createParser("32.5").asLatitude(0, true)).isEqualTo(32.5);
 
+        assertThat(createParser("-91").asLatitude(0, true)).isNull();
+        assertThat(createParser("91").asLatitude(0, true)).isNull();
         assertThat(createParser("invalid").asLatitude(0, true)).isNull();
     }
 
     @Test
     public void asLongitude() {
         assertThat(createParser("-32.5").asLongitude(0, true)).isEqualTo(-32.5);
+        assertThat(createParser("-91").asLongitude(0, true)).isEqualTo(-91);
+        assertThat(createParser("91").asLongitude(0, true)).isEqualTo(91);
 
+        assertThat(createParser("-181").asLongitude(0, true)).isNull();
+        assertThat(createParser("181").asLongitude(0, true)).isNull();
         assertThat(createParser("invalid").asLongitude(0, true)).isNull();
     }
 }
