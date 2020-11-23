@@ -41,6 +41,8 @@ public class CsvFile implements Iterable<CsvRow> {
 
     /**
      * Tells if the file is empty, i.e. it has no rows and even no headers.
+     *
+     * @return @code true} is the file is empty, {@code false} otherwise
      */
     public boolean isEmpty() {
         return isEmpty;
@@ -52,7 +54,9 @@ public class CsvFile implements Iterable<CsvRow> {
     }
 
     /**
-     * Returns the next record or null if not available.
+     * Advances to the next row.
+     *
+     * @return the next @code CsvRow} or null if end of file was reached.
      */
     @Nullable
     public CsvRow nextResult() {

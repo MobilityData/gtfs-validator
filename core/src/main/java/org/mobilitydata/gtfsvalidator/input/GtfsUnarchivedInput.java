@@ -21,7 +21,6 @@ public class GtfsUnarchivedInput implements GtfsInput {
                 filenames.add(file.getName());
             }
         }
-
     }
 
     @Override

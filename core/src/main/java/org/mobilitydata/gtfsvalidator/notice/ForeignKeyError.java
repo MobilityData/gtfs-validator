@@ -8,7 +8,7 @@ public class ForeignKeyError extends Notice {
                            String fieldValue, long csvRowNumber) {
         super(new ImmutableMap.Builder<String, Object>().
                 put("childFilename", childFilename)
-                .put("childfieldName", childFieldName)
+                .put("childFieldName", childFieldName)
                 .put("parentFilename", parentFilename)
                 .put("parentFieldName", parentFieldName)
                 .put("fieldValue", fieldValue)
