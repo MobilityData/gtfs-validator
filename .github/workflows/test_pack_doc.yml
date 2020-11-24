@@ -61,27 +61,8 @@ jobs:
             adapter/tree/build/reports/tests/
             adapter/utils/build/reports/tests/
             adapter/validator/build/reports/tests/
-            application/web-app/spring-server/build/reports/tests/
             domain/build/reports/tests/
             usecase/build/reports/tests/
-      - name: Run JS tests
-        if: ${{ always() }} #we still want js test report if Java tests failed
-        uses: eskatos/gradle-command-action@v1
-        env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
-        with:
-          arguments: uiTest
-      - name: Persist JS tests report
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: Test report - JavaScript -- ${{ steps.prep.outputs.versionTag }}
-          path: application/web-app/react-client/test-reports/
-      - name: Persist JS tests coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: Test coverage report - JavaScript -- ${{ steps.prep.outputs.versionTag }}
-          path: application/web-app/react-client/build/coverage
 
   pack:
     needs: [test]
@@ -119,22 +100,11 @@ jobs:
           versionTag: ${{ steps.prep.outputs.versionTag }}
         with:
           arguments: shadowJar
-      - name: Package web app war with Gradle
-        uses: eskatos/gradle-command-action@v1
-        env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
-        with:
-          arguments: bootWar
       - name: Persist cli app jar
         uses: actions/upload-artifact@v2
         with:
           name: Application - cli executable .jar -- ${{ steps.prep.outputs.versionTag }}
           path: application/cli-app/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_cli.jar
-      - name: Persist web app war
-        uses: actions/upload-artifact@v2
-        with:
-          name: Application - web executable .war (Spring&React) -- ${{ steps.prep.outputs.versionTag }}
-          path: application/web-app/spring-server/build/libs/gtfs-validator-${{ steps.prep.outputs.versionTag }}_web.war
 
   doc:
     needs: [test]
@@ -166,12 +136,6 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Build jsdoc
-        uses: andstor/jsdoc-action@v1
-        with:
-          source_dir: ./application/web-app/react-client/src/
-          recurse: true
-          output_dir: build/docs/jsdoc/
       - name: Build Javadoc
         uses: eskatos/gradle-command-action@v1
         env:
@@ -183,8 +147,3 @@ jobs:
         with:
           name: Documentation - javadoc -- ${{ steps.prep.outputs.versionTag }}
           path: build/docs/javadoc/
-      - name: Persist jsdoc
-        uses: actions/upload-artifact@v2
-        with:
-          name: Documentation - jsdoc -- ${{ steps.prep.outputs.versionTag }}
-          path: build/docs/jsdoc/
