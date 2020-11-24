@@ -136,14 +136,3 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Build Javadoc
-        uses: eskatos/gradle-command-action@v1
-        env:
-          versionTag: ${{ steps.prep.outputs.versionTag }}
-        with:
-          arguments: aggregateJavadocs
-      - name: Persist javadoc
-        uses: actions/upload-artifact@v2
-        with:
-          name: Documentation - javadoc -- ${{ steps.prep.outputs.versionTag }}
-          path: build/docs/javadoc/
