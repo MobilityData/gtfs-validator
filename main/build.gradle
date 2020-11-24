@@ -1,10 +1,37 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'application'
     id 'java'
 }
 
 group 'org.mobilitydata'
 version "${System.getenv("versionTag")}"
+
+group 'org.mobilitydata'
+version "${System.getenv("versionTag")}_cli"
+
+jar {
+    // Add the manifest within the JAR, using gtfs-validator as the title
+    manifest {
+        attributes('Implementation-Title': rootProject.name,
+                'Implementation-Version': project.version,
+                'Main-Class': 'org.mobilitydata.gtfsvalidator.cli.Main',
+                'Multi-Release': 'true')
+    }
+}
+
+shadowJar {
+    minimize {
+        exclude(dependency('org.apache.logging.log4j:log4j-core'))
+        exclude(dependency('com.fasterxml.jackson.core:jackson-databind'))
+    }
+    // Change the JAR name from cli-app to gtfs-validator
+    archiveBaseName = rootProject.name
+    // Remove "-all" from the end of the JAR file name
+    archiveClassifier = null
+    // Add "v" to version to match previous releases
+    archiveVersion = project.version
+}
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 mainClassName = 'org.mobilitydata.gtfsvalidator.cli.Main'
