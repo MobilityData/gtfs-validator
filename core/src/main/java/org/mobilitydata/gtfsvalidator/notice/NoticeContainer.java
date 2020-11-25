@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class NoticeContainer {
-    private static int MAX_NOTICES_TO_STORE = 100000;
+    private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100000;
     private final ObjectMapper mapper = new ObjectMapper();
 
     private List<Notice> notices = new ArrayList<>();
@@ -40,7 +40,7 @@ public class NoticeContainer {
             int i = 0;
             for (Notice notice : noticesOfType) {
                 ++i;
-                if (i > MAX_NOTICES_TO_STORE) {
+                if (i > MAX_EXPORTS_PER_NOTICE_TYPE) {
                     // Do not store too many notices.
                     break;
                 }
