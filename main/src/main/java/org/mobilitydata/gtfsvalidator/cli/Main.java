@@ -30,7 +30,8 @@ public class Main {
         System.out.println("Input: " + args.input);
         System.out.println("Output: " + args.outputBase);
         System.out.println("Table loaders: " + feedLoader.listTableLoaders());
-        System.out.println("Validators:\n" + validatorLoader.listValidators());
+        System.out.println("Validators:");
+        System.out.println(validatorLoader.listValidators());
 
         // Input.
         feedLoader.setNumThreads(args.numThreads);
@@ -39,8 +40,8 @@ public class Main {
         try {
             feedContainer = feedLoader.load(GtfsInput.createFromPath(args.input), feedName, validatorLoader,
                     noticeContainer);
-        } catch (IOException | InterruptedException exception) {
-            exception.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
             return;
         }
 

@@ -30,7 +30,7 @@ public class GtfsZipFileInput implements GtfsInput {
     }
 
     private boolean insideZipDirectory(ZipEntry entry) {
-        // The .zip file specification states:
+        // We do not use File.separator because the .zip file specification states:
         // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility with Amiga and
         // UNIX file systems etc.
         //

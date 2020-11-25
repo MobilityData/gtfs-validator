@@ -41,7 +41,7 @@ public class NoticeContainer {
             for (Notice notice : noticesOfType) {
                 ++i;
                 if (i > MAX_EXPORTS_PER_NOTICE_TYPE) {
-                    // Do not store too many notices.
+                    // Do not export too many notices for this type.
                     break;
                 }
                 ObjectNode noticeJson = noticesArrayJson.addObject();

@@ -13,6 +13,7 @@ public interface GtfsStopSchema extends GtfsEntity {
 
     String stopCode();
 
+    @ConditionallyRequired
     String stopName();
 
     String ttsStopName();
@@ -20,13 +21,16 @@ public interface GtfsStopSchema extends GtfsEntity {
     String stopDesc();
 
     @FieldType(FieldTypeEnum.LATITUDE)
+    @ConditionallyRequired
     double stopLat();
 
     @FieldType(FieldTypeEnum.LONGITUDE)
+    @ConditionallyRequired
     double stopLon();
 
     @FieldType(FieldTypeEnum.ID)
     @Index
+    @ConditionallyRequired
     String zoneId();
 
     @FieldType(FieldTypeEnum.URL)
@@ -36,6 +40,7 @@ public interface GtfsStopSchema extends GtfsEntity {
 
     @FieldType(FieldTypeEnum.ID)
     @ForeignKey(table = "stops.txt", field = "stop_id")
+    @ConditionallyRequired
     String parentStation();
 
     @FieldType(FieldTypeEnum.TIMEZONE)

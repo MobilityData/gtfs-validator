@@ -10,6 +10,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 import javax.annotation.Nullable;
+import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.util.Currency;
 import java.util.Locale;
@@ -26,20 +27,6 @@ public class RowParser {
     public static final boolean OPTIONAL = false;
     private final NoticeContainer noticeContainer;
     private final GtfsFeedName feedName;
-    private final ValueParser<Boolean> booleanParser = new ValueParser("boolean") {
-        @Override
-        Boolean parseString(String s) {
-            int i = Integer.parseInt(s);
-            switch (i) {
-                case 0:
-                    return false;
-                case 1:
-                    return true;
-                default:
-                    throw new IllegalArgumentException("Illegal boolean value" + i);
-            }
-        }
-    };
     private final ValueParser<Integer> integerParser = new ValueParser("integer") {
         @Override
         Integer parseString(String s) {
@@ -50,6 +37,12 @@ public class RowParser {
         @Override
         Double parseString(String s) {
             return Double.parseDouble(s);
+        }
+    };
+    private final ValueParser<BigDecimal> decimalParser = new ValueParser("decimal") {
+        @Override
+        BigDecimal parseString(String s) {
+            return new BigDecimal(s);
         }
     };
     private final ValueParser<TimeZone> timezoneParser = new ValueParser("timezone") {
@@ -138,13 +131,15 @@ public class RowParser {
             return s;
         }
     };
-
     private CsvRow row;
     private boolean parseErrorsInRow;
-
     public RowParser(GtfsFeedName feedName, NoticeContainer noticeContainer) {
         this.feedName = feedName;
         this.noticeContainer = noticeContainer;
+    }
+
+    public NoticeContainer getNoticeContainer() {
+        return noticeContainer;
     }
 
     public void setRow(CsvRow row) {
@@ -297,13 +292,46 @@ public class RowParser {
     }
 
     @Nullable
-    public GtfsColor asColor(int columnIndex, boolean required) {
-        return colorParser.parseField(columnIndex, required);
+    public BigDecimal asDecimal(int columnIndex, boolean required) {
+        return decimalParser.parseField(columnIndex, required);
     }
 
     @Nullable
-    public Boolean asBoolean(int columnIndex, boolean required) {
-        return booleanParser.parseField(columnIndex, required);
+    public BigDecimal asDecimal(int columnIndex, boolean required, NumberBounds bounds) {
+        BigDecimal value = asDecimal(columnIndex, required);
+        if (value != null) {
+            final int compareToZero = value.compareTo(new BigDecimal(0));
+            switch (bounds) {
+                case POSITIVE:
+                    if (compareToZero <= 0) {
+                        addErrorInRow(new NumberOutOfBoundsError(
+                                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
+                                "positive decimal", value));
+                    }
+                    break;
+                case NON_NEGATIVE:
+                    if (compareToZero < 0) {
+                        addErrorInRow(new NumberOutOfBoundsError(
+                                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
+                                "non-negative decimal", value));
+                    }
+                    break;
+                case NON_ZERO:
+                    if (compareToZero == 0) {
+                        addErrorInRow(new NumberOutOfBoundsError(
+                                row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
+                                "non-zero decimal", value));
+                    }
+                    break;
+            }
+        }
+        return value;
+    }
+
+
+    @Nullable
+    public GtfsColor asColor(int columnIndex, boolean required) {
+        return colorParser.parseField(columnIndex, required);
     }
 
     @Nullable

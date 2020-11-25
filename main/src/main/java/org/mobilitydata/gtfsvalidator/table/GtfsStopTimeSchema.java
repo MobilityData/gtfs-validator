@@ -10,8 +10,10 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
     @FirstKey
     String tripId();
 
+    @ConditionallyRequired
     GtfsTime arrivalTime();
 
+    @ConditionallyRequired
     GtfsTime departureTime();
 
     @FieldType(FieldTypeEnum.ID)
@@ -40,5 +42,5 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
     double shapeDistTraveled();
 
     @DefaultValue("1")
-    boolean timepoint();
+    GtfsStopTimesTimepoint timepoint();
 }

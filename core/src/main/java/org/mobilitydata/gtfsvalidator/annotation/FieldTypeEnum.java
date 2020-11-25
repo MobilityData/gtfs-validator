@@ -15,13 +15,13 @@ package org.mobilitydata.gtfsvalidator.annotation;
  * * {@code int} - {@code INTEGER};
  * * {@code double} - {@code FLOAT};
  * * {@code String} - {@code TEXT};
- * * {@code boolean} - {@code BOOLEAN};
  * * {@code GtfsColor} - {@code COLOR};
  * * {@code GtfsDate} - {@code DATE};
  * * {@code GtfsTime} - {@code TIME};
  * * {@code TimeZone} - {@code TIMEZONE};
  * * {@code Locale} - {@code LANGUAGE_CODE};
- * * {@code Currency} - {@code CURRENCY_CODE}.
+ * * {@code Currency} - {@code CURRENCY_CODE}
+ * * {@code BigDecimal} - {@code DECIMAL}.
  * <p>
  * However, if you need {@code EMAIL} instead of {@code TEXT}, {@code LATITUDE} instead of {@code FLOAT} etc,
  * then you need to specify a {@code FieldTypeEnum} using {@code @FieldType} annotation.
@@ -29,8 +29,8 @@ package org.mobilitydata.gtfsvalidator.annotation;
 public enum FieldTypeEnum {
     INTEGER,
     FLOAT,
+    DECIMAL,
     TEXT,
-    BOOLEAN,
     ID,
     COLOR,
     CURRENCY_CODE,

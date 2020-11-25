@@ -4,6 +4,7 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 @GtfsTable("calendar_dates.txt")
+@ConditionallyRequired
 public interface GtfsCalendarDateSchema extends GtfsEntity {
     @FieldType(FieldTypeEnum.ID)
     @Required

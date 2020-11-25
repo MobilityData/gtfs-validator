@@ -8,8 +8,8 @@ import java.util.*;
  * The tables are kept as {@code GtfsTableContainer} instances.
  */
 public class GtfsFeedContainer {
-    private Map<String, GtfsTableContainer> tables = new HashMap<>();
-    private Map<Class<? extends GtfsTableContainer>, GtfsTableContainer> tablesByClass = new HashMap<>();
+    private final Map<String, GtfsTableContainer> tables = new HashMap<>();
+    private final Map<Class<? extends GtfsTableContainer>, GtfsTableContainer> tablesByClass = new HashMap<>();
 
     public GtfsFeedContainer(List<GtfsTableContainer> tableContainerList) {
         for (GtfsTableContainer table : tableContainerList) {

@@ -4,6 +4,7 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 @GtfsTable("calendar.txt")
+@ConditionallyRequired
 public interface GtfsCalendarSchema extends GtfsEntity {
     @FieldType(FieldTypeEnum.ID)
     @PrimaryKey
@@ -11,25 +12,25 @@ public interface GtfsCalendarSchema extends GtfsEntity {
     String serviceId();
 
     @Required
-    boolean monday();
+    GtfsCalendarService monday();
 
     @Required
-    boolean tuesday();
+    GtfsCalendarService tuesday();
 
     @Required
-    boolean wednesday();
+    GtfsCalendarService wednesday();
 
     @Required
-    boolean thursday();
+    GtfsCalendarService thursday();
 
     @Required
-    boolean friday();
+    GtfsCalendarService friday();
 
     @Required
-    boolean saturday();
+    GtfsCalendarService saturday();
 
     @Required
-    boolean sunday();
+    GtfsCalendarService sunday();
 
     @Required
     GtfsDate startDate();

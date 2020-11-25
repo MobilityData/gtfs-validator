@@ -10,6 +10,7 @@ import java.util.TimeZone;
 public interface GtfsAgencySchema extends GtfsEntity {
     @FieldType(FieldTypeEnum.ID)
     @PrimaryKey
+    @ConditionallyRequired
     String agencyId();
 
     @Required

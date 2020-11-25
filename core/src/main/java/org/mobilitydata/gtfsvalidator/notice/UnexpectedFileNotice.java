@@ -2,8 +2,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-public class UnexpectedFile extends Notice {
-    public UnexpectedFile(String filename) {
+public class UnexpectedFileNotice extends Notice {
+    public UnexpectedFileNotice(String filename) {
         super(ImmutableMap.of("filename", filename));
     }
 

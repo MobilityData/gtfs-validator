@@ -2,7 +2,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
-import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyField;
+import org.mobilitydata.gtfsvalidator.notice.InconsistentAgencyFieldNotice;
 import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
@@ -18,7 +18,7 @@ import java.util.TimeZone;
  *
  * Generated notices:
  * * MissingRequiredFieldError - multiple agencies present but no agency_id set
- * * InconsistentAgencyField - inconsistent timezone or language among the agencies
+ * * InconsistentAgencyFieldNotice - inconsistent timezone or language among the agencies
  */
 @GtfsValidator
 public class AgencyConsistencyValidator extends FileValidator {
@@ -50,7 +50,7 @@ public class AgencyConsistencyValidator extends FileValidator {
             GtfsAgency agency = agencyTable.getEntities().get(i);
             if (!commonTimezone.getID().equals(agency.agencyTimezone().getID())) {
                 noticeContainer.addNotice(
-                        new InconsistentAgencyField(
+                        new InconsistentAgencyFieldNotice(
                                 agency.csvRowNumber(),
                                 GtfsAgencyTableLoader.AGENCY_TIMEZONE_FIELD_NAME,
                                 commonTimezone.getID(),
@@ -59,7 +59,7 @@ public class AgencyConsistencyValidator extends FileValidator {
             if (hasLanguage != agency.hasAgencyLang()
                     || (hasLanguage && agency.hasAgencyLang() && !commonLanguage.equals(agency.agencyLang()))) {
                 noticeContainer.addNotice(
-                        new InconsistentAgencyField(
+                        new InconsistentAgencyFieldNotice(
                                 agency.csvRowNumber(),
                                 GtfsAgencyTableLoader.AGENCY_LANG_FIELD_NAME,
                                 hasLanguage ? commonLanguage.getLanguage() : "",

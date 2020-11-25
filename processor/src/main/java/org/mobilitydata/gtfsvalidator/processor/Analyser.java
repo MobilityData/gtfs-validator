@@ -11,6 +11,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleTypeVisitor8;
+import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -79,8 +80,6 @@ public class Analyser {
             @Override
             public FieldTypeEnum visitPrimitive(PrimitiveType t, Void p) {
                 switch (t.getKind()) {
-                    case BOOLEAN:
-                        return FieldTypeEnum.BOOLEAN;
                     case BYTE:
                     case SHORT:
                     case INT:
@@ -118,6 +117,9 @@ public class Analyser {
                 }
                 if (name.equals(GtfsColor.class.getCanonicalName())) {
                     return FieldTypeEnum.COLOR;
+                }
+                if (name.equals(BigDecimal.class.getCanonicalName())) {
+                    return FieldTypeEnum.DECIMAL;
                 }
                 return FieldTypeEnum.ENUM;
             }

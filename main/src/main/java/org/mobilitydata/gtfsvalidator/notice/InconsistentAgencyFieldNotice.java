@@ -2,8 +2,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-public class InconsistentAgencyField extends Notice {
-    public InconsistentAgencyField(long csvRowNumber, String fieldName, String expected, String actual) {
+public class InconsistentAgencyFieldNotice extends Notice {
+    public InconsistentAgencyFieldNotice(long csvRowNumber, String fieldName, String expected, String actual) {
         super(ImmutableMap.of(
                 "csvRowNumber", csvRowNumber,
                 "fieldName", fieldName,

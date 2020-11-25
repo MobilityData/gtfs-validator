@@ -16,7 +16,7 @@ import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_P
  */
 public class EnumGenerator {
     public static String ENUM_SUFFIX = "Enum";
-    private GtfsEnumDescriptor enumDescriptor;
+    private final GtfsEnumDescriptor enumDescriptor;
 
     public EnumGenerator(GtfsEnumDescriptor enumDescriptor) {
         this.enumDescriptor = enumDescriptor;

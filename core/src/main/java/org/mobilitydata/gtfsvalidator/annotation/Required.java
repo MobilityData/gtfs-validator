@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Adds a validation that the field is required.
+ * Adds a validation that the field or a file is required.
  * <p>
  * Example.
  *

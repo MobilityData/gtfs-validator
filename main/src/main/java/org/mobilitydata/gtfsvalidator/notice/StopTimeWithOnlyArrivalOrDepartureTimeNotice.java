@@ -2,8 +2,8 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-public class StopTimeWithOnlyArrivalOrDepartureTime extends Notice {
-    public StopTimeWithOnlyArrivalOrDepartureTime(long csvRowNumber, String tripId, int stopSequence, String specifiedField) {
+public class StopTimeWithOnlyArrivalOrDepartureTimeNotice extends Notice {
+    public StopTimeWithOnlyArrivalOrDepartureTimeNotice(long csvRowNumber, String tripId, int stopSequence, String specifiedField) {
         super(ImmutableMap.of(
                 "csvRowNumber", csvRowNumber,
                 "tripId", tripId,

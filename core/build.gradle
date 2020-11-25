@@ -5,7 +5,7 @@ plugins {
 group 'org.mobilitydata'
 version "gtfs-validator-${System.getenv("versionTag")}"
 
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()

@@ -16,17 +16,18 @@ public interface GtfsAttributionSchema extends GtfsEntity {
     @ForeignKey(table = "routes.txt", field = "route_id")
     String routeId();
 
+    @FieldType(FieldTypeEnum.ID)
     @ForeignKey(table = "trips.txt", field = "trip_id")
     String tripId();
 
     @Required
     String organizationName();
 
-    boolean isProducer();
+    GtfsAttributionRole isProducer();
 
-    boolean isOperator();
+    GtfsAttributionRole isOperator();
 
-    boolean isAuthority();
+    GtfsAttributionRole isAuthority();
 
     @FieldType(FieldTypeEnum.URL)
     String attributionUrl();

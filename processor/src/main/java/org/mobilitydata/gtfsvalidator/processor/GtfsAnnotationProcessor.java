@@ -29,7 +29,7 @@ import static javax.lang.model.util.ElementFilter.typesIn;
 @AutoService(Processor.class)
 public class GtfsAnnotationProcessor extends AbstractProcessor {
 
-    private Analyser analyser = new Analyser();
+    private final Analyser analyser = new Analyser();
 
     /**
      * Sanitizes the result of {@link RoundEnvironment#getElementsAnnotatedWith}, which otherwise

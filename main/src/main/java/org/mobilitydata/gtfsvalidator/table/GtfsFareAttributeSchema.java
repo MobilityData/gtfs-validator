@@ -2,6 +2,7 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import org.mobilitydata.gtfsvalidator.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Currency;
 
 @GtfsTable("fare_attributes.txt")
@@ -12,7 +13,7 @@ public interface GtfsFareAttributeSchema extends GtfsEntity {
     String fareId();
 
     @NonNegative
-    double price();
+    BigDecimal price();
 
     @Required
     Currency currencyType();
@@ -25,6 +26,7 @@ public interface GtfsFareAttributeSchema extends GtfsEntity {
 
     @FieldType(FieldTypeEnum.ID)
     @ForeignKey(table = "agency.txt", field = "agency_id")
+    @ConditionallyRequired
     String agencyId();
 
     @NonNegative

@@ -5,7 +5,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.UnexpectedFile;
+import org.mobilitydata.gtfsvalidator.notice.UnexpectedFileNotice;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
@@ -23,7 +23,7 @@ import java.util.concurrent.*;
  * based on {@code GtfsLoader} annotation.
  */
 public class GtfsFeedLoader {
-    private HashMap<String, GtfsTableLoader> tableLoaders = new HashMap<>();
+    private final HashMap<String, GtfsTableLoader> tableLoaders = new HashMap<>();
     private int numThreads = 1;
 
     public GtfsFeedLoader() {
@@ -42,16 +42,17 @@ public class GtfsFeedLoader {
             GtfsTableLoader loader;
             try {
                 loader = clazz.asSubclass(GtfsTableLoader.class).getConstructor().newInstance();
-            } catch (ReflectiveOperationException exception) {
-                System.err.println("Possible bug in GTFS annotation processor");
-                exception.printStackTrace();
+            } catch (ReflectiveOperationException e) {
+                System.err.println("Possible bug in GTFS annotation processor - " +
+                        "expected a constructor without parameters for " + clazz.getName());
+                e.printStackTrace();
                 continue;
             }
             tableLoaders.put(loader.gtfsFilename(), loader);
         }
     }
 
-    private static Reader createFileReader(InputStream stream) throws FileNotFoundException {
+    private static Reader createFileReader(InputStream stream) {
         return new BufferedReader(new InputStreamReader(stream));
     }
 
@@ -64,7 +65,7 @@ public class GtfsFeedLoader {
     }
 
     public GtfsFeedContainer load(GtfsInput gtfsInput, GtfsFeedName feedName, ValidatorLoader validatorLoader,
-                                  NoticeContainer noticeContainer) throws IOException, InterruptedException {
+                                  NoticeContainer noticeContainer) {
         System.out.println("Loading in " + numThreads + " threads");
         ExecutorService exec = Executors.newFixedThreadPool(numThreads);
         List<Callable<GtfsTableContainer>> loaderCallables = new ArrayList<>();
@@ -72,10 +73,16 @@ public class GtfsFeedLoader {
         for (String filename : gtfsInput.getFilenames()) {
             GtfsTableLoader loader = remainingLoaders.remove(filename.toLowerCase());
             if (loader == null) {
-                noticeContainer.addNotice(new UnexpectedFile(filename));
+                noticeContainer.addNotice(new UnexpectedFileNotice(filename));
             } else {
-                loaderCallables.add(() -> loader.load(
-                        createFileReader(gtfsInput.getFile(filename)), feedName, validatorLoader, noticeContainer));
+                loaderCallables.add(() -> {
+                    Reader reader = createFileReader(gtfsInput.getFile(filename));
+                    try {
+                        return loader.load(reader, feedName, validatorLoader, noticeContainer);
+                    } finally {
+                        reader.close();
+                    }
+                });
             }
         }
         ArrayList<GtfsTableContainer> tableContainers = new ArrayList<>();

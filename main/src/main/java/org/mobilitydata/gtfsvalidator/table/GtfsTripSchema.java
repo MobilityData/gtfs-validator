@@ -30,6 +30,7 @@ public interface GtfsTripSchema extends GtfsEntity {
     @FieldType(FieldTypeEnum.ID)
     @ForeignKey(table = "shapes.txt", field = "shape_id")
     @Index
+    @ConditionallyRequired
     String shapeId();
 
     GtfsWheelchairBoarding wheelchairAccessible();

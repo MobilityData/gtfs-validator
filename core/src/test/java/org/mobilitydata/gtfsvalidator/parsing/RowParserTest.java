@@ -10,6 +10,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Locale;
@@ -41,29 +42,58 @@ public class RowParserTest {
     }
 
     @Test
-    public void asBoolean() {
-        assertThat(createParser("0").asBoolean(0, true)).isEqualTo(false);
-        assertThat(createParser("1").asBoolean(0, true)).isEqualTo(true);
-
-        assertThat(createParser("invalid").asBoolean(0, true)).isNull();
-    }
-
-    @Test
     public void asInteger() {
-        assertThat(createParser("12345").asInteger(0, true)).isEqualTo(12345);
-        assertThat(createParser("12345").asInteger(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(12345);
-        assertThat(createParser("12345").asInteger(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(12345);
-        assertThat(createParser("12345").asInteger(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(12345);
+        RowParser parser = createParser("12345");
+
+        assertThat(parser.asInteger(0, true)).isEqualTo(12345);
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(parser.asInteger(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(12345);
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(parser.asInteger(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(12345);
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(parser.asInteger(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(12345);
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
 
         assertThat(createParser("abc").asInteger(0, true)).isNull();
     }
 
     @Test
+    public void asDecimal() {
+        RowParser parser = createParser("123.45");
+
+        assertThat(parser.asDecimal(0, true)).isEqualTo(new BigDecimal("123.45"));
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(parser.asDecimal(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(new BigDecimal("123.45"));
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(parser.asDecimal(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(new BigDecimal("123.45"));
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(parser.asDecimal(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(new BigDecimal("123.45"));
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(createParser("abc").asDecimal(0, true)).isNull();
+    }
+
+    @Test
     public void asFloat() {
-        assertThat(createParser("1234.5").asFloat(0, true)).isEqualTo(1234.5);
-        assertThat(createParser("1234.5").asFloat(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(1234.5);
-        assertThat(createParser("1234.5").asFloat(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(1234.5);
-        assertThat(createParser("1234.5").asFloat(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(1234.5);
+        RowParser parser = createParser("123.45");
+
+        assertThat(parser.asFloat(0, true)).isEqualTo(123.45);
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(parser.asFloat(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(123.45);
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(parser.asFloat(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(123.45);
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+
+        assertThat(parser.asFloat(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(123.45);
+        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
 
         assertThat(createParser("abc").asFloat(0, true)).isNull();
     }

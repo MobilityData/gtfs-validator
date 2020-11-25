@@ -6,7 +6,7 @@ import com.google.common.collect.Multimaps;
 import com.squareup.javapoet.*;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyError;
-import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntity;
+import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 
@@ -203,7 +203,7 @@ public class TableContainerGenerator {
         if (fileDescriptor.singleRow()) {
             method.beginControlFlow("if (entities.size() > 1)")
                     .addStatement("noticeContainer.addNotice(new $T(gtfsFilename(), entities.size()))",
-                            MoreThanOneEntity.class)
+                            MoreThanOneEntityNotice.class)
                     .endControlFlow();
         } else if (fileDescriptor.sequenceKey().isPresent() && fileDescriptor.firstKey().isPresent()) {
             GtfsFieldDescriptor firstKey = fileDescriptor.firstKey().get();

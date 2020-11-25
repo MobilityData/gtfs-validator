@@ -13,10 +13,13 @@ public interface GtfsRouteSchema extends GtfsEntity {
 
     @FieldType(FieldTypeEnum.ID)
     @ForeignKey(table = "agency.txt", field = "agency_id")
+    @ConditionallyRequired
     String agencyId();
 
+    @ConditionallyRequired
     String routeShortName();
 
+    @ConditionallyRequired
     String routeLongName();
 
     String routeDesc();

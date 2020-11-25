@@ -39,10 +39,6 @@ public class EntityImplementationGenerator {
         if (field.defaultValue().isPresent()) {
             String valueString = field.defaultValue().get();
             switch (field.type()) {
-                case BOOLEAN:
-                    return CodeBlock.of(
-                            Boolean.parseBoolean(valueString) || (Integer.parseInt(valueString) == 1) ?
-                                    "true" : "false");
                 case INTEGER:
                 case ENUM:
                     return CodeBlock.of(Integer.toString(Integer.parseInt(valueString)));
@@ -61,8 +57,6 @@ public class EntityImplementationGenerator {
             }
         }
         switch (field.type()) {
-            case BOOLEAN:
-                return CodeBlock.of("false");
             case ENUM:
             case INTEGER:
             case FLOAT:
