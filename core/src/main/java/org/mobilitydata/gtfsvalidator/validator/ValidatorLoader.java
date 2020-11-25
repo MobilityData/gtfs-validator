@@ -23,9 +23,9 @@ import java.util.Map;
  * provides convenient methods to invoke them on a single entity of file.
  */
 public class ValidatorLoader {
-    private ListMultimap<Class<? extends GtfsEntity>, SingleEntityValidator<?>> singleEntityValidators = ArrayListMultimap.create();
-    private ListMultimap<Class<? extends GtfsTableContainer>, Class<? extends FileValidator>> singleFileValidators = ArrayListMultimap.create();
-    private List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
+    private final ListMultimap<Class<? extends GtfsEntity>, SingleEntityValidator<?>> singleEntityValidators = ArrayListMultimap.create();
+    private final ListMultimap<Class<? extends GtfsTableContainer>, Class<? extends FileValidator>> singleFileValidators = ArrayListMultimap.create();
+    private final List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
 
     public ValidatorLoader() {
         List<Class<? extends SingleEntityValidator>> singleEntityValidatorClasses = new ArrayList<>();
@@ -50,13 +50,18 @@ public class ValidatorLoader {
 
         for (Class<? extends SingleEntityValidator> validatorClass : singleEntityValidatorClasses) {
             for (Method method : validatorClass.getMethods()) {
+                // A child class of SingleEntityValidator has two `validate' methods:
+                // 1) the inherited void validate(GtfsEntity entity, NoticeContainer noticeContainer);
+                // 2) the type-specific void validate(Gtfs<name> entity, NoticeContainer noticeContainer).
+                // We need to skip the first one and use the second one.
+                Class<?>[] parameterTypes = method.getParameterTypes();
                 if (method.getName().equals("validate") && method.getParameterCount() == 2
-                        && GtfsEntity.class.isAssignableFrom(method.getParameterTypes()[0])
-                        && !method.getParameterTypes()[0].isAssignableFrom(GtfsEntity.class)
-                        && method.getParameterTypes()[1].isAssignableFrom(NoticeContainer.class)) {
+                        && GtfsEntity.class.isAssignableFrom(parameterTypes[0])
+                        && !parameterTypes[0].isAssignableFrom(GtfsEntity.class)
+                        && parameterTypes[1].isAssignableFrom(NoticeContainer.class)) {
                     try {
                         singleEntityValidators.put(
-                                (Class<? extends GtfsEntity>) method.getParameterTypes()[0],
+                                (Class<? extends GtfsEntity>) parameterTypes[0],
                                 ((Class<? extends SingleEntityValidator>) validatorClass).getConstructor().newInstance());
                     } catch (ReflectiveOperationException exception) {
                         System.err.println("Cannot instantiate validator: " + exception);
