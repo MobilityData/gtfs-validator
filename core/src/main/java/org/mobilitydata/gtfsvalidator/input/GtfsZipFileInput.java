@@ -15,16 +15,27 @@ import java.util.zip.ZipFile;
  * Implements support for GTFS ZIP archives.
  */
 public class GtfsZipFileInput implements GtfsInput {
-    private Set<String> filenames = new HashSet();
-    private ZipFile zipFile;
+    private final Set<String> filenames = new HashSet();
+    private final ZipFile zipFile;
 
     public GtfsZipFileInput(File file) throws IOException {
         zipFile = new ZipFile(file);
         for (Enumeration<? extends ZipEntry> i = zipFile.entries(); i
                 .hasMoreElements(); ) {
-            filenames.add(i.nextElement().getName());
+            ZipEntry entry = i.nextElement();
+            if (!insideZipDirectory(entry)) {
+                filenames.add(entry.getName());
+            }
         }
+    }
 
+    private boolean insideZipDirectory(ZipEntry entry) {
+        // The .zip file specification states:
+        // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility with Amiga and
+        // UNIX file systems etc.
+        //
+        // Directory names in end with '/'.
+        return entry.getName().contains("/");
     }
 
     @Override

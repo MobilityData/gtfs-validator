@@ -30,8 +30,10 @@ public interface GtfsInput {
 
     /**
      * Lists all files inside the GTFS dataset, even if they are not CSV and do not have .txt extension.
+     * <p>
+     * Directories and files in nested directories are skipped.
      *
-     * @return names of all available files
+     * @return base names of all available files
      */
     Set<String> getFilenames();
 
