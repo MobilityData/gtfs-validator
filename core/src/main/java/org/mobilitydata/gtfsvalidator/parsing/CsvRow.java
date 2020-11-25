@@ -6,9 +6,9 @@ import javax.annotation.Nullable;
  * Read access to a data row in a CSV file.
  */
 public class CsvRow {
-    private CsvFile csvFile;
-    private long rowNumber;
-    private String[] columnValues;
+    private final CsvFile csvFile;
+    private final long rowNumber;
+    private final String[] columnValues;
 
     public CsvRow(CsvFile csvFile, long rowNumber, String[] columnValues) {
         this.csvFile = csvFile;

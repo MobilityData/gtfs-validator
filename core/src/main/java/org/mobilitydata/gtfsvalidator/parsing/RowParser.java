@@ -9,6 +9,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
+import javax.annotation.Nullable;
 import java.time.ZoneId;
 import java.util.Currency;
 import java.util.Locale;
@@ -127,7 +128,7 @@ public class RowParser {
         }
     };
     private final ValueParser<String> phoneNumberParser = new ValueParser("phone number") {
-        private PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        private final PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
         @Override
         String parseString(String s) {
@@ -157,83 +158,89 @@ public class RowParser {
 
     public void checkRowColumnCount(CsvFile csvFile) {
         if (row.getColumnCount() != csvFile.getColumnCount()) {
-            noticeContainer.addNotice(new InvalidRowLengthError(csvFile.getFileName(), row.getRowNumber(),
+            addErrorInRow(new InvalidRowLengthError(csvFile.getFileName(), row.getRowNumber(),
                     row.getColumnCount(), csvFile.getColumnCount()));
-            parseErrorsInRow = true;
         }
     }
 
+    @Nullable
     public String asString(int columnIndex, boolean required) {
         String s = row.asString(columnIndex);
         if (required && s == null) {
-            noticeContainer.addNotice(new MissingRequiredFieldError(row.getFileName(),
+            addErrorInRow(new MissingRequiredFieldError(row.getFileName(),
                     row.getRowNumber(),
                     row.getColumnName(columnIndex)));
-            parseErrorsInRow = true;
         }
         return s;
     }
 
+    @Nullable
     public String asText(int columnIndex, boolean required) {
         return asString(columnIndex, required);
     }
 
+    @Nullable
     public String asId(int columnIndex, boolean required) {
         return asString(columnIndex, required);
     }
 
+    @Nullable
     public String asUrl(int columnIndex, boolean required) {
         return urlParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public String asEmail(int columnIndex, boolean required) {
         return emailParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public String asPhoneNumber(int columnIndex, boolean required) {
         return phoneNumberParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public Locale asLanguageCode(int columnIndex, boolean required) {
         return languageCodeParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public TimeZone asTimezone(int columnIndex, boolean required) {
         return timezoneParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public Currency asCurrencyCode(int columnIndex, boolean required) {
         return currencyParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public Double asFloat(int columnIndex, boolean required) {
         return floatParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public Double asFloat(int columnIndex, boolean required, NumberBounds bounds) {
         Double value = asFloat(columnIndex, required);
         if (value != null) {
             switch (bounds) {
                 case POSITIVE:
                     if (value <= 0) {
-                        parseErrorsInRow = true;
-                        noticeContainer.addNotice(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfBoundsError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "positive float", value));
                     }
                     break;
                 case NON_NEGATIVE:
                     if (value < 0) {
-                        parseErrorsInRow = true;
-                        noticeContainer.addNotice(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfBoundsError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-negative float", value));
                     }
                     break;
                 case NON_ZERO:
                     if (value == 0) {
-                        parseErrorsInRow = true;
-                        noticeContainer.addNotice(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfBoundsError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-zero float", value));
                     }
@@ -243,42 +250,43 @@ public class RowParser {
         return value;
     }
 
+    @Nullable
     public Double asLatitude(int columnIndex, boolean required) {
         return latitudeParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public Double asLongitude(int columnIndex, boolean required) {
         return longitudeParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public Integer asInteger(int columnIndex, boolean required) {
         return integerParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public Integer asInteger(int columnIndex, boolean required, NumberBounds bounds) {
         Integer value = asInteger(columnIndex, required);
         if (value != null) {
             switch (bounds) {
                 case POSITIVE:
                     if (value <= 0) {
-                        parseErrorsInRow = true;
-                        noticeContainer.addNotice(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfBoundsError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "positive integer", value));
                     }
                     break;
                 case NON_NEGATIVE:
                     if (value < 0) {
-                        parseErrorsInRow = true;
-                        noticeContainer.addNotice(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfBoundsError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-negative integer", value));
                     }
                     break;
                 case NON_ZERO:
                     if (value == 0) {
-                        parseErrorsInRow = true;
-                        noticeContainer.addNotice(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfBoundsError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-zero integer", value));
                     }
@@ -288,14 +296,17 @@ public class RowParser {
         return value;
     }
 
+    @Nullable
     public GtfsColor asColor(int columnIndex, boolean required) {
         return colorParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public Boolean asBoolean(int columnIndex, boolean required) {
         return booleanParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public <E> Integer asEnum(int columnIndex, boolean required, EnumCreator<E> enumCreator) {
         String s = asString(columnIndex, required);
         if (s == null) {
@@ -305,8 +316,7 @@ public class RowParser {
         try {
             i = Integer.parseInt(s);
         } catch (Exception ex) {
-            parseErrorsInRow = true;
-            noticeContainer.addNotice(new FieldParsingError(
+            addErrorInRow(new FieldParsingError(
                     row.getFileName(),
                     row.getRowNumber(),
                     row.getColumnName(columnIndex),
@@ -315,8 +325,7 @@ public class RowParser {
             return null;
         }
         if (enumCreator.convert(i) == null) {
-            parseErrorsInRow = true;
-            noticeContainer.addNotice(new UnexpectedEnumValueError(
+            addErrorInRow(new UnexpectedEnumValueError(
                     row.getFileName(),
                     row.getRowNumber(),
                     row.getColumnName(columnIndex),
@@ -325,12 +334,19 @@ public class RowParser {
         return i;
     }
 
+    @Nullable
     public GtfsTime asTime(int columnIndex, boolean required) {
         return timeParser.parseField(columnIndex, required);
     }
 
+    @Nullable
     public GtfsDate asDate(int columnIndex, boolean required) {
         return dateParser.parseField(columnIndex, required);
+    }
+
+    private void addErrorInRow(Notice error) {
+        parseErrorsInRow = true;
+        noticeContainer.addNotice(error);
     }
 
     public enum NumberBounds {
@@ -345,7 +361,7 @@ public class RowParser {
     }
 
     abstract class ValueParser<T> {
-        private String formatName;
+        private final String formatName;
 
         public ValueParser(String formatName) {
             this.formatName = formatName;
@@ -361,8 +377,7 @@ public class RowParser {
             try {
                 return parseString(s);
             } catch (Exception ex) {
-                parseErrorsInRow = true;
-                noticeContainer.addNotice(new FieldParsingError(
+                addErrorInRow(new FieldParsingError(
                         row.getFileName(),
                         row.getRowNumber(),
                         row.getColumnName(columnIndex),

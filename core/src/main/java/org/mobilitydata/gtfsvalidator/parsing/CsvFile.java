@@ -13,10 +13,10 @@ import java.util.Iterator;
  */
 public class CsvFile implements Iterable<CsvRow> {
     private final boolean isEmpty;
-    private CsvParser parser;
-    private HashMap<String, Integer> columnIndices = new HashMap<>();
+    private final CsvParser parser;
+    private final HashMap<String, Integer> columnIndices = new HashMap<>();
     private String[] columnNames;
-    private String filename;
+    private final String filename;
 
     public CsvFile(Reader reader, String filename) {
         this.filename = filename;
@@ -48,6 +48,14 @@ public class CsvFile implements Iterable<CsvRow> {
         return isEmpty;
     }
 
+    /**
+     * Returns an iterator over this CSV file.
+     * <p>
+     * Note that you can iterate over the file only once. Any subsequent call to this function returns an iterator
+     * that starts from the previous position.
+     *
+     * @return an iterator over this CSV file.
+     */
     @Override
     public Iterator<CsvRow> iterator() {
         return new CsvFileIterator();
@@ -59,7 +67,7 @@ public class CsvFile implements Iterable<CsvRow> {
      * @return the next @code CsvRow} or null if end of file was reached.
      */
     @Nullable
-    public CsvRow nextResult() {
+    private CsvRow nextResult() {
         String[] columnValues = parser.parseNext();
         if (columnValues == null) {
             return null;
