@@ -1,5 +1,8 @@
 package org.mobilitydata.gtfsvalidator.type;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Represents GTFS time.
  * <p>
@@ -30,20 +33,23 @@ public class GtfsTime implements Comparable<GtfsTime> {
         return new GtfsTime(secondsSinceMidnight);
     }
 
-    public static GtfsTime fromString(String hhmmss) {
-        int length = hhmmss.length();
-        if (length != 8 && length != 7) {
-            throw new IllegalArgumentException("Time must have HH:MM:SS or H:MM:SS format: " + hhmmss);
+    private static final Pattern hhmmccPatter = Pattern.compile("(\\d{1,3}):(\\d\\d):(\\d\\d)");
+
+    /**
+     * Returns a GtfsTime object from its string representation, such as 12:02:34.
+     *
+     * @param time the time in H:MM:SS, HH:MM:SS or HHH:MM:SS format
+     * @return GtfsTime object
+     */
+    public static GtfsTime fromString(String time) {
+        Matcher matcher = hhmmccPatter.matcher(time);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Time must have H:MM:SS, HH:MM:SS or HHH:MM:SS format: " + time);
         }
-        int hour, minute, second;
-        try {
-            hour = Integer.parseInt(hhmmss.substring(0, length - 6));
-            minute = Integer.parseInt(hhmmss.substring(length - 5, length - 3));
-            second = Integer.parseInt(hhmmss.substring(length - 2));
-        } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException("Time must have HH:MM:SS or H:MM:SS format: " + hhmmss);
-        }
-        return fromHourMinuteSecond(hour, minute, second);
+        return fromHourMinuteSecond(
+                Integer.parseInt(matcher.group(1)),
+                Integer.parseInt(matcher.group(2)),
+                Integer.parseInt(matcher.group(3)));
     }
 
     public int getSecondsSinceMidnight() {
