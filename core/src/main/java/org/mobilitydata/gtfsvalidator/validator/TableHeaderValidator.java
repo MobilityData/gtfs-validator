@@ -18,7 +18,7 @@ public class TableHeaderValidator {
                             Set<String> supportedColumns, Set<String> requiredColumns,
                             NoticeContainer noticeContainer) {
         boolean isValid = true;
-        if (actualColumns == null) {
+        if (actualColumns.length == 0) {
             // This is an empty file.
             return isValid;
         }
