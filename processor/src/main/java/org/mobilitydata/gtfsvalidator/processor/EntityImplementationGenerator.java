@@ -31,8 +31,44 @@ public class EntityImplementationGenerator {
         this.classNames = new GtfsEntityClasses(fileDescriptor);
     }
 
+    private static int lastBitFieldNumber(int fieldCount) {
+        // Each bitField has 32 bits. We need bitField0_ to store 1..32 fields,
+        // bitField0_ and bitField1_ for 33..64 fields etc.
+        return (fieldCount - 1) / 32;
+    }
+
+    /**
+     * Returns name of a bitField with the given index.
+     *
+     * Example.
+     *
+     * bitFieldName(1) == "bitField1_"
+     *
+     * @param i number of a bitField, starting from 0.
+     * @return name of a bitField, e.g., bitField0_.
+     */
+    private static String bitFieldName(int i) {
+        return "bitField" + i + "_";
+    }
+
+    /**
+     * Returns name of a bitField to store bit for GTFS field with a given number.
+     *
+     * Examples.
+     * * bitFieldName(1) == "bitField0_"
+     * * bitFieldName(32) == "bitField1_"
+     *
+     * @param fieldNumber number of a GTFS field, starting from 0.
+     * @return name of a bitField, e.g., bitField0_.
+     */
+    private static String bitFieldForFieldNumber(int fieldNumber) {
+        // Bits for fields 0..31 are stored in bitField0_,
+        // for fields 32..63 - in bitField1_ etc.
+        return bitFieldName(fieldNumber / 32);
+    }
+
     private static String maskForFieldNumber(int fieldNumber) {
-        return "0x" + Integer.toHexString(1 << fieldNumber);
+        return "0x" + Integer.toHexString(1 << (fieldNumber % 32));
     }
 
     private static CodeBlock getDefaultValue(GtfsFieldDescriptor field) {
@@ -96,6 +132,17 @@ public class EntityImplementationGenerator {
                 TABLE_PACKAGE_NAME, generateGtfsEntityClass()).build();
     }
 
+    private void addEntityOrBuilderFields(TypeSpec.Builder typeSpec) {
+        typeSpec.addField(long.class, CSV_ROW_NUMBER, Modifier.PRIVATE);
+        for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+            typeSpec.addField(getClassFieldType(field), field.name(), Modifier.PRIVATE);
+        }
+        for (int i = 0; i <= lastBitFieldNumber(fileDescriptor.fields().size()); ++i) {
+            typeSpec.addField(FieldSpec.builder(int.class, "bitField" + i + "_", Modifier.PRIVATE)
+                    .initializer("0").build());
+        }
+    }
+
     public TypeSpec generateGtfsEntityClass() {
         TypeSpec.Builder typeSpec = TypeSpec.classBuilder(classNames.entityImplementationSimpleName())
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
@@ -106,20 +153,15 @@ public class EntityImplementationGenerator {
             typeSpec.addSuperinterface(superinterface);
         }
 
-        typeSpec.addField(long.class, "csvRowNumber", Modifier.PRIVATE);
-        for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-            typeSpec.addField(getClassFieldType(field), field.name(), Modifier.PRIVATE);
-        }
-        typeSpec.addField(FieldSpec.builder(int.class, "bitField0_", Modifier.PRIVATE)
-                .initializer("0").build());
+        addEntityOrBuilderFields(typeSpec);
 
         int fieldNumber = 0;
 
-        typeSpec.addMethod(MethodSpec.methodBuilder("csvRowNumber")
+        typeSpec.addMethod(MethodSpec.methodBuilder(getterMethodName(CSV_ROW_NUMBER))
                 .addModifiers(Modifier.PUBLIC)
                 .returns(long.class)
                 .addAnnotation(Override.class)
-                .addStatement("return csvRowNumber")
+                .addStatement("return $L", CSV_ROW_NUMBER)
                 .build());
         for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
             typeSpec.addMethod(generateGetterMethod(field));
@@ -161,7 +203,7 @@ public class EntityImplementationGenerator {
         return MethodSpec.methodBuilder(hasMethodName(field.name()))
                 .addModifiers(Modifier.PUBLIC)
                 .returns(boolean.class)
-                .addStatement("return (bitField0_ & $L) != 0", maskForFieldNumber(fieldNumber))
+                .addStatement("return ($L & $L) != 0", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))
                 .build();
     }
 
@@ -169,12 +211,7 @@ public class EntityImplementationGenerator {
         TypeSpec.Builder typeSpec = TypeSpec.classBuilder("Builder")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC);
 
-        typeSpec.addField(long.class, CSV_ROW_NUMBER, Modifier.PRIVATE);
-        for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-            typeSpec.addField(getClassFieldType(field), field.name(), Modifier.PRIVATE);
-        }
-        typeSpec.addField(FieldSpec.builder(int.class, "bitField0_", Modifier.PRIVATE)
-                .initializer("0").build());
+        addEntityOrBuilderFields(typeSpec);
 
         typeSpec.addMethod(MethodSpec.methodBuilder(getterMethodName(CSV_ROW_NUMBER))
                 .addModifiers(Modifier.PUBLIC)
@@ -195,15 +232,16 @@ public class EntityImplementationGenerator {
                     .addStatement("return $L", field.name()).build());
             typeSpec.addMethod(MethodSpec.methodBuilder(setterMethodName(field.name()))
                     .addModifiers(Modifier.PUBLIC)
-                    .returns(void.class)
+                    .returns(classNames.entityBuilderTypeName())
                     .addParameter(getClassFieldType(field).box(), "value")
                     .beginControlFlow("if (value == null)")
                     .addStatement("$L = $L", field.name(), getDefaultValue(field))
-                    .addStatement("bitField0_ &= ~$L", maskForFieldNumber(fieldNumber))
-                    .addStatement("return")
+                    .addStatement("$L &= ~$L", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))
+                    .addStatement("return this")
                     .endControlFlow()
                     .addStatement("$L = value", field.name())
-                    .addStatement("bitField0_ |= $L", maskForFieldNumber(fieldNumber))
+                    .addStatement("$L |= $L", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))
+                    .addStatement("return this")
                     .build());
             ++fieldNumber;
         }
@@ -220,10 +258,12 @@ public class EntityImplementationGenerator {
                 .addModifiers(Modifier.PUBLIC)
                 .returns(gtfsEntityType)
                 .addStatement("$T entity = new $T()", gtfsEntityType, gtfsEntityType)
-                .addStatement("entity.csvRowNumber = csvRowNumber")
-                .addStatement("entity.bitField0_ = bitField0_");
+                .addStatement("entity.$L = this.$L", CSV_ROW_NUMBER, CSV_ROW_NUMBER);
+        for (int i = 0; i <= lastBitFieldNumber(fileDescriptor.fields().size()); ++i) {
+            buildMethod.addStatement("entity.$L = this.$L", bitFieldName(i), bitFieldName(i));
+        }
         for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-            buildMethod.addStatement("entity.$L = $L", field.name(), field.name());
+            buildMethod.addStatement("entity.$L = this.$L", field.name(), field.name());
         }
         buildMethod.addStatement("return entity");
 
@@ -234,8 +274,10 @@ public class EntityImplementationGenerator {
         MethodSpec.Builder buildMethod = MethodSpec.methodBuilder("clear")
                 .addModifiers(Modifier.PUBLIC)
                 .returns(void.class)
-                .addStatement("csvRowNumber = 0")
-                .addStatement("bitField0_ = 0");
+                .addStatement("$L = 0", CSV_ROW_NUMBER);
+        for (int i = 0; i <= lastBitFieldNumber(fileDescriptor.fields().size()); ++i) {
+            buildMethod.addStatement("$L = 0", bitFieldName(i));
+        }
         for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
             buildMethod.addStatement("$L = $L", field.name(), getDefaultValue(field));
         }

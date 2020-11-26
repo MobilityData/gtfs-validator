@@ -80,13 +80,8 @@ public class Analyser {
             @Override
             public FieldTypeEnum visitPrimitive(PrimitiveType t, Void p) {
                 switch (t.getKind()) {
-                    case BYTE:
-                    case SHORT:
                     case INT:
-                    case LONG:
-                    case CHAR:
                         return FieldTypeEnum.INTEGER;
-                    case FLOAT:
                     case DOUBLE:
                         return FieldTypeEnum.FLOAT;
                     default:

@@ -49,6 +49,10 @@ public final class GtfsEntityClasses {
         return ClassName.get(TABLE_PACKAGE_NAME, entityImplementationSimpleName());
     }
 
+    public TypeName entityBuilderTypeName() {
+        return ClassName.get(TABLE_PACKAGE_NAME, entityImplementationSimpleName() + ".Builder");
+    }
+
     public TypeName tableLoaderTypeName() {
         return ClassName.get(TABLE_PACKAGE_NAME, tableLoaderSimpleName());
     }
