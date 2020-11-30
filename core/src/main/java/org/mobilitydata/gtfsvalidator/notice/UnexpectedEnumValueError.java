@@ -18,6 +18,9 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * An enum has an unexpected value.
+ */
 public class UnexpectedEnumValueError extends Notice {
     public UnexpectedEnumValueError(String filename, long csvRowNumber, String fieldName, int fieldValue) {
         super(ImmutableMap.of("filename", filename,

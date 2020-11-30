@@ -21,7 +21,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.notice.UnexpectedFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.UnknownFileNotice;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
@@ -89,7 +89,7 @@ public class GtfsFeedLoader {
         for (String filename : gtfsInput.getFilenames()) {
             GtfsTableLoader loader = remainingLoaders.remove(filename.toLowerCase());
             if (loader == null) {
-                noticeContainer.addNotice(new UnexpectedFileNotice(filename));
+                noticeContainer.addNotice(new UnknownFileNotice(filename));
             } else {
                 loaderCallables.add(() -> {
                     Reader reader = createFileReader(gtfsInput.getFile(filename));

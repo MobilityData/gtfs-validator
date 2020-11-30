@@ -18,6 +18,9 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * A column name is unknown.
+ */
 public class UnknownColumnNotice extends Notice {
     public UnknownColumnNotice(String filename, String fieldName, int index) {
         super(ImmutableMap.of(

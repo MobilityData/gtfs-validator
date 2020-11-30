@@ -18,8 +18,11 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-public class UnexpectedFileNotice extends Notice {
-    public UnexpectedFileNotice(String filename) {
+/**
+ * A file is unknown.
+ */
+public class UnknownFileNotice extends Notice {
+    public UnknownFileNotice(String filename) {
         super(ImmutableMap.of("filename", filename));
     }
 

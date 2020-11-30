@@ -20,6 +20,10 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The values in the given column of the input rows do not represent valid values according to the column type, or have
+ * values that conflict with others according to the requirements on the input.
+ */
 public class FieldParsingError extends Notice {
 
     public FieldParsingError(String filename, long csvRowNumber, String fieldName, String fieldType, @Nullable String fieldValue) {

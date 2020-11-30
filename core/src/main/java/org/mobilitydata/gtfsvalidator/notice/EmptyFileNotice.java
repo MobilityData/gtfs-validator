@@ -18,6 +18,9 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
+/**
+ * A CSV file is empty.
+ */
 public class EmptyFileNotice extends Notice {
 
     public EmptyFileNotice(String filename) {

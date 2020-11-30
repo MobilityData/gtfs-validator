@@ -18,7 +18,9 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-
+/**
+ * The values of the given key and rows are duplicates.
+ */
 public class DuplicateKeyError extends Notice {
     public DuplicateKeyError(String filename, long oldCsvRowNumber,
                              long newCsvRowNumber,
