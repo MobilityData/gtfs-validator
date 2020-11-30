@@ -1,0 +1,7 @@
+#============================================================================================================
+# This file contains configuration for https://github.com/zeke/semantic-pull-requests
+#============================================================================================================
+
+# Always validate the PR title, and ignore the commits. This is all that is required for implementing conventional
+# commits since the repo only allows 'squash merging' for pull requests.
+titleOnly: true
