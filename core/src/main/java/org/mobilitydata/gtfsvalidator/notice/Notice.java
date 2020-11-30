@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.base.Joiner;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -31,7 +32,7 @@ public abstract class Notice {
     }
 
     public Map<String, Object> getContext() {
-        return context;
+        return Collections.unmodifiableMap(context);
     }
 
     /**

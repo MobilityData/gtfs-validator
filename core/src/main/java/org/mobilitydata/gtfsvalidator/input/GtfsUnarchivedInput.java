@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class GtfsUnarchivedInput implements GtfsInput {
 
     @Override
     public Set<String> getFilenames() {
-        return filenames;
+        return Collections.unmodifiableSet(filenames);
     }
 
     @Override
