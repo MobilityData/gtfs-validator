@@ -32,6 +32,7 @@ public class Arguments {
     @Parameter(names = {"-t", "--threads"}, description = "Number of threads to use")
     public int numThreads = 1;
 
-    @Parameter(names = {"-f", "--feed_name"}, description = "Name of the feed, e.g., `nl-openov`")
+    @Parameter(names = {"-f", "--feed_name"}, description = "Name of the feed, e.g., `nl-openov`. "+
+            "It must start from two-letter country code (ISO 3166-1 alpha-2)")
     public String feedName;
 }
