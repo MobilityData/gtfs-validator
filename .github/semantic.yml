@@ -4,5 +4,5 @@
 
 # Always validate the PR title, and ignore the commits. This is all that is required for implementing conventional
 # commits since the repo only allows 'squash merging' for pull requests.
-titleAndCommits: true
+titleOnly: true
 allowMergeCommits: true
