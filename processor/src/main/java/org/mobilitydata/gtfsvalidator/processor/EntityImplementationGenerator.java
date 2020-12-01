@@ -194,7 +194,8 @@ public class EntityImplementationGenerator {
     private MethodSpec generateGetterMethod(GtfsFieldDescriptor field) {
         MethodSpec.Builder method = MethodSpec.methodBuilder(getterMethodName(field.name()))
                 .addModifiers(Modifier.PUBLIC)
-                .returns(TypeName.get(field.javaType()));
+                .returns(TypeName.get(field.javaType()))
+                .addAnnotation(Override.class);
         if (field.type() == FieldTypeEnum.ENUM) {
             method.addStatement("$T result = $T.forNumber($L)",
                     field.javaType(), field.javaType(), field.name())
