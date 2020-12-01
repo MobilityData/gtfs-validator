@@ -237,21 +237,21 @@ public class RowParser {
             switch (bounds) {
                 case POSITIVE:
                     if (value <= 0) {
-                        addErrorInRow(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfRangeError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "positive float", value));
                     }
                     break;
                 case NON_NEGATIVE:
                     if (value < 0) {
-                        addErrorInRow(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfRangeError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-negative float", value));
                     }
                     break;
                 case NON_ZERO:
                     if (value == 0) {
-                        addErrorInRow(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfRangeError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-zero float", value));
                     }
@@ -283,21 +283,21 @@ public class RowParser {
             switch (bounds) {
                 case POSITIVE:
                     if (value <= 0) {
-                        addErrorInRow(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfRangeError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "positive integer", value));
                     }
                     break;
                 case NON_NEGATIVE:
                     if (value < 0) {
-                        addErrorInRow(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfRangeError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-negative integer", value));
                     }
                     break;
                 case NON_ZERO:
                     if (value == 0) {
-                        addErrorInRow(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfRangeError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-zero integer", value));
                     }
@@ -320,21 +320,21 @@ public class RowParser {
             switch (bounds) {
                 case POSITIVE:
                     if (compareToZero <= 0) {
-                        addErrorInRow(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfRangeError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "positive decimal", value));
                     }
                     break;
                 case NON_NEGATIVE:
                     if (compareToZero < 0) {
-                        addErrorInRow(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfRangeError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-negative decimal", value));
                     }
                     break;
                 case NON_ZERO:
                     if (compareToZero == 0) {
-                        addErrorInRow(new NumberOutOfBoundsError(
+                        addErrorInRow(new NumberOutOfRangeError(
                                 row.getFileName(), row.getRowNumber(), row.getColumnName(columnIndex),
                                 "non-zero decimal", value));
                     }
