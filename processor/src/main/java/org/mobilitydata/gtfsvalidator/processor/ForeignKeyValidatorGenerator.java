@@ -36,7 +36,7 @@ import java.util.Map;
 
 /**
  * Generates a validator class to check reference integrity for a foreign key.
- *
+ * <p>
  * A foreign key constraint is added with {@code @ForeignKey} annotation in GTFS schema.
  */
 public class ForeignKeyValidatorGenerator {

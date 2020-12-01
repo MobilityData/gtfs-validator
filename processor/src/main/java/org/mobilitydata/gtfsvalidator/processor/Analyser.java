@@ -40,7 +40,7 @@ import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.entityI
 /**
  * Analyses annotations on Java interfaces that define GTFS schema and translates them to descriptors
  * ({@code GtfsFileDescriptor} etc.).
- *
+ * <p>
  * Code generators (such as {@code TableContainerGenerator}) use descriptors instead of analysing Java annotations
  * directly. This makes the code of generators much simpler, makes testing easier and also allows to extend GTFS schema
  * by adding new Java interfaces that describe the same tables.

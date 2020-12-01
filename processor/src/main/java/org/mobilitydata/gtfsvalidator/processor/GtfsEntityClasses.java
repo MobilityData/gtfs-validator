@@ -21,7 +21,7 @@ import com.squareup.javapoet.TypeName;
 
 /**
  * Generates class names for a given GTFS table.
- *
+ * <p>
  * This class is used by multiple code generators.
  */
 public final class GtfsEntityClasses {

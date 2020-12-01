@@ -29,7 +29,7 @@ import java.util.Set;
 
 /**
  * Validates that every shape in "shapes.txt" is used by some trip from "trips.txt"
- *
+ * <p>
  * Generated notices:
  * * UnusedShapeNotice
  */

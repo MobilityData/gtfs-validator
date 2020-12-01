@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * The values of the given key and rows of one table cannot be found a values of the given key in another table.
- *
+ * <p>
  * This is the case when a foreign key of one table references a non-existing value in its original table.
  */
 public class ForeignKeyError extends Notice {

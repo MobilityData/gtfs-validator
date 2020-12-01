@@ -24,7 +24,7 @@ import org.mobilitydata.gtfsvalidator.table.*;
 
 /**
  * Validates that service_id field in "trips.txt" references a valid service_id in "calendar.txt" or "calendar_date.txt".
- *
+ * <p>
  * Generated notices:
  * * ForeignKeyError
  */

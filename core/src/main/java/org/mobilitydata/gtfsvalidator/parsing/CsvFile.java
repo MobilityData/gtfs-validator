@@ -31,8 +31,8 @@ public class CsvFile implements Iterable<CsvRow> {
     private final boolean isEmpty;
     private final CsvParser parser;
     private final HashMap<String, Integer> columnIndices = new HashMap<>();
-    private String[] columnNames;
     private final String filename;
+    private String[] columnNames;
 
     public CsvFile(Reader reader, String filename) {
         this.filename = filename;

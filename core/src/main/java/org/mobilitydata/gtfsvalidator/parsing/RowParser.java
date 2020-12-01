@@ -149,6 +149,7 @@ public class RowParser {
     };
     private CsvRow row;
     private boolean parseErrorsInRow;
+
     public RowParser(GtfsFeedName feedName, NoticeContainer noticeContainer) {
         this.feedName = feedName;
         this.noticeContainer = noticeContainer;

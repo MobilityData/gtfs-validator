@@ -37,7 +37,7 @@ import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_P
 
 /**
  * Generates code for a container for a loaded GTFS table.
- *
+ * <p>
  * E.g., GtfsStopTableContainer class is generated for "stops.txt".
  */
 public class TableContainerGenerator {

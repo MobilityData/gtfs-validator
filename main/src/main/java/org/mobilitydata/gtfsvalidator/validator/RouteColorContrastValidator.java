@@ -23,7 +23,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 /**
  * Validates that there is enough contrast between route_color and route_text_color in "routes.txt".
- *
+ * <p>
  * Generated notices:
  * * RouteColorContrastNotice
  */

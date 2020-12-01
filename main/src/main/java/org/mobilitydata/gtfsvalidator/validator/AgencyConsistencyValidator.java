@@ -31,7 +31,7 @@ import java.util.TimeZone;
 /**
  * Validates that all agencies have the same timezone and language and that agency_id field is set if there is more than
  * 1 agency.
- *
+ * <p>
  * Generated notices:
  * * MissingRequiredFieldError - multiple agencies present but no agency_id set
  * * InconsistentAgencyFieldNotice - inconsistent timezone or language among the agencies

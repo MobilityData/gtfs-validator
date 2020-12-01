@@ -34,7 +34,7 @@ import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_P
 
 /**
  * Generates a class that represent a single parsed row of a GTFS table.
- *
+ * <p>
  * E.g., GtfsStop class is generated for "stops.txt".
  */
 public class EntityImplementationGenerator {
@@ -55,9 +55,9 @@ public class EntityImplementationGenerator {
 
     /**
      * Returns name of a bitField with the given index.
-     *
+     * <p>
      * Example.
-     *
+     * <p>
      * bitFieldName(1) == "bitField1_"
      *
      * @param i number of a bitField, starting from 0.
@@ -69,7 +69,7 @@ public class EntityImplementationGenerator {
 
     /**
      * Returns name of a bitField to store bit for GTFS field with a given number.
-     *
+     * <p>
      * Examples.
      * * bitFieldName(1) == "bitField0_"
      * * bitFieldName(32) == "bitField1_"
