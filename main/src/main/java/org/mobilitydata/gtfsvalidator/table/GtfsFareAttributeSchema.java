@@ -28,6 +28,7 @@ public interface GtfsFareAttributeSchema extends GtfsEntity {
     @Required
     String fareId();
 
+    @Required
     @NonNegative
     BigDecimal price();
 
@@ -37,7 +38,7 @@ public interface GtfsFareAttributeSchema extends GtfsEntity {
     @Required
     GtfsFareAttributePaymentMethod paymentMethod();
 
-    @Required
+    // GTFS defines it as "a required field that can be empty".
     GtfsFareAttributeTransfers transfers();
 
     @FieldType(FieldTypeEnum.ID)

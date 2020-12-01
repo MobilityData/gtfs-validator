@@ -20,7 +20,7 @@ import com.google.common.base.CaseFormat;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Collection of utility functions to generate names of getters and setters, fields and other related staff for a given
+ * Collection of utility functions to generate names of getters and setters, fields and other related stuff for a given
  * GTFS field name.
  */
 public final class FieldNameConverter {

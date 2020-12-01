@@ -48,10 +48,11 @@ public interface GtfsRouteSchema extends GtfsEntity {
     @DefaultValue("FFFFFF")
     GtfsColor routeColor();
 
+    @DefaultValue("000000")
     GtfsColor routeTextColor();
 
     @NonNegative
-    int sortOrder();
+    int routeSortOrder();
 
     @DefaultValue("1")
     GtfsContinuousPickupDropOff continuousPickup();

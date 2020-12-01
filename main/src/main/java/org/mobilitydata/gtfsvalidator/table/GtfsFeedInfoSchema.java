@@ -29,9 +29,11 @@ public interface GtfsFeedInfoSchema extends GtfsEntity {
     @Required
     String feedPublisherName();
 
+    @Required
     @FieldType(FieldTypeEnum.URL)
     String feedPublisherUrl();
 
+    @Required
     Locale feedLang();
 
     Locale defaultLang();

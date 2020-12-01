@@ -30,6 +30,7 @@ public interface GtfsTransferSchema extends GtfsEntity {
     @ForeignKey(table = "stops.txt", field = "stop_id")
     String toStopId();
 
+    @Required
     GtfsTransferType transferType();
 
     @NonNegative
