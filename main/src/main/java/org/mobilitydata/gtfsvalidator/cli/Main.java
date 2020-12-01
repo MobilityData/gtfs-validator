@@ -54,7 +54,7 @@ public class Main {
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsFeedContainer feedContainer;
         try {
-            feedContainer = feedLoader.load(GtfsInput.createFromPath(args.input), feedName, validatorLoader,
+            feedContainer = feedLoader.loadAndValidate(GtfsInput.createFromPath(args.input), feedName, validatorLoader,
                     noticeContainer);
         } catch (IOException e) {
             e.printStackTrace();

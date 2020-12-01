@@ -49,7 +49,7 @@ public class Analyser {
     public GtfsFileDescriptor analyzeGtfsFileType(TypeElement type) {
         GtfsFileDescriptor.Builder fileBuilder = GtfsFileDescriptor.builder();
         GtfsTable gtfsFileAnnotation = type.getAnnotation(GtfsTable.class);
-        fileBuilder.setFilename(gtfsFileAnnotation.value());
+        fileBuilder.setFilename(gtfsFileAnnotation.value().toLowerCase());
         fileBuilder.setSingleRow(gtfsFileAnnotation.singleRow());
         fileBuilder.interfacesBuilder().add(type.asType());
         fileBuilder.setClassName(entityImplementationSimpleName(type.getSimpleName().toString()));

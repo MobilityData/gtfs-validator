@@ -34,6 +34,8 @@ import java.util.Set;
 public abstract class GtfsTableLoader<T extends GtfsEntity> {
     public abstract String gtfsFilename();
 
+    public abstract boolean isRequired();
+
     public abstract Set<String> getColumnNames();
 
     public abstract Set<String> getRequiredColumnNames();

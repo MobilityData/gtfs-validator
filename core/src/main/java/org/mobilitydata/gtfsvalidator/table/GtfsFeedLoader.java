@@ -80,8 +80,8 @@ public class GtfsFeedLoader {
         this.numThreads = numThreads;
     }
 
-    public GtfsFeedContainer load(GtfsInput gtfsInput, GtfsFeedName feedName, ValidatorLoader validatorLoader,
-                                  NoticeContainer noticeContainer) {
+    public GtfsFeedContainer loadAndValidate(GtfsInput gtfsInput, GtfsFeedName feedName, ValidatorLoader validatorLoader,
+                                             NoticeContainer noticeContainer) {
         System.out.println("Loading in " + numThreads + " threads");
         ExecutorService exec = Executors.newFixedThreadPool(numThreads);
         List<Callable<GtfsTableContainer>> loaderCallables = new ArrayList<>();
@@ -102,13 +102,13 @@ public class GtfsFeedLoader {
             }
         }
         ArrayList<GtfsTableContainer> tableContainers = new ArrayList<>();
+        tableContainers.ensureCapacity(tableLoaders.size());
         for (GtfsTableLoader loader : remainingLoaders.values()) {
             tableContainers.add(loader.loadMissingFile(validatorLoader, noticeContainer));
         }
         try {
             try {
                 List<Future<GtfsTableContainer>> results = exec.invokeAll(loaderCallables);
-                tableContainers.ensureCapacity(results.size());
                 results.forEach(f -> {
                     try {
                         tableContainers.add(f.get());

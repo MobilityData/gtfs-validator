@@ -21,6 +21,7 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 import java.util.TimeZone;
 
 @GtfsTable("stops.txt")
+@Required
 public interface GtfsStopSchema extends GtfsEntity {
     @FieldType(FieldTypeEnum.ID)
     @Required

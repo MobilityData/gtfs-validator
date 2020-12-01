@@ -24,6 +24,7 @@ import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.notice.EmptyFileNotice;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
 import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
@@ -84,14 +85,8 @@ public class TableLoaderGenerator {
         }
 
         typeSpec.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC).build());
-
-        typeSpec.addMethod(MethodSpec.methodBuilder("gtfsFilename")
-                .addAnnotation(Override.class)
-                .addModifiers(Modifier.PUBLIC)
-                .returns(String.class)
-                .addStatement("return FILENAME")
-                .build());
-
+        typeSpec.addMethod(generateGtfsFilenameMethod());
+        typeSpec.addMethod(generateIsRequiredMethod());
         typeSpec.addMethod(generateLoadMethod());
         typeSpec.addMethod(generateLoadMissingFileMethod());
         typeSpec.addMethod(generateGetColumnNamesMethod());
@@ -217,6 +212,24 @@ public class TableLoaderGenerator {
         return method.build();
     }
 
+    private MethodSpec generateGtfsFilenameMethod() {
+        return MethodSpec.methodBuilder("gtfsFilename")
+                .addAnnotation(Override.class)
+                .addModifiers(Modifier.PUBLIC)
+                .returns(String.class)
+                .addStatement("return FILENAME")
+                .build();
+    }
+
+    private MethodSpec generateIsRequiredMethod() {
+        return MethodSpec.methodBuilder("isRequired")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(boolean.class)
+                .addAnnotation(Override.class)
+                .addStatement("return $L", fileDescriptor.required())
+                .build();
+    }
+
     private MethodSpec generateLoadMissingFileMethod() {
         TypeName gtfsEntityType = classNames.entityImplementationTypeName();
         MethodSpec.Builder method = MethodSpec.methodBuilder("loadMissingFile")
@@ -227,6 +240,9 @@ public class TableLoaderGenerator {
                 .addAnnotation(Override.class)
                 .addStatement("$T table = $T.forMissingFile()",
                         classNames.tableContainerTypeName(), classNames.tableContainerTypeName())
+                .beginControlFlow("if (isRequired())")
+                .addStatement("noticeContainer.addNotice(new $T(gtfsFilename()))", MissingRequiredFileError.class)
+                .endControlFlow()
                 .addStatement("validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
                 .addStatement("return table");
 

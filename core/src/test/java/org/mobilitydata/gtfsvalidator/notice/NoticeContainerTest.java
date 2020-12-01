@@ -29,14 +29,14 @@ public class NoticeContainerTest {
     @Test
     public void exportJson() throws JsonProcessingException {
         NoticeContainer container = new NoticeContainer();
-        container.addNotice(new MissingTableError("stops.txt"));
-        container.addNotice(new MissingTableError("agency.txt"));
+        container.addNotice(new MissingRequiredFileError("stops.txt"));
+        container.addNotice(new MissingRequiredFileError("agency.txt"));
 
         ObjectMapper mapper = new ObjectMapper();
 
         assertThat(container.exportJson()).isEqualTo(
                 "{\"notices\":[" +
-                        "{\"code\":\"missing_table\",\"totalNotices\":2,\"notices\":" +
+                        "{\"code\":\"missing_required_file\",\"totalNotices\":2,\"notices\":" +
                         "[{\"filename\":\"stops.txt\"},{\"filename\":\"agency.txt\"}]}]}");
     }
 }

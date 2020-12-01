@@ -23,6 +23,7 @@ import java.util.TimeZone;
 
 
 @GtfsTable("agency.txt")
+@Required
 public interface GtfsAgencySchema extends GtfsEntity {
     @FieldType(FieldTypeEnum.ID)
     @PrimaryKey

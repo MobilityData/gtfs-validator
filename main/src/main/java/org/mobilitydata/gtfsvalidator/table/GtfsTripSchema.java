@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.table;
 import org.mobilitydata.gtfsvalidator.annotation.*;
 
 @GtfsTable("trips.txt")
+@Required
 public interface GtfsTripSchema extends GtfsEntity {
     @FieldType(FieldTypeEnum.ID)
     @Required

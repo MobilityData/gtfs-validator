@@ -19,15 +19,15 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * A required table file is missing.
+ * A required file is missing.
  */
-public class MissingTableError extends Notice {
-    public MissingTableError(String filename) {
+public class MissingRequiredFileError extends Notice {
+    public MissingRequiredFileError(String filename) {
         super(ImmutableMap.of("filename", filename));
     }
 
     @Override
     public String getCode() {
-        return "missing_table";
+        return "missing_required_file";
     }
 }
