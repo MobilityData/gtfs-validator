@@ -18,9 +18,6 @@ package org.mobilitydata.gtfsvalidator.table;
 
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 
-// GTFS spec treats empty value as "unlimited" and 0 as "no transfer", so we add a magical -1 constant here for
-// "unlimited".
-@GtfsEnumValue(name = "UNLIMITED", value = -1)
 @GtfsEnumValue(name = "NO_TRANSFER", value = 0)
 @GtfsEnumValue(name = "ONE_TRANSFER", value = 1)
 @GtfsEnumValue(name = "TWO_TRANSFERS", value = 2)
