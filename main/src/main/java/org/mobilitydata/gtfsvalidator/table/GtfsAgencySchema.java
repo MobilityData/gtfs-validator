@@ -21,7 +21,6 @@ import org.mobilitydata.gtfsvalidator.annotation.*;
 import java.util.Locale;
 import java.util.TimeZone;
 
-
 @GtfsTable("agency.txt")
 @Required
 public interface GtfsAgencySchema extends GtfsEntity {
