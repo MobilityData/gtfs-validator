@@ -103,6 +103,11 @@ public class GtfsTime implements Comparable<GtfsTime> {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(secondsSinceMidnight);
+    }
+
     public boolean isAfter(GtfsTime other) {
         return secondsSinceMidnight > other.secondsSinceMidnight;
     }

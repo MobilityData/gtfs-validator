@@ -57,4 +57,14 @@ public abstract class Notice {
     public String toString() {
         return getCode() + " " + Joiner.on(",").withKeyValueSeparator("=").join(context);
     }
+
+    @Override
+    public int hashCode() {
+        int h = 1;
+        h *= 1000003;
+        h ^= getCode().hashCode();
+        h *= 1000003;
+        h ^= getContext().hashCode();
+        return h;
+    }
 }
