@@ -16,6 +16,8 @@
 
 package org.mobilitydata.gtfsvalidator.parsing;
 
+import com.google.common.base.Strings;
+
 import javax.annotation.Nullable;
 
 /**
@@ -60,11 +62,10 @@ public class CsvRow {
     /**
      * Returns a value in this row for the requested column as a string.
      * <p>
-     * Returns null in the following cases:
+     * Returns {@code null} in the following cases:
      * - the column index is out of bounds
      * - column value is not defined
-     * <p>
-     * If the column value is not specified explicitly or contains an explicit empty string "", then null is returned.
+     * - column value is an empty string ""
      * <p>
      * Example.
      * <p>
@@ -88,7 +89,7 @@ public class CsvRow {
         String s = columnValues[columnIndex];
         // Univocity CSV parser already returns null for no explicit value and for an explicit empty string "".
         // Here we just want to be sure that we always return null and never "".
-        if (s == null || s.isEmpty()) {
+        if (Strings.isNullOrEmpty(s)) {
             return null;
         }
         return s;
