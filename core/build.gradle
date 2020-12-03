@@ -21,3 +21,13 @@ dependencies {
     testImplementation "com.google.truth:truth:1.0.1"
     testImplementation 'org.mockito:mockito-core:1.10.19'
 }
+
+test {
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
+
+    // Show test results.
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}

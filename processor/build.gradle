@@ -22,3 +22,13 @@ dependencies {
     implementation 'com.google.guava:guava:29.0-jre'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
 }
+
+test {
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
+
+    // Show test results.
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
