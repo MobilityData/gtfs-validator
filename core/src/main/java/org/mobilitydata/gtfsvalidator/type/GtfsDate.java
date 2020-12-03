@@ -91,6 +91,11 @@ public class GtfsDate implements Comparable<GtfsDate> {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return localDate.hashCode();
+    }
+
     public boolean isAfter(GtfsDate other) {
         return localDate.isAfter(other.localDate);
     }
