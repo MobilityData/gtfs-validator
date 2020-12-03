@@ -20,7 +20,7 @@ Instructions to build the project locally are available in our [Build Documentat
 Instructions to run the application locally are available in our [Usage page]().
 
 # How to run tests locally
-Unit tests, and end to end testing are implemented. Please refer to our [Test Documentation page]() for details.
+Unit tests, and end-to-end testing are implemented. Please refer to our [Test Documentation page]() for details.
 
 # Architecture
 The architecture of the `gtfs-validator` is described in our [Architecture page]().
