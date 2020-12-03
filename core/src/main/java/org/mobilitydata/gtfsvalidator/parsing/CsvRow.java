@@ -64,7 +64,7 @@ public class CsvRow {
      * - the column index is out of bounds
      * - column value is not defined
      * <p>
-     * If the column contains an explicit empty string, then an empty string is returned.
+     * If the column value is not specified explicitly or contains an explicit empty string "", then null is returned.
      * <p>
      * Example.
      * <p>
@@ -72,10 +72,10 @@ public class CsvRow {
      * a,,""
      * <p>
      * asString(0) == "a"
-     * asString(1) == null
-     * asString(2) == ""
-     * asString(3) == null
-     * asString(-1) == null
+     * asString(1) == null  (no value specified)
+     * asString(2) == null  (explicit empty string)
+     * asString(3) == null  (index out of bounds)
+     * asString(-1) == null (index out of bounds)
      *
      * @param columnIndex
      * @return value for the requested column or null
@@ -85,6 +85,12 @@ public class CsvRow {
         if (columnIndex < 0 || columnIndex >= columnValues.length) {
             return null;
         }
-        return columnValues[columnIndex];
+        String s = columnValues[columnIndex];
+        // Univocity CSV parser already returns null for no explicit value and for an explicit empty string "".
+        // Here we just want to be sure that we always return null and never "".
+        if (s == null || s.isEmpty()) {
+            return null;
+        }
+        return s;
     }
 }

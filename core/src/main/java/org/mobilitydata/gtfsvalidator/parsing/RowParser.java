@@ -416,7 +416,7 @@ public class RowParser {
 
         final T parseField(int columnIndex, boolean required) {
             String s = asString(columnIndex, required);
-            if (s == null || s.isEmpty()) {
+            if (s == null) {
                 return null;
             }
             try {
