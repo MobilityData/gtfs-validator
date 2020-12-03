@@ -1,7 +1,6 @@
 # Run gtfs-validator tests locally
 ## Unit tests
-To run tests: 
-1. Run Java tests
+1. Run the following command at the root of the project to run Java tests:
 ```
 $ ./gradlew test
 ```

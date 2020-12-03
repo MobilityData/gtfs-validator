@@ -34,4 +34,4 @@ The architecture of the `gtfs-validator` is described in our [Architecture page]
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
 
 # Contributing
-We welcome contributions to the project! Please check out our [Contribution guidelines](/CONTRIBUTION.md) for details.
+We welcome contributions to the project! Please check out our [Contribution guidelines](/CONTRIBUTION.md) for details. Information regarding the execution of tests can also be found in this same document. 
