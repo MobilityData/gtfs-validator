@@ -33,7 +33,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
  */
 @GtfsValidator
 public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
-    private static final int MAX_SHORT_NAME_LENGTH = 6;
+    private static final int MAX_SHORT_NAME_LENGTH = 12;
 
     @Override
     public void validate(GtfsRoute entity, NoticeContainer noticeContainer) {

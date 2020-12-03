@@ -19,7 +19,11 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.notice.Notice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 import java.util.List;
@@ -71,5 +75,7 @@ public class RouteNameValidatorTest {
         assertThat(validateRoute(createRoute("THISISMYSHORTNAME", null)))
                 .containsExactly(
                         new RouteShortNameTooLongNotice("r1", 1, "THISISMYSHORTNAME"));
+
+        assertThat(validateRoute(createRoute("SH", null))).isEmpty();
     }
 }
