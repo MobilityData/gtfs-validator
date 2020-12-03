@@ -16,7 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Specifies a value for a GTFS enum. This information will be used to generate the actual Java class for the enum.

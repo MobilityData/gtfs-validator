@@ -20,7 +20,12 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 
 /**
  * Validates that service_id field in "trips.txt" references a valid service_id in "calendar.txt" or "calendar_date.txt".
