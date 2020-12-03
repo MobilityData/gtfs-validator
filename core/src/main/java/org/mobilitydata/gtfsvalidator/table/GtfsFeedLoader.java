@@ -25,12 +25,20 @@ import org.mobilitydata.gtfsvalidator.notice.UnknownFileNotice;
 import org.mobilitydata.gtfsvalidator.validator.FileValidator;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Loader for a whole GTFS feed with all its CSV files.

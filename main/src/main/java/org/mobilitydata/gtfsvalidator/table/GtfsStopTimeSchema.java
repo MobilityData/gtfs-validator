@@ -16,7 +16,16 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import org.mobilitydata.gtfsvalidator.annotation.*;
+import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
+import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
+import org.mobilitydata.gtfsvalidator.annotation.FieldType;
+import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
+import org.mobilitydata.gtfsvalidator.annotation.FirstKey;
+import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
+import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
+import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.SequenceKey;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 @GtfsTable("stop_times.txt")
