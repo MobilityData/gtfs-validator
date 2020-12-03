@@ -24,6 +24,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsEnum;
 
 import javax.lang.model.element.Modifier;
 
+import static java.lang.Math.min;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 /**
@@ -31,7 +32,7 @@ import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_P
  * {@code getNumber()} for conversion to and from an integer.
  */
 public class EnumGenerator {
-    public static String ENUM_SUFFIX = "Enum";
+    public static final String ENUM_SUFFIX = "Enum";
     private final GtfsEnumDescriptor enumDescriptor;
 
     public EnumGenerator(GtfsEnumDescriptor enumDescriptor) {
@@ -40,6 +41,15 @@ public class EnumGenerator {
 
     public static String createEnumName(String interfaceName) {
         return interfaceName.substring(0, interfaceName.length() - ENUM_SUFFIX.length());
+    }
+
+    private static MethodSpec getNumberMethod() {
+        return MethodSpec.methodBuilder("getNumber")
+                .addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class)
+                .returns(int.class)
+                .addStatement("return value")
+                .build();
     }
 
     public JavaFile generateEnumJavaFile() {
@@ -56,7 +66,7 @@ public class EnumGenerator {
         for (GtfsEnumValueDescriptor enumValue : enumDescriptor.values()) {
             enumType.addEnumConstant(enumValue.name(),
                     TypeSpec.anonymousClassBuilder(Integer.toString(enumValue.value())).build());
-            minValue = Math.min(minValue, enumValue.value());
+            minValue = min(minValue, enumValue.value());
         }
         enumType.addEnumConstant("UNRECOGNIZED",
                 TypeSpec.anonymousClassBuilder(Integer.toString(minValue - 1)).build());
@@ -88,14 +98,4 @@ public class EnumGenerator {
         method.endControlFlow();
         return method.build();
     }
-
-    private MethodSpec getNumberMethod() {
-        return MethodSpec.methodBuilder("getNumber")
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Override.class)
-                .returns(int.class)
-                .addStatement("return value")
-                .build();
-    }
-
 }
