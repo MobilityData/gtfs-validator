@@ -1,17 +1,17 @@
 # Architecture description
-`gtfs-validator` counts three principal modules: [`main`]([[INSERT LINK]]), [`processor`]([[INSERT LINK]]) and [`core`]([[INSERT LINK]]).
+`gtfs-validator` counts three principal modules: [`main`](/main), [`processor`](/processor) and [`core`](/core).
 
 ### Main
 _Depends on: no other modules._
 
-- The [CLI app]([[INSERT LINK]]),
+- The [CLI app](/main/src/main/java/org/mobilitydata/gtfsvalidator/cli),
 - GTFS table schemas,
 - notices and use cases.
   
 ### Processor
 _Depends on: `main`._
 
-- A file analyser to analyse annotations on Java interfaces that define GTFS schema and translates them to descriptors
+- A file analyser to analyse annotations on Java interfaces that define GTFS schema and translates them to descriptors,
 - descriptors of annotations fields (`ForeignKey`, `GtfsEnum`, `GtfsField`, `GtfsFile` ),
 - a processor to generates data classes, loaders and validators based on annotations on GTFS schema interfaces,
 - GTFS entity classes to generate class names for a given GTFS table,
@@ -26,9 +26,9 @@ _Depends on: `processor` and `main`._
 - notice to be generated when checking "trivial" validation rules such as "EmptyFileNotice", 
 - a notice container (`NoticeContainer`),
 - GTFS type definitions such as `GtfsTime`, `GtfsDate`, or `GtfsColor`,
-- `GtfsFeedLoader` to load for a whole GTFS feed with all its CSV files.
-- validators and validator loader
-- GTFS feed's name,
+- `GtfsFeedLoader` to load for a whole GTFS feed with all its CSV files,
+- validators and validator loader,
+- GTFS feed's name.
 
 ### Data pipeline 📥➡️♨➡️📤
 
@@ -59,14 +59,12 @@ _Depends on: `processor` and `main`._
 Adding a new validator is relatively simple:
 1. Create a class for the validator that implements one of the interfaces `FileValidator`, or `SingleEntityValidator`.
 
-   💡 Use [`SingleEntityValidator`]([[INSERT LINK]]) to implement a validation rule that can be applied to a single row from a GTFS file.
+   💡 Use [`SingleEntityValidator`](/core/src/main/java/org/mobilitydata/gtfsvalidator/validator/SingleEntityValidator.java) to implement a validation rule that can be applied to a single row from a GTFS file.
    
-   💡 Use [`FileValidator`]([[INSERT LINK]]) to implement a validation rule that handles one as a whole or several files.
+   💡 Use [`FileValidator`](/core/src/main/java/org/mobilitydata/gtfsvalidator/validator/FileValidator.java) to implement a validation rule that handles one as a whole or several files.
     
 1. If needed, inject GTFS tables that will be used during the validation process in the newly created validator as class fields.  
 1. Write the validation rule logic in overridden `validate` method with the correct set of parameters.
-
-See commit [[[INSERT COMMIT HASH]]]
 
 ## How to test the newly added validator?
 `gtfs-validator` tests rely on [`JUnit 4`](https://junit.org/junit4/), [`Mockito`](https://site.mockito.org/) and [`Google Truth`](https://github.com/google/truth).
@@ -82,8 +80,6 @@ See commit [[[INSERT COMMIT HASH]]]
 
 5️⃣ Verify interactions with the mocked `GtfsEntity` 
 
-See commit [[[INSERT COMMIT HASH]]]
-
 ### Test a `FileValidator`
 1️⃣ Create a class constant `NoticeContainer` and annotate it `@Mock`
 
@@ -96,8 +92,6 @@ See commit [[[INSERT COMMIT HASH]]]
 5️⃣ Verify interactions with the `NoticeContainer`
 
 6️⃣ Verify interactions with all mocks
-
-See commit [[[INSERT COMMIT HASH]]]
 
 ## Resources
 

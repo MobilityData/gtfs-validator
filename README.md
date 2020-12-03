@@ -13,19 +13,25 @@ This command-line tool written in Java that performs the following steps:
 1. Performs advanced GTFS business rule validation *(work-in-progress)*
 
 # Build Setup
-Instructions to build the project locally are available in our [Build Documentation page]().
+The main IDE used when designing this project is IntelliJ which can be downloaded on [Jetbrains' web page](https://www.jetbrains.com/idea/download/?gclid=Cj0KCQiAtqL-BRC0ARIsAF4K3WGaq62QEFq2fzTUWswRwp4KKFcJ1GEIxeVMS4puzHwuCIYYBHS1DqwaAuWTEALw_wcB#section=mac).
+This IDE is a powerful tool that allows building and running this project.
+Instructions to build the project locally are available in our [Build Documentation page](/BUILD.md).
 
 # How to run the app locally 
-Instructions to run the application locally are available in our [Usage page]().
+Instructions to run the application locally are available in our [Usage page](/USAGE.md).
 
-# How to run tests locally
-Unit tests, and end-to-end testing are implemented. Please refer to our [Test Documentation page]() for details.
+⚠ ️The following command line parameters are required to run the application:
+* `--input` or `-i`: the path to the GTFS archive
+* `--output` or `-o`: the path to the validation report
+* `--feed_name` or `-f`: the name of the feed as 
+
+⚠ CLI parameter `--thread` or `-t` (the number of threads to use) is optional
 
 # Architecture
-The architecture of the `gtfs-validator` is described in our [Architecture page]().
+The architecture of the `gtfs-validator` is described in our [Architecture page](/ARCHITECTURE.md).
 
 # License
 Code licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
 
 # Contributing
-We welcome contributions to the project! Please check out our [Contribution guidelines]() for details.
+We welcome contributions to the project! Please check out our [Contribution guidelines](/CONTRIBUTION.md) for details.
