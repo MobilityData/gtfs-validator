@@ -244,9 +244,10 @@ public class EntityImplementationGenerator {
                 .addStatement("return $L", CSV_ROW_NUMBER).build());
         typeSpec.addMethod(MethodSpec.methodBuilder(setterMethodName(CSV_ROW_NUMBER))
                 .addModifiers(Modifier.PUBLIC)
-                .returns(void.class)
+                .returns(classNames.entityBuilderTypeName())
                 .addParameter(long.class, "value")
                 .addStatement("$L = value", CSV_ROW_NUMBER)
+                .addStatement("return this")
                 .build());
 
         int fieldNumber = 0;
