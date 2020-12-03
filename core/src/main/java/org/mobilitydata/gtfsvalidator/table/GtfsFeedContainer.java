@@ -16,7 +16,11 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Container for a whole parsed GTFS feed with all its tables.

@@ -119,4 +119,20 @@ public class CsvFileTest {
 
         reader.close();
     }
+
+    @Test
+    public void emptyValues() throws IOException {
+        Reader reader = new StringReader("col0,col1,col2\n"+
+                "a,,\"\",b\n");
+        CsvFile csvFile = new CsvFile(reader, "stops.txt");
+
+        Iterator<CsvRow> iterator = csvFile.iterator();
+        assertThat(iterator.hasNext()).isEqualTo(true);
+        CsvRow row = iterator.next();
+        assertThat(row.asString(0)).isEqualTo("a");
+        // There is no way to tell between a missing value and an explicit empty string "". Both are returned as null.
+        assertThat(row.asString(1)).isNull();
+        assertThat(row.asString(2)).isNull();
+        assertThat(row.asString(3)).isEqualTo("b");
+    }
 }

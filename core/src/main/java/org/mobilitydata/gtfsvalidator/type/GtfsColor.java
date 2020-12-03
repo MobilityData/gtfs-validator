@@ -57,6 +57,11 @@ public class GtfsColor {
         return false;
     }
 
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(rgb);
+    }
+
     public String toHtmlColor() {
         return String.format("#%06X", rgb);
     }

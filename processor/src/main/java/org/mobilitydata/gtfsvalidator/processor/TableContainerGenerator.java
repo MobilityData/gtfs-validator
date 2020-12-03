@@ -19,7 +19,13 @@ package org.mobilitydata.gtfsvalidator.processor;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.notice.DuplicateKeyError;
 import org.mobilitydata.gtfsvalidator.notice.MoreThanOneEntityNotice;
@@ -32,7 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.*;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.byKeyMapName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.byKeyMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 /**
