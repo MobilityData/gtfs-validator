@@ -121,4 +121,9 @@ public class GtfsFeedName {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        return countryFirstName.hashCode();
+    }
 }
