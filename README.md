@@ -16,7 +16,10 @@ This command-line tool written in Java that performs the following steps:
 # Build Setup
 Instructions to build the project locally are available in our [Build Documentation page]().
 
-# Run tests locally
+# How to run the app locally 
+Instructions to run the application locally are available in our [Usage page]().
+
+# How to run tests locally
 Unit tests, and end to end testing are implemented. Please refer to our [Test Documentation page]() for details.
 
 # Architecture
