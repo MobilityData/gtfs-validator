@@ -20,6 +20,7 @@ import com.google.common.base.Joiner;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Base class for all notices produced by GTFS validator.
@@ -60,11 +61,6 @@ public abstract class Notice {
 
     @Override
     public int hashCode() {
-        int h = 1;
-        h *= 1000003;
-        h ^= getCode().hashCode();
-        h *= 1000003;
-        h ^= getContext().hashCode();
-        return h;
+        return Objects.hash(getCode(), getContext());
     }
 }
