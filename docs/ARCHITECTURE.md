@@ -1,6 +1,6 @@
 # Architecture description
-`gtfs-validator` counts three principal modules: [`main`](/main), [`processor`](/processor) and [`core`](/core).
-Module dependencies diagram:
+`gtfs-validator` counts three principal modules: [`main`](/main), [`processor`](/processor) and [`core`](/core). These modules dependencies are illustrated in the following diagram:
+
 ![architecture schema](https://user-images.githubusercontent.com/35747326/101182386-610e9400-3624-11eb-84b9-ec935e44aa2b.png)
 
 ### Main
