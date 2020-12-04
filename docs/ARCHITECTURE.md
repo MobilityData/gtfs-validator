@@ -1,5 +1,5 @@
 # Architecture description
-`gtfs-validator` counts three principal modules: [`main`](../), [`processor`](../) and [`core`](../).
+`gtfs-validator` counts three principal modules: [`main`](/), [`processor`](/) and [`core`](/).
 
 ### Main
 _Depends on: `processor` and `core`_
