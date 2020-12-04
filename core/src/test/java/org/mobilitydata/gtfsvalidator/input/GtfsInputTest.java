@@ -26,11 +26,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class GtfsInputTest {
@@ -65,5 +68,25 @@ public class GtfsInputTest {
 
         GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.getAbsolutePath());
         assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
+    }
+
+    @Test
+    public void createFromValidUrlShouldNotThrowException() throws IOException {
+        GtfsInput underTest = GtfsInput.createFromUrl(
+                new URL("https://octa.net/current/google_transit.zip"),
+                "storage");
+        assertThat(underTest instanceof GtfsZipFileInput);
+        // remove created file
+        File toDelete = new File("storage");
+        assertTrue(toDelete.delete());
+
+    }
+
+    @Test
+    public void createFromInvalidUrlShouldThrowException() {
+        assertThrows(
+                IOException.class, () -> GtfsInput.createFromUrl(
+                        new URL("https://octa.net/current/gowkdjhfiouwehfogle_transit.zip"),
+                        "storage"));
     }
 }

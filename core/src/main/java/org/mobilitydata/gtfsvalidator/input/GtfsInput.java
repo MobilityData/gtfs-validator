@@ -36,6 +36,7 @@ import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
 public interface GtfsInput {
     int HTTP_TEMP_REDIRECT = 307;
     int HTTP_PERM_REDIRECT = 308;
+
     /**
      * Creates an specific GtfsInput to read data from the given path.
      *
@@ -54,6 +55,14 @@ public interface GtfsInput {
         return new GtfsZipFileInput(file);
     }
 
+    /**
+     * Creates an specific GtfsInput to read data from the given URL.
+     *
+     * @param sourceUrl
+     * @param targetPathAsString
+     * @return
+     * @throws IOException
+     */
     static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString) throws IOException {
         InputStream inputStream;
 
@@ -82,24 +91,21 @@ public interface GtfsInput {
         }
     }
 
-    static GtfsInput create(String path) throws IOException {
-        return createFromPath(path);
-    }
-
-    static GtfsInput create(URL url, String targetPathAsString) throws IOException {
-        return createFromUrl(url, targetPathAsString);
-    }
-
+    /**
+     * Creates a path from a given string
+     * @param toCleanOrCreate
+     * @return
+     */
     static Path createPath(final String toCleanOrCreate) {
         // to empty any already existing directory
         Path pathToCleanOrCreate = Paths.get(toCleanOrCreate);
         if (Files.exists(pathToCleanOrCreate)) {
-                try {
-                    //noinspection ResultOfMethodCallIgnored -- we ignore if deletion went well or not
-                    Files.walk(pathToCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-                    Files.createDirectory(pathToCleanOrCreate);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            try {
+                //noinspection ResultOfMethodCallIgnored -- we ignore if deletion went well or not
+                Files.walk(pathToCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+                Files.createDirectory(pathToCleanOrCreate);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return pathToCleanOrCreate;
         }
@@ -118,7 +124,6 @@ public interface GtfsInput {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return pathToCleanOrCreate;
     }
 
