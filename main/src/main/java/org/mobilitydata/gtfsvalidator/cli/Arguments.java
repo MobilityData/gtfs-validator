@@ -38,4 +38,8 @@ public class Arguments {
 
     @Parameter(names = {"-u", "--url"}, description = "URL to download GTFS archive")
     public String url;
+
+    @Parameter(names = {"-e", "--extract"}, description = "Target path where to extract GTFS archive downloaded from " +
+            "network")
+    public String targetPath;
 }

@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -62,7 +63,9 @@ public class Main {
         try {
             if (args.input == null) {
                 feedContainer = feedLoader.loadAndValidate(
-                        GtfsInput.create(args.url),
+                        GtfsInput.create(
+                                new URL(args.url),
+                                args.targetPath),
                         feedName,
                         validatorLoader,
                         noticeContainer);
