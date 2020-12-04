@@ -2,6 +2,7 @@
 
 A GTFS Schedule (static) [General Transit Feed Specification (GTFS)](https://gtfs.mobilitydata.org/spec/gtfs-schedule) feed validator
 
+
 # Introduction
 
 This command-line tool written in Java that performs the following steps:
