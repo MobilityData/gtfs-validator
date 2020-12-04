@@ -16,7 +16,12 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
 import org.mobilitydata.gtfsvalidator.annotation.Generated;
 import org.mobilitydata.gtfsvalidator.table.GtfsEntity;
@@ -29,7 +34,10 @@ import javax.lang.model.type.TypeMirror;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
-import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.*;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getValueMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getterMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.setterMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
 
 /**

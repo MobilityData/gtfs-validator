@@ -16,7 +16,21 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
-import org.mobilitydata.gtfsvalidator.annotation.*;
+import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
+import org.mobilitydata.gtfsvalidator.annotation.FieldType;
+import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
+import org.mobilitydata.gtfsvalidator.annotation.FirstKey;
+import org.mobilitydata.gtfsvalidator.annotation.ForeignKey;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValues;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
+import org.mobilitydata.gtfsvalidator.annotation.Index;
+import org.mobilitydata.gtfsvalidator.annotation.NonNegative;
+import org.mobilitydata.gtfsvalidator.annotation.NonZero;
+import org.mobilitydata.gtfsvalidator.annotation.Positive;
+import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
+import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.SequenceKey;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;

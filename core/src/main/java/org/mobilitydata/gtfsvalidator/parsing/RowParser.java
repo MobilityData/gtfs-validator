@@ -20,7 +20,13 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
-import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.notice.FieldParsingError;
+import org.mobilitydata.gtfsvalidator.notice.InvalidRowLengthError;
+import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFieldError;
+import org.mobilitydata.gtfsvalidator.notice.Notice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeError;
+import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueError;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -416,7 +422,7 @@ public class RowParser {
 
         final T parseField(int columnIndex, boolean required) {
             String s = asString(columnIndex, required);
-            if (s == null || s.isEmpty()) {
+            if (s == null) {
                 return null;
             }
             try {
