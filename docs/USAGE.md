@@ -1,5 +1,5 @@
 # Instructions to run the application locally
-1. Install [Java 11 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
+1. Install [Java 8 or higher](https://www.oracle.com/java/technologies/javase-downloads.html)
 1. Download the latest gtfs-validator JAR file from our [Releases page](https://github.com/MobilityData/gtfs-validator/releases) or snapshot artifact from [GitHub Actions](https://github.com/MobilityData/gtfs-validator/actions?query=branch%3Amaster) or [Circle-CI Pipelines](https://app.circleci.com/pipelines/github/MobilityData/gtfs-validator?branch=master)
 
 ## cli-app usage
