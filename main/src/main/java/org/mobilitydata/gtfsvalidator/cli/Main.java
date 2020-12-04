@@ -64,7 +64,7 @@ public class Main {
         try {
             if (args.input == null) {
                 feedContainer = feedLoader.loadAndValidate(
-                        GtfsInput.create(
+                        GtfsInput.createFromUrl(
                                 new URL(args.url),
                                 args.storageDirectory),
                         feedName,
@@ -72,7 +72,7 @@ public class Main {
                         noticeContainer);
             } else {
                 feedContainer = feedLoader.loadAndValidate(
-                        GtfsInput.create(args.input),
+                        GtfsInput.createFromPath(args.input),
                         feedName,
                         validatorLoader,
                         noticeContainer);
