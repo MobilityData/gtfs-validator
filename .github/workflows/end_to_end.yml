@@ -1,0 +1,67 @@
+name: End to end
+
+on:
+  push:
+    branches: [ master, download-archive ] #<-- replace transport-agency-name by the name of the agency/publisher
+
+jobs:
+  run-on-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Prepare version name
+        id: prep
+        run: |
+          VERSION_TAG=edge
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION_TAG=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION_TAG=-$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          elif [[ $GITHUB_REF == refs/pull/* ]]; then
+            VERSION_TAG=-pr-${{ github.event.number }}
+          fi
+          if [ ${VERSION_TAG} != ${GITHUB_REF#refs/tags/} ]; then
+            VERSION_TAG=v${VERSION_TAG}-sha-${GITHUB_SHA::8}-SNAPSHOT
+          fi
+          echo ::set-output name=versionTag::${VERSION_TAG}
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: Package cli app jar with Gradle
+        uses: eskatos/gradle-command-action@v1
+        env:
+          versionTag: ${{ steps.prep.outputs.versionTag }}
+        with:
+          arguments: shadowJar
+
+      - name: Validate dataset from -- SMART
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download --output_base output --feed_name us-smart --storage_directory smart.zip
+      - name: Validate dataset from -- STM
+        run: java -jar main/build/libs/*.jar --url https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download --output_base output --feed_name ca-stm --storage_directory stm.zip
+      - name: Validate dataset from -- MBTA
+        run: java -jar main/build/libs/*.jar --url https://cdn.mbta.com/MBTA_GTFS.zip --input mbta.zip --output_base output --feed_name us-mbta --storage_directory mbta.zip
+      - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
+        run: java -jar main/build/libs/*.jar --url http://www.bart.gov/dev/schedules/google_transit.zip --output_base output --feed_name us-bart --storage_directory bart.zip
+      - name: Validate dataset from issue 399 -- Monterey-Salinas Transit
+        run: java -jar main/build/libs/*.jar --url http://www.mst.org/google/google_transit.zip --output_base output --feed_name us-mst --storage_directory mst.zip
+      - name: Validate dataset from issue 398 -- Orange County Transportation Authority
+        run: java -jar main/build/libs/*.jar --url https://octa.net/current/google_transit.zip --output_base output --feed_name us-octa --storage_directory octa.zip
+      - name: Validate dataset from issue 400 -- Siskiyou Transit and General Express
+        run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/siskiyou-transit-and-general-express/492/latest/download --output_base output --feed_name us-siskiyou --storage_directory siskiyou.zip
+      - name: Persist datasets
+        uses: actions/upload-artifact@v2
+        with:
+          name: dataset_all
+          path: ./*.zip
+      - name: Persist reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: validation_report_all
+          path: output
