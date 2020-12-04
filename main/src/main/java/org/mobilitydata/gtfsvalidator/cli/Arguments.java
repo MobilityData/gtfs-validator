@@ -23,7 +23,7 @@ import com.beust.jcommander.Parameter;
  */
 public class Arguments {
 
-    @Parameter(names = {"-i", "--input"}, description = "Location of the input GTFS ZIP or unarchived directory", required = true)
+    @Parameter(names = {"-i", "--input"}, description = "Location of the input GTFS ZIP or unarchived directory")
     public String input;
 
     @Parameter(names = {"-o", "--output_base"}, description = "Base directory to store the outputs", required = true)
