@@ -37,6 +37,11 @@ public class Main {
     public static void main(String[] argv) {
         Arguments args = new Arguments();
         new JCommander(args).parse(argv);
+        try {
+            new ValidateCliParameters(args).validate();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
 
         ValidatorLoader validatorLoader = new ValidatorLoader();
         GtfsFeedLoader feedLoader = new GtfsFeedLoader();
@@ -44,6 +49,7 @@ public class Main {
         GtfsFeedName feedName = GtfsFeedName.parseString(args.feedName);
         System.out.println("Feed name: " + feedName.getCountryFirstName());
         System.out.println("Input: " + args.input);
+        System.out.println("URL: " + args.url);
         System.out.println("Output: " + args.outputBase);
         System.out.println("Table loaders: " + feedLoader.listTableLoaders());
         System.out.println("Validators:");
@@ -54,8 +60,19 @@ public class Main {
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsFeedContainer feedContainer;
         try {
-            feedContainer = feedLoader.loadAndValidate(GtfsInput.createFromPath(args.input), feedName, validatorLoader,
-                    noticeContainer);
+            if (args.input == null) {
+                feedContainer = feedLoader.loadAndValidate(
+                        GtfsInput.create(args.url),
+                        feedName,
+                        validatorLoader,
+                        noticeContainer);
+            } else {
+                feedContainer = feedLoader.loadAndValidate(
+                        GtfsInput.create(args.input),
+                        feedName,
+                        validatorLoader,
+                        noticeContainer);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             return;
