@@ -35,4 +35,7 @@ public class Arguments {
     @Parameter(names = {"-f", "--feed_name"}, description = "Name of the feed, e.g., `nl-openov`. " +
             "It must start from two-letter country code (ISO 3166-1 alpha-2)")
     public String feedName;
+
+    @Parameter(names = {"-u", "--url"}, description = "URL to download GTFS archive")
+    public String url;
 }
