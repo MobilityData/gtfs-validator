@@ -3,9 +3,9 @@
 Adding a new validator is relatively simple:
 1. Create a class for the validator that implements one of the interfaces `FileValidator`, or `SingleEntityValidator`.
 
-   💡 Use [`SingleEntityValidator`](/org/mobilitydata/gtfsvalidator/validator/SingleEntityValidator.java) to implement a validation rule that can be applied to a single row from a GTFS file.
+   💡 Use [`SingleEntityValidator`](../core/src/main/java/org/mobilitydata/gtfsvalidator/validator/SingleEntityValidator.java) to implement a validation rule that can be applied to a single row from a GTFS file.
    
-   💡 Use [`FileValidator`](/org/mobilitydata/gtfsvalidator/validator/FileValidator.java) to implement a validation rule that handles one as a whole or several files.
+   💡 Use [`FileValidator`](../core/src/main/java/org/mobilitydata/gtfsvalidator/validator/FileValidator.java) to implement a validation rule that handles one as a whole or several files.
     
 1. If needed, inject GTFS tables that will be used during the validation process in the newly created validator as class fields.  
 1. Write the validation rule logic in overridden `validate` method with the correct set of parameters.
