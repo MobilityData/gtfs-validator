@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * savings time changes occur).
  */
 public class GtfsTime implements Comparable<GtfsTime> {
-    private static final Pattern hhmmccPatter = Pattern.compile("(\\d{1,3}):(\\d\\d):(\\d\\d)");
+    private static final Pattern HHMMCC_PATTERN = Pattern.compile("(\\d{1,3}):(\\d\\d):(\\d\\d)");
     private final int secondsSinceMidnight;
 
     private GtfsTime(int secondsSinceMidnight) {
@@ -57,7 +57,7 @@ public class GtfsTime implements Comparable<GtfsTime> {
      * @return GtfsTime object
      */
     public static GtfsTime fromString(String time) {
-        Matcher matcher = hhmmccPatter.matcher(time);
+        Matcher matcher = HHMMCC_PATTERN.matcher(time);
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Time must have H:MM:SS, HH:MM:SS or HHH:MM:SS format: " + time);
         }
