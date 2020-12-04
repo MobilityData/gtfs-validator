@@ -2,7 +2,7 @@
 
 ## Prerequisites for Gradle
 1. Clone this repository
-1. Install [Java Development Kit (JDK 8+)](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 8 or higher
+1. Install [Java Development Kit (JDK 8+)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
 ## Building from the command line
 To build the application, run `./gradlew clean build` from the command line at the root of the project.
