@@ -36,7 +36,6 @@ import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
 public interface GtfsInput {
     int HTTP_TEMP_REDIRECT = 307;
     int HTTP_PERM_REDIRECT = 308;
-
     /**
      * Creates an specific GtfsInput to read data from the given path.
      *
