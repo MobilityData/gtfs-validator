@@ -39,7 +39,7 @@ public class Arguments {
     @Parameter(names = {"-u", "--url"}, description = "URL to download GTFS archive")
     public String url;
 
-    @Parameter(names = {"-s", "--store_archive"}, description = "Target path where to store the GTFS archive " +
+    @Parameter(names = {"-s", "--storage_directory"}, description = "Target path where to store the GTFS archive " +
             "downloaded from network")
-    public String archiveStorageDirectory;
+    public String storageDirectory;
 }
