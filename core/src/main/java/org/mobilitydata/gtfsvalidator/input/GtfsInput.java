@@ -36,6 +36,8 @@ import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
 public interface GtfsInput {
     int HTTP_TEMP_REDIRECT = 307;
     int HTTP_PERM_REDIRECT = 308;
+    String PATH_TO_ZIPPED_DATASET = "dataset.zip";
+
     /**
      * Creates an specific GtfsInput to read data from the given path.
      *
@@ -58,11 +60,10 @@ public interface GtfsInput {
      * Creates an specific GtfsInput to read data from the given URL.
      *
      * @param sourceUrl
-     * @param targetPathAsString
      * @return
      * @throws IOException
      */
-    static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString) throws IOException {
+    static GtfsInput createFromUrl(URL sourceUrl) throws IOException {
         InputStream inputStream;
 
         try {
@@ -78,7 +79,7 @@ public interface GtfsInput {
             } else {
                 inputStream = sourceUrl.openStream();
             }
-            Path path = createPath(targetPathAsString);
+            Path path = createPath(PATH_TO_ZIPPED_DATASET);
             Files.copy(
                     inputStream,
                     path,

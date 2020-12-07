@@ -73,8 +73,7 @@ public class GtfsInputTest {
     @Test
     public void createFromValidUrlShouldNotThrowException() throws IOException {
         GtfsInput underTest = GtfsInput.createFromUrl(
-                new URL("https://octa.net/current/google_transit.zip"),
-                "storage");
+                new URL("https://octa.net/current/google_transit.zip"));
         assertThat(underTest instanceof GtfsZipFileInput);
         // remove created file
         File toDelete = new File("storage");
@@ -86,7 +85,6 @@ public class GtfsInputTest {
     public void createFromInvalidUrlShouldThrowException() {
         assertThrows(
                 IOException.class, () -> GtfsInput.createFromUrl(
-                        new URL("https://octa.net/current/gowkdjhfiouwehfogle_transit.zip"),
-                        "storage"));
+                        new URL("https://octa.net/current/gowkdjhfiouwehfogle_transit.zip")));
     }
 }
