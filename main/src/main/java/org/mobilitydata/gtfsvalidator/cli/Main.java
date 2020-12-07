@@ -26,6 +26,7 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -75,7 +76,7 @@ public class Main {
                         validatorLoader,
                         noticeContainer);
             }
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException | InterruptedException e) {
             e.printStackTrace();
             return;
         }

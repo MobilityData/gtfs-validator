@@ -15,27 +15,24 @@
  */
 
 package org.mobilitydata.gtfsvalidator.input;
-
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.*;
 import java.util.Comparator;
 import java.util.Set;
-
-import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
-import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
 
 /**
  * GtfsInput provides a common interface for reading GTFS data, either from a ZIP archive or from a directory.
  */
 public interface GtfsInput {
-    int HTTP_TEMP_REDIRECT = 307;
-    int HTTP_PERM_REDIRECT = 308;
     String PATH_TO_ZIPPED_DATASET = "dataset.zip";
 
     /**
@@ -63,22 +60,14 @@ public interface GtfsInput {
      * @return
      * @throws IOException
      */
-    static GtfsInput createFromUrl(URL sourceUrl) throws IOException {
-        InputStream inputStream;
+    static GtfsInput createFromUrl(URL sourceUrl) throws IOException, URISyntaxException, InterruptedException {
 
         try {
-            final HttpURLConnection httpConnection = (HttpURLConnection) sourceUrl.openConnection();
-            final int responseCode = httpConnection.getResponseCode();
-            // check response code
-            if (responseCode == HTTP_MOVED_PERM || responseCode == HTTP_MOVED_TEMP ||
-                    responseCode == HTTP_TEMP_REDIRECT || responseCode == HTTP_PERM_REDIRECT) {
-                // use redirection instead of original url
-                final String newUrlAsString = httpConnection.getHeaderField("Location");
-                final URLConnection connection = new URL(newUrlAsString).openConnection();
-                inputStream = connection.getInputStream();
-            } else {
-                inputStream = sourceUrl.openStream();
-            }
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+
+            HttpGet httpGet = new HttpGet(sourceUrl.toURI());
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            InputStream inputStream = httpResponse.getEntity().getContent();
             Path path = createPath(PATH_TO_ZIPPED_DATASET);
             Files.copy(
                     inputStream,
@@ -86,7 +75,7 @@ public interface GtfsInput {
                     StandardCopyOption.REPLACE_EXISTING
             );
             return createFromPath(path.toString());
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException | InterruptedException e) {
             throw e;
         }
     }
@@ -96,7 +85,7 @@ public interface GtfsInput {
      * @param toCleanOrCreate
      * @return
      */
-    static Path createPath(final String toCleanOrCreate) {
+    static Path createPath(final String toCleanOrCreate) throws IOException, InterruptedException {
         // to empty any already existing directory
         Path pathToCleanOrCreate = Paths.get(toCleanOrCreate);
         if (Files.exists(pathToCleanOrCreate)) {
@@ -112,14 +101,14 @@ public interface GtfsInput {
 
         // Create the directory
         try {
-            Files.createDirectory(pathToCleanOrCreate);
+            Files.createFile(pathToCleanOrCreate);
         } catch (AccessDeniedException e) {
             // Wait and try again - Windows can initially block creating a directory immediately after a delete when a file lock exists (#112)
             try {
                 Thread.sleep(500);
-                Files.createDirectory(pathToCleanOrCreate);
+                Files.createFile(pathToCleanOrCreate);
             } catch (IOException | InterruptedException ex) {
-                ex.printStackTrace();
+                throw ex;
             }
         } catch (IOException e) {
             e.printStackTrace();
