@@ -92,7 +92,7 @@ public interface GtfsInput {
                 FileUtils.deleteQuietly(new File(toCleanOrCreate));
                 Files.createDirectory(pathToCleanOrCreate);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw e;
             }
             return pathToCleanOrCreate;
         }
@@ -106,10 +106,10 @@ public interface GtfsInput {
                 Thread.sleep(500);
                 Files.createFile(pathToCleanOrCreate);
             } catch (IOException | InterruptedException ex) {
-                ex.printStackTrace();
+                throw ex;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw e;
         }
         return pathToCleanOrCreate;
     }
