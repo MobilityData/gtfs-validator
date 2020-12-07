@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.input;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -63,9 +64,8 @@ public interface GtfsInput {
 
         try {
             CloseableHttpClient httpClient = HttpClients.createDefault();
-
             HttpGet httpGet = new HttpGet(sourceUrl.toURI());
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
             InputStream inputStream = httpResponse.getEntity().getContent();
             Path path = createPath(targetPathAsString);
             Files.copy(
@@ -73,6 +73,8 @@ public interface GtfsInput {
                     path,
                     StandardCopyOption.REPLACE_EXISTING
             );
+            httpResponse.close();
+            httpClient.close();
             return createFromPath(path.toString());
         } catch (IOException | URISyntaxException | InterruptedException e) {
             throw e;
