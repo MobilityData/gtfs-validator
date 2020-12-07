@@ -2,7 +2,7 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import org.junit.Test;
 
-public class ValidateCliParametersTest {
+public class CliParametersAnalyzerTest {
 
     @Test
     public void provideUrlAndInputCliParametersShouldThrowException() {

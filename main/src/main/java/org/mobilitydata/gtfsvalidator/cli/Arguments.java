@@ -36,7 +36,7 @@ public class Arguments {
             "It must start from two-letter country code (ISO 3166-1 alpha-2)")
     public String feedName;
 
-    @Parameter(names = {"-u", "--url"}, description = "URL to download GTFS archive")
+    @Parameter(names = {"-u", "--url"}, description = "Fully qualified URL to download GTFS archive")
     public String url;
 
     @Parameter(names = {"-s", "--storage_directory"}, description = "Target path where to store the GTFS archive " +

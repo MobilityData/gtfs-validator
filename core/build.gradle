@@ -12,8 +12,8 @@ repositories {
 }
 
 dependencies {
-    compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
-    compile 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'commons-io:commons-io:2.8.0'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'com.univocity:univocity-parsers:2.9.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
     implementation 'com.google.guava:guava:29.0-jre'

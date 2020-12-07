@@ -16,7 +16,6 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -60,25 +59,21 @@ public interface GtfsInput {
      * @return
      * @throws IOException
      */
-    static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString) throws IOException, URISyntaxException, InterruptedException {
-
-        try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpGet httpGet = new HttpGet(sourceUrl.toURI());
-            CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
-            InputStream inputStream = httpResponse.getEntity().getContent();
-            Path path = createPath(targetPathAsString);
-            Files.copy(
-                    inputStream,
-                    path,
-                    StandardCopyOption.REPLACE_EXISTING
-            );
-            httpResponse.close();
-            httpClient.close();
-            return createFromPath(path.toString());
-        } catch (IOException | URISyntaxException | InterruptedException e) {
-            throw e;
-        }
+    static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString) throws IOException, URISyntaxException,
+            InterruptedException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(sourceUrl.toURI());
+        CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+        InputStream inputStream = httpResponse.getEntity().getContent();
+        Path path = createPath(targetPathAsString);
+        Files.copy(
+                inputStream,
+                path,
+                StandardCopyOption.REPLACE_EXISTING
+        );
+        httpResponse.close();
+        httpClient.close();
+        return createFromPath(path.toString());
     }
 
     /**
@@ -90,12 +85,9 @@ public interface GtfsInput {
         // to empty any already existing directory
         Path pathToCleanOrCreate = Paths.get(toCleanOrCreate);
         if (Files.exists(pathToCleanOrCreate)) {
-            try {
-                FileUtils.deleteQuietly(new File(toCleanOrCreate));
-                Files.createDirectory(pathToCleanOrCreate);
-            } catch (IOException e) {
-                throw e;
-            }
+            FileUtils.deleteQuietly(new File(toCleanOrCreate));
+            Files.createDirectory(pathToCleanOrCreate);
+
             return pathToCleanOrCreate;
         }
 
@@ -103,15 +95,10 @@ public interface GtfsInput {
         try {
             Files.createFile(pathToCleanOrCreate);
         } catch (AccessDeniedException e) {
-            // Wait and try again - Windows can initially block creating a directory immediately after a delete when a file lock exists (#112)
-            try {
-                Thread.sleep(500);
-                Files.createFile(pathToCleanOrCreate);
-            } catch (IOException | InterruptedException ex) {
-                throw ex;
-            }
-        } catch (IOException e) {
-            throw e;
+            // Wait and try again - Windows can initially block creating a directory immediately after a delete when a
+            // file lock exists (#112)
+            Thread.sleep(500);
+            Files.createFile(pathToCleanOrCreate);
         }
         return pathToCleanOrCreate;
     }

@@ -17,6 +17,8 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.JCommander;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -36,13 +38,16 @@ import java.nio.file.Paths;
  * The main entry point for GTFS Validator CLI.
  */
 public class Main {
+
     public static void main(String[] argv) {
+        Logger logger = LogManager.getLogger();
         Arguments args = new Arguments();
+        CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer(logger);
+
         new JCommander(args).parse(argv);
-        try {
-            new ValidateCliParameters(args).validate();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+
+        if (!cliParametersAnalyzer.isValid(args)) {
+            System.exit(1);
         }
 
         ValidatorLoader validatorLoader = new ValidatorLoader();
