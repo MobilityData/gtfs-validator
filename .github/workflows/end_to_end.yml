@@ -43,8 +43,6 @@ jobs:
 
       - name: Validate dataset from -- SMART
         run: java -jar main/build/libs/*.jar --url http://transitfeeds.com/p/sonoma-marin-area-rail-transit/1050/20200930/download --output_base output --feed_name us-smart --storage_directory smart.zip
-      - name: Validate dataset from -- STM
-        run: java -jar main/build/libs/*.jar --url https://openmobilitydata.org/p/societe-de-transport-de-montreal/39/latest/download --output_base output --feed_name ca-stm --storage_directory stm.zip
       - name: Validate dataset from -- MBTA
         run: java -jar main/build/libs/*.jar --url https://cdn.mbta.com/MBTA_GTFS.zip --input mbta.zip --output_base output --feed_name us-mbta --storage_directory mbta.zip
       - name: Validate dataset from issue 379 -- Bay Area Rapid Transit
