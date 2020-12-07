@@ -15,6 +15,7 @@
  */
 
 package org.mobilitydata.gtfsvalidator.input;
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -26,7 +27,6 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
-import java.util.Comparator;
 import java.util.Set;
 
 /**
@@ -90,8 +90,7 @@ public interface GtfsInput {
         Path pathToCleanOrCreate = Paths.get(toCleanOrCreate);
         if (Files.exists(pathToCleanOrCreate)) {
             try {
-                //noinspection ResultOfMethodCallIgnored -- we ignore if deletion went well or not
-                Files.walk(pathToCleanOrCreate).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+                FileUtils.deleteQuietly(new File(toCleanOrCreate));
                 Files.createDirectory(pathToCleanOrCreate);
             } catch (IOException e) {
                 e.printStackTrace();
