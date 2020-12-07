@@ -33,8 +33,6 @@ import java.util.Set;
  * GtfsInput provides a common interface for reading GTFS data, either from a ZIP archive or from a directory.
  */
 public interface GtfsInput {
-    String PATH_TO_ZIPPED_DATASET = "dataset.zip";
-
     /**
      * Creates an specific GtfsInput to read data from the given path.
      *
@@ -57,10 +55,11 @@ public interface GtfsInput {
      * Creates an specific GtfsInput to read data from the given URL.
      *
      * @param sourceUrl
+     * @param targetPathAsString
      * @return
      * @throws IOException
      */
-    static GtfsInput createFromUrl(URL sourceUrl) throws IOException, URISyntaxException, InterruptedException {
+    static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString) throws IOException, URISyntaxException, InterruptedException {
 
         try {
             CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -68,7 +67,7 @@ public interface GtfsInput {
             HttpGet httpGet = new HttpGet(sourceUrl.toURI());
             HttpResponse httpResponse = httpClient.execute(httpGet);
             InputStream inputStream = httpResponse.getEntity().getContent();
-            Path path = createPath(PATH_TO_ZIPPED_DATASET);
+            Path path = createPath(targetPathAsString);
             Files.copy(
                     inputStream,
                     path,
@@ -107,7 +106,7 @@ public interface GtfsInput {
                 Thread.sleep(500);
                 Files.createFile(pathToCleanOrCreate);
             } catch (IOException | InterruptedException ex) {
-                throw ex;
+                ex.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();

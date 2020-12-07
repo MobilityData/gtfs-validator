@@ -53,6 +53,7 @@ public class Main {
         System.out.println("Input: " + args.input);
         System.out.println("URL: " + args.url);
         System.out.println("Output: " + args.outputBase);
+        System.out.println("Path to archive storage directory: " + args.storageDirectory);
         System.out.println("Table loaders: " + feedLoader.listTableLoaders());
         System.out.println("Validators:");
         System.out.println(validatorLoader.listValidators());
@@ -65,7 +66,8 @@ public class Main {
             if (args.input == null) {
                 feedContainer = feedLoader.loadAndValidate(
                         GtfsInput.createFromUrl(
-                                new URL(args.url)),
+                                new URL(args.url),
+                                args.storageDirectory),
                         feedName,
                         validatorLoader,
                         noticeContainer);
