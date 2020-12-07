@@ -62,21 +62,16 @@ public class Main {
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsFeedContainer feedContainer;
         try {
-            if (args.input == null) {
-                feedContainer = feedLoader.loadAndValidate(
-                        GtfsInput.createFromUrl(
+            GtfsInput gtfsInput = args.input == null ? GtfsInput.createFromUrl(
                                 new URL(args.url),
-                                args.storageDirectory),
+                                args.storageDirectory)
+  : GtfsInput.createFromPath(args.input);
+
+feedContainer = feedLoader.loadAndValidate(
+                        gtfsInput,
                         feedName,
                         validatorLoader,
                         noticeContainer);
-            } else {
-                feedContainer = feedLoader.loadAndValidate(
-                        GtfsInput.createFromPath(args.input),
-                        feedName,
-                        validatorLoader,
-                        noticeContainer);
-            }
         } catch (IOException e) {
             e.printStackTrace();
             return;
