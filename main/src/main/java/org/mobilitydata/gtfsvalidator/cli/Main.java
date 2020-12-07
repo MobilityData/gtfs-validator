@@ -53,32 +53,32 @@ public class Main {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         GtfsFeedLoader feedLoader = new GtfsFeedLoader();
 
-        GtfsFeedName feedName = GtfsFeedName.parseString(args.feedName);
+        GtfsFeedName feedName = GtfsFeedName.parseString(args.getFeedName());
         System.out.println("Feed name: " + feedName.getCountryFirstName());
-        System.out.println("Input: " + args.input);
-        System.out.println("URL: " + args.url);
-        System.out.println("Output: " + args.outputBase);
-        System.out.println("Path to archive storage directory: " + args.storageDirectory);
+        System.out.println("Input: " + args.getInput());
+        System.out.println("URL: " + args.getUrl());
+        System.out.println("Output: " + args.getOutputBase());
+        System.out.println("Path to archive storage directory: " + args.getStorageDirectory());
         System.out.println("Table loaders: " + feedLoader.listTableLoaders());
         System.out.println("Validators:");
         System.out.println(validatorLoader.listValidators());
 
         // Input.
-        feedLoader.setNumThreads(args.numThreads);
+        feedLoader.setNumThreads(args.getNumThreads());
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsFeedContainer feedContainer;
         try {
-            if (args.input == null) {
+            if (args.getInput() == null) {
                 feedContainer = feedLoader.loadAndValidate(
                         GtfsInput.createFromUrl(
-                                new URL(args.url),
-                                args.storageDirectory),
+                                new URL(args.getUrl()),
+                                args.getStorageDirectory()),
                         feedName,
                         validatorLoader,
                         noticeContainer);
             } else {
                 feedContainer = feedLoader.loadAndValidate(
-                        GtfsInput.createFromPath(args.input),
+                        GtfsInput.createFromPath(args.getInput()),
                         feedName,
                         validatorLoader,
                         noticeContainer);
@@ -89,9 +89,9 @@ public class Main {
         }
 
         // Output.
-        new File(args.outputBase).mkdirs();
+        new File(args.getOutputBase()).mkdirs();
         try {
-            Files.write(Paths.get(args.outputBase, "report.json"),
+            Files.write(Paths.get(args.getOutputBase(), "report.json"),
                     noticeContainer.exportJson().getBytes(StandardCharsets.UTF_8));
         } catch (IOException exception) {
             exception.printStackTrace();

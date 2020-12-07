@@ -18,20 +18,20 @@ public class CliParametersAnalyzer {
      * @return true if CLI parameter combination is legal, otherwise return false
      */
     public boolean isValid(Arguments args) {
-        if (args.input == null && args.url == null) {
+        if (args.getInput() == null && args.getUrl() == null) {
             logger.error("One of the two following CLI parameter must be provided: '--input' and '--url'");
             return false;
         }
-        if (args.input != null && args.url != null) {
+        if (args.getInput() != null && args.getUrl() != null) {
             logger.error("The two following CLI parameters cannot be provided at the same time:" +
                     " '--input' and '--url'");
             return false;
         }
-        if (args.url != null && args.storageDirectory == null) {
+        if (args.getUrl() != null && args.getStorageDirectory() == null) {
             logger.error("CLI parameter '--storage_directory' must be provided if '--url' is provided");
             return false;
         }
-        if (args.storageDirectory != null && args.url == null) {
+        if (args.getStorageDirectory() != null && args.getUrl() == null) {
             logger.error("CLI parameter '--storage_directory' must not be provided if '--url' is not provided");
             return false;
         }
