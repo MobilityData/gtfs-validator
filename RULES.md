@@ -4,86 +4,86 @@ Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs
 
 ### Table of Errors
 
-| `v2.0` Error designation 	| `v1.4.0` Error IDs 	| Error Title                                                             	|   	|
-|--------------------------	|--------------------	|-------------------------------------------------------------------------	|---	|
-|                          	| [E001](#E001)      	| Missing required `field`                                                	|   	|
-|                          	| [E003](#E003)      	| Missing required `file`                                                 	|   	|
-|                          	| [E004](#E004)      	| Invalid csv row length                                                  	|   	|
-|                          	| [E005](#E005)      	| Cannot parse `integer`                                                  	|   	|
-|                          	| [E006](#E006)      	| Cannot parse `float`                                                    	|   	|
-|                          	| [E007](#E007)      	| Cannot `download` archive                                               	|   	|
-|                          	| [E008](#E008)      	| Cannot `unzip` archive                                                  	|   	|
-|                          	| [E010](#E010)      	| `Integer` field value out of range                                      	|   	|
-|                          	| [E011](#E011)      	| `Float` field value out of range                                        	|   	|
-|                          	| [E012](#E012)      	| Invalid `url` field value                                               	|   	|
-|                          	| [E013](#E013)      	| Invalid `timezone` field value                                          	|   	|
-|                          	| [E014](#E014)      	| Invalid `color` field value                                             	|   	|
-|                          	| [E015](#E015)      	| Missing required `value`                                                	|   	|
-|                          	| [E016](#E016)      	| Invalid `time` value                                                    	|   	|
-|                          	| [E017](#E017)      	| Cannot parse `date`                                                     	|   	|
-|                          	| [E018](#E018)      	| Invalid `currency code`                                                 	|   	|
-|                          	| [E019](#E019)      	| Illegal field value combination                                         	|   	|
-|                          	| [E020](#E020)      	| Duplicated entity                                                       	|   	|
-|                          	| [E021](#E021)      	| Unexpected `enum` value                                                 	|   	|
-|                          	| [E022](#E022)      	| Invalid language code                                                   	|   	|
-|                          	| [E023](#E023)      	| Invalid email                                                           	|   	|
-|                          	| [E024](#E024)      	| Same name and description for route                                     	|   	|
-|                          	| [E025](#E025)      	| Insufficient route color contrast                                       	|   	|
-|                          	| [E026](#E026)      	| Invalid route type                                                      	|   	|
-|                          	| [E027](#E027)      	| Missing route short name and long name                                  	|   	|
-|                          	| [E028](#E028)      	| Route long name equals short name                                       	|   	|
-|                          	| [E029](#E029)      	| Missing field `agency_id` for file `agency.txt` with more than 1 record 	|   	|
-|                          	| [E030](#E030)      	| Inconsistent field `agency_timezone`                                    	|   	|
-|                          	| [E031](#E031)      	| Invalid `agency_id`                                                     	|   	|
-|                          	| [E032](#E032)      	| `calendar.txt` `end_date` is before `start_date`                        	|   	|
-|                          	| [E033](#E033)      	| `route_id` not found in GTFS `routes.txt`                               	|   	|
-|                          	| [E034](#E034)      	| `shape_id` not found in GTFS `shapes.txt`                               	|   	|
-|                          	| [E035](#E035)      	| `agency_id` not found in GTFS `agency.txt`                              	|   	|
-|                          	| [E036](#E036)      	| `service_id` not found in GTFS `calendar.txt` or `calendar_dates.txt`   	|   	|
-|                          	| [E037](#E037)      	| `trip_id` not found in GTFS `trips.txt`                                 	|   	|
-|                          	| [E038](#E038)      	| All shapes should be used in `trips.txt`                                	|   	|
-|                          	| [E039](#E039)      	| `feed_start_date` after `feed_end_date`                                 	|   	|
-|                          	| [E040](#E040)      	| Dataset should be valid for at least the next 7 days                    	|   	|
-|                          	| [E041](#E041)      	| Invalid parent `location_type` for stop                                 	|   	|
-|                          	| [E042](#E042)      	| Station stop (`location_type`=2) has a parent stop                      	|   	|
-|                          	| [E043](#E043)      	| Duplicated field                                                        	|   	|
-|                          	| [E044](#E044)      	| Missing trip edge `arrival_time` or `departure_time`                    	|   	|
-|                          	| [E045](#E045)      	| `arrival_time` after `departure_time` in `stop_times.txt`               	|   	|
-|                          	| [E046](#E046)      	| Fast travel between stops in `stop_times.txt`                           	|   	|
-|                          	| [E047](#E047)      	| Csv file is empty                                                       	|   	|
-|                          	| [E048](#E048)      	| `end_time` after `start_time` in `frequencies.txt`                      	|   	|
-|                          	| [E049](#E049)      	| Backwards time travel between stops in `stop_times.txt`                 	|   	|
-|                          	| [E050](#E050)      	| Trips must be used in `stop_times.txt`                                  	|   	|
-|                          	| [E051](#E051)      	| Trips must have more than one stop to be usable                         	|   	|
-|                          	| [E052](#E052)      	| Stop too far from trip shape                                            	|   	|
-|                          	| [E053](#E053)      	| Trip frequencies overlap                                                	|   	|
-|                          	| [E054](#E054)      	| Block trips must not have overlapping stop times                        	|   	|
-|                          	| [E055](#E055)      	| Mismatching feed and agency language fields                             	|   	|
-|                          	| [E056](#E056)      	| Missing `calendar_dates.txt` and `calendar.txt` files                   	|   	|
-|                          	| [E057](#E057)      	| Decreasing `shape_dist_traveled` in `stop_times.txt`                    	|   	|
-|                          	| [E058](#E058)      	| Decreasing `shape_dist_traveled` in `shapes.txt`                        	|   	|
-|                          	| [E059](#E059)      	| GTFS dataset too big                                                    	|   	|
-|                          	| [E060](#E060)      	| Fatal internal error -- please report                                   	|   	|
-|                          	| [E061](#E061)      	| Out of memory                                                           	|   	|
+| `v2.0` Error designation 	| `v1.4.0` Error IDs 	| Error Title                                                             	|
+|--------------------------	|--------------------	|-------------------------------------------------------------------------	|
+|                          	| [E001](#E001)      	| Missing required `field`                                                	|
+|                          	| [E003](#E003)      	| Missing required `file`                                                 	|
+|                          	| [E004](#E004)      	| Invalid csv row length                                                  	|
+|                          	| [E005](#E005)      	| Cannot parse `integer`                                                  	|
+|                          	| [E006](#E006)      	| Cannot parse `float`                                                    	|
+|                          	| [E007](#E007)      	| Cannot `download` archive                                               	|
+|                          	| [E008](#E008)      	| Cannot `unzip` archive                                                  	|
+|                          	| [E010](#E010)      	| `Integer` field value out of range                                      	|
+|                          	| [E011](#E011)      	| `Float` field value out of range                                        	|
+|                          	| [E012](#E012)      	| Invalid `url` field value                                               	|
+|                          	| [E013](#E013)      	| Invalid `timezone` field value                                          	|
+|                          	| [E014](#E014)      	| Invalid `color` field value                                             	|
+|                          	| [E015](#E015)      	| Missing required `value`                                                	|
+|                          	| [E016](#E016)      	| Invalid `time` value                                                    	|
+|                          	| [E017](#E017)      	| Cannot parse `date`                                                     	|
+|                          	| [E018](#E018)      	| Invalid `currency code`                                                 	|
+|                          	| [E019](#E019)      	| Illegal field value combination                                         	|
+|                          	| [E020](#E020)      	| Duplicated entity                                                       	|
+|                          	| [E021](#E021)      	| Unexpected `enum` value                                                 	|
+|                          	| [E022](#E022)      	| Invalid language code                                                   	|
+|                          	| [E023](#E023)      	| Invalid email                                                           	|
+|                          	| [E024](#E024)      	| Same name and description for route                                     	|
+|                          	| [E025](#E025)      	| Insufficient route color contrast                                       	|
+|                          	| [E026](#E026)      	| Invalid route type                                                      	|
+|                          	| [E027](#E027)      	| Missing route short name and long name                                  	|
+|                          	| [E028](#E028)      	| Route long name equals short name                                       	|
+|                          	| [E029](#E029)      	| Missing field `agency_id` for file `agency.txt` with more than 1 record 	|
+|                          	| [E030](#E030)      	| Inconsistent field `agency_timezone`                                    	|
+|                          	| [E031](#E031)      	| Invalid `agency_id`                                                     	|
+|                          	| [E032](#E032)      	| `calendar.txt` `end_date` is before `start_date`                        	|
+|                          	| [E033](#E033)      	| `route_id` not found in GTFS `routes.txt`                               	|
+|                          	| [E034](#E034)      	| `shape_id` not found in GTFS `shapes.txt`                               	|
+|                          	| [E035](#E035)      	| `agency_id` not found in GTFS `agency.txt`                              	|
+|                          	| [E036](#E036)      	| `service_id` not found in GTFS `calendar.txt` or `calendar_dates.txt`   	|
+|                          	| [E037](#E037)      	| `trip_id` not found in GTFS `trips.txt`                                 	|
+|                          	| [E038](#E038)      	| All shapes should be used in `trips.txt`                                	|
+|                          	| [E039](#E039)      	| `feed_start_date` after `feed_end_date`                                 	|
+|                          	| [E040](#E040)      	| Dataset should be valid for at least the next 7 days                    	|
+|                          	| [E041](#E041)      	| Invalid parent `location_type` for stop                                 	|
+|                          	| [E042](#E042)      	| Station stop (`location_type`=2) has a parent stop                      	|
+|                          	| [E043](#E043)      	| Duplicated field                                                        	|
+|                          	| [E044](#E044)      	| Missing trip edge `arrival_time` or `departure_time`                    	|
+|                          	| [E045](#E045)      	| `arrival_time` after `departure_time` in `stop_times.txt`               	|
+|                          	| [E046](#E046)      	| Fast travel between stops in `stop_times.txt`                           	|
+|                          	| [E047](#E047)      	| Csv file is empty                                                       	|
+|                          	| [E048](#E048)      	| `end_time` after `start_time` in `frequencies.txt`                      	|
+|                          	| [E049](#E049)      	| Backwards time travel between stops in `stop_times.txt`                 	|
+|                          	| [E050](#E050)      	| Trips must be used in `stop_times.txt`                                  	|
+|                          	| [E051](#E051)      	| Trips must have more than one stop to be usable                         	|
+|                          	| [E052](#E052)      	| Stop too far from trip shape                                            	|
+|                          	| [E053](#E053)      	| Trip frequencies overlap                                                	|
+|                          	| [E054](#E054)      	| Block trips must not have overlapping stop times                        	|
+|                          	| [E055](#E055)      	| Mismatching feed and agency language fields                             	|
+|                          	| [E056](#E056)      	| Missing `calendar_dates.txt` and `calendar.txt` files                   	|
+|                          	| [E057](#E057)      	| Decreasing `shape_dist_traveled` in `stop_times.txt`                    	|
+|                          	| [E058](#E058)      	| Decreasing `shape_dist_traveled` in `shapes.txt`                        	|
+|                          	| [E059](#E059)      	| GTFS dataset too big                                                    	|
+|                          	| [E060](#E060)      	| Fatal internal error -- please report                                   	|
+|                          	| [E061](#E061)      	| Out of memory                                                           	|
 ### Table of Warnings
 
-| `v2.0` Error nomenclature 	| `v1.4.0` Warning IDs 	| Warning Title                                                                   	|   	|
-|---------------------------	|----------------------	|---------------------------------------------------------------------------------	|---	|
-|                           	| [W001](#W001)        	| Input zip archive contains folder                                               	|   	|
-|                           	| [W002](#W002)        	| Non standard field name                                                         	|   	|
-|                           	| [W003](#W003)        	| Non ascii or non printable char in `id`                                         	|   	|
-|                           	| [W004](#W004)        	| Extra `file` found                                                              	|   	|
-|                           	| [W005](#W005)        	| Route short name too long                                                       	|   	|
-|                           	| [W006](#W006)        	| Missing route short name                                                        	|   	|
-|                           	| [W007](#W007)        	| Missing route long name                                                         	|   	|
-|                           	| [W008](#W008)        	| Route long name contains short name                                             	|   	|
-|                           	| [W009](#W009)        	| Dataset should cover at least the next 30 days of service                       	|   	|
-|                           	| [W010](#W010)        	| `feed_end_date` should be provided if `feed_start_date` is provided             	|   	|
-|                           	| [W011](#W011)        	| `feed_start_date` should be provided if `feed_end_date` is provided             	|   	|
-|                           	| [W012](#W012)        	| Optional csv file is empty                                                      	|   	|
-|                           	| [W014](#W014)        	| Duplicate `routes.route_long_name`                                              	|   	|
-|                           	| [W015](#W015)        	| Duplicate `routes.route_short_name`                                             	|   	|
-|                           	| [W016](#W016)        	| Duplicate combination of fields `route_long_name` and `routes.route_short_name` 	|   	|
+| `v2.0` Error nomenclature 	| `v1.4.0` Warning IDs 	| Warning Title                                                                   	|
+|---------------------------	|----------------------	|---------------------------------------------------------------------------------	|
+|                           	| [W001](#W001)        	| Input zip archive contains folder                                               	|
+|                           	| [W002](#W002)        	| Non standard field name                                                         	|
+|                           	| [W003](#W003)        	| Non ascii or non printable char in `id`                                         	|
+|                           	| [W004](#W004)        	| Extra `file` found                                                              	|
+|                           	| [W005](#W005)        	| Route short name too long                                                       	|
+|                           	| [W006](#W006)        	| Missing route short name                                                        	|
+|                           	| [W007](#W007)        	| Missing route long name                                                         	|
+|                           	| [W008](#W008)        	| Route long name contains short name                                             	|
+|                           	| [W009](#W009)        	| Dataset should cover at least the next 30 days of service                       	|
+|                           	| [W010](#W010)        	| `feed_end_date` should be provided if `feed_start_date` is provided             	|
+|                           	| [W011](#W011)        	| `feed_start_date` should be provided if `feed_end_date` is provided             	|
+|                           	| [W012](#W012)        	| Optional csv file is empty                                                      	|
+|                           	| [W014](#W014)        	| Duplicate `routes.route_long_name`                                              	|
+|                           	| [W015](#W015)        	| Duplicate `routes.route_short_name`                                             	|
+|                           	| [W016](#W016)        	| Duplicate combination of fields `route_long_name` and `routes.route_short_name` 	|
 # Errors
 
 <a name="E001"/>
