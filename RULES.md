@@ -11,6 +11,8 @@ Rules are declared in the `Notice` modules: [Notice related to CSV structure iss
 | `DuplicatedColumnNotice`  |     ❌   	            | Duplicated column                                                      	|
 | `MissingRequiredColumn`   |     ❌   	            | Missing required column                                                  	|
 | `MoreThanOneEntityNotice` |     ❌   	            | More than one row in CSV                                                 	|
+| `UnknownFileNotice`           | [W004](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W004)        	| Extra `file` found                                                              	|
+| `RouteShortNameTooLongNotice` | [W005](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W005)        	| Route short name too long                                                       	|
 | `MissingRequiredFileError`| [E003](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E003)      	| Missing required `file`                                                 	|
 | `InvalidRowLengthError`   | [E004](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E004)      	| Invalid csv row length                                                  	|
 | `FieldParsingError`       | [E005](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E005), [E006](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E006), [E017](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E017)    	| Cannot parse value                            |
@@ -66,11 +68,7 @@ Rules are declared in the `Notice` modules: [Notice related to CSV structure iss
 
 | `v2.0` Error nomenclature 	| `v1.4.0` Warning IDs 	| Warning Title                                                                   	|
 |---------------------------	|----------------------	|---------------------------------------------------------------------------------	|
-|          ❌                 	| [W001](#W001)        	| Input zip archive contains folder                                               	|
-|          ❌                	| [W002](#W002)        	| Non standard field name                                                         	|
 |                           	| [W003](#W003)        	| Non ascii or non printable char in `id`                                         	|
-| `UnknownFileNotice`           | [W004](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W004)        	| Extra `file` found                                                              	|
-| `RouteShortNameTooLongNotice` | [W005](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W005)        	| Route short name too long                                                       	|
 |                           	| [W006](#W006)        	| Missing route short name                                                        	|
 |                           	| [W007](#W007)        	| Missing route long name                                                         	|
 |                           	| [W008](#W008)        	| Route long name contains short name                                             	|
