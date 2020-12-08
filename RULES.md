@@ -1,8 +1,9 @@
 # Implemented rules
 
-Rules are declared in the [`Notice` module](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/domain/entity/notice).  Below are details of currently implemented rules.
+Rules are declared in the `Notice` modules: [Notice related to CSV structure issues](https://github.com/MobilityData/gtfs-validator/tree/master/core/src/java/org/mobilitydata/gtfsvalidator/notice) 
+[Notices related to GTFS semantic rules issues](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/notice).  Below are details of currently implemented rules.
 
-### Table of Errors
+### Table of Errors [WIP]
 
 | `v2.0` Error designation 	| `v1.4.0` Error IDs 	| Error Title                                                             	|
 |--------------------------	|--------------------	|-------------------------------------------------------------------------	|
