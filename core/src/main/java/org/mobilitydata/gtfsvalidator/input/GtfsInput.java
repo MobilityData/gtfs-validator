@@ -36,9 +36,9 @@ public interface GtfsInput {
     /**
      * Creates an specific GtfsInput to read data from the given path.
      *
-     * @param path
-     * @return
-     * @throws IOException
+     * @param path  the path to the resource
+     * @return the @code{GtfsInput} created after processing the GTFS archive
+     * @throws IOException if no file could not be found at the specified location
      */
     static GtfsInput createFromPath(String path) throws IOException {
         File file = new File(path);
@@ -54,10 +54,13 @@ public interface GtfsInput {
     /**
      * Creates an specific GtfsInput to read data from the given URL.
      *
-     * @param sourceUrl
-     * @param targetPathAsString
-     * @return
-     * @throws IOException
+     * @param sourceUrl           the fully qualified URL to download of the resource to download
+     * @param targetPathAsString  the path to where the downloaded resource will be stored
+     * @return the @code{GtfsInput} created after download of the GTFS archive
+     * @throws IOException  if no file could not be found at the specified location
+     * @throws URISyntaxException  if URL is malformed
+     * @throws InterruptedException when a thread is waiting, sleeping, or otherwise occupied, and the thread is
+     * interrupted, either before or during the activity
      */
     static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString) throws IOException, URISyntaxException,
             InterruptedException {
@@ -77,9 +80,10 @@ public interface GtfsInput {
     }
 
     /**
-     * Creates a path from a given string
-     * @param toCleanOrCreate
-     * @return
+     * Creates a path from a given string or cleans it if the path already exists
+     *
+     * @param toCleanOrCreate  the path to clean or create as string
+     * @return the created @code{Path}
      */
     static Path createPath(final String toCleanOrCreate) throws IOException, InterruptedException {
         // to empty any already existing directory
@@ -117,7 +121,7 @@ public interface GtfsInput {
      *
      * @param filename relative path to the file, e.g, "stops.txt"
      * @return an stream to read the file data
-     * @throws IOException
+     * @throws IOException if no file could not be found at the specified location
      */
     InputStream getFile(String filename) throws IOException;
 }
