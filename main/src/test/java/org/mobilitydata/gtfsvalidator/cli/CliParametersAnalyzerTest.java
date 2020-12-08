@@ -5,10 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.*;
 
 @RunWith(JUnit4.class)
 public class CliParametersAnalyzerTest {
@@ -21,9 +19,14 @@ public class CliParametersAnalyzerTest {
         when(mockArguments.getInput()).thenReturn("path to dataset");
 
         CliParametersAnalyzer underTest = new CliParametersAnalyzer(mockLogger);
-        underTest.isValid(mockArguments);
         assertThat(underTest.isValid(mockArguments)).isFalse();
-        // TODO: verify logger.error has been called with the correct set of parameters
+        verify(mockLogger, times(1)).error("The two following CLI parameters cannot be " +
+                "provided at the same time: '--input' and '--url'");
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(1)).getUrl();
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(2)).getInput();
+        verifyNoMoreInteractions(mockArguments, mockLogger);
     }
 
     @Test
@@ -34,9 +37,14 @@ public class CliParametersAnalyzerTest {
         when(mockArguments.getInput()).thenReturn(null);
 
         CliParametersAnalyzer underTest = new CliParametersAnalyzer(mockLogger);
-        underTest.isValid(mockArguments);
         assertThat(underTest.isValid(mockArguments)).isFalse();
-        // TODO: verify logger.error has been called with the correct set of parameters
+        verify(mockLogger, times(1)).error("One of the two following CLI parameter must be" +
+                " provided: '--input' and '--url'");
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(1)).getUrl();
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(1)).getInput();
+        verifyNoMoreInteractions(mockArguments, mockLogger);
     }
 
     @Test
@@ -48,9 +56,16 @@ public class CliParametersAnalyzerTest {
         when(mockArguments.getStorageDirectory()).thenReturn(null);
 
         CliParametersAnalyzer underTest = new CliParametersAnalyzer(mockLogger);
-        underTest.isValid(mockArguments);
         assertThat(underTest.isValid(mockArguments)).isFalse();
-        // TODO: verify logger.error has been called with the correct set of parameters
+        verify(mockLogger, times(1)).error("CLI parameter '--storage_directory' must be " +
+                "provided if '--url' is provided");
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(2)).getUrl();
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(2)).getInput();
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(1)).getStorageDirectory();
+        verifyNoMoreInteractions(mockArguments, mockLogger);
     }
 
     @Test
@@ -62,9 +77,14 @@ public class CliParametersAnalyzerTest {
         when(mockArguments.getStorageDirectory()).thenReturn("storage.zip");
 
         CliParametersAnalyzer underTest = new CliParametersAnalyzer(mockLogger);
-        underTest.isValid(mockArguments);
         assertThat(underTest.isValid(mockArguments)).isFalse();
-        // TODO: verify logger.error has been called with the correct set of parameters
+        verify(mockLogger, times(1)).error("One of the two following CLI parameter must be" +
+                " provided: '--input' and '--url'");
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(1)).getUrl();
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(1)).getInput();
+        verifyNoMoreInteractions(mockArguments, mockLogger);
     }
 
     @Test
@@ -76,8 +96,13 @@ public class CliParametersAnalyzerTest {
         when(mockArguments.getStorageDirectory()).thenReturn("storage.zip");
 
         CliParametersAnalyzer underTest = new CliParametersAnalyzer(mockLogger);
-        underTest.isValid(mockArguments);
         assertThat(underTest.isValid(mockArguments)).isTrue();
-        // TODO: verify logger.error has been called with the correct set of parameters
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(3)).getUrl();
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(2)).getInput();
+        //noinspection ResultOfMethodCallIgnored because object is mocked
+        verify(mockArguments, times(2)).getStorageDirectory();
+        verifyNoMoreInteractions(mockArguments, mockLogger);
     }
 }
