@@ -3,65 +3,61 @@
 Rules are declared in the `Notice` modules: [Notice related to CSV structure issues](https://github.com/MobilityData/gtfs-validator/tree/master/core/src/java/org/mobilitydata/gtfsvalidator/notice) 
 [Notices related to GTFS semantic rules issues](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/notice).  Below are details of currently implemented rules.
 
-### Table of Errors [WIP]
+### Table of Notices [WIP]
 
-| `v2.0` Error designation 	| `v1.4.0` Error IDs 	| Error Title                                                             	|
+| `v2.0` Error nomenclature | `v1.4.0` Error IDs 	| Error Title                                                             	|
 |--------------------------	|--------------------	|-------------------------------------------------------------------------	|
-|                          	| [E001](#E001)      	| Missing required `field`                                                	|
-|                          	| [E003](#E003)      	| Missing required `file`                                                 	|
-|                          	| [E004](#E004)      	| Invalid csv row length                                                  	|
-|                          	| [E005](#E005)      	| Cannot parse `integer`                                                  	|
-|                          	| [E006](#E006)      	| Cannot parse `float`                                                    	|
+| `MissingRequiredFieldError` | [E001](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E001)      	| Missing required `field`                                                	|
+| `DuplicatedColumnNotice`  |     ❌   	            | Duplicated column                                                      	|
+| `MissingRequiredColumn`   |     ❌   	            | Missing required column                                                  	|
+| `MoreThanOneEntityNotice` |     ❌   	            | More than one row in CSV                                                 	|
+| `MissingRequiredFileError`| [E003](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E003)      	| Missing required `file`                                                 	|
+| `InvalidRowLengthError`   | [E004](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E004)      	| Invalid csv row length                                                  	|
+| `FieldParsingError`       | [E005](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E005), [E006](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E006), [E017](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E017)    	| Cannot parse value                            |
 |                          	| [E007](#E007)      	| Cannot `download` archive                                               	|
 |                          	| [E008](#E008)      	| Cannot `unzip` archive                                                  	|
-|                          	| [E010](#E010)      	| `Integer` field value out of range                                      	|
-|                          	| [E011](#E011)      	| `Float` field value out of range                                        	|
+| `NumberOfOutRangeError`   | [E010](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E010), [E011](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E011)      	| Field value out of range                                      	|
 |                          	| [E012](#E012)      	| Invalid `url` field value                                               	|
 |                          	| [E013](#E013)      	| Invalid `timezone` field value                                          	|
 |                          	| [E014](#E014)      	| Invalid `color` field value                                             	|
-|                          	| [E015](#E015)      	| Missing required `value`                                                	|
+| `MissingRequiredFieldError`| [E015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E015)      	| Missing required `value`                                                	|
 |                          	| [E016](#E016)      	| Invalid `time` value                                                    	|
-|                          	| [E017](#E017)      	| Cannot parse `date`                                                     	|
 |                          	| [E018](#E018)      	| Invalid `currency code`                                                 	|
 |                          	| [E019](#E019)      	| Illegal field value combination                                         	|
-|                          	| [E020](#E020)      	| Duplicated entity                                                       	|
-|                          	| [E021](#E021)      	| Unexpected `enum` value                                                 	|
+| `DuplicatedKeyError`      | [E020](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E020)      	| Duplicated entity                                                       	|
+| `UnexpectedEnumValueError` | [E021](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E021)      	| Unexpected `enum` value                                                 	|
 |                          	| [E022](#E022)      	| Invalid language code                                                   	|
 |                          	| [E023](#E023)      	| Invalid email                                                           	|
 |                          	| [E024](#E024)      	| Same name and description for route                                     	|
-|                          	| [E025](#E025)      	| Insufficient route color contrast                                       	|
+| `RouteColorContrastNotice`                        | [E025](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E025)      	| Insufficient route color contrast                                       	|
 |                          	| [E026](#E026)      	| Invalid route type                                                      	|
-|                          	| [E027](#E027)      	| Missing route short name and long name                                  	|
-|                          	| [E028](#E028)      	| Route long name equals short name                                       	|
+| `RouteBothShortAndLongNameMissingNotice` | [E027](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E027)      	| Missing route short name and long name                                  	|
+| `RouteShortAndLongNameEqualNotice` | [E028](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E028)| Route long name equals short name                                       	|
 |                          	| [E029](#E029)      	| Missing field `agency_id` for file `agency.txt` with more than 1 record 	|
-|                          	| [E030](#E030)      	| Inconsistent field `agency_timezone`                                    	|
+| `InconsistentAgencyFieldNotice` | [E030](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E030)  	| Inconsistent field `agency_timezone`                                    	|
 |                          	| [E031](#E031)      	| Invalid `agency_id`                                                     	|
-|                          	| [E032](#E032)      	| `calendar.txt` `end_date` is before `start_date`                        	|
-|                          	| [E033](#E033)      	| `route_id` not found in GTFS `routes.txt`                               	|
-|                          	| [E034](#E034)      	| `shape_id` not found in GTFS `shapes.txt`                               	|
-|                          	| [E035](#E035)      	| `agency_id` not found in GTFS `agency.txt`                              	|
-|                          	| [E036](#E036)      	| `service_id` not found in GTFS `calendar.txt` or `calendar_dates.txt`   	|
-|                          	| [E037](#E037)      	| `trip_id` not found in GTFS `trips.txt`                                 	|
-|                          	| [E038](#E038)      	| All shapes should be used in `trips.txt`                                	|
+| `StartAndEndDateOutOfOrderNotice`| [E032](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E032)  | `calendar.txt` `end_date` is before `start_date`                        	|
+| `ForeignKeyError`         | [E033](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E033), [E034](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E034), [E035](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E035), [E036](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E036)      	| Wrong foreign key             |
+| `UnusedShapeNotice`                         	| [E038](#E038)      	| All shapes should be used in `trips.txt`                                	|
 |                          	| [E039](#E039)      	| `feed_start_date` after `feed_end_date`                                 	|
 |                          	| [E040](#E040)      	| Dataset should be valid for at least the next 7 days                    	|
 |                          	| [E041](#E041)      	| Invalid parent `location_type` for stop                                 	|
 |                          	| [E042](#E042)      	| Station stop (`location_type`=2) has a parent stop                      	|
 |                          	| [E043](#E043)      	| Duplicated field                                                        	|
-|                          	| [E044](#E044)      	| Missing trip edge `arrival_time` or `departure_time`                    	|
-|                          	| [E045](#E045)      	| `arrival_time` after `departure_time` in `stop_times.txt`               	|
+| `StopTimeWithOnlyArrivalOrDepartureTimeNotice`                         	| [E044](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E044)      	| Missing trip edge `arrival_time` or `departure_time`                    	|
+| `StopTimeWithArrivalBeforePreviousDepartureTimeNotice`                         	| [E045](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E045)      	| `arrival_time` after `departure_time` in `stop_times.txt`               	|
 |                          	| [E046](#E046)      	| Fast travel between stops in `stop_times.txt`                           	|
-|                          	| [E047](#E047)      	| Csv file is empty                                                       	|
+| `EmptyFileNotice`         | [E047](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E047), [W012](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W012)      	| Csv file is empty                                                       	|
 |                          	| [E048](#E048)      	| `end_time` after `start_time` in `frequencies.txt`                      	|
-|                          	| [E049](#E049)      	| Backwards time travel between stops in `stop_times.txt`                 	|
+| `StopTimeWithArrivalBeforePreviousDepartureTimeNotice`                         	| [E049](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E049)      	| Backwards time travel between stops in `stop_times.txt`                 	|
 |                          	| [E050](#E050)      	| Trips must be used in `stop_times.txt`                                  	|
 |                          	| [E051](#E051)      	| Trips must have more than one stop to be usable                         	|
 |                          	| [E052](#E052)      	| Stop too far from trip shape                                            	|
 |                          	| [E053](#E053)      	| Trip frequencies overlap                                                	|
 |                          	| [E054](#E054)      	| Block trips must not have overlapping stop times                        	|
-|                          	| [E055](#E055)      	| Mismatching feed and agency language fields                             	|
+| `InconsistentAgencyFieldNotice` | [E055](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E055)   | Mismatching feed and agency language fields                             	|
 |                          	| [E056](#E056)      	| Missing `calendar_dates.txt` and `calendar.txt` files                   	|
-|                          	| [E057](#E057)      	| Decreasing `shape_dist_traveled` in `stop_times.txt`                    	|
+| `DecreasingShapeDistanceNotice`| [E057](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E057)   	| Decreasing `shape_dist_traveled` in `stop_times.txt`                    	|
 |                          	| [E058](#E058)      	| Decreasing `shape_dist_traveled` in `shapes.txt`                        	|
 |                          	| [E059](#E059)      	| GTFS dataset too big                                                    	|
 |                          	| [E060](#E060)      	| Fatal internal error -- please report                                   	|
@@ -70,18 +66,17 @@ Rules are declared in the `Notice` modules: [Notice related to CSV structure iss
 
 | `v2.0` Error nomenclature 	| `v1.4.0` Warning IDs 	| Warning Title                                                                   	|
 |---------------------------	|----------------------	|---------------------------------------------------------------------------------	|
-|                           	| [W001](#W001)        	| Input zip archive contains folder                                               	|
-|                           	| [W002](#W002)        	| Non standard field name                                                         	|
+|          ❌                 	| [W001](#W001)        	| Input zip archive contains folder                                               	|
+|          ❌                	| [W002](#W002)        	| Non standard field name                                                         	|
 |                           	| [W003](#W003)        	| Non ascii or non printable char in `id`                                         	|
-|                           	| [W004](#W004)        	| Extra `file` found                                                              	|
-|                           	| [W005](#W005)        	| Route short name too long                                                       	|
+| `UnknownFileNotice`           | [W004](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W004)        	| Extra `file` found                                                              	|
+| `RouteShortNameTooLongNotice` | [W005](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W005)        	| Route short name too long                                                       	|
 |                           	| [W006](#W006)        	| Missing route short name                                                        	|
 |                           	| [W007](#W007)        	| Missing route long name                                                         	|
 |                           	| [W008](#W008)        	| Route long name contains short name                                             	|
 |                           	| [W009](#W009)        	| Dataset should cover at least the next 30 days of service                       	|
 |                           	| [W010](#W010)        	| `feed_end_date` should be provided if `feed_start_date` is provided             	|
 |                           	| [W011](#W011)        	| `feed_start_date` should be provided if `feed_end_date` is provided             	|
-|                           	| [W012](#W012)        	| Optional csv file is empty                                                      	|
 |                           	| [W014](#W014)        	| Duplicate `routes.route_long_name`                                              	|
 |                           	| [W015](#W015)        	| Duplicate `routes.route_short_name`                                             	|
 |                           	| [W016](#W016)        	| Duplicate combination of fields `route_long_name` and `routes.route_short_name` 	|
