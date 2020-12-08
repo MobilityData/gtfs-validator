@@ -71,9 +71,11 @@ public class GtfsInputTest {
     }
 
     @Test
-    public void createFromValidUrlShouldNotThrowException() throws IOException, URISyntaxException, InterruptedException {
+    public void createFromValidUrlShouldNotThrowException() throws IOException, URISyntaxException,
+            InterruptedException {
         GtfsInput underTest = GtfsInput.createFromUrl(
-                new URL("https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/valid_zip_sample.zip"),
+                new URL("https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/" +
+                        "valid_zip_sample.zip"),
                 "storage");
         assertThat(underTest instanceof GtfsZipFileInput);
         // remove created file
@@ -85,7 +87,7 @@ public class GtfsInputTest {
     public void createFromInvalidUrlShouldThrowException() {
         assertThrows(
                 IOException.class, () -> GtfsInput.createFromUrl(
-                        new URL("https://openmobilitydata.org/p/mobilitydata-dataset/197/latest/download"),
+                        new URL("https://openmobilitydata.org/p/mobilitydata-invalid-dataset/197/latest/download"),
                         "storage"));
     }
 }
