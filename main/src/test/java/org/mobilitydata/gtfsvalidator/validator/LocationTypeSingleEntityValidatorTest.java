@@ -19,7 +19,11 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.notice.LocationWithoutParentStationNotice;
+import org.mobilitydata.gtfsvalidator.notice.Notice;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.PlatformWithoutParentStationNotice;
+import org.mobilitydata.gtfsvalidator.notice.StationWithParentStationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 
@@ -73,7 +77,8 @@ public class LocationTypeSingleEntityValidatorTest {
 
     @Test
     public void locationWithoutParentStationNotice() {
-        for (GtfsLocationType locationType : new GtfsLocationType[]{GtfsLocationType.ENTRANCE}) {
+        for (GtfsLocationType locationType : new GtfsLocationType[]{GtfsLocationType.ENTRANCE,
+                GtfsLocationType.GENERIC_NODE, GtfsLocationType.BOARDING_AREA}) {
             GtfsStop.Builder builder = new GtfsStop.Builder()
                     .setStopId("s0")
                     .setCsvRowNumber(1)
