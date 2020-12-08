@@ -43,9 +43,7 @@ public class Main {
         Logger logger = LogManager.getLogger();
         Arguments args = new Arguments();
         CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer(logger);
-
         new JCommander(args).parse(argv);
-
         if (!cliParametersAnalyzer.isValid(args)) {
             System.exit(1);
         }
