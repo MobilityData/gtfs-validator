@@ -73,7 +73,7 @@ public class GtfsInputTest {
     @Test
     public void createFromValidUrlShouldNotThrowException() throws IOException, URISyntaxException, InterruptedException {
         GtfsInput underTest = GtfsInput.createFromUrl(
-                new URL("https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/usecase/src/test/resources/valid_zip_sample.zip"),
+                new URL("https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/valid_zip_sample.zip"),
                 "storage");
         assertThat(underTest instanceof GtfsZipFileInput);
         // remove created file
