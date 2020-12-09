@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,24 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import org.apache.commons.io.FileUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+
 import java.io.IOException;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 /**
@@ -29,9 +43,9 @@ public interface GtfsInput {
     /**
      * Creates an specific GtfsInput to read data from the given path.
      *
-     * @param path
-     * @return
-     * @throws IOException
+     * @param path  the path to the resource
+     * @return the @code{GtfsInput} created after processing the GTFS archive
+     * @throws IOException if no file could not be found at the specified location
      */
     static GtfsInput createFromPath(String path) throws IOException {
         File file = new File(path);
@@ -42,6 +56,58 @@ public interface GtfsInput {
             return new GtfsUnarchivedInput(file);
         }
         return new GtfsZipFileInput(file);
+    }
+
+    /**
+     * Creates an specific GtfsInput to read data from the given URL.
+     *
+     * @param sourceUrl           the fully qualified URL to download of the resource to download
+     * @param targetPathAsString  the path to where the downloaded resource will be stored
+     * @return the @code{GtfsInput} created after download of the GTFS archive
+     * @throws IOException  if no file could not be found at the specified location
+     * @throws URISyntaxException  if URL is malformed
+     * @throws InterruptedException when a thread is waiting, sleeping, or otherwise occupied, and the thread is
+     * interrupted, either before or during the activity
+     */
+    static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString)
+            throws IOException, URISyntaxException, InterruptedException {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(sourceUrl.toURI());
+        CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
+        Path targetPath = createPath(targetPathAsString);
+        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(targetPath.toString()));
+        httpResponse.getEntity().writeTo(outputStream);
+        outputStream.close();
+        httpResponse.close();
+        httpClient.close();
+        return createFromPath(targetPath.toString());
+    }
+
+    /**
+     * Creates a path from a given string or cleans it if the path already exists
+     *
+     * @param toCleanOrCreate  the path to clean or create as string
+     * @return the created @code{Path}
+     */
+    static Path createPath(final String toCleanOrCreate) throws IOException, InterruptedException {
+        // to empty any already existing directory
+        Path pathToCleanOrCreate = Paths.get(toCleanOrCreate);
+        if (Files.exists(pathToCleanOrCreate)) {
+            FileUtils.deleteQuietly(new File(toCleanOrCreate));
+            Files.createFile(pathToCleanOrCreate);
+            return pathToCleanOrCreate;
+        }
+
+        // Create the directory
+        try {
+            Files.createFile(pathToCleanOrCreate);
+        } catch (AccessDeniedException e) {
+            // Wait and try again - Windows can initially block creating a directory immediately after a delete when a
+            // file lock exists (#112)
+            Thread.sleep(500);
+            Files.createFile(pathToCleanOrCreate);
+        }
+        return pathToCleanOrCreate;
     }
 
     /**
@@ -58,7 +124,7 @@ public interface GtfsInput {
      *
      * @param filename relative path to the file, e.g, "stops.txt"
      * @return an stream to read the file data
-     * @throws IOException
+     * @throws IOException if no file could not be found at the specified location
      */
     InputStream getFile(String filename) throws IOException;
 }
