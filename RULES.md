@@ -5,7 +5,7 @@ Rules are declared in the `Notice` modules:
 - [Notices related to GTFS semantic rules issues](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/notice). 
  
 Below are details of currently implemented rules.
-** Please note that the error ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. The table below indicates the ID used in gtfs-validator `v2` and higher in the first column and the legacy ID in the second column.** 
+**Please note that the error ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. The table below indicates the ID used in gtfs-validator `v2` and higher in the first column and the legacy ID in the second column.** 
 
 ### Table of Notices [WIP]
 
