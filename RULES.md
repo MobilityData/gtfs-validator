@@ -4,10 +4,9 @@ Rules are declared in the `Notice` modules:
 - [Notice related to CSV structure issues](https://github.com/MobilityData/gtfs-validator/tree/master/core/src/java/org/mobilitydata/gtfsvalidator/notice) 
 - [Notices related to GTFS semantic rules issues](https://github.com/MobilityData/gtfs-validator/tree/master/domain/src/main/java/org/mobilitydata/gtfsvalidator/notice). 
  
-Below are details of currently implemented rules.
-**Please note that the error ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. The table below indicates the ID used in gtfs-validator `v2` and higher in the first column and the legacy ID in the second column.** 
+Note that the notice ID naming conventions changed in `v2` to make contributions of new rules easier by reducing the likelihood of conflicting IDs during parallel development. The table below indicates the ID used in gtfs-validator `v2` and higher in the first column and the legacy ID for v1.x in the second column.
 
-### Table of Notices [WIP]
+## Table of Notices [WIP]
 
 | Error ID (v2.0+) | Error ID (v1.x) 	| Error Title                                                             	|
 |--------------------------	|--------------------	|-------------------------------------------------------------------------	|
@@ -76,7 +75,7 @@ Below are details of currently implemented rules.
 |                           | [W015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W015)        	| Duplicate `routes.route_short_name`                                             	|
 |                           | [W016](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#W016)        	| Duplicate combination of fields `route_long_name` and `routes.route_short_name` 	|
 
-# Errors
+## Notices
 
 <a name="MissingRequiredFieldError"/>
 
