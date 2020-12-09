@@ -15,6 +15,8 @@ We suggest using [IntelliJ](https://www.jetbrains.com/idea/download/) to [import
 Instructions to build the project from the command-line using [Gradle](https://gradle.org/) are available in our [Build documentation](/docs/BUILD.md).
 
 # Run the app
+If you're running `v1.x` release JAR you'll need Java 11, and can follow [these instructions](https://github.com/MobilityData/gtfs-validator/tree/v1.4.0#via-java-on-your-local-computer).
+
 *(Instructions to run a pre-built JAR file are coming soon)*
 
 From IntelliJ set up a [run configuration](https://www.jetbrains.com/help/idea/run-debug-configuration.html) with the following program arguments: 
