@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.processor;
 
+import org.mobilitydata.gtfsvalidator.annotation.CachedField;
 import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
@@ -80,6 +81,7 @@ public class Analyser {
             fieldBuilder.setFirstKey(method.getAnnotation(FirstKey.class) != null);
             fieldBuilder.setSequenceKey(method.getAnnotation(SequenceKey.class) != null);
             fieldBuilder.setIndex(method.getAnnotation(Index.class) != null);
+            fieldBuilder.setCached(method.getAnnotation(CachedField.class) != null);
 
             if (method.getAnnotation(Positive.class) != null) {
                 fieldBuilder.setNumberBounds(NumberBounds.POSITIVE);
