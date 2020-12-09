@@ -31,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.annotation.Positive;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 import org.mobilitydata.gtfsvalidator.annotation.SequenceKey;
+import org.mobilitydata.gtfsvalidator.parsing.RowParser.NumberBounds;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -47,7 +48,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static javax.lang.model.util.ElementFilter.methodsIn;
-import static org.mobilitydata.gtfsvalidator.parsing.RowParser.NumberBounds;
 import static org.mobilitydata.gtfsvalidator.processor.EnumGenerator.createEnumName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.entityImplementationSimpleName;
 
