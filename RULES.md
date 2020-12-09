@@ -5,7 +5,7 @@ Rules are declared in the `Notice` modules: [Notice related to CSV structure iss
 
 ### Table of Notices [WIP]
 
-| `v2.0` Error nomenclature | `v1.4.0` Error IDs 	| Error Title                                                             	|
+| Error ID (v2.0+) | Error ID (v1.x) 	| Error Title                                                             	|
 |--------------------------	|--------------------	|-------------------------------------------------------------------------	|
 | `MissingRequiredFieldError` | [E001](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E001)      	| Missing required `field`                                                	|
 | `DuplicatedColumnNotice`  |     ❌   	            | Duplicated column                                                      	|
@@ -66,7 +66,7 @@ Rules are declared in the `Notice` modules: [Notice related to CSV structure iss
 |                          	| [E061](#E061)      	| Out of memory                                                           	|
 ### Table of Warnings
 
-| `v2.0` Error nomenclature 	| `v1.4.0` Warning IDs 	| Warning Title                                                                   	|
+| Warning ID (v2.0+) | Warning ID (v1.x) 	| Warning Title                                                                   	|
 |---------------------------	|----------------------	|---------------------------------------------------------------------------------	|
 |                           	| [W003](#W003)        	| Non ascii or non printable char in `id`                                         	|
 |                           	| [W006](#W006)        	| Missing route short name                                                        	|
