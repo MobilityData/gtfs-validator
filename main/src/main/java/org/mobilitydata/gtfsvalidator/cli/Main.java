@@ -61,6 +61,7 @@ public class Main {
         System.out.println("Validators:");
         System.out.println(validatorLoader.listValidators());
 
+        final long startNanos = System.nanoTime();
         // Input.
         feedLoader.setNumThreads(args.getNumThreads());
         NoticeContainer noticeContainer = new NoticeContainer();
@@ -94,6 +95,9 @@ public class Main {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+
+        final long endNanos = System.nanoTime();
+        System.out.println(String.format("Validation took %.3f seconds", (endNanos - startNanos) / 1e9));
         System.out.println(feedContainer.tableTotals());
     }
 }
