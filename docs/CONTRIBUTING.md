@@ -1,9 +1,9 @@
 # Contribution guidelines [WIP]
 
-## How to contribute to project? [coming soon]
+## How to contribute to project? [Coming soon]
 
-## How to reproduce errors?
-Instructions to reproduce errors can be found in our [guide to reproduce errors.](/docs/REPRODUCE_ERRORS.md)
+## Having problems?
+Have you encountered an error? A critical step in troubleshooting is being able to reproduct the problem. Instructions to publicly reproduce errors using GitHub Actions can be found in our [guide to reproduce errors.](/docs/REPRODUCE_ERRORS.md)
 
 ## Code template [Coming soon]
 
@@ -13,13 +13,13 @@ Instructions to reproduce errors can be found in our [guide to reproduce errors.
 ## How to run tests locally
 This project includes unit and end-to-end tests in order to:
 1. Verify the implementation behaves as expected in tests as well as on real data
-1. Make sure any new implementation does not involuntarily break existing code
+1. Make sure any new code does not break existing code
 
-### Unitary tests
 Run the following command at the root of the project to run Java tests:
+
 ```
 $ ./gradlew test
 ```
 
-### End to end tests
-The behavior of the validator can be tested on existing datasets: instructions to proceed are available in our [end-to-end testing guide](/docs/END_TO_END.md)
+### Locally run GitHub Actions
+We use GitHub Actions to build the project and test on datasets. You can run these tools locally by following our [end-to-end testing guide](/docs/END_TO_END.md)
