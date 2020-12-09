@@ -62,5 +62,5 @@ public interface GtfsFareAttributeSchema extends GtfsEntity {
     String agencyId();
 
     @NonNegative
-    int transfer_duration();
+    int transferDuration();
 }
