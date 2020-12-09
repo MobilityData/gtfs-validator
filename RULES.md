@@ -12,9 +12,9 @@ Below are details of currently implemented rules.
 | Error ID (v2.0+) | Error ID (v1.x) 	| Error Title                                                             	|
 |--------------------------	|--------------------	|-------------------------------------------------------------------------	|
 | [`MissingRequiredFieldError`](#MissingRequiredFieldError) | [E015](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E015)      	| Missing required `field`                                                	|
-| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)  |     ❌   	            | Duplicated column                                                      	|
+| [`DuplicatedColumnNotice`](#DuplicatedColumnNotice)  |        	            | Duplicated column                                                      	|
 | [`MissingRequiredColumn`](#MissingRequiredColumn)   | [E001](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E001)          | Missing required column                                                  	|
-| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice) |     ❌   	            | More than one row in CSV                                                 	|
+| [`MoreThanOneEntityNotice`](#MoreThanOneEntityNotice) |        	            | More than one row in CSV                                                 	|
 | [`MissingRequiredFileError`](#MissingRequiredFileError)| [E003](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E003)      	| Missing required `file`                                                 	|
 | [`InvalidRowLengthError`](#InvalidRowLengthError)   | [E004](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E004)      	| Invalid csv row length                                                  	|
 | [`FieldParsingError`](#FieldParsingError)       | [E005](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E005), [E006](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E006), [E017](https://github.com/MobilityData/gtfs-validator/blob/v1.4.0/RULES.md#E017)    	| Cannot parse value                            |
