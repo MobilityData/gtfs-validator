@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class GtfsInputTest {
@@ -65,5 +68,48 @@ public class GtfsInputTest {
 
         GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.getAbsolutePath());
         assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
+    }
+
+    @Test
+    public void createFromValidUrlShouldNotThrowException() throws IOException, URISyntaxException,
+            InterruptedException {
+        GtfsInput underTest = GtfsInput.createFromUrl(
+                new URL("https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/" +
+                        "valid_zip_sample.zip"),
+                "storage");
+        assertThat(underTest instanceof GtfsZipFileInput);
+        // remove created file
+        File toDelete = new File("storage");
+        assertTrue(toDelete.delete());
+    }
+
+    @Test
+    public void createFromRedirectedUrlShouldNotThrowException() throws IOException, URISyntaxException,
+            InterruptedException {
+        GtfsInput underTest = GtfsInput.createFromUrl(
+                new URL("http://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/" +
+                        "valid_zip_sample.zip"),
+                "storage");
+        assertThat(underTest instanceof GtfsZipFileInput);
+        // remove created file
+        File toDelete = new File("storage");
+        assertTrue(toDelete.delete());
+
+        // URL from #398
+        underTest = GtfsInput.createFromUrl(
+        new URL("https://octa.net/current/google_transit.zip"),
+                "storage");
+        assertThat(underTest instanceof GtfsZipFileInput);
+        // remove created file
+        toDelete = new File("storage");
+        assertTrue(toDelete.delete());
+    }
+
+    @Test
+    public void createFromInvalidUrlShouldThrowException() {
+        assertThrows(
+                IOException.class, () -> GtfsInput.createFromUrl(
+                        new URL("https://openmobilitydata.org/p/mobilitydata-invalid-dataset/197/latest/download"),
+                        "storage"));
     }
 }

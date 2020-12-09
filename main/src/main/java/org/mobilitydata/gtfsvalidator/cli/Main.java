@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.JCommander;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -26,6 +28,8 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -34,37 +38,58 @@ import java.nio.file.Paths;
  * The main entry point for GTFS Validator CLI.
  */
 public class Main {
+
     public static void main(String[] argv) {
+        Logger logger = LogManager.getLogger();
         Arguments args = new Arguments();
+        CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer(logger);
         new JCommander(args).parse(argv);
+        if (!cliParametersAnalyzer.isValid(args)) {
+            System.exit(1);
+        }
 
         ValidatorLoader validatorLoader = new ValidatorLoader();
         GtfsFeedLoader feedLoader = new GtfsFeedLoader();
 
-        GtfsFeedName feedName = GtfsFeedName.parseString(args.feedName);
+        GtfsFeedName feedName = GtfsFeedName.parseString(args.getFeedName());
         System.out.println("Feed name: " + feedName.getCountryFirstName());
-        System.out.println("Input: " + args.input);
-        System.out.println("Output: " + args.outputBase);
+        System.out.println("Input: " + args.getInput());
+        System.out.println("URL: " + args.getUrl());
+        System.out.println("Output: " + args.getOutputBase());
+        System.out.println("Path to archive storage directory: " + args.getStorageDirectory());
         System.out.println("Table loaders: " + feedLoader.listTableLoaders());
         System.out.println("Validators:");
         System.out.println(validatorLoader.listValidators());
 
         // Input.
-        feedLoader.setNumThreads(args.numThreads);
+        feedLoader.setNumThreads(args.getNumThreads());
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsFeedContainer feedContainer;
         try {
-            feedContainer = feedLoader.loadAndValidate(GtfsInput.createFromPath(args.input), feedName, validatorLoader,
-                    noticeContainer);
-        } catch (IOException e) {
+            if (args.getInput() == null) {
+                feedContainer = feedLoader.loadAndValidate(
+                        GtfsInput.createFromUrl(
+                                new URL(args.getUrl()),
+                                args.getStorageDirectory()),
+                        feedName,
+                        validatorLoader,
+                        noticeContainer);
+            } else {
+                feedContainer = feedLoader.loadAndValidate(
+                        GtfsInput.createFromPath(args.getInput()),
+                        feedName,
+                        validatorLoader,
+                        noticeContainer);
+            }
+        } catch (IOException | URISyntaxException | InterruptedException e) {
             e.printStackTrace();
             return;
         }
 
         // Output.
-        new File(args.outputBase).mkdirs();
+        new File(args.getOutputBase()).mkdirs();
         try {
-            Files.write(Paths.get(args.outputBase, "report.json"),
+            Files.write(Paths.get(args.getOutputBase(), "report.json"),
                     noticeContainer.exportJson().getBytes(StandardCharsets.UTF_8));
         } catch (IOException exception) {
             exception.printStackTrace();
