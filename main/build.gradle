@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Google LLC, MobilityData IO
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 plugins {
     id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'application'
@@ -26,6 +42,7 @@ shadowJar {
     minimize {
         exclude(dependency('org.apache.logging.log4j:log4j-core'))
         exclude(dependency('com.fasterxml.jackson.core:jackson-databind'))
+        exclude(dependency('org.apache.httpcomponents:httpclient'))
     }
     // Change the JAR name from cli-app to gtfs-validator
     archiveBaseName = rootProject.name
@@ -46,12 +63,16 @@ dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')
     implementation project(':core')
+    implementation 'org.apache.logging.log4j:log4j-api:2.14.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.14.0'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
     implementation 'com.beust:jcommander:1.48'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
     implementation 'com.google.guava:guava:29.0-jre'
     testImplementation group: 'junit', name: 'junit', version: '4.13'
     testImplementation "com.google.truth:truth:1.0.1"
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
 }
 
 test {

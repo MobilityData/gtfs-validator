@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,47 @@ import com.beust.jcommander.Parameter;
  */
 public class Arguments {
 
-    @Parameter(names = {"-i", "--input"}, description = "Location of the input GTFS ZIP or unarchived directory", required = true)
-    public String input;
+    @Parameter(names = {"-i", "--input"}, description = "Location of the input GTFS ZIP or unarchived directory")
+    private String input;
 
     @Parameter(names = {"-o", "--output_base"}, description = "Base directory to store the outputs", required = true)
-    public String outputBase;
+    private String outputBase;
 
     @Parameter(names = {"-t", "--threads"}, description = "Number of threads to use")
-    public int numThreads = 1;
+    private int numThreads = 1;
 
     @Parameter(names = {"-f", "--feed_name"}, description = "Name of the feed, e.g., `nl-openov`. " +
             "It must start from two-letter country code (ISO 3166-1 alpha-2)")
-    public String feedName;
+    private String feedName;
+
+    @Parameter(names = {"-u", "--url"}, description = "Fully qualified URL to download GTFS archive")
+    private String url;
+
+    @Parameter(names = {"-s", "--storage_directory"}, description = "Target path where to store the GTFS archive " +
+            "downloaded from network")
+    private String storageDirectory;
+
+    public String getInput() {
+        return input;
+    }
+
+    public String getOutputBase() {
+        return outputBase;
+    }
+
+    public int getNumThreads() {
+        return numThreads;
+    }
+
+    public String getFeedName() {
+        return feedName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getStorageDirectory() {
+        return storageDirectory;
+    }
 }
