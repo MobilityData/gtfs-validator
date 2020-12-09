@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
-public class StartAndEndTimeOutOfOrderNotice extends Notice {
+public class StartAndEndTimeOutOfOrderNotice extends ValidationNotice {
     public StartAndEndTimeOutOfOrderNotice(String filename,
                                            String entityId,
                                            long csvRowNumber,

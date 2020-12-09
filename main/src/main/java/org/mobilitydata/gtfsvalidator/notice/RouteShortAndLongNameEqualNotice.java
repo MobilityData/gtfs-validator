@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Short and long name are equal for a route.
  */
-public class RouteShortAndLongNameEqualNotice extends Notice {
+public class RouteShortAndLongNameEqualNotice extends ValidationNotice {
     public RouteShortAndLongNameEqualNotice(String routeId,
                                             long csvRowNumber, String routeShortName, String routeLongName) {
         super(ImmutableMap.of(

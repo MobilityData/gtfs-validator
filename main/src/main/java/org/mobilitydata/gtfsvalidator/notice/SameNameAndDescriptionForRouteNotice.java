@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableMap;
 
 import static org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader.FILENAME;
 
-public class SameNameAndDescriptionForRouteNotice extends Notice {
+public class SameNameAndDescriptionForRouteNotice extends ValidationNotice {
     public SameNameAndDescriptionForRouteNotice(long csvRowNumber,
                                                 String routeId,
                                                 String routeDesc,

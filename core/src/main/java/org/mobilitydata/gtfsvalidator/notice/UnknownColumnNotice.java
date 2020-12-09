@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * A column name is unknown.
  */
-public class UnknownColumnNotice extends Notice {
+public class UnknownColumnNotice extends ValidationNotice {
     public UnknownColumnNotice(String filename, String fieldName, int index) {
         super(ImmutableMap.of(
                 "filename", filename,

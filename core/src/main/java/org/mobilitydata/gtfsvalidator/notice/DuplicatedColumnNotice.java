@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * The input file CSV header has the same column name repeated.
  */
-public class DuplicatedColumnNotice extends Notice {
+public class DuplicatedColumnNotice extends ValidationNotice {
     // Indices should start from 1.
     public DuplicatedColumnNotice(String filename, String fieldName, int firstIndex, int secondIndex) {
         super(ImmutableMap.of(

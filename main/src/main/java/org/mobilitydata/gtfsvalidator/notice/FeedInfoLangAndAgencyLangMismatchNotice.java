@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Locale;
 import java.util.Set;
 
-public class FeedInfoLangAndAgencyLangMismatchNotice extends Notice {
+public class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
     public FeedInfoLangAndAgencyLangMismatchNotice(String feedInfoLang,
                                                    Set<String> agencyLangCollection) {
         super(ImmutableMap.of(

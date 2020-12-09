@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * A required file is missing.
  */
-public class MissingRequiredFileError extends Notice {
+public class MissingRequiredFileError extends ValidationNotice {
     public MissingRequiredFileError(String filename) {
         super(ImmutableMap.of("filename", filename));
     }

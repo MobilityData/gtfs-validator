@@ -9,7 +9,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
  * Two entries X and Y are considered to directly overlap if <i>X.start_time <= Y.start_time</i> and
  * <i>Y.start_time < X.end_time</i>.
  */
-public class OverlappingFrequencyNotice extends Notice {
+public class OverlappingFrequencyNotice extends ValidationNotice {
     public OverlappingFrequencyNotice(
             long prevCsvRowNumber, GtfsTime prevEndTime,
             long currCsvRowNumber, GtfsTime currStartTime, String tripId) {
