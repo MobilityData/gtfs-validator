@@ -16,9 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
-import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
-import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
-import org.mobilitydata.gtfsvalidator.annotation.Required;
+import org.mobilitydata.gtfsvalidator.annotation.*;
 
 import java.util.Locale;
 
@@ -36,9 +34,11 @@ public interface GtfsTranslationSchema extends GtfsEntity {
     @Required
     String translation();
 
+    @FieldType(FieldTypeEnum.ID)
     @ConditionallyRequired
     String recordId();
 
+    @FieldType(FieldTypeEnum.ID)
     @ConditionallyRequired
     String recordSubId();
 
