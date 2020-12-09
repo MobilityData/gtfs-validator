@@ -31,6 +31,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 @GtfsTable("stop_times.txt")
 @Required
 public interface GtfsStopTimeSchema extends GtfsEntity {
+    @FieldType(FieldTypeEnum.ID)
     @Required
     @ForeignKey(table = "trips.txt", field = "trip_id")
     @FirstKey
