@@ -25,6 +25,7 @@ java -jar gtfs-validator-v2.0.jar --url url/to/dataset --output relative/output/
 ...which will:
  1. Download the GTFS feed at the URL `url/to/dataset` and name it `input.zip`  
  1. Validate the GTFS data and output the results to the directory located at `relative/output/path`. Validation results are exported to JSON by default.
+Please note that since downloading will take time, we recommend validating repeatedly on a local file.
 
 ## via GitHub Actions - run the validator on any gtfs archive available on a public url
 

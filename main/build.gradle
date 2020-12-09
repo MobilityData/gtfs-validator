@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020. MobilityData IO.
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,8 +63,9 @@ dependencies {
     annotationProcessor project(':processor')
     compileOnly project(':processor')
     implementation project(':core')
-    implementation 'org.apache.logging.log4j:log4j-api:2.12.1'
-    implementation 'org.apache.logging.log4j:log4j-core:2.12.1'
+    implementation 'org.apache.logging.log4j:log4j-api:2.14.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.14.0'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.0.3'
     implementation 'com.beust:jcommander:1.48'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
     implementation 'com.google.guava:guava:29.0-jre'

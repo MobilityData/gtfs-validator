@@ -1,6 +1,5 @@
 /*
- * Original work Copyright (C) 2020 Google LLC
- * Modified work Copyright (C) 2020 MobilityData IO
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -1,6 +1,5 @@
 /*
- * Original work Copyright (C) 2020 Google LLC
- * Modified work Copyright (C) 2020. MobilityData IO.
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,6 +80,28 @@ public class GtfsInputTest {
         assertThat(underTest instanceof GtfsZipFileInput);
         // remove created file
         File toDelete = new File("storage");
+        assertTrue(toDelete.delete());
+    }
+
+    @Test
+    public void createFromRedirectedUrlShouldNotThrowException() throws IOException, URISyntaxException,
+            InterruptedException {
+        GtfsInput underTest = GtfsInput.createFromUrl(
+                new URL("http://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/" +
+                        "valid_zip_sample.zip"),
+                "storage");
+        assertThat(underTest instanceof GtfsZipFileInput);
+        // remove created file
+        File toDelete = new File("storage");
+        assertTrue(toDelete.delete());
+
+        // URL from #398
+        underTest = GtfsInput.createFromUrl(
+        new URL("https://octa.net/current/google_transit.zip"),
+                "storage");
+        assertThat(underTest instanceof GtfsZipFileInput);
+        // remove created file
+        toDelete = new File("storage");
         assertTrue(toDelete.delete());
     }
 

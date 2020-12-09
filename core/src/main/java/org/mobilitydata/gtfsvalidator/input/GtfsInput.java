@@ -1,6 +1,5 @@
 /*
- * Original work Copyright (C) 2020 Google LLC
- * Modified work Copyright (C) 2020 MobilityData IO
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +15,18 @@
  */
 
 package org.mobilitydata.gtfsvalidator.input;
+
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import java.io.File;
-import java.io.FileNotFoundException;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+
 import java.io.IOException;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -31,7 +34,6 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.Set;
 
 /**
@@ -67,21 +69,18 @@ public interface GtfsInput {
      * @throws InterruptedException when a thread is waiting, sleeping, or otherwise occupied, and the thread is
      * interrupted, either before or during the activity
      */
-    static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString) throws IOException, URISyntaxException,
-            InterruptedException {
+    static GtfsInput createFromUrl(URL sourceUrl, String targetPathAsString)
+            throws IOException, URISyntaxException, InterruptedException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(sourceUrl.toURI());
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
-        InputStream inputStream = httpResponse.getEntity().getContent();
-        Path path = createPath(targetPathAsString);
-        Files.copy(
-                inputStream,
-                path,
-                StandardCopyOption.REPLACE_EXISTING
-        );
+        Path targetPath = createPath(targetPathAsString);
+        BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(targetPath.toString()));
+        httpResponse.getEntity().writeTo(outputStream);
+        outputStream.close();
         httpResponse.close();
         httpClient.close();
-        return createFromPath(path.toString());
+        return createFromPath(targetPath.toString());
     }
 
     /**
@@ -95,8 +94,7 @@ public interface GtfsInput {
         Path pathToCleanOrCreate = Paths.get(toCleanOrCreate);
         if (Files.exists(pathToCleanOrCreate)) {
             FileUtils.deleteQuietly(new File(toCleanOrCreate));
-            Files.createDirectory(pathToCleanOrCreate);
-
+            Files.createFile(pathToCleanOrCreate);
             return pathToCleanOrCreate;
         }
 
