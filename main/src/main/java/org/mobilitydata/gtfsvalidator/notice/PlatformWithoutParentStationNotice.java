@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableMap;
  *
  * This is different from {@code LocationWithoutParentStationNotice} since it is less severe.
  */
-public class PlatformWithoutParentStationNotice extends Notice {
+public class PlatformWithoutParentStationNotice extends ValidationNotice {
     public PlatformWithoutParentStationNotice(String stopId, long csvRowNumber) {
         super(ImmutableMap.of(
                 "stopId", stopId,

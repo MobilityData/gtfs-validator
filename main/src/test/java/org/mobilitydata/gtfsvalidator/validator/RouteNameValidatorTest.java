@@ -19,7 +19,12 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.*;
+import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.RouteBothShortAndLongNameMissingNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortAndLongNameEqualNotice;
+import org.mobilitydata.gtfsvalidator.notice.RouteShortNameTooLongNotice;
+import org.mobilitydata.gtfsvalidator.notice.SameNameAndDescriptionForRouteNotice;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
 
 import java.util.List;
@@ -28,11 +33,11 @@ import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(JUnit4.class)
 public class RouteNameValidatorTest {
-    private List<Notice> validateRoute(GtfsRoute route) {
+    private List<ValidationNotice> validateRoute(GtfsRoute route) {
         NoticeContainer container = new NoticeContainer();
         RouteNameValidator validator = new RouteNameValidator();
         validator.validate(route, container);
-        return container.getNotices();
+        return container.getValidationNotices();
     }
 
     private GtfsRoute createRoute(String shortName, String longName, String desc) {

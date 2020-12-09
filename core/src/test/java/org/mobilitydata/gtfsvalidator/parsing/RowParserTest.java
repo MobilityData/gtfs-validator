@@ -61,16 +61,16 @@ public class RowParserTest {
         RowParser parser = createParser("12345");
 
         assertThat(parser.asInteger(0, true)).isEqualTo(12345);
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(parser.asInteger(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(12345);
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(parser.asInteger(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(12345);
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(parser.asInteger(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(12345);
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(createParser("abc").asInteger(0, true)).isNull();
     }
@@ -80,16 +80,16 @@ public class RowParserTest {
         RowParser parser = createParser("123.45");
 
         assertThat(parser.asDecimal(0, true)).isEqualTo(new BigDecimal("123.45"));
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(parser.asDecimal(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(new BigDecimal("123.45"));
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(parser.asDecimal(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(new BigDecimal("123.45"));
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(parser.asDecimal(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(new BigDecimal("123.45"));
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(createParser("abc").asDecimal(0, true)).isNull();
     }
@@ -99,16 +99,16 @@ public class RowParserTest {
         RowParser parser = createParser("123.45");
 
         assertThat(parser.asFloat(0, true)).isEqualTo(123.45);
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(parser.asFloat(0, true, RowParser.NumberBounds.NON_NEGATIVE)).isEqualTo(123.45);
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(parser.asFloat(0, true, RowParser.NumberBounds.NON_ZERO)).isEqualTo(123.45);
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(parser.asFloat(0, true, RowParser.NumberBounds.POSITIVE)).isEqualTo(123.45);
-        assertThat(parser.getNoticeContainer().getNotices().isEmpty()).isTrue();
+        assertThat(parser.getNoticeContainer().getValidationNotices().isEmpty()).isTrue();
 
         assertThat(createParser("abc").asFloat(0, true)).isNull();
     }

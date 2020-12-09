@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * A CSV file is empty.
  */
-public class EmptyFileNotice extends Notice {
+public class EmptyFileNotice extends ValidationNotice {
 
     public EmptyFileNotice(String filename) {
         super(ImmutableMap.of("filename", filename));

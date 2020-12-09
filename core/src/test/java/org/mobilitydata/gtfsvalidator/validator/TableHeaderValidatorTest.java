@@ -36,7 +36,7 @@ public class TableHeaderValidatorTest {
         assertThat(new TableHeaderValidator().validate("stops.txt", new String[]{"stop_id", "stop_name"},
                 ImmutableSet.of("stop_id", "stop_name", "stop_lat", "stop_lon"),
                 ImmutableSet.of("stop_id"), container)).isTrue();
-        assertThat(container.getNotices().isEmpty()).isTrue();
+        assertThat(container.getValidationNotices().isEmpty()).isTrue();
     }
 
     @Test
@@ -45,7 +45,7 @@ public class TableHeaderValidatorTest {
 
         assertThat(new TableHeaderValidator().validate("stops.txt", new String[]{"stop_id", "stop_name", "stop_extra"},
                 ImmutableSet.of("stop_id", "stop_name"), ImmutableSet.of("stop_id"), container)).isTrue();
-        assertThat(container.getNotices()).containsExactly(new UnknownColumnNotice("stops.txt", "stop_extra", 3));
+        assertThat(container.getValidationNotices()).containsExactly(new UnknownColumnNotice("stops.txt", "stop_extra", 3));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class TableHeaderValidatorTest {
         assertThat(new TableHeaderValidator().validate("stops.txt", new String[]{"stop_name"},
                 ImmutableSet.of("stop_id", "stop_name"),
                 ImmutableSet.of("stop_id"), container)).isFalse();
-        assertThat(container.getNotices()).containsExactly(new MissingRequiredColumnError("stops.txt", "stop_id"));
+        assertThat(container.getValidationNotices()).containsExactly(new MissingRequiredColumnError("stops.txt", "stop_id"));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class TableHeaderValidatorTest {
         assertThat(new TableHeaderValidator().validate("stops.txt", new String[]{"stop_id", "stop_name", "stop_id"},
                 ImmutableSet.of("stop_id", "stop_name"),
                 ImmutableSet.of("stop_id"), container)).isFalse();
-        assertThat(container.getNotices()).containsExactly(new DuplicatedColumnNotice("stops.txt", "stop_id", 1, 3));
+        assertThat(container.getValidationNotices()).containsExactly(new DuplicatedColumnNotice("stops.txt", "stop_id", 1, 3));
     }
 
     @Test
@@ -75,6 +75,6 @@ public class TableHeaderValidatorTest {
         assertThat(new TableHeaderValidator().validate("stops.txt", new String[]{},
                 ImmutableSet.of("stop_id", "stop_name"),
                 ImmutableSet.of("stop_id"), container)).isTrue();
-        assertThat(container.getNotices().isEmpty()).isTrue();
+        assertThat(container.getValidationNotices().isEmpty()).isTrue();
     }
 }

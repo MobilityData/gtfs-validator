@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Incorrect type of the parent location (e.g., a parent for a stop or an entrance must be a station).
  */
-public class WrongParentLocationTypeNotice extends Notice {
+public class WrongParentLocationTypeNotice extends ValidationNotice {
     public WrongParentLocationTypeNotice(String stopId, long csvRowNumber, int locationType, String parentStation,
                                          long parentCsvRowNumber, int parentLocationType, int expectedLocationType) {
         super(new ImmutableMap.Builder<String, Object>()

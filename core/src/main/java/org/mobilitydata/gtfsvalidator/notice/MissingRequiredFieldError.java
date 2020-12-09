@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * The given field has no value in some input row, even though values are required.
  */
-public class MissingRequiredFieldError extends Notice {
+public class MissingRequiredFieldError extends ValidationNotice {
     public MissingRequiredFieldError(String filename, long csvRowNumber, String fieldName) {
         super(ImmutableMap.of("filename", filename,
                 "csvRowNumber", csvRowNumber,

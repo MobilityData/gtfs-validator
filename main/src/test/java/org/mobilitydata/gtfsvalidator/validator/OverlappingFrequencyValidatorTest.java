@@ -3,9 +3,9 @@ package org.mobilitydata.gtfsvalidator.validator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.OverlappingFrequencyNotice;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableContainer;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -27,12 +27,12 @@ public class OverlappingFrequencyValidatorTest {
                 .setHeadwaySecs(headwaySecs).build();
     }
 
-    private List<Notice> validateFrequencies(GtfsFrequency... frequencies) {
+    private List<ValidationNotice> validateFrequencies(GtfsFrequency... frequencies) {
         NoticeContainer noticeContainer = new NoticeContainer();
         OverlappingFrequencyValidator validator = new OverlappingFrequencyValidator();
         validator.table = GtfsFrequencyTableContainer.forEntities(Arrays.asList(frequencies), noticeContainer);
         validator.validate(noticeContainer);
-        return noticeContainer.getNotices();
+        return noticeContainer.getValidationNotices();
     }
 
     @Test

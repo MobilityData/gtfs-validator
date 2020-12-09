@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * The values of the given key and rows are duplicates.
  */
-public class DuplicateKeyError extends Notice {
+public class DuplicateKeyError extends ValidationNotice {
     public DuplicateKeyError(String filename, long oldCsvRowNumber,
                              long newCsvRowNumber,
                              String fieldName, Object fieldValue) {

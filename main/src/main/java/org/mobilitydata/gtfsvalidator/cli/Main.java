@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.JCommander;
 import com.google.common.base.Strings;
+import com.google.common.flogger.FluentLogger;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -37,6 +38,7 @@ import java.nio.file.Paths;
  * The main entry point for GTFS Validator CLI.
  */
 public class Main {
+    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
     public static void main(String[] argv) {
         Arguments args = new Arguments();
@@ -76,7 +78,8 @@ public class Main {
                 gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
             }
         } catch (IOException | URISyntaxException | InterruptedException e) {
-            e.printStackTrace();
+            // FIXME: Add system errors to noticeContainer here.
+            logger.atSevere().withCause(e).log("Cannot load GTFS feed");
             return;
         }
         feedContainer = feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
@@ -85,9 +88,11 @@ public class Main {
         new File(args.getOutputBase()).mkdirs();
         try {
             Files.write(Paths.get(args.getOutputBase(), "report.json"),
-                    noticeContainer.exportJson().getBytes(StandardCharsets.UTF_8));
-        } catch (IOException exception) {
-            exception.printStackTrace();
+                    noticeContainer.exportValidationNotices().getBytes(StandardCharsets.UTF_8));
+            Files.write(Paths.get(args.getOutputBase(), "system_errors.json"),
+                    noticeContainer.exportSystemErrors().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            logger.atSevere().withCause(e).log("Cannot store report files");
         }
 
         final long endNanos = System.nanoTime();

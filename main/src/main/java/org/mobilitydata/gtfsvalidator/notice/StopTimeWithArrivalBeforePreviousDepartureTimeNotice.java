@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
-public class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends Notice {
+public class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends ValidationNotice {
     public StopTimeWithArrivalBeforePreviousDepartureTimeNotice(long csvRowNumber, long prevCsvRowNumber, String tripId, GtfsTime arrivalTime, GtfsTime departureTime) {
         super(ImmutableMap.of(
                 "csvRowNumber", csvRowNumber,

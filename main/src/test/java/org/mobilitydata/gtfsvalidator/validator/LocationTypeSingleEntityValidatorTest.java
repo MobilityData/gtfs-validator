@@ -20,10 +20,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.LocationWithoutParentStationNotice;
-import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.PlatformWithoutParentStationNotice;
 import org.mobilitydata.gtfsvalidator.notice.StationWithParentStationNotice;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 
@@ -33,11 +33,11 @@ import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(JUnit4.class)
 public class LocationTypeSingleEntityValidatorTest {
-    private List<Notice> validateStop(GtfsStop stop) {
+    private List<ValidationNotice> validateStop(GtfsStop stop) {
         NoticeContainer container = new NoticeContainer();
         LocationTypeSingleEntityValidator validator = new LocationTypeSingleEntityValidator();
         validator.validate(stop, container);
-        return container.getNotices();
+        return container.getValidationNotices();
     }
 
     @Test

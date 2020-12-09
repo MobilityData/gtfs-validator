@@ -68,7 +68,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         validator.feedInfoTable = GtfsFeedInfoTableContainer.forEntities(new ArrayList<>(), noticeContainer);
         validator.validate(noticeContainer);
 
-        assertThat(noticeContainer.getNotices()).isEmpty();
+        assertThat(noticeContainer.getValidationNotices()).isEmpty();
     }
 
     @Test
