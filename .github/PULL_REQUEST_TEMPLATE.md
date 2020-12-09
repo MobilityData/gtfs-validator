@@ -1,6 +1,6 @@
 Please create the PR and a member of the Mobility Data team will take it from here - thanks!
 
-- [ ] This PR only touches `end_to_end.ym` in `.github/workflows`
+- [ ] This PR only touches `end_to_end.yml` in `.github/workflows`
 - [ ] `-abort_on_error` to **false**
 - [ ] Null Pointer Exception --> add bug and NPE tag
 - [ ] Attach the dataset and report from the workflow run to this PR
