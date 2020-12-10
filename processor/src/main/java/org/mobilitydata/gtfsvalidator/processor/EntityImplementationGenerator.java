@@ -34,6 +34,7 @@ import javax.lang.model.type.TypeMirror;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldDefaultName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getValueMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getterMethodName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.hasMethodName;
@@ -167,6 +168,16 @@ public class EntityImplementationGenerator {
         }
     }
 
+    private void addDefaultValueFields(TypeSpec.Builder typeSpec) {
+        for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+            typeSpec.addField(
+                    FieldSpec.builder(getClassFieldType(field), fieldDefaultName(field.name()),
+                            Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                            .initializer(getDefaultValue(field))
+                            .build());
+        }
+    }
+
     public TypeSpec generateGtfsEntityClass() {
         TypeSpec.Builder typeSpec = TypeSpec.classBuilder(classNames.entityImplementationSimpleName())
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
@@ -178,6 +189,7 @@ public class EntityImplementationGenerator {
         }
 
         addEntityOrBuilderFields(typeSpec);
+        addDefaultValueFields(typeSpec);
 
         int fieldNumber = 0;
 
@@ -261,7 +273,7 @@ public class EntityImplementationGenerator {
                     .returns(classNames.entityBuilderTypeName())
                     .addParameter(getClassFieldType(field).box(), "value")
                     .beginControlFlow("if (value == null)")
-                    .addStatement("$L = $L", field.name(), getDefaultValue(field))
+                    .addStatement("$L = $L", field.name(), fieldDefaultName(field.name()))
                     .addStatement("$L &= ~$L", bitFieldForFieldNumber(fieldNumber), maskForFieldNumber(fieldNumber))
                     .addStatement("return this")
                     .endControlFlow()
@@ -305,7 +317,7 @@ public class EntityImplementationGenerator {
             buildMethod.addStatement("$L = 0", bitFieldName(i));
         }
         for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-            buildMethod.addStatement("$L = $L", field.name(), getDefaultValue(field));
+            buildMethod.addStatement("$L = $L", field.name(), fieldDefaultName(field.name()));
         }
         return buildMethod.build();
     }

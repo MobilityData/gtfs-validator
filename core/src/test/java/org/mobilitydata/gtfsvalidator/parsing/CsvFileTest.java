@@ -122,7 +122,7 @@ public class CsvFileTest {
 
     @Test
     public void emptyValues() throws IOException {
-        Reader reader = new StringReader("col0,col1,col2\n"+
+        Reader reader = new StringReader("col0,col1,col2\n" +
                 "a,,\"\",b\n");
         CsvFile csvFile = new CsvFile(reader, "stops.txt");
 
