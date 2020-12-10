@@ -65,6 +65,4 @@ public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
         return calendarContainer.byServiceId(childKey) != null
                 || !calendarDateContainer.byServiceId(childKey).isEmpty();
     }
-
 }
-
