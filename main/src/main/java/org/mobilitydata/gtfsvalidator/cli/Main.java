@@ -41,6 +41,7 @@ public class Main {
 
     public static void main(String[] argv) {
         Logger logger = LogManager.getLogger();
+        System.out.println(Runtime.getRuntime().maxMemory());
         Arguments args = new Arguments();
         CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer(logger);
         new JCommander(args).parse(argv);
