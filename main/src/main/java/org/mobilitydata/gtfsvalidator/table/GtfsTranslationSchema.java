@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import org.mobilitydata.gtfsvalidator.annotation.CachedField;
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
@@ -25,9 +26,11 @@ import java.util.Locale;
 @GtfsTable("translations.txt")
 public interface GtfsTranslationSchema extends GtfsEntity {
     @Required
+    @CachedField
     String tableName();
 
     @Required
+    @CachedField
     String fieldName();
 
     @Required
@@ -37,11 +40,14 @@ public interface GtfsTranslationSchema extends GtfsEntity {
     String translation();
 
     @ConditionallyRequired
+    @CachedField
     String recordId();
 
     @ConditionallyRequired
+    @CachedField
     String recordSubId();
 
     @ConditionallyRequired
+    @CachedField
     String fieldValue();
 }

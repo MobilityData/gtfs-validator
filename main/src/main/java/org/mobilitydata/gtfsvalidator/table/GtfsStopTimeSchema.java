@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import org.mobilitydata.gtfsvalidator.annotation.CachedField;
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.DefaultValue;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
@@ -53,6 +54,7 @@ public interface GtfsStopTimeSchema extends GtfsEntity {
     @SequenceKey
     int stopSequence();
 
+    @CachedField
     String stopHeadsign();
 
     GtfsPickupDropOff pickupType();
