@@ -70,8 +70,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         FeedInfoLangAndAgencyLangMismatchNotice notice = captor.getValue();
         assertThat(notice.getCode()).matches("feed_info_lang_and_agency_lang_mismatch");
         assertThat(notice.getContext()).containsEntry("feedInfoLang", "mul");
-        assertThat(notice.getContext()).containsEntry("agencyLangCollection",
-                new HashSet<>(Collections.singletonList(Locale.forLanguageTag("fra"))));
+        assertThat(notice.getContext()).containsEntry("agencyLangCollection", new HashSet<>(Collections.singletonList("fra")));
     }
 
     @Test
@@ -257,6 +256,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
         List<GtfsAgency> agencyCollection = new ArrayList<>();
         agencyCollection.add(mockAgency0);
+        agencyCollection.add(mockAgency1);
         when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
 
         underTest.validate(mockNoticeContainer);
@@ -267,10 +267,11 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         //noinspection ResultOfMethodCallIgnored stubbed method
         verify(mockFeedInfoTable, times(1)).getEntities();
         //noinspection ResultOfMethodCallIgnored stubbed method
-        verify(mockAgencyTable, times(2)).getEntities();
+        verify(mockAgencyTable, times(1)).getEntities();
         verify(mockFeedInfo, times(1)).feedLang();
-        verify(mockAgency0, times(2)).agencyLang();
+        verify(mockAgency0, times(1)).agencyLang();
+        verify(mockAgency1, times(1)).agencyLang();
 
-        verifyNoMoreInteractions(mockFeedInfoTable, mockFeedInfo, mockAgencyTable, mockAgency0);
+        verifyNoMoreInteractions(mockFeedInfoTable, mockFeedInfo, mockAgencyTable, mockAgency0, mockAgency1);
     }
 }
