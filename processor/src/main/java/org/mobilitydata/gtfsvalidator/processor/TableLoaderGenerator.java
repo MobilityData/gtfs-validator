@@ -74,16 +74,20 @@ public class TableLoaderGenerator {
     }
 
     private static boolean cachingEnabled(final GtfsFieldDescriptor field) {
+        // FIXME: Add a way to disable all caching with a command-line flag.
         if (field.cached()) {
             return true;
         }
         if (field.primaryKey()) {
+            // Primary keys are not cached because caches are per-table, and primary keys are unique to each row within
+            // the table, so by definition they won't be used more than once and won't benefit from being cached.
             return false;
         }
         // Caching is enabled by default for certain field types.
         return field.type() == FieldTypeEnum.COLOR
                 || field.type() == FieldTypeEnum.DATE
                 || field.type() == FieldTypeEnum.TIME
+                || field.type() == FieldTypeEnum.LANGUAGE_CODE
                 || field.type() == FieldTypeEnum.ID;
     }
 
@@ -97,6 +101,8 @@ public class TableLoaderGenerator {
                 return "dateCache";
             case COLOR:
                 return "colorCache";
+            case LANGUAGE_CODE:
+                return "languageCodeCache";
         }
         return field.name() + "ColumnCache";
     }
@@ -260,13 +266,14 @@ public class TableLoaderGenerator {
         // Print statistics for cache efficiency.
         for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
             if (cachingEnabled(field)) {
+                final String cacheName = fieldColumnCache(field);
                 method.addStatement(
-                        "System.out.println(String.format(\"Cache size for $L $L is %d (total rows: %d)\", "
-                                + "$L.getCacheSize(), $L.getInvocationCount()))",
-                        fileDescriptor.filename(),
-                        gtfsColumnName(field.name()),
-                        fieldColumnCache(field),
-                        fieldColumnCache(field));
+                        "System.out.println(String.format(" +
+                                "$S, gtfsFilename(), $L, $L.getCacheSize(), $L.getLookupCount(), " +
+                                "$L.getHitRatio() * 100.0, $L.getMissRatio() * 100.0))",
+                        "Cache for %s %s: size = %d, lookup count = %d, hits = %.2f%%, misses = %.2f%%",
+                        fieldNameField(field.name()),
+                        cacheName, cacheName, cacheName, cacheName);
             }
         }
 

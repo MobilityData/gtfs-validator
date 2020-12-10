@@ -36,10 +36,13 @@ import java.util.Map;
 public class FieldCache<T> {
     private final Map<T, T> cache = new HashMap<>();
 
-    private int invocationCount = 0;
+    private int lookupCount = 0;
 
     /**
      * Adds the object to the cache if it is absent. Returns a reference to the given object in cache.
+     * <p>
+     * If this function is called for {@code null}, it returns {@code null} but does not add it to the cache.
+     *
      * <p>
      * Note that it is not the same as {@code Map.putIfAbsent()} which returns {@code null} if the the object was not
      * already in the map.
@@ -49,7 +52,7 @@ public class FieldCache<T> {
      */
     public @Nullable
     T addIfAbsent(@Nullable T obj) {
-        ++invocationCount;
+        ++lookupCount;
         if (obj == null) {
             // Do not store null in the cache.
             return null;
@@ -64,12 +67,14 @@ public class FieldCache<T> {
     }
 
     /**
-     * Returns amount of invocations of {@code addIfAbsent}.
+     * Returns amount of lookups using {@code addIfAbsent}.
+     * <p>
+     * This is equal to {@code getCacheHits() + getCacheMisses()}.
      *
-     * @return amount of invocations of {@code addIfAbsent}.
+     * @return amount of cache lookups of {@code addIfAbsent}.
      */
-    public int getInvocationCount() {
-        return invocationCount;
+    public int getLookupCount() {
+        return lookupCount;
     }
 
     /**
@@ -79,5 +84,47 @@ public class FieldCache<T> {
      */
     public int getCacheSize() {
         return cache.size();
+    }
+
+    /**
+     * Returns the amount of cache misses.
+     * <p>
+     * This is the same as the cache size because objects are not removed from cache.
+     *
+     * @return amount of cache misses.
+     */
+    public int getCacheMisses() {
+        return cache.size();
+    }
+
+    /**
+     * Returns the amount of cache hits.
+     *
+     * @return
+     */
+    public int getCacheHits() {
+        return getLookupCount() - getCacheMisses();
+    }
+
+    /**
+     * Returns cache hit ratio from 0.0 to 1.0.
+     * <p>
+     * If there were no lookups, returns 1.0.
+     *
+     * @return hit ratio.
+     */
+    public double getHitRatio() {
+        return lookupCount == 0 ? 1.0 : getCacheHits() * 1.0 / lookupCount;
+    }
+
+    /**
+     * Returns cache miss ratio from 0.0 to 1.0.
+     * <p>
+     * If there were no lookups, returns 0.0.
+     *
+     * @return miss ratio.
+     */
+    public double getMissRatio() {
+        return lookupCount == 0 ? 0.0 : getCacheMisses() * 1.0 / lookupCount;
     }
 }

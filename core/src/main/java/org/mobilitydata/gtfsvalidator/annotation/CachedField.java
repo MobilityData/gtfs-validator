@@ -21,7 +21,7 @@ package org.mobilitydata.gtfsvalidator.annotation;
  * <p>
  * See {@code FieldCache} for details.
  * <p>
- * Note that caching is already automatically enabled for certain field types (ID, date, time, color).
+ * Note that caching is already automatically enabled for certain field types (ID, date, time, color, language code).
  * <p>
  * Example.
  *
