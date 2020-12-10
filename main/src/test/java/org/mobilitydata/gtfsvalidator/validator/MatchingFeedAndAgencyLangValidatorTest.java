@@ -4,14 +4,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mobilitydata.gtfsvalidator.notice.FeedInfoLangAndAgencyLangMismatchNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.*;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Locale;
+import java.util.*;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(JUnit4.class)
@@ -24,7 +27,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     final MatchingFeedAndAgencyLangValidator underTest = new MatchingFeedAndAgencyLangValidator();
 
     @Before
-    public void initMocks(){
+    public void openMocks() {
         MockitoAnnotations.openMocks(this);
     }
 
@@ -35,7 +38,136 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
+        verifyNoInteractions(mockNoticeContainer, mockAgencyTable);
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockFeedInfoTable, times(1)).isEmptyFile();
+    }
+
+    @Test
+    public void mulFeedLangAndNoMoreThanOneAgencyLangShouldGenerateNotice() {
+        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+
+        GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
+        when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("mul"));
+        List<GtfsFeedInfo> feedInfoCollection = new ArrayList<>();
+        feedInfoCollection.add(mockFeedInfo);
+        when(mockFeedInfoTable.getEntities()).thenReturn(feedInfoCollection);
+
+        GtfsAgency mockAgency = mock(GtfsAgency.class);
+        when(mockAgency.agencyLang()).thenReturn(Locale.forLanguageTag("fr"));
+        List<GtfsAgency> agencyCollection = new ArrayList<>();
+        agencyCollection.add(mockAgency);
+        when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
+
+        underTest.validate(mockNoticeContainer);
+
+        final ArgumentCaptor<FeedInfoLangAndAgencyLangMismatchNotice> captor =
+                ArgumentCaptor.forClass(FeedInfoLangAndAgencyLangMismatchNotice.class);
+
+        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+
+        FeedInfoLangAndAgencyLangMismatchNotice notice = captor.getValue();
+        assertThat(notice.getCode()).matches("feed_info_lang_and_agency_lang_mismatch");
+        assertThat(notice.getContext()).containsEntry("feedInfoLang", "mul");
+        assertThat(notice.getContext()).containsEntry("agencyLangCollection",
+                new HashSet<>(Collections.singletonList(Locale.forLanguageTag("fra"))));
+    }
+
+    @Test
+    public void feedLangNotMulAndMoreThanOneAgencyLangShouldGenerateNotice() {
+        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+
+        GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
+        when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
+        List<GtfsFeedInfo> feedInfoCollection = new ArrayList<>();
+        feedInfoCollection.add(mockFeedInfo);
+        when(mockFeedInfoTable.getEntities()).thenReturn(feedInfoCollection);
+
+        GtfsAgency mockAgency0 = mock(GtfsAgency.class);
+        GtfsAgency mockAgency1 = mock(GtfsAgency.class);
+        when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("fr"));
+        when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
+        List<GtfsAgency> agencyCollection = new ArrayList<>();
+        agencyCollection.add(mockAgency0);
+        agencyCollection.add(mockAgency1);
+        when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
+
+        underTest.validate(mockNoticeContainer);
+
+        final ArgumentCaptor<FeedInfoLangAndAgencyLangMismatchNotice> captor =
+                ArgumentCaptor.forClass(FeedInfoLangAndAgencyLangMismatchNotice.class);
+
+        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+
+        FeedInfoLangAndAgencyLangMismatchNotice notice = captor.getValue();
+        assertThat(notice.getCode()).matches("feed_info_lang_and_agency_lang_mismatch");
+        assertThat(notice.getContext()).containsEntry("feedInfoLang", "fra");
+        assertThat(notice.getContext()).containsEntry("agencyLangCollection", new HashSet<>(Arrays.asList("fra", "eng")));
+    }
+
+    @Test
+    public void feedLangNotMulAndOnlyThanOneMatchingAgencyLangShouldNotGenerateNotice() {
+        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+
+        GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
+        when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
+        List<GtfsFeedInfo> feedInfoCollection = new ArrayList<>();
+        feedInfoCollection.add(mockFeedInfo);
+        when(mockFeedInfoTable.getEntities()).thenReturn(feedInfoCollection);
+
+        GtfsAgency mockAgency0 = mock(GtfsAgency.class);
+        when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("fr"));
+        List<GtfsAgency> agencyCollection = new ArrayList<>();
+        agencyCollection.add(mockAgency0);
+        when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
+
+        underTest.validate(mockNoticeContainer);
+
         verifyNoInteractions(mockNoticeContainer);
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockFeedInfoTable, times(1)).isEmptyFile();
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockFeedInfoTable, times(1)).getEntities();
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockAgencyTable, times(2)).getEntities();
+        verify(mockFeedInfo, times(1)).feedLang();
+        verify(mockAgency0, times(2)).agencyLang();
+
+        verifyNoMoreInteractions(mockFeedInfoTable, mockFeedInfo, mockAgencyTable, mockAgency0);
+    }
+
+    @Test
+    public void feedLangNotMulAndOnlyOneMismatchingAgencyLangShouldGenerateNotice() {
+        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+
+        GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
+        when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
+        List<GtfsFeedInfo> feedInfoCollection = new ArrayList<>();
+        feedInfoCollection.add(mockFeedInfo);
+        when(mockFeedInfoTable.getEntities()).thenReturn(feedInfoCollection);
+
+        GtfsAgency mockAgency0 = mock(GtfsAgency.class);
+        when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
+        List<GtfsAgency> agencyCollection = new ArrayList<>();
+        agencyCollection.add(mockAgency0);
+        when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
+
+        underTest.validate(mockNoticeContainer);
+
+        final ArgumentCaptor<FeedInfoLangAndAgencyLangMismatchNotice> captor =
+                ArgumentCaptor.forClass(FeedInfoLangAndAgencyLangMismatchNotice.class);
+
+        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+
+        FeedInfoLangAndAgencyLangMismatchNotice notice = captor.getValue();
+        assertThat(notice.getCode()).matches("feed_info_lang_and_agency_lang_mismatch");
+        assertThat(notice.getContext()).containsEntry("feedInfoLang", "fra");
+        assertThat(notice.getContext()).containsEntry("agencyLangCollection",
+                new HashSet<>(Collections.singletonList("eng")));
     }
 
     @Test
@@ -44,38 +176,101 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
 
         GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
-        when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr_FR"));
+        when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
+        List<GtfsFeedInfo> feedInfoCollection = new ArrayList<>();
+        feedInfoCollection.add(mockFeedInfo);
+        when(mockFeedInfoTable.getEntities()).thenReturn(feedInfoCollection);
 
         GtfsAgency mockAgency0 = mock(GtfsAgency.class);
-        when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("fr_FR"));
+        when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("fr"));
         GtfsAgency mockAgency1 = mock(GtfsAgency.class);
-        when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("fr_FR"));
+        when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("fr"));
+        List<GtfsAgency> agencyCollection = new ArrayList<>();
+        agencyCollection.add(mockAgency0);
+        agencyCollection.add(mockAgency1);
+        when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
 
         underTest.validate(mockNoticeContainer);
 
         verifyNoInteractions(mockNoticeContainer);
-        verifyNoMoreInteractions(mockNoticeContainer, mockAgency0, mockAgency1, mockFeedInfo, mockAgencyTable,
-                mockFeedInfoTable);
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockFeedInfoTable, times(1)).isEmptyFile();
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockFeedInfoTable, times(1)).getEntities();
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockAgencyTable, times(2)).getEntities();
+        verify(mockFeedInfo, times(1)).feedLang();
+        verify(mockAgency0, times(2)).agencyLang();
+        verify(mockAgency1, times(2)).agencyLang();
+
+        verifyNoMoreInteractions(mockFeedInfoTable, mockFeedInfo, mockAgencyTable, mockAgency0, mockAgency1);
     }
 
     @Test
-    public void nonMatchingFeedInfoFeedLangShouldGenerateNotice() {}
+    public void feedLangNotMulAndMultipleNonMatchingAgencyLangShouldGenerateNotice() {
+        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+
+        GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
+        when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
+        List<GtfsFeedInfo> feedInfoCollection = new ArrayList<>();
+        feedInfoCollection.add(mockFeedInfo);
+        when(mockFeedInfoTable.getEntities()).thenReturn(feedInfoCollection);
+
+        GtfsAgency mockAgency0 = mock(GtfsAgency.class);
+        when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
+        GtfsAgency mockAgency1 = mock(GtfsAgency.class);
+        when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("es"));
+        List<GtfsAgency> agencyCollection = new ArrayList<>();
+        agencyCollection.add(mockAgency0);
+        agencyCollection.add(mockAgency1);
+        when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
+
+        underTest.validate(mockNoticeContainer);
+
+        final ArgumentCaptor<FeedInfoLangAndAgencyLangMismatchNotice> captor =
+                ArgumentCaptor.forClass(FeedInfoLangAndAgencyLangMismatchNotice.class);
+
+        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+
+        FeedInfoLangAndAgencyLangMismatchNotice notice = captor.getValue();
+        assertThat(notice.getCode()).matches("feed_info_lang_and_agency_lang_mismatch");
+        assertThat(notice.getContext()).containsEntry("feedInfoLang", "fra");
+        assertThat(notice.getContext()).containsEntry("agencyLangCollection",
+                new HashSet<>(Arrays.asList("spa", "eng")));
+    }
 
     @Test
-    public void nonMatchingFeedInfoFeedLangAndUniqueAgencyLangShouldGenerateNotice() {}
+    public void mulFeedLandAnMoreThanOneAgencyShouldNotGenerateNotice() {
+        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
 
-    @Test
-    public void feedLangNotMulAndMoreThanOneAgencyLangShouldGenerateNotice() {}
+        GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
+        when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("mul"));
+        List<GtfsFeedInfo> feedInfoCollection = new ArrayList<>();
+        feedInfoCollection.add(mockFeedInfo);
+        when(mockFeedInfoTable.getEntities()).thenReturn(feedInfoCollection);
 
-    @Test
-    public void feedLangNotMulAndOnlyThanOneMatchingAgencyLangShouldNotGenerateNotice() {}
+        GtfsAgency mockAgency0 = mock(GtfsAgency.class);
+        when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("fr"));
+        GtfsAgency mockAgency1 = mock(GtfsAgency.class);
+        when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
+        List<GtfsAgency> agencyCollection = new ArrayList<>();
+        agencyCollection.add(mockAgency0);
+        when(mockAgencyTable.getEntities()).thenReturn(agencyCollection);
 
-    @Test
-    public void feedLangNotMulAndOnlyOneMismatchingAgencyLangShouldGenerateNotice() {}
+        underTest.validate(mockNoticeContainer);
 
-    @Test
-    public void mulFeedLangAndNoMoreThanOneAgencyLangShouldGenerateNotice() {}
+        verifyNoInteractions(mockNoticeContainer);
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockFeedInfoTable, times(1)).isEmptyFile();
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockFeedInfoTable, times(1)).getEntities();
+        //noinspection ResultOfMethodCallIgnored stubbed method
+        verify(mockAgencyTable, times(2)).getEntities();
+        verify(mockFeedInfo, times(1)).feedLang();
+        verify(mockAgency0, times(2)).agencyLang();
 
-    @Test
-    public void mulFeedLandAnMoreThanOneAgencyShouldNotGenerateNotice() {}
+        verifyNoMoreInteractions(mockFeedInfoTable, mockFeedInfo, mockAgencyTable, mockAgency0);
+    }
 }
