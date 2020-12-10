@@ -32,7 +32,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRouteTableLoader;
  * * MissingRequiredFieldError
  */
 @GtfsValidator
-public class TripAgencyIdValidator extends FileValidator {
+public class RouteAgencyIdValidator extends FileValidator {
     @Inject
     GtfsAgencyTableContainer agencyTable;
 
