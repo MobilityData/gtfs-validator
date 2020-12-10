@@ -25,7 +25,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
     @Before
     public void initMocks(){
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        verifyZeroInteractions(mockNoticeContainer);
+        verifyNoInteractions(mockNoticeContainer);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        verifyZeroInteractions(mockNoticeContainer);
+        verifyNoInteractions(mockNoticeContainer);
         verifyNoMoreInteractions(mockNoticeContainer, mockAgency0, mockAgency1, mockFeedInfo, mockAgencyTable,
                 mockFeedInfoTable);
     }
