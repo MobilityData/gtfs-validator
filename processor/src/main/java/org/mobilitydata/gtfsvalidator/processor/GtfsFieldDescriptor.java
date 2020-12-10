@@ -48,6 +48,8 @@ public abstract class GtfsFieldDescriptor {
 
     public abstract boolean index();
 
+    public abstract boolean cached();
+
     public abstract Optional<ForeignKeyDescriptor> foreignKey();
 
     public abstract Optional<RowParser.NumberBounds> numberBounds();
@@ -71,6 +73,8 @@ public abstract class GtfsFieldDescriptor {
         public abstract Builder setSequenceKey(boolean value);
 
         public abstract Builder setIndex(boolean value);
+
+        public abstract Builder setCached(boolean value);
 
         public abstract Builder setForeignKey(Optional<ForeignKeyDescriptor> value);
 

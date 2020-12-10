@@ -19,6 +19,7 @@ package org.mobilitydata.gtfsvalidator.processor;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -34,6 +35,7 @@ import org.mobilitydata.gtfsvalidator.notice.MissingRequiredFileError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.parsing.CsvFile;
 import org.mobilitydata.gtfsvalidator.parsing.CsvRow;
+import org.mobilitydata.gtfsvalidator.parsing.FieldCache;
 import org.mobilitydata.gtfsvalidator.parsing.RowParser;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsTableLoader;
@@ -43,9 +45,11 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import javax.lang.model.element.Modifier;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldColumnIndex;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldNameField;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.gtfsColumnName;
 import static org.mobilitydata.gtfsvalidator.processor.GtfsEntityClasses.TABLE_PACKAGE_NAME;
@@ -67,6 +71,40 @@ public class TableLoaderGenerator {
 
     private static String gtfsTypeToParserMethod(FieldTypeEnum typeEnum) {
         return "as" + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, typeEnum.toString());
+    }
+
+    private static boolean cachingEnabled(final GtfsFieldDescriptor field) {
+        // FIXME: Add a way to disable all caching with a command-line flag.
+        if (field.cached()) {
+            return true;
+        }
+        if (field.primaryKey()) {
+            // Primary keys are not cached because caches are per-table, and primary keys are unique to each row within
+            // the table, so by definition they won't be used more than once and won't benefit from being cached.
+            return false;
+        }
+        // Caching is enabled by default for certain field types.
+        return field.type() == FieldTypeEnum.COLOR
+                || field.type() == FieldTypeEnum.DATE
+                || field.type() == FieldTypeEnum.TIME
+                || field.type() == FieldTypeEnum.LANGUAGE_CODE
+                || field.type() == FieldTypeEnum.ID;
+    }
+
+    private static String fieldColumnCache(GtfsFieldDescriptor field) {
+        // There is a limited amount of possible values for certain field types, so it is more efficient to use a single
+        // cache for the whole table instead of dedicated caches for each field.
+        switch (field.type()) {
+            case TIME:
+                return "timeCache";
+            case DATE:
+                return "dateCache";
+            case COLOR:
+                return "colorCache";
+            case LANGUAGE_CODE:
+                return "languageCodeCache";
+        }
+        return field.name() + "ColumnCache";
     }
 
     public JavaFile generateGtfsTableLoaderJavaFile() {
@@ -165,10 +203,23 @@ public class TableLoaderGenerator {
 
         for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
             method.addStatement(
-                    "final int $LColumnIndex = csvFile.getColumnIndex($L)",
-                    field.name(),
-                    fieldNameField(field.name()));
+                    "final int $L = csvFile.getColumnIndex($L)",
+                    fieldColumnIndex(field.name()), fieldNameField(field.name()));
         }
+
+        // Several fields may reuse the same cache.
+        Set<String> cacheVars = new HashSet<>();
+        for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+            if (cachingEnabled(field)) {
+                String cacheVarName = fieldColumnCache(field);
+                if (cacheVars.add(cacheVarName)) {
+                    method.addStatement(
+                            "final $T<$T> $L = new $T<>()",
+                            FieldCache.class, TypeName.get(field.javaType()), cacheVarName, FieldCache.class);
+                }
+            }
+        }
+
         method.addStatement("$T.Builder builder = new $T.Builder()", gtfsEntityType, gtfsEntityType)
                 .addStatement(
                         "$T rowParser = new $T(feedName, noticeContainer)", RowParser.class, RowParser.class)
@@ -189,17 +240,19 @@ public class TableLoaderGenerator {
                 .addStatement("builder.$L(row.getRowNumber())", FieldNameConverter.setterMethodName("csvRowNumber"));
 
         for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
-            method.addStatement(
-                    "builder.$L(rowParser.$L($LColumnIndex, $T.$L$L))",
-                    FieldNameConverter.setterMethodName(field.name()),
+            CodeBlock fieldValue = CodeBlock.of("rowParser.$L($L, $T.$L$L)",
                     gtfsTypeToParserMethod(field.type()),
-                    field.name(),
+                    fieldColumnIndex(field.name()),
                     RowParser.class,
                     field.required() ? "REQUIRED" : "OPTIONAL",
                     field.numberBounds().isPresent() ? ", RowParser.NumberBounds." + field.numberBounds().get()
                             :
                             field.type() == FieldTypeEnum.ENUM
                                     ? ", " + field.javaType().toString() + "::forNumber" : "");
+            if (cachingEnabled(field)) {
+                fieldValue = CodeBlock.of("$L.addIfAbsent($L)", fieldColumnCache(field), fieldValue);
+            }
+            method.addStatement("builder.$L($L)", FieldNameConverter.setterMethodName(field.name()), fieldValue);
         }
 
         method.beginControlFlow("if (!rowParser.hasParseErrorsInRow())")
@@ -209,6 +262,20 @@ public class TableLoaderGenerator {
                 .endControlFlow();
 
         method.endControlFlow();  // end for (row)
+
+        // Print statistics for cache efficiency.
+        for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
+            if (cachingEnabled(field)) {
+                final String cacheName = fieldColumnCache(field);
+                method.addStatement(
+                        "System.out.println(String.format(" +
+                                "$S, gtfsFilename(), $L, $L.getCacheSize(), $L.getLookupCount(), " +
+                                "$L.getHitRatio() * 100.0, $L.getMissRatio() * 100.0))",
+                        "Cache for %s %s: size = %d, lookup count = %d, hits = %.2f%%, misses = %.2f%%",
+                        fieldNameField(field.name()),
+                        cacheName, cacheName, cacheName, cacheName);
+            }
+        }
 
         method.addStatement("$T table = $T.forEntities(entities, noticeContainer)", tableContainerTypeName, tableContainerTypeName)
                 .addStatement(
