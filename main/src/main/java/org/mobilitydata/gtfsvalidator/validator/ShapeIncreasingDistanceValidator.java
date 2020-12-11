@@ -61,4 +61,3 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         }
     }
 }
-
