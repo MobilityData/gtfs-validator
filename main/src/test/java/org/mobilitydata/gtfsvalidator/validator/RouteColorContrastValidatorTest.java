@@ -107,7 +107,7 @@ public class RouteColorContrastValidatorTest {
 
         underTest.validate(mockRoute, mockNoticeContainer);
 
-        final ArgumentCaptor<RouteColorContrastNotice> captor =
+        ArgumentCaptor<RouteColorContrastNotice> captor =
                 ArgumentCaptor.forClass(RouteColorContrastNotice.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());

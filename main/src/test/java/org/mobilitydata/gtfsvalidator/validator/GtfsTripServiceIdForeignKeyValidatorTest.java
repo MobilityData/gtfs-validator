@@ -112,7 +112,7 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<ForeignKeyError> captor = ArgumentCaptor.forClass(ForeignKeyError.class);
+        ArgumentCaptor<ForeignKeyError> captor = ArgumentCaptor.forClass(ForeignKeyError.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
         ForeignKeyError notice = captor.getValue();

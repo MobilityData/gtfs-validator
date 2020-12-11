@@ -102,7 +102,7 @@ public class CalendarServiceDateValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<StartAndEndDateOutOfOrderNotice> captor =
+        ArgumentCaptor<StartAndEndDateOutOfOrderNotice> captor =
                 ArgumentCaptor.forClass(StartAndEndDateOutOfOrderNotice.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());

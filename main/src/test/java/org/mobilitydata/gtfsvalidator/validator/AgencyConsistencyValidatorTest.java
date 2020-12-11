@@ -86,7 +86,7 @@ public class AgencyConsistencyValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<MissingRequiredFieldError> captor =
+        ArgumentCaptor<MissingRequiredFieldError> captor =
                 ArgumentCaptor.forClass(MissingRequiredFieldError.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
@@ -137,7 +137,7 @@ public class AgencyConsistencyValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<InconsistentAgencyFieldNotice> captor =
+        ArgumentCaptor<InconsistentAgencyFieldNotice> captor =
                 ArgumentCaptor.forClass(InconsistentAgencyFieldNotice.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());

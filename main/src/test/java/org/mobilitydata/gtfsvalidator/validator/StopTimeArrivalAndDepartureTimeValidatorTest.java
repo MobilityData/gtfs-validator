@@ -121,7 +121,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<StopTimeWithDepartureBeforeArrivalTimeNotice> captor =
+        ArgumentCaptor<StopTimeWithDepartureBeforeArrivalTimeNotice> captor =
                 ArgumentCaptor.forClass(StopTimeWithDepartureBeforeArrivalTimeNotice.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
@@ -189,7 +189,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<StopTimeWithArrivalBeforePreviousDepartureTimeNotice> captor =
+        ArgumentCaptor<StopTimeWithArrivalBeforePreviousDepartureTimeNotice> captor =
                 ArgumentCaptor.forClass(StopTimeWithArrivalBeforePreviousDepartureTimeNotice.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
@@ -289,7 +289,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<StopTimeWithOnlyArrivalOrDepartureTimeNotice> captor =
+        ArgumentCaptor<StopTimeWithOnlyArrivalOrDepartureTimeNotice> captor =
                 ArgumentCaptor.forClass(StopTimeWithOnlyArrivalOrDepartureTimeNotice.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
@@ -328,7 +328,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<StopTimeWithOnlyArrivalOrDepartureTimeNotice> captor =
+        ArgumentCaptor<StopTimeWithOnlyArrivalOrDepartureTimeNotice> captor =
                 ArgumentCaptor.forClass(StopTimeWithOnlyArrivalOrDepartureTimeNotice.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());

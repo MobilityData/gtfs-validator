@@ -115,7 +115,7 @@ public class ShapeIncreasingDistanceValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<DecreasingShapeDistanceNotice> captor =
+        ArgumentCaptor<DecreasingShapeDistanceNotice> captor =
                 ArgumentCaptor.forClass(DecreasingShapeDistanceNotice.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
@@ -176,7 +176,7 @@ public class ShapeIncreasingDistanceValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<DecreasingShapeDistanceNotice> captor =
+        ArgumentCaptor<DecreasingShapeDistanceNotice> captor =
                 ArgumentCaptor.forClass(DecreasingShapeDistanceNotice.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());

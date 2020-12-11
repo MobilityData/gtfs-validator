@@ -88,7 +88,7 @@ public class RouteAgencyIdValidatorTest {
 
         underTest.validate(mockNoticeContainer);
 
-        final ArgumentCaptor<MissingRequiredFieldError> captor =
+        ArgumentCaptor<MissingRequiredFieldError> captor =
                 ArgumentCaptor.forClass(MissingRequiredFieldError.class);
 
         verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
