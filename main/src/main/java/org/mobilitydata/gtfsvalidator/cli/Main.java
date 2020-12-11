@@ -17,8 +17,6 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.JCommander;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -40,9 +38,8 @@ import java.nio.file.Paths;
 public class Main {
 
     public static void main(String[] argv) {
-        Logger logger = LogManager.getLogger();
         Arguments args = new Arguments();
-        CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer(logger);
+        CliParametersAnalyzer cliParametersAnalyzer = new CliParametersAnalyzer();
         new JCommander(args).parse(argv);
         if (!cliParametersAnalyzer.isValid(args)) {
             System.exit(1);

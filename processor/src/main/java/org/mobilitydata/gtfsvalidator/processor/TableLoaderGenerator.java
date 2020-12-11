@@ -103,8 +103,9 @@ public class TableLoaderGenerator {
                 return "colorCache";
             case LANGUAGE_CODE:
                 return "languageCodeCache";
+            default:
+                return field.name() + "ColumnCache";
         }
-        return field.name() + "ColumnCache";
     }
 
     public JavaFile generateGtfsTableLoaderJavaFile() {
