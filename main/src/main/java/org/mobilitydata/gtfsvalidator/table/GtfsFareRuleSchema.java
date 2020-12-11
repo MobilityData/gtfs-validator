@@ -26,7 +26,7 @@ import org.mobilitydata.gtfsvalidator.annotation.Required;
 public interface GtfsFareRuleSchema extends GtfsEntity {
     @FieldType(FieldTypeEnum.ID)
     @Required
-    @ForeignKey(table = "fare_attributes", field = "fare_id")
+    @ForeignKey(table = "fare_attributes.txt", field = "fare_id")
     String fareId();
 
     @FieldType(FieldTypeEnum.ID)
