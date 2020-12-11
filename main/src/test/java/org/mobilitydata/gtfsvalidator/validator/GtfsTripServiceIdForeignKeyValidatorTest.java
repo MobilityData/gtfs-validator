@@ -1,10 +1,33 @@
+/*
+ * Copyright 2020 Google LLC, MobilityData IO
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.mobilitydata.gtfsvalidator.validator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mobilitydata.gtfsvalidator.notice.ForeignKeyError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsTrip;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendar;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDate;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarDateTableLoader;
+import org.mobilitydata.gtfsvalidator.table.GtfsCalendarTableLoader;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
