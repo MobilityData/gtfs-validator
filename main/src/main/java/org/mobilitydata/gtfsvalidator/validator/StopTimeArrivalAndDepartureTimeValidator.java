@@ -45,6 +45,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
 
     @Override
     public void validate(NoticeContainer noticeContainer) {
+        //noinspection UnstableApiUsage
         for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(table.byTripIdMap()).values()) {
             int previousDepartureRow = -1;
             for (int i = 0; i < stopTimeList.size(); ++i) {
@@ -52,26 +53,38 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
                 final boolean hasDeparture = stopTime.hasDepartureTime();
                 final boolean hasArrival = stopTime.hasArrivalTime();
                 if (hasArrival != hasDeparture) {
-                    noticeContainer.addNotice(new StopTimeWithOnlyArrivalOrDepartureTimeNotice(
-                            stopTime.csvRowNumber(), stopTime.tripId(), stopTime.stopSequence(),
-                            hasArrival ? GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME
-                                    : GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME
+                    noticeContainer.addNotice(
+                            new StopTimeWithOnlyArrivalOrDepartureTimeNotice(
+                                    stopTime.csvRowNumber(),
+                                    stopTime.tripId(),
+                                    stopTime.stopSequence(),
+                                    hasArrival ? GtfsStopTimeTableLoader.ARRIVAL_TIME_FIELD_NAME
+                                            : GtfsStopTimeTableLoader.DEPARTURE_TIME_FIELD_NAME
                     ));
                 }
                 if (hasDeparture && hasArrival) {
                     if (stopTime.departureTime().isBefore(stopTime.arrivalTime())) {
-                        noticeContainer.addNotice(new StopTimeWithDepartureBeforeArrivalTimeNotice(
-                                stopTime.csvRowNumber(), stopTime.tripId(), stopTime.stopSequence(),
-                                stopTime.departureTime(), stopTime.arrivalTime()
+                        noticeContainer.addNotice(
+                                new StopTimeWithDepartureBeforeArrivalTimeNotice(
+                                        stopTime.csvRowNumber(),
+                                        stopTime.tripId(),
+                                        stopTime.stopSequence(),
+                                        stopTime.departureTime(),
+                                        stopTime.arrivalTime()
                         ));
                     }
                 }
                 if (hasArrival && previousDepartureRow != -1 &&
                         stopTime.arrivalTime().isBefore(stopTimeList.get(previousDepartureRow).departureTime())) {
-                    noticeContainer.addNotice(new StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
-                            stopTime.csvRowNumber(), stopTimeList.get(previousDepartureRow).csvRowNumber(), stopTime.tripId(),
-                            stopTime.arrivalTime(), stopTimeList.get(previousDepartureRow).departureTime()
-                    ));
+                    noticeContainer.addNotice(
+                            new StopTimeWithArrivalBeforePreviousDepartureTimeNotice(
+                                    stopTime.csvRowNumber(),
+                                    stopTimeList.get(previousDepartureRow).csvRowNumber(),
+                                    stopTime.tripId(),
+                                    stopTime.arrivalTime(),
+                                    stopTimeList.get(previousDepartureRow).departureTime()
+                            )
+                    );
                 }
                 if (hasDeparture) {
                     previousDepartureRow = i;
