@@ -52,7 +52,8 @@ public class AgencyConsistencyValidator extends FileValidator {
             // agency_id is required when there are 2 or more agencies.
             if (!agency.hasAgencyId()) {
                 noticeContainer.addNotice(
-                        new MissingRequiredFieldError(agencyTable.gtfsFilename(),
+                        new MissingRequiredFieldError(
+                                agencyTable.gtfsFilename(),
                                 agency.csvRowNumber(),
                                 GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
             }
