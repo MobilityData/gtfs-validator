@@ -29,7 +29,6 @@ import java.io.StringReader;
 
 import static com.google.common.truth.Truth.assertThat;
 
-
 /**
  * Runs GtfsLevelTableContainer on test CSV data.
  */
@@ -83,6 +82,4 @@ public class GtfsLevelTableLoaderTest {
         assertThat(noticeContainer.getNotices().get(0).getClass().getSimpleName()).isEqualTo("EmptyFileNotice");
         reader.close();
     }
-
 }
-
