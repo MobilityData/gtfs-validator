@@ -123,7 +123,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     }
 
     @Test
-    public void feedLangNotMulAndOnlyThanOneMatchingAgencyLangShouldNotGenerateNotice() {
+    public void feedLangNotMulAndOnlyOneMatchingAgencyLangShouldNotGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
         when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
 
@@ -256,7 +256,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     }
 
     @Test
-    public void mulFeedLandAnMoreThanOneAgencyShouldNotGenerateNotice() {
+    public void mulFeedLandAndMoreThanOneAgencyShouldNotGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
         when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
 
