@@ -91,12 +91,32 @@ public class FrequencyTimeInOrderValidatorTest {
         assertThat(notice.getContext()).containsEntry("endTime", "end time value");
 
         verify(mockStartTime, times(1)).isAfter(mockEndTime);
-        verify(mockFrequency, times(2)).startTime();
-        verify(mockFrequency, times(2)).endTime();
+        verify(mockFrequency, times(1)).startTime();
+        verify(mockFrequency, times(1)).endTime();
         verify(mockFrequency, times(1)).csvRowNumber();
         verify(mockFrequency, times(1)).tripId();
         verify(mockStartTime, times(1)).toHHMMSS();
         verify(mockEndTime, times(1)).toHHMMSS();
         verifyNoMoreInteractions(mockEndTime, mockStartTime, mockFrequency);
+    }
+
+    @Test
+    public void startTimeEqualToEndTimeShouldNotGenerateNotice() {
+        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+        GtfsFrequency mockFrequency = mock(GtfsFrequency.class);
+        // .equals() method cannot be stubbed: we use real object for GtfsTime
+        GtfsTime startTime = GtfsTime.fromHourMinuteSecond(12, 30, 45);
+        GtfsTime endTime = GtfsTime.fromHourMinuteSecond(12, 30, 45);
+        when(mockFrequency.startTime()).thenReturn(startTime);
+        when(mockFrequency.endTime()).thenReturn(endTime);
+
+        FrequencyTimeInOrderValidator underTest = new FrequencyTimeInOrderValidator();
+
+        underTest.validate(mockFrequency, mockNoticeContainer);
+
+        verifyNoInteractions(mockNoticeContainer);
+        verify(mockFrequency, times(1)).startTime();
+        verify(mockFrequency, times(1)).endTime();
+        verifyNoMoreInteractions(mockFrequency);
     }
 }

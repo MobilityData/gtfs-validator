@@ -20,6 +20,7 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndTimeOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFrequency;
+import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 
 import static org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableLoader.FILENAME;
 
@@ -34,14 +35,19 @@ public class FrequencyTimeInOrderValidator extends SingleEntityValidator<GtfsFre
     @Override
     public void validate(GtfsFrequency frequency, NoticeContainer noticeContainer) {
         // startTime and endTime are assumed to be not null: therefore, we do not check hasStartTime and hasEndTime.
-        if (frequency.startTime().isAfter(frequency.endTime())) {
+        GtfsTime startTime = frequency.startTime();
+        GtfsTime endTime = frequency.endTime();
+        if (startTime.equals(endTime)) {
+            return;
+        }
+        if (startTime.isAfter(endTime)) {
             noticeContainer.addNotice(
                     new StartAndEndTimeOutOfOrderNotice(
                             FILENAME,
                             frequency.tripId(),
                             frequency.csvRowNumber(),
-                            frequency.startTime(),
-                            frequency.endTime()
+                            startTime,
+                            endTime
                     )
             );
         }
