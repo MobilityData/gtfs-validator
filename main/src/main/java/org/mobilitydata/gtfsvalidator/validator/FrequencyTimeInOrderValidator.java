@@ -25,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import static org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableLoader.FILENAME;
 
 /**
- * Validates `frequencies.start_time` is before `frequencies.end_time` for a single entity.
+ * Validates `frequencies.start_time` is before or equal to `frequencies.end_time` for a single entity.
  * <p>
  * Generated notices:
  * * StartAndEndTimeOutOfOrder
@@ -53,5 +53,4 @@ public class FrequencyTimeInOrderValidator extends SingleEntityValidator<GtfsFre
         }
     }
 }
-
 
