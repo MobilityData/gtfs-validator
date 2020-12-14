@@ -109,5 +109,4 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
                     Diagnostic.Kind.ERROR, String.format("failed to generate output file: %s", e.getMessage()));
         }
     }
-
 }
