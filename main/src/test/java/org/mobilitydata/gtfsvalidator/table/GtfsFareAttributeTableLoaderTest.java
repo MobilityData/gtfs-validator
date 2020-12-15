@@ -33,10 +33,10 @@ import java.util.Currency;
 import static com.google.common.truth.Truth.assertThat;
 
 /**
- * Runs GtfsCalendarFareAttributeContainer on test CSV data.
+ * Runs GtfsFareAttributeContainer on test CSV data.
  */
 @RunWith(JUnit4.class)
-public class GtfsCalendarFareAttributeTableLoaderTest {
+public class GtfsFareAttributeTableLoaderTest {
     private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
 
     @Test
