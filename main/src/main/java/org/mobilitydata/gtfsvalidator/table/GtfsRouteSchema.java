@@ -27,7 +27,6 @@ import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
-
 @GtfsTable("routes.txt")
 @Required
 public interface GtfsRouteSchema extends GtfsEntity {
