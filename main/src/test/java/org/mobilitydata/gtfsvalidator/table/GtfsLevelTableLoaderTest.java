@@ -43,7 +43,8 @@ public class GtfsLevelTableLoaderTest {
                 + "level1,Ground,1\n");
         GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
         NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+        GtfsLevelTableContainer tableContainer =
+                (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
         assertThat(noticeContainer.getNotices()).isEmpty();
         assertThat(tableContainer.entityCount()).isEqualTo(1);
@@ -63,7 +64,8 @@ public class GtfsLevelTableLoaderTest {
                 + ",Ground,1\n");
         GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
         NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+        GtfsLevelTableContainer tableContainer =
+                (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
         assertThat(noticeContainer.getNotices()).isNotEmpty();
         assertThat(tableContainer.entityCount()).isEqualTo(0);
@@ -76,10 +78,11 @@ public class GtfsLevelTableLoaderTest {
         Reader reader = new StringReader("");
         GtfsLevelTableLoader loader = new GtfsLevelTableLoader();
         NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+        loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
         assertThat(noticeContainer.getNotices()).isNotEmpty();
-        assertThat(noticeContainer.getNotices().get(0).getClass().getSimpleName()).isEqualTo("EmptyFileNotice");
+        assertThat(noticeContainer.getNotices().get(0).getClass().getSimpleName())
+                .isEqualTo("EmptyFileNotice");
         reader.close();
     }
 }
