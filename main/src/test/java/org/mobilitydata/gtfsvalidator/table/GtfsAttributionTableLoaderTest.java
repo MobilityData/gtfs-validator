@@ -81,6 +81,7 @@ public class GtfsAttributionTableLoaderTest {
         Reader reader = new StringReader("");
         GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();
         NoticeContainer noticeContainer = new NoticeContainer();
+
         loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
         assertThat(noticeContainer.getNotices()).isNotEmpty();

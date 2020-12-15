@@ -117,8 +117,8 @@ public class GtfsAgencyTableLoaderTest {
         Reader reader = new StringReader("");
         GtfsAgencyTableLoader loader = new GtfsAgencyTableLoader();
         NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsAgencyTableContainer tableContainer =
-                (GtfsAgencyTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
+
+        loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
         assertThat(noticeContainer.getNotices()).isNotEmpty();
         assertThat(noticeContainer.getNotices().get(0).getClass().getSimpleName()).isEqualTo("EmptyFileNotice");
