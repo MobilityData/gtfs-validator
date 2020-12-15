@@ -42,7 +42,7 @@ public class GtfsCalendarDateTableLoaderTest {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         Reader reader =
                 new StringReader(
-                        "service_id,date,exception_type,"
+                        "service_id,date,exception_type"
                                 + System.lineSeparator() +
                                 "service id value,20201122,2");
         GtfsCalendarDateTableLoader loader = new GtfsCalendarDateTableLoader();
@@ -55,7 +55,7 @@ public class GtfsCalendarDateTableLoaderTest {
         GtfsCalendarDate calendarDate = tableContainer.byServiceId("service id value").get(0);
         assertThat(calendarDate).isNotNull();
         assertThat(calendarDate.serviceId()).matches("service id value");
-        assertThat(calendarDate.date()).isEqualTo(GtfsDate.fromString("20201210"));
+        assertThat(calendarDate.date()).isEqualTo(GtfsDate.fromString("20201122"));
         assertThat(calendarDate.exceptionType()).isEqualTo(GtfsCalendarDateExceptionType.SERVICE_REMOVED);
 
         reader.close();
