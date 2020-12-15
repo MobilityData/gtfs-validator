@@ -49,6 +49,7 @@ public interface GtfsRouteSchema extends GtfsEntity {
 
     String routeDesc();
 
+    @Required
     GtfsRouteType routeType();
 
     @FieldType(FieldTypeEnum.URL)
