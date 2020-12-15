@@ -38,7 +38,7 @@ public class GtfsAttributionTableLoaderTest {
     private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
 
     @Test
-    public void validFile() throws IOException {
+    public void validFileShouldNotGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         Reader reader =
                 new StringReader(
@@ -55,7 +55,7 @@ public class GtfsAttributionTableLoaderTest {
     }
 
     @Test
-    public void missingRequiredField() throws IOException {
+    public void missingRequiredFieldShouldGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         Reader reader =
                 new StringReader(
@@ -76,7 +76,7 @@ public class GtfsAttributionTableLoaderTest {
     }
 
     @Test
-    public void emptyFile() throws IOException {
+    public void emptyFileShouldGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         Reader reader = new StringReader("");
         GtfsAttributionTableLoader loader = new GtfsAttributionTableLoader();

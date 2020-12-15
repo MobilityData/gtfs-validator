@@ -68,50 +68,6 @@ public class GtfsCalendarTableLoaderTest {
     }
 
     @Test
-    public void malformedDateShouldGenerateNotice() throws IOException {
-        ValidatorLoader validatorLoader = new ValidatorLoader();
-        Reader reader =
-                new StringReader(
-                        "service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date"
-                                + System.lineSeparator() +
-                                "service id value,1,0,0,0,0,0,0,2020122,20201210");
-        GtfsCalendarTableLoader loader = new GtfsCalendarTableLoader();
-        NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsCalendarTableContainer tableContainer =
-                (GtfsCalendarTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
-
-        assertThat(noticeContainer.getNotices()).isNotEmpty();
-        assertThat(noticeContainer.getNotices().get(0).getCode()).matches("field_parsing_error");
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("filename", "calendar.txt");
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("csvRowNumber", 2L);
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("fieldName", "start_date");
-        assertThat(tableContainer.entityCount()).isEqualTo(0);
-        reader.close();
-    }
-
-    @Test
-    public void unexpectedEnumValueShouldGenerateNotice() throws IOException {
-        ValidatorLoader validatorLoader = new ValidatorLoader();
-        Reader reader =
-                new StringReader(
-                        "service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date"
-                                + System.lineSeparator() +
-                                "service id value,4,0,0,0,0,0,0,20201122,20201210");
-        GtfsCalendarTableLoader loader = new GtfsCalendarTableLoader();
-        NoticeContainer noticeContainer = new NoticeContainer();
-        GtfsCalendarTableContainer tableContainer =
-                (GtfsCalendarTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
-
-        assertThat(noticeContainer.getNotices()).isNotEmpty();
-        assertThat(noticeContainer.getNotices().get(0).getCode()).matches("unexpected_enum_value");
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("filename", "calendar.txt");
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("csvRowNumber", 2L);
-        assertThat(noticeContainer.getNotices().get(0).getContext()).containsEntry("fieldName", "monday");
-        assertThat(tableContainer.entityCount()).isEqualTo(0);
-        reader.close();
-    }
-
-    @Test
     public void missingRequiredFieldShouldGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         Reader reader =

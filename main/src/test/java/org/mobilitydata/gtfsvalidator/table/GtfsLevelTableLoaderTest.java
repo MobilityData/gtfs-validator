@@ -37,7 +37,7 @@ public class GtfsLevelTableLoaderTest {
     private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
 
     @Test
-    public void validFile() throws IOException {
+    public void validFileShouldNotGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         Reader reader = new StringReader("level_id,level_name,level_index\n"
                 + "level1,Ground,1\n");
@@ -57,7 +57,7 @@ public class GtfsLevelTableLoaderTest {
     }
 
     @Test
-    public void missingRequiredField() throws IOException {
+    public void missingRequiredFieldShouldGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         Reader reader = new StringReader("level_id,level_name,level_index\n"
                 + ",Ground,1\n");
@@ -71,7 +71,7 @@ public class GtfsLevelTableLoaderTest {
     }
 
     @Test
-    public void emptyFile() throws IOException {
+    public void emptyFileShouldGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         Reader reader = new StringReader("");
         GtfsLevelTableLoader loader = new GtfsLevelTableLoader();

@@ -39,14 +39,14 @@ public class GtfsAgencyTableLoaderTest {
     private static final GtfsFeedName FEED_NAME = GtfsFeedName.parseString("au-sydney-buses");
 
     @Test
-    public void validFile() throws IOException {
+    public void validFileShouldNotGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
-        // agencyId is not null
         Reader reader =
                 new StringReader(
                         "agency_id,agency_name,agency_url,agency_timezone,agency_lang," +
                                 "agency_phone,agency_fare_url,agency_email" + System.lineSeparator() +
-                        "agency id value,agency name value,https://www.mobilitydata.org,America/Montreal,fr,514-234-7894," +
+                                "agency id value,agency name value,https://www.mobilitydata.org," +
+                                "America/Montreal,fr,514-234-7894," +
                                 "https://www.mobilitydata.org,hello@mobilitydata.org");
         GtfsAgencyTableLoader loader = new GtfsAgencyTableLoader();
         NoticeContainer noticeContainer = new NoticeContainer();
@@ -67,30 +67,10 @@ public class GtfsAgencyTableLoaderTest {
         assertThat(agency.agencyEmail()).matches("hello@mobilitydata.org");
 
         reader.close();
-
-        // agencyId is null
-        reader =
-                new StringReader(
-                        "agency_id,agency_name,agency_url,agency_timezone" + System.lineSeparator() +
-                        ",agency name value,https://www.mobilitydata.org,America/Montreal");
-        loader = new GtfsAgencyTableLoader();
-        tableContainer =
-                (GtfsAgencyTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
-
-        assertThat(noticeContainer.getNotices()).isEmpty();
-        assertThat(tableContainer.entityCount()).isEqualTo(1);
-        agency = tableContainer.byAgencyId("");
-        assertThat(agency).isNotNull();
-        assertThat(agency.agencyId()).isEmpty();
-        assertThat(agency.agencyName()).isEqualTo("agency name value");
-        assertThat(agency.agencyUrl()).isEqualTo("https://www.mobilitydata.org");
-        assertThat(agency.agencyTimezone()).isEqualTo(TimeZone.getTimeZone("America/Montreal"));
-
-        reader.close();
     }
 
     @Test
-    public void missingRequiredField() throws IOException {
+    public void missingRequiredFieldShouldGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         // agencyId is not null
         Reader reader =
@@ -112,7 +92,7 @@ public class GtfsAgencyTableLoaderTest {
     }
 
     @Test
-    public void emptyFile() throws IOException {
+    public void emptyFileShouldGenerateNotice() throws IOException {
         ValidatorLoader validatorLoader = new ValidatorLoader();
         Reader reader = new StringReader("");
         GtfsAgencyTableLoader loader = new GtfsAgencyTableLoader();
