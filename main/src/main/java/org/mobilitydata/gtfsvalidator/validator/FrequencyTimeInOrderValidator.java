@@ -34,7 +34,6 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsFrequencyTableLoader.FILE
 public class FrequencyTimeInOrderValidator extends SingleEntityValidator<GtfsFrequency> {
     @Override
     public void validate(GtfsFrequency frequency, NoticeContainer noticeContainer) {
-        // startTime and endTime are assumed to be not null: therefore, we do not check hasStartTime and hasEndTime.
         // validate() will only be called if startTime and endTime have been populated for this frequency
         GtfsTime startTime = frequency.startTime();
         GtfsTime endTime = frequency.endTime();
