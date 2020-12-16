@@ -62,11 +62,11 @@ public class GtfsShapeTableContainerTest {
     @Test
     public void forEntities() {
         NoticeContainer noticeContainer = new NoticeContainer();
-        List<GtfsShape> ShapeCollection = new ArrayList<>();
+        List<GtfsShape> shapeCollection = new ArrayList<>();
         GtfsShape mockShape = mock(GtfsShape.class);
-        ShapeCollection.add(mockShape);
+        shapeCollection.add(mockShape);
         GtfsShapeTableContainer tableContainer =
-                GtfsShapeTableContainer.forEntities(ShapeCollection, noticeContainer);
+                GtfsShapeTableContainer.forEntities(shapeCollection, noticeContainer);
         assertThat(tableContainer.getEntities().isEmpty()).isFalse();
         assertThat(tableContainer.isEmptyFile()).isFalse();
         assertThat(tableContainer.gtfsFilename()).matches("shapes.txt");
