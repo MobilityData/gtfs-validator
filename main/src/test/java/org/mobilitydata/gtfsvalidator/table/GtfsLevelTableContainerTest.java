@@ -62,11 +62,11 @@ public class GtfsLevelTableContainerTest {
     @Test
     public void forEntities() {
         NoticeContainer noticeContainer = new NoticeContainer();
-        List<GtfsLevel> LevelCollection = new ArrayList<>();
+        List<GtfsLevel> levelCollection = new ArrayList<>();
         GtfsLevel mockLevel = mock(GtfsLevel.class);
-        LevelCollection.add(mockLevel);
+        levelCollection.add(mockLevel);
         GtfsLevelTableContainer tableContainer =
-                GtfsLevelTableContainer.forEntities(LevelCollection, noticeContainer);
+                GtfsLevelTableContainer.forEntities(levelCollection, noticeContainer);
         assertThat(tableContainer.getEntities().isEmpty()).isFalse();
         assertThat(tableContainer.isEmptyFile()).isFalse();
         assertThat(tableContainer.gtfsFilename()).matches("levels.txt");

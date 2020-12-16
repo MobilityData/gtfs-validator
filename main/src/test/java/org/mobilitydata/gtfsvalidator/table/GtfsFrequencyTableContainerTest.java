@@ -62,11 +62,11 @@ public class GtfsFrequencyTableContainerTest {
     @Test
     public void forEntities() {
         NoticeContainer noticeContainer = new NoticeContainer();
-        List<GtfsFrequency> FrequencyCollection = new ArrayList<>();
+        List<GtfsFrequency> frequencyCollection = new ArrayList<>();
         GtfsFrequency mockFrequency = mock(GtfsFrequency.class);
-        FrequencyCollection.add(mockFrequency);
+        frequencyCollection.add(mockFrequency);
         GtfsFrequencyTableContainer tableContainer =
-                GtfsFrequencyTableContainer.forEntities(FrequencyCollection, noticeContainer);
+                GtfsFrequencyTableContainer.forEntities(frequencyCollection, noticeContainer);
         assertThat(tableContainer.getEntities().isEmpty()).isFalse();
         assertThat(tableContainer.isEmptyFile()).isFalse();
         assertThat(tableContainer.gtfsFilename()).matches("frequencies.txt");

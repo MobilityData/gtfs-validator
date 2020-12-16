@@ -62,11 +62,11 @@ public class GtfsRouteTableContainerTest {
     @Test
     public void forEntities() {
         NoticeContainer noticeContainer = new NoticeContainer();
-        List<GtfsRoute> RouteCollection = new ArrayList<>();
+        List<GtfsRoute> routeCollection = new ArrayList<>();
         GtfsRoute mockRoute = mock(GtfsRoute.class);
-        RouteCollection.add(mockRoute);
+        routeCollection.add(mockRoute);
         GtfsRouteTableContainer tableContainer =
-                GtfsRouteTableContainer.forEntities(RouteCollection, noticeContainer);
+                GtfsRouteTableContainer.forEntities(routeCollection, noticeContainer);
         assertThat(tableContainer.getEntities().isEmpty()).isFalse();
         assertThat(tableContainer.isEmptyFile()).isFalse();
         assertThat(tableContainer.gtfsFilename()).matches("routes.txt");

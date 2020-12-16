@@ -62,11 +62,11 @@ public class GtfsPathwayTableContainerTest {
     @Test
     public void forEntities() {
         NoticeContainer noticeContainer = new NoticeContainer();
-        List<GtfsPathway> PathwayCollection = new ArrayList<>();
+        List<GtfsPathway> pathwayCollection = new ArrayList<>();
         GtfsPathway mockPathway = mock(GtfsPathway.class);
-        PathwayCollection.add(mockPathway);
+        pathwayCollection.add(mockPathway);
         GtfsPathwayTableContainer tableContainer =
-                GtfsPathwayTableContainer.forEntities(PathwayCollection, noticeContainer);
+                GtfsPathwayTableContainer.forEntities(pathwayCollection, noticeContainer);
         assertThat(tableContainer.getEntities().isEmpty()).isFalse();
         assertThat(tableContainer.isEmptyFile()).isFalse();
         assertThat(tableContainer.gtfsFilename()).matches("pathways.txt");

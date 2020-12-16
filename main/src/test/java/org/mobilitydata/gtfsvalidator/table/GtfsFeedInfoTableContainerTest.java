@@ -62,11 +62,11 @@ public class GtfsFeedInfoTableContainerTest {
     @Test
     public void forEntities() {
         NoticeContainer noticeContainer = new NoticeContainer();
-        List<GtfsFeedInfo> FeedInfoCollection = new ArrayList<>();
+        List<GtfsFeedInfo> feedInfoCollection = new ArrayList<>();
         GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
-        FeedInfoCollection.add(mockFeedInfo);
+        feedInfoCollection.add(mockFeedInfo);
         GtfsFeedInfoTableContainer tableContainer =
-                GtfsFeedInfoTableContainer.forEntities(FeedInfoCollection, noticeContainer);
+                GtfsFeedInfoTableContainer.forEntities(feedInfoCollection, noticeContainer);
         assertThat(tableContainer.getEntities().isEmpty()).isFalse();
         assertThat(tableContainer.isEmptyFile()).isFalse();
         assertThat(tableContainer.gtfsFilename()).matches("feed_info.txt");
