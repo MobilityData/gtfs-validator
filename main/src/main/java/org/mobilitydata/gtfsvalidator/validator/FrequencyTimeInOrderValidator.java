@@ -37,9 +37,6 @@ public class FrequencyTimeInOrderValidator extends SingleEntityValidator<GtfsFre
         // startTime and endTime are assumed to be not null: therefore, we do not check hasStartTime and hasEndTime.
         GtfsTime startTime = frequency.startTime();
         GtfsTime endTime = frequency.endTime();
-        if (startTime.equals(endTime)) {
-            return;
-        }
         if (startTime.isAfter(endTime)) {
             noticeContainer.addNotice(
                     new StartAndEndTimeOutOfOrderNotice(
