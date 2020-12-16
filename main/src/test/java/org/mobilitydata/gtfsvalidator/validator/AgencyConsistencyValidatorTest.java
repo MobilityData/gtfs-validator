@@ -54,7 +54,7 @@ public class AgencyConsistencyValidatorTest {
     }
 
     @Test
-    public void noMoreThanTwoAgenciesShouldNotGenerateNotice() {
+    public void oneAgencyShouldNotGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
         when(mockAgencyTable.entityCount()).thenReturn(1);
 
