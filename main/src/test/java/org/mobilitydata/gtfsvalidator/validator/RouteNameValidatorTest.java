@@ -97,6 +97,16 @@ public class RouteNameValidatorTest {
                                 "route_short_name"
                         )
                 );
+        // include difference with lower case and upper case characters
+        assertThat(validateRoute(createRoute("DuplicATE", null, "duplicate")))
+                .containsExactly(
+                        new SameNameAndDescriptionForRouteNotice(
+                                1,
+                                "r1",
+                                "duplicate",
+                                "route_short_name"
+                        )
+                );
     }
 
     @Test
@@ -107,6 +117,16 @@ public class RouteNameValidatorTest {
                                 1,
                                 "r1",
                                 "duplicate",
+                                "route_long_name"
+                        )
+                );
+        // include difference with lower case and upper case characters
+        assertThat(validateRoute(createRoute(null, "duplicate", "DuplicATE")))
+                .containsExactly(
+                        new SameNameAndDescriptionForRouteNotice(
+                                1,
+                                "r1",
+                                "DuplicATE",
                                 "route_long_name"
                         )
                 );
