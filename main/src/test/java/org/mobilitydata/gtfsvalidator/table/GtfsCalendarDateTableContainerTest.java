@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import sun.util.calendar.CalendarDate;
 
 import java.util.ArrayList;
 import java.util.List;
