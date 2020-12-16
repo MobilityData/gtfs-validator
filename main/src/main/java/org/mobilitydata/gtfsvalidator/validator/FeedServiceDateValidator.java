@@ -39,11 +39,6 @@ public class FeedServiceDateValidator extends FileValidator {
     public void validate(NoticeContainer noticeContainer) {
         for (GtfsFeedInfo feedInfo : feedInfoTable.getEntities()) {
             if (feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
-                GtfsDate startDate = feedInfo.feedStartDate();
-                GtfsDate endDate = feedInfo.feedEndDate();
-                if (startDate.equals(endDate)) {
-                    return;
-                }
                 if (feedInfo.feedStartDate().isAfter(feedInfo.feedEndDate())) {
                     noticeContainer.addNotice(
                             new StartAndEndDateOutOfOrderNotice(

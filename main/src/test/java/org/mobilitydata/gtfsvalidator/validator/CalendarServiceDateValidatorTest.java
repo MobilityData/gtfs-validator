@@ -129,7 +129,7 @@ public class CalendarServiceDateValidatorTest {
     }
 
     @Test
-    public void noStartDateShouldNotThrowException() {
+    public void noStartDateShouldRunWithoutError() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
         List<GtfsCalendar> calendarCollection = new ArrayList<>();
         GtfsCalendar mockCalendar = mock(GtfsCalendar.class);
@@ -152,7 +152,7 @@ public class CalendarServiceDateValidatorTest {
     }
 
     @Test
-    public void noEndDateShouldNotGenerateNotice() {
+    public void noEndDateShouldRunWithoutError() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
         List<GtfsCalendar> calendarCollection = new ArrayList<>();
         GtfsCalendar mockCalendar = mock(GtfsCalendar.class);

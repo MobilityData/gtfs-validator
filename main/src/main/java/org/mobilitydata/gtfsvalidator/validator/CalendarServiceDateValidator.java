@@ -39,11 +39,6 @@ public class CalendarServiceDateValidator extends FileValidator {
     public void validate(NoticeContainer noticeContainer) {
         for (GtfsCalendar calendar : calendarTable.getEntities()) {
             if (calendar.hasStartDate() && calendar.hasEndDate()) {
-                GtfsDate startDate = calendar.startDate();
-                GtfsDate endDate = calendar.endDate();
-                if (startDate.equals(endDate)) {
-                    return;
-                }
                 if (calendar.startDate().isAfter(calendar.endDate())) {
                     noticeContainer.addNotice(new StartAndEndDateOutOfOrderNotice(calendarTable.gtfsFilename(),
                             calendar.serviceId(),
