@@ -22,6 +22,7 @@ import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.StartAndEndDateOutOfOrderNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
+import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
 /**
  * Validates that start_date <= end_date for all rows in "feed_info.txt".
@@ -37,14 +38,20 @@ public class FeedServiceDateValidator extends FileValidator {
     @Override
     public void validate(NoticeContainer noticeContainer) {
         for (GtfsFeedInfo feedInfo : feedInfoTable.getEntities()) {
-            if (feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate() &&
-                    feedInfo.feedStartDate().isAfter(feedInfo.feedEndDate())) {
-                noticeContainer.addNotice(
-                        new StartAndEndDateOutOfOrderNotice(
-                                feedInfoTable.gtfsFilename(),
-                                feedInfo.csvRowNumber(),
-                                feedInfo.feedStartDate(),
-                                feedInfo.feedEndDate()));
+            if (feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate()) {
+                GtfsDate startDate = feedInfo.feedStartDate();
+                GtfsDate endDate = feedInfo.feedEndDate();
+                if (startDate.equals(endDate)) {
+                    return;
+                }
+                if (feedInfo.feedStartDate().isAfter(feedInfo.feedEndDate())) {
+                    noticeContainer.addNotice(
+                            new StartAndEndDateOutOfOrderNotice(
+                                    feedInfoTable.gtfsFilename(),
+                                    feedInfo.csvRowNumber(),
+                                    feedInfo.feedStartDate(),
+                                    feedInfo.feedEndDate()));
+                }
             }
         }
     }

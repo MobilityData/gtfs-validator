@@ -69,7 +69,7 @@ public class RouteAgencyIdValidatorTest {
     @Test
     public void undefinedRouteAgencyIdShouldGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        when(mockAgencyTable.entityCount()).thenReturn(3);
+        when(mockAgencyTable.entityCount()).thenReturn(2);
         when(mockRouteTable.gtfsFilename()).thenReturn("routes.txt");
 
         GtfsRoute mockRoute0 = mock(GtfsRoute.class);

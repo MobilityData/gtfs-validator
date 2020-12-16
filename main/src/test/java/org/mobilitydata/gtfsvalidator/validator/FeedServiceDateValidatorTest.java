@@ -170,4 +170,30 @@ public class FeedServiceDateValidatorTest {
         verify(mockFeedInfo, times(1)).hasFeedStartDate();
         verifyNoMoreInteractions(mockFeedInfo, mockEndDate, mockStartDate);
     }
+
+    @Test
+    public void equalDateShouldNotGenerateNotice() {
+        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+        List<GtfsFeedInfo> feedInfoCollection = new ArrayList<>();
+        GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
+        when(mockFeedInfo.hasFeedEndDate()).thenReturn(true);
+        when(mockFeedInfo.hasFeedStartDate()).thenReturn(true);
+
+        GtfsDate startDate = GtfsDate.fromString("20201027");
+        GtfsDate endDate = GtfsDate.fromString("20201027");
+
+        when(mockFeedInfo.feedStartDate()).thenReturn(startDate);
+        when(mockFeedInfo.feedEndDate()).thenReturn(endDate);
+        feedInfoCollection.add(mockFeedInfo);
+        when(mockFeedInfoTable.getEntities()).thenReturn(feedInfoCollection);
+
+        underTest.validate(mockNoticeContainer);
+
+        verifyNoInteractions(mockNoticeContainer);
+        verify(mockFeedInfo, times(1)).hasFeedEndDate();
+        verify(mockFeedInfo, times(1)).feedEndDate();
+        verify(mockFeedInfo, times(1)).hasFeedStartDate();
+        verify(mockFeedInfo, times(1)).feedStartDate();
+        verifyNoMoreInteractions(mockFeedInfo);
+    }
 }

@@ -53,7 +53,8 @@ public class RouteAgencyIdValidator extends FileValidator {
                                 route.csvRowNumber(),
                                 GtfsRouteTableLoader.AGENCY_ID_FIELD_NAME));
             }
-            // No need to check reference integrity because it is done by a validator generated from @ForeignKey annotation.
+            // No need to check reference integrity because it is done by a validator generated from @ForeignKey
+            // annotation.
         }
     }
 }

@@ -129,7 +129,7 @@ public class CalendarServiceDateValidatorTest {
     }
 
     @Test
-    public void noStartDateShouldNotGenerateNotice() {
+    public void noStartDateShouldNotThrowException() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
         List<GtfsCalendar> calendarCollection = new ArrayList<>();
         GtfsCalendar mockCalendar = mock(GtfsCalendar.class);
@@ -172,5 +172,31 @@ public class CalendarServiceDateValidatorTest {
         verify(mockCalendar, times(1)).hasEndDate();
         verify(mockCalendar, times(1)).hasStartDate();
         verifyNoMoreInteractions(mockCalendar, mockEndDate, mockStartDate);
+    }
+
+    @Test
+    public void equalDatesShouldGenerateNotice() {
+        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
+        List<GtfsCalendar> calendarCollection = new ArrayList<>();
+        GtfsCalendar mockCalendar = mock(GtfsCalendar.class);
+        when(mockCalendar.hasEndDate()).thenReturn(true);
+        when(mockCalendar.hasStartDate()).thenReturn(true);
+
+        GtfsDate startDate = GtfsDate.fromString("20200223");
+        GtfsDate endDate = GtfsDate.fromString("20200223");
+
+        when(mockCalendar.startDate()).thenReturn(startDate);
+        when(mockCalendar.endDate()).thenReturn(endDate);
+        calendarCollection.add(mockCalendar);
+        when(mockCalendarTable.getEntities()).thenReturn(calendarCollection);
+
+        underTest.validate(mockNoticeContainer);
+
+        verifyNoInteractions(mockNoticeContainer);
+        verify(mockCalendar, times(1)).hasEndDate();
+        verify(mockCalendar, times(1)).endDate();
+        verify(mockCalendar, times(1)).hasStartDate();
+        verify(mockCalendar, times(1)).startDate();
+        verifyNoMoreInteractions(mockCalendar);
     }
 }
