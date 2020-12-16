@@ -26,7 +26,6 @@ import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.TimeZone;
 
 import static com.google.common.truth.Truth.assertThat;
 
