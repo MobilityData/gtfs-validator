@@ -39,4 +39,9 @@ public class GtfsColorTest {
     public void toHtmlColor() {
         assertThat(GtfsColor.fromInt(0x11ff00).toHtmlColor()).isEqualTo("#11FF00");
     }
+
+    @Test
+    public void rec601Luma() {
+        assertThat(GtfsColor.fromString("00bfff").rec601Luma()).isEqualTo(140);
+    }
 }
