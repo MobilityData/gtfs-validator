@@ -39,8 +39,10 @@ import java.util.Map;
  * provides convenient methods to invoke them on a single entity of file.
  */
 public class ValidatorLoader {
-    private final ListMultimap<Class<? extends GtfsEntity>, SingleEntityValidator<?>> singleEntityValidators = ArrayListMultimap.create();
-    private final ListMultimap<Class<? extends GtfsTableContainer>, Class<? extends FileValidator>> singleFileValidators = ArrayListMultimap.create();
+    private final ListMultimap<Class<? extends GtfsEntity>, SingleEntityValidator<?>> singleEntityValidators =
+            ArrayListMultimap.create();
+    private final ListMultimap<Class<? extends GtfsTableContainer>, Class<? extends FileValidator>>
+            singleFileValidators = ArrayListMultimap.create();
     private final List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
 
     public ValidatorLoader() {
@@ -120,7 +122,8 @@ public class ValidatorLoader {
         }
     }
 
-    public <T extends GtfsEntity> void invokeSingleFileValidators(GtfsTableContainer<T> table, NoticeContainer noticeContainer) {
+    public <T extends GtfsEntity> void invokeSingleFileValidators(GtfsTableContainer<T> table,
+                                                                  NoticeContainer noticeContainer) {
         for (Class<? extends FileValidator> validatorClass : singleFileValidators.get(table.getClass())) {
             FileValidator validator;
             try {
@@ -157,7 +160,8 @@ public class ValidatorLoader {
             }
             GtfsTableContainer table = feed.getTable((Class<? extends GtfsTableContainer>) field.getType());
             if (table == null) {
-                throw new InstantiationException("Cannot find " + field.getType().getSimpleName() + " in feed container");
+                throw new InstantiationException("Cannot find " + field.getType().getSimpleName()
+                        + " in feed container");
             }
             field.set(validator, table);
         }
@@ -181,7 +185,8 @@ public class ValidatorLoader {
         StringBuilder builder = new StringBuilder();
         if (!singleEntityValidators.isEmpty()) {
             builder.append("Single-entity validators\n");
-            for (Map.Entry<Class<? extends GtfsEntity>, Collection<SingleEntityValidator<?>>> entry : singleEntityValidators.asMap().entrySet()) {
+            for (Map.Entry<Class<? extends GtfsEntity>,
+                    Collection<SingleEntityValidator<?>>> entry : singleEntityValidators.asMap().entrySet()) {
                 builder.append("\t").append(entry.getKey().getSimpleName()).append(": ");
                 for (SingleEntityValidator validator : entry.getValue()) {
                     builder.append(validator.getClass().getSimpleName()).append(" ");
