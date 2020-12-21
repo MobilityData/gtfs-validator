@@ -80,7 +80,8 @@ public class ValidatorLoader {
                     try {
                         singleEntityValidators.put(
                                 (Class<? extends GtfsEntity>) parameterTypes[0],
-                                ((Class<? extends SingleEntityValidator>) validatorClass).getConstructor().newInstance());
+                                ((Class<? extends SingleEntityValidator>) validatorClass).getConstructor()
+                                        .newInstance());
                     } catch (ReflectiveOperationException exception) {
                         System.err.println("Cannot instantiate validator: " + exception);
                     }
