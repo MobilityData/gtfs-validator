@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Google LLC
+ * Copyright 2020 Google LLC, MobilityData IO
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,36 +40,41 @@ public class TableHeaderValidatorTest {
     }
 
     @Test
-    public void unknownColumn() {
+    public void unknownColumnShouldGenerateNotice() {
         NoticeContainer container = new NoticeContainer();
 
-        assertThat(new TableHeaderValidator().validate("stops.txt", new String[]{"stop_id", "stop_name", "stop_extra"},
-                ImmutableSet.of("stop_id", "stop_name"), ImmutableSet.of("stop_id"), container)).isTrue();
-        assertThat(container.getNotices()).containsExactly(new UnknownColumnNotice("stops.txt", "stop_extra", 3));
+        assertThat(new TableHeaderValidator()
+                .validate("stops.txt", new String[]{"stop_id", "stop_name", "stop_extra"},
+                        ImmutableSet.of("stop_id", "stop_name"), ImmutableSet.of("stop_id"), container)).isTrue();
+        assertThat(container.getNotices()).containsExactly(
+                new UnknownColumnNotice("stops.txt", "stop_extra", 3));
     }
 
     @Test
-    public void missingRequiredColumn() {
+    public void missingRequiredColumnShouldGenerateNotice() {
         NoticeContainer container = new NoticeContainer();
 
         assertThat(new TableHeaderValidator().validate("stops.txt", new String[]{"stop_name"},
                 ImmutableSet.of("stop_id", "stop_name"),
                 ImmutableSet.of("stop_id"), container)).isFalse();
-        assertThat(container.getNotices()).containsExactly(new MissingRequiredColumnError("stops.txt", "stop_id"));
+        assertThat(container.getNotices()).containsExactly(
+                new MissingRequiredColumnError("stops.txt", "stop_id"));
     }
 
     @Test
-    public void duplicatedColumn() {
+    public void duplicatedColumnShouldGenerateNotice() {
         NoticeContainer container = new NoticeContainer();
 
-        assertThat(new TableHeaderValidator().validate("stops.txt", new String[]{"stop_id", "stop_name", "stop_id"},
-                ImmutableSet.of("stop_id", "stop_name"),
-                ImmutableSet.of("stop_id"), container)).isFalse();
-        assertThat(container.getNotices()).containsExactly(new DuplicatedColumnNotice("stops.txt", "stop_id", 1, 3));
+        assertThat(new TableHeaderValidator()
+                .validate("stops.txt", new String[]{"stop_id", "stop_name", "stop_id"},
+                        ImmutableSet.of("stop_id", "stop_name"),
+                        ImmutableSet.of("stop_id"), container)).isFalse();
+        assertThat(container.getNotices()).containsExactly(
+                new DuplicatedColumnNotice("stops.txt", "stop_id", 1, 3));
     }
 
     @Test
-    public void emptyFile() {
+    public void emptyFileShouldNotGenerateNotice() {
         NoticeContainer container = new NoticeContainer();
 
         assertThat(new TableHeaderValidator().validate("stops.txt", new String[]{},
