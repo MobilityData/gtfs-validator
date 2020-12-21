@@ -105,7 +105,6 @@ public class ValidatorLoader {
                 multiFileValidators.add(validatorClass);
             }
         }
-
     }
 
     private static boolean isTableInjectableField(Field field) {
