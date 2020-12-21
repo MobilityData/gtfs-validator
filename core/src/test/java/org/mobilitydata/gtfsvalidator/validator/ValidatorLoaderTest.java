@@ -16,10 +16,29 @@
 
 package org.mobilitydata.gtfsvalidator.validator;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+//TODO: implement test for ValidatorLoader class
 @RunWith(JUnit4.class)
 public class ValidatorLoaderTest {
-    //TODO: implement test for ValidatorLoader class
+    @Test
+    public void shouldReturnAllSingleEntityValidatorsForClass() {}
+
+    @Test
+    public void shouldInvokeValidateMethodOfSingleEntityValidators() {}
+
+    @Test
+    public void shouldInvokeValidateMethodOfSingleFileValidators() {}
+
+    @Test
+    public void shouldCreateMultiFileValidators() {}
+
+    @Test
+    public void createMultiFileValidatorsShouldThrowExceptionOnErrorWhenAddingValidator() {}
+
+    @Test
+    public void shouldListAllValidators() {}
+
 }
