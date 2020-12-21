@@ -24,7 +24,14 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.table.GtfsAgency.*;
+import static org.mobilitydata.gtfsvalidator.table.GtfsAgency.DEFAULT_AGENCY_ID;
+import static org.mobilitydata.gtfsvalidator.table.GtfsAgency.DEFAULT_AGENCY_EMAIL;
+import static org.mobilitydata.gtfsvalidator.table.GtfsAgency.DEFAULT_AGENCY_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsAgency.DEFAULT_AGENCY_URL;
+import static org.mobilitydata.gtfsvalidator.table.GtfsAgency.DEFAULT_AGENCY_TIMEZONE;
+import static org.mobilitydata.gtfsvalidator.table.GtfsAgency.DEFAULT_AGENCY_LANG;
+import static org.mobilitydata.gtfsvalidator.table.GtfsAgency.DEFAULT_AGENCY_PHONE;
+import static org.mobilitydata.gtfsvalidator.table.GtfsAgency.DEFAULT_AGENCY_FARE_URL;
 
 @RunWith(JUnit4.class)
 public class GtfsAgencyTest {
