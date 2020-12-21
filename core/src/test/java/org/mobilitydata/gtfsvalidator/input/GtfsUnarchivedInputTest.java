@@ -41,7 +41,7 @@ public class GtfsUnarchivedInputTest {
         tmpDir.newFolder("unarchived/nested-folder");
         tmpDir.newFile("unarchived/nested-folder/nested.txt");
 
-        GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.getAbsolutePath());
+        GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath());
         assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
     }
 
@@ -50,7 +50,7 @@ public class GtfsUnarchivedInputTest {
         File rootDir = tmpDir.newFolder("unarchived");
         tmpDir.newFile("unarchived/noext");
 
-        GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.getAbsolutePath());
+        GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath());
         assertThat(gtfsInput.getFilenames()).containsExactly("noext");
     }
 }

@@ -16,33 +16,34 @@
 
 package org.mobilitydata.gtfsvalidator.input;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
- * Implements support for GTFS ZIP archives.
+ * Implements support for GTFS ZIP archives located at given {@code java.nio.file.Path}.
  */
-public class GtfsZipFileInput extends GtfsInput {
-    private final Set<String> filenames = new HashSet();
-    private final ZipFile zipFile;
+public class GtfsZipInMemoryInput extends GtfsInput {
+    private final Set<String> filenames = new HashSet<>();
+    private final String path;
+    private final byte[] bytes;
 
-    public GtfsZipFileInput(File file) throws IOException {
-        zipFile = new ZipFile(file);
-        for (Enumeration<? extends ZipEntry> i = zipFile.entries(); i
-                .hasMoreElements(); ) {
-            ZipEntry entry = i.nextElement();
+    public GtfsZipInMemoryInput(String path, byte[] bytes) throws IOException {
+        this.path = path;
+        this.bytes = bytes;
+
+        ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(bytes));
+        ZipEntry entry = zipInputStream.getNextEntry();
+        while (entry != null) {
             if (!insideZipDirectory(entry)) {
                 filenames.add(entry.getName());
             }
+            entry = zipInputStream.getNextEntry();
         }
     }
 
@@ -57,16 +58,21 @@ public class GtfsZipFileInput extends GtfsInput {
 
     @Override
     public Set<String> getFilenames() {
-        return Collections.unmodifiableSet(filenames);
+        return filenames;
     }
 
     @Override
     public InputStream getFile(String filename) throws IOException {
-        ZipEntry entry = zipFile.getEntry(filename);
-        if (entry == null) {
-            throw new FileNotFoundException(
-                    Paths.get(zipFile.getName(), filename).toString());
+        if (!filenames.contains(filename)) {
+            throw new FileNotFoundException(path + ":" + filename);
         }
-        return zipFile.getInputStream(entry);
+        ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(bytes));
+        ZipEntry entry = zipInputStream.getNextEntry();
+        for (; ; ) {
+            if (entry.getName().equals(filename)) {
+                return zipInputStream;
+            }
+            entry = zipInputStream.getNextEntry();
+        }
     }
 }

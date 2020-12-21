@@ -28,6 +28,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -45,7 +46,7 @@ public class GtfsInputTest {
     public void inputNotFound() {
         assertThrows(
                 FileNotFoundException.class,
-                () -> GtfsInput.createFromPath("/no/such/file"));
+                () -> GtfsInput.createFromPath(Paths.get("/no/such/file")));
     }
 
     @Test
@@ -53,7 +54,7 @@ public class GtfsInputTest {
         File rootDir = tmpDir.newFolder("unarchived");
         tmpDir.newFile("unarchived/stops.txt");
 
-        GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.getAbsolutePath());
+        GtfsInput gtfsInput = GtfsInput.createFromPath(rootDir.toPath());
         assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
     }
 
@@ -66,7 +67,7 @@ public class GtfsInputTest {
         out.closeEntry();
         out.close();
 
-        GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.getAbsolutePath());
+        GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath());
         assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
     }
 
@@ -97,7 +98,7 @@ public class GtfsInputTest {
 
         // URL from #398
         underTest = GtfsInput.createFromUrl(
-        new URL("https://octa.net/current/google_transit.zip"),
+                new URL("https://octa.net/current/google_transit.zip"),
                 "storage");
         assertThat(underTest instanceof GtfsZipFileInput);
         // remove created file
@@ -112,4 +113,25 @@ public class GtfsInputTest {
                         new URL("https://openmobilitydata.org/p/mobilitydata-invalid-dataset/197/latest/download"),
                         "storage"));
     }
+
+    @Test
+    public void createFromValidUrlInMemoryShouldNotThrowException() throws IOException, URISyntaxException {
+        GtfsInput underTest = GtfsInput.createFromUrlInMemory(
+                new URL("https://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/" +
+                        "valid_zip_sample.zip"));
+        assertThat(underTest instanceof GtfsZipInMemoryInput);
+    }
+
+    @Test
+    public void createFromRedirectedUrlInMemoryShouldNotThrowException() throws IOException, URISyntaxException {
+        GtfsInput underTest = GtfsInput.createFromUrlInMemory(
+                new URL("http://github.com/MobilityData/gtfs-validator/raw/v1.4.0/usecase/src/test/resources/" +
+                        "valid_zip_sample.zip"));
+        assertThat(underTest instanceof GtfsZipInMemoryInput);
+
+        // URL from #398
+        underTest = GtfsInput.createFromUrlInMemory(new URL("https://octa.net/current/google_transit.zip"));
+        assertThat(underTest instanceof GtfsZipInMemoryInput);
+    }
+
 }
