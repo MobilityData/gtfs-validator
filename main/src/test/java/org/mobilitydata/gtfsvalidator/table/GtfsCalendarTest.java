@@ -73,7 +73,6 @@ public class GtfsCalendarTest {
     @Test
     public void shouldReturnDefaultValuesForMissingValues() {
         GtfsCalendar.Builder builder = new GtfsCalendar.Builder();
-
         GtfsCalendar underTest = builder
                 .setServiceId(null)
                 .setMonday(null)
@@ -156,7 +155,6 @@ public class GtfsCalendarTest {
     @Test
     public void fieldValuesNotSetShouldBeNull() {
         GtfsCalendar.Builder builder = new GtfsCalendar.Builder();
-
         GtfsCalendar underTest = builder.build();
 
         assertThat(underTest.serviceId()).isNull();
