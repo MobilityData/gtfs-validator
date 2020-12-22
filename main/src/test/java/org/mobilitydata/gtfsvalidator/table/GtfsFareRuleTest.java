@@ -34,7 +34,7 @@ public class GtfsFareRuleTest {
         GtfsFareRule.Builder builder = new GtfsFareRule.Builder();
         GtfsFareRule underTest = builder
                 .setFareId("fare id")
-                .setRouteId("route id ")
+                .setRouteId("route id")
                 .setOriginId("origin id")
                 .setDestinationId("destination id")
                 .setContainsId("contains id")
