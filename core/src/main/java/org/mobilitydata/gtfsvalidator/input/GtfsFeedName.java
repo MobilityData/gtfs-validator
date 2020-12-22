@@ -36,6 +36,10 @@ public class GtfsFeedName {
 
     private static final String INVALID_FEED_NAME_MESSAGE = "Feed name must follow format `cc-abc-...', where cc is an ISO Alpha 2 country code";
 
+    // ISO 3166-1 Alpha 2 country code for the United Kingdom is "GB" but feed names may use "UK".
+    private static final String UK = "UK";
+    private static final String GB = "GB";
+
     private final String countryFirstName;
 
     private GtfsFeedName(String countryFirstName) {
@@ -54,9 +58,15 @@ public class GtfsFeedName {
 
     /**
      * Checks that the given string is a valid ISO Alpha 2 country code (case insensitive).
+     * <p>
+     * We support "UK" as an additional country code equivalent to the ISO 3166-1 Alpha 2 code "GB".
      */
     public static boolean isValidISOAlpha2(String s) {
-        return s.length() == 2 && ISO_COUNTRIES.contains(s.toUpperCase());
+        if (s.length() != 2) {
+            return false;
+        }
+        s = s.toUpperCase();
+        return s.equals(UK) || ISO_COUNTRIES.contains(s);
     }
 
     /**
@@ -107,12 +117,15 @@ public class GtfsFeedName {
     }
 
     /**
-     * Returns the uppercase ISO Alpha country code component, e.g., "NL" or "AU".
+     * Returns the uppercase ISO 3166-1 Alpha 2 country code component, e.g., "NL" or "AU".
+     *
+     * Note that this returns "GB" for feeds that use the non-standard "UK" country code.
      *
      * @return uppercase ISO Alpha country code
      */
     public String getISOAlpha2CountryCode() {
-        return countryFirstName.substring(0, 2).toUpperCase();
+        String countryCode = countryFirstName.substring(0, 2).toUpperCase();
+        return countryCode.equals(UK) ? GB : countryCode;
     }
 
     @Override
