@@ -16,24 +16,22 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class NoticeContainer {
     private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100000;
-    private final ObjectMapper mapper = new ObjectMapper();
+    private static final Gson DEFAULT_GSON = new GsonBuilder().serializeNulls().create();
 
-    private List<Notice> notices = new ArrayList<>();
+    private final List<Notice> notices = new ArrayList<>();
 
     public void addNotice(Notice notice) {
         notices.add(notice);
@@ -43,16 +41,19 @@ public class NoticeContainer {
         return notices;
     }
 
-    public String exportJson() throws JsonProcessingException {
-        ObjectNode root = new ObjectNode(new JsonNodeFactory(true));
-        ArrayNode jsonNotices = root.withArray("notices");
+    public String exportJson() {
+        JsonObject root = new JsonObject();
+        JsonArray jsonNotices = new JsonArray();
+        root.add("notices", jsonNotices);
 
         ListMultimap<Integer, Notice> noticesByType = getNoticesByType();
         for (Collection<Notice> noticesOfType : noticesByType.asMap().values()) {
-            ObjectNode noticesOfTypeJson = jsonNotices.addObject();
-            noticesOfTypeJson.put("code", noticesOfType.iterator().next().getCode());
-            noticesOfTypeJson.put("totalNotices", noticesOfType.size());
-            ArrayNode noticesArrayJson = noticesOfTypeJson.withArray("notices");
+            JsonObject noticesOfTypeJson = new JsonObject();
+            jsonNotices.add(noticesOfTypeJson);
+            noticesOfTypeJson.addProperty("code", noticesOfType.iterator().next().getCode());
+            noticesOfTypeJson.addProperty("totalNotices", noticesOfType.size());
+            JsonArray noticesArrayJson = new JsonArray();
+            noticesOfTypeJson.add("notices", noticesArrayJson);
             int i = 0;
             for (Notice notice : noticesOfType) {
                 ++i;
@@ -60,14 +61,11 @@ public class NoticeContainer {
                     // Do not export too many notices for this type.
                     break;
                 }
-                ObjectNode noticeJson = noticesArrayJson.addObject();
-                for (Map.Entry<String, Object> kv : notice.getContext().entrySet()) {
-                    noticeJson.putPOJO(kv.getKey(), kv.getValue());
-                }
+                noticesArrayJson.add(DEFAULT_GSON.toJsonTree(notice.getContext()));
             }
         }
 
-        return mapper.writeValueAsString(root);
+        return DEFAULT_GSON.toJson(root);
     }
 
     private ListMultimap<Integer, Notice> getNoticesByType() {

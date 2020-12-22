@@ -16,27 +16,51 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(JUnit4.class)
 public class NoticeContainerTest {
     @Test
-    public void exportJson() throws JsonProcessingException {
+    public void exportJson() {
         NoticeContainer container = new NoticeContainer();
         container.addNotice(new MissingRequiredFileError("stops.txt"));
         container.addNotice(new MissingRequiredFileError("agency.txt"));
-
-        ObjectMapper mapper = new ObjectMapper();
-
         assertThat(container.exportJson()).isEqualTo(
                 "{\"notices\":[" +
                         "{\"code\":\"missing_required_file\",\"totalNotices\":2,\"notices\":" +
                         "[{\"filename\":\"stops.txt\"},{\"filename\":\"agency.txt\"}]}]}");
+    }
+
+    @Test
+    public void exportNullInContext() {
+        // Test that `null` value in the context is serialized properly.
+        NoticeContainer container = new NoticeContainer();
+        // Use HashMap because ImmutableMap does not support nulls.
+        Map<String, Object> context = new HashMap<>();
+        context.put("nullField", null);
+        container.addNotice(new TestNotice("test_notice", context));
+        assertThat(container.exportJson()).isEqualTo(
+                "{\"notices\":[{\"code\":\"test_notice\",\"totalNotices\":1,\"notices\":[{\"nullField\":null}]}]}");
+    }
+
+    static private class TestNotice extends Notice {
+        private final String code;
+
+        public TestNotice(String code, Map<String, Object> context) {
+            super(context);
+            this.code = code;
+        }
+
+        @Override
+        public String getCode() {
+            return code;
+        }
     }
 }
