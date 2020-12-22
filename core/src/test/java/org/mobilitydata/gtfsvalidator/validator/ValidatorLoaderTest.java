@@ -40,5 +40,4 @@ public class ValidatorLoaderTest {
 
     @Test
     public void shouldListAllValidators() {}
-
 }
