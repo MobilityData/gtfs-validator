@@ -75,4 +75,16 @@ public class NoticeContainer {
         }
         return noticesByType;
     }
+
+    /**
+     * Adds all notices from another container.
+     * <p>
+     * This is useful for multithreaded validation: each thread has its own notice container which is merged
+     * into the global container when the thread finishes.
+     *
+     * @param otherContainer a container to take the notices from
+     */
+    public void addAll(NoticeContainer otherContainer) {
+        notices.addAll(otherContainer.notices);
+    }
 }
