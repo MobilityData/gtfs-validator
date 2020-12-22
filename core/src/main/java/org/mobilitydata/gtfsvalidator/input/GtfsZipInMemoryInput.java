@@ -25,6 +25,8 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import static org.mobilitydata.gtfsvalidator.input.GtfsZipFileInput.isInsideZipDirectory;
+
 /**
  * Implements support for GTFS ZIP archives located at given {@code java.nio.file.Path}.
  */
@@ -40,20 +42,11 @@ public class GtfsZipInMemoryInput extends GtfsInput {
         ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(bytes));
         ZipEntry entry = zipInputStream.getNextEntry();
         while (entry != null) {
-            if (!insideZipDirectory(entry)) {
+            if (!isInsideZipDirectory(entry)) {
                 filenames.add(entry.getName());
             }
             entry = zipInputStream.getNextEntry();
         }
-    }
-
-    private boolean insideZipDirectory(ZipEntry entry) {
-        // We do not use File.separator because the .zip file specification states:
-        // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility with Amiga and
-        // UNIX file systems etc.
-        //
-        // Directory names in end with '/'.
-        return entry.getName().contains("/");
     }
 
     @Override

@@ -44,7 +44,7 @@ import java.util.Set;
  */
 public abstract class GtfsInput {
     /**
-     * Creates an specific GtfsInput to read data from the given path.
+     * Creates a specific GtfsInput to read data from the given path.
      *
      * @param path the path to the resource
      * @return the {@code GtfsInput} created after processing the GTFS archive
@@ -98,12 +98,12 @@ public abstract class GtfsInput {
     }
 
     /**
-     * Downloads data from network
+     * Downloads data from network.
      *
-     * @param sourceUrl     the fully qualified URL
-     * @param outputStream  the output stream
-     * @throws IOException         if no file could not be found at the specified location
-     * @throws URISyntaxException  if URL is malformed
+     * @param sourceUrl    the fully qualified URL
+     * @param outputStream the output stream
+     * @throws IOException        if no file could not be found at the specified location
+     * @throws URISyntaxException if URL is malformed
      */
     private static void loadFromUrl(URL sourceUrl, OutputStream outputStream)
             throws IOException, URISyntaxException {
@@ -117,7 +117,7 @@ public abstract class GtfsInput {
     }
 
     /**
-     * Creates a path from a given string or cleans it if the path already exists
+     * Creates a path from a given string or cleans it if the path already exists.
      *
      * @param toCleanOrCreate the path to clean or create as string
      * @return the created @code{Path}
