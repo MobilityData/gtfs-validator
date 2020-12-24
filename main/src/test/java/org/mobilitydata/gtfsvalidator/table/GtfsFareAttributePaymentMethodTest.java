@@ -35,5 +35,4 @@ public class GtfsFareAttributePaymentMethodTest {
         assertThat(GtfsFareAttributePaymentMethod.forNumber(-1)).isNull();
         assertThat(GtfsFareAttributePaymentMethod.forNumber(4)).isNull();
     }
-
 }
