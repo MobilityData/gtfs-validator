@@ -81,6 +81,8 @@ public class GtfsFareAttributeTest {
         assertThat(underTest.fareId()).matches(DEFAULT_FARE_ID);
         assertThat(underTest.price()).isEqualTo(DEFAULT_PRICE);
         assertThat(underTest.currencyType()).isEqualTo(DEFAULT_CURRENCY_TYPE);
+        // FIXME: should this be GtfsFareAttributePaymentMethod.UNRECOGNIZED since there is no default value in case
+        //  field is missing?
         assertThat(underTest.paymentMethod())
                 .isEqualTo(GtfsFareAttributePaymentMethod.forNumber(DEFAULT_PAYMENT_METHOD));
         assertThat(underTest.transfers()).isEqualTo(GtfsFareAttributeTransfers.forNumber(DEFAULT_TRANSFERS));
@@ -114,6 +116,8 @@ public class GtfsFareAttributeTest {
         assertThat(underTest.fareId()).matches(DEFAULT_FARE_ID);
         assertThat(underTest.price()).isEqualTo(DEFAULT_PRICE);
         assertThat(underTest.currencyType()).isEqualTo(DEFAULT_CURRENCY_TYPE);
+        // FIXME: should this be GtfsFareAttributePaymentMethod.UNRECOGNIZED since there is no default value in case
+        //  field is missing?
         assertThat(underTest.paymentMethod())
                 .isEqualTo(GtfsFareAttributePaymentMethod.forNumber(DEFAULT_PAYMENT_METHOD));
         assertThat(underTest.transfers()).isEqualTo(GtfsFareAttributeTransfers.forNumber(DEFAULT_TRANSFERS));
@@ -138,6 +142,8 @@ public class GtfsFareAttributeTest {
         assertThat(underTest.fareId()).isNull();
         assertThat(underTest.price()).isNull();
         assertThat(underTest.currencyType()).isEqualTo(DEFAULT_CURRENCY_TYPE);
+        // FIXME: should this be GtfsFareAttributePaymentMethod.UNRECOGNIZED since there is no default value in case
+        //  field is missing?
         assertThat(underTest.paymentMethod())
                 .isEqualTo(GtfsFareAttributePaymentMethod.forNumber(DEFAULT_PAYMENT_METHOD));
         assertThat(underTest.transfers()).isEqualTo(GtfsFareAttributeTransfers.forNumber(DEFAULT_TRANSFERS));
