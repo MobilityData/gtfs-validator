@@ -141,9 +141,9 @@ public class GtfsFeedLoader {
                 });
             }
             try {
-                exec.invokeAll(validatorCallables).forEach(f -> {
+                exec.invokeAll(validatorCallables).forEach(container -> {
                     try {
-                        noticeContainer.addAll(f.get());
+                        noticeContainer.addAll(container.get());
                     } catch (ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                     }
