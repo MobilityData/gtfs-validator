@@ -22,17 +22,7 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.Builder;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_ID;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_AGENCY_ID;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_SHORT_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_LONG_NAME;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_DESC;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_TYPE;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_URL;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_COLOR;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_TEXT_COLOR;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_SORT_ORDER;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.*;
 
 @RunWith(JUnit4.class)
 public class GtfsRouteTest {
@@ -110,8 +100,11 @@ public class GtfsRouteTest {
         assertThat(underTest.routeColor()).isEqualTo(DEFAULT_ROUTE_COLOR);
         assertThat(underTest.routeTextColor()).isEqualTo(DEFAULT_ROUTE_TEXT_COLOR);
         assertThat(underTest.routeSortOrder()).isEqualTo(DEFAULT_ROUTE_SORT_ORDER);
-        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff.NOT_AVAILABLE);
-        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff.NOT_AVAILABLE);
+        // continuous_drop_off and continuous_pickup are optional fields with a default value.
+        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff
+                .forNumber(DEFAULT_CONTINUOUS_PICKUP));
+        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff
+                .forNumber(DEFAULT_CONTINUOUS_DROP_OFF));
 
         assertThat(underTest.hasRouteId()).isFalse();
         assertThat(underTest.hasAgencyId()).isFalse();
@@ -156,8 +149,11 @@ public class GtfsRouteTest {
         assertThat(underTest.routeColor()).isEqualTo(DEFAULT_ROUTE_COLOR);
         assertThat(underTest.routeTextColor()).isEqualTo(DEFAULT_ROUTE_TEXT_COLOR);
         assertThat(underTest.routeSortOrder()).isEqualTo(DEFAULT_ROUTE_SORT_ORDER);
-        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff.NOT_AVAILABLE);
-        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff.NOT_AVAILABLE);
+        // continuous_drop_off and continuous_pickup are optional fields with a default value.
+        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff
+                .forNumber(DEFAULT_CONTINUOUS_PICKUP));
+        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff
+                .forNumber(DEFAULT_CONTINUOUS_DROP_OFF));
 
         assertThat(underTest.hasRouteId()).isFalse();
         assertThat(underTest.hasAgencyId()).isFalse();
@@ -188,8 +184,11 @@ public class GtfsRouteTest {
         assertThat(underTest.routeColor()).isNull();
         assertThat(underTest.routeTextColor()).isNull();
         assertThat(underTest.routeSortOrder()).isEqualTo(DEFAULT_ROUTE_SORT_ORDER);
-        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff.ALLOWED);
-        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff.ALLOWED);
+        // continuous_drop_off and continuous_pickup are optional fields with a default value.
+        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff
+                .forNumber(DEFAULT_CONTINUOUS_PICKUP));
+        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff
+                .forNumber(DEFAULT_CONTINUOUS_DROP_OFF));
 
         assertThat(underTest.hasRouteId()).isFalse();
         assertThat(underTest.hasAgencyId()).isFalse();
