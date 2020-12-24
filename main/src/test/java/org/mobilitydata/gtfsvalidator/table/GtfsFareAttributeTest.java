@@ -85,6 +85,8 @@ public class GtfsFareAttributeTest {
         //  field is missing?
         assertThat(underTest.paymentMethod())
                 .isEqualTo(GtfsFareAttributePaymentMethod.forNumber(DEFAULT_PAYMENT_METHOD));
+        // GtfsFareAttributeTransfers is an optional field with a default value. Therefore is field is not provided it
+        // will be evaluated to its default value
         assertThat(underTest.transfers()).isEqualTo(GtfsFareAttributeTransfers.forNumber(DEFAULT_TRANSFERS));
         assertThat(underTest.transferDuration()).isEqualTo(DEFAULT_TRANSFER_DURATION);
         assertThat(underTest.agencyId()).matches(DEFAULT_AGENCY_ID);
@@ -120,6 +122,8 @@ public class GtfsFareAttributeTest {
         //  field is missing?
         assertThat(underTest.paymentMethod())
                 .isEqualTo(GtfsFareAttributePaymentMethod.forNumber(DEFAULT_PAYMENT_METHOD));
+        // GtfsFareAttributeTransfers is an optional field with a default value. Therefore is field is not provided it
+        // will be evaluated to its default value
         assertThat(underTest.transfers()).isEqualTo(GtfsFareAttributeTransfers.forNumber(DEFAULT_TRANSFERS));
         assertThat(underTest.transferDuration()).isEqualTo(DEFAULT_TRANSFER_DURATION);
         assertThat(underTest.agencyId()).matches(DEFAULT_AGENCY_ID);
@@ -146,6 +150,8 @@ public class GtfsFareAttributeTest {
         //  field is missing?
         assertThat(underTest.paymentMethod())
                 .isEqualTo(GtfsFareAttributePaymentMethod.forNumber(DEFAULT_PAYMENT_METHOD));
+        // GtfsFareAttributeTransfers is an optional field with a default value. Therefore is field is not provided it
+        // will be evaluated to its default value
         assertThat(underTest.transfers()).isEqualTo(GtfsFareAttributeTransfers.forNumber(DEFAULT_TRANSFERS));
         assertThat(underTest.transferDuration()).isEqualTo(DEFAULT_TRANSFER_DURATION);
         assertThat(underTest.agencyId()).isNull();
