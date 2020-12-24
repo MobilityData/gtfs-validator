@@ -145,6 +145,8 @@ public class GtfsAttributionTest {
         assertThat(underTest.attributionEmail()).matches(DEFAULT_ATTRIBUTION_EMAIL);
         assertThat(underTest.attributionUrl()).matches(DEFAULT_ATTRIBUTION_URL);
         assertThat(underTest.attributionPhone()).matches(DEFAULT_ATTRIBUTION_PHONE);
+        // is_operator, is_authority and is_producer are optional field than can left be blank.
+        // For this reason if they are not defined their default value is used
         assertThat(underTest.isAuthority()).isEqualTo(GtfsAttributionRole.forNumber(DEFAULT_IS_AUTHORITY));
         assertThat(underTest.isOperator()).isEqualTo(GtfsAttributionRole.forNumber(DEFAULT_IS_OPERATOR));
         assertThat(underTest.isProducer()).isEqualTo(GtfsAttributionRole.forNumber(DEFAULT_IS_PRODUCER));
@@ -175,9 +177,11 @@ public class GtfsAttributionTest {
         assertThat(underTest.attributionEmail()).isNull();
         assertThat(underTest.attributionUrl()).isNull();
         assertThat(underTest.attributionPhone()).isNull();
-        assertThat(underTest.isAuthority()).isEqualTo(GtfsAttributionRole.NOT_ASSIGNED);
-        assertThat(underTest.isOperator()).isEqualTo(GtfsAttributionRole.NOT_ASSIGNED);
-        assertThat(underTest.isProducer()).isEqualTo(GtfsAttributionRole.NOT_ASSIGNED);
+        // is_operator, is_authority and is_producer are optional field than can left be blank.
+        // For this reason if they are not defined their default value is used
+        assertThat(underTest.isAuthority()).isEqualTo(GtfsAttributionRole.forNumber(DEFAULT_IS_AUTHORITY));
+        assertThat(underTest.isOperator()).isEqualTo(GtfsAttributionRole.forNumber(DEFAULT_IS_OPERATOR));
+        assertThat(underTest.isProducer()).isEqualTo(GtfsAttributionRole.forNumber(DEFAULT_IS_PRODUCER));
 
         assertThat(underTest.hasAttributionId()).isFalse();
         assertThat(underTest.hasAgencyId()).isFalse();
