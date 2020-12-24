@@ -111,6 +111,7 @@ public class GtfsStopTimeTest {
         assertThat(underTest.stopHeadsign()).isEqualTo(DEFAULT_STOP_HEADSIGN);
         assertThat(underTest.pickupType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_PICKUP_TYPE));
         assertThat(underTest.dropOffType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_DROP_OFF_TYPE));
+        // continuous_drop_off and continuous_pickup are optional fields with a default value.
         assertThat(underTest.continuousPickup())
                 .isEqualTo(GtfsContinuousPickupDropOff.forNumber(DEFAULT_CONTINUOUS_PICKUP));
         assertThat(underTest.continuousDropOff())
@@ -161,6 +162,7 @@ public class GtfsStopTimeTest {
         assertThat(underTest.stopHeadsign()).isEqualTo(DEFAULT_STOP_HEADSIGN);
         assertThat(underTest.pickupType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_PICKUP_TYPE));
         assertThat(underTest.dropOffType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_DROP_OFF_TYPE));
+        // continuous_drop_off and continuous_pickup are optional fields with a default value.
         assertThat(underTest.continuousPickup())
                 .isEqualTo(GtfsContinuousPickupDropOff.forNumber(DEFAULT_CONTINUOUS_PICKUP));
         assertThat(underTest.continuousDropOff())
@@ -195,8 +197,11 @@ public class GtfsStopTimeTest {
         assertThat(underTest.stopHeadsign()).isNull();
         assertThat(underTest.pickupType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_PICKUP_TYPE));
         assertThat(underTest.dropOffType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_DROP_OFF_TYPE));
-        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff.ALLOWED);
-        assertThat(underTest.continuousDropOff()).isEqualTo(GtfsContinuousPickupDropOff.ALLOWED);
+        // continuous_drop_off and continuous_pickup are optional fields with a default value.
+        assertThat(underTest.continuousPickup()).isEqualTo(GtfsContinuousPickupDropOff
+                .forNumber(DEFAULT_CONTINUOUS_PICKUP));
+        assertThat(underTest.continuousDropOff()).isEqualTo(GtfsContinuousPickupDropOff
+                .forNumber(DEFAULT_CONTINUOUS_DROP_OFF));
         assertThat(underTest.shapeDistTraveled()).isEqualTo(DEFAULT_SHAPE_DIST_TRAVELED);
         assertThat(underTest.timepoint()).isEqualTo(GtfsStopTimesTimepoint.APPROXIMATE);
 
