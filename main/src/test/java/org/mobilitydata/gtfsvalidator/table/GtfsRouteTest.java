@@ -95,6 +95,7 @@ public class GtfsRouteTest {
         assertThat(underTest.routeShortName()).isEqualTo(DEFAULT_ROUTE_SHORT_NAME);
         assertThat(underTest.routeLongName()).isEqualTo(DEFAULT_ROUTE_LONG_NAME);
         assertThat(underTest.routeDesc()).isEqualTo(DEFAULT_ROUTE_DESC);
+        // route_type in an optional fields with a default value.
         assertThat(underTest.routeType()).isEqualTo(GtfsRouteType.forNumber(DEFAULT_ROUTE_TYPE));
         assertThat(underTest.routeUrl()).isEqualTo(DEFAULT_ROUTE_URL);
         assertThat(underTest.routeColor()).isEqualTo(DEFAULT_ROUTE_COLOR);
@@ -144,6 +145,7 @@ public class GtfsRouteTest {
         assertThat(underTest.routeShortName()).isEqualTo(DEFAULT_ROUTE_SHORT_NAME);
         assertThat(underTest.routeLongName()).isEqualTo(DEFAULT_ROUTE_LONG_NAME);
         assertThat(underTest.routeDesc()).isEqualTo(DEFAULT_ROUTE_DESC);
+        // route_type in an optional fields with a default value.
         assertThat(underTest.routeType()).isEqualTo(GtfsRouteType.forNumber(DEFAULT_ROUTE_TYPE));
         assertThat(underTest.routeUrl()).isEqualTo(DEFAULT_ROUTE_URL);
         assertThat(underTest.routeColor()).isEqualTo(DEFAULT_ROUTE_COLOR);
@@ -179,6 +181,7 @@ public class GtfsRouteTest {
         assertThat(underTest.routeShortName()).isNull();
         assertThat(underTest.routeLongName()).isNull();
         assertThat(underTest.routeDesc()).isNull();
+        // route_type in an optional fields with a default value.
         assertThat(underTest.routeType()).isEqualTo(GtfsRouteType.forNumber(DEFAULT_ROUTE_TYPE));
         assertThat(underTest.routeUrl()).isNull();
         assertThat(underTest.routeColor()).isNull();
