@@ -109,6 +109,7 @@ public class GtfsStopTimeTest {
         assertThat(underTest.stopId()).isEqualTo(DEFAULT_STOP_ID);
         assertThat(underTest.stopSequence()).isEqualTo(DEFAULT_STOP_SEQUENCE);
         assertThat(underTest.stopHeadsign()).isEqualTo(DEFAULT_STOP_HEADSIGN);
+        // drop_off_type and pickup_typr are optional fields with a default value.
         assertThat(underTest.pickupType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_PICKUP_TYPE));
         assertThat(underTest.dropOffType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_DROP_OFF_TYPE));
         // continuous_drop_off and continuous_pickup are optional fields with a default value.
@@ -160,6 +161,7 @@ public class GtfsStopTimeTest {
         assertThat(underTest.stopId()).isEqualTo(DEFAULT_STOP_ID);
         assertThat(underTest.stopSequence()).isEqualTo(DEFAULT_STOP_SEQUENCE);
         assertThat(underTest.stopHeadsign()).isEqualTo(DEFAULT_STOP_HEADSIGN);
+        // drop_off_type and pickup_typr are optional fields with a default value.
         assertThat(underTest.pickupType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_PICKUP_TYPE));
         assertThat(underTest.dropOffType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_DROP_OFF_TYPE));
         // continuous_drop_off and continuous_pickup are optional fields with a default value.
@@ -195,6 +197,7 @@ public class GtfsStopTimeTest {
         assertThat(underTest.stopId()).isNull();
         assertThat(underTest.stopSequence()).isEqualTo(DEFAULT_STOP_SEQUENCE);
         assertThat(underTest.stopHeadsign()).isNull();
+        // drop_off_type and pickup_typr are optional fields with a default value.
         assertThat(underTest.pickupType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_PICKUP_TYPE));
         assertThat(underTest.dropOffType()).isEqualTo(GtfsPickupDropOff.forNumber(DEFAULT_DROP_OFF_TYPE));
         // continuous_drop_off and continuous_pickup are optional fields with a default value.
