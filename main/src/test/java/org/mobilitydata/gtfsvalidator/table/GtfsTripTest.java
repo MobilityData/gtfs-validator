@@ -100,6 +100,7 @@ public class GtfsTripTest {
         assertThat(underTest.shapeId()).isEqualTo(DEFAULT_SHAPE_ID);
         assertThat(underTest.wheelchairAccessible())
                 .isEqualTo(GtfsWheelchairBoarding.forNumber(DEFAULT_WHEELCHAIR_ACCESSIBLE));
+        // bikes_allowed is an optional field. If field is not provided, then it evaluates to its default value
         assertThat(underTest.bikesAllowed()).isEqualTo(GtfsBikesAllowed.forNumber(DEFAULT_BIKES_ALLOWED));
 
         assertThat(underTest.hasTripId()).isFalse();
@@ -139,7 +140,9 @@ public class GtfsTripTest {
         assertThat(underTest.directionId()).isEqualTo(GtfsTripDirectionId.forNumber(DEFAULT_DIRECTION_ID));
         assertThat(underTest.blockId()).isEqualTo(DEFAULT_BLOCK_ID);
         assertThat(underTest.shapeId()).isEqualTo(DEFAULT_SHAPE_ID);
-        assertThat(underTest.wheelchairAccessible()).isEqualTo(GtfsWheelchairBoarding.forNumber(DEFAULT_WHEELCHAIR_ACCESSIBLE));
+        assertThat(underTest.wheelchairAccessible())
+                .isEqualTo(GtfsWheelchairBoarding.forNumber(DEFAULT_WHEELCHAIR_ACCESSIBLE));
+        // bikes_allowed is an optional field. If field is not provided, then it evaluates to its default value
         assertThat(underTest.bikesAllowed()).isEqualTo(GtfsBikesAllowed.forNumber(DEFAULT_BIKES_ALLOWED));
 
         assertThat(underTest.hasTripId()).isFalse();
@@ -169,6 +172,7 @@ public class GtfsTripTest {
         assertThat(underTest.shapeId()).isNull();
         assertThat(underTest.wheelchairAccessible()).
                 isEqualTo(GtfsWheelchairBoarding.forNumber(DEFAULT_WHEELCHAIR_ACCESSIBLE));
+        // bikes_allowed is an optional field. If field is not provided, then it evaluates to its default value
         assertThat(underTest.bikesAllowed()).isEqualTo(GtfsBikesAllowed.forNumber(DEFAULT_BIKES_ALLOWED));
 
         assertThat(underTest.hasTripId()).isFalse();
