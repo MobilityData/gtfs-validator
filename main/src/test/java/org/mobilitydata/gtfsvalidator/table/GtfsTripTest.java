@@ -95,6 +95,7 @@ public class GtfsTripTest {
         assertThat(underTest.serviceId()).isEqualTo(DEFAULT_SERVICE_ID);
         assertThat(underTest.tripHeadsign()).isEqualTo(DEFAULT_TRIP_HEADSIGN);
         assertThat(underTest.tripShortName()).isEqualTo(DEFAULT_TRIP_SHORT_NAME);
+        // FIX ME: direction_id is an optional field with no default value. Should this be UNRECOGNIZED?
         assertThat(underTest.directionId()).isEqualTo(GtfsTripDirectionId.forNumber(DEFAULT_DIRECTION_ID));
         assertThat(underTest.blockId()).isEqualTo(DEFAULT_BLOCK_ID);
         assertThat(underTest.shapeId()).isEqualTo(DEFAULT_SHAPE_ID);
@@ -137,6 +138,7 @@ public class GtfsTripTest {
         assertThat(underTest.serviceId()).isEqualTo(DEFAULT_SERVICE_ID);
         assertThat(underTest.tripHeadsign()).isEqualTo(DEFAULT_TRIP_HEADSIGN);
         assertThat(underTest.tripShortName()).isEqualTo(DEFAULT_TRIP_SHORT_NAME);
+        // FIX ME: direction_id is an optional field with no default value. Should this be UNRECOGNIZED?
         assertThat(underTest.directionId()).isEqualTo(GtfsTripDirectionId.forNumber(DEFAULT_DIRECTION_ID));
         assertThat(underTest.blockId()).isEqualTo(DEFAULT_BLOCK_ID);
         assertThat(underTest.shapeId()).isEqualTo(DEFAULT_SHAPE_ID);
@@ -167,6 +169,7 @@ public class GtfsTripTest {
         assertThat(underTest.serviceId()).isNull();
         assertThat(underTest.tripHeadsign()).isNull();
         assertThat(underTest.tripShortName()).isNull();
+        // FIX ME: direction_id is an optional field with no default value. Should this be UNRECOGNIZED?
         assertThat(underTest.directionId()).isEqualTo(GtfsTripDirectionId.forNumber(DEFAULT_DIRECTION_ID));
         assertThat(underTest.blockId()).isNull();
         assertThat(underTest.shapeId()).isNull();
