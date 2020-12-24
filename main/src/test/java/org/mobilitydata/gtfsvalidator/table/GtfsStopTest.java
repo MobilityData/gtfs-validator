@@ -126,6 +126,8 @@ public class GtfsStopTest {
         assertThat(underTest.stopLon()).isEqualTo(DEFAULT_STOP_LON);
         assertThat(underTest.zoneId()).isEqualTo(DEFAULT_ZONE_ID);
         assertThat(underTest.stopUrl()).isEqualTo(DEFAULT_STOP_URL);
+        // location_type is a conditionally required field with a default value. Therefore, if not provided this field
+        // evaluates to its default value
         assertThat(underTest.locationType()).isEqualTo(GtfsLocationType.forNumber(DEFAULT_LOCATION_TYPE));
         assertThat(underTest.parentStation()).isEqualTo(DEFAULT_PARENT_STATION);
         assertThat(underTest.stopTimezone()).isEqualTo(DEFAULT_STOP_TIMEZONE);
@@ -181,6 +183,8 @@ public class GtfsStopTest {
         assertThat(underTest.stopLon()).isEqualTo(DEFAULT_STOP_LON);
         assertThat(underTest.zoneId()).isEqualTo(DEFAULT_ZONE_ID);
         assertThat(underTest.stopUrl()).isEqualTo(DEFAULT_STOP_URL);
+        // location_type is a conditionally required field with a default value. Therefore, if not provided this field
+        // evaluates to its default value
         assertThat(underTest.locationType()).isEqualTo(GtfsLocationType.forNumber(DEFAULT_LOCATION_TYPE));
         assertThat(underTest.parentStation()).isEqualTo(DEFAULT_PARENT_STATION);
         assertThat(underTest.stopTimezone()).isEqualTo(DEFAULT_STOP_TIMEZONE);
@@ -220,6 +224,8 @@ public class GtfsStopTest {
         assertThat(underTest.stopLon()).isEqualTo(DEFAULT_STOP_LON);
         assertThat(underTest.zoneId()).isNull();
         assertThat(underTest.stopUrl()).isNull();
+        // location_type is a conditionally required field with a default value. Therefore, if not provided this field
+        // evaluates to its default value
         assertThat(underTest.locationType()).isEqualTo(GtfsLocationType.forNumber(DEFAULT_LOCATION_TYPE));
         assertThat(underTest.parentStation()).isNull();
         assertThat(underTest.stopTimezone()).isNull();
