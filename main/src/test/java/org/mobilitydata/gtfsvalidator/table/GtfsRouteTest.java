@@ -22,7 +22,19 @@ import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.*;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.Builder;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_ID;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_AGENCY_ID;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_SHORT_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_LONG_NAME;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_DESC;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_TYPE;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_URL;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_COLOR;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_TEXT_COLOR;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_SORT_ORDER;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_CONTINUOUS_PICKUP;
+import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_CONTINUOUS_DROP_OFF;
 
 @RunWith(JUnit4.class)
 public class GtfsRouteTest {
