@@ -62,6 +62,7 @@ public class GtfsTransferTest {
 
         assertThat(underTest.fromStopId()).isEqualTo(DEFAULT_FROM_STOP_ID);
         assertThat(underTest.toStopId()).isEqualTo(DEFAULT_TO_STOP_ID);
+        // transfer_type is an optional field wirth default value
         assertThat(underTest.transferType()).isEqualTo(GtfsTransferType.forNumber(DEFAULT_TRANSFER_TYPE));
         assertThat(underTest.minTransferTime()).isEqualTo(DEFAULT_MIN_TRANSFER_TIME);
 
@@ -84,6 +85,7 @@ public class GtfsTransferTest {
 
         assertThat(underTest.fromStopId()).isEqualTo(DEFAULT_FROM_STOP_ID);
         assertThat(underTest.toStopId()).isEqualTo(DEFAULT_TO_STOP_ID);
+        // transfer_type is an optional field wirth default value
         assertThat(underTest.transferType()).isEqualTo(GtfsTransferType.forNumber(DEFAULT_TRANSFER_TYPE));
         assertThat(underTest.minTransferTime()).isEqualTo(DEFAULT_MIN_TRANSFER_TIME);
 
@@ -100,6 +102,7 @@ public class GtfsTransferTest {
 
         assertThat(underTest.fromStopId()).isNull();
         assertThat(underTest.toStopId()).isNull();
+        // transfer_type is an optional field wirth default value
         assertThat(underTest.transferType()).isEqualTo(GtfsTransferType.forNumber(DEFAULT_TRANSFER_TYPE));
         assertThat(underTest.minTransferTime()).isEqualTo(DEFAULT_MIN_TRANSFER_TIME);
 
