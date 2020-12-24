@@ -57,6 +57,9 @@ public class GtfsCalendarDateTest {
 
         assertThat(underTest.serviceId()).matches(GtfsCalendarDate.DEFAULT_SERVICE_ID);
         assertThat(underTest.date()).isEqualTo(GtfsCalendarDate.DEFAULT_DATE);
+        // exception_type is a required field and has no default value. Therefore, if field is not provided it will be
+        // interpreted as unrecognized. No GtfsEntity will be created from such data: a notice will be created and added
+        // to a notice container.
         assertThat(underTest.exceptionType()).isEqualTo(GtfsCalendarDateExceptionType.UNRECOGNIZED);
 
         assertThat(underTest.hasServiceId()).isFalse();
@@ -78,6 +81,9 @@ public class GtfsCalendarDateTest {
 
         assertThat(underTest.serviceId()).matches(GtfsCalendarDate.DEFAULT_SERVICE_ID);
         assertThat(underTest.date()).isEqualTo(GtfsCalendarDate.DEFAULT_DATE);
+        // exception_type is a required field and has no default value. Therefore, if field is not provided it will be
+        // interpreted as unrecognized. No GtfsEntity will be created from such data: a notice will be created and added
+        // to a notice container.
         assertThat(underTest.exceptionType()).isEqualTo(GtfsCalendarDateExceptionType.UNRECOGNIZED);
 
         assertThat(underTest.hasServiceId()).isFalse();
@@ -93,6 +99,9 @@ public class GtfsCalendarDateTest {
 
         assertThat(underTest.serviceId()).isNull();
         assertThat(underTest.date()).isNull();
+        // exception_type is a required field and has no default value. Therefore, if field is not provided it will be
+        // interpreted as unrecognized. No GtfsEntity will be created from such data: a notice will be created and added
+        // to a notice container.
         assertThat(underTest.exceptionType()).isEqualTo(GtfsCalendarDateExceptionType.UNRECOGNIZED);
 
         assertThat(underTest.hasServiceId()).isFalse();
