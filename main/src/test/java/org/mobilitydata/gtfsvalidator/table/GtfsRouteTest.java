@@ -33,8 +33,6 @@ import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_URL;
 import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_COLOR;
 import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_TEXT_COLOR;
 import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_ROUTE_SORT_ORDER;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_CONTINUOUS_PICKUP;
-import static org.mobilitydata.gtfsvalidator.table.GtfsRoute.DEFAULT_CONTINUOUS_DROP_OFF;
 
 @RunWith(JUnit4.class)
 public class GtfsRouteTest {
