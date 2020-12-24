@@ -102,6 +102,8 @@ public class GtfsPathwayTest {
         assertThat(underTest.pathwayId()).isEqualTo(DEFAULT_PATHWAY_ID);
         assertThat(underTest.fromStopId()).isEqualTo(DEFAULT_FROM_STOP_ID);
         assertThat(underTest.toStopId()).isEqualTo(DEFAULT_TO_STOP_ID);
+        // pathway_mode is a required field with no default value. Therefore, if not provided this field
+        // evaluates to UNRECOGNIZED.
         assertThat(underTest.pathwayMode()).isEqualTo(GtfsPathwayMode.UNRECOGNIZED);
         assertThat(underTest.isBidirectional()).isEqualTo(DEFAULT_IS_BIDIRECTIONAL);
         assertThat(underTest.length()).isEqualTo(DEFAULT_LENGTH);
@@ -147,6 +149,8 @@ public class GtfsPathwayTest {
         assertThat(underTest.pathwayId()).isEqualTo(DEFAULT_PATHWAY_ID);
         assertThat(underTest.fromStopId()).isEqualTo(DEFAULT_FROM_STOP_ID);
         assertThat(underTest.toStopId()).isEqualTo(DEFAULT_TO_STOP_ID);
+        // pathway_mode is a required field with no default value. Therefore, if not provided this field
+        // evaluates to UNRECOGNIZED.
         assertThat(underTest.pathwayMode()).isEqualTo(GtfsPathwayMode.UNRECOGNIZED);
         assertThat(underTest.isBidirectional()).isEqualTo(DEFAULT_IS_BIDIRECTIONAL);
         assertThat(underTest.length()).isEqualTo(DEFAULT_LENGTH);
@@ -179,6 +183,8 @@ public class GtfsPathwayTest {
         assertThat(underTest.pathwayId()).isNull();
         assertThat(underTest.fromStopId()).isNull();
         assertThat(underTest.toStopId()).isNull();
+        // pathway_mode is a required field with no default value. Therefore, if not provided this field
+        // evaluates to UNRECOGNIZED.
         assertThat(underTest.pathwayMode()).isEqualTo(GtfsPathwayMode.UNRECOGNIZED);
         assertThat(underTest.isBidirectional()).isEqualTo(DEFAULT_IS_BIDIRECTIONAL);
         assertThat(underTest.length()).isEqualTo(DEFAULT_LENGTH);
