@@ -71,6 +71,8 @@ public class GtfsFrequencyTest {
         assertThat(underTest.startTime()).isEqualTo(DEFAULT_START_TIME);
         assertThat(underTest.endTime()).isEqualTo(DEFAULT_END_TIME);
         assertThat(underTest.headwaySecs()).isEqualTo(DEFAULT_HEADWAY_SECS);
+        // exact_times is an optional field with a default value. Therefore, if not provided this fields evaluates to
+        // its default value.
         assertThat(underTest.exactTimes()).isEqualTo(GtfsFrequencyExactTimes.forNumber(DEFAULT_EXACT_TIMES));
 
         assertThat(underTest.hasTripId()).isFalse();
@@ -98,6 +100,8 @@ public class GtfsFrequencyTest {
         assertThat(underTest.startTime()).isEqualTo(DEFAULT_START_TIME);
         assertThat(underTest.endTime()).isEqualTo(DEFAULT_END_TIME);
         assertThat(underTest.headwaySecs()).isEqualTo(DEFAULT_HEADWAY_SECS);
+        // exact_times is an optional field with a default value. Therefore, if not provided this fields evaluates to
+        // its default value.
         assertThat(underTest.exactTimes()).isEqualTo(GtfsFrequencyExactTimes.forNumber(DEFAULT_EXACT_TIMES));
 
         assertThat(underTest.hasTripId()).isFalse();
@@ -116,6 +120,8 @@ public class GtfsFrequencyTest {
         assertThat(underTest.startTime()).isNull();
         assertThat(underTest.endTime()).isNull();
         assertThat(underTest.headwaySecs()).isEqualTo(DEFAULT_HEADWAY_SECS);
+        // exact_times is an optional field with a default value. Therefore, if not provided this fields evaluates to
+        // its default value.
         assertThat(underTest.exactTimes()).isEqualTo(GtfsFrequencyExactTimes.forNumber(DEFAULT_EXACT_TIMES));
 
         assertThat(underTest.hasTripId()).isFalse();
