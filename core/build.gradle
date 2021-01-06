@@ -31,7 +31,7 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpclient:4.5.2'
     implementation 'commons-io:commons-io:2.8.0'
     implementation 'com.univocity:univocity-parsers:2.9.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.guava:guava:29.0-jre'
     implementation 'commons-validator:commons-validator:1.6'
     implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.13'
