@@ -27,6 +27,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Container for validation notices (errors and warnings).
+ * <p>
+ * This class is not thread-safe.
+ */
 public class NoticeContainer {
     private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100000;
     private static final Gson DEFAULT_GSON = new GsonBuilder().serializeNulls().create();
