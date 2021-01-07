@@ -32,7 +32,6 @@ import org.mobilitydata.gtfsvalidator.type.GtfsTime;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 import java.time.ZoneId;
-import java.util.TimeZone;
 
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.fieldDefaultName;
 import static org.mobilitydata.gtfsvalidator.processor.FieldNameConverter.getValueMethodName;
@@ -137,7 +136,7 @@ public class EntityImplementationGenerator {
             case TIME:
                 return CodeBlock.of("$T.fromSecondsSinceMidnight(0)", GtfsTime.class);
             case TIMEZONE:
-                return CodeBlock.of("$T.getTimeZone($T.of(\"UTC\"))", TimeZone.class, ZoneId.class);
+                return CodeBlock.of("$T.of(\"UTC\")", ZoneId.class);
             case CURRENCY_CODE:
             case LANGUAGE_CODE:
             default:
