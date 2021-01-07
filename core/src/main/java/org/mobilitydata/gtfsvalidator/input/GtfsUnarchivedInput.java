@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Implements support for unarchived GTFS directories.
@@ -33,10 +34,12 @@ public class GtfsUnarchivedInput extends GtfsInput {
 
     public GtfsUnarchivedInput(Path directory) throws IOException {
         this.directory = directory;
-        this.filenames = Files.list(directory)
-                .filter(Files::isRegularFile)
-                .map(x -> x.getFileName().toString())
-                .collect(Collectors.toSet());
+        try (Stream<Path> stream = Files.list(directory)) {
+            this.filenames = stream
+                    .filter(Files::isRegularFile)
+                    .map(x -> x.getFileName().toString())
+                    .collect(Collectors.toSet());
+        }
     }
 
     @Override
