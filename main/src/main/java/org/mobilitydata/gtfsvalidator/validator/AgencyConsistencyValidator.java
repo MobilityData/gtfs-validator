@@ -25,8 +25,8 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
 
+import java.time.ZoneId;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Validates that all agencies have the same timezone and language and that agency_id field is set if there is more than
@@ -58,19 +58,19 @@ public class AgencyConsistencyValidator extends FileValidator {
             }
         }
 
-        TimeZone commonTimezone = agencyTable.getEntities().get(0).agencyTimezone();
+        ZoneId commonTimezone = agencyTable.getEntities().get(0).agencyTimezone();
         boolean hasLanguage = agencyTable.getEntities().get(0).hasAgencyLang();
         Locale commonLanguage = agencyTable.getEntities().get(0).agencyLang();
         // Timezone and language must be the same for all agencies.
         for (int i = 1; i < agencyCount; ++i) {
             GtfsAgency agency = agencyTable.getEntities().get(i);
-            if (!commonTimezone.getID().equals(agency.agencyTimezone().getID())) {
+            if (!commonTimezone.equals(agency.agencyTimezone())) {
                 noticeContainer.addNotice(
                         new InconsistentAgencyFieldNotice(
                                 agency.csvRowNumber(),
                                 GtfsAgencyTableLoader.AGENCY_TIMEZONE_FIELD_NAME,
-                                commonTimezone.getID(),
-                                agency.agencyTimezone().getID()));
+                                commonTimezone.getId(),
+                                agency.agencyTimezone().getId()));
             }
             if (hasLanguage != agency.hasAgencyLang()
                     || (hasLanguage && agency.hasAgencyLang() && !commonLanguage.equals(agency.agencyLang()))) {

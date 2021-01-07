@@ -84,19 +84,16 @@ public class CliParametersAnalyzerTest {
     }
 
     @Test
-    public void provideUrlWithoutSpecifyingStorageDirectoryCliParameterShouldReturnFalse() {
+    public void provideUrlWithoutSpecifyingStorageDirectoryCliParameterShouldReturnTrue() {
         Arguments mockArguments = mock(Arguments.class);
         when(mockArguments.getUrl()).thenReturn("url to dataset");
         when(mockArguments.getInput()).thenReturn(null);
         when(mockArguments.getStorageDirectory()).thenReturn(null);
 
         CliParametersAnalyzer underTest = new CliParametersAnalyzer();
-        assertThat(underTest.isValid(mockArguments)).isFalse();
-        verify(mockHandler).publish(logRecordCaptor.capture());
-        assertThat(logRecordCaptor.getValue().getMessage()).contains("CLI parameter '--storage_directory' must be " +
-                "provided if '--url' is provided");
+        assertThat(underTest.isValid(mockArguments)).isTrue();
         //noinspection ResultOfMethodCallIgnored because object is mocked
-        verify(mockArguments, times(2)).getUrl();
+        verify(mockArguments, times(1)).getUrl();
         //noinspection ResultOfMethodCallIgnored because object is mocked
         verify(mockArguments, times(2)).getInput();
         //noinspection ResultOfMethodCallIgnored because object is mocked
@@ -133,11 +130,11 @@ public class CliParametersAnalyzerTest {
         CliParametersAnalyzer underTest = new CliParametersAnalyzer();
         assertThat(underTest.isValid(mockArguments)).isTrue();
         //noinspection ResultOfMethodCallIgnored because object is mocked
-        verify(mockArguments, times(3)).getUrl();
+        verify(mockArguments, times(2)).getUrl();
         //noinspection ResultOfMethodCallIgnored because object is mocked
         verify(mockArguments, times(2)).getInput();
         //noinspection ResultOfMethodCallIgnored because object is mocked
-        verify(mockArguments, times(2)).getStorageDirectory();
+        verify(mockArguments, times(1)).getStorageDirectory();
         verifyNoMoreInteractions(mockArguments, mockHandler);
     }
 }
