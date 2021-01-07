@@ -23,8 +23,8 @@ import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
+import java.time.ZoneId;
 import java.util.Locale;
-import java.util.TimeZone;
 
 @GtfsTable("agency.txt")
 @Required
@@ -42,7 +42,7 @@ public interface GtfsAgencySchema extends GtfsEntity {
     String agencyUrl();
 
     @Required
-    TimeZone agencyTimezone();
+    ZoneId agencyTimezone();
 
     Locale agencyLang();
 

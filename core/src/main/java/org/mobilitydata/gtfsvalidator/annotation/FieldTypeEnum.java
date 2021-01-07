@@ -34,7 +34,7 @@ package org.mobilitydata.gtfsvalidator.annotation;
  * * {@code GtfsColor} - {@code COLOR};
  * * {@code GtfsDate} - {@code DATE};
  * * {@code GtfsTime} - {@code TIME};
- * * {@code TimeZone} - {@code TIMEZONE};
+ * * {@code ZoneId} - {@code TIMEZONE};
  * * {@code Locale} - {@code LANGUAGE_CODE};
  * * {@code Currency} - {@code CURRENCY_CODE}
  * * {@code BigDecimal} - {@code DECIMAL}.

@@ -36,7 +36,6 @@ import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.util.Currency;
 import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * Parses cells of a CSV row as values of requested data types.
@@ -67,10 +66,10 @@ public class RowParser {
             return new BigDecimal(s);
         }
     };
-    private final ValueParser<TimeZone> timezoneParser = new ValueParser("timezone") {
+    private final ValueParser<ZoneId> timezoneParser = new ValueParser("timezone") {
         @Override
-        TimeZone parseString(String s) {
-            return TimeZone.getTimeZone(ZoneId.of(s));
+        ZoneId parseString(String s) {
+            return ZoneId.of(s);
         }
     };
     private final ValueParser<Locale> languageCodeParser = new ValueParser("language code") {
@@ -223,7 +222,7 @@ public class RowParser {
     }
 
     @Nullable
-    public TimeZone asTimezone(int columnIndex, boolean required) {
+    public ZoneId asTimezone(int columnIndex, boolean required) {
         return timezoneParser.parseField(columnIndex, required);
     }
 
