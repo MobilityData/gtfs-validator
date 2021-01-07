@@ -31,7 +31,7 @@ import java.util.zip.ZipFile;
 /**
  * Implements support for GTFS ZIP archives.
  */
-public class GtfsZipFileInput implements GtfsInput {
+public class GtfsZipFileInput extends GtfsInput {
     private final Set<String> filenames = new HashSet();
     private final ZipFile zipFile;
 
@@ -40,13 +40,13 @@ public class GtfsZipFileInput implements GtfsInput {
         for (Enumeration<? extends ZipEntry> i = zipFile.entries(); i
                 .hasMoreElements(); ) {
             ZipEntry entry = i.nextElement();
-            if (!insideZipDirectory(entry)) {
+            if (!isInsideZipDirectory(entry)) {
                 filenames.add(entry.getName());
             }
         }
     }
 
-    private boolean insideZipDirectory(ZipEntry entry) {
+    static boolean isInsideZipDirectory(ZipEntry entry) {
         // We do not use File.separator because the .zip file specification states:
         // All slashes MUST be forward slashes '/' as opposed to backwards slashes '\' for compatibility with Amiga and
         // UNIX file systems etc.

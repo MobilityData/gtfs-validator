@@ -40,7 +40,7 @@ public class Arguments {
     private String url;
 
     @Parameter(names = {"-s", "--storage_directory"}, description = "Target path where to store the GTFS archive " +
-            "downloaded from network")
+            "downloaded from network (if not provided, the ZIP will be stored in memory)")
     private String storageDirectory;
 
     public String getInput() {
