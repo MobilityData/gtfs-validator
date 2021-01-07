@@ -39,10 +39,6 @@ public class CliParametersAnalyzer {
                     " '--input' and '--url'");
             return false;
         }
-        if (args.getUrl() != null && args.getStorageDirectory() == null) {
-            logger.atSevere().log("CLI parameter '--storage_directory' must be provided if '--url' is provided");
-            return false;
-        }
         if (args.getStorageDirectory() != null && args.getUrl() == null) {
             logger.atSevere().log("CLI parameter '--storage_directory' must not be provided if '--url' is not provided");
             return false;

@@ -27,6 +27,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Container for validation notices (errors and warnings).
+ * <p>
+ * This class is not intentionally not thread-safe to increase performance. Each thread
+ * has it's own NoticeContainer, and after execution is complete the results are merged.
+ */
 public class NoticeContainer {
     private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100000;
     private static final Gson DEFAULT_GSON = new GsonBuilder().serializeNulls().create();
@@ -74,5 +80,17 @@ public class NoticeContainer {
             noticesByType.put(notice.getClass().hashCode(), notice);
         }
         return noticesByType;
+    }
+
+    /**
+     * Adds all notices from another container.
+     * <p>
+     * This is useful for multithreaded validation: each thread has its own notice container which is merged
+     * into the global container when the thread finishes.
+     *
+     * @param otherContainer a container to take the notices from
+     */
+    public void addAll(NoticeContainer otherContainer) {
+        notices.addAll(otherContainer.notices);
     }
 }

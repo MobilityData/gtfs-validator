@@ -49,7 +49,7 @@ public class GtfsZipFileInputTest {
 
         out.close();
 
-        GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.getAbsolutePath());
+        GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath());
         assertThat(gtfsInput.getFilenames()).containsExactly("stops.txt");
     }
 
@@ -63,7 +63,7 @@ public class GtfsZipFileInputTest {
 
         out.close();
 
-        GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.getAbsolutePath());
+        GtfsInput gtfsInput = GtfsInput.createFromPath(zipFile.toPath());
         assertThat(gtfsInput.getFilenames()).containsExactly("noext");
     }
 

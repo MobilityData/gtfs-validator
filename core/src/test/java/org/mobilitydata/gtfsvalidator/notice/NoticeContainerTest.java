@@ -50,6 +50,18 @@ public class NoticeContainerTest {
                 "{\"notices\":[{\"code\":\"test_notice\",\"totalNotices\":1,\"notices\":[{\"nullField\":null}]}]}");
     }
 
+    @Test
+    public void addAll() {
+        Notice n1 = new MissingRequiredFileError("stops.txt");
+        Notice n2 = new UnknownFileNotice("unknown.txt");
+        NoticeContainer c1 = new NoticeContainer();
+        c1.addNotice(n1);
+        NoticeContainer c2 = new NoticeContainer();
+        c2.addNotice(n2);
+        c1.addAll(c2);
+        assertThat(c1.getNotices()).containsExactly(n1, n2);
+    }
+
     static private class TestNotice extends Notice {
         private final String code;
 

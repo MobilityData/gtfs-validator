@@ -17,6 +17,7 @@
 package org.mobilitydata.gtfsvalidator.cli;
 
 import com.beust.jcommander.JCommander;
+import com.google.common.base.Strings;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
@@ -63,26 +64,22 @@ public class Main {
         feedLoader.setNumThreads(args.getNumThreads());
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsFeedContainer feedContainer;
+        GtfsInput gtfsInput;
         try {
             if (args.getInput() == null) {
-                feedContainer = feedLoader.loadAndValidate(
-                        GtfsInput.createFromUrl(
-                                new URL(args.getUrl()),
-                                args.getStorageDirectory()),
-                        feedName,
-                        validatorLoader,
-                        noticeContainer);
+                if (Strings.isNullOrEmpty(args.getStorageDirectory())) {
+                    gtfsInput = GtfsInput.createFromUrlInMemory(new URL(args.getUrl()));
+                } else {
+                    gtfsInput = GtfsInput.createFromUrl(new URL(args.getUrl()), args.getStorageDirectory());
+                }
             } else {
-                feedContainer = feedLoader.loadAndValidate(
-                        GtfsInput.createFromPath(args.getInput()),
-                        feedName,
-                        validatorLoader,
-                        noticeContainer);
+                gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
             }
         } catch (IOException | URISyntaxException | InterruptedException e) {
             e.printStackTrace();
             return;
         }
+        feedContainer = feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
 
         // Output.
         new File(args.getOutputBase()).mkdirs();
