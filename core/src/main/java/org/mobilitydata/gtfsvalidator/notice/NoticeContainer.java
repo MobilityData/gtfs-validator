@@ -30,7 +30,8 @@ import java.util.List;
 /**
  * Container for validation notices (errors and warnings).
  * <p>
- * This class is not thread-safe.
+ * This class is not intentionally not thread-safe to increase performance. Each thread
+ * has it's own NoticeContainer, and after execution is complete the results are merged.
  */
 public class NoticeContainer {
     private static final int MAX_EXPORTS_PER_NOTICE_TYPE = 100000;
