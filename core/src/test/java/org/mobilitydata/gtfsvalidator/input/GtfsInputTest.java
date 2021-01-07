@@ -81,7 +81,7 @@ public class GtfsInputTest {
         assertThat(underTest instanceof GtfsZipFileInput);
         // remove created file
         File toDelete = new File("storage");
-        assertTrue(toDelete.delete());
+        toDelete.delete();
     }
 
     @Test
