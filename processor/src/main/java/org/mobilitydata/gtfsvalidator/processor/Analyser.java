@@ -44,9 +44,9 @@ import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import java.math.BigDecimal;
+import java.time.ZoneId;
 import java.util.Currency;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static javax.lang.model.util.ElementFilter.methodsIn;
 import static org.mobilitydata.gtfsvalidator.processor.EnumGenerator.createEnumName;
@@ -127,7 +127,7 @@ public class Analyser {
                 if (name.equals(String.class.getCanonicalName())) {
                     return FieldTypeEnum.TEXT;
                 }
-                if (name.equals(TimeZone.class.getCanonicalName())) {
+                if (name.equals(ZoneId.class.getCanonicalName())) {
                     return FieldTypeEnum.TIMEZONE;
                 }
                 if (name.equals(Locale.class.getCanonicalName())) {

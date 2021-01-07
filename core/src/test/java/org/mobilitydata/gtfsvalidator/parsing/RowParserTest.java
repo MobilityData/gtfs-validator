@@ -30,7 +30,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -169,7 +168,7 @@ public class RowParserTest {
 
     @Test
     public void asTimezone() {
-        assertThat(createParser("America/Toronto").asTimezone(0, true)).isEqualTo(TimeZone.getTimeZone(ZoneId.of("America/Toronto")));
+        assertThat(createParser("America/Toronto").asTimezone(0, true)).isEqualTo(ZoneId.of("America/Toronto"));
 
         assertThat(createParser("invalid").asTimezone(0, true)).isNull();
     }

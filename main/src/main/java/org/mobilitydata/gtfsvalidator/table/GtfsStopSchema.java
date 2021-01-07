@@ -25,7 +25,7 @@ import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
-import java.util.TimeZone;
+import java.time.ZoneId;
 
 @GtfsTable("stops.txt")
 @Required
@@ -68,7 +68,7 @@ public interface GtfsStopSchema extends GtfsEntity {
     String parentStation();
 
     @FieldType(FieldTypeEnum.TIMEZONE)
-    TimeZone stopTimezone();
+    ZoneId stopTimezone();
 
     GtfsWheelchairBoarding wheelchairBoarding();
 
