@@ -98,6 +98,16 @@ public class OverlappingFrequencyValidatorTest {
     }
 
     @Test
+    public void overlappingIncluded() {
+        assertThat(validateFrequencies(
+                createFrequency(2, "t0", "07:00:00", "12:00:00", 600),
+                createFrequency(3, "t0", "08:00:00", "11:00:00", 300)))
+                .containsExactly(new OverlappingFrequencyNotice(
+                        2, GtfsTime.fromString("12:00:00"),
+                        3, GtfsTime.fromString("08:00:00"), "t0"));
+    }
+
+    @Test
     public void overlappingThreeIntervals() {
         assertThat(validateFrequencies(
                 createFrequency(2, "t0", "05:00:00", "05:25:00", 600),
