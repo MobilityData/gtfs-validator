@@ -33,8 +33,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(JUnit4.class)
 public class GtfsInputTest {
@@ -92,18 +91,20 @@ public class GtfsInputTest {
                         "valid_zip_sample.zip"),
                 "storage");
         assertThat(underTest instanceof GtfsZipFileInput);
+        assertNotNull(underTest);
         // remove created file
         File toDelete = new File("storage");
-        assertTrue(toDelete.delete());
+        toDelete.delete();
 
         // URL from #398
         underTest = GtfsInput.createFromUrl(
                 new URL("https://octa.net/current/google_transit.zip"),
-                "storage");
+                "storage2");
         assertThat(underTest instanceof GtfsZipFileInput);
+        assertNotNull(underTest);
         // remove created file
-        toDelete = new File("storage");
-        assertTrue(toDelete.delete());
+        toDelete = new File("storage2");
+        toDelete.delete();
     }
 
     @Test
