@@ -49,6 +49,7 @@ public interface GtfsTripSchema extends GtfsEntity {
     GtfsTripDirectionId directionId();
 
     @FieldType(FieldTypeEnum.ID)
+    @Index
     String blockId();
 
     @FieldType(FieldTypeEnum.ID)

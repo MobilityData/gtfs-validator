@@ -294,8 +294,8 @@ public class TableContainerGenerator {
                         "$L.put(entity.$L(), entity)",
                         byKeyMapName(indexField.name()),
                         indexField.name());
-                method.endControlFlow();
             }
+            method.endControlFlow();
         }
         return method.build();
     }
