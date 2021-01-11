@@ -136,6 +136,7 @@ public class TableContainerGenerator {
 
         if (fileDescriptor.singleRow()) {
             typeSpec.addMethod(MethodSpec.methodBuilder("getSingleEntity")
+                    .addModifiers(Modifier.PUBLIC)
                     .returns(classNames.entityImplementationTypeName())
                     .addStatement("return entities.isEmpty() ? null : entities.get(0)")
                     .build());
