@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.processor;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.flogger.FluentLogger;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -120,6 +121,9 @@ public class TableLoaderGenerator {
                 .addAnnotation(Generated.class)
                 .addModifiers(Modifier.PUBLIC);
 
+        typeSpec.addField(
+                FieldSpec.builder(FluentLogger.class, "logger", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                        .initializer("$T.forEnclosingClass()", FluentLogger.class).build());
         typeSpec.addField(
                 FieldSpec.builder(String.class, "FILENAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                         .initializer("$S", fileDescriptor.filename()).build());
@@ -230,8 +234,7 @@ public class TableLoaderGenerator {
                 "for ($T row : csvFile)", CsvRow.class);
 
         method.beginControlFlow("if (row.getRowNumber() % $L == 0)", LOG_EVERY_N_ROWS)
-                .addStatement("System.out.println($S + FILENAME + $S + row.getRowNumber())",
-                        "Reading ", ", row ")
+                .addStatement("logger.atInfo().log($S, FILENAME, row.getRowNumber())", "Reading %s, row %d")
                 .endControlFlow();
 
         method
@@ -269,9 +272,9 @@ public class TableLoaderGenerator {
             if (cachingEnabled(field)) {
                 final String cacheName = fieldColumnCache(field);
                 method.addStatement(
-                        "System.out.println(String.format(" +
+                        "logger.atInfo().log(" +
                                 "$S, gtfsFilename(), $L, $L.getCacheSize(), $L.getLookupCount(), " +
-                                "$L.getHitRatio() * 100.0, $L.getMissRatio() * 100.0))",
+                                "$L.getHitRatio() * 100.0, $L.getMissRatio() * 100.0)",
                         "Cache for %s %s: size = %d, lookup count = %d, hits = %.2f%%, misses = %.2f%%",
                         fieldNameField(field.name()),
                         cacheName, cacheName, cacheName, cacheName);

@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import com.google.common.flogger.FluentLogger;
 import com.google.common.reflect.ClassPath;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsLoader;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
@@ -46,6 +47,7 @@ import java.util.concurrent.Executors;
  * based on {@code GtfsLoader} annotation.
  */
 public class GtfsFeedLoader {
+    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
     private final HashMap<String, GtfsTableLoader> tableLoaders = new HashMap<>();
     private int numThreads = 1;
 
@@ -66,9 +68,9 @@ public class GtfsFeedLoader {
             try {
                 loader = clazz.asSubclass(GtfsTableLoader.class).getConstructor().newInstance();
             } catch (ReflectiveOperationException e) {
-                System.err.println("Possible bug in GTFS annotation processor - " +
-                        "expected a constructor without parameters for " + clazz.getName());
-                e.printStackTrace();
+                logger.atSevere().withCause(e).log(
+                        "Possible bug in GTFS annotation processor: expected a constructor without parameters for %s",
+                        clazz.getName());
                 continue;
             }
             tableLoaders.put(loader.gtfsFilename(), loader);
@@ -89,7 +91,7 @@ public class GtfsFeedLoader {
 
     public GtfsFeedContainer loadAndValidate(GtfsInput gtfsInput, GtfsFeedName feedName, ValidatorLoader validatorLoader,
                                              NoticeContainer noticeContainer) {
-        System.out.println("Loading in " + numThreads + " threads");
+        logger.atInfo().log("Loading in %d threads", numThreads);
         ExecutorService exec = Executors.newFixedThreadPool(numThreads);
 
         List<Callable<TableAndNoticeContainers>> loaderCallables = new ArrayList<>();
