@@ -22,16 +22,29 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mobilitydata.gtfsvalidator.notice.FeedInfoLangAndAgencyLangMismatchNotice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
-import org.mobilitydata.gtfsvalidator.table.*;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgency;
+import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableContainer;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfo;
+import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @RunWith(JUnit4.class)
 public class MatchingFeedAndAgencyLangValidatorTest {
@@ -48,21 +61,20 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     }
 
     @Test
-    public void feedInfoFileNotProvidedShouldNotGenerateNotice() {
-        NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        when(mockFeedInfoTable.isEmptyFile()).thenReturn(true);
+    public void noFeedInfoShouldNotGenerateNotice() {
+        NoticeContainer noticeContainer = new NoticeContainer();
+        MatchingFeedAndAgencyLangValidator validator = new MatchingFeedAndAgencyLangValidator();
+        validator.agencyTable = GtfsAgencyTableContainer.forEntities(new ArrayList<>(), noticeContainer);
+        validator.feedInfoTable = GtfsFeedInfoTableContainer.forEntities(new ArrayList<>(), noticeContainer);
+        validator.validate(noticeContainer);
 
-        underTest.validate(mockNoticeContainer);
-
-        verifyNoInteractions(mockNoticeContainer, mockAgencyTable);
-        //noinspection ResultOfMethodCallIgnored stubbed method
-        verify(mockFeedInfoTable, times(1)).isEmptyFile();
+        assertThat(noticeContainer.getNotices()).isEmpty();
     }
 
     @Test
     public void mulFeedLangAndNoMoreThanOneAgencyLangShouldGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+        when(mockFeedInfoTable.entityCount()).thenReturn(1);
 
         GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
         when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("mul"));
@@ -92,7 +104,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     @Test
     public void feedLangNotMulAndMoreThanOneAgencyLangShouldGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+        when(mockFeedInfoTable.entityCount()).thenReturn(1);
 
         GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
         when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
@@ -125,7 +137,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     @Test
     public void feedLangNotMulAndOnlyOneMatchingAgencyLangShouldNotGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+        when(mockFeedInfoTable.entityCount()).thenReturn(1);
 
         GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
         when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
@@ -143,7 +155,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
         verifyNoInteractions(mockNoticeContainer);
         //noinspection ResultOfMethodCallIgnored stubbed method
-        verify(mockFeedInfoTable, times(1)).isEmptyFile();
+        verify(mockFeedInfoTable, times(1)).entityCount();
         //noinspection ResultOfMethodCallIgnored stubbed method
         verify(mockFeedInfoTable, times(1)).getEntities();
         //noinspection ResultOfMethodCallIgnored stubbed method
@@ -157,7 +169,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     @Test
     public void feedLangNotMulAndOnlyOneMismatchingAgencyLangShouldGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+        when(mockFeedInfoTable.entityCount()).thenReturn(1);
 
         GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
         when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
@@ -188,7 +200,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     @Test
     public void matchingFeedInfoFeedLangShouldNotGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+        when(mockFeedInfoTable.entityCount()).thenReturn(1);
 
         GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
         when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
@@ -209,7 +221,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
         verifyNoInteractions(mockNoticeContainer);
         //noinspection ResultOfMethodCallIgnored stubbed method
-        verify(mockFeedInfoTable, times(1)).isEmptyFile();
+        verify(mockFeedInfoTable, times(1)).entityCount();
         //noinspection ResultOfMethodCallIgnored stubbed method
         verify(mockFeedInfoTable, times(1)).getEntities();
         //noinspection ResultOfMethodCallIgnored stubbed method
@@ -224,7 +236,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     @Test
     public void feedLangNotMulAndMultipleNonMatchingAgencyLangShouldGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+        when(mockFeedInfoTable.entityCount()).thenReturn(1);
 
         GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
         when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("fr"));
@@ -258,7 +270,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
     @Test
     public void mulFeedLandAndMoreThanOneAgencyShouldNotGenerateNotice() {
         NoticeContainer mockNoticeContainer = mock(NoticeContainer.class);
-        when(mockFeedInfoTable.isEmptyFile()).thenReturn(false);
+        when(mockFeedInfoTable.entityCount()).thenReturn(1);
 
         GtfsFeedInfo mockFeedInfo = mock(GtfsFeedInfo.class);
         when(mockFeedInfo.feedLang()).thenReturn(Locale.forLanguageTag("mul"));
@@ -279,7 +291,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
 
         verifyNoInteractions(mockNoticeContainer);
         //noinspection ResultOfMethodCallIgnored stubbed method
-        verify(mockFeedInfoTable, times(1)).isEmptyFile();
+        verify(mockFeedInfoTable, times(1)).entityCount();
         //noinspection ResultOfMethodCallIgnored stubbed method
         verify(mockFeedInfoTable, times(1)).getEntities();
         //noinspection ResultOfMethodCallIgnored stubbed method

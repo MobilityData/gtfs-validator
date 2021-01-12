@@ -41,6 +41,11 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
 
     public abstract String gtfsFilename();
 
+    /**
+     * Tells if the file is empty, i.e. it has no rows and even no headers.
+     *
+     * @return true if the file is empty, false otherwise
+     */
     public boolean isEmptyFile() {
         return emptyFile;
     }
@@ -49,6 +54,11 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
         this.emptyFile = emptyFile;
     }
 
+    /**
+     * Tells if the file is missing.
+     *
+     * @return true if the file is missing, false otherwise
+     */
     public boolean isMissingFile() {
         return missingFile;
     }
@@ -61,6 +71,13 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
         return invalidHeaders;
     }
 
+    /**
+     * Tells if the file is invalid headers, e.g., some required headers are missing.
+     * <p>
+     * Note that unknown headers are not considered invalid.
+     *
+     * @return true if the file has invalid headers, false otherwise
+     */
     public void setInvalidHeaders(boolean invalidHeaders) {
         this.invalidHeaders = invalidHeaders;
     }
