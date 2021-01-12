@@ -57,7 +57,7 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
     /**
      * Tells if the file is missing.
      *
-     * @return true is the file is missing, false otherwise
+     * @return true if the file is missing, false otherwise
      */
     public boolean isMissingFile() {
         return missingFile;
