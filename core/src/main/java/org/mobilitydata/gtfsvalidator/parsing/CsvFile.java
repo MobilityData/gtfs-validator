@@ -58,7 +58,7 @@ public class CsvFile implements Iterable<CsvRow> {
     /**
      * Tells if the file is empty, i.e. it has no rows and even no headers.
      *
-     * @return @code true} is the file is empty, {@code false} otherwise
+     * @return true if the file is empty, false otherwise
      */
     public boolean isEmpty() {
         return isEmpty;
@@ -80,7 +80,7 @@ public class CsvFile implements Iterable<CsvRow> {
     /**
      * Advances to the next row.
      *
-     * @return the next @code CsvRow} or null if end of file was reached.
+     * @return the next {@link CsvRow} or null if end of file was reached.
      */
     @Nullable
     private CsvRow nextResult() {

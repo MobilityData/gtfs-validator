@@ -51,7 +51,7 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator{
 
     @Override
     public void validate(NoticeContainer noticeContainer) {
-        if (feedInfoTable.isEmptyFile()) {
+        if (feedInfoTable.entityCount() == 0) {
             return;
         }
         // the previous early return ensures feedInfoTable is not empty
