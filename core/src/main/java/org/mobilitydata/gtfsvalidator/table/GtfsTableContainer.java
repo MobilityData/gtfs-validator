@@ -44,7 +44,7 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
     /**
      * Tells if the file is empty, i.e. it has no rows and even no headers.
      *
-     * @return true is the file is empty, false otherwise
+     * @return true if the file is empty, false otherwise
      */
     public boolean isEmptyFile() {
         return emptyFile;
