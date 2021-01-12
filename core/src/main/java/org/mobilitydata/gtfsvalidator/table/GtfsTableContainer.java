@@ -76,7 +76,7 @@ public abstract class GtfsTableContainer<T extends GtfsEntity> {
      * <p>
      * Note that unknown headers are not considered invalid.
      *
-     * @return true is the file has invalid headers, false otherwise
+     * @return true if the file has invalid headers, false otherwise
      */
     public void setInvalidHeaders(boolean invalidHeaders) {
         this.invalidHeaders = invalidHeaders;
