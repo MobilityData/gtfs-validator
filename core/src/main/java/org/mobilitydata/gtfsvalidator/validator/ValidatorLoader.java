@@ -18,6 +18,7 @@ package org.mobilitydata.gtfsvalidator.validator;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.common.flogger.FluentLogger;
 import com.google.common.reflect.ClassPath;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsValidator;
 import org.mobilitydata.gtfsvalidator.annotation.Inject;
@@ -39,6 +40,8 @@ import java.util.Map;
  * provides convenient methods to invoke them on a single entity of file.
  */
 public class ValidatorLoader {
+    private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
     private final ListMultimap<Class<? extends GtfsEntity>, SingleEntityValidator<?>> singleEntityValidators = ArrayListMultimap.create();
     private final ListMultimap<Class<? extends GtfsTableContainer>, Class<? extends FileValidator>> singleFileValidators = ArrayListMultimap.create();
     private final List<Class<? extends FileValidator>> multiFileValidators = new ArrayList<>();
@@ -79,8 +82,9 @@ public class ValidatorLoader {
                         singleEntityValidators.put(
                                 (Class<? extends GtfsEntity>) parameterTypes[0],
                                 ((Class<? extends SingleEntityValidator>) validatorClass).getConstructor().newInstance());
-                    } catch (ReflectiveOperationException exception) {
-                        System.err.println("Cannot instantiate validator: " + exception);
+                    } catch (ReflectiveOperationException e) {
+                        logger.atSevere().withCause(e).log("Cannot instantiate validator %s",
+                                validatorClass.getCanonicalName());
                     }
                     break;
                 }
@@ -125,8 +129,8 @@ public class ValidatorLoader {
             FileValidator validator;
             try {
                 validator = createValidator(validatorClass, table);
-            } catch (ReflectiveOperationException exception) {
-                System.err.println("Cannot instantiate validator: " + exception);
+            } catch (ReflectiveOperationException e) {
+                logger.atSevere().withCause(e).log("Cannot instantiate validator %s", validatorClass.getCanonicalName());
                 continue;
             }
             validator.validate(noticeContainer);
@@ -170,8 +174,8 @@ public class ValidatorLoader {
         for (Class<? extends FileValidator> validatorClass : multiFileValidators) {
             try {
                 validators.add(createValidator(validatorClass, feed));
-            } catch (ReflectiveOperationException exception) {
-                System.err.println("Cannot instantiate validator: " + exception);
+            } catch (ReflectiveOperationException e) {
+                logger.atSevere().withCause(e).log("Cannot instantiate validator %s", validatorClass.getCanonicalName());
             }
         }
         return validators;
