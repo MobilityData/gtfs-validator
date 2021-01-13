@@ -19,6 +19,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -175,16 +176,21 @@ public class CalendarUtilTest {
     }
 
     @Test
-    public void firstIntersectingDate() {
-        assertThat(CalendarUtil.firstIntersectingDate(
-                ImmutableSortedSet.of(LocalDate.of(2021, 1, 4),
-                        LocalDate.of(2021, 1, 5),
-                        LocalDate.of(2021, 1, 6)),
-                ImmutableSortedSet.of(
-                        LocalDate.of(2021, 1, 1), LocalDate.of(2021, 1, 5),
-                        LocalDate.of(2021, 1, 6), LocalDate.of(2021, 1, 7))))
-                .isEqualTo(Optional.of(LocalDate.of(2021, 1, 5)));
+    public void firstIntersectingDateWithIntersection() {
+        final SortedSet<LocalDate> set456 = ImmutableSortedSet.of(
+            LocalDate.of(2021, 1, 4), LocalDate.of(2021, 1, 5),
+            LocalDate.of(2021, 1, 6));
+        final SortedSet<LocalDate> set1567 = ImmutableSortedSet.of(
+            LocalDate.of(2021, 1, 1), LocalDate.of(2021, 1, 5),
+            LocalDate.of(2021, 1, 6), LocalDate.of(2021, 1, 7));
+        assertThat(CalendarUtil.firstIntersectingDate(set456, set1567))
+            .isEqualTo(Optional.of(LocalDate.of(2021, 1, 5)));
+        assertThat(CalendarUtil.firstIntersectingDate(set1567, set456))
+            .isEqualTo(Optional.of(LocalDate.of(2021, 1, 5)));
+    }
 
+    @Test
+    public void firstIntersectingDateNoIntersection() {
         assertThat(CalendarUtil.firstIntersectingDate(
                 ImmutableSortedSet.of(LocalDate.of(2021, 1, 4),
                         LocalDate.of(2021, 1, 5)),

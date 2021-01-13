@@ -31,15 +31,17 @@ public class ServiceIdIntersectionCache {
     }
 
     /**
-     * Finds the first intersecting date in the given sets, if any, and caches the result. Returns
-     * {@code Optional.empty()} if there is no intersection.
+     * Finds the first intersecting date in the given sets, if any, and caches
+     * the result. Returns {@code Optional.empty()} if there is no intersection.
      * <p>
-     * Note that if either service has no active service dates, then the method always returns false, even if the
-     * service ids are the same.
+     * Note that if either service has no active service dates, then the method
+     * always returns {@code Optional.empty()}, even if the service ids are the
+     * same.
      *
      * @param serviceId1 the first service id
      * @param serviceId2 the second service id
-     * @return the first intersecting date or {@code Optional.empty()}
+     * @return the first intersecting date or {@code Optional.empty()} for no
+     *     intersection
      */
     public Optional<LocalDate> findIntersectingDate(String serviceId1, String serviceId2) {
         // We generate the cache key with the smallest service id coming first.

@@ -53,6 +53,8 @@ public class ServicePeriod {
 
     /**
      * Checks whether day in week is in pattern.
+     *
+     * @return whether the day is included in the pattern
      */
     static boolean isIncludedInPattern(DayOfWeek day, byte weeklyPattern) {
         // DayOfWeek.getValue() returns the day-of-week, from 1 (Monday) to 7 (Sunday).
@@ -70,14 +72,14 @@ public class ServicePeriod {
      * Example.
      * Monday, Tuesday, Wednesday and Saturday: {@code weeklyPatternFromMTWTFSS(1, 1, 1, 0, 0, 1, 0) = 0b0100111}
      *
-     * @param monday    whether to include Monday
-     * @param tuesday   whether to include Tuesday
-     * @param wednesday whether to include Wednesday
-     * @param thursday  whether to include Thursday
-     * @param friday    whether to include Friday
-     * @param saturday  whether to include Saturday
-     * @param sunday    whether to include Sunday
-     * @return weekly pattern in a format for ServicePeriod
+     * @param monday    1 to include or 0 to exclude Monday
+     * @param tuesday   1 to include or 0 to exclude Tuesday
+     * @param wednesday 1 to include or 0 to exclude Wednesday
+     * @param thursday  1 to include or 0 to exclude Thursday
+     * @param friday    1 to include or 0 to exclude Friday
+     * @param saturday  1 to include or 0 to exclude Saturday
+     * @param sunday    1 to include or 0 to exclude Sunday
+     * @return weekly pattern for ServicePeriod, in the format 0b0SSFTWTM
      */
     public static byte weeklyPatternFromMTWTFSS(int monday, int tuesday, int wednesday, int thursday, int friday,
                                                 int saturday, int sunday) {
@@ -130,11 +132,11 @@ public class ServicePeriod {
     /**
      * Returns the bitmask for the active week days.
      *
-     * The least significant bit represents Monday. The last bit is not used.
+     * The least significant bit represents Monday. The most significant bit is not used.
      *
      * Example. {@code 0b01101101} is Mon, Wed, Thu, Sat and Sun.
      *
-     * @return the bitmask for the active week days
+     * @return the bitmask for the active week days, in the format 0b0SSFTWTM
      */
     public byte getWeeklyPattern() {
         return weeklyPattern;

@@ -121,14 +121,18 @@ public final class CalendarUtil {
     }
 
     /**
-     * Finds the first intersecting date in the given sets, if any. Returns {@code Optional.empty()} if there is no
-     * intersection.
-     * <p>
-     * If either set is empty, then the method always returns false, even if both sets are empty.
+     * Finds the first intersecting date in the given sets, if any. Returns
+     * {@code Optional.empty()} if there is no intersection.
+     *
+     * <p> If either set is empty, then the method always returns {@code
+     * Optional.empty()}, even if both sets are empty.
+     *
+     * <p>Time complexity: O(size(dates1) + size(dates2)).
      *
      * @param dates1 the first sorted set of service dates
      * @param dates2 the second sorted set of service dates
-     * @return the first intersecting date or {@code Optional.empty()}
+     * @return the first intersecting date or {@code Optional.empty()} if there
+     *     is no intersection
      */
     public static Optional<LocalDate> firstIntersectingDate(@Nonnull SortedSet<LocalDate> dates1,
                                                             @Nonnull SortedSet<LocalDate> dates2) {
