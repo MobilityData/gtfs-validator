@@ -195,4 +195,27 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
                         1, "t0", "WEEK", 2, "t1", "WEEK-ALT",
                         GtfsDate.fromString("20210104")));
     }
+
+    @Test
+    public void tripsWith0or1Stop() {
+        // Trips with 0 or 1 stop are not useful to end users and should be
+        // gracefully handled by this validator.
+        final NoticeContainer noticeContainer = new NoticeContainer();
+
+        BlockTripsWithOverlappingStopTimesValidator validator =
+            new BlockTripsWithOverlappingStopTimesValidator();
+        validator.calendarTable = createCalendarTable(noticeContainer);
+        validator.calendarDateTable =
+            GtfsCalendarDateTableContainer.forMissingFile();
+        validator.tripTable = createTripTable(new String[] {"t0", "t1"},
+                                              new String[] {"WEEK", "WEEK"},
+                                              "b1", noticeContainer);
+        // t0 has 1 stop (s0), t1 has no stops at all.
+        validator.stopTimeTable = createStopTimeTable(
+            new String[] {"t0"}, new String[] {"s0"},
+            new String[][] {new String[] {"08:00:00"}}, noticeContainer);
+
+        validator.validate(noticeContainer);
+        assertThat(noticeContainer.getNotices()).isEmpty();
+    }
 }
