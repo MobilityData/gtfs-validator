@@ -52,7 +52,7 @@ shadowJar {
     archiveVersion = project.version
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_11
 mainClassName = 'org.mobilitydata.gtfsvalidator.cli.Main'
 
 repositories {
