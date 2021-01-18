@@ -108,7 +108,7 @@ public class TableContainerGenerator {
         TypeSpec.Builder typeSpec = TypeSpec.classBuilder(classNames.tableContainerSimpleName())
                 .superclass(ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
                 .addAnnotation(Generated.class)
-                .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         typeSpec.addMethod(MethodSpec.methodBuilder("getEntityClass")
                 .addAnnotation(Override.class)

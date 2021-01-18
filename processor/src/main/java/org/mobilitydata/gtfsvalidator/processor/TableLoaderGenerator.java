@@ -119,7 +119,7 @@ public class TableLoaderGenerator {
                 .superclass(ParameterizedTypeName.get(ClassName.get(GtfsTableLoader.class), classNames.entityImplementationTypeName()))
                 .addAnnotation(GtfsLoader.class)
                 .addAnnotation(Generated.class)
-                .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         typeSpec.addField(
                 FieldSpec.builder(FluentLogger.class, "logger", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
