@@ -44,19 +44,23 @@ public class LocationTypeSingleEntityValidator extends SingleEntityValidator<Gtf
     public void validate(GtfsStop location, NoticeContainer noticeContainer) {
         if (location.hasParentStation()) {
             if (location.locationType() == GtfsLocationType.STATION) {
-                noticeContainer.addNotice(new StationWithParentStationNotice(location.stopId(),
-                        location.csvRowNumber(), location.parentStation()));
+                noticeContainer.addNotice(new StationWithParentStationNotice(
+                    location.csvRowNumber(), location.stopId(),
+                    location.stopName(), location.parentStation()));
             }
         } else if (location.locationType() == GtfsLocationType.STOP) {
             if (!location.platformCode().isEmpty()) {
                 // This is a platform since it has platform_code. This is a separate notice from
                 // LocationWithoutParentStationNotice because it is less severe.
-                noticeContainer.addNotice(new PlatformWithoutParentStationNotice(location.stopId(),
-                        location.csvRowNumber()));
+                noticeContainer.addNotice(
+                    new PlatformWithoutParentStationNotice(
+                        location.csvRowNumber(), location.stopId(),
+                        location.stopName()));
             }
         } else if (requiresParentStation(location.locationType())) {
-            noticeContainer.addNotice(new LocationWithoutParentStationNotice(location.stopId(), location.csvRowNumber(),
-                    location.locationTypeValue()));
+            noticeContainer.addNotice(new LocationWithoutParentStationNotice(
+                location.csvRowNumber(), location.stopId(), location.stopName(),
+                location.locationTypeValue()));
         }
     }
 }

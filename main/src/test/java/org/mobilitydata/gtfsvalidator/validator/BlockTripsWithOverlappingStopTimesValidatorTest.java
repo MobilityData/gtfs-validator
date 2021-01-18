@@ -164,9 +164,9 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
 
         validator.validate(noticeContainer);
         assertThat(noticeContainer.getNotices())
-                .containsExactly(new BlockTripsWithOverlappingStopTimesNotice(
-                        1, "t0", "WEEK", 2, "t1", "WEEK",
-                        GtfsDate.fromString("20210104")));
+            .containsExactly(new BlockTripsWithOverlappingStopTimesNotice(
+                1, "t0", "WEEK", 2, "t1", "WEEK", "b1",
+                GtfsDate.fromString("20210104")));
     }
 
     @Test
@@ -191,9 +191,9 @@ public class BlockTripsWithOverlappingStopTimesValidatorTest {
 
         validator.validate(noticeContainer);
         assertThat(noticeContainer.getNotices())
-                .containsExactly(new BlockTripsWithOverlappingStopTimesNotice(
-                        1, "t0", "WEEK", 2, "t1", "WEEK-ALT",
-                        GtfsDate.fromString("20210104")));
+            .containsExactly(new BlockTripsWithOverlappingStopTimesNotice(
+                1, "t0", "WEEK", 2, "t1", "WEEK-ALT", "b1",
+                GtfsDate.fromString("20210104")));
     }
 
     @Test

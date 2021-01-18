@@ -24,11 +24,12 @@ import com.google.common.collect.ImmutableMap;
  * The following location types must have `parent_station`: entrance, generic node, boarding area.
  */
 public class LocationWithoutParentStationNotice extends Notice {
-    public LocationWithoutParentStationNotice(String stopId, long csvRowNumber, int locationType) {
-        super(ImmutableMap.of(
-                "stopId", stopId,
-                "csvRowNumber", csvRowNumber,
-                "locationType", locationType));
+    public LocationWithoutParentStationNotice(long csvRowNumber, String stopId,
+                                              String stopName,
+                                              int locationType) {
+        super(ImmutableMap.of("csvRowNumber", csvRowNumber, "stopId", stopId,
+                              "stopName", stopName, "locationType",
+                              locationType));
     }
 
     @Override

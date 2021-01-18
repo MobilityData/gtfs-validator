@@ -22,11 +22,12 @@ import com.google.common.collect.ImmutableMap;
  * A station has `parent_station` field set.
  */
 public class StationWithParentStationNotice extends Notice {
-    public StationWithParentStationNotice(String stopId, long csvRowNumber, String parentStation) {
-        super(ImmutableMap.of(
-                "stopId", stopId,
-                "csvRowNumber", csvRowNumber,
-                "parentStation", parentStation));
+    public StationWithParentStationNotice(long csvRowNumber, String stopId,
+                                          String stopName,
+                                          String parentStation) {
+        super(ImmutableMap.of("stopId", stopId, "stopName", stopName,
+                              "csvRowNumber", csvRowNumber, "parentStation",
+                              parentStation));
     }
 
     @Override
