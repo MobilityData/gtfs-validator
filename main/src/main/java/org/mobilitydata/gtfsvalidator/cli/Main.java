@@ -21,6 +21,7 @@ import com.google.common.base.Strings;
 import com.google.common.flogger.FluentLogger;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
+import org.mobilitydata.gtfsvalidator.notice.GtfsInputCreationError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
@@ -78,12 +79,22 @@ public class Main {
                 gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
             }
         } catch (IOException | URISyntaxException | InterruptedException e) {
-            // FIXME: Add system errors to noticeContainer here.
+            noticeContainer.addSystemError(
+                    new GtfsInputCreationError(e.getClass().getCanonicalName(), e.getMessage()));
             logger.atSevere().withCause(e).log("Cannot load GTFS feed");
+            generateAndExportReports(args, noticeContainer);
             return;
         }
         feedContainer = feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
+        generateAndExportReports(args, noticeContainer);
+        final long endNanos = System.nanoTime();
+        System.out.printf("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
+        System.out.println(feedContainer.tableTotals());
+    }
 
+    // generates and exports reports for both validation notices and system errors reports
+    private static void generateAndExportReports(final Arguments args,
+                                                 final NoticeContainer noticeContainer) {
         // Output.
         new File(args.getOutputBase()).mkdirs();
         try {
@@ -94,9 +105,5 @@ public class Main {
         } catch (IOException e) {
             logger.atSevere().withCause(e).log("Cannot store report files");
         }
-
-        final long endNanos = System.nanoTime();
-        System.out.println(String.format("Validation took %.3f seconds", (endNanos - startNanos) / 1e9));
-        System.out.println(feedContainer.tableTotals());
     }
 }
