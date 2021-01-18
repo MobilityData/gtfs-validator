@@ -86,6 +86,7 @@ public class Main {
             return;
         }
         feedContainer = feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
+        // Output.
         generateAndExportReports(args, noticeContainer);
         final long endNanos = System.nanoTime();
         System.out.printf("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
@@ -95,7 +96,6 @@ public class Main {
     // generates and exports reports for both validation notices and system errors reports
     private static void generateAndExportReports(final Arguments args,
                                                  final NoticeContainer noticeContainer) {
-        // Output.
         new File(args.getOutputBase()).mkdirs();
         try {
             Files.write(Paths.get(args.getOutputBase(), "report.json"),
