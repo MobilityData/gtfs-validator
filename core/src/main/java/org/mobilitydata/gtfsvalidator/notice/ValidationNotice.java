@@ -16,17 +16,18 @@
 
 package org.mobilitydata.gtfsvalidator.notice;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 
-public class UnusedShapeNotice extends ValidationNotice {
-    public UnusedShapeNotice(String shapeId, long csvRowNumber) {
-        super(ImmutableMap.of(
-                "shapeId", shapeId,
-                "csvRowNumber", csvRowNumber));
-    }
-
-    @Override
-    public String getCode() {
-        return "unused_shape";
+/**
+ * ValidationNotice is the base class for all validation errors and warnings
+ * related to the content of a GTFS feed.
+ * <p>
+ * This is the parent class for the most of notices, such as
+ * {@link DuplicatedColumnNotice}, {@link NumberOutOfRangeError} and notices
+ * outside of the validator core, including 3rd-party notices.
+ */
+public abstract class ValidationNotice extends Notice {
+    public ValidationNotice(Map<String, Object> context) {
+        super(context);
     }
 }

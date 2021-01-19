@@ -20,8 +20,8 @@ import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.notice.WrongParentLocationTypeNotice;
 import org.mobilitydata.gtfsvalidator.table.GtfsLocationType;
 import org.mobilitydata.gtfsvalidator.table.GtfsStop;
@@ -34,7 +34,7 @@ import static com.google.common.truth.Truth.assertThat;
 @RunWith(JUnit4.class)
 public class ParentLocationTypeValidatorTest {
 
-    private List<Notice> validateChildAndParent(GtfsLocationType childType, GtfsLocationType parentType) {
+    private List<ValidationNotice> validateChildAndParent(GtfsLocationType childType, GtfsLocationType parentType) {
         NoticeContainer noticeContainer = new NoticeContainer();
         ParentLocationTypeValidator validator = new ParentLocationTypeValidator();
         validator.stopTable = GtfsStopTableContainer.forEntities(
@@ -53,10 +53,10 @@ public class ParentLocationTypeValidatorTest {
                                  .build()),
             noticeContainer);
         validator.validate(noticeContainer);
-        return noticeContainer.getNotices();
+        return noticeContainer.getValidationNotices();
     }
 
-    private List<Notice> validateNoParent(GtfsLocationType locationType) {
+    private List<ValidationNotice> validateNoParent(GtfsLocationType locationType) {
         NoticeContainer noticeContainer = new NoticeContainer();
         ParentLocationTypeValidator validator = new ParentLocationTypeValidator();
         validator.stopTable = GtfsStopTableContainer.forEntities(ImmutableList.of(
@@ -67,7 +67,7 @@ public class ParentLocationTypeValidatorTest {
                         .build()),
                 noticeContainer);
         validator.validate(noticeContainer);
-        return noticeContainer.getNotices();
+        return noticeContainer.getValidationNotices();
     }
 
     @Test

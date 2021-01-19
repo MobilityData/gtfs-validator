@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * Both short_name and long_name are missing for a route.
  */
-public class RouteBothShortAndLongNameMissingNotice extends Notice {
+public class RouteBothShortAndLongNameMissingNotice extends ValidationNotice {
     public RouteBothShortAndLongNameMissingNotice(String routeId,
                                                   long csvRowNumber) {
         super(ImmutableMap.of(

@@ -61,29 +61,28 @@ public class MatchingFeedAndAgencyLangValidator extends FileValidator{
         if (feedInfoFeedLang.equals(Locale.forLanguageTag("mul"))) {
             // If feed_lang is mul and there isn't more than one agency_lang, that's an error
             if (agencyLangCollection.size() <= 1) {
-                noticeContainer.addNotice(
-                        new FeedInfoLangAndAgencyLangMismatchNotice(
-                                feedInfoFeedLang.getISO3Language(),
-                                agencyLangCollection));
+                noticeContainer.addValidationNotice(
+                    new FeedInfoLangAndAgencyLangMismatchNotice(
+                        feedInfoFeedLang.getISO3Language(),
+                        agencyLangCollection));
                 return;
             }
             return;
         }
         // If there is more than one agency_lang and feed_lang isn't mul, that's an error
         if (agencyLangCollection.size() > 1) {
-            noticeContainer.addNotice(
-                    new FeedInfoLangAndAgencyLangMismatchNotice(
-                            feedInfoFeedLang.getISO3Language(),
-                            agencyLangCollection));
+            noticeContainer.addValidationNotice(
+                new FeedInfoLangAndAgencyLangMismatchNotice(
+                    feedInfoFeedLang.getISO3Language(), agencyLangCollection));
             return;
         }
         agencyTable.getEntities().forEach(agency -> {
             // If feed_lang is not mul and differs from agency_lang, that's an error
             if (!feedInfoFeedLang.equals(agency.agencyLang())) {
-                noticeContainer.addNotice(
-                        new FeedInfoLangAndAgencyLangMismatchNotice(
-                                feedInfoFeedLang.getISO3Language(),
-                                agencyLangCollection));
+                noticeContainer.addValidationNotice(
+                    new FeedInfoLangAndAgencyLangMismatchNotice(
+                        feedInfoFeedLang.getISO3Language(),
+                        agencyLangCollection));
             }
         });
     }

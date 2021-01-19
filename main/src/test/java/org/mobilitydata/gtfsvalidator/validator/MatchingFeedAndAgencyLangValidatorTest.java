@@ -68,7 +68,7 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         validator.feedInfoTable = GtfsFeedInfoTableContainer.forEntities(new ArrayList<>(), noticeContainer);
         validator.validate(noticeContainer);
 
-        assertThat(noticeContainer.getNotices()).isEmpty();
+        assertThat(noticeContainer.getValidationNotices()).isEmpty();
     }
 
     @Test
@@ -93,7 +93,8 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         final ArgumentCaptor<FeedInfoLangAndAgencyLangMismatchNotice> captor =
                 ArgumentCaptor.forClass(FeedInfoLangAndAgencyLangMismatchNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1))
+            .addValidationNotice(captor.capture());
 
         FeedInfoLangAndAgencyLangMismatchNotice notice = captor.getValue();
         assertThat(notice.getCode()).matches("feed_info_lang_and_agency_lang_mismatch");
@@ -126,7 +127,8 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         final ArgumentCaptor<FeedInfoLangAndAgencyLangMismatchNotice> captor =
                 ArgumentCaptor.forClass(FeedInfoLangAndAgencyLangMismatchNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1))
+            .addValidationNotice(captor.capture());
 
         FeedInfoLangAndAgencyLangMismatchNotice notice = captor.getValue();
         assertThat(notice.getCode()).matches("feed_info_lang_and_agency_lang_mismatch");
@@ -188,7 +190,8 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         final ArgumentCaptor<FeedInfoLangAndAgencyLangMismatchNotice> captor =
                 ArgumentCaptor.forClass(FeedInfoLangAndAgencyLangMismatchNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1))
+            .addValidationNotice(captor.capture());
 
         FeedInfoLangAndAgencyLangMismatchNotice notice = captor.getValue();
         assertThat(notice.getCode()).matches("feed_info_lang_and_agency_lang_mismatch");
@@ -258,7 +261,8 @@ public class MatchingFeedAndAgencyLangValidatorTest {
         final ArgumentCaptor<FeedInfoLangAndAgencyLangMismatchNotice> captor =
                 ArgumentCaptor.forClass(FeedInfoLangAndAgencyLangMismatchNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1))
+            .addValidationNotice(captor.capture());
 
         FeedInfoLangAndAgencyLangMismatchNotice notice = captor.getValue();
         assertThat(notice.getCode()).matches("feed_info_lang_and_agency_lang_mismatch");

@@ -18,7 +18,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
 
-public class DecreasingShapeDistanceNotice extends Notice {
+public class DecreasingShapeDistanceNotice extends ValidationNotice {
     public DecreasingShapeDistanceNotice(String shapeId,
                                          long csvRowNumber, double shapeDistTraveled, int shapePtSequence,
                                          long prevCsvRowNumber, double prevShapeDistTraveled, int prevShapePtSequence) {

@@ -78,7 +78,8 @@ public class FrequencyTimeInOrderValidatorTest {
         final ArgumentCaptor<StartAndEndTimeOutOfOrderNotice> captor =
                 ArgumentCaptor.forClass(StartAndEndTimeOutOfOrderNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1))
+            .addValidationNotice(captor.capture());
 
         StartAndEndTimeOutOfOrderNotice notice = captor.getValue();
 

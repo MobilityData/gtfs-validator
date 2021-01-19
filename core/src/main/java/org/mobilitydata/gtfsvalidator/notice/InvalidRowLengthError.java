@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * A row in the input file has a different number of values than specified by the CSV header.
  */
-public class InvalidRowLengthError extends Notice {
+public class InvalidRowLengthError extends ValidationNotice {
     public InvalidRowLengthError(String filename, long csvRowNumber, int rowLength, int headerCount) {
         super(ImmutableMap.of(
                 "filename", filename,

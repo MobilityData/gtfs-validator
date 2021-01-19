@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>
  * The following location types must have `parent_station`: entrance, generic node, boarding area.
  */
-public class LocationWithoutParentStationNotice extends Notice {
+public class LocationWithoutParentStationNotice extends ValidationNotice {
     public LocationWithoutParentStationNotice(long csvRowNumber, String stopId,
                                               String stopName,
                                               int locationType) {

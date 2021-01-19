@@ -51,10 +51,10 @@ public class AgencyConsistencyValidator extends FileValidator {
         for (GtfsAgency agency : agencyTable.getEntities()) {
             // agency_id is required when there are 2 or more agencies.
             if (!agency.hasAgencyId()) {
-                noticeContainer.addNotice(
-                        new MissingRequiredFieldError(agencyTable.gtfsFilename(),
-                                agency.csvRowNumber(),
-                                GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
+                noticeContainer.addValidationNotice(
+                    new MissingRequiredFieldError(
+                        agencyTable.gtfsFilename(), agency.csvRowNumber(),
+                        GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
             }
         }
 
@@ -65,21 +65,23 @@ public class AgencyConsistencyValidator extends FileValidator {
         for (int i = 1; i < agencyCount; ++i) {
             GtfsAgency agency = agencyTable.getEntities().get(i);
             if (!commonTimezone.equals(agency.agencyTimezone())) {
-                noticeContainer.addNotice(
-                        new InconsistentAgencyFieldNotice(
-                                agency.csvRowNumber(),
-                                GtfsAgencyTableLoader.AGENCY_TIMEZONE_FIELD_NAME,
-                                commonTimezone.getId(),
-                                agency.agencyTimezone().getId()));
+                noticeContainer.addValidationNotice(
+                    new InconsistentAgencyFieldNotice(
+                        agency.csvRowNumber(),
+                        GtfsAgencyTableLoader.AGENCY_TIMEZONE_FIELD_NAME,
+                        commonTimezone.getId(),
+                        agency.agencyTimezone().getId()));
             }
             if (hasLanguage != agency.hasAgencyLang()
                     || (hasLanguage && agency.hasAgencyLang() && !commonLanguage.equals(agency.agencyLang()))) {
-                noticeContainer.addNotice(
-                        new InconsistentAgencyFieldNotice(
-                                agency.csvRowNumber(),
-                                GtfsAgencyTableLoader.AGENCY_LANG_FIELD_NAME,
-                                hasLanguage ? commonLanguage.getLanguage() : "",
-                                agency.hasAgencyLang() ? agency.agencyLang().getLanguage() : ""));
+                noticeContainer.addValidationNotice(
+                    new InconsistentAgencyFieldNotice(
+                        agency.csvRowNumber(),
+                        GtfsAgencyTableLoader.AGENCY_LANG_FIELD_NAME,
+                        hasLanguage ? commonLanguage.getLanguage() : "",
+                        agency.hasAgencyLang()
+                            ? agency.agencyLang().getLanguage()
+                            : ""));
             }
         }
     }

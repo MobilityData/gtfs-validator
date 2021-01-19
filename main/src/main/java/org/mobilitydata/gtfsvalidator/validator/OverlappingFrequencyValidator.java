@@ -45,7 +45,8 @@ public class OverlappingFrequencyValidator extends FileValidator {
                 GtfsFrequency prev = frequencyList.get(i - 1);
                 GtfsFrequency curr = frequencyList.get(i);
                 if (curr.startTime().isBefore(prev.endTime())) {
-                    noticeContainer.addNotice(new OverlappingFrequencyNotice(
+                    noticeContainer.addValidationNotice(
+                        new OverlappingFrequencyNotice(
                             prev.csvRowNumber(), prev.endTime(),
                             curr.csvRowNumber(), curr.startTime(),
                             prev.tripId()));

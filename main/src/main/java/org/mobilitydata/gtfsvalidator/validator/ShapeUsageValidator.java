@@ -48,7 +48,8 @@ public class ShapeUsageValidator extends FileValidator {
         for (GtfsShape shape : shapeTable.getEntities()) {
             String shapeId = shape.shapeId();
             if (reportedShapes.add(shapeId) && tripTable.byShapeId(shapeId).isEmpty()) {
-                noticeContainer.addNotice(new UnusedShapeNotice(shapeId, shape.csvRowNumber()));
+                noticeContainer.addValidationNotice(
+                    new UnusedShapeNotice(shapeId, shape.csvRowNumber()));
             }
         }
     }

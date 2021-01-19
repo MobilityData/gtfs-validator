@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * A required column is missing in the input file.
  */
-public class MissingRequiredColumnError extends Notice {
+public class MissingRequiredColumnError extends ValidationNotice {
     public MissingRequiredColumnError(String filename, String fieldName) {
         super(ImmutableMap.of("filename", filename,
                 "fieldName", fieldName));

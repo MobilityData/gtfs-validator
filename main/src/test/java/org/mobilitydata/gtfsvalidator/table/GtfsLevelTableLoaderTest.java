@@ -45,7 +45,7 @@ public class GtfsLevelTableLoaderTest {
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-        assertThat(noticeContainer.getNotices()).isEmpty();
+        assertThat(noticeContainer.getValidationNotices()).isEmpty();
         assertThat(tableContainer.entityCount()).isEqualTo(1);
         GtfsLevel level = tableContainer.byLevelId("level1");
         assertThat(level).isNotNull();
@@ -65,7 +65,7 @@ public class GtfsLevelTableLoaderTest {
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-        assertThat(noticeContainer.getNotices()).isNotEmpty();
+        assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
         assertThat(tableContainer.entityCount()).isEqualTo(0);
         reader.close();
     }
@@ -78,8 +78,8 @@ public class GtfsLevelTableLoaderTest {
         NoticeContainer noticeContainer = new NoticeContainer();
         GtfsLevelTableContainer tableContainer = (GtfsLevelTableContainer) loader.load(reader, FEED_NAME, validatorLoader, noticeContainer);
 
-        assertThat(noticeContainer.getNotices()).isNotEmpty();
-        assertThat(noticeContainer.getNotices().get(0).getClass().getSimpleName()).isEqualTo("EmptyFileNotice");
+        assertThat(noticeContainer.getValidationNotices()).isNotEmpty();
+        assertThat(noticeContainer.getValidationNotices().get(0).getClass().getSimpleName()).isEqualTo("EmptyFileNotice");
         reader.close();
     }
 

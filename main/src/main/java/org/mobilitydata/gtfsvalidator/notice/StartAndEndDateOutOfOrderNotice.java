@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 
-public class StartAndEndDateOutOfOrderNotice extends Notice {
+public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
     public StartAndEndDateOutOfOrderNotice(String filename, long csvRowNumber, GtfsDate startDate, GtfsDate endDate) {
         super(ImmutableMap.of("filename", filename,
                 "csvRowNumber", csvRowNumber,

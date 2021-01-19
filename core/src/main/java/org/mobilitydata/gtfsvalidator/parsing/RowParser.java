@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.notice.Notice;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.notice.NumberOutOfRangeError;
 import org.mobilitydata.gtfsvalidator.notice.UnexpectedEnumValueError;
+import org.mobilitydata.gtfsvalidator.notice.ValidationNotice;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 import org.mobilitydata.gtfsvalidator.type.GtfsDate;
 import org.mobilitydata.gtfsvalidator.type.GtfsTime;
@@ -394,9 +395,9 @@ public class RowParser {
         return dateParser.parseField(columnIndex, required);
     }
 
-    private void addErrorInRow(Notice error) {
+    private void addErrorInRow(ValidationNotice error) {
         parseErrorsInRow = true;
-        noticeContainer.addNotice(error);
+        noticeContainer.addValidationNotice(error);
     }
 
     public enum NumberBounds {

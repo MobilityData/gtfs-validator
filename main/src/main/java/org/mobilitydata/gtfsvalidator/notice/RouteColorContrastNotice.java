@@ -19,7 +19,7 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 import org.mobilitydata.gtfsvalidator.type.GtfsColor;
 
-public class RouteColorContrastNotice extends Notice {
+public class RouteColorContrastNotice extends ValidationNotice {
     public RouteColorContrastNotice(String routeId, long csvRowNumber, GtfsColor routeColor, GtfsColor routeTextColor) {
         super(ImmutableMap.of("routeId", routeId,
                 "csvRowNumber", csvRowNumber,

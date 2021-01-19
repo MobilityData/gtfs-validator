@@ -23,7 +23,7 @@ import com.google.common.collect.ImmutableMap;
  * <p>
  * This is the case when a foreign key of one table references a non-existing value in its original table.
  */
-public class ForeignKeyError extends Notice {
+public class ForeignKeyError extends ValidationNotice {
     public ForeignKeyError(String childFilename, String childFieldName,
                            String parentFilename, String parentFieldName,
                            String fieldValue, long csvRowNumber) {

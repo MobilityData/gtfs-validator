@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * An enum has an unexpected value.
  */
-public class UnexpectedEnumValueError extends Notice {
+public class UnexpectedEnumValueError extends ValidationNotice {
     public UnexpectedEnumValueError(String filename, long csvRowNumber, String fieldName, int fieldValue) {
         super(ImmutableMap.of("filename", filename,
                 "csvRowNumber", csvRowNumber,

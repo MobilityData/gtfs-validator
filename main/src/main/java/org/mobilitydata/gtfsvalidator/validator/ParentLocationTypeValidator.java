@@ -57,12 +57,14 @@ public class ParentLocationTypeValidator extends FileValidator {
             GtfsStop parentLocation = stopTable.byStopId(location.parentStation());
             GtfsLocationType expected = expectedParentLocationType(location.locationType());
             if (expected != GtfsLocationType.UNRECOGNIZED && parentLocation.locationType() != expected) {
-                noticeContainer.addNotice(new WrongParentLocationTypeNotice(
-                    location.csvRowNumber(), location.stopId(),
-                    location.stopName(), location.locationTypeValue(),
-                    parentLocation.csvRowNumber(), location.parentStation(),
-                    parentLocation.stopName(),
-                    parentLocation.locationTypeValue(), expected.getNumber()));
+                noticeContainer.addValidationNotice(
+                    new WrongParentLocationTypeNotice(
+                        location.csvRowNumber(), location.stopId(),
+                        location.stopName(), location.locationTypeValue(),
+                        parentLocation.csvRowNumber(), location.parentStation(),
+                        parentLocation.stopName(),
+                        parentLocation.locationTypeValue(),
+                        expected.getNumber()));
             }
         }
     }

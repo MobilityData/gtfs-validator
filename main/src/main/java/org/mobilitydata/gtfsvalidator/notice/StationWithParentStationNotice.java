@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMap;
 /**
  * A station has `parent_station` field set.
  */
-public class StationWithParentStationNotice extends Notice {
+public class StationWithParentStationNotice extends ValidationNotice {
     public StationWithParentStationNotice(long csvRowNumber, String stopId,
                                           String stopName,
                                           String parentStation) {
