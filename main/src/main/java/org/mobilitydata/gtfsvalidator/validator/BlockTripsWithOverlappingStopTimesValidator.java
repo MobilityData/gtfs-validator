@@ -73,10 +73,11 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
                 final GtfsTrip tripA = overlap.getTripA();
                 final GtfsTrip tripB = overlap.getTripB();
                 noticeContainer.addNotice(
-                        new BlockTripsWithOverlappingStopTimesNotice(
-                                tripA.csvRowNumber(), tripA.tripId(), tripA.serviceId(),
-                                tripB.csvRowNumber(), tripB.tripId(), tripB.serviceId(),
-                                GtfsDate.fromLocalDate(overlap.intersection)));
+                    new BlockTripsWithOverlappingStopTimesNotice(
+                        tripA.csvRowNumber(), tripA.tripId(), tripA.serviceId(),
+                        tripB.csvRowNumber(), tripB.tripId(), tripB.serviceId(),
+                        tripA.blockId(),
+                        GtfsDate.fromLocalDate(overlap.intersection)));
             }
         }
     }
