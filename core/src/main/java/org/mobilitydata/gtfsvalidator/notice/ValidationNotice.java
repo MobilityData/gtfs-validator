@@ -23,8 +23,8 @@ import java.util.Map;
  * related to the content of a GTFS feed.
  * <p>
  * This is the parent class for the most of notices, such as
- * {@link DuplicatedColumnNotice}, {@link NumberOutOfRangeError} or notices
- * produced by user-implemented validators.
+ * {@link DuplicatedColumnNotice}, {@link NumberOutOfRangeError} and notices
+ * outside of the validator core, including 3rd-party notices.
  */
 public abstract class ValidationNotice extends Notice {
     public ValidationNotice(Map<String, Object> context) {
