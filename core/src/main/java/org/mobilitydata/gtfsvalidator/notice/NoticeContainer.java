@@ -40,7 +40,7 @@ public class NoticeContainer {
     private final List<ValidationNotice> validationNotices = new ArrayList<>();
     private final List<SystemError> systemErrors = new ArrayList<>();
 
-    public void addNotice(ValidationNotice notice) {
+    public void addValidationNotice(ValidationNotice notice) {
         validationNotices.add(notice);
     }
 

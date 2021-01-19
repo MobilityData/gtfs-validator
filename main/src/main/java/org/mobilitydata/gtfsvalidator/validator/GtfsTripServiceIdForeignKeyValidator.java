@@ -47,11 +47,13 @@ public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {
         for (GtfsTrip trip : tripContainer.getEntities()) {
             String childKey = trip.serviceId();
             if (!hasReferencedKey(childKey, calendarContainer, calendarDateContainer)) {
-                noticeContainer.addNotice(new ForeignKeyError(GtfsCalendarDateTableLoader.FILENAME,
-                        GtfsCalendarDateTableLoader.SERVICE_ID_FIELD_NAME,
-                        GtfsCalendarTableLoader.FILENAME + " or " + GtfsCalendarDateTableLoader.FILENAME,
-                        GtfsCalendarTableLoader.SERVICE_ID_FIELD_NAME,
-                        childKey, trip.csvRowNumber()));
+                noticeContainer.addValidationNotice(new ForeignKeyError(
+                    GtfsCalendarDateTableLoader.FILENAME,
+                    GtfsCalendarDateTableLoader.SERVICE_ID_FIELD_NAME,
+                    GtfsCalendarTableLoader.FILENAME + " or " +
+                        GtfsCalendarDateTableLoader.FILENAME,
+                    GtfsCalendarTableLoader.SERVICE_ID_FIELD_NAME, childKey,
+                    trip.csvRowNumber()));
             }
         }
 

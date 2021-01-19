@@ -227,9 +227,10 @@ public class TableContainerGenerator {
 
         if (fileDescriptor.singleRow()) {
             method.beginControlFlow("if (entities.size() > 1)")
-                    .addStatement("noticeContainer.addNotice(new $T(gtfsFilename(), entities.size()))",
-                            MoreThanOneEntityNotice.class)
-                    .endControlFlow();
+                .addStatement(
+                    "noticeContainer.addValidationNotice(new $T(gtfsFilename(), entities.size()))",
+                    MoreThanOneEntityNotice.class)
+                .endControlFlow();
         } else if (fileDescriptor.sequenceKey().isPresent() && fileDescriptor.firstKey().isPresent()) {
             GtfsFieldDescriptor firstKey = fileDescriptor.firstKey().get();
             GtfsFieldDescriptor sequenceKey = fileDescriptor.sequenceKey().get();
@@ -239,52 +240,50 @@ public class TableContainerGenerator {
                     "$L.put(entity.$L(), entity)", byKeyMap, firstKey.name());
             method.endControlFlow();
 
-            method.beginControlFlow("for (List<$T> entityList: $T.asMap($L).values())",
+            method
+                .beginControlFlow(
+                    "for (List<$T> entityList: $T.asMap($L).values())",
                     gtfsEntityType, Multimaps.class, byKeyMap)
-                    .addStatement("entityList.sort((entity1, entity2) -> Integer.compare(entity1.$L(), entity2.$L()))",
-                            sequenceKey.name(), sequenceKey.name())
-                    .beginControlFlow("for (int i = 1; i < entityList.size(); ++i)")
-                    .addStatement("$T a = entityList.get(i - 1)", gtfsEntityType)
-                    .addStatement("$T b = entityList.get(i)", gtfsEntityType)
-                    .beginControlFlow("if (a.$L() == b.$L())", sequenceKey.name(), sequenceKey.name())
-                    .addStatement(
-                            "noticeContainer.addNotice(new $T(" +
-                                    "gtfsFilename(), a.csvRowNumber(), " +
-                                    "b.csvRowNumber(), " +
-                                    "$T.$L, a.$L(), " +
-                                    "$T.$L, a.$L()))",
-                            DuplicateKeyError.class,
-                            loaderType,
-                            fieldNameField(firstKey.name()),
-                            firstKey.name(),
-                            loaderType,
-                            fieldNameField(sequenceKey.name()),
-                            sequenceKey.name())
-                    .endControlFlow()
-                    .endControlFlow()
-                    .endControlFlow();
+                .addStatement(
+                    "entityList.sort((entity1, entity2) -> Integer.compare(entity1.$L(), entity2.$L()))",
+                    sequenceKey.name(), sequenceKey.name())
+                .beginControlFlow("for (int i = 1; i < entityList.size(); ++i)")
+                .addStatement("$T a = entityList.get(i - 1)", gtfsEntityType)
+                .addStatement("$T b = entityList.get(i)", gtfsEntityType)
+                .beginControlFlow("if (a.$L() == b.$L())", sequenceKey.name(),
+                                  sequenceKey.name())
+                .addStatement("noticeContainer.addValidationNotice(new $T("
+                                  + "gtfsFilename(), a.csvRowNumber(), "
+                                  + "b.csvRowNumber(), "
+                                  + "$T.$L, a.$L(), "
+                                  + "$T.$L, a.$L()))",
+                              DuplicateKeyError.class, loaderType,
+                              fieldNameField(firstKey.name()), firstKey.name(),
+                              loaderType, fieldNameField(sequenceKey.name()),
+                              sequenceKey.name())
+                .endControlFlow()
+                .endControlFlow()
+                .endControlFlow();
         } else if (fileDescriptor.primaryKey().isPresent()) {
             GtfsFieldDescriptor primaryKey = fileDescriptor.primaryKey().get();
             String byKeyMap = byKeyMapName(primaryKey.name());
             method.beginControlFlow("for ($T newEntity : entities)", gtfsEntityType);
-            method.addStatement(
+            method
+                .addStatement(
                     "$T oldEntity = $L.getOrDefault(newEntity.$L(), null)",
-                    classNames.entityImplementationTypeName(),
-                    byKeyMap,
+                    classNames.entityImplementationTypeName(), byKeyMap,
                     primaryKey.name())
-                    .beginControlFlow(
-                            "if (oldEntity != null)")
-                    .addStatement(
-                            "noticeContainer.addNotice(" +
-                                    "new $T(gtfsFilename(), newEntity.csvRowNumber(), oldEntity.csvRowNumber(), $T.$L, newEntity.$L()))",
-                            DuplicateKeyError.class,
-                            loaderType,
-                            fieldNameField(primaryKey.name()),
-                            primaryKey.name())
-                    .nextControlFlow("else")
-                    .addStatement(
-                            "$L.put(newEntity.$L(), newEntity)", byKeyMap, primaryKey.name())
-                    .endControlFlow();
+                .beginControlFlow("if (oldEntity != null)")
+                .addStatement(
+                    "noticeContainer.addValidationNotice("
+                        +
+                        "new $T(gtfsFilename(), newEntity.csvRowNumber(), oldEntity.csvRowNumber(), $T.$L, newEntity.$L()))",
+                    DuplicateKeyError.class, loaderType,
+                    fieldNameField(primaryKey.name()), primaryKey.name())
+                .nextControlFlow("else")
+                .addStatement("$L.put(newEntity.$L(), newEntity)", byKeyMap,
+                              primaryKey.name())
+                .endControlFlow();
             method.endControlFlow();
         }
 

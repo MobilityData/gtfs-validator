@@ -397,7 +397,7 @@ public class RowParser {
 
     private void addErrorInRow(ValidationNotice error) {
         parseErrorsInRow = true;
-        noticeContainer.addNotice(error);
+        noticeContainer.addValidationNotice(error);
     }
 
     public enum NumberBounds {

@@ -183,27 +183,34 @@ public class TableLoaderGenerator {
     private MethodSpec generateLoadMethod() {
         TypeName gtfsEntityType = classNames.entityImplementationTypeName();
         TypeName tableContainerTypeName = classNames.tableContainerTypeName();
-        MethodSpec.Builder method = MethodSpec.methodBuilder("load")
+        MethodSpec.Builder method =
+            MethodSpec.methodBuilder("load")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(Reader.class, "reader")
                 .addParameter(GtfsFeedName.class, "feedName")
                 .addParameter(ValidatorLoader.class, "validatorLoader")
                 .addParameter(NoticeContainer.class, "noticeContainer")
-                .returns(ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
-                .addStatement("$T csvFile = new $T(reader, FILENAME)", CsvFile.class, CsvFile.class)
+                .returns(ParameterizedTypeName.get(
+                    ClassName.get(GtfsTableContainer.class), gtfsEntityType))
+                .addStatement("$T csvFile = new $T(reader, FILENAME)",
+                              CsvFile.class, CsvFile.class)
                 .beginControlFlow("if (csvFile.isEmpty())")
                 .addStatement(
-                        "noticeContainer.addNotice(new $T(FILENAME))", EmptyFileNotice.class)
+                    "noticeContainer.addValidationNotice(new $T(FILENAME))",
+                    EmptyFileNotice.class)
+                .addStatement("$T table = $T.forEmptyFile()",
+                              tableContainerTypeName, tableContainerTypeName)
                 .addStatement(
-                        "$T table = $T.forEmptyFile()", tableContainerTypeName, tableContainerTypeName)
-                .addStatement(
-                        "validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
+                    "validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
                 .addStatement("return table")
                 .endControlFlow()
-                .beginControlFlow("if (!new $T().validate(FILENAME, csvFile.getColumnNames(), " +
-                                "getColumnNames(), getRequiredColumnNames(), noticeContainer))",
-                        TableHeaderValidator.class)
-                .addStatement("return $T.forInvalidHeaders()", tableContainerTypeName)
+                .beginControlFlow(
+                    "if (!new $T().validate(FILENAME, csvFile.getColumnNames(), "
+                        +
+                        "getColumnNames(), getRequiredColumnNames(), noticeContainer))",
+                    TableHeaderValidator.class)
+                .addStatement("return $T.forInvalidHeaders()",
+                              tableContainerTypeName)
                 .endControlFlow();
 
         for (GtfsFieldDescriptor field : fileDescriptor.fields()) {
@@ -309,18 +316,24 @@ public class TableLoaderGenerator {
 
     private MethodSpec generateLoadMissingFileMethod() {
         TypeName gtfsEntityType = classNames.entityImplementationTypeName();
-        MethodSpec.Builder method = MethodSpec.methodBuilder("loadMissingFile")
+        MethodSpec.Builder method =
+            MethodSpec.methodBuilder("loadMissingFile")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(ValidatorLoader.class, "validatorLoader")
                 .addParameter(NoticeContainer.class, "noticeContainer")
-                .returns(ParameterizedTypeName.get(ClassName.get(GtfsTableContainer.class), gtfsEntityType))
+                .returns(ParameterizedTypeName.get(
+                    ClassName.get(GtfsTableContainer.class), gtfsEntityType))
                 .addAnnotation(Override.class)
                 .addStatement("$T table = $T.forMissingFile()",
-                        classNames.tableContainerTypeName(), classNames.tableContainerTypeName())
+                              classNames.tableContainerTypeName(),
+                              classNames.tableContainerTypeName())
                 .beginControlFlow("if (isRequired())")
-                .addStatement("noticeContainer.addNotice(new $T(gtfsFilename()))", MissingRequiredFileError.class)
+                .addStatement(
+                    "noticeContainer.addValidationNotice(new $T(gtfsFilename()))",
+                    MissingRequiredFileError.class)
                 .endControlFlow()
-                .addStatement("validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
+                .addStatement(
+                    "validatorLoader.invokeSingleFileValidators(table, noticeContainer)")
                 .addStatement("return table");
 
         return method.build();

@@ -96,21 +96,30 @@ public class ForeignKeyValidatorGenerator {
                         .addAnnotation(Inject.class)
                         .build());
 
-        MethodSpec.Builder validateMethod = MethodSpec.methodBuilder("validate")
+        MethodSpec.Builder validateMethod =
+            MethodSpec.methodBuilder("validate")
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Override.class)
                 .returns(void.class)
                 .addParameter(NoticeContainer.class, "noticeContainer")
-                .beginControlFlow("for ($T childEntity: childContainer.getEntities())",
-                        childClasses.entityImplementationTypeName())
-                .beginControlFlow("if (!childEntity.$L())", FieldNameConverter.hasMethodName(childField.name()))
+                .beginControlFlow(
+                    "for ($T childEntity: childContainer.getEntities())",
+                    childClasses.entityImplementationTypeName())
+                .beginControlFlow(
+                    "if (!childEntity.$L())",
+                    FieldNameConverter.hasMethodName(childField.name()))
                 .addStatement("continue")
                 .endControlFlow()
-                .addStatement("String childKey = childEntity.$L()", childField.name())
-                .beginControlFlow("if (!hasReferencedKey(childKey, parentContainer))")
-                .addStatement("noticeContainer.addNotice(new $T($S, $S, $S, $S, childKey, childEntity.csvRowNumber()))",
-                        ForeignKeyError.class, childFile.filename(), FieldNameConverter.gtfsColumnName(childField.name()),
-                        parentFile.filename(), FieldNameConverter.gtfsColumnName(parentField.name()))
+                .addStatement("String childKey = childEntity.$L()",
+                              childField.name())
+                .beginControlFlow(
+                    "if (!hasReferencedKey(childKey, parentContainer))")
+                .addStatement(
+                    "noticeContainer.addValidationNotice(new $T($S, $S, $S, $S, childKey, childEntity.csvRowNumber()))",
+                    ForeignKeyError.class, childFile.filename(),
+                    FieldNameConverter.gtfsColumnName(childField.name()),
+                    parentFile.filename(),
+                    FieldNameConverter.gtfsColumnName(parentField.name()))
                 .endControlFlow()
                 .endControlFlow();
         typeSpec.addMethod(validateMethod.build());

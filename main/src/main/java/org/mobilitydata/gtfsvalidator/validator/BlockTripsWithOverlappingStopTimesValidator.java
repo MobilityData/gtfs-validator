@@ -72,7 +72,7 @@ public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {
                     constructOrderedTripIntervals(tripsInBlock), serviceIdIntersectionCache)) {
                 final GtfsTrip tripA = overlap.getTripA();
                 final GtfsTrip tripB = overlap.getTripB();
-                noticeContainer.addNotice(
+                noticeContainer.addValidationNotice(
                     new BlockTripsWithOverlappingStopTimesNotice(
                         tripA.csvRowNumber(), tripA.tripId(), tripA.serviceId(),
                         tripB.csvRowNumber(), tripB.tripId(), tripB.serviceId(),

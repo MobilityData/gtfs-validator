@@ -46,18 +46,21 @@ public class TableHeaderValidator {
             Integer prev = columnIndices.putIfAbsent(column, i);
             // Column indices are zero-based. We add 1 to make them 1-based.
             if (prev != null) {
-                noticeContainer.addNotice(new DuplicatedColumnNotice(filename, column, prev + 1, i + 1));
+                noticeContainer.addValidationNotice(new DuplicatedColumnNotice(
+                    filename, column, prev + 1, i + 1));
                 isValid = false;
             }
             if (!supportedColumns.contains(column)) {
-                noticeContainer.addNotice(new UnknownColumnNotice(filename, column, i + 1));
+                noticeContainer.addValidationNotice(
+                    new UnknownColumnNotice(filename, column, i + 1));
             }
             missingColumns.remove(column);
         }
         if (!missingColumns.isEmpty()) {
             isValid = false;
             for (String column : missingColumns) {
-                noticeContainer.addNotice(new MissingRequiredColumnError(filename, column));
+                noticeContainer.addValidationNotice(
+                    new MissingRequiredColumnError(filename, column));
             }
         }
         return isValid;

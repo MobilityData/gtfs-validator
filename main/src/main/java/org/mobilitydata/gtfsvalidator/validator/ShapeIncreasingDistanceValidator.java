@@ -46,10 +46,12 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
                 GtfsShape curr = shapeList.get(i);
                 if (prev.hasShapeDistTraveled() && curr.hasShapeDistTraveled() &&
                         prev.shapeDistTraveled() > curr.shapeDistTraveled()) {
-                    noticeContainer.addNotice(new DecreasingShapeDistanceNotice(
-                            curr.shapeId(),
-                            curr.csvRowNumber(), curr.shapeDistTraveled(), curr.shapePtSequence(),
-                            prev.csvRowNumber(), prev.shapeDistTraveled(), prev.shapePtSequence()));
+                    noticeContainer.addValidationNotice(
+                        new DecreasingShapeDistanceNotice(
+                            curr.shapeId(), curr.csvRowNumber(),
+                            curr.shapeDistTraveled(), curr.shapePtSequence(),
+                            prev.csvRowNumber(), prev.shapeDistTraveled(),
+                            prev.shapePtSequence()));
                 }
             }
         }

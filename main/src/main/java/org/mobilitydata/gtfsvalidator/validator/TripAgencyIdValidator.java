@@ -47,11 +47,10 @@ public class TripAgencyIdValidator extends FileValidator {
         }
         for (GtfsRoute route : routeTable.getEntities()) {
             if (!route.hasAgencyId()) {
-                noticeContainer.addNotice(
-                        new MissingRequiredFieldError(
-                                routeTable.gtfsFilename(),
-                                route.csvRowNumber(),
-                                GtfsRouteTableLoader.AGENCY_ID_FIELD_NAME));
+                noticeContainer.addValidationNotice(
+                    new MissingRequiredFieldError(
+                        routeTable.gtfsFilename(), route.csvRowNumber(),
+                        GtfsRouteTableLoader.AGENCY_ID_FIELD_NAME));
             }
             // No need to check reference integrity because it is done by a validator generated from @ForeignKey annotation.
         }

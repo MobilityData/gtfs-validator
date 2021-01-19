@@ -30,8 +30,10 @@ public class NoticeContainerTest {
     @Test
     public void exportJson() {
         NoticeContainer container = new NoticeContainer();
-        container.addNotice(new MissingRequiredFileError("stops.txt"));
-        container.addNotice(new MissingRequiredFileError("agency.txt"));
+        container.addValidationNotice(
+            new MissingRequiredFileError("stops.txt"));
+        container.addValidationNotice(
+            new MissingRequiredFileError("agency.txt"));
         container.addSystemError(new RuntimeExceptionInValidatorError(
             "FaultyValidator", "java.lang.IndexOutOfBoundsException",
             "Index 0 out of bounds"));
@@ -56,7 +58,8 @@ public class NoticeContainerTest {
         // Use HashMap because ImmutableMap does not support nulls.
         Map<String, Object> context = new HashMap<>();
         context.put("nullField", null);
-        container.addNotice(new TestValidationNotice("test_notice", context));
+        container.addValidationNotice(
+            new TestValidationNotice("test_notice", context));
         assertThat(container.exportValidationNotices()).isEqualTo(
                 "{\"notices\":[{\"code\":\"test_notice\",\"totalNotices\":1,\"notices\":[{\"nullField\":null}]}]}");
     }
@@ -72,10 +75,10 @@ public class NoticeContainerTest {
             "Validator2", "java.lang.NegativeArraySizeException",
             "Index -1 out of bounds");
         NoticeContainer c1 = new NoticeContainer();
-        c1.addNotice(n1);
+        c1.addValidationNotice(n1);
         c1.addSystemError(e1);
         NoticeContainer c2 = new NoticeContainer();
-        c2.addNotice(n2);
+        c2.addValidationNotice(n2);
         c2.addSystemError(e2);
         c1.addAll(c2);
         assertThat(c1.getValidationNotices()).containsExactly(n1, n2);

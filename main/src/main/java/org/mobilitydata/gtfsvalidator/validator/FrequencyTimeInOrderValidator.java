@@ -38,15 +38,10 @@ public class FrequencyTimeInOrderValidator extends SingleEntityValidator<GtfsFre
         GtfsTime startTime = frequency.startTime();
         GtfsTime endTime = frequency.endTime();
         if (startTime.isAfter(endTime)) {
-            noticeContainer.addNotice(
-                    new StartAndEndTimeOutOfOrderNotice(
-                            FILENAME,
-                            frequency.tripId(),
-                            frequency.csvRowNumber(),
-                            startTime,
-                            endTime
-                    )
-            );
+            noticeContainer.addValidationNotice(
+                new StartAndEndTimeOutOfOrderNotice(
+                    FILENAME, frequency.tripId(), frequency.csvRowNumber(),
+                    startTime, endTime));
         }
     }
 }

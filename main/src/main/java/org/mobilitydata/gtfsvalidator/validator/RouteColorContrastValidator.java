@@ -46,8 +46,9 @@ public class RouteColorContrastValidator extends SingleEntityValidator<GtfsRoute
         }
         if (Math.abs(entity.routeColor().rec601Luma() - entity.routeTextColor().rec601Luma()) <
                 MAX_ROUTE_COLOR_LUMA_DIFFERENCE) {
-            noticeContainer.addNotice(new RouteColorContrastNotice(entity.routeId(),
-                    entity.csvRowNumber(), entity.routeColor(), entity.routeTextColor()));
+            noticeContainer.addValidationNotice(new RouteColorContrastNotice(
+                entity.routeId(), entity.csvRowNumber(), entity.routeColor(),
+                entity.routeTextColor()));
         }
     }
 }
