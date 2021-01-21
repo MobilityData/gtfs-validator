@@ -78,34 +78,31 @@ public class Main {
       }
     } catch (IOException | URISyntaxException | InterruptedException e) {
       noticeContainer.addSystemError(
-              new GtfsInputCreationError(e.getClass().getCanonicalName(), e.getMessage()));
-      generateAndExportReports(args, noticeContainer);
+          new GtfsInputCreationError(e.getClass().getCanonicalName(), e.getMessage()));
+      exportReport(args.getOutputBase(), noticeContainer);
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       return;
     }
     feedContainer =
-            feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
+        feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
 
     // Output
-    generateAndExportReports(args, noticeContainer);
+    exportReport(args.getOutputBase(), noticeContainer);
     final long endNanos = System.nanoTime();
     System.out.printf("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
     System.out.println(feedContainer.tableTotals());
   }
 
-  /**
-   * Generates and exports reports for both validation notices and system errors reports
-   */
-  private static void generateAndExportReports(
-          final Arguments args, final NoticeContainer noticeContainer) {
-    new File(args.getOutputBase()).mkdirs();
+  /** Generates and exports reports for both validation notices and system errors reports */
+  private static void exportReport(final String outputBase, final NoticeContainer noticeContainer) {
+    new File(outputBase).mkdirs();
     try {
       Files.write(
-              Paths.get(args.getOutputBase(), "report.json"),
-              noticeContainer.exportValidationNotices().getBytes(StandardCharsets.UTF_8));
+          Paths.get(outputBase, "report.json"),
+          noticeContainer.exportValidationNotices().getBytes(StandardCharsets.UTF_8));
       Files.write(
-              Paths.get(args.getOutputBase(), "system_errors.json"),
-              noticeContainer.exportSystemErrors().getBytes(StandardCharsets.UTF_8));
+          Paths.get(outputBase, "system_errors.json"),
+          noticeContainer.exportSystemErrors().getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
     }
