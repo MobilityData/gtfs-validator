@@ -17,20 +17,19 @@
 package org.mobilitydata.gtfsvalidator.notice;
 
 import com.google.common.collect.ImmutableMap;
-
-import java.util.Locale;
 import java.util.Set;
 
 public class FeedInfoLangAndAgencyLangMismatchNotice extends ValidationNotice {
-    public FeedInfoLangAndAgencyLangMismatchNotice(String feedInfoLang,
-                                                   Set<String> agencyLangCollection) {
-        super(ImmutableMap.of(
-                "feedInfoLang", feedInfoLang,
-                "agencyLangCollection", agencyLangCollection));
-    }
+  public FeedInfoLangAndAgencyLangMismatchNotice(
+      String feedInfoLang, Set<String> agencyLangCollection) {
+    super(
+        ImmutableMap.of(
+            "feedInfoLang", feedInfoLang,
+            "agencyLangCollection", agencyLangCollection));
+  }
 
-    @Override
-    public String getCode() {
-        return "feed_info_lang_and_agency_lang_mismatch";
-    }
+  @Override
+  public String getCode() {
+    return "feed_info_lang_and_agency_lang_mismatch";
+  }
 }

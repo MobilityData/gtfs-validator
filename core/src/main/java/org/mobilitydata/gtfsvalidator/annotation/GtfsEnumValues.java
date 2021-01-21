@@ -22,10 +22,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation should not be used directly. It is necessary for making {@code GtfsEnumValue} annotation repeatable.
+ * This annotation should not be used directly. It is necessary for making {@code GtfsEnumValue}
+ * annotation repeatable.
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface GtfsEnumValues {
-    GtfsEnumValue[] value();
+  GtfsEnumValue[] value();
 }

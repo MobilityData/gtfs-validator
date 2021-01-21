@@ -16,6 +16,7 @@
 
 package org.mobilitydata.gtfsvalidator.table;
 
+import java.time.ZoneId;
 import org.mobilitydata.gtfsvalidator.annotation.ConditionallyRequired;
 import org.mobilitydata.gtfsvalidator.annotation.FieldType;
 import org.mobilitydata.gtfsvalidator.annotation.FieldTypeEnum;
@@ -25,56 +26,54 @@ import org.mobilitydata.gtfsvalidator.annotation.Index;
 import org.mobilitydata.gtfsvalidator.annotation.PrimaryKey;
 import org.mobilitydata.gtfsvalidator.annotation.Required;
 
-import java.time.ZoneId;
-
 @GtfsTable("stops.txt")
 @Required
 public interface GtfsStopSchema extends GtfsEntity {
-    @FieldType(FieldTypeEnum.ID)
-    @Required
-    @PrimaryKey
-    String stopId();
+  @FieldType(FieldTypeEnum.ID)
+  @Required
+  @PrimaryKey
+  String stopId();
 
-    String stopCode();
+  String stopCode();
 
-    @ConditionallyRequired
-    String stopName();
+  @ConditionallyRequired
+  String stopName();
 
-    String ttsStopName();
+  String ttsStopName();
 
-    String stopDesc();
+  String stopDesc();
 
-    @FieldType(FieldTypeEnum.LATITUDE)
-    @ConditionallyRequired
-    double stopLat();
+  @FieldType(FieldTypeEnum.LATITUDE)
+  @ConditionallyRequired
+  double stopLat();
 
-    @FieldType(FieldTypeEnum.LONGITUDE)
-    @ConditionallyRequired
-    double stopLon();
+  @FieldType(FieldTypeEnum.LONGITUDE)
+  @ConditionallyRequired
+  double stopLon();
 
-    @FieldType(FieldTypeEnum.ID)
-    @Index
-    @ConditionallyRequired
-    String zoneId();
+  @FieldType(FieldTypeEnum.ID)
+  @Index
+  @ConditionallyRequired
+  String zoneId();
 
-    @FieldType(FieldTypeEnum.URL)
-    String stopUrl();
+  @FieldType(FieldTypeEnum.URL)
+  String stopUrl();
 
-    GtfsLocationType locationType();
+  GtfsLocationType locationType();
 
-    @FieldType(FieldTypeEnum.ID)
-    @ForeignKey(table = "stops.txt", field = "stop_id")
-    @ConditionallyRequired
-    String parentStation();
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "stops.txt", field = "stop_id")
+  @ConditionallyRequired
+  String parentStation();
 
-    @FieldType(FieldTypeEnum.TIMEZONE)
-    ZoneId stopTimezone();
+  @FieldType(FieldTypeEnum.TIMEZONE)
+  ZoneId stopTimezone();
 
-    GtfsWheelchairBoarding wheelchairBoarding();
+  GtfsWheelchairBoarding wheelchairBoarding();
 
-    @FieldType(FieldTypeEnum.ID)
-    @ForeignKey(table = "levels.txt", field = "level_id")
-    String levelId();
+  @FieldType(FieldTypeEnum.ID)
+  @ForeignKey(table = "levels.txt", field = "level_id")
+  String levelId();
 
-    String platformCode();
+  String platformCode();
 }

@@ -18,8 +18,8 @@ package org.mobilitydata.gtfsvalidator.annotation;
 
 /**
  * Generates a validation that an integer or a double (float) field is not negative.
- * <p>
- * Example.
+ *
+ * <p>Example.
  *
  * <pre>
  *   @GtfsTable("stop_times.txt")
@@ -29,5 +29,4 @@ package org.mobilitydata.gtfsvalidator.annotation;
  *   }
  * </pre>
  */
-public @interface NonNegative {
-}
+public @interface NonNegative {}
