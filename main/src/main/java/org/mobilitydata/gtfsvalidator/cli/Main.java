@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.mobilitydata.gtfsvalidator.input.GtfsFeedName;
 import org.mobilitydata.gtfsvalidator.input.GtfsInput;
+import org.mobilitydata.gtfsvalidator.notice.GtfsInputCreationError;
 import org.mobilitydata.gtfsvalidator.notice.NoticeContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
@@ -75,29 +76,35 @@ public class Main {
         gtfsInput = GtfsInput.createFromPath(Paths.get(args.getInput()));
       }
     } catch (IOException | URISyntaxException | InterruptedException e) {
-      // FIXME: Add system errors to noticeContainer here.
+      noticeContainer.addSystemError(
+              new GtfsInputCreationError(e.getClass().getCanonicalName(), e.getMessage()));
+      generateAndExportReports(args, noticeContainer);
       logger.atSevere().withCause(e).log("Cannot load GTFS feed");
       return;
     }
     feedContainer =
-        feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
+            feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
 
-    // Output.
+    // Output
+    generateAndExportReports(args, noticeContainer);
+    final long endNanos = System.nanoTime();
+    System.out.printf("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
+    System.out.println(feedContainer.tableTotals());
+  }
+
+  /**
+   * Generates and exports reports for both validation notices and system errors reports
+   */
+  private static void generateAndExportReports(final Arguments args,
+                                               final NoticeContainer noticeContainer) {
     new File(args.getOutputBase()).mkdirs();
     try {
-      Files.write(
-          Paths.get(args.getOutputBase(), "report.json"),
-          noticeContainer.exportValidationNotices().getBytes(StandardCharsets.UTF_8));
-      Files.write(
-          Paths.get(args.getOutputBase(), "system_errors.json"),
-          noticeContainer.exportSystemErrors().getBytes(StandardCharsets.UTF_8));
+      Files.write(Paths.get(args.getOutputBase(), "report.json"),
+              noticeContainer.exportValidationNotices().getBytes(StandardCharsets.UTF_8));
+      Files.write(Paths.get(args.getOutputBase(), "system_errors.json"),
+              noticeContainer.exportSystemErrors().getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.atSevere().withCause(e).log("Cannot store report files");
     }
-
-    final long endNanos = System.nanoTime();
-    System.out.println(
-        String.format("Validation took %.3f seconds", (endNanos - startNanos) / 1e9));
-    System.out.println(feedContainer.tableTotals());
   }
 }
