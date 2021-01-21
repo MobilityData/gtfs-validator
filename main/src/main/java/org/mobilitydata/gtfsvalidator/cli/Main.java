@@ -34,9 +34,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedContainer;
 import org.mobilitydata.gtfsvalidator.table.GtfsFeedLoader;
 import org.mobilitydata.gtfsvalidator.validator.ValidatorLoader;
 
-/**
- * The main entry point for GTFS Validator CLI.
- */
+/** The main entry point for GTFS Validator CLI. */
 public class Main {
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
@@ -84,11 +82,14 @@ public class Main {
             generateAndExportReports(args, noticeContainer);
             return;
         }
-        feedContainer = feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
+        feedContainer =
+                feedLoader.loadAndValidate(gtfsInput, feedName, validatorLoader, noticeContainer);
+
         // Output.
         generateAndExportReports(args, noticeContainer);
         final long endNanos = System.nanoTime();
-        System.out.printf("Validation took %.3f seconds%n", (endNanos - startNanos) / 1e9);
+        System.out.println(
+                String.format("Validation took %.3f seconds", (endNanos - startNanos) / 1e9));
         System.out.println(feedContainer.tableTotals());
     }
 
