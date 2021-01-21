@@ -98,6 +98,7 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
       for (GtfsEnumDescriptor enumDescriptor : enumDescriptors) {
           writeJavaFile(new EnumGenerator(enumDescriptor).generateEnumJavaFile());
       }
+  }
 
   @Override
   @SuppressWarnings("unchecked")
