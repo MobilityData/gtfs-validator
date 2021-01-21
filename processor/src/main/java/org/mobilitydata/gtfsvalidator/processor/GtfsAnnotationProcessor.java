@@ -70,11 +70,6 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
   }
 
   @Override
-  public Set<String> getSupportedAnnotationTypes() {
-    return ImmutableSet.of(GtfsTable.class.getName(), GtfsEnumValues.class.getName());
-  }
-
-  @Override
   public SourceVersion getSupportedSourceVersion() {
     return SourceVersion.latestSupported();
   }
@@ -82,22 +77,6 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-      List<GtfsEnumDescriptor> enumDescriptors = new ArrayList<>();
-      for (TypeElement type : typesIn(annotatedElementsIn(roundEnv, GtfsEnumValues.class))) {
-          enumDescriptors.add(analyser.analyzeGtfsEnumType(type));
-      }
-      // Support enums that have a single value.
-      for (TypeElement type : typesIn(annotatedElementsIn(roundEnv, GtfsEnumValue.class))) {
-          enumDescriptors.add(analyser.analyzeGtfsEnumType(type));
-      }
-      for (GtfsEnumDescriptor enumDescriptor : enumDescriptors) {
-          writeJavaFile(new EnumGenerator(enumDescriptor).generateEnumJavaFile());
-      }
   }
 
   @Override
