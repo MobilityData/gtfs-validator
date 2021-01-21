@@ -39,6 +39,7 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
 
     @Override
     public void validate(NoticeContainer noticeContainer) {
+        //noinspection UnstableApiUsage
         for (List<GtfsShape> shapeList : Multimaps.asMap(table.byShapeIdMap()).values()) {
             // GtfsShape objects are sorted based on @SequenceKey annotation on shape_pt_sequence field.
             for (int i = 1; i < shapeList.size(); ++i) {
@@ -57,4 +58,3 @@ public class ShapeIncreasingDistanceValidator extends FileValidator {
         }
     }
 }
-

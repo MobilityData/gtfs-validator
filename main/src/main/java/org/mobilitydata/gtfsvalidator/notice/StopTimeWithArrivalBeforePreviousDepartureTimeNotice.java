@@ -25,8 +25,8 @@ public class StopTimeWithArrivalBeforePreviousDepartureTimeNotice extends Valida
                 "csvRowNumber", csvRowNumber,
                 "prevCsvRowNumber", prevCsvRowNumber,
                 "tripId", tripId,
-                "departureTime", departureTime.toHHMMSS(),
-                "arrivalTime", arrivalTime.toHHMMSS()
+                "arrivalTime", arrivalTime.toHHMMSS(),
+                "departureTime", departureTime.toHHMMSS()
         ));
     }
 

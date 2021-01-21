@@ -40,8 +40,11 @@ public class FeedServiceDateValidator extends FileValidator {
             if (feedInfo.hasFeedStartDate() && feedInfo.hasFeedEndDate() && feedInfo.feedStartDate().isAfter(feedInfo.feedEndDate())) {
                 noticeContainer.addValidationNotice(
                     new StartAndEndDateOutOfOrderNotice(
-                        feedInfoTable.gtfsFilename(), feedInfo.csvRowNumber(),
-                        feedInfo.feedStartDate(), feedInfo.feedEndDate()));
+                        feedInfoTable.gtfsFilename(),
+                            feedInfo.csvRowNumber(),
+                            feedInfo.feedStartDate(),
+                            feedInfo.feedEndDate())
+                );
             }
         }
     }

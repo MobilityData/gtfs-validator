@@ -45,6 +45,7 @@ public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {
 
     @Override
     public void validate(NoticeContainer noticeContainer) {
+        //noinspection UnstableApiUsage
         for (List<GtfsStopTime> stopTimeList : Multimaps.asMap(table.byTripIdMap()).values()) {
             int previousDepartureRow = -1;
             for (int i = 0; i < stopTimeList.size(); ++i) {

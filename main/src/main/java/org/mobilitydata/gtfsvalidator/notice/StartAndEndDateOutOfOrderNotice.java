@@ -29,8 +29,8 @@ public class StartAndEndDateOutOfOrderNotice extends ValidationNotice {
 
     public StartAndEndDateOutOfOrderNotice(String filename, String entityId, long csvRowNumber, GtfsDate startDate, GtfsDate endDate) {
         super(ImmutableMap.of("filename", filename,
-                "csvRowNumber", csvRowNumber,
                 "entityId", entityId,
+                "csvRowNumber", csvRowNumber,
                 "startDate", startDate.toYYYYMMDD(),
                 "endDate", endDate.toYYYYMMDD()));
     }

@@ -40,9 +40,12 @@ public class CalendarServiceDateValidator extends FileValidator {
             if (calendar.hasStartDate() && calendar.hasEndDate() && calendar.startDate().isAfter(calendar.endDate())) {
                 noticeContainer.addValidationNotice(
                     new StartAndEndDateOutOfOrderNotice(
-                        calendarTable.gtfsFilename(), calendar.serviceId(),
-                        calendar.csvRowNumber(), calendar.startDate(),
-                        calendar.endDate()));
+                        calendarTable.gtfsFilename(),
+                            calendar.serviceId(),
+                            calendar.csvRowNumber(),
+                            calendar.startDate(),
+                            calendar.endDate())
+                );
             }
         }
     }

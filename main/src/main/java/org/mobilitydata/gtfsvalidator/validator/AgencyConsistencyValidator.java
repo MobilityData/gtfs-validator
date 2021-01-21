@@ -53,7 +53,8 @@ public class AgencyConsistencyValidator extends FileValidator {
             if (!agency.hasAgencyId()) {
                 noticeContainer.addValidationNotice(
                     new MissingRequiredFieldError(
-                        agencyTable.gtfsFilename(), agency.csvRowNumber(),
+                        agencyTable.gtfsFilename(),
+                            agency.csvRowNumber(),
                         GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
             }
         }
