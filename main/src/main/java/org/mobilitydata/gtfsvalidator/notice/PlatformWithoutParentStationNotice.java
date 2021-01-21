@@ -21,17 +21,15 @@ import com.google.common.collect.ImmutableMap;
 /**
  * A platform has no `parent_station` field set.
  *
- * This is different from {@code LocationWithoutParentStationNotice} since it is less severe.
+ * <p>This is different from {@code LocationWithoutParentStationNotice} since it is less severe.
  */
 public class PlatformWithoutParentStationNotice extends ValidationNotice {
-    public PlatformWithoutParentStationNotice(String stopId, long csvRowNumber) {
-        super(ImmutableMap.of(
-                "stopId", stopId,
-                "csvRowNumber", csvRowNumber));
-    }
+  public PlatformWithoutParentStationNotice(long csvRowNumber, String stopId, String stopName) {
+    super(ImmutableMap.of("csvRowNumber", csvRowNumber, "stopId", stopId, "stopName", stopName));
+  }
 
-    @Override
-    public String getCode() {
-        return "platform_without_parent_station";
-    }
+  @Override
+  public String getCode() {
+    return "platform_without_parent_station";
+  }
 }

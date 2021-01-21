@@ -19,23 +19,36 @@ package org.mobilitydata.gtfsvalidator.notice;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Incorrect type of the parent location (e.g., a parent for a stop or an entrance must be a station).
+ * Incorrect type of the parent location (e.g., a parent for a stop or an entrance must be a
+ * station).
  */
 public class WrongParentLocationTypeNotice extends ValidationNotice {
-    public WrongParentLocationTypeNotice(String stopId, long csvRowNumber, int locationType, String parentStation,
-                                         long parentCsvRowNumber, int parentLocationType, int expectedLocationType) {
-        super(new ImmutableMap.Builder<String, Object>()
-                .put("stopId", stopId)
-                .put("csvRowNumber", csvRowNumber)
-                .put("locationType", locationType)
-                .put("parentStation", parentStation)
-                .put("parentCsvRowNumber", parentCsvRowNumber)
-                .put("parentLocationType", parentLocationType)
-                .put("expectedLocationType", expectedLocationType).build());
-    }
+  public WrongParentLocationTypeNotice(
+      long csvRowNumber,
+      String stopId,
+      String stopName,
+      int locationType,
+      long parentCsvRowNumber,
+      String parentStation,
+      String parentStopName,
+      int parentLocationType,
+      int expectedLocationType) {
+    super(
+        new ImmutableMap.Builder<String, Object>()
+            .put("csvRowNumber", csvRowNumber)
+            .put("stopId", stopId)
+            .put("stopName", stopName)
+            .put("locationType", locationType)
+            .put("parentCsvRowNumber", parentCsvRowNumber)
+            .put("parentStation", parentStation)
+            .put("parentStopName", parentStopName)
+            .put("parentLocationType", parentLocationType)
+            .put("expectedLocationType", expectedLocationType)
+            .build());
+  }
 
-    @Override
-    public String getCode() {
-        return "wrong_parent_location_type";
-    }
+  @Override
+  public String getCode() {
+    return "wrong_parent_location_type";
+  }
 }

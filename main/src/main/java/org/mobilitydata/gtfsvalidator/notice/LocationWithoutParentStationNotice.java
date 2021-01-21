@@ -20,19 +20,27 @@ import com.google.common.collect.ImmutableMap;
 
 /**
  * A location that must have `parent_station` field does not have it.
- * <p>
- * The following location types must have `parent_station`: entrance, generic node, boarding area.
+ *
+ * <p>The following location types must have `parent_station`: entrance, generic node, boarding
+ * area.
  */
 public class LocationWithoutParentStationNotice extends ValidationNotice {
-    public LocationWithoutParentStationNotice(String stopId, long csvRowNumber, int locationType) {
-        super(ImmutableMap.of(
-                "stopId", stopId,
-                "csvRowNumber", csvRowNumber,
-                "locationType", locationType));
-    }
+  public LocationWithoutParentStationNotice(
+      long csvRowNumber, String stopId, String stopName, int locationType) {
+    super(
+        ImmutableMap.of(
+            "csvRowNumber",
+            csvRowNumber,
+            "stopId",
+            stopId,
+            "stopName",
+            stopName,
+            "locationType",
+            locationType));
+  }
 
-    @Override
-    public String getCode() {
-        return "location_without_parent_station";
-    }
+  @Override
+  public String getCode() {
+    return "location_without_parent_station";
+  }
 }

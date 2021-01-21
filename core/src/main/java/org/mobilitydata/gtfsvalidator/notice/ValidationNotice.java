@@ -19,15 +19,15 @@ package org.mobilitydata.gtfsvalidator.notice;
 import java.util.Map;
 
 /**
- * ValidationNotice is the base class for all validation errors and warnings
- * related to the content of a GTFS feed.
- * <p>
- * This is the parent class for the most of notices, such as
- * {@link DuplicatedColumnNotice}, {@link NumberOutOfRangeError} or notices
- * produced by user-implemented validators.
+ * ValidationNotice is the base class for all validation errors and warnings related to the content
+ * of a GTFS feed.
+ *
+ * <p>This is the parent class for the most of notices, such as {@link DuplicatedColumnNotice},
+ * {@link NumberOutOfRangeError} and notices outside of the validator core, including 3rd-party
+ * notices.
  */
 public abstract class ValidationNotice extends Notice {
-    public ValidationNotice(Map<String, Object> context) {
-        super(context);
-    }
+  public ValidationNotice(Map<String, Object> context) {
+    super(context);
+  }
 }
