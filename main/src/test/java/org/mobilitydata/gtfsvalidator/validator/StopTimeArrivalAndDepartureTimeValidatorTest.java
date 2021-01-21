@@ -124,7 +124,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
         ArgumentCaptor<StopTimeWithDepartureBeforeArrivalTimeNotice> captor =
                 ArgumentCaptor.forClass(StopTimeWithDepartureBeforeArrivalTimeNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         StopTimeWithDepartureBeforeArrivalTimeNotice notice = captor.getValue();
 
         assertThat(notice.getCode()).matches("stop_time_with_departure_before_arrival_time");
@@ -192,7 +192,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
         ArgumentCaptor<StopTimeWithArrivalBeforePreviousDepartureTimeNotice> captor =
                 ArgumentCaptor.forClass(StopTimeWithArrivalBeforePreviousDepartureTimeNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         StopTimeWithArrivalBeforePreviousDepartureTimeNotice notice = captor.getValue();
 
         assertThat(notice.getCode()).matches("stop_time_with_arrival_before_previous_departure_time");
@@ -292,7 +292,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
         ArgumentCaptor<StopTimeWithOnlyArrivalOrDepartureTimeNotice> captor =
                 ArgumentCaptor.forClass(StopTimeWithOnlyArrivalOrDepartureTimeNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         StopTimeWithOnlyArrivalOrDepartureTimeNotice notice = captor.getValue();
 
         assertThat(notice.getCode()).matches("stop_time_with_only_arrival_or_departure_time");
@@ -331,7 +331,7 @@ public class StopTimeArrivalAndDepartureTimeValidatorTest {
         ArgumentCaptor<StopTimeWithOnlyArrivalOrDepartureTimeNotice> captor =
                 ArgumentCaptor.forClass(StopTimeWithOnlyArrivalOrDepartureTimeNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         StopTimeWithOnlyArrivalOrDepartureTimeNotice notice = captor.getValue();
 
         assertThat(notice.getCode()).matches("stop_time_with_only_arrival_or_departure_time");

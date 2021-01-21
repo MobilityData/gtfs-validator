@@ -110,7 +110,7 @@ public class RouteColorContrastValidatorTest {
         ArgumentCaptor<RouteColorContrastNotice> captor =
                 ArgumentCaptor.forClass(RouteColorContrastNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         RouteColorContrastNotice notice = captor.getValue();
         assertThat(notice.getCode()).matches("route_color_contrast");
         assertThat(notice.getContext()).containsEntry("routeId","route id value" );

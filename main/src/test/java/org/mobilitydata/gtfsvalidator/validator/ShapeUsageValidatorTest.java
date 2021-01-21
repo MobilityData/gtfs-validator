@@ -93,7 +93,7 @@ public class ShapeUsageValidatorTest {
         ArgumentCaptor<UnusedShapeNotice> captor =
                 ArgumentCaptor.forClass(UnusedShapeNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         UnusedShapeNotice notice = captor.getValue();
         assertThat(notice.getCode()).matches("unused_shape");
         assertThat(notice.getContext()).containsEntry("shapeId", "shape id value");

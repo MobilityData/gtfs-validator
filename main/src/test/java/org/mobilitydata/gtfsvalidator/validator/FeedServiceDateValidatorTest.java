@@ -104,7 +104,7 @@ public class FeedServiceDateValidatorTest {
         ArgumentCaptor<StartAndEndDateOutOfOrderNotice> captor =
                 ArgumentCaptor.forClass(StartAndEndDateOutOfOrderNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         StartAndEndDateOutOfOrderNotice notice = captor.getValue();
 
         assertThat(notice.getCode()).matches("start_and_end_date_out_of_order");

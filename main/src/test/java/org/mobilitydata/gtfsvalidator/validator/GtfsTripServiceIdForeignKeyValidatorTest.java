@@ -114,7 +114,7 @@ public class GtfsTripServiceIdForeignKeyValidatorTest {
 
         ArgumentCaptor<ForeignKeyError> captor = ArgumentCaptor.forClass(ForeignKeyError.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         ForeignKeyError notice = captor.getValue();
         assertThat(notice.getCode()).matches("foreign_key_error");
         assertThat(notice.getContext()).containsEntry("childFilename", GtfsCalendarDateTableLoader.FILENAME);

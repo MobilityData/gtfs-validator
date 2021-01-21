@@ -91,7 +91,7 @@ public class RouteAgencyIdValidatorTest {
         ArgumentCaptor<MissingRequiredFieldError> captor =
                 ArgumentCaptor.forClass(MissingRequiredFieldError.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         MissingRequiredFieldError notice = captor.getValue();
         assertThat(notice.getCode()).matches("missing_required_field");
         assertThat(notice.getContext()).containsEntry("filename", "routes.txt");

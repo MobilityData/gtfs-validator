@@ -29,10 +29,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
@@ -70,12 +70,12 @@ public class AgencyConsistencyValidatorTest {
         GtfsAgency mockAgency0 = mock(GtfsAgency.class);
         when(mockAgency0.hasAgencyId()).thenReturn(true);
         when(mockAgency0.hasAgencyLang()).thenReturn(true);
-        when(mockAgency0.agencyTimezone()).thenReturn(TimeZone.getDefault());
+        when(mockAgency0.agencyTimezone()).thenReturn(ZoneId.systemDefault());
         when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
         GtfsAgency mockAgency1 = mock(GtfsAgency.class);
         when(mockAgency1.hasAgencyId()).thenReturn(false);
         when(mockAgency1.hasAgencyLang()).thenReturn(true);
-        when(mockAgency1.agencyTimezone()).thenReturn(TimeZone.getDefault());
+        when(mockAgency1.agencyTimezone()).thenReturn(ZoneId.systemDefault());
         when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
         when(mockAgency1.csvRowNumber()).thenReturn(1L);
         agencyCollection.add(mockAgency0);
@@ -89,7 +89,7 @@ public class AgencyConsistencyValidatorTest {
         ArgumentCaptor<MissingRequiredFieldError> captor =
                 ArgumentCaptor.forClass(MissingRequiredFieldError.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         MissingRequiredFieldError notice = captor.getValue();
 
         assertThat(notice.getCode()).matches("missing_required_field");
@@ -121,12 +121,12 @@ public class AgencyConsistencyValidatorTest {
         GtfsAgency mockAgency0 = mock(GtfsAgency.class);
         when(mockAgency0.hasAgencyId()).thenReturn(true);
         when(mockAgency0.hasAgencyLang()).thenReturn(true);
-        when(mockAgency0.agencyTimezone()).thenReturn(TimeZone.getTimeZone("America/Bogota"));
+        when(mockAgency0.agencyTimezone()).thenReturn(ZoneId.of("America/Bogota"));
         when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
         GtfsAgency mockAgency1 = mock(GtfsAgency.class);
         when(mockAgency1.hasAgencyId()).thenReturn(true);
         when(mockAgency1.hasAgencyLang()).thenReturn(true);
-        when(mockAgency1.agencyTimezone()).thenReturn(TimeZone.getTimeZone("America/Montreal"));
+        when(mockAgency1.agencyTimezone()).thenReturn(ZoneId.of("America/Montreal"));
         when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
         when(mockAgency1.csvRowNumber()).thenReturn(1L);
         agencyCollection.add(mockAgency0);
@@ -140,7 +140,7 @@ public class AgencyConsistencyValidatorTest {
         ArgumentCaptor<InconsistentAgencyFieldNotice> captor =
                 ArgumentCaptor.forClass(InconsistentAgencyFieldNotice.class);
 
-        verify(mockNoticeContainer, times(1)).addNotice(captor.capture());
+        verify(mockNoticeContainer, times(1)).addValidationNotice(captor.capture());
         InconsistentAgencyFieldNotice notice = captor.getValue();
 
         assertThat(notice.getCode()).matches("inconsistent_agency_field");
@@ -172,12 +172,12 @@ public class AgencyConsistencyValidatorTest {
         GtfsAgency mockAgency0 = mock(GtfsAgency.class);
         when(mockAgency0.hasAgencyId()).thenReturn(true);
         when(mockAgency0.hasAgencyLang()).thenReturn(true);
-        when(mockAgency0.agencyTimezone()).thenReturn(TimeZone.getTimeZone("America/Bogota"));
+        when(mockAgency0.agencyTimezone()).thenReturn(ZoneId.of("America/Bogota"));
         when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
         GtfsAgency mockAgency1 = mock(GtfsAgency.class);
         when(mockAgency1.hasAgencyId()).thenReturn(true);
         when(mockAgency1.hasAgencyLang()).thenReturn(true);
-        when(mockAgency1.agencyTimezone()).thenReturn(TimeZone.getTimeZone("America/Bogota"));
+        when(mockAgency1.agencyTimezone()).thenReturn(ZoneId.of("America/Bogota"));
         when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
         when(mockAgency1.csvRowNumber()).thenReturn(1L);
         agencyCollection.add(mockAgency0);
@@ -219,12 +219,12 @@ public class AgencyConsistencyValidatorTest {
         GtfsAgency mockAgency0 = mock(GtfsAgency.class);
         when(mockAgency0.hasAgencyId()).thenReturn(true);
         when(mockAgency0.hasAgencyLang()).thenReturn(true);
-        when(mockAgency0.agencyTimezone()).thenReturn(TimeZone.getTimeZone("America/Chicago"));
+        when(mockAgency0.agencyTimezone()).thenReturn(ZoneId.of("America/Chicago"));
         when(mockAgency0.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
         GtfsAgency mockAgency1 = mock(GtfsAgency.class);
         when(mockAgency1.hasAgencyId()).thenReturn(true);
         when(mockAgency1.hasAgencyLang()).thenReturn(true);
-        when(mockAgency1.agencyTimezone()).thenReturn(TimeZone.getTimeZone("America/Chicago"));
+        when(mockAgency1.agencyTimezone()).thenReturn(ZoneId.of("America/Chicago"));
         when(mockAgency1.agencyLang()).thenReturn(Locale.forLanguageTag("en"));
         when(mockAgency1.csvRowNumber()).thenReturn(1L);
         agencyCollection.add(mockAgency0);
