@@ -20,6 +20,7 @@ import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.squareup.javapoet.JavaFile;
+import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValue;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsEnumValues;
 import org.mobilitydata.gtfsvalidator.annotation.GtfsTable;
 
@@ -61,7 +62,8 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
-        return ImmutableSet.of(GtfsTable.class.getName(), GtfsEnumValues.class.getName());
+        return ImmutableSet.of(GtfsTable.class.getName(), GtfsEnumValues.class.getName(),
+            GtfsEnumValue.class.getName());
     }
 
     @Override
@@ -79,6 +81,10 @@ public class GtfsAnnotationProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         List<GtfsEnumDescriptor> enumDescriptors = new ArrayList<>();
         for (TypeElement type : typesIn(annotatedElementsIn(roundEnv, GtfsEnumValues.class))) {
+            enumDescriptors.add(analyser.analyzeGtfsEnumType(type));
+        }
+        // Support enums that have a single value.
+        for (TypeElement type : typesIn(annotatedElementsIn(roundEnv, GtfsEnumValue.class))) {
             enumDescriptors.add(analyser.analyzeGtfsEnumType(type));
         }
         for (GtfsEnumDescriptor enumDescriptor : enumDescriptors) {

@@ -163,11 +163,21 @@ public class Analyser {
         GtfsEnumDescriptor.Builder enumBuilder = GtfsEnumDescriptor.builder();
         enumBuilder.setName(createEnumName(type.getSimpleName().toString()));
         GtfsEnumValues valuesAnnotation = type.getAnnotation(GtfsEnumValues.class);
-        for (GtfsEnumValue value : valuesAnnotation.value()) {
-            enumBuilder.valuesBuilder().add(
-                    GtfsEnumValueDescriptor.create(value.name().toUpperCase(), value.value()));
+        if (valuesAnnotation != null) {
+            // A typical enum has multiple values.
+            for (GtfsEnumValue value : valuesAnnotation.value()) {
+                addEnumValue(value, enumBuilder);
+            }
+        } else {
+            // A trivial enum has a single values.
+            addEnumValue(type.getAnnotation(GtfsEnumValue.class), enumBuilder);
         }
         return enumBuilder.build();
+    }
+
+    private void addEnumValue(GtfsEnumValue value, GtfsEnumDescriptor.Builder enumBuilder) {
+        enumBuilder.valuesBuilder().add(
+            GtfsEnumValueDescriptor.create(value.name().toUpperCase(), value.value()));
     }
 }
 
