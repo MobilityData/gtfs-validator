@@ -27,6 +27,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsAgencyTableLoader;
 
 import java.time.ZoneId;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Validates that all agencies have the same timezone and language and that agency_id field is set if there is more than
@@ -53,8 +54,9 @@ public class AgencyConsistencyValidator extends FileValidator {
             if (!agency.hasAgencyId()) {
                 noticeContainer.addValidationNotice(
                     new MissingRequiredFieldError(
-                        agencyTable.gtfsFilename(), agency.csvRowNumber(),
-                        GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
+                            agencyTable.gtfsFilename(),
+                            agency.csvRowNumber(),
+                            GtfsAgencyTableLoader.AGENCY_ID_FIELD_NAME));
             }
         }
 
@@ -79,9 +81,7 @@ public class AgencyConsistencyValidator extends FileValidator {
                         agency.csvRowNumber(),
                         GtfsAgencyTableLoader.AGENCY_LANG_FIELD_NAME,
                         hasLanguage ? commonLanguage.getLanguage() : "",
-                        agency.hasAgencyLang()
-                            ? agency.agencyLang().getLanguage()
-                            : ""));
+                        agency.hasAgencyLang() ? agency.agencyLang().getLanguage() : ""));
             }
         }
     }
