@@ -26,8 +26,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsFeedInfoTableContainer;
 /**
  * Validates that start_date <= end_date for all rows in "feed_info.txt".
  * <p>
- * Generated notices:
- * * StartAndEndDateOutOfOrderNotice
+ * Generated notice: {@link StartAndEndDateOutOfOrderNotice}.
  */
 @GtfsValidator
 public class FeedServiceDateValidator extends FileValidator {

@@ -33,8 +33,10 @@ import java.util.Locale;
  * 1 agency.
  * <p>
  * Generated notices:
- * * MissingRequiredFieldError - multiple agencies present but no agency_id set
- * * InconsistentAgencyFieldNotice - inconsistent timezone or language among the agencies
+ * <ul>
+ * <li>{@link MissingRequiredFieldError} - multiple agencies present but no agency_id set
+ * <li>{@link InconsistentAgencyFieldNotice} - inconsistent timezone or language among the agencies
+ * </ul>
  */
 @GtfsValidator
 public class AgencyConsistencyValidator extends FileValidator {

@@ -27,10 +27,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStop;
 /**
  * Validates presence or absence of `parent_station` field based on `location_type`.
  * <p>
- * Generated notices:
- * * StationWithParentStationNotice
- * * PlatformWithoutParentStationNotice
- * * LocationWithoutParentStationNotice
+ * Generated notice:
+ * <ul>
+ * <li>{@link StationWithParentStationNotice}
+ * <li>{@link PlatformWithoutParentStationNotice}
+ * <li>{@link LocationWithoutParentStationNotice}
+ * </ul>
  */
 @GtfsValidator
 public class LocationTypeSingleEntityValidator extends SingleEntityValidator<GtfsStop> {

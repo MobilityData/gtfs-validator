@@ -33,10 +33,12 @@ import java.util.List;
  * Validates departure_time and arrival_time fields in "stop_times.txt".
  * <p>
  * Generated notices:
- * * StopTimeWithOnlyArrivalOrDepartureTimeNotice - a single departure_time or arrival_time is defined for a row (both
+ * <ul>
+ * <li>{@link StopTimeWithOnlyArrivalOrDepartureTimeNotice} - a single departure_time or arrival_time is defined for a row (both
  * or none are expected)
- * * StopTimeWithDepartureBeforeArrivalTimeNotice - departure_time < arrival_time
- * * StopTimeWithArrivalBeforePreviousDepartureTimeNotice - prev(arrival_time) < curr(departure_time)
+ * <li>{@link StopTimeWithDepartureBeforeArrivalTimeNotice} - departure_time < arrival_time
+ * <li>{@link StopTimeWithArrivalBeforePreviousDepartureTimeNotice} - prev(arrival_time) < curr(departure_time)
+ * </ul>
  */
 @GtfsValidator
 public class StopTimeArrivalAndDepartureTimeValidator extends FileValidator {

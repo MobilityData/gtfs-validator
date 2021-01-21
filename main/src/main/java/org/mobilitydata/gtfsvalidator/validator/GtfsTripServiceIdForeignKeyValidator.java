@@ -30,8 +30,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsTripTableContainer;
 /**
  * Validates that service_id field in "trips.txt" references a valid service_id in "calendar.txt" or "calendar_date.txt".
  * <p>
- * Generated notices:
- * * ForeignKeyError
+ * Generated notice: {@link ForeignKeyError}.
  */
 @GtfsValidator
 public class GtfsTripServiceIdForeignKeyValidator extends FileValidator {

@@ -21,11 +21,7 @@ import java.util.List;
  * <p>
  * Time complexity: <i>O(n log n)</i> where <i>n</i> is the number of entries in <i>frequencies.txt</i>.
  * <p>
- * Generated notices:
- * <p><ul>
- * <li>{@link OverlappingFrequencyNotice} - two frequency entries referring to the same trip have an overlapping time
- *     range.
- * </ul>
+ * Generated notice: {@link OverlappingFrequencyNotice}.
  */
 @GtfsValidator
 public class OverlappingFrequencyValidator extends FileValidator {

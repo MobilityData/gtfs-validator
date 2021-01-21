@@ -78,9 +78,11 @@ public class EntityImplementationGenerator {
     /**
      * Returns name of a bitField to store bit for GTFS field with a given number.
      * <p>
-     * Examples.
-     * * bitFieldName(1) == "bitField0_"
-     * * bitFieldName(32) == "bitField1_"
+     * Examples
+     * <ul>
+     * <li>bitFieldName(1) == "bitField0_"
+     * <li>bitFieldName(32) == "bitField1_"
+     * </ul>
      *
      * @param fieldNumber number of a GTFS field, starting from 0.
      * @return name of a bitField, e.g., bitField0_.

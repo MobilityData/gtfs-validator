@@ -29,8 +29,7 @@ import java.util.List;
 /**
  * Validates that shape_dist_traveled along a shape in "shapes.txt" are not decreasing.
  * <p>
- * Generated notices:
- * * DecreasingShapeDistanceNotice
+ * Generated notice: {@link DecreasingShapeDistanceNotice}.
  */
 @GtfsValidator
 public class ShapeIncreasingDistanceValidator extends FileValidator {

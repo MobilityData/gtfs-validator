@@ -27,8 +27,7 @@ import org.mobilitydata.gtfsvalidator.table.GtfsStopTableContainer;
 /**
  * Validates `location_type` of the referenced `parent_station`.
  * <p>
- * Generated notices:
- * * WrongParentLocationTypeNotice
+ * Generated notice: {@link WrongParentLocationTypeNotice}.
  */
 @GtfsValidator
 public class ParentLocationTypeValidator extends FileValidator {

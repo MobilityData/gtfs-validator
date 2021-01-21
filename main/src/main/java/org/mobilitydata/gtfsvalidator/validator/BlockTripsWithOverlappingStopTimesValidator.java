@@ -28,10 +28,7 @@ import java.util.Optional;
  * <p>
  * Both trips have to be operating on the same service day, as determined by comparing the service dates of the trips.
  * <p>
- * Generated notices:
- * <p><ul>
- * <li>{@link BlockTripsWithOverlappingStopTimesNotice}
- * </ul>
+ * Generated notices: {@link BlockTripsWithOverlappingStopTimesNotice}.
  */
 @GtfsValidator
 public class BlockTripsWithOverlappingStopTimesValidator extends FileValidator {

@@ -39,8 +39,7 @@ import java.util.Set;
  * [GTFS feed_info.txt specification](http://gtfs.org/reference/static/#feed_infotxt)
  * [GTFS agency.txt specification](http://gtfs.org/reference/static/#agencytxt)
  *
- * Notice generated:
- *  * @code{FeedInfoLangAndAgencyLangMismatchNotice}
+ * Generated notice: {@link FeedInfoLangAndAgencyLangMismatchNotice}.
  */
 @GtfsValidator
 public class MatchingFeedAndAgencyLangValidator extends FileValidator{

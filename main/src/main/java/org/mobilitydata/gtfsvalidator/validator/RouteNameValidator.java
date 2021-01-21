@@ -24,10 +24,12 @@ import org.mobilitydata.gtfsvalidator.table.GtfsRoute;
  * Validates short and long name for a single route.
  * <p>
  * Generated notices:
- * * RouteBothShortAndLongNameMissingNotice
- * * RouteShortAndLongNameEqualNotice
- * * RouteShortNameTooLongNotice
- * * SameNameAndDescriptionForRouteNotice
+ * <ul>
+ * <li>{@link RouteBothShortAndLongNameMissingNotice}
+ * <li>{@link RouteShortAndLongNameEqualNotice}
+ * <li>{@link RouteShortNameTooLongNotice}
+ * <li>{@link SameNameAndDescriptionForRouteNotice}
+ * </ul>
  */
 @GtfsValidator
 public class RouteNameValidator extends SingleEntityValidator<GtfsRoute> {
